@@ -146,10 +146,18 @@ show-tunnel ()
 
    # echo -en "Pinging $innerRemoteIP (peer of tunnel interface $interface) ..."
 
+   success=0
    if [[ "$innerRemoteIP" =~ : ]] ; then
-      ping6 -W3 -c3 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && log-result 1 || log-result 0
+      ping6 -W3 -c3 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
    else
-      ping -W3 -c3 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && log-result 1 || log-result 0
+      ping -W3 -c3 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
+   fi
+   log-result $success
+   
+   if [ $success -eq 1 ] ; then
+      return 0
+   else
+      return 1
    fi
 }
 
