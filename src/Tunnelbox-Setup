@@ -1,0 +1,64 @@
+#!/bin/bash -e
+#
+# Tunnelbox Setup
+# Copyright (C) 2012 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
+
+
+if [ $# -ne 2 ] ; then
+   echo >&2 "Usage: $0 [Site] [start|stop|status]"
+   exit 1
+fi
+
+site="$1"
+state="$2"
+
+if [ "$state" != "start" -a "$state" != "stop" -a \
+     "$state" != "restart" -a "$state" != "status" -a "$state" != "reset" ] ; then
+   echo >&2 "Usage: $0 [start|stop|status|reset]"
+   exit 1
+fi
+
+
+WORK_DIRECTORY="."
+if [ ! -e "$WORK_DIRECTORY/Routing-Setup" ] ; then
+   echo >&2 "ERROR: $WORK_DIRECTORY/Routing-Setup not found!"
+   exit 1
+fi
+. ./$WORK_DIRECTORY/Routing-Setup
+
+
+if [ "$state" = "reset" ] ; then
+   ip rule flush
+   ip rule del lookup local || true
+   ip rule add from all lookup local   pref 0
+   ip rule add from all lookup main    pref 32766
+   ip rule add from all lookup default pref 32767
+   state="stop"
+fi
+
+
+errors=0
+PROVIDER_CONFIGS=`find $WORK_DIRECTORY -name "tunnelbox-${site}-*-config"`
+for providerConfig in $PROVIDER_CONFIGS ; do
+   echo $providerConfig ...
+   bash -ce "state=$state && . ./$WORK_DIRECTORY/Routing-Setup && . ./$providerConfig" || let errors=errors+1 && true
+done
+
+echo "errors=$errors"
+exit $errors

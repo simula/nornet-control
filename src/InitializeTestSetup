@@ -1,0 +1,153 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# NorNet Test Setup
+# Copyright (C) 2012 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
+from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+
+# NorNet
+from NorNetTools         import *;
+from NorNetAPI           import *;
+from NorNetProviderSetup import *;
+from NorNetSiteSetup     import *;
+
+
+
+# ###### Make test setup ####################################################
+# WARNING: A previous test setup is completely REMOVED!
+def createTestConfiguration(userName, sliceName):
+   # ====== Create tags =====================================================
+   makeTagType('site/nornet', 'NorNet Managed Site',      'nornet_is_managed_site')
+   makeTagType('site/nornet', 'NorNet Site Index',        'nornet_site_index')
+   makeTagType('site/nornet', 'NorNet Site Domain Name',  'nornet_site_domain')
+   makeTagType('site/nornet', 'NorNet Site City',         'nornet_site_city')
+   makeTagType('site/nornet', 'NorNet Site Province',     'nornet_site_province')
+   makeTagType('site/nornet', 'NorNet Site Country',      'nornet_site_country')
+   makeTagType('site/nornet', 'NorNet Site Country Code', 'nornet_site_country_code')
+
+   for i in range(0, NorNet_MaxProviders - 1):
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Index',        'nornet_site_tbp' + str(i) + '_index')
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv4', 'nornet_site_tbp' + str(i) + '_address_ipv4')
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv6', 'nornet_site_tbp' + str(i) + '_address_ipv6')
+
+   makeTagType('node/nornet',      'NorNet Managed Node',         'nornet_is_managed_node')
+   makeTagType('node/nornet',      'NorNet Node Index',           'nornet_node_index')
+   makeTagType('node/nornet',      'NorNet Node Address Index',   'nornet_node_address')
+
+   makeTagType('interface/nornet', 'NorNet Managed Interface',        'nornet_is_managed_interface')
+   makeTagType('interface/nornet', 'NorNet Interface Provider Index', 'nornet_ifprovider_index')
+
+
+   # ====== Remove test sites ===============================================
+   removeNorNetSite("Alpha Test Site")
+   removeNorNetSite("Beta Test Site")
+   removeNorNetSite("Gamma Test Site")
+
+
+   # ====== Add test sites ==================================================
+   siteAlphaNorNetIndex = 1
+   siteAlphaID = makeNorNetSite('Alpha Test Site', 'TA', 'ta', 'http://www.alpha.site', 'alpha.site',
+                                siteAlphaNorNetIndex, 'Ullevål', 'Østlandet', 'Norge', 'NO', 10.0, 50.0, [
+                                   [ 'Uninett', IPv4Address('132.252.156.70'), IPv6Address('fd55:5555::70') ],
+                                   [ 'Telenor', IPv4Address('169.254.100.70'), IPv6Address('::') ]
+                                ])
+   siteAlphaPCUID = makeNorNetPCU(siteAlphaID, 'pcu', 'alpha.site', IPv4Address('132.252.156.2'),
+                                  'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
+
+   siteBetaNorNetIndex = 2
+   siteBetaID  = makeNorNetSite('Beta Test Site', 'TB', 'tb', 'http://www.beta.site', 'beta.site',
+                                siteBetaNorNetIndex, 'Bygdøy',  'Østlandet', 'Norge', 'NO', 15.0, 55.0, [
+                                   [ 'Uninett', IPv4Address('132.252.156.71'), IPv6Address('fd55:5555::71') ],
+                                   [ 'Telenor', IPv4Address('169.254.100.71'), IPv6Address('::') ]
+                                ])
+   siteBetaPCUID = makeNorNetPCU(siteBetaID, 'pcu', 'beta.site', IPv4Address('132.252.156.3'),
+                                 'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
+
+   siteGammaNorNetIndex = 3
+   siteGammaID = makeNorNetSite('Gamma Test Site', 'TC', 'tc', 'http://www.gamma.site', 'gamma.site',
+                                siteGammaNorNetIndex, 'Essen',  'Nordrhein-Westfalen', 'Deutschland', 'DE', 12.5, 40.0, [
+                                   [ 'Uninett', IPv4Address('132.252.156.72'), IPv6Address('::') ],
+                                   [ 'Telenor', IPv4Address('169.254.100.72'), IPv6Address('::') ],
+                                   [ 'Deutsches Forschungsnetz', IPv4Address('172.31.255.72'),  IPv6Address('::') ]
+                                ])
+   siteGammaPCUID = makeNorNetPCU(siteGammaID, 'pcu', 'gamma.site', IPv4Address('132.252.156.4'),
+                                  'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
+
+
+   # ====== Add test nodes ==================================================
+   firstAddressIndex = 81
+   i = 0
+
+   names = sorted(['akerbrygge', 'bygdoey', 'ekeberg', 'fornebu', 'majorstuen', 'ullevaal'])
+   for name in names:
+      makeNorNetNode(siteAlphaID, name, 1 + i, firstAddressIndex,
+                     siteAlphaPCUID, 1 + i,
+                     IPv4Network('132.252.156.' + str(firstAddressIndex + i) + '/24'),
+                     IPv4Address('132.252.156.1'),
+                     [ IPv4Address('132.252.156.21') ])
+      i = i + 1
+
+   names = sorted(['bjordammen', 'maridalsvannet', 'sognsvann', 'svartkulp', 'skjennungen', 'tyrvann'])
+   for name in names:
+      makeNorNetNode(siteBetaID, name, 1 + i, firstAddressIndex,
+                     siteBetaPCUID, 1 + i,
+                     IPv4Network('132.252.156.' + str(firstAddressIndex + i) + '/24'),
+                     IPv4Address('132.252.156.1'),
+                     [ IPv4Address('132.252.156.21') ])
+      i = i + 1
+
+   names = sorted(['altenessen', 'baldeneysee', 'borbeck', 'zollvererin'])
+   for name in names:
+      makeNorNetNode(siteGammaID, name, 1 + i, firstAddressIndex,
+                     siteGammaPCUID, 1 + i,
+                     IPv4Network('132.252.156.' + str(firstAddressIndex + i) + '/24'),
+                     IPv4Address('132.252.156.1'),
+                     [ IPv4Address('132.252.156.21') ])
+      i = i + 1
+
+
+
+   # ====== Add person to all test sites ====================================
+   personID = lookupPersonID(userName)
+   if personID == 0:
+      error('Unable to find user ' + userName + '\n')
+   getPLCServer().AddPersonToSite(getPLCAuthentication(), personID, siteAlphaID)
+   getPLCServer().AddPersonToSite(getPLCAuthentication(), personID, siteBetaID)
+   getPLCServer().AddPersonToSite(getPLCAuthentication(), personID, siteGammaID)
+
+
+   # ====== Add slice to all nodes ==========================================
+   sliceID = lookupSliceID(sliceName)
+   if sliceID == 0:
+      error('Unable to find slice ' + userName + '\n')
+   nodeList = fetchNodeList()
+   nodeIDs  = []
+   for node in nodeList:
+      nodeID = int(node['node_id'])
+      nodeIDs.append(nodeID)
+
+   getPLCServer().AddSliceToNodes(getPLCAuthentication(), sliceID, nodeIDs)
+
+
+
+log('***** This is NorNet *****')
+loginToPLC()
+createTestConfiguration('dreibh@simula.no', 'nn_test')
