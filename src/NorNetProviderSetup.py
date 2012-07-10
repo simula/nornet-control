@@ -96,21 +96,19 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
    if incomingSite < outgoingSite:
       side  = 1
       sLow  = incomingSite
+      pLow  = incomingProvider
       sHigh = outgoingSite
+      pHigh = outgoingProvider
    else:
       side  = 2
       sLow  = outgoingSite
-      sHigh = incomingSite
-
-   if incomingProvider < outgoingProvider:
-      pLow  = incomingProvider
-      pHigh = outgoingProvider
-   else:
       pLow  = outgoingProvider
+      sHigh = incomingSite
       pHigh = incomingProvider
-
-   source      = str.replace(hex((pLow << 8) | sLow), '0x', '')
-   destination = str.replace(hex((pHigh << 8) | pLow), '0x', '')
+      
+      
+   source      = str.replace(hex((sHigh << 8) | pHigh), '0x', '')
+   destination = str.replace(hex((sLow << 8)  | pLow), '0x', '')
    address     = 'fdff:ffff:' + source + ':' + destination + '::'
    if version == 4:
       # The space is to small in IPv4 addresses. Use MD5 to create most likely
