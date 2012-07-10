@@ -170,8 +170,6 @@ remove-table ()
                pref=${BASH_REMATCH[1]}
                rule=${BASH_REMATCH[2]}
                lookup=${BASH_REMATCH[3]}
-
-               echo ip rule del $rule lookup ${lookup} pref $pref
                ip rule del $rule ${lookup} pref $pref
             fi
         fi
