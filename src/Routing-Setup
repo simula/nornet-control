@@ -140,15 +140,16 @@ make-tunnel ()
 show-tunnel ()
 {
    local interface="$1"           # Interface name (fire*, seks*, gre*)
-   local innerRemoteIP="$2"       # Inner Remote IP
-   local description="$3"         # Description
+   local innerLocalIP="$2"        # Inner Local IP
+   local innerRemoteIP="$3"       # Inner Remote IP
+   local description="$4"         # Description
 
    # echo -en "Pinging $innerRemoteIP (peer of tunnel interface $interface) ..."
 
    if [[ "$innerRemoteIP" =~ : ]] ; then
-      ping6 -W3 -c3 -i0.2 -q $innerRemoteIP >/dev/null 2>&1 && log-result 1 || log-result 0
+      ping6 -W3 -c3 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && log-result 1 || log-result 0
    else
-      ping -W3 -c3 -i0.2 -q $innerRemoteIP >/dev/null 2>&1 && log-result 1 || log-result 0
+      ping -W3 -c3 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && log-result 1 || log-result 0
    fi
 }
 
@@ -162,12 +163,18 @@ remove-table ()
    ip route flush table $1
 
    # ====== Remove all rules pointing to that table =========================
-   rulesToRemove=`ip rule show | grep "lookup $tableID[ ]*\$" | wc --lines`
-   i=0 ; while [ $i -lt $rulesToRemove ] ; do
-      # echo ip rule del lookup $1
-      ip rule del lookup $1
-      let i=$i+1
-   done
+   ip rule show | (
+     while read inputLine ; do
+         if [[ $inputLine =~ ([0-9]*):(.*)([ \t]*lookup ${tableID}[ \t]*)$ ]]; then
+            if [ ${#BASH_REMATCH[*]} -eq 4 ] ; then
+               pref=${BASH_REMATCH[1]}
+               rule=${BASH_REMATCH[2]}
+               lookup=${BASH_REMATCH[3]}
+               ip rule del $rule ${lookup} pref $pref
+            fi
+        fi
+     done
+   )
 }
 
 

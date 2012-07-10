@@ -53,12 +53,24 @@ if [ "$state" = "reset" ] ; then
 fi
 
 
+log "Entering Tunnelbox setup ..."
 errors=0
 PROVIDER_CONFIGS=`find $WORK_DIRECTORY -name "tunnelbox-${site}-*-config"`
 for providerConfig in $PROVIDER_CONFIGS ; do
-   echo $providerConfig ...
-   bash -ce "state=$state && . ./$WORK_DIRECTORY/Routing-Setup && . ./$providerConfig" || let errors=errors+1 && true
+   log "Entering $providerConfig ..."
+   success=0
+   bash -ce "state=$state && . ./$WORK_DIRECTORY/Routing-Setup && . ./$providerConfig" && success=1
+   log-action "Finished $providerConfig!"
+   log-result $success
+   if [ $success -eq 0 ] ; then
+      let errors=$errors+1
+   fi
 done
 
-echo "errors=$errors"
+log-action "Finished Tunnelbox setup!"
+if [ $errors -eq 0 ] ; then
+   log-result 1
+else
+   log-result 0
+fi
 exit $errors
