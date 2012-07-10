@@ -200,7 +200,6 @@ def updateNorNetInterfaces(nodeID, siteTagsList):
       if siteNorNetIndex < 0:
          error('Bad nornet_site_index setting')
 
-      alias = 1
       for i in range(0, NorNet_MaxProviders - 1):
          providerNorNetIndex = int(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_index', '-1'))
          if providerNorNetIndex >= 0:
@@ -210,6 +209,7 @@ def updateNorNetInterfaces(nodeID, siteTagsList):
             ifIPv4            = makeNorNetIP(providerNorNetIndex, siteNorNetIndex, nodeNorNetAddress, 4)
             ifGateway         = makeNorNetIP(providerNorNetIndex, siteNorNetIndex, 1, 4)
             ifProviderNetwork = makeNorNetIP(providerNorNetIndex, 0, 0, 4)
+            ifAlias           = providerNorNetIndex
 
             interface = {}
             interface['hostname']   = ifHostName
@@ -227,7 +227,7 @@ def updateNorNetInterfaces(nodeID, siteTagsList):
             if interfaceID <= 0:
                error('Unable to add secondary interface ' + str(ifIPv4.ip))
 
-            if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, "alias", str(alias)) <= 0:
+            if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, "alias", str(ifAlias)) <= 0:
                error('Unable to add "alias" tag to interface ' + str(ifIPv4.ip))
 
             if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, 'nornet_is_managed_interface', '1') <= 0:
