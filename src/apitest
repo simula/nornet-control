@@ -295,7 +295,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    str(tunnel['tunnel_remote_inner_address']) + '   # via ' + \
                                    localProvider['provider_long_name'] + ' <--> ' + \
                                    remoteProvider['provider_long_name'] + ' tunnel\n')
-                  metric = 10
+                  metric = 10 + pathNumber
                   if remoteProviderIndex == localProviderIndex:
                      metric = 5
                   outputFile.write('   make-route ' + \
