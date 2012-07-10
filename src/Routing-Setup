@@ -162,12 +162,20 @@ remove-table ()
    ip route flush table $1
 
    # ====== Remove all rules pointing to that table =========================
-   rulesToRemove=`ip rule show | grep "lookup $tableID[ ]*\$" | wc --lines`
-   i=0 ; while [ $i -lt $rulesToRemove ] ; do
-      # echo ip rule del lookup $1
-      ip rule del lookup $1
-      let i=$i+1
-   done
+   ip rule show | (
+     while read inputLine ; do
+         if [[ $inputLine =~ ([0-9]*):(.*)([ \t]*lookup ${tableID}[ \t]*)$ ]]; then
+            if [ ${#BASH_REMATCH[*]} -eq 4 ] ; then
+               pref=${BASH_REMATCH[1]}
+               rule=${BASH_REMATCH[2]}
+               lookup=${BASH_REMATCH[3]}
+
+               echo ip rule del $rule lookup ${lookup} pref $pref
+               ip rule del $rule ${lookup} pref $pref
+            fi
+        fi
+     done
+   )
 }
 
 
