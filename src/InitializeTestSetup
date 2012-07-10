@@ -124,14 +124,20 @@ def createTestConfiguration(userName, sliceName):
       i = i + 1
 
 
-
    # ====== Add person to all test sites ====================================
    personID = lookupPersonID(userName)
    if personID == 0:
       error('Unable to find user ' + userName + '\n')
+
+   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'user', personID)
+   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'pi',   personID)
+   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'tech', personID)
+
    getPLCServer().AddPersonToSite(getPLCAuthentication(), personID, siteAlphaID)
    getPLCServer().AddPersonToSite(getPLCAuthentication(), personID, siteBetaID)
    getPLCServer().AddPersonToSite(getPLCAuthentication(), personID, siteGammaID)
+
+   getPLCServer().SetPersonPrimarySite(getPLCAuthentication(), personID, siteBetaID)
 
 
    # ====== Add slice to all nodes ==========================================
