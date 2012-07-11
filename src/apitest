@@ -131,7 +131,7 @@ def _getTablePref(opIndex, tos):
 
 
 # ###### Get tunnel configuration ###########################################
-def getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
+def _getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
    localSiteIndex      = localSite['site_index']
    localProviderIndex  = localProvider['provider_index']
    localSiteTags       = localSite['site_tags']
@@ -171,6 +171,20 @@ def getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
    }
 
    return norNetTunnel
+
+
+# ###### Get tunnel configuration for default tunnel to central site ########
+def _getDefaultTunnel(fullSiteList, localSite, version):
+   localSiteProviders          = getNorNetProvidersForSite(localSite)
+   localDefaultProviderIndex   = localSite['site_default_provider_index']
+
+   centralSite                 = fullSiteList[NorNet_InternetInterconnectSite]
+   centralSiteProviders        = getNorNetProvidersForSite(centralSite)
+   centralDefaultProviderIndex = centralSite['site_default_provider_index']
+
+   return _getTunnel(localSite, localSiteProviders[localDefaultProviderIndex],
+                     centralSite, centralSiteProviders[centralDefaultProviderIndex],
+                     version)
 
 
 # ###### Generate tunnelbox configuration for given provider ################
@@ -223,6 +237,21 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
          outputFile.write('   remove-table ' + str(routingTableID) + '\n')
 
 
+
+      # ====== Default route to central site ================================
+      if (state == 'start'):
+         if (localSiteIndex != NorNet_InternetInterconnectSite):
+            for version in [ 4, 6 ]:
+               if ((version == 6) and (v4only == True)):
+                  continue
+               defaultTunnel = _getDefaultTunnel(fullSiteList, localSite, version)
+               outputFile.write('   make-route ' + \
+                                str(routingTableID) + ' ' +
+                                'default ' +
+                                defaultTunnel['tunnel_interface'] + ' ' + \
+                                str(defaultTunnel['tunnel_remote_inner_address']) + '   # DEFAULT to CENTRAL SITE\n')
+
+
       # ====== Create provider-specific tunnels and routes ==================
       for remoteSiteIndex in fullSiteList:
          if remoteSiteIndex == localSiteIndex:
@@ -247,7 +276,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
             for version in [ 4, 6 ]:
                if ((version == 6) and (v4only == True)):
                   continue
-               tunnel        = getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
+               tunnel        = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
                remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, version)
 
                outputFile.write('   log-action "Tunnel ' + tunnel['tunnel_interface'] + ': ' + \
@@ -287,8 +316,9 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    ' (' + str(localProvider['provider_index']) + ')]"\n')
 
 
-               # ====== Create provider-specific routing table entries ======
+               # ====== Create routing table entries ========================
                if (state == 'start'):
+                  # ====== Entry into provider-specific routing table =======
                   outputFile.write('   make-route ' + \
                                    str(routingTableID) + ' ' +
                                    str(remoteNetwork) + ' ' +
@@ -296,6 +326,8 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    str(tunnel['tunnel_remote_inner_address']) + '   # via ' + \
                                    localProvider['provider_long_name'] + ' <--> ' + \
                                    remoteProvider['provider_long_name'] + ' tunnel\n')
+
+                  # ====== Entry into global routing table ==================
                   metric = 10 + pathNumber
                   if remoteProviderIndex == localProviderIndex:
                      metric = 5

@@ -49,9 +49,12 @@ def makeTagType(category, description, tagName):
 
 # ###### Remove NorNet site #################################################
 def removeNorNetSite(siteName):
-   siteID = findSiteID(siteName)
-   if siteID != 0:
-      log('Deleting site ' + str(siteID) + ' ...')
+   site = fetchNorNetSite(siteName)
+   if site != None:
+      if int(getTagValue(site['site_tags'], 'nornet_is_managed_site', '-1')) < 1:
+         error('removeNorNetSite() will only remove NorNet sites!')
+      log('Removing NorNet site ' + siteName + ' ...')
+      siteID = site['site_id']
       getPLCServer().DeleteSite(getPLCAuthentication(), siteID)
 
 
@@ -59,8 +62,8 @@ def removeNorNetSite(siteName):
 def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDomain,
                    siteNorNetIndex, siteCity, siteProvince, cityCountry, siteCountryCode,
                    siteLatitude, siteLogitude,
-                   providerList):
-  try:
+                   providerList, defaultProvider):
+   try:
       log('Adding site ' + siteName + ' ...')
 
       site = {}
@@ -92,6 +95,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
       if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_country_code', siteCountryCode) <= 0:
          error('Unable to add "nornet_site_country_code" tag to site ' + siteName)
 
+      gotDefaultProvider = False
       i = 0
       for provider in providerList:
          if i <= NorNet_MaxProviders:
@@ -103,6 +107,11 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
                   break
             if providerNorNetIndex <= 0:
                error("Bad provider " + provider)
+            if providerName == defaultProvider:
+               if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_default_provider_index', str(providerNorNetIndex)) <= 0:
+                  error('Unable to add "nornet_site_default_provider_index" tag to site ' + siteName)
+               gotDefaultProvider = True
+
             providerIPv4 = IPv4Address(provider[1])
             providerIPv6 = IPv6Address(provider[2])
 
@@ -115,19 +124,21 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
 
          i = i + 1
 
+      if gotDefaultProvider == False:
+         error('Site ' + siteName + ' is not connected to default provider ' + defaultProvider)
 
-      return siteID
+   except Exception as e:
+      error('Adding site ' + siteName + ' has failed: ' + str(e))
 
-  except Exception as e:
-     error('Adding site ' + siteName + ' has failed: ' + str(e))
+   return fetchNorNetSite(siteName)
 
 
 # ###### Create NorNet PCU ##################################################
-def makeNorNetPCU(siteID, hostName, siteNorNetDomain, publicIPv4Address,
+def makeNorNetPCU(site, hostName, siteNorNetDomain, publicIPv4Address,
                   user, password, protocol, model, notes):
    try:
       pcuHostName = str.lower(hostName) + '.' + str.lower(siteNorNetDomain);
-      log('Adding PCU ' + pcuHostName + ' ...')
+      log('Adding PCU ' + pcuHostName + ' to site ' + site['site_long_name'] + ' ...')
 
       pcu = {}
       pcu['username'] = user
@@ -138,14 +149,14 @@ def makeNorNetPCU(siteID, hostName, siteNorNetDomain, publicIPv4Address,
       pcu['ip']       = str(publicIPv4Address)
       pcu['hostname'] = pcuHostName
 
-      pcuID = getPLCServer().AddPCU(getPLCAuthentication(), siteID, pcu)
+      pcuID = getPLCServer().AddPCU(getPLCAuthentication(), site['site_id'], pcu)
       if pcuID <= 0:
          error('Unable to add PCU ' + pcuHostName)
 
       return pcuID
 
    except Exception as e:
-      error('Adding PCU ' + pcuHostName + ' has failed: ' + str(e))
+      error('Adding PCU ' + pcuHostName + ' to site ' + site['site_long_name'] + ' has failed: ' + str(e))
 
 
 # ###### Update interfaces of a node ########################################
@@ -167,7 +178,7 @@ def updateNorNetInterfaces(nodeID, siteTagsList):
       for interface in interfaceList:
          interfaceID      = interface['interface_id']
          interfaceTagList = getPLCServer().GetInterfaceTags(getPLCAuthentication(),
-                                                        { 'interface_id' : interfaceID })
+                                                            { 'interface_id' : interfaceID })
          if int(getTagValue(interfaceTagList, 'nornet_is_managed_interface', 0)) > 0:
             currentAddressList.append(IPAddress(interface['ip']))
             currentInterfaceIDList.append(interfaceID)
@@ -242,30 +253,29 @@ def updateNorNetInterfaces(nodeID, siteTagsList):
 
 
 # ###### Create NorNet node #################################################
-def makeNorNetNode(siteID, nodeNiceName, nodeNorNetIndex, firstAddressNumber,
+def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, firstAddressNumber,
                    pcuID, pcuPort,
                    publicIPv4Address, publicGateway, publicDNS):
    nodeHostName = nodeNiceName   # Domain to be set below!
    try:
       # ====== Get site information =========================================
-      siteTagsList    = fetchSiteTagsList(siteID)
-      siteNorNetIndex = int(getTagValue(siteTagsList, 'nornet_site_index', '-1'))
+      siteNorNetIndex = int(getTagValue(site['site_tags'], 'nornet_site_index', '-1'))
       if siteNorNetIndex < 0:
-         error("Site " + str(siteID) + ' has no NorNet site index!')
-      siteNorNetDomain = getTagValue(siteTagsList, 'nornet_site_domain', '')
+         error("Site " + site['site_long_name'] + ' has no NorNet site index!')
+      siteNorNetDomain = getTagValue(site['site_tags'], 'nornet_site_domain', '')
       if siteNorNetIndex == '':
-         error("Site " + str(siteID) + ' has no NorNet domain name!')
+         error("Site " + site['site_long_name'] + ' has no NorNet domain name!')
 
 
       # ====== Create node ==================================================
       nodeHostName = nodeHostName + '.' + str.lower(siteNorNetDomain);
-      log('Adding node ' + nodeHostName + ' ...')
+      log('Adding node ' + nodeHostName + ' to site ' + site['site_long_name'] + ' ...')
 
       node = {}
       node['hostname']   = nodeHostName
       node['boot_state'] = 'reinstall'
       node['model']      = 'Amiga 5000'
-      nodeID = getPLCServer().AddNode(getPLCAuthentication(), siteID, node)
+      nodeID = getPLCServer().AddNode(getPLCAuthentication(), site['site_id'], node)
       if nodeID <= 0:
          error('Unable to add node ' + nodeHostName)
 
@@ -298,12 +308,13 @@ def makeNorNetNode(siteID, nodeNiceName, nodeNorNetIndex, firstAddressNumber,
       interface['dns1']       = str(publicDNS[0])
       if len(publicDNS) > 1:
          interface['dns2']    = str(publicDNS[1])
+
       if getPLCServer().AddInterface(getPLCAuthentication(), nodeID, interface) <= 0:
          error('Unable to add primary interface ' + str(publicIPv4Address.ip))
 
 
       # ====== Create NorNet interfaces =====================================
-      updateNorNetInterfaces(nodeID, siteTagsList)
+      updateNorNetInterfaces(nodeID, site['site_tags'])
 
       return nodeID
 

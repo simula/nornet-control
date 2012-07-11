@@ -33,6 +33,8 @@ from NorNetProviderSetup import *;
 
 
 NorNetPLC_Name          = '132.252.156.21'
+#NorNetPLC_Name          = '132.252.156.23'
+
 NorNetPLC_Root_User     = 'root@localhost.localdomain'
 NorNetPLC_Root_Password = 'nntb-root'
 
@@ -68,33 +70,6 @@ def getPLCServer():
 # ###### Get PLC authentication object ######################################
 def getPLCAuthentication():
    return plc_authentication
-
-
-# ###### Find site ID #######################################################
-def findSiteID(siteName):
-   try:
-      site = plc_server.GetSites(plc_authentication,
-                                 {'name': siteName}, ['site_id'])
-      siteID = int(site[0]['site_id'])
-      return(siteID)
-
-   except:
-      return(0)
-
-
-# ###### Get list of site tags ##############################################
-def fetchSiteTagsList(siteID):
-   global plc_server
-   global plc_authentication
-
-   try:
-      siteTagsList = plc_server.GetSiteTags(plc_authentication,
-                                            { 'site_id' : siteID },
-                                            [ 'tagname', 'value' ])
-      return(siteTagsList)
-
-   except:
-      error('Unable to fetch site tag list!')
 
 
 # ###### Find person ID #####################################################
@@ -133,48 +108,78 @@ def lookupNodeID(nodeName):
       return(0)
 
 
+# ###### Find site ID #######################################################
+def lookupSiteID(siteName):
+   try:
+      site = plc_server.GetSites(plc_authentication,
+                                 {'name': siteName}, ['site_id'])
+      siteID = int(site[0]['site_id'])
+      return(siteID)
+
+   except:
+      return(0)
+
+
 # ###### Fetch list of NorNet sites #########################################
-def fetchNorNetSiteList():
+def fetchNorNetSite(siteNameToFind):
    global plc_server
    global plc_authentication
 
-   log('Fetching NorNet site list ...')
+   if siteNameToFind == None:   # Get full list
+      filter = { 'is_public': True,
+                 'enabled':   True }
+   else:              # Only perform lookup for given name
+      filter = { 'is_public': True,
+                 'enabled':   True,
+                 'name':      siteNameToFind }
+
    try:
-      filter = {'is_public': True,
-                'enabled':   True}
-
-      fullSiteList = plc_server.GetSites(plc_authentication, filter)
-
       norNetSiteList = dict([])
+      fullSiteList   = plc_server.GetSites(plc_authentication, filter)
       for site in fullSiteList:
-         siteID       = int(site['site_id']),
+         siteID       = int(site['site_id'])
          siteTagsList = plc_server.GetSiteTags(plc_authentication,
                                                { 'site_id' : siteID },
                                                [ 'site_id', 'tagname', 'value' ])
          if int(getTagValue(siteTagsList, 'nornet_is_managed_site', '-1')) < 1:
             continue
-         siteIndex    = int(getTagValue(siteTagsList, 'nornet_site_index', '-1'))
-         siteName     = str(site['name'])
-         siteAbbrev   = str(site['abbreviated_name'])
+         siteName             = str(site['name'])
+         siteAbbrev           = str(site['abbreviated_name'])
+         siteIndex            = int(getTagValue(siteTagsList, 'nornet_site_index', '-1'))
+         siteDefProviderIndex = int(getTagValue(siteTagsList, 'nornet_site_default_provider_index', '-1'))
+         if siteDefProviderIndex < 1:
+            error('Site ' + siteName + ' has to NorNet Default Provider Index')
          if not re.match(r"^[a-zA-Z][a-zA-Z0-9]*$", siteAbbrev):
             error('Bad site abbreviation ' + siteAbbrev)
          if ((siteIndex < 0) or (siteIndex > 255)):
             error('Bad site index ' + str(siteIndex))
 
          norNetSite = {
-            'site_id'         : siteID,
-            'site_index'      : siteIndex,
-            'site_short_name' : siteAbbrev,
-            'site_long_name'  : str(site['name']),
-            'site_tags'       : siteTagsList
+            'site_id'                     : siteID,
+            'site_index'                  : siteIndex,
+            'site_short_name'             : siteAbbrev,
+            'site_long_name'              : str(site['name']),
+            'site_tags'                   : siteTagsList,
+            'site_default_provider_index' : siteDefProviderIndex
          }
+
+         if siteNameToFind != None:
+            return(norNetSite)
 
          norNetSiteList[siteIndex] = norNetSite
 
+      if len(norNetSiteList) == 0:
+         return None
       return(norNetSiteList)
 
    except Exception as e:
       error('Unable to fetch NorNet site list: ' + str(e))
+
+
+# ###### Fetch list of NorNet sites #########################################
+def fetchNorNetSiteList():
+   log('Fetching NorNet site list ...')
+   return fetchNorNetSite(None)
 
 
 # ###### Get the providers a site is connected to ###########################
