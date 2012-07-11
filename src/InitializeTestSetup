@@ -99,29 +99,23 @@ def createTestConfiguration(userName, sliceName):
 
    names = sorted(['akerbrygge', 'bygdoey', 'ekeberg', 'fornebu', 'majorstuen', 'ullevaal'])
    for name in names:
-      makeNorNetNode(siteAlpha, name, 1 + i, firstAddressIndex,
+      n = makeNorNetNode(siteAlpha, name, 1 + i, firstAddressIndex,
                      siteAlphaPCUID, 1 + i,
-                     IPv4Network('132.252.156.' + str(firstAddressIndex + i) + '/24'),
-                     IPv4Address('132.252.156.1'),
-                     [ IPv4Address('132.252.156.21') ])
+                     [ getPLCAddress() ])
       i = i + 1
 
    names = sorted(['bjordammen', 'maridalsvannet', 'sognsvann', 'svartkulp', 'skjennungen', 'tyrvann'])
    for name in names:
       makeNorNetNode(siteBeta, name, 1 + i, firstAddressIndex,
                      siteBetaPCUID, 1 + i,
-                     IPv4Network('132.252.156.' + str(firstAddressIndex + i) + '/24'),
-                     IPv4Address('132.252.156.1'),
-                     [ IPv4Address('132.252.156.21') ])
+                     [ getPLCAddress() ])
       i = i + 1
 
    names = sorted(['altenessen', 'baldeneysee', 'borbeck', 'zollvererin'])
    for name in names:
       makeNorNetNode(siteGamma, name, 1 + i, firstAddressIndex,
                      siteGammaPCUID, 1 + i,
-                     IPv4Network('132.252.156.' + str(firstAddressIndex + i) + '/24'),
-                     IPv4Address('132.252.156.1'),
-                     [ IPv4Address('132.252.156.21') ])
+                     [ getPLCAddress() ])
       i = i + 1
 
 
@@ -145,7 +139,7 @@ def createTestConfiguration(userName, sliceName):
    sliceID = lookupSliceID(sliceName)
    if sliceID == 0:
       error('Unable to find slice ' + sliceName + '\n')
-   nodeList = fetchNodeList()
+   nodeList = getPLCServer().GetNodes(getPLCAuthentication(), { })
    nodeIDs  = []
    for node in nodeList:
       nodeID = int(node['node_id'])

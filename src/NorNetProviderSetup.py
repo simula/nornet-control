@@ -25,6 +25,9 @@ import hashlib;
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
+# NorNet
+from NorNetTools import *;
+
 
 NorNet_MaxProviders = 8
 NorNet_ProviderList = {

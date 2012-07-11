@@ -32,9 +32,7 @@ from NorNetProviderSetup import *;
 
 
 
-NorNetPLC_Name          = '132.252.156.21'
-#NorNetPLC_Name          = '132.252.156.23'
-
+NorNetPLC_Address       = '132.252.156.21'
 NorNetPLC_Root_User     = 'root@localhost.localdomain'
 NorNetPLC_Root_Password = 'nntb-root'
 
@@ -47,7 +45,7 @@ def loginToPLC():
 
    log('Logging into PLC ...')
    try:
-      apiURL     = 'https://' + NorNetPLC_Name + '/PLCAPI/'
+      apiURL     = 'https://' + NorNetPLC_Address + '/PLCAPI/'
       plc_server = xmlrpclib.ServerProxy(apiURL, allow_none=True)
 
       plc_authentication = {}
@@ -62,6 +60,11 @@ def loginToPLC():
       error('Unable to log into PLC!')
 
 
+# ###### Get PLC address ####################################################
+def getPLCAddress():
+   return IPv4Address(NorNetPLC_Address)
+
+
 # ###### Get PLC server object ##############################################
 def getPLCServer():
    return plc_server
@@ -70,42 +73,6 @@ def getPLCServer():
 # ###### Get PLC authentication object ######################################
 def getPLCAuthentication():
    return plc_authentication
-
-
-# ###### Find person ID #####################################################
-def lookupPersonID(eMail):
-   try:
-      person = plc_server.GetPersons(plc_authentication,
-                                     {'email': eMail}, ['person_id'])
-      personID = int(person[0]['person_id'])
-      return(personID)
-
-   except:
-      return(0)
-
-
-# ###### Find slice ID ######################################################
-def lookupSliceID(sliceName):
-   try:
-      slice = plc_server.GetSlices(plc_authentication,
-                                   {'name': sliceName}, ['slice_id'])
-      sliceID = int(slice[0]['slice_id'])
-      return(sliceID)
-
-   except:
-      return(0)
-
-
-# ###### Find node ID #######################################################
-def lookupNodeID(nodeName):
-   try:
-      node = plc_server.GetNodes(plc_authentication,
-                                 {'hostname': nodeName}, ['node_id'])
-      nodeID = int(node[0]['node_id'])
-      return(nodeID)
-
-   except:
-      return(0)
 
 
 # ###### Find site ID #######################################################
@@ -146,6 +113,7 @@ def fetchNorNetSite(siteNameToFind):
          siteName             = str(site['name'])
          siteAbbrev           = str(site['abbreviated_name'])
          siteIndex            = int(getTagValue(siteTagsList, 'nornet_site_index', '-1'))
+         siteDomain           = getTagValue(siteTagsList, 'nornet_site_domain', '')
          siteDefProviderIndex = int(getTagValue(siteTagsList, 'nornet_site_default_provider_index', '-1'))
          if siteDefProviderIndex < 1:
             error('Site ' + siteName + ' has to NorNet Default Provider Index')
@@ -159,6 +127,7 @@ def fetchNorNetSite(siteNameToFind):
             'site_index'                  : siteIndex,
             'site_short_name'             : siteAbbrev,
             'site_long_name'              : str(site['name']),
+            'site_domain'                 : siteDomain,
             'site_tags'                   : siteTagsList,
             'site_default_provider_index' : siteDefProviderIndex
          }
@@ -212,18 +181,96 @@ def getNorNetProvidersForSite(norNetSite):
       error('Unable to get NorNet providers for site ' + norNetSite['site_long_name'] + ': ' + str(e))
 
 
-# ###### Get list of NorNet nodes ###########################################
-def fetchNodeList():
+# ###### Find node ID #######################################################
+def lookupNodeID(nodeName):
+   try:
+      node = plc_server.GetNodes(plc_authentication,
+                                 {'hostname': nodeName}, ['node_id'])
+      nodeID = int(node[0]['node_id'])
+      return(nodeID)
+
+   except:
+      return(0)
+
+
+# ###### Fetch list of NorNet Nodes #########################################
+def fetchNorNetNode(nodeNameToFind):
    global plc_server
    global plc_authentication
 
-   log('Fetching node list ...')
+   if nodeNameToFind == None:   # Get full list
+      filter = { }
+   else:              # Only perform lookup for given name
+      filter = { 'hostname':  nodeNameToFind }
+
    try:
-      nodeList = plc_server.GetNodes(plc_authentication)
-      return(nodeList)
+      norNetNodeList = dict([])
+      fullNodeList   = plc_server.GetNodes(plc_authentication, filter)
+      for node in fullNodeList:
+         nodeID       = int(node['node_id'])
+         nodeTagsList = plc_server.GetNodeTags(plc_authentication,
+                                               { 'node_id' : nodeID },
+                                               [ 'node_id', 'tagname', 'value' ])
+         if int(getTagValue(nodeTagsList, 'nornet_is_managed_node', '-1')) < 1:
+            continue
+         nodeIndex = int(getTagValue(nodeTagsList, 'nornet_node_index', '-1'))
+         if nodeIndex < 1:
+            error('Node ' + nodeName + ' has invalid NorNet Node Index')
+         nodeAddress = int(getTagValue(nodeTagsList, 'nornet_node_address', '-1'))
+         if nodeAddress < 1:
+            error('Node ' + nodeName + ' has invalid address base')
+
+         norNetNode = {
+            'node_id'      : nodeID,
+            'node_index'   : nodeIndex,
+            'node_address' : nodeAddress,
+            'node_name'    : node['hostname'],
+            'node_model'   : node['model'],
+            'node_state'   : node['boot_state'],
+            'node_tags'    : nodeTagsList
+         }
+
+         if nodeNameToFind != None:
+            return(norNetNode)
+
+         norNetNodeList[nodeIndex] = norNetNode
+
+      if len(norNetNodeList) == 0:
+         return None
+      return(norNetNodeList)
+
+   except Exception as e:
+      error('Unable to fetch NorNet Node list: ' + str(e))
+
+
+# ###### Fetch list of NorNet sites #########################################
+def fetchNorNetNodeList():
+   log('Fetching NorNet node list ...')
+   return fetchNorNetNode(None)
+
+
+# ###### Find person ID #####################################################
+def lookupPersonID(eMail):
+   try:
+      person = plc_server.GetPersons(plc_authentication,
+                                     {'email': eMail}, ['person_id'])
+      personID = int(person[0]['person_id'])
+      return(personID)
 
    except:
-      error('Unable to fetch node list!')
+      return(0)
+
+
+# ###### Find slice ID ######################################################
+def lookupSliceID(sliceName):
+   try:
+      slice = plc_server.GetSlices(plc_authentication,
+                                   {'name': sliceName}, ['slice_id'])
+      sliceID = int(slice[0]['slice_id'])
+      return(sliceID)
+
+   except:
+      return(0)
 
 
 # ###### Get list of node tags ##############################################
