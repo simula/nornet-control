@@ -367,7 +367,7 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
       if ((version == 6) and (v4only == True)):
          continue
 
-      localNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
+      localNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_TunnelboxNode, version)
 
       if state == 'start':
          outputFile.write('   make-address ' + localInterface + ' ' + str(localNetwork) + '\n')

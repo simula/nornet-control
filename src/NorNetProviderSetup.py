@@ -50,6 +50,7 @@ NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
 
 # NorNet Internet connection to/from outside world goes via site 1!
 NorNet_InternetInterconnectSite = 1
+NorNet_TunnelboxNode            = 1
 
 
 # ###### Get NorNet provider information ####################################
