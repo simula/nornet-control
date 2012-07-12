@@ -82,16 +82,20 @@ def makeNorNetIP(provider, site, host, version):
       error('Bad host ID')
 
    if version == 4:
-      if site != 0:
+      if s != 0:
          prefix = 24;
-      else:
+      elif ((s == 0) and (p != 0)):	
          prefix = 16;
+      else:
+         prefix = 8;
       return IPv4Network('10.' + str(p) + '.' + str(s) + '.' + str(h) + '/' + str(prefix))
    else:
-      if site != 0:
+      if s != 0:
          prefix = 48;
-      else:
+      elif ((s == 0) and (p != 0)):	
          prefix = 32;
+      else:
+         prefix = 16;
       return IPv6Network('fd00:' + \
                           str.replace(hex(p), '0x', '') + ':' + \
                           str.replace(hex(s), '0x', '') + ':' + \
