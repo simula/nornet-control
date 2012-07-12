@@ -273,3 +273,36 @@ make-route ()
    # echo ip route add $destination via $nextHop dev $interface table $tableID $miscOptions
    ip route add $destination via $nextHop dev $interface table $tableID $miscOptions
 }
+
+
+# ###### Add Source NAT rule ################################################
+make-nat ()
+{
+   local sourceNetwork="$1"       # Source network (e.g. 10.0.0.0/8)
+   local range="$2"               # Public IP range (optional)
+
+   remove-nat "$sourceNetwork" "$range"
+   if [ "$range" = "" ] ; then
+      iptables -t nat -A POSTROUTING -s "$sourceNetwork" -j MASQUERADE
+   else
+      iptables -t nat -A POSTROUTING -s "$sourceNetwork" -j SNAT --to-source "$range"
+   fi
+}
+
+   
+# ###### Add Source NAT rule ################################################
+remove-nat ()
+{
+   local sourceNetwork="$1"       # Source network (e.g. 10.0.0.0/8)
+   local range="$2"               # Public IP range (optional)
+   
+   if [ "$range" = "" ] ; then
+      while iptables -t nat -D POSTROUTING -s "$sourceNetwork" -j MASQUERADE 2>/dev/null ; do
+         dummy=1
+      done
+   else
+      while iptables -t nat -D POSTROUTING -s "$sourceNetwork" -j SNAT --to-source "$range" 2>/dev/null ; do
+         dummy=1
+      done
+   fi
+}
