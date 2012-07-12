@@ -45,12 +45,20 @@ NorNet_ProviderList = {
 
    222 : [ 'Deutsches Forschungsnetz',         'dfn'      ],
 }
+
+# TOS Settings for provider selection
 NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
 
+# Source NAT range for IPv4 (to be set up at Central Site)
+# NorNet_CentralSiteIPv4NATRange = [ IPv4Address('132.252.156.240'), IPv4Address('132.252.156.249') ]
+NorNet_CentralSiteIPv4NATRange = [ IPv4Address('0.0.0.0'), IPv4Address('0.0.0.0') ]
 
-# NorNet Internet connection to/from outside world goes via site 1!
-NorNet_InternetInterconnectSite = 1
-NorNet_TunnelboxNode            = 1
+# NorNet Internet connection to/from outside world goes via Site 1!
+NorNet_SiteIndex_Central    = 1
+
+# NorNet Tunnelbox is always Node 1!
+NorNet_NodeIndex_Tunnelbox  = 1
+
 
 
 # ###### Get NorNet provider information ####################################
@@ -74,16 +82,20 @@ def makeNorNetIP(provider, site, host, version):
       error('Bad host ID')
 
    if version == 4:
-      if site != 0:
+      if s != 0:
          prefix = 24;
-      else:
+      elif ((s == 0) and (p != 0)):	
          prefix = 16;
+      else:
+         prefix = 8;
       return IPv4Network('10.' + str(p) + '.' + str(s) + '.' + str(h) + '/' + str(prefix))
    else:
-      if site != 0:
+      if s != 0:
          prefix = 48;
-      else:
+      elif ((s == 0) and (p != 0)):	
          prefix = 32;
+      else:
+         prefix = 16;
       return IPv6Network('fd00:' + \
                           str.replace(hex(p), '0x', '') + ':' + \
                           str.replace(hex(s), '0x', '') + ':' + \
