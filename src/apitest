@@ -117,16 +117,6 @@ def makeNorNetConfiguration(v4only):
    return configurationName
 
 
-# ###### Get ID for routing table ###########################################
-def _getTableID(opIndex):
-   return 1000000 + opIndex
-
-
-# ###### Get preference for routing table ###################################
-def _getTablePref(opIndex, level):
-   return 1000 + (1000 * level) + opIndex
-
-
 # ###### Get tunnel configuration ###########################################
 def _getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
    localSiteIndex      = localSite['site_index']
@@ -184,6 +174,16 @@ def _getDefaultTunnel(fullSiteList, localSite, version):
                      version)
 
 
+# ###### Get ID for routing table ###########################################
+def _getTableID(opIndex):
+   return 1000000 + opIndex
+
+
+# ###### Get preference for routing table ###################################
+def _getTablePref(opIndex, level):
+   return 1000 + (1000 * level) + opIndex
+
+
 # ###### Generate tunnelbox configuration for given provider ################
 def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvider, pathNumber, v4only):
    configurationName = 'tunnelbox-' + localSite['site_short_name'] + '-' + \
@@ -212,9 +212,9 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
 
       routingTableID = _getTableID(localProviderIndex)
       if (state == 'start'):
-         routingTableSourcePref = _getTablePref(localProviderIndex, 0)
+         routingTableDestPref   = _getTablePref(localProviderIndex, 0)
          routingTableTOSPref    = _getTablePref(localProviderIndex, 1)
-         routingTableDestPref   = _getTablePref(localProviderIndex, 2)
+         routingTableSourcePref = _getTablePref(localProviderIndex, 2)
          
          if pathNumber + 1 < len(NorNet_TOSSettings):
             routingTableTOS = NorNet_TOSSettings[pathNumber + 1]
