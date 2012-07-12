@@ -233,7 +233,7 @@ def updateNorNetInterfaces(node, site, publicDNS):
    nodeAddress          = int(node['node_address'])
    nodeName             = node['node_name']
    for providerIndex in providerList:
-      ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeAddress, 4)
+      ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeAddress, 0, 4)
       newAddressList.append(IPv4Address(ifIPv4.ip))
 
 
@@ -253,9 +253,9 @@ def updateNorNetInterfaces(node, site, publicDNS):
                   providerName = getNorNetProviderInfo(providerIndex)[1]
 
                   ifHostName        = nodeName.split('.')[0] + '-' + str.lower(providerName) + '.' + str.lower(siteDomain)
-                  ifIPv4            = makeNorNetIP(providerIndex, siteIndex, nodeAddress, 4)
-                  ifGateway         = makeNorNetIP(providerIndex, siteIndex, 1, 4)
-                  ifProviderNetwork = makeNorNetIP(providerIndex, 0, 0, 4)
+                  ifIPv4            = makeNorNetIP(providerIndex, siteIndex, nodeAddress, 0, 4)
+                  ifGateway         = makeNorNetIP(providerIndex, siteIndex, 1, 0, 4)
+                  ifProviderNetwork = makeNorNetIP(providerIndex, 0, 0, 0, 4)
                   ifAlias           = providerIndex
 
                   interface = {}

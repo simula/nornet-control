@@ -49,6 +49,10 @@ NorNet_ProviderList = {
 # TOS Settings for provider selection
 NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
 
+# Prefixes for the internal IPv4 and IPv6 networks
+NorNet_IPv4Prefix = '10'          # /8 prefix for internal IPv4 space (e.g. '10')
+NorNet_IPv6Prefix = 'fd00:0000'   # /32 prefix for internal IPv6 space (e.g. 'fd00:0000')
+
 # Source NAT range for IPv4 (to be set up at Central Site)
 # NorNet_CentralSiteIPv4NATRange = [ IPv4Address('132.252.156.240'), IPv4Address('132.252.156.249') ]
 NorNet_CentralSiteIPv4NATRange = [ IPv4Address('0.0.0.0'), IPv4Address('0.0.0.0') ]
@@ -70,37 +74,46 @@ def getNorNetProviderInfo(providerIndex):
 
 
 # ###### Get NorNet interface IPv4 address ##################################
-def makeNorNetIP(provider, site, host, version):
+def makeNorNetIP(provider, site, node, subnode, version):
    p = int(provider)
    s = int(site)
-   h = int(host)
+   n = int(node)
+   v = int(subnode)
    if ((p < 0) | (p > 255)):
       error('Bad provider ID')
    if ((s < 0) | (s > 255)):
       error('Bad site ID')
-   if ((h < 0) | (h > 255)):
+   if ((n < 0) | (n > 255)):
       error('Bad host ID')
 
    if version == 4:
+      if v != 0:
+         error('Bad subnode ID; must be 0 for IPv4')
       if s != 0:
          prefix = 24;
-      elif ((s == 0) and (p != 0)):	
+      elif p != 0:
          prefix = 16;
       else:
          prefix = 8;
-      return IPv4Network('10.' + str(p) + '.' + str(s) + '.' + str(h) + '/' + str(prefix))
+      return IPv4Network(NorNet_IPv4Prefix + '.' + \
+                         str(p) + '.' + str(s) + '.' + str(n) + '/' + str(prefix))
    else:
-      if s != 0:
-         prefix = 48;
-      elif ((s == 0) and (p != 0)):	
-         prefix = 32;
+      if ((v < 0) | (v > 255)):
+         error('Bad subnode ID')
+      if v != 0:
+         prefix = 64;
+      elif n != 0:
+         prefix = 56;   # NorNet + Provider + Site + Host
+      elif s != 0:
+         prefix = 48;   # NorNet + Provider + Site
+      elif p != 0:
+         prefix = 40;   # NorNet + Provider
       else:
-         prefix = 16;
-      return IPv6Network('fd00:' + \
-                          str.replace(hex(p), '0x', '') + ':' + \
-                          str.replace(hex(s), '0x', '') + ':' + \
-                          str.replace(hex(h), '0x', '') + ':0:0::' + \
-                          str.replace(hex(h), '0x', '') + '/' + str(prefix))
+         prefix = 32;   # NorNet
+      return IPv6Network(NorNet_IPv6Prefix + ':' + \
+                          str.replace(hex((p << 8) | s), '0x', '') + ':' + \
+                          str.replace(hex((n << 8) | v), '0x', '') + '::' + \
+                          str.replace(hex(n), '0x', '') + '/' + str(prefix))
 
 
 # ###### Get NorNet tunnel inner IPv4 address ###############################

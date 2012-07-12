@@ -86,8 +86,8 @@ def makeSiteConfiguration(fullSiteList, site, v4only):
    for providerIndex in siteProviderList:
       provider            = siteProviderList[providerIndex]
       providerShortName   = provider['provider_short_name']
-      providerNetworkIPv4 = makeNorNetIP(providerIndex, siteIndex, 0, 4)
-      providerNetworkIPv6 = makeNorNetIP(providerIndex, siteIndex, 0, 6)
+      providerNetworkIPv4 = makeNorNetIP(providerIndex, siteIndex, 0, 0, 4)
+      providerNetworkIPv6 = makeNorNetIP(providerIndex, siteIndex, 0, 0, 6)
       outputFile.write(siteShortName + '_' + providerShortName + '_network_ipv4="' + str(providerNetworkIPv4) + '"\n')
       outputFile.write(siteShortName + '_' + providerShortName + '_network_ipv6="' + str(providerNetworkIPv6) + '"\n')
 
@@ -233,7 +233,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
          for version in [ 4, 6 ]:
             if ((version == 6) and (v4only == True)):
                continue
-            localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
+            localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, version)
             outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + ' to ' + str(localProviderNetwork) + '\n')
 
          # ====== TOS rule ==================================================
@@ -246,7 +246,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
          for version in [ 4, 6 ]:
             if ((version == 6) and (v4only == True)):
                continue
-            localProviderNetwork = makeNorNetIP(localProviderIndex, 0, 0, version)
+            localProviderNetwork = makeNorNetIP(localProviderIndex, 0, 0, 0, version)
             outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableSourcePref) + ' from ' + str(localProviderNetwork) + '\n')
 
       elif (state == 'stop'):
@@ -279,7 +279,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                if ((version == 6) and (v4only == True)):
                   continue
                tunnel        = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
-               remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, version)
+               remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, 0, version)
 
                outputFile.write('   log-action "Tunnel ' + tunnel['tunnel_interface'] + ': ' + \
                                 str(tunnel['tunnel_local_inner_address'])  + ' <--> ' + \
@@ -383,7 +383,7 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
       if ((version == 6) and (v4only == True)):
          continue
 
-      localNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
+      localNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, 0, version)
 
       if state == 'start':
          outputFile.write('   make-address ' + localInterface + ' ' + str(localNetwork) + '\n')
@@ -405,7 +405,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
    if not re.match(r"^[a-z][a-z0-9-\.]*$", localInterface):
       error('Bad local interface setting for site ' + localSite['site_long_name'])
    sourceNatRange    = getTagValue(localSite['site_tags'], 'nornet_site_tb_nat_range_ipv4', '')
-   fullNorNetIPv4    = makeNorNetIP(0, 0, 0, 4)
+   fullNorNetIPv4    = makeNorNetIP(0, 0, 0, 0, 4)
 
 
    # ====== Remove local setup ==============================================
