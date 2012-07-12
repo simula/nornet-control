@@ -87,7 +87,8 @@ def makeNorNetIP(provider, site, host, version):
       return IPv6Network('fd00:' + \
                           str.replace(hex(p), '0x', '') + ':' + \
                           str.replace(hex(s), '0x', '') + ':' + \
-                          str.replace(hex(h), '0x', '') + ':0:0::/' + str(prefix))
+                          str.replace(hex(h), '0x', '') + ':0:0::' + \
+                          str.replace(hex(h), '0x', '') + '/' + str(prefix))
 
 
 # ###### Get NorNet tunnel inner IPv4 address ###############################
