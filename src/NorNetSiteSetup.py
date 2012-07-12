@@ -298,15 +298,15 @@ def updateNorNetInterfaces(node, site, publicDNS):
 # ###### Create NorNet node #################################################
 def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
                    pcuID, pcuPort, publicDNS):
-      nodeHostName = nodeNiceName   # Domain to be added below!
+   nodeHostName = nodeNiceName   # Domain to be added below!
 
-      # ====== Get site information ============================================
-      siteNorNetIndex = int(getTagValue(site['site_tags'], 'nornet_site_index', '-1'))
-      if siteNorNetIndex < 0:
-         error("Site " + site['site_long_name'] + ' has no NorNet site index!')
-      siteNorNetDomain = getTagValue(site['site_tags'], 'nornet_site_domain', '')
-      if siteNorNetIndex == '':
-         error("Site " + site['site_long_name'] + ' has no NorNet domain name!')
+   # ====== Get site information ============================================
+   siteNorNetIndex = int(getTagValue(site['site_tags'], 'nornet_site_index', '-1'))
+   if siteNorNetIndex < 0:
+      error("Site " + site['site_long_name'] + ' has no NorNet site index!')
+   siteNorNetDomain = getTagValue(site['site_tags'], 'nornet_site_domain', '')
+   if siteNorNetIndex == '':
+      error("Site " + site['site_long_name'] + ' has no NorNet domain name!')
 
    # ====== Create node =====================================================
    try:

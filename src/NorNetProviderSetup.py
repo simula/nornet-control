@@ -50,6 +50,7 @@ NorNet_ProviderList = {
 NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
 
 # Source NAT range for IPv4 (to be set up at Central Site)
+# NorNet_CentralSiteIPv4NATRange = [ IPv4Address('132.252.156.240'), IPv4Address('132.252.156.249') ]
 NorNet_CentralSiteIPv4NATRange = [ IPv4Address('0.0.0.0'), IPv4Address('0.0.0.0') ]
 
 # NorNet Internet connection to/from outside world goes via Site 1!
