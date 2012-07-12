@@ -215,7 +215,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
          routingTableDestPref   = _getTablePref(localProviderIndex, 0)
          routingTableTOSPref    = _getTablePref(localProviderIndex, 1)
          routingTableSourcePref = _getTablePref(localProviderIndex, 2)
-         
+
          if pathNumber + 1 < len(NorNet_TOSSettings):
             routingTableTOS = NorNet_TOSSettings[pathNumber + 1]
          else:
@@ -226,8 +226,24 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
          outputFile.write('   make-table ' + str(routingTableID) + '   # ' + \
                           localProvider['provider_long_name'] + ' table\n')
 
+         # ====== Destination rules =========================================
+         # For directly connected NorNet networks, skip further rules and go
+         # to "main" table!
+         providerList = getNorNetProvidersForSite(localSite)
+         for version in [ 4, 6 ]:
+            if ((version == 6) and (v4only == True)):
+               continue
+            for providerIndex in providerList:
+               providerNetwork = makeNorNetIP(providerIndex, localSiteIndex, 0, version)
+               outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + ' to ' + str(providerNetwork) + '\n')
+
+         # ====== TOS rule ==================================================
+         # If TOS is set, select outgoing provider accordingly
          if routingTableTOS != 0x00:
             outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableTOSPref) + ' tos ' + hex(routingTableTOS) + '\n')
+
+         # ====== Source rules ==============================================
+         # Otherwise, use source address to determine the outgoing provider.
          for version in [ 4, 6 ]:
             if ((version == 6) and (v4only == True)):
                continue
