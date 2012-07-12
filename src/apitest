@@ -395,6 +395,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
    outputFile.write('   log-action "Turning off IP forwarding..."\n')
    outputFile.write('   sysctl -q net.ipv4.ip_forward=0\n')
    outputFile.write('   sysctl -q net.ipv6.conf.all.forwarding=0\n')
+   outputFile.write('   log-result 1\n')
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'stop', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex, v4only)
@@ -421,6 +422,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
    outputFile.write('   sysctl -q net.ipv4.ip_forward=1\n')
    outputFile.write('   sysctl -q net.ipv6.conf.all.forwarding=1\n')
    outputFile.write('   sysctl -q net.ipv4.tcp_ecn=1\n')
+   outputFile.write('   log-result 1\n')
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'start', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex, v4only)
