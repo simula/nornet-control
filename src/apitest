@@ -178,7 +178,7 @@ def _getDefaultTunnel(fullSiteList, localSite, version):
    localSiteProviders          = getNorNetProvidersForSite(localSite)
    localDefaultProviderIndex   = localSite['site_default_provider_index']
 
-   centralSite                 = fullSiteList[NorNet_InternetInterconnectSite]
+   centralSite                 = fullSiteList[NorNet_SiteIndex_Central]
    centralSiteProviders        = getNorNetProvidersForSite(centralSite)
    centralDefaultProviderIndex = centralSite['site_default_provider_index']
 
@@ -332,7 +332,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
 
       # ====== Default route to central site ================================
       if (state == 'start'):
-         if (localSiteIndex != NorNet_InternetInterconnectSite):
+         if (localSiteIndex != NorNet_SiteIndex_Central):
             for version in [ 4, 6 ]:
                if ((version == 6) and (v4only == True)):
                   continue
@@ -367,7 +367,7 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
       if ((version == 6) and (v4only == True)):
          continue
 
-      localNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_TunnelboxNode, version)
+      localNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
 
       if state == 'start':
          outputFile.write('   make-address ' + localInterface + ' ' + str(localNetwork) + '\n')
@@ -376,7 +376,7 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
 
    outputFile.write('   log-result 1\n')
 
-   
+
 # ###### Generate tunnelbox configuration ###################################
 def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
    configurationName = 'tunnelbox-' + localSite['site_short_name'] + '-config'
@@ -388,16 +388,23 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
    localInterface    = getTagValue(localSite['site_tags'], 'nornet_site_tb_internal_interface', '')
    if not re.match(r"^[a-z][a-z0-9-\.]*$", localInterface):
       error('Bad local interface setting for site ' + localSite['site_long_name'])
+   sourceNatRange    = getTagValue(localSite['site_tags'], 'nornet_site_tb_nat_range_ipv4', '')
+   fullNorNetIPv4    = makeNorNetIP(0, 0, 0, 4)
 
 
    # ====== Remove local setup ==============================================
    outputFile.write('if [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
-   outputFile.write('   log-action "Turning off IP forwarding..."\n')
+   outputFile.write('   log-action "Turning off IP forwarding ..."\n')
    outputFile.write('   sysctl -q net.ipv4.ip_forward=0\n')
    outputFile.write('   sysctl -q net.ipv6.conf.all.forwarding=0\n')
+   outputFile.write('   log-result 1\n')
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'stop', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex, v4only)
+   if localSiteIndex == NorNet_SiteIndex_Central:
+      outputFile.write('   log-action "Turning off IPv4 NAT ..."\n')
+      outputFile.write('   remove-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '"\n')
+      outputFile.write('   log-result 1\n')
    outputFile.write('fi\n\n')
 
 
@@ -421,9 +428,14 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
    outputFile.write('   sysctl -q net.ipv4.ip_forward=1\n')
    outputFile.write('   sysctl -q net.ipv6.conf.all.forwarding=1\n')
    outputFile.write('   sysctl -q net.ipv4.tcp_ecn=1\n')
+   outputFile.write('   log-result 1\n')
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'start', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex, v4only)
+   if localSiteIndex == NorNet_SiteIndex_Central:
+      outputFile.write('   log-action "Turning on IPv4 NAT ..."\n')
+      outputFile.write('   make-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '"\n')
+      outputFile.write('   log-result 1\n')
    outputFile.write('fi\n')
 
    outputFile.close()
