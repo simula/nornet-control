@@ -374,7 +374,9 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
       elif state == 'stop':
          outputFile.write('   remove-address ' + localInterface + ' ' + str(localNetwork) + '\n')
 
+   outputFile.write('   log-result 1\n')
 
+   
 # ###### Generate tunnelbox configuration ###################################
 def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
    configurationName = 'tunnelbox-' + localSite['site_short_name'] + '-config'
@@ -391,8 +393,8 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
    # ====== Remove local setup ==============================================
    outputFile.write('if [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
    outputFile.write('   log-action "Turning off IP forwarding..."\n')
-   outputFile.write('   sysctl net.ipv4.ip_forward=0\n')
-   outputFile.write('   sysctl net.ipv6.conf.all.forwarding=0\n')
+   outputFile.write('   sysctl -q net.ipv4.ip_forward=0\n')
+   outputFile.write('   sysctl -q net.ipv6.conf.all.forwarding=0\n')
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'stop', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex, v4only)
@@ -416,9 +418,9 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
    # ====== Make local setup ================================================
    outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
    outputFile.write('   log-action "Turning on IP forwarding..."\n')
-   outputFile.write('   sysctl net.ipv4.ip_forward=1\n')
-   outputFile.write('   sysctl net.ipv6.conf.all.forwarding=1\n')
-   outputFile.write('   sysctl net.ipv4.tcp_ecn=1\n')
+   outputFile.write('   sysctl -q net.ipv4.ip_forward=1\n')
+   outputFile.write('   sysctl -q net.ipv6.conf.all.forwarding=1\n')
+   outputFile.write('   sysctl -q net.ipv4.tcp_ecn=1\n')
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'start', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex, v4only)
