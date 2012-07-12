@@ -123,11 +123,8 @@ def _getTableID(opIndex):
 
 
 # ###### Get preference for routing table ###################################
-def _getTablePref(opIndex, tos):
-   if tos != 0:
-     return 100 + opIndex
-   else:
-     return 1000 + opIndex
+def _getTablePref(opIndex, level):
+   return 1000 + (1000 * level) + opIndex
 
 
 # ###### Get tunnel configuration ###########################################
@@ -215,8 +212,10 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
 
       routingTableID = _getTableID(localProviderIndex)
       if (state == 'start'):
-         routingTableTOSPref    = _getTablePref(localProviderIndex, 1)
          routingTableSourcePref = _getTablePref(localProviderIndex, 0)
+         routingTableTOSPref    = _getTablePref(localProviderIndex, 1)
+         routingTableDestPref   = _getTablePref(localProviderIndex, 2)
+         
          if pathNumber + 1 < len(NorNet_TOSSettings):
             routingTableTOS = NorNet_TOSSettings[pathNumber + 1]
          else:
@@ -226,6 +225,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                           localProvider['provider_long_name'] + '"\n')
          outputFile.write('   make-table ' + str(routingTableID) + '   # ' + \
                           localProvider['provider_long_name'] + ' table\n')
+
          if routingTableTOS != 0x00:
             outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableTOSPref) + ' tos ' + hex(routingTableTOS) + '\n')
          for version in [ 4, 6 ]:
@@ -233,6 +233,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                continue
             localProviderNetwork = makeNorNetIP(localProviderIndex, 0, 0, version)
             outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableSourcePref) + ' from ' + str(localProviderNetwork) + '\n')
+
       elif (state == 'stop'):
          outputFile.write('   remove-table ' + str(routingTableID) + '\n')
 
