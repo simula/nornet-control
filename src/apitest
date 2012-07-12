@@ -228,14 +228,13 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
 
          # ====== Destination rules =========================================
          # For directly connected NorNet networks, skip further rules and go
-         # to "main" table!
+         # to "main" table instead!
          providerList = getNorNetProvidersForSite(localSite)
          for version in [ 4, 6 ]:
             if ((version == 6) and (v4only == True)):
                continue
-            for providerIndex in providerList:
-               providerNetwork = makeNorNetIP(providerIndex, localSiteIndex, 0, version)
-               outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + ' to ' + str(providerNetwork) + '\n')
+            localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
+            outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + ' to ' + str(localProviderNetwork) + '\n')
 
          # ====== TOS rule ==================================================
          # If TOS is set, select outgoing provider accordingly

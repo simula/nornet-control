@@ -245,12 +245,21 @@ add-table-selector ()
             v6option="-6"
          fi
          shift
+      elif [ "$1" = "to" ] ; then
+         selectorOptions="$selectorOptions to $2"
+         if [[ "$2" =~ : ]] ; then
+            v6option="-6"
+         fi
+         shift
       elif [ "$1" = "tos" ] ; then
          selectorOptions="$selectorOptions tos $2"
          shift
       elif [ "$1" = "fwmark" ] ; then
          selectorOptions="$selectorOptions fwmark $2"
          shift
+      else
+         echo >&2 "ERROR: Unknown selector "$1"!"
+         exit 1
       fi
       shift
    done
