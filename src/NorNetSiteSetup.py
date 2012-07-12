@@ -309,7 +309,7 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
          error("Site " + site['site_long_name'] + ' has no NorNet domain name!')
 
    # ====== Create node =====================================================
-   #try:
+   try:
       nodeHostName = nodeHostName + '.' + str.lower(siteNorNetDomain);
       log('Adding node ' + nodeHostName + ' to site ' + site['site_long_name'] + ' ...')
 
@@ -341,5 +341,5 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
 
       return newNode
 
-   #except Exception as e:
-      #error('Adding node ' + nodeHostName + ' has failed: ' + str(e))
+   except Exception as e:
+      error('Adding node ' + nodeHostName + ' has failed: ' + str(e))
