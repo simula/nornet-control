@@ -35,17 +35,19 @@ from NorNetSiteSetup     import *;
 # WARNING: A previous test setup is completely REMOVED!
 def createTestConfiguration(userName, sliceName):
    # ====== Create tags =====================================================
-   makeTagType('site/nornet', 'NorNet Managed Site',                'nornet_is_managed_site')
-   makeTagType('site/nornet', 'NorNet Site Index',                  'nornet_site_index')
-   makeTagType('site/nornet', 'NorNet Site Domain Name',            'nornet_site_domain')
-   makeTagType('site/nornet', 'NorNet Site City',                   'nornet_site_city')
-   makeTagType('site/nornet', 'NorNet Site Province',               'nornet_site_province')
-   makeTagType('site/nornet', 'NorNet Site Country',                'nornet_site_country')
-   makeTagType('site/nornet', 'NorNet Site Country Code',           'nornet_site_country_code')
-   makeTagType('site/nornet', 'NorNet Site Default Provider Index', 'nornet_site_default_provider_index')
+   makeTagType('site/nornet', 'NorNet Managed Site',                      'nornet_is_managed_site')
+   makeTagType('site/nornet', 'NorNet Site Index',                        'nornet_site_index')
+   makeTagType('site/nornet', 'NorNet Site Domain Name',                  'nornet_site_domain')
+   makeTagType('site/nornet', 'NorNet Site City',                         'nornet_site_city')
+   makeTagType('site/nornet', 'NorNet Site Province',                     'nornet_site_province')
+   makeTagType('site/nornet', 'NorNet Site Country',                      'nornet_site_country')
+   makeTagType('site/nornet', 'NorNet Site Country Code',                 'nornet_site_country_code')
+   makeTagType('site/nornet', 'NorNet Site Default Provider Index',       'nornet_site_default_provider_index')
+   makeTagType('site/nornet', 'NorNet Site Tunnelbox Internal Interface', 'nornet_site_tb_internal_interface')
 
    for i in range(0, NorNet_MaxProviders - 1):
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Index',        'nornet_site_tbp' + str(i) + '_index')
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Interface',    'nornet_site_tbp' + str(i) + '_interface')
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv4', 'nornet_site_tbp' + str(i) + '_address_ipv4')
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv6', 'nornet_site_tbp' + str(i) + '_address_ipv6')
 
@@ -67,28 +69,28 @@ def createTestConfiguration(userName, sliceName):
    siteAlphaNorNetIndex = 1
    siteAlpha = makeNorNetSite('Alpha Test Site', 'TA', 'ta', 'http://www.alpha.site', 'alpha.site',
                               siteAlphaNorNetIndex, 'Ullevål', 'Østlandet', 'Norge', 'NO', 10.0, 50.0, [
-                                 [ 'Uninett', IPv4Address('132.252.156.70'), IPv6Address('fd55:5555::70') ],
-                                 [ 'Telenor', IPv4Address('169.254.100.70'), IPv6Address('::') ]
-                              ], 'Uninett')
+                                 [ 'Uninett', 'eth0', IPv4Address('132.252.156.70'), IPv6Address('fd55:5555::70') ],
+                                 [ 'Telenor', 'eth0', IPv4Address('169.254.100.70'), IPv6Address('::') ]
+                              ], 'Uninett', 'eth0')
    siteAlphaPCUID = makeNorNetPCU(siteAlpha, 'pcu', 'alpha.site', IPv4Address('132.252.156.2'),
                                   'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 
    siteBetaNorNetIndex = 2
    siteBeta  = makeNorNetSite('Beta Test Site', 'TB', 'tb', 'http://www.beta.site', 'beta.site',
                               siteBetaNorNetIndex, 'Bygdøy',  'Østlandet', 'Norge', 'NO', 15.0, 55.0, [
-                                 [ 'Uninett', IPv4Address('132.252.156.71'), IPv6Address('fd55:5555::71') ],
-                                 [ 'Telenor', IPv4Address('169.254.100.71'), IPv6Address('::') ]
-                              ], 'Uninett')
+                                 [ 'Uninett', 'eth0', IPv4Address('132.252.156.71'), IPv6Address('fd55:5555::71') ],
+                                 [ 'Telenor', 'eth0', IPv4Address('169.254.100.71'), IPv6Address('::') ]
+                              ], 'Uninett', 'eth0')
    siteBetaPCUID = makeNorNetPCU(siteBeta, 'pcu', 'beta.site', IPv4Address('132.252.156.3'),
                                  'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 
    siteGammaNorNetIndex = 3
    siteGamma = makeNorNetSite('Gamma Test Site', 'TC', 'tc', 'http://www.gamma.site', 'gamma.site',
                               siteGammaNorNetIndex, 'Essen',  'Nordrhein-Westfalen', 'Deutschland', 'DE', 12.5, 40.0, [
-                                 [ 'Uninett', IPv4Address('132.252.156.72'), IPv6Address('::') ],
-                                 [ 'Telenor', IPv4Address('169.254.100.72'), IPv6Address('::') ],
-                                 [ 'Deutsches Forschungsnetz', IPv4Address('172.31.255.72'),  IPv6Address('::') ]
-                              ], 'Uninett')
+                                 [ 'Uninett', 'eth0', IPv4Address('132.252.156.72'), IPv6Address('::') ],
+                                 [ 'Telenor', 'eth0', IPv4Address('169.254.100.72'), IPv6Address('::') ],
+                                 [ 'Deutsches Forschungsnetz', 'eth0', IPv4Address('172.31.255.72'),  IPv6Address('::') ]
+                              ], 'Uninett', 'eth0')
    siteGammaPCUID = makeNorNetPCU(siteGamma, 'pcu', 'gamma.site', IPv4Address('132.252.156.4'),
                                   'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 

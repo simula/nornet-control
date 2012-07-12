@@ -62,7 +62,7 @@ def removeNorNetSite(siteName):
 def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDomain,
                    siteNorNetIndex, siteCity, siteProvince, cityCountry, siteCountryCode,
                    siteLatitude, siteLogitude,
-                   providerList, defaultProvider):
+                   providerList, defaultProvider, tbInternalInterface):
    try:
       log('Adding site ' + siteName + ' ...')
 
@@ -95,6 +95,9 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
       if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_country_code', siteCountryCode) <= 0:
          error('Unable to add "nornet_site_country_code" tag to site ' + siteName)
 
+      if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tb_internal_interface', tbInternalInterface) <= 0:
+         error('Unable to add "nornet_site_tb_internal_interface" tag to site ' + siteName)
+
       gotDefaultProvider = False
       i = 0
       for provider in providerList:
@@ -112,11 +115,14 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
                   error('Unable to add "nornet_site_default_provider_index" tag to site ' + siteName)
                gotDefaultProvider = True
 
-            providerIPv4 = IPv4Address(provider[1])
-            providerIPv6 = IPv6Address(provider[2])
+            providerInterface = str(provider[1])
+            providerIPv4      = IPv4Address(provider[2])
+            providerIPv6      = IPv6Address(provider[3])
 
             if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tbp' + str(i) + '_index', str(providerIndex)) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_index" tag to site ' + siteName)
+            if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tbp' + str(i) + '_interface', providerInterface) <= 0:
+               error('Unable to add "nornet_site_tbp' + str(i) + '_interface" tag to site ' + siteName)
             if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tbp' + str(i) + '_address_ipv4', str(providerIPv4)) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_ipv4" tag to site ' + siteName)
             if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tbp' + str(i) + '_address_ipv6', str(providerIPv6)) <= 0:
