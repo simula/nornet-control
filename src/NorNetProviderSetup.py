@@ -45,12 +45,19 @@ NorNet_ProviderList = {
 
    222 : [ 'Deutsches Forschungsnetz',         'dfn'      ],
 }
+
+# TOS Settings for provider selection
 NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
 
+# Source NAT range for IPv4 (to be set up at Central Site)
+NorNet_CentralSiteIPv4NATRange = [ IPv4Address('0.0.0.0'), IPv4Address('0.0.0.0') ]
 
-# NorNet Internet connection to/from outside world goes via site 1!
-NorNet_InternetInterconnectSite = 1
-NorNet_TunnelboxNode            = 1
+# NorNet Internet connection to/from outside world goes via Site 1!
+NorNet_SiteIndex_Central    = 1
+
+# NorNet Tunnelbox is always Node 1!
+NorNet_NodeIndex_Tunnelbox  = 1
+
 
 
 # ###### Get NorNet provider information ####################################

@@ -178,7 +178,7 @@ def _getDefaultTunnel(fullSiteList, localSite, version):
    localSiteProviders          = getNorNetProvidersForSite(localSite)
    localDefaultProviderIndex   = localSite['site_default_provider_index']
 
-   centralSite                 = fullSiteList[NorNet_InternetInterconnectSite]
+   centralSite                 = fullSiteList[NorNet_SiteIndex_Central]
    centralSiteProviders        = getNorNetProvidersForSite(centralSite)
    centralDefaultProviderIndex = centralSite['site_default_provider_index']
 
@@ -332,7 +332,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
 
       # ====== Default route to central site ================================
       if (state == 'start'):
-         if (localSiteIndex != NorNet_InternetInterconnectSite):
+         if (localSiteIndex != NorNet_SiteIndex_Central):
             for version in [ 4, 6 ]:
                if ((version == 6) and (v4only == True)):
                   continue
@@ -367,7 +367,7 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
       if ((version == 6) and (v4only == True)):
          continue
 
-      localNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_TunnelboxNode, version)
+      localNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
 
       if state == 'start':
          outputFile.write('   make-address ' + localInterface + ' ' + str(localNetwork) + '\n')
@@ -376,7 +376,7 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
 
    outputFile.write('   log-result 1\n')
 
-   
+
 # ###### Generate tunnelbox configuration ###################################
 def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
    configurationName = 'tunnelbox-' + localSite['site_short_name'] + '-config'
