@@ -401,13 +401,16 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
 
    # ====== Configure tunnels and routing ===================================
    pathNumber        = 0
-   for localProviderIndex in localProviderList:
-      localProvider = localProviderList[localProviderIndex]
-      tbpName = _makeTunnelboxProvider(fullSiteList, localSite,
-                                       localProviderList, localProvider,
-                                       pathNumber, v4only)
-      outputFile.write('. ./' + tbpName + '\n')
-      pathNumber = pathNumber + 1
+   for onlyDefault in [ True, False ]:
+      for localProviderIndex in localProviderList:
+         if ( ((onlyDefault == True)  and (localProviderIndex == localSite['site_default_provider_index'])) or \
+              ((onlyDefault == False) and (localProviderIndex != localSite['site_default_provider_index'])) ):
+            localProvider = localProviderList[localProviderIndex]
+            tbpName = _makeTunnelboxProvider(fullSiteList, localSite,
+                                             localProviderList, localProvider,
+                                             pathNumber, v4only)
+            outputFile.write('. ./' + tbpName +'\n')
+            pathNumber = pathNumber + 1
 
 
    # ====== Make local setup ================================================
