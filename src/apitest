@@ -452,6 +452,13 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
       outputFile.write('   log-action "Turning on IPv4 NAT ..."\n')
       outputFile.write('   make-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '"\n')
       outputFile.write('   log-result 1\n')
+   outputFile.write('fi\n\n')
+
+
+   outputFile.write('\nif [ "$state" = "stop" -o "$state" = "start" -o "$state" = "restart" ] ; then\n')
+   outputFile.write('   log-action "Flushing route cache ..."\n')
+   outputFile.write('   ip route flush cache\n')
+   outputFile.write('   log-result 1\n')
    outputFile.write('fi\n')
 
    outputFile.close()

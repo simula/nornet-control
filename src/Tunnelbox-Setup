@@ -29,8 +29,8 @@ site="$1"
 state="$2"
 
 if [ "$state" != "start" -a "$state" != "stop" -a \
-     "$state" != "restart" -a "$state" != "status" -a "$state" != "reset" ] ; then
-   echo >&2 "Usage: $0 [start|stop|status|reset]"
+     "$state" != "restart" -a "$state" != "status" -a "$state" != "reset" -a "$state" != "coldstart" ] ; then
+   echo >&2 "Usage: $0 [start|stop|status|reset|coldstart]"
    exit 1
 fi
 
@@ -43,14 +43,19 @@ fi
 . ./$WORK_DIRECTORY/Routing-Setup
 
 
-if [ "$state" = "reset" ] ; then
+if [ "$state" = "reset" -o "$state" = "coldstart" ] ; then
    ip rule flush
    ip rule del lookup local || true
    ip rule add from all lookup local   pref 0
    ip rule add from all lookup main    pref 32766
    ip rule add from all lookup default pref 32767
+   ip route flush cache
    iptables -t nat -F POSTROUTING
-   state="stop"
+   if [ "$state" = "coldstart" ] ; then
+      state="restart"
+   else
+      state="stop"
+   fi
 fi
 
 
