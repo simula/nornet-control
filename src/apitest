@@ -131,7 +131,7 @@ def _getTablePref(opIndex, tos):
 
 
 # ###### Get tunnel configuration ###########################################
-def getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
+def _getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
    localSiteIndex      = localSite['site_index']
    localProviderIndex  = localProvider['provider_index']
    localSiteTags       = localSite['site_tags']
@@ -171,6 +171,20 @@ def getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
    }
 
    return norNetTunnel
+
+
+# ###### Get tunnel configuration for default tunnel to central site ########
+def _getDefaultTunnel(fullSiteList, localSite, version):
+   localSiteProviders          = getNorNetProvidersForSite(localSite)
+   localDefaultProviderIndex   = localSite['site_default_provider_index']
+
+   centralSite                 = fullSiteList[NorNet_InternetInterconnectSite]
+   centralSiteProviders        = getNorNetProvidersForSite(centralSite)
+   centralDefaultProviderIndex = centralSite['site_default_provider_index']
+
+   return _getTunnel(localSite, localSiteProviders[localDefaultProviderIndex],
+                     centralSite, centralSiteProviders[centralDefaultProviderIndex],
+                     version)
 
 
 # ###### Generate tunnelbox configuration for given provider ################
@@ -223,6 +237,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
          outputFile.write('   remove-table ' + str(routingTableID) + '\n')
 
 
+
       # ====== Create provider-specific tunnels and routes ==================
       for remoteSiteIndex in fullSiteList:
          if remoteSiteIndex == localSiteIndex:
@@ -247,7 +262,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
             for version in [ 4, 6 ]:
                if ((version == 6) and (v4only == True)):
                   continue
-               tunnel        = getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
+               tunnel        = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
                remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, version)
 
                outputFile.write('   log-action "Tunnel ' + tunnel['tunnel_interface'] + ': ' + \
@@ -287,8 +302,9 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    ' (' + str(localProvider['provider_index']) + ')]"\n')
 
 
-               # ====== Create provider-specific routing table entries ======
+               # ====== Create routing table entries ========================
                if (state == 'start'):
+                  # ====== Entry into provider-specific routing table =======
                   outputFile.write('   make-route ' + \
                                    str(routingTableID) + ' ' +
                                    str(remoteNetwork) + ' ' +
@@ -296,6 +312,8 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    str(tunnel['tunnel_remote_inner_address']) + '   # via ' + \
                                    localProvider['provider_long_name'] + ' <--> ' + \
                                    remoteProvider['provider_long_name'] + ' tunnel\n')
+
+                  # ====== Entry into global routing table ==================
                   metric = 10 + pathNumber
                   if remoteProviderIndex == localProviderIndex:
                      metric = 5
@@ -312,6 +330,19 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                   outputFile.write('   log-result 1\n')
 
 
+      # ====== Default route to central site ================================
+      if (state == 'start'):
+         if (localSiteIndex != NorNet_InternetInterconnectSite):
+            for version in [ 4, 6 ]:
+               if ((version == 6) and (v4only == True)):
+                  continue
+               defaultTunnel = _getDefaultTunnel(fullSiteList, localSite, version)
+               outputFile.write('   make-route ' + \
+                                str(routingTableID) + ' ' +
+                                'default ' +
+                                defaultTunnel['tunnel_interface'] + ' ' + \
+                                str(defaultTunnel['tunnel_remote_inner_address']) + '   # DEFAULT to CENTRAL SITE\n')
+
       outputFile.write('fi\n\n')
       pathNumber = pathNumber + 1
 
@@ -319,22 +350,81 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
    return configurationName
 
 
+# ###### Generate tunnelbox configuration for local network #################
+def _makeTunnelboxNetwork(outputFile, state, localInterface,
+                          localProvider, localSiteIndex, v4only):
+   localProviderIndex = localProvider['provider_index']
+
+   action = ''
+   if (state == 'start'):
+      action = 'Setting up'
+   elif (state == 'stop'):
+      action = 'Tearing down'
+   outputFile.write('   log-action "' + action + ' local networks for ' + \
+                    localProvider['provider_long_name'] + ' ..."\n')
+
+   for version in [ 4, 6 ]:
+      if ((version == 6) and (v4only == True)):
+         continue
+
+      localNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_TunnelboxNode, version)
+
+      if state == 'start':
+         outputFile.write('   make-address ' + localInterface + ' ' + str(localNetwork) + '\n')
+      elif state == 'stop':
+         outputFile.write('   remove-address ' + localInterface + ' ' + str(localNetwork) + '\n')
+
+   outputFile.write('   log-result 1\n')
+
+   
 # ###### Generate tunnelbox configuration ###################################
 def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
    configurationName = 'tunnelbox-' + localSite['site_short_name'] + '-config'
    outputFile = makeConfigFile('Tunnelbox', configurationName)
    log('Making tunnelbox configuration for ' + localSite['site_long_name'] + ' ...')
 
-   localProviderList = getNorNetProvidersForSite(localSite)
    localSiteIndex    = localSite['site_index']
-   pathNumber        = 0
+   localProviderList = getNorNetProvidersForSite(localSite)
+   localInterface    = getTagValue(localSite['site_tags'], 'nornet_site_tb_internal_interface', '')
+   if not re.match(r"^[a-z][a-z0-9-\.]*$", localInterface):
+      error('Bad local interface setting for site ' + localSite['site_long_name'])
+
+
+   # ====== Remove local setup ==============================================
+   outputFile.write('if [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
+   outputFile.write('   log-action "Turning off IP forwarding..."\n')
+   outputFile.write('   sysctl -q net.ipv4.ip_forward=0\n')
+   outputFile.write('   sysctl -q net.ipv6.conf.all.forwarding=0\n')
    for localProviderIndex in localProviderList:
-      localProvider = localProviderList[localProviderIndex]
-      tbpName = _makeTunnelboxProvider(fullSiteList, localSite,
-                                       localProviderList, localProvider,
-                                       pathNumber, v4only)
-      outputFile.write('. ./' + tbpName + '\n')
-      pathNumber = pathNumber + 1
+      _makeTunnelboxNetwork(outputFile, 'stop', localInterface,
+                            localProviderList[localProviderIndex], localSiteIndex, v4only)
+   outputFile.write('fi\n\n')
+
+
+   # ====== Configure tunnels and routing ===================================
+   pathNumber        = 0
+   for onlyDefault in [ True, False ]:
+      for localProviderIndex in localProviderList:
+         if ( ((onlyDefault == True)  and (localProviderIndex == localSite['site_default_provider_index'])) or \
+              ((onlyDefault == False) and (localProviderIndex != localSite['site_default_provider_index'])) ):
+            localProvider = localProviderList[localProviderIndex]
+            tbpName = _makeTunnelboxProvider(fullSiteList, localSite,
+                                             localProviderList, localProvider,
+                                             pathNumber, v4only)
+            outputFile.write('. ./' + tbpName +'\n')
+            pathNumber = pathNumber + 1
+
+
+   # ====== Make local setup ================================================
+   outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
+   outputFile.write('   log-action "Turning on IP forwarding..."\n')
+   outputFile.write('   sysctl -q net.ipv4.ip_forward=1\n')
+   outputFile.write('   sysctl -q net.ipv6.conf.all.forwarding=1\n')
+   outputFile.write('   sysctl -q net.ipv4.tcp_ecn=1\n')
+   for localProviderIndex in localProviderList:
+      _makeTunnelboxNetwork(outputFile, 'start', localInterface,
+                            localProviderList[localProviderIndex], localSiteIndex, v4only)
+   outputFile.write('fi\n')
 
    outputFile.close()
    return configurationName

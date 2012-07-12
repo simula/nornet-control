@@ -25,6 +25,9 @@ import hashlib;
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
+# NorNet
+from NorNetTools import *;
+
 
 NorNet_MaxProviders = 8
 NorNet_ProviderList = {
@@ -43,6 +46,11 @@ NorNet_ProviderList = {
    222 : [ 'Deutsches Forschungsnetz',         'dfn'      ],
 }
 NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
+
+
+# NorNet Internet connection to/from outside world goes via site 1!
+NorNet_InternetInterconnectSite = 1
+NorNet_TunnelboxNode            = 1
 
 
 # ###### Get NorNet provider information ####################################
@@ -105,8 +113,8 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
       pLow  = outgoingProvider
       sHigh = incomingSite
       pHigh = incomingProvider
-      
-      
+
+
    source      = str.replace(hex((sHigh << 8) | pHigh), '0x', '')
    destination = str.replace(hex((sLow << 8)  | pLow), '0x', '')
    address     = 'fdff:ffff:' + source + ':' + destination + '::'

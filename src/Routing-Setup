@@ -36,14 +36,14 @@
 # ###### Write log information ##############################################
 log ()
 {
-   echo -e "\x1b[34m`date --utc --iso-8601=s`: $@\x1b[0m"
+   echo -e "\x1b[1;34m`date --utc +%FT%H:%M:%S`: $@\x1b[0m"
 }
 
 
 # ###### Write log action information #######################################
 log-action ()
 {
-   echo -en "\x1b[34m`date --utc --iso-8601=s`: $@\x1b[0m"
+   echo -en "\x1b[34m`date --utc +%FT%H:%M:%S`: $@\x1b[0m"
 }
 
 
@@ -159,6 +159,40 @@ show-tunnel ()
    else
       return 1
    fi
+}
+
+
+# ###### Address removal ####################################################
+remove-address ()
+{
+   local interface="$1"           # Interface
+   local address="$2"             # Address with network prefix (e.g. 10.1.1.1/24)
+
+   local v6option=""
+   if [[ "$address" =~ : ]] ; then
+      v6option="-6"
+   fi
+
+   while ip $v6option addr del $address dev $interface 2>/dev/null ; do
+      dummy=1
+   done
+}
+
+
+# ###### Address setup ######################################################
+make-address ()
+{
+   local interface="$1"           # Interface
+   local address="$2"             # Address with network prefix (e.g. 10.1.1.1/24)
+
+   local v6option=""
+   if [[ "$address" =~ : ]] ; then
+      v6option="-6"
+   fi
+
+   remove-address $interface $address
+   ip $v6option addr add $address dev $interface
+   ip link set up dev eth0
 }
 
 
