@@ -506,16 +506,18 @@ def makeNodeConfiguration(fullSiteList, node, v4only):
                   debianFile.write('iface ' + interface + ' inet static\n')
                   debianFile.write('   address ' + str(address.ip) + '\n')
                   debianFile.write('   netmask ' + str(address.netmask) + '\n')
-                  # debianFile.write('   network ' + str(address.network) + '\n')
-                  # debianFile.write('   broadcast ' + str(address.broadcast) + '\n')
                else:
-                  debianFile.write('iface ' + interface + ' inet6 static\n')
-                  debianFile.write('   address ' + str(address.ip) + '\n')
-                  debianFile.write('   netmask ' + str(address.prefixlen) + '\n')
-               print interface, address, gateway
+                  if providerIndex != site['site_default_provider_index']:   # NOTE: Work-around for buggy Ubuntu ifupdown!
+                     debianFile.write('   up /sbin/ip -6 addr add ' + str(address) + ' dev ' + interface + '\n')
+                     debianFile.write('   up /sbin/ip -6 addr del ' + str(address) + ' dev ' + interface + '\n')
+                  else:
+                     debianFile.write('\niface ' + interface + ' inet6 static\n')
+                     debianFile.write('   address ' + str(address.ip) + '\n')
+                     debianFile.write('   netmask ' + str(address.prefixlen) + '\n')
+               # print interface, address, gateway
 
                if providerIndex == site['site_default_provider_index']:
-                  debianFile.write('   gateway ' + str(gateway.ip) + '\n')
+                  debianFile.write('   # gateway ' + str(gateway.ip) + '\n')
 
                   dnsList = ''
                   for i in range(0, NorNet_MaxDNSServers - 1):
@@ -526,7 +528,7 @@ def makeNodeConfiguration(fullSiteList, node, v4only):
                      debianFile.write('   dns-nameservers' + dnsList + '\n')
                      debianFile.write('   dns-search ' + site['site_domain'] + '\n')
 
-               debianFile.write('\n')
+                  debianFile.write('\n')
 
 
    debianFile.close()
@@ -540,12 +542,10 @@ def makeNodeConfiguration(fullSiteList, node, v4only):
 log('***** This is NorNet version 1.0! *****')
 loginToPLC()
 
-makeProviderConfiguration()
-makeNorNetConfiguration(False)
+#makeProviderConfiguration()
+#makeNorNetConfiguration(False)
+
 fullSiteList = fetchNorNetSiteList()
-
-
 node = fetchNorNetNode('altenessen.gamma.site')
-print "N=",node
 if node != None:
    makeNodeConfiguration(fullSiteList, node, False)
