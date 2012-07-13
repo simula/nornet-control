@@ -27,7 +27,7 @@ import hashlib;
 import datetime;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddr import IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
 from NorNetTools         import *;
@@ -59,9 +59,9 @@ def makeNorNetTagTypes():
    makeTagType('site/nornet', 'NorNet Site Country Code',                 'nornet_site_country_code')
    makeTagType('site/nornet', 'NorNet Site Default Provider Index',       'nornet_site_default_provider_index')
    makeTagType('site/nornet', 'NorNet Site Tunnelbox Internal Interface', 'nornet_site_tb_internal_interface')
-   makeTagType('site/nornet', 'NorNet Site Primary DNS',                  'nornet_site_dns1')
-   makeTagType('site/nornet', 'NorNet Site Secondary DNS',                'nornet_site_dns2')
    makeTagType('site/nornet', 'NorNet Site Central Site Tunnelbox NAT Range IPv4', 'nornet_site_tb_nat_range_ipv4')
+   for i in range(0, NorNet_MaxDNSServers - 1):
+      makeTagType('site/nornet', 'NorNet Site DNS Server ' + str(1 + i),  'nornet_site_dns' + str(1 + i))
 
    for i in range(0, NorNet_MaxProviders - 1):
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Index',        'nornet_site_tbp' + str(i) + '_index')
@@ -127,25 +127,6 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
          error('Unable to add "nornet_site_country" tag to site ' + siteName)
       if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_country_code', siteCountryCode) <= 0:
          error('Unable to add "nornet_site_country_code" tag to site ' + siteName)
-      if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_dns1', str(dnsServers[0])) <= 0:
-         error('Unable to add "nornet_site_dns1" tag to site ' + siteName)
-      if len(dnsServers) > 1:
-         if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_dns2', str(dnsServers[1])) <= 0:
-            error('Unable to add "nornet_site_dns2" tag to site ' + siteName)
-
-      if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tb_internal_interface', tbInternalInterface) <= 0:
-         error('Unable to add "nornet_site_tb_internal_interface" tag to site ' + siteName)
-
-      # ====== Set Source NAT range at Central Site =========================
-      if siteNorNetIndex == NorNet_SiteIndex_Central:
-         a = NorNet_CentralSiteIPv4NATRange[0]
-         b = NorNet_CentralSiteIPv4NATRange[1]
-         if ((a != IPv4Address('0.0.0.0')) and (b != IPv4Address('0.0.0.0'))):
-            if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tb_nat_range_ipv4', str(a) + '-' + str(b)) <= 0:
-               error('Unable to add "nornet_site_tb_nat_range_ipv4" tag to site ' + siteName)
-         else:
-            if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tb_nat_range_ipv4', '') <= 0:
-               error('Unable to add "nornet_site_tb_nat_range_ipv4" tag to site ' + siteName)
 
       # ====== Set providers ================================================
       gotDefaultProvider = False
@@ -182,6 +163,26 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
 
       if gotDefaultProvider == False:
          error('Site ' + siteName + ' is not connected to default provider ' + defaultProvider)
+
+      # ====== Set DNS servers ==============================================
+      for i in range(0, NorNet_MaxDNSServers - 1):
+         if len(dnsServers) > i:
+            if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_dns' + str(1 + i), str(IPNetwork(dnsServers[i]).ip)) <= 0:
+               error('Unable to add "nornet_site_dns' + str(1 + i) + '" tag to site ' + siteName)
+
+      if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tb_internal_interface', tbInternalInterface) <= 0:
+         error('Unable to add "nornet_site_tb_internal_interface" tag to site ' + siteName)
+
+      # ====== Set Source NAT range at Central Site =========================
+      if siteNorNetIndex == NorNet_SiteIndex_Central:
+         a = NorNet_CentralSiteIPv4NATRange[0]
+         b = NorNet_CentralSiteIPv4NATRange[1]
+         if ((a != IPv4Address('0.0.0.0')) and (b != IPv4Address('0.0.0.0'))):
+            if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tb_nat_range_ipv4', str(a) + '-' + str(b)) <= 0:
+               error('Unable to add "nornet_site_tb_nat_range_ipv4" tag to site ' + siteName)
+         else:
+            if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tb_nat_range_ipv4', '') <= 0:
+               error('Unable to add "nornet_site_tb_nat_range_ipv4" tag to site ' + siteName)
 
    except Exception as e:
       error('Adding site ' + siteName + ' has failed: ' + str(e))
@@ -280,9 +281,12 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                interface['gateway']       = str(ifGateway.ip)
                if providerIndex == siteDefProviderIndex:
                   interface['is_primary'] = True
-                  interface['dns1']       = str(site['site_dns1'])
-                  if site['site_dns2'] != '':
-                     interface['dns2']    = str(site['site_dns2'])
+                  j = 0
+                  for i in range(0, NorNet_MaxDNSServers - 1):
+                     dns = IPAddress(getTagValue(site['site_tags'], 'nornet_site_dns' + str(1 + i), '0.0.0.0'))
+                     if ((dns != IPv4Address('0.0.0.0')) and (dns.version == 4)):
+                        interface['dns' + str(1 + j)] = str(dns)
+                        j = j + 1
                else:
                   interface['is_primary'] = False
                # print interface

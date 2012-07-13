@@ -53,6 +53,9 @@ NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
 NorNet_IPv4Prefix = '10'          # /8 prefix for internal IPv4 space (e.g. '10')
 NorNet_IPv6Prefix = 'fd00:0000'   # /32 prefix for internal IPv6 space (e.g. 'fd00:0000')
 
+# Maximum number of DNS servers (e.g. 2+2 = 2x IPv4 + 2x IPv6)
+NorNet_MaxDNSServers = 4
+
 # Source NAT range for IPv4 (to be set up at Central Site)
 # NorNet_CentralSiteIPv4NATRange = [ IPv4Address('132.252.156.240'), IPv4Address('132.252.156.249') ]
 NorNet_CentralSiteIPv4NATRange = [ IPv4Address('0.0.0.0'), IPv4Address('0.0.0.0') ]
@@ -90,22 +93,22 @@ def makeNorNetIP(provider, site, node, subnode, version):
       if v > 0:   # Ignore negative values!
          error('Bad subnode ID; must be 0 for IPv4')
       if s != 0:
-         prefix = 24;
+         prefix = 24;   # NorNet + Provider + Site
       elif p != 0:
-         prefix = 16;
+         prefix = 16;   # NorNet + Provider
       else:
-         prefix = 8;
+         prefix = 8;    # NorNet
       return IPv4Network(NorNet_IPv4Prefix + '.' + \
                          str(p) + '.' + str(s) + '.' + str(n) + '/' + str(prefix))
    else:
       if v != 0:
-         prefix = 64;
+         prefix = 64;   # NorNet + Provider + Site + Node
          if v < 0:   # Negative value -> set 0, to use first subnet (0)!
             v = 0
          if v > 255:
             error('Bad subnode ID')
       elif n != 0:
-         prefix = 56;   # NorNet + Provider + Site + Host
+         prefix = 56;   # NorNet + Provider + Site + Node
       elif s != 0:
          prefix = 48;   # NorNet + Provider + Site
       elif p != 0:

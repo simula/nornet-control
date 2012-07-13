@@ -116,16 +116,12 @@ def fetchNorNetSite(siteNameToFind):
          siteDomain           = getTagValue(siteTagsList, 'nornet_site_domain', '')
          siteDefProviderIndex = int(getTagValue(siteTagsList, 'nornet_site_default_provider_index', '-1'))
          if siteDefProviderIndex < 1:
-            # siteDefProviderIndex = 1
-            error('Site ' + siteName + ' has no NorNet Default Provider Index')
+            siteDefProviderIndex = 0
+            # error('Site ' + siteName + ' has no NorNet Default Provider Index')
          if not re.match(r"^[a-zA-Z][a-zA-Z0-9]*$", siteAbbrev):
             error('Bad site abbreviation ' + siteAbbrev)
          if ((siteIndex < 0) or (siteIndex > 255)):
             error('Bad site index ' + str(siteIndex))
-         siteDNS1 = IPAddress(getTagValue(siteTagsList, 'nornet_site_dns1', '0.0.0.0'))
-         if siteDNS1 == IPv4Address('0.0.0.0'):
-            error('Bad primary DNS setting')
-         siteDNS2 = IPAddress(getTagValue(siteTagsList, 'nornet_site_dns2', '0.0.0.0'))
 
          norNetSite = {
             'site_id'                     : siteID,
@@ -133,8 +129,6 @@ def fetchNorNetSite(siteNameToFind):
             'site_short_name'             : siteAbbrev,
             'site_long_name'              : str(site['name']),
             'site_domain'                 : siteDomain,
-            'site_dns1'                   : siteDNS1,
-            'site_dns2'                   : siteDNS2,
             'site_tags'                   : siteTagsList,
             'site_default_provider_index' : siteDefProviderIndex
          }

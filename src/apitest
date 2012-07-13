@@ -43,7 +43,7 @@ from NorNetSiteSetup     import *;
 # ###### Generate provider configuration ####################################
 def makeProviderConfiguration():
    configurationName = 'provider-config'
-   outputFile = makeConfigFile('provider', configurationName)
+   outputFile = makeConfigFile('provider', configurationName, True)
 
    providers         = 0
    providerIndexSet  = []
@@ -76,7 +76,7 @@ def makeProviderConfiguration():
 # ###### Generate site configuration ########################################
 def makeSiteConfiguration(fullSiteList, site, v4only):
    configurationName = 'site-' + site['site_short_name'] + '-config'
-   outputFile = makeConfigFile('Site', configurationName)
+   outputFile = makeConfigFile('Site', configurationName, True)
 
    log('Making site configuration for ' + site['site_long_name'] + ' ...')
 
@@ -100,7 +100,7 @@ def makeSiteConfiguration(fullSiteList, site, v4only):
 # ###### Generate sites configuration #######################################
 def makeNorNetConfiguration(v4only):
    configurationName = 'nornet-config'
-   outputFile = makeConfigFile('nornet', configurationName)
+   outputFile = makeConfigFile('nornet', configurationName, True)
 
    providerConfigurationName = makeProviderConfiguration()
    outputFile.write('. ./' + providerConfigurationName + '\n\n')
@@ -188,7 +188,7 @@ def _getTablePref(opIndex, level):
 def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvider, pathNumber, v4only):
    configurationName = 'tunnelbox-' + localSite['site_short_name'] + '-' + \
                        localProvider['provider_short_name'] + '-config'
-   outputFile = makeConfigFile('Tunnelbox-Provider', configurationName)
+   outputFile = makeConfigFile('Tunnelbox-Provider', configurationName, True)
    log('Making tunnelbox provider configuration for ' + \
        localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + ' ...')
 
@@ -396,7 +396,7 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
 # ###### Generate tunnelbox configuration ###################################
 def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
    configurationName = 'tunnelbox-' + localSite['site_short_name'] + '-config'
-   outputFile = makeConfigFile('Tunnelbox', configurationName)
+   outputFile = makeConfigFile('Tunnelbox', configurationName, True)
    log('Making tunnelbox configuration for ' + localSite['site_long_name'] + ' ...')
 
    localSiteIndex    = localSite['site_index']
@@ -470,7 +470,13 @@ def makeNodeConfiguration(fullSiteList, node, v4only):
    log('Making node configuration for ' + node['node_name'] + ' ...')
 
    configurationName = 'node-' + node['node_name'] + '-config'
-   debianFile = makeConfigFile('Node', configurationName + '.debian')
+   debianFile = makeConfigFile('Node', configurationName + '.debian', False)
+
+
+   debianFile.write('# ====== Loopback ======\n')
+   debianFile.write('auto lo\n')
+   debianFile.write('iface lo inet loopback\n\n')
+
 
    site = getNorNetSiteOfNode(fullSiteList, node)
    if site == None:
@@ -488,7 +494,7 @@ def makeNodeConfiguration(fullSiteList, node, v4only):
             if providerIndex == site['site_default_provider_index']:
                interface = node['node_nornet_interface']
             else:
-               interface = node['node_nornet_interface'] + '.' + str(providerIndex)
+               interface = node['node_nornet_interface'] + ':' + str(providerIndex)
 
             debianFile.write('\n# ====== ' + provider['provider_long_name'] + ' (' + \
                              str(provider['provider_index']) + ') ======\n')
@@ -500,19 +506,25 @@ def makeNodeConfiguration(fullSiteList, node, v4only):
                   debianFile.write('iface ' + interface + ' inet static\n')
                   debianFile.write('   address ' + str(address.ip) + '\n')
                   debianFile.write('   netmask ' + str(address.netmask) + '\n')
-                  debianFile.write('   gateway ' + str(gateway.ip) + '\n')
+                  # debianFile.write('   network ' + str(address.network) + '\n')
+                  # debianFile.write('   broadcast ' + str(address.broadcast) + '\n')
                else:
                   debianFile.write('iface ' + interface + ' inet6 static\n')
                   debianFile.write('   address ' + str(address.ip) + '\n')
                   debianFile.write('   netmask ' + str(address.prefixlen) + '\n')
-                  debianFile.write('   gateway ' + str(gateway.ip) + '\n')
                print interface, address, gateway
 
                if providerIndex == site['site_default_provider_index']:
-                  dnsList = str(site['site_dns1'])
-                  if site['site_dns2'] != IPv4Address('0.0.0.0'):
-                     dnsList = dnsList + ' ' + str(site['site_dns2'])
-                  debianFile.write('   dns-nameservers ' + dnsList + '\n')
+                  debianFile.write('   gateway ' + str(gateway.ip) + '\n')
+
+                  dnsList = ''
+                  for i in range(0, NorNet_MaxDNSServers - 1):
+                     dns = IPAddress(getTagValue(site['site_tags'], 'nornet_site_dns' + str(1 + i), '0.0.0.0'))
+                     if ((dns != IPv4Address('0.0.0.0')) and (dns.version == version)):
+                        dnsList = dnsList + ' ' + str(dns)
+                  if dnsList != '':
+                     debianFile.write('   dns-nameservers' + dnsList + '\n')
+                     debianFile.write('   dns-search ' + site['site_domain'] + '\n')
 
                debianFile.write('\n')
 
@@ -528,14 +540,12 @@ def makeNodeConfiguration(fullSiteList, node, v4only):
 log('***** This is NorNet version 1.0! *****')
 loginToPLC()
 
-#makeProviderConfiguration()
-#makeNorNetConfiguration(False)
-
-
+makeProviderConfiguration()
+makeNorNetConfiguration(False)
 fullSiteList = fetchNorNetSiteList()
-
 
 
 node = fetchNorNetNode('altenessen.gamma.site')
 print "N=",node
-makeNodeConfiguration(fullSiteList, node, False)
+if node != None:
+   makeNodeConfiguration(fullSiteList, node, False)
