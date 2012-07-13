@@ -516,7 +516,7 @@ def makeNodeConfiguration(fullSiteList, node, v4only):
                # print interface, address, gateway
 
                if providerIndex == site['site_default_provider_index']:
-                  debianFile.write('   # gateway ' + str(gateway.ip) + '\n')
+                  debianFile.write('   gateway ' + str(gateway.ip) + '\n')
 
                   dnsList = ''
                   for i in range(0, NorNet_MaxDNSServers - 1):
