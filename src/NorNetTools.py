@@ -31,7 +31,8 @@ def log(logstring):
 
 # ###### Abort with error ===================================================
 def error(logstring):
-   print datetime.datetime.utcnow().isoformat() + ' ===== ERROR: ' + logstring + " =====";
+   print datetime.datetime.utcnow().isoformat() + \
+         ' ===== ERROR: ' + logstring + " =====";
    sys.exit(1)
 
 
