@@ -27,7 +27,7 @@ import hashlib;
 import datetime;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddr import IPAddress, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
 from NorNetTools         import *;
@@ -466,26 +466,51 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
 
 
 # ###### Generate node configuration ########################################
-def makeNodeConfiguration(nodeID):
+def makeNodeConfiguration(fullSiteList, node, v4only):
+   log('Making node configuration for ' + node['node_name'] + ' ...')
+
+   configurationName = 'node-' + node['node_name'] + '-config'
+   debianFile = makeConfigFile('Node', configurationName + '.debian')
+
+   site = getNorNetSiteOfNode(fullSiteList, node)
+   if site == None:
+      error('Node ' + node['node_name'] + ' does not belong to a NorNet site')
+   siteIndex   = site['site_index']
+   nodeAddress = node['node_address']
+
    # ====== Get node information ============================================
-   nodeList = getPLCServer().GetNodes(getPLCAuthentication(), {'node_id': nodeID} )
-   if len(nodeList) != 1:
-      error('Cannot find node ' + str(nodeID))
-   node        = nodeList[0]
-   nodeName    = node['hostname']
-   nodeTagList = fetchNodeTagsList(nodeID)
-   nodeNorNetIndex = int(getTagValue(nodeTagList, 'nornet_node_index', '-1'))
-   if nodeNorNetIndex < 0:
-      error('Bad nornet_node_index setting')
-   nodeNorNetAddress = int(getTagValue(nodeTagList, 'nornet_node_address', '-1'))
-   if nodeNorNetAddress < 0:
-      error('Bad nornet_node_address setting')
+   providerList = getNorNetProvidersForSite(site)
+   for onlyDefault in [ True, False ]:
+      for providerIndex in providerList:
+         if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+              ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+            provider = providerList[providerIndex]
+            if providerIndex == site['site_default_provider_index']:
+               interface = node['node_nornet_interface']
+            else:
+               interface = node['node_nornet_interface'] + '.' + str(providerIndex)
 
-   outputFile = open(nodeName + '-config', 'w')
-   outputFile.write('# ===== Node configuration for ' + nodeName + ' =====\n')
-   outputFile.write('# Generated on ' + datetime.datetime.utcnow().isoformat() + '\n\n')
+            debianFile.write('\n# ' + provider['provider_long_name'] + ' (' + \
+                             str(provider['provider_index']) + ')\n')
+            debianFile.write('auto ' + interface + '\n')
+            for version in [ 4, 6 ]:
+               address = makeNorNetIP(providerIndex, siteIndex, nodeAddress,                0, version)
+               gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 0, version)
+               if version == 4:
+                  debianFile.write('iface ' + interface + ' inet static\n')
+                  debianFile.write('   address ' + str(address.ip) + '\n')
+                  debianFile.write('   netmask ' + str(address.netmask) + '\n')
+                  debianFile.write('   gateway ' + str(gateway.ip) + '\n\n')
+               else:
+                  debianFile.write('iface ' + interface + ' inet6 static\n')
+                  debianFile.write('   address ' + str(address.ip) + '\n')
+                  debianFile.write('   netmask ' + str(address.prefixlen) + '\n')
+                  debianFile.write('   gateway ' + str(gateway.ip) + '\n\n')
+               print interface, address, gateway
 
-   print 'Node configuration for: ' + nodeName
+   debianFile.close()
+   return configurationName
+
 
 
 # ###########################################################################
@@ -494,23 +519,14 @@ def makeNodeConfiguration(nodeID):
 log('***** This is NorNet version 1.0! *****')
 loginToPLC()
 
-makeProviderConfiguration()
-makeNorNetConfiguration(False)
+#makeProviderConfiguration()
+#makeNorNetConfiguration(False)
 
 
-#f = fetchNorNetSiteList()
-#for s in f:
-   #print f[s]
-   #p = getNorNetProvidersForSite(f[s])
+fullSiteList = fetchNorNetSiteList()
 
 
-#siteID = findSiteID('Alpha Test Site')
-#makeTunnelBoxConfiguration(siteID)
 
-#siteID = findSiteID('Beta Test Site')
-#makeTunnelBoxConfiguration(siteID,True)
-
-
-#nodeID = findNodeID('altenessen.gamma.site')
-#print "N=",nodeID
-#makeNodeConfiguration(nodeID)
+node = fetchNorNetNode('altenessen.gamma.site')
+print "N=",node
+makeNodeConfiguration(fullSiteList, node, False)

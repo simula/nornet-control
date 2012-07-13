@@ -208,6 +208,7 @@ def fetchNorNetNode(nodeNameToFind):
       fullNodeList   = plc_server.GetNodes(plc_authentication, filter)
       for node in fullNodeList:
          nodeID       = int(node['node_id'])
+         nodeSiteID   = int(node['site_id'])
          nodeTagsList = plc_server.GetNodeTags(plc_authentication,
                                                { 'node_id' : nodeID },
                                                [ 'node_id', 'tagname', 'value' ])
@@ -219,15 +220,20 @@ def fetchNorNetNode(nodeNameToFind):
          nodeAddress = int(getTagValue(nodeTagsList, 'nornet_node_address', '-1'))
          if nodeAddress < 1:
             error('Node ' + nodeName + ' has invalid address base')
+         nodeInterface = getTagValue(nodeTagsList, 'nornet_node_interface', '')
+         if nodeInterface == '':
+            error('Node ' + nodeName + ' has invalid NorNet interface name')
 
          norNetNode = {
-            'node_id'      : nodeID,
-            'node_index'   : nodeIndex,
-            'node_address' : nodeAddress,
-            'node_name'    : node['hostname'],
-            'node_model'   : node['model'],
-            'node_state'   : node['boot_state'],
-            'node_tags'    : nodeTagsList
+            'node_id'               : nodeID,
+            'node_site_id'          : nodeSiteID,
+            'node_index'            : nodeIndex,
+            'node_address'          : nodeAddress,
+            'node_name'             : node['hostname'],
+            'node_nornet_interface' : nodeInterface,
+            'node_model'            : node['model'],
+            'node_state'            : node['boot_state'],
+            'node_tags'             : nodeTagsList
          }
 
          if nodeNameToFind != None:
@@ -247,6 +253,18 @@ def fetchNorNetNode(nodeNameToFind):
 def fetchNorNetNodeList():
    log('Fetching NorNet node list ...')
    return fetchNorNetNode(None)
+
+
+# ###### Get NorNet Site of NorNet node #####################################
+def getNorNetSiteOfNode(fullSiteList, node):
+   nodeID = node['node_id']
+   siteID = node['node_site_id']
+
+   for siteIndex in fullSiteList:
+      if siteID == fullSiteList[siteIndex]['site_id']:
+         return fullSiteList[siteIndex]
+
+   return None
 
 
 # ###### Find person ID #####################################################

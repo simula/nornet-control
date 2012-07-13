@@ -82,21 +82,21 @@ def createTestConfiguration(userName, sliceName):
    for name in names:
       n = makeNorNetNode(siteAlpha, name, 1 + i, firstAddressIndex,
                      siteAlphaPCUID, 1 + i,
-                     [ getPLCAddress() ])
+                     [ getPLCAddress() ], 'eth0')
       i = i + 1
 
    names = sorted(['bjordammen', 'maridalsvannet', 'sognsvann', 'svartkulp', 'skjennungen', 'tyrvann'])
    for name in names:
       makeNorNetNode(siteBeta, name, 1 + i, firstAddressIndex,
                      siteBetaPCUID, 1 + i,
-                     [ getPLCAddress() ])
+                     [ getPLCAddress() ], 'eth0')
       i = i + 1
 
    names = sorted(['altenessen', 'baldeneysee', 'borbeck', 'zollvererin'])
    for name in names:
       makeNorNetNode(siteGamma, name, 1 + i, firstAddressIndex,
                      siteGammaPCUID, 1 + i,
-                     [ getPLCAddress() ])
+                     [ getPLCAddress() ], 'eth0')
       i = i + 1
 
 

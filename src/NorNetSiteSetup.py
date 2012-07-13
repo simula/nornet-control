@@ -70,6 +70,7 @@ def makeNorNetTagTypes():
    makeTagType('node/nornet',      'NorNet Managed Node',         'nornet_is_managed_node')
    makeTagType('node/nornet',      'NorNet Node Index',           'nornet_node_index')
    makeTagType('node/nornet',      'NorNet Node Address Index',   'nornet_node_address')
+   makeTagType('node/nornet',      'NorNet Node Interface',       'nornet_node_interface')
 
    makeTagType('interface/nornet', 'NorNet Managed Interface',        'nornet_is_managed_interface')
    makeTagType('interface/nornet', 'NorNet Interface Provider Index', 'nornet_ifprovider_index')
@@ -207,7 +208,7 @@ def makeNorNetPCU(site, hostName, siteNorNetDomain, publicIPv4Address,
 
 
 # ###### Update interfaces of a node ########################################
-def updateNorNetInterfaces(node, site, publicDNS):
+def updateNorNetInterfaces(node, site, publicDNS, norNetInterface):
    # ====== Current interface settings ======================================
    currentAddressList     = [ ]
    currentInterfaceIDList = [ ]
@@ -268,7 +269,7 @@ def updateNorNetInterfaces(node, site, publicDNS):
                      interface['dns2']    = str(publicDNS[1])
                else:
                   interface['is_primary'] = False
-               interface['ifname']     = 'eth0'
+               interface['ifname']     = norNetInterface
                interface['type']       = 'ipv4'
                interface['method']     = 'static'
                interface['ip']         = str(ifIPv4.ip)
@@ -298,7 +299,7 @@ def updateNorNetInterfaces(node, site, publicDNS):
 
 # ###### Create NorNet node #################################################
 def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
-                   pcuID, pcuPort, publicDNS):
+                   pcuID, pcuPort, publicDNS, norNetInterface):
    nodeHostName = nodeNiceName   # Domain to be added below!
 
    # ====== Get site information ============================================
@@ -328,6 +329,8 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
          error('Unable to add "nornet_node_index" tag to node ' + nodeHostName)
       if getPLCServer().AddNodeTag(getPLCAuthentication(), nodeID, 'nornet_node_address', str(nodeNorNetIndex + addressBase)) <= 0:
          error('Unable to add "nornet_node_address" tag to node ' + nodeHostName)
+      if getPLCServer().AddNodeTag(getPLCAuthentication(), nodeID, 'nornet_node_interface', norNetInterface) <= 0:
+         error('Unable to add "nornet_node_interface" tag to node ' + nodeHostName)
 
       # ====== Add node to PCU ==============================================
       if pcuID > 0:
@@ -338,7 +341,7 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
       newNode = fetchNorNetNode(nodeHostName)
       if newNode == None:
          error('Unable to find new node ' + nodeHostName)
-      updateNorNetInterfaces(newNode, site, publicDNS)
+      updateNorNetInterfaces(newNode, site, publicDNS, norNetInterface)
 
       return newNode
 
