@@ -1,0 +1,75 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
+from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+
+
+NorNet_IPv4Prefix = '10'          # /8 prefix for internal IPv4 space (e.g. '10')
+NorNet_IPv6Prefix = 'fd00:0000'   # /32 prefix for internal IPv6 space (e.g. 'fd00:0000')
+
+
+# ###### Get NorNet interface IPv4 address ##################################
+def makeNorNetIP(provider, site, node, subnode, version):
+   p = int(provider)
+   s = int(site)
+   n = int(node)
+   v = int(subnode)
+   if ((p < 0) | (p > 255)):
+      error('Bad provider ID')
+   if ((s < 0) | (s > 255)):
+      error('Bad site ID')
+   if ((n < 0) | (n > 255)):
+      error('Bad host ID')
+
+   # ====== IPv4 handling ===================================================
+   if version == 4:
+      if v > 0:   # Ignore negative values!
+         error('Bad subnode ID; must be 0 for IPv4')
+      if n != 0:
+         prefix = 32;    #  NorNet + Provider + Site + Node
+      elif s != 0:
+         prefix = 24;    #  NorNet + Provider + Site
+      elif p != 0:
+         prefix = 16;    # NorNet + Provider
+      else:
+         prefix = 8;     # NorNet
+      return IPv4Network(NorNet_IPv4Prefix + '.' + \
+                         str(p) + '.' + str(s) + '.' + str(n) + '/' + str(prefix))
+
+   # ====== IPv6 handling ===================================================
+   else:
+      nodeNet = n
+      nodeNum = 0
+      if v != 0:
+         prefix = 64     # NorNet + Provider + Site + NodeNetwork + VirtalNodeNet
+         if v < 0:       # Special case: NodeNetwork zero; get IP of node in this network.
+             v = 0
+             nodeNet = 0
+             nodeNum = n
+      elif n != 0:
+         prefix = 56     # NorNet + Provider + Site + NodeNetwork
+      elif s != 0:
+         prefix = 48;    # NorNet + Provider + Site
+      elif p != 0:
+         prefix = 40;    # NorNet + Provider
+      else:
+         prefix = 32;    # NorNet
+      return IPv6Network(NorNet_IPv6Prefix + ':' + \
+                          str.replace(hex((p << 8) | s), '0x', '') + ':' + \
+                          str.replace(hex((nodeNet << 8) | v), '0x', '') + '::' + \
+                          str.replace(hex(nodeNum), '0x', '') + '/' + str(prefix))
+
+
+print 'NodeVNet=', makeNorNetIP(1,1,2,123, 6)
+print 'NodeNet= ', makeNorNetIP(1,1,2,0, 6)
+print 'NodeNet0=', makeNorNetIP(1,1,2,-1, 6)
+print 'Site=    ', makeNorNetIP(1,1,0,0, 6)
+print 'Provider=', makeNorNetIP(1,0,0,0, 6)
+print 'NorNet=  ', makeNorNetIP(0,0,0,0, 6)
+print ''
+
+print 'Node=    ', makeNorNetIP(1,1,1,0, 4)
+print 'Site=    ', makeNorNetIP(1,1,0,0, 4)
+print 'Provider=', makeNorNetIP(1,0,0,0, 4)
+print 'NorNet=  ', makeNorNetIP(0,0,0,0, 4)
