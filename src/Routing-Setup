@@ -36,14 +36,14 @@
 # ###### Write log information ##############################################
 log ()
 {
-   echo -e "\x1b[34m`date --utc --iso-8601=s`: $@\x1b[0m"
+   echo -e "\x1b[1;34m`date --utc +%FT%H:%M:%S`: $@\x1b[0m"
 }
 
 
 # ###### Write log action information #######################################
 log-action ()
 {
-   echo -en "\x1b[34m`date --utc --iso-8601=s`: $@\x1b[0m"
+   echo -en "\x1b[34m`date --utc +%FT%H:%M:%S`: $@\x1b[0m"
 }
 
 
@@ -140,16 +140,59 @@ make-tunnel ()
 show-tunnel ()
 {
    local interface="$1"           # Interface name (fire*, seks*, gre*)
-   local innerRemoteIP="$2"       # Inner Remote IP
-   local description="$3"         # Description
+   local innerLocalIP="$2"        # Inner Local IP
+   local innerRemoteIP="$3"       # Inner Remote IP
+   local description="$4"         # Description
 
    # echo -en "Pinging $innerRemoteIP (peer of tunnel interface $interface) ..."
 
+   success=0
    if [[ "$innerRemoteIP" =~ : ]] ; then
-      ping6 -W3 -c3 -i0.2 -q $innerRemoteIP >/dev/null 2>&1 && log-result 1 || log-result 0
+      ping6 -W3 -c3 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
    else
-      ping -W3 -c3 -i0.2 -q $innerRemoteIP >/dev/null 2>&1 && log-result 1 || log-result 0
+      ping -W3 -c3 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
    fi
+   log-result $success
+   
+   if [ $success -eq 1 ] ; then
+      return 0
+   else
+      return 1
+   fi
+}
+
+
+# ###### Address removal ####################################################
+remove-address ()
+{
+   local interface="$1"           # Interface
+   local address="$2"             # Address with network prefix (e.g. 10.1.1.1/24)
+
+   local v6option=""
+   if [[ "$address" =~ : ]] ; then
+      v6option="-6"
+   fi
+
+   while ip $v6option addr del $address dev $interface 2>/dev/null ; do
+      dummy=1
+   done
+}
+
+
+# ###### Address setup ######################################################
+make-address ()
+{
+   local interface="$1"           # Interface
+   local address="$2"             # Address with network prefix (e.g. 10.1.1.1/24)
+
+   local v6option=""
+   if [[ "$address" =~ : ]] ; then
+      v6option="-6"
+   fi
+
+   remove-address $interface $address
+   ip $v6option addr add $address dev $interface
+   ip link set up dev eth0
 }
 
 
@@ -162,12 +205,18 @@ remove-table ()
    ip route flush table $1
 
    # ====== Remove all rules pointing to that table =========================
-   rulesToRemove=`ip rule show | grep "lookup $tableID[ ]*\$" | wc --lines`
-   i=0 ; while [ $i -lt $rulesToRemove ] ; do
-      # echo ip rule del lookup $1
-      ip rule del lookup $1
-      let i=$i+1
-   done
+   ip rule show | (
+     while read inputLine ; do
+         if [[ $inputLine =~ ([0-9]*):(.*)([ \t]*lookup ${tableID}[ \t]*)$ ]]; then
+            if [ ${#BASH_REMATCH[*]} -eq 4 ] ; then
+               pref=${BASH_REMATCH[1]}
+               rule=${BASH_REMATCH[2]}
+               lookup=${BASH_REMATCH[3]}
+               ip rule del $rule ${lookup} pref $pref
+            fi
+        fi
+     done
+   )
 }
 
 
@@ -196,12 +245,21 @@ add-table-selector ()
             v6option="-6"
          fi
          shift
+      elif [ "$1" = "to" ] ; then
+         selectorOptions="$selectorOptions to $2"
+         if [[ "$2" =~ : ]] ; then
+            v6option="-6"
+         fi
+         shift
       elif [ "$1" = "tos" ] ; then
          selectorOptions="$selectorOptions tos $2"
          shift
       elif [ "$1" = "fwmark" ] ; then
          selectorOptions="$selectorOptions fwmark $2"
          shift
+      else
+         echo >&2 "ERROR: Unknown selector "$1"!"
+         exit 1
       fi
       shift
    done
@@ -223,4 +281,37 @@ make-route ()
 
    # echo ip route add $destination via $nextHop dev $interface table $tableID $miscOptions
    ip route add $destination via $nextHop dev $interface table $tableID $miscOptions
+}
+
+
+# ###### Add Source NAT rule ################################################
+make-nat ()
+{
+   local sourceNetwork="$1"       # Source network (e.g. 10.0.0.0/8)
+   local range="$2"               # Public IP range (optional)
+
+   remove-nat "$sourceNetwork" "$range"
+   if [ "$range" = "" ] ; then
+      iptables -t nat -A POSTROUTING -s "$sourceNetwork" -j MASQUERADE
+   else
+      iptables -t nat -A POSTROUTING -s "$sourceNetwork" -j SNAT --to-source "$range"
+   fi
+}
+
+   
+# ###### Add Source NAT rule ################################################
+remove-nat ()
+{
+   local sourceNetwork="$1"       # Source network (e.g. 10.0.0.0/8)
+   local range="$2"               # Public IP range (optional)
+   
+   if [ "$range" = "" ] ; then
+      while iptables -t nat -D POSTROUTING -s "$sourceNetwork" -j MASQUERADE 2>/dev/null ; do
+         dummy=1
+      done
+   else
+      while iptables -t nat -D POSTROUTING -s "$sourceNetwork" -j SNAT --to-source "$range" 2>/dev/null ; do
+         dummy=1
+      done
+   fi
 }

@@ -34,26 +34,8 @@ from NorNetSiteSetup     import *;
 # ###### Make test setup ####################################################
 # WARNING: A previous test setup is completely REMOVED!
 def createTestConfiguration(userName, sliceName):
-   # ====== Create tags =====================================================
-   makeTagType('site/nornet', 'NorNet Managed Site',      'nornet_is_managed_site')
-   makeTagType('site/nornet', 'NorNet Site Index',        'nornet_site_index')
-   makeTagType('site/nornet', 'NorNet Site Domain Name',  'nornet_site_domain')
-   makeTagType('site/nornet', 'NorNet Site City',         'nornet_site_city')
-   makeTagType('site/nornet', 'NorNet Site Province',     'nornet_site_province')
-   makeTagType('site/nornet', 'NorNet Site Country',      'nornet_site_country')
-   makeTagType('site/nornet', 'NorNet Site Country Code', 'nornet_site_country_code')
-
-   for i in range(0, NorNet_MaxProviders - 1):
-      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Index',        'nornet_site_tbp' + str(i) + '_index')
-      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv4', 'nornet_site_tbp' + str(i) + '_address_ipv4')
-      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv6', 'nornet_site_tbp' + str(i) + '_address_ipv6')
-
-   makeTagType('node/nornet',      'NorNet Managed Node',         'nornet_is_managed_node')
-   makeTagType('node/nornet',      'NorNet Node Index',           'nornet_node_index')
-   makeTagType('node/nornet',      'NorNet Node Address Index',   'nornet_node_address')
-
-   makeTagType('interface/nornet', 'NorNet Managed Interface',        'nornet_is_managed_interface')
-   makeTagType('interface/nornet', 'NorNet Interface Provider Index', 'nornet_ifprovider_index')
+   # ====== Add tag types ===================================================
+   makeNorNetTagTypes()
 
 
    # ====== Remove test sites ===============================================
@@ -61,84 +43,85 @@ def createTestConfiguration(userName, sliceName):
    removeNorNetSite("Beta Test Site")
    removeNorNetSite("Gamma Test Site")
 
-
    # ====== Add test sites ==================================================
+   dnsServers = [ getPLCAddress(),
+                  makeNorNetIP(1, 1, 21, -1, 4), makeNorNetIP(1, 1, 21, -1, 6) ]
+
    siteAlphaNorNetIndex = 1
-   siteAlphaID = makeNorNetSite('Alpha Test Site', 'TA', 'ta', 'http://www.alpha.site', 'alpha.site',
-                                siteAlphaNorNetIndex, 'Ullevål', 'Østlandet', 'Norge', 'NO', 10.0, 50.0, [
-                                   [ 'Uninett', IPv4Address('132.252.156.70'), IPv6Address('fd55:5555::70') ],
-                                   [ 'Telenor', IPv4Address('169.254.100.70'), IPv6Address('::') ]
-                                ])
-   siteAlphaPCUID = makeNorNetPCU(siteAlphaID, 'pcu', 'alpha.site', IPv4Address('132.252.156.2'),
+   siteAlpha = makeNorNetSite('Alpha Test Site', 'TA', 'ta', 'http://www.alpha.site', 'alpha.site',
+                              siteAlphaNorNetIndex, 'Ullevål', 'Østlandet', 'Norge', 'NO', 10.0, 50.0, [
+                                 [ 'Uninett', 'eth0', IPv4Address('132.252.156.70'), IPv6Address('fd55:5555::70') ],
+                                 [ 'Telenor', 'eth0', IPv4Address('169.254.100.70'), IPv6Address('::') ]
+                              ], 'Uninett', 'eth0', dnsServers)
+   siteAlphaPCUID = makeNorNetPCU(siteAlpha, 'pcu', 'alpha.site', IPv4Address('132.252.156.2'),
                                   'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 
    siteBetaNorNetIndex = 2
-   siteBetaID  = makeNorNetSite('Beta Test Site', 'TB', 'tb', 'http://www.beta.site', 'beta.site',
-                                siteBetaNorNetIndex, 'Bygdøy',  'Østlandet', 'Norge', 'NO', 15.0, 55.0, [
-                                   [ 'Uninett', IPv4Address('132.252.156.71'), IPv6Address('fd55:5555::71') ],
-                                   [ 'Telenor', IPv4Address('169.254.100.71'), IPv6Address('::') ]
-                                ])
-   siteBetaPCUID = makeNorNetPCU(siteBetaID, 'pcu', 'beta.site', IPv4Address('132.252.156.3'),
+   siteBeta  = makeNorNetSite('Beta Test Site', 'TB', 'tb', 'http://www.beta.site', 'beta.site',
+                              siteBetaNorNetIndex, 'Bygdøy',  'Østlandet', 'Norge', 'NO', 15.0, 55.0, [
+                                 [ 'Uninett', 'eth0', IPv4Address('132.252.156.71'), IPv6Address('fd55:5555::71') ],
+                                 [ 'Telenor', 'eth0', IPv4Address('169.254.100.71'), IPv6Address('::') ]
+                              ], 'Uninett', 'eth0', dnsServers)
+   siteBetaPCUID = makeNorNetPCU(siteBeta, 'pcu', 'beta.site', IPv4Address('132.252.156.3'),
                                  'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 
    siteGammaNorNetIndex = 3
-   siteGammaID = makeNorNetSite('Gamma Test Site', 'TC', 'tc', 'http://www.gamma.site', 'gamma.site',
-                                siteGammaNorNetIndex, 'Essen',  'Nordrhein-Westfalen', 'Deutschland', 'DE', 12.5, 40.0, [
-                                   [ 'Uninett', IPv4Address('132.252.156.72'), IPv6Address('::') ],
-                                   [ 'Telenor', IPv4Address('169.254.100.72'), IPv6Address('::') ],
-                                   [ 'Deutsches Forschungsnetz', IPv4Address('172.31.255.72'),  IPv6Address('::') ]
-                                ])
-   siteGammaPCUID = makeNorNetPCU(siteGammaID, 'pcu', 'gamma.site', IPv4Address('132.252.156.4'),
+   siteGamma = makeNorNetSite('Gamma Test Site', 'TC', 'tc', 'http://www.gamma.site', 'gamma.site',
+                              siteGammaNorNetIndex, 'Essen',  'Nordrhein-Westfalen', 'Deutschland', 'DE', 12.5, 40.0, [
+                                 [ 'Uninett', 'eth0', IPv4Address('132.252.156.72'), IPv6Address('::') ],
+                                 [ 'Telenor', 'eth0', IPv4Address('169.254.100.72'), IPv6Address('::') ],
+                                 [ 'Deutsches Forschungsnetz', 'eth0', IPv4Address('172.31.255.72'),  IPv6Address('::') ]
+                              ], 'Deutsches Forschungsnetz', 'eth0', dnsServers)
+   siteGammaPCUID = makeNorNetPCU(siteGamma, 'pcu', 'gamma.site', IPv4Address('132.252.156.4'),
                                   'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 
 
    # ====== Add test nodes ==================================================
-   firstAddressIndex = 81
-   i = 0
+   firstAddressIndex = 101
 
    names = sorted(['akerbrygge', 'bygdoey', 'ekeberg', 'fornebu', 'majorstuen', 'ullevaal'])
+   i = 0
    for name in names:
-      makeNorNetNode(siteAlphaID, name, 1 + i, firstAddressIndex,
-                     siteAlphaPCUID, 1 + i,
-                     IPv4Network('132.252.156.' + str(firstAddressIndex + i) + '/24'),
-                     IPv4Address('132.252.156.1'),
-                     [ IPv4Address('132.252.156.21') ])
+      n = makeNorNetNode(siteAlpha, name, 1 + i, firstAddressIndex,
+                     siteAlphaPCUID, 1 + i, 'eth0')
       i = i + 1
 
    names = sorted(['bjordammen', 'maridalsvannet', 'sognsvann', 'svartkulp', 'skjennungen', 'tyrvann'])
+   i = 0
    for name in names:
-      makeNorNetNode(siteBetaID, name, 1 + i, firstAddressIndex,
-                     siteBetaPCUID, 1 + i,
-                     IPv4Network('132.252.156.' + str(firstAddressIndex + i) + '/24'),
-                     IPv4Address('132.252.156.1'),
-                     [ IPv4Address('132.252.156.21') ])
+      makeNorNetNode(siteBeta, name, 1 + i, firstAddressIndex,
+                     siteBetaPCUID, 1 + i, 'eth0')
       i = i + 1
 
    names = sorted(['altenessen', 'baldeneysee', 'borbeck', 'zollvererin'])
+   i = 0
    for name in names:
-      makeNorNetNode(siteGammaID, name, 1 + i, firstAddressIndex,
-                     siteGammaPCUID, 1 + i,
-                     IPv4Network('132.252.156.' + str(firstAddressIndex + i) + '/24'),
-                     IPv4Address('132.252.156.1'),
-                     [ IPv4Address('132.252.156.21') ])
+      makeNorNetNode(siteGamma, name, 1 + i, firstAddressIndex,
+                     siteGammaPCUID, 1 + i, 'eth0')
       i = i + 1
-
 
 
    # ====== Add person to all test sites ====================================
    personID = lookupPersonID(userName)
    if personID == 0:
       error('Unable to find user ' + userName + '\n')
-   getPLCServer().AddPersonToSite(getPLCAuthentication(), personID, siteAlphaID)
-   getPLCServer().AddPersonToSite(getPLCAuthentication(), personID, siteBetaID)
-   getPLCServer().AddPersonToSite(getPLCAuthentication(), personID, siteGammaID)
+
+   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'user', personID)
+   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'pi',   personID)
+   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'tech', personID)
+
+   getPLCServer().AddPersonToSite(getPLCAuthentication(), personID, siteAlpha['site_id'])
+   getPLCServer().AddPersonToSite(getPLCAuthentication(), personID, siteBeta['site_id'])
+   getPLCServer().AddPersonToSite(getPLCAuthentication(), personID, siteGamma['site_id'])
+
+   getPLCServer().SetPersonPrimarySite(getPLCAuthentication(), personID, siteBeta['site_id'])
 
 
    # ====== Add slice to all nodes ==========================================
    sliceID = lookupSliceID(sliceName)
    if sliceID == 0:
-      error('Unable to find slice ' + userName + '\n')
-   nodeList = fetchNodeList()
+      error('Unable to find slice ' + sliceName + '\n')
+   nodeList = getPLCServer().GetNodes(getPLCAuthentication(), { })
    nodeIDs  = []
    for node in nodeList:
       nodeID = int(node['node_id'])

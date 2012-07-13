@@ -25,6 +25,9 @@ import hashlib;
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
+# NorNet
+from NorNetTools import *;
+
 
 NorNet_MaxProviders = 8
 NorNet_ProviderList = {
@@ -42,7 +45,27 @@ NorNet_ProviderList = {
 
    222 : [ 'Deutsches Forschungsnetz',         'dfn'      ],
 }
+
+# TOS Settings for provider selection
 NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
+
+# Prefixes for the internal IPv4 and IPv6 networks
+NorNet_IPv4Prefix = '10'          # /8 prefix for internal IPv4 space (e.g. '10')
+NorNet_IPv6Prefix = 'fd00:0000'   # /32 prefix for internal IPv6 space (e.g. 'fd00:0000')
+
+# Maximum number of DNS servers (e.g. 2+2 = 2x IPv4 + 2x IPv6)
+NorNet_MaxDNSServers = 4
+
+# Source NAT range for IPv4 (to be set up at Central Site)
+# NorNet_CentralSiteIPv4NATRange = [ IPv4Address('132.252.156.240'), IPv4Address('132.252.156.249') ]
+NorNet_CentralSiteIPv4NATRange = [ IPv4Address('0.0.0.0'), IPv4Address('0.0.0.0') ]
+
+# NorNet Internet connection to/from outside world goes via Site 1!
+NorNet_SiteIndex_Central    = 1
+
+# NorNet Tunnelbox is always Node 1!
+NorNet_NodeIndex_Tunnelbox  = 1
+
 
 
 # ###### Get NorNet provider information ####################################
@@ -54,32 +77,53 @@ def getNorNetProviderInfo(providerIndex):
 
 
 # ###### Get NorNet interface IPv4 address ##################################
-def makeNorNetIP(provider, site, host, version):
+def makeNorNetIP(provider, site, node, subnode, version):
    p = int(provider)
    s = int(site)
-   h = int(host)
+   n = int(node)
+   v = int(subnode)
    if ((p < 0) | (p > 255)):
       error('Bad provider ID')
    if ((s < 0) | (s > 255)):
       error('Bad site ID')
-   if ((h < 0) | (h > 255)):
+   if ((n < 0) | (n > 255)):
       error('Bad host ID')
 
+   # ====== IPv4 handling ===================================================
    if version == 4:
-      if site != 0:
-         prefix = 24;
+      if v > 0:   # Ignore negative values!
+         error('Bad subnode ID; must be 0 for IPv4')
+      if s != 0:
+         prefix = 24;    # NorNet + Provider + Site
+      elif p != 0:
+         prefix = 16;    # NorNet + Provider
       else:
-         prefix = 16;
-      return IPv4Network('10.' + str(p) + '.' + str(s) + '.' + str(h) + '/' + str(prefix))
+         prefix = 8;     # NorNet
+      return IPv4Network(NorNet_IPv4Prefix + '.' + \
+                         str(p) + '.' + str(s) + '.' + str(n) + '/' + str(prefix))
+
+   # ====== IPv6 handling ===================================================
    else:
-      if site != 0:
-         prefix = 48;
+      nodeNet = n
+      nodeNum = 0
+      if v != 0:
+         prefix = 64     # NorNet + Provider + Site + NodeNetwork + VirtalNodeNet
+         if v < 0:       # Special case: NodeNetwork zero; get IP of node in this network.
+             v = 0
+             nodeNet = 0
+             nodeNum = n
+      elif n != 0:
+         prefix = 56     # NorNet + Provider + Site + NodeNetwork
+      elif s != 0:
+         prefix = 48;    # NorNet + Provider + Site
+      elif p != 0:
+         prefix = 40;    # NorNet + Provider
       else:
-         prefix = 32;
-      return IPv6Network('fd00:' + \
-                          str.replace(hex(p), '0x', '') + ':' + \
-                          str.replace(hex(s), '0x', '') + ':' + \
-                          str.replace(hex(h), '0x', '') + ':0:0::/' + str(prefix))
+         prefix = 32;    # NorNet
+      return IPv6Network(NorNet_IPv6Prefix + ':' + \
+                          str.replace(hex((p << 8) | s), '0x', '') + ':' + \
+                          str.replace(hex((nodeNet << 8) | v), '0x', '') + '::' + \
+                          str.replace(hex(nodeNum), '0x', '') + '/' + str(prefix))
 
 
 # ###### Get NorNet tunnel inner IPv4 address ###############################
@@ -105,8 +149,8 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
       pLow  = outgoingProvider
       sHigh = incomingSite
       pHigh = incomingProvider
-      
-      
+
+
    source      = str.replace(hex((sHigh << 8) | pHigh), '0x', '')
    destination = str.replace(hex((sLow << 8)  | pLow), '0x', '')
    address     = 'fdff:ffff:' + source + ':' + destination + '::'

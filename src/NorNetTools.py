@@ -31,7 +31,8 @@ def log(logstring):
 
 # ###### Abort with error ===================================================
 def error(logstring):
-   print datetime.datetime.utcnow().isoformat() + ' ===== ERROR: ' + logstring + " =====";
+   print datetime.datetime.utcnow().isoformat() + \
+         ' ===== ERROR: ' + logstring + " =====";
    sys.exit(1)
 
 
@@ -44,12 +45,13 @@ def getTagValue(tagList, tagName, default):
 
 
 # ###### Create a configuration file ########################################
-def makeConfigFile(type, configurationName):
+def makeConfigFile(type, configurationName, setInfoVariable):
    outputFile = open(configurationName, 'w')
    outputFile.write('# ===== ' + type + ' configuration ===============\n')
    now = datetime.datetime.utcnow().isoformat()
    info = str.replace(str.lower(configurationName), '-', '_')
    outputFile.write('# Generated on ' + now + '\n\n')
-   outputFile.write(info + '="' + now + '"\n\n')
+   if setInfoVariable == True:
+      outputFile.write(info + '="' + now + '"\n\n')
 
    return outputFile

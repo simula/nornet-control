@@ -29,8 +29,8 @@ site="$1"
 state="$2"
 
 if [ "$state" != "start" -a "$state" != "stop" -a \
-     "$state" != "restart" -a "$state" != "status" -a "$state" != "reset" ] ; then
-   echo >&2 "Usage: $0 [start|stop|status|reset]"
+     "$state" != "restart" -a "$state" != "status" -a "$state" != "reset" -a "$state" != "coldstart" ] ; then
+   echo >&2 "Usage: $0 [start|stop|status|reset|coldstart]"
    exit 1
 fi
 
@@ -43,22 +43,28 @@ fi
 . ./$WORK_DIRECTORY/Routing-Setup
 
 
-if [ "$state" = "reset" ] ; then
+if [ "$state" = "reset" -o "$state" = "coldstart" ] ; then
    ip rule flush
    ip rule del lookup local || true
    ip rule add from all lookup local   pref 0
    ip rule add from all lookup main    pref 32766
    ip rule add from all lookup default pref 32767
-   state="stop"
+   ip route flush cache
+   iptables -t nat -F POSTROUTING
+   if [ "$state" = "coldstart" ] ; then
+      state="restart"
+   else
+      state="stop"
+   fi
 fi
 
 
-errors=0
-PROVIDER_CONFIGS=`find $WORK_DIRECTORY -name "tunnelbox-${site}-*-config"`
-for providerConfig in $PROVIDER_CONFIGS ; do
-   echo $providerConfig ...
-   bash -ce "state=$state && . ./$WORK_DIRECTORY/Routing-Setup && . ./$providerConfig" || let errors=errors+1 && true
-done
+log "Entering Tunnelbox setup ..."
+success=1
+. ./tunnelbox-${site}-config || success=0
+log-action "Finished Tunnelbox setup ..."
+log-result $success
 
-echo "errors=$errors"
-exit $errors
+if [ $success -eq 0 ] ; then
+   exit 1
+fi
