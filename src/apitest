@@ -383,12 +383,11 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
       if ((version == 6) and (v4only == True)):
          continue
 
-      localNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, 0, version)
-
+      localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
       if state == 'start':
-         outputFile.write('   make-address ' + localInterface + ' ' + str(localNetwork) + '\n')
+         outputFile.write('   make-address ' + localInterface + ' ' + str(localAddress) + '\n')
       elif state == 'stop':
-         outputFile.write('   remove-address ' + localInterface + ' ' + str(localNetwork) + '\n')
+         outputFile.write('   remove-address ' + localInterface + ' ' + str(localAddress) + '\n')
 
    outputFile.write('   log-result 1\n')
 
@@ -542,8 +541,8 @@ def makeNodeConfiguration(fullSiteList, node, v4only):
 log('***** This is NorNet version 1.0! *****')
 loginToPLC()
 
-#makeProviderConfiguration()
-#makeNorNetConfiguration(False)
+makeProviderConfiguration()
+makeNorNetConfiguration(False)
 
 fullSiteList = fetchNorNetSiteList()
 node = fetchNorNetNode('altenessen.gamma.site')

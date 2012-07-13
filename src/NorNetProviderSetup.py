@@ -89,36 +89,41 @@ def makeNorNetIP(provider, site, node, subnode, version):
    if ((n < 0) | (n > 255)):
       error('Bad host ID')
 
+   # ====== IPv4 handling ===================================================
    if version == 4:
       if v > 0:   # Ignore negative values!
          error('Bad subnode ID; must be 0 for IPv4')
       if s != 0:
-         prefix = 24;   # NorNet + Provider + Site
+         prefix = 24;    # NorNet + Provider + Site
       elif p != 0:
-         prefix = 16;   # NorNet + Provider
+         prefix = 16;    # NorNet + Provider
       else:
-         prefix = 8;    # NorNet
+         prefix = 8;     # NorNet
       return IPv4Network(NorNet_IPv4Prefix + '.' + \
                          str(p) + '.' + str(s) + '.' + str(n) + '/' + str(prefix))
+
+   # ====== IPv6 handling ===================================================
    else:
+      nodeNet = n
+      nodeNum = 0
       if v != 0:
-         prefix = 64;   # NorNet + Provider + Site + Node
-         if v < 0:   # Negative value -> set 0, to use first subnet (0)!
-            v = 0
-         if v > 255:
-            error('Bad subnode ID')
+         prefix = 64     # NorNet + Provider + Site + NodeNetwork + VirtalNodeNet
+         if v < 0:       # Special case: NodeNetwork zero; get IP of node in this network.
+             v = 0
+             nodeNet = 0
+             nodeNum = n
       elif n != 0:
-         prefix = 56;   # NorNet + Provider + Site + Node
+         prefix = 56     # NorNet + Provider + Site + NodeNetwork
       elif s != 0:
-         prefix = 48;   # NorNet + Provider + Site
+         prefix = 48;    # NorNet + Provider + Site
       elif p != 0:
-         prefix = 40;   # NorNet + Provider
+         prefix = 40;    # NorNet + Provider
       else:
-         prefix = 32;   # NorNet
+         prefix = 32;    # NorNet
       return IPv6Network(NorNet_IPv6Prefix + ':' + \
                           str.replace(hex((p << 8) | s), '0x', '') + ':' + \
-                          str.replace(hex((n << 8) | v), '0x', '') + '::' + \
-                          str.replace(hex(n), '0x', '') + '/' + str(prefix))
+                          str.replace(hex((nodeNet << 8) | v), '0x', '') + '::' + \
+                          str.replace(hex(nodeNum), '0x', '') + '/' + str(prefix))
 
 
 # ###### Get NorNet tunnel inner IPv4 address ###############################
