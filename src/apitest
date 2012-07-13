@@ -490,23 +490,32 @@ def makeNodeConfiguration(fullSiteList, node, v4only):
             else:
                interface = node['node_nornet_interface'] + '.' + str(providerIndex)
 
-            debianFile.write('\n# ' + provider['provider_long_name'] + ' (' + \
-                             str(provider['provider_index']) + ')\n')
+            debianFile.write('\n# ====== ' + provider['provider_long_name'] + ' (' + \
+                             str(provider['provider_index']) + ') ======\n')
             debianFile.write('auto ' + interface + '\n')
             for version in [ 4, 6 ]:
-               address = makeNorNetIP(providerIndex, siteIndex, nodeAddress,                0, version)
-               gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 0, version)
+               address = makeNorNetIP(providerIndex, siteIndex, nodeAddress,                -1, version)
+               gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
                if version == 4:
                   debianFile.write('iface ' + interface + ' inet static\n')
                   debianFile.write('   address ' + str(address.ip) + '\n')
                   debianFile.write('   netmask ' + str(address.netmask) + '\n')
-                  debianFile.write('   gateway ' + str(gateway.ip) + '\n\n')
+                  debianFile.write('   gateway ' + str(gateway.ip) + '\n')
                else:
                   debianFile.write('iface ' + interface + ' inet6 static\n')
                   debianFile.write('   address ' + str(address.ip) + '\n')
                   debianFile.write('   netmask ' + str(address.prefixlen) + '\n')
-                  debianFile.write('   gateway ' + str(gateway.ip) + '\n\n')
+                  debianFile.write('   gateway ' + str(gateway.ip) + '\n')
                print interface, address, gateway
+
+               if providerIndex == site['site_default_provider_index']:
+                  dnsList = str(site['site_dns1'])
+                  if site['site_dns2'] != IPv4Address('0.0.0.0'):
+                     dnsList = dnsList + ' ' + str(site['site_dns2'])
+                  debianFile.write('   dns-nameservers ' + dnsList + '\n')
+
+               debianFile.write('\n')
+
 
    debianFile.close()
    return configurationName

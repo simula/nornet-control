@@ -87,7 +87,7 @@ def makeNorNetIP(provider, site, node, subnode, version):
       error('Bad host ID')
 
    if version == 4:
-      if v != 0:
+      if v > 0:   # Ignore negative values!
          error('Bad subnode ID; must be 0 for IPv4')
       if s != 0:
          prefix = 24;
@@ -98,10 +98,12 @@ def makeNorNetIP(provider, site, node, subnode, version):
       return IPv4Network(NorNet_IPv4Prefix + '.' + \
                          str(p) + '.' + str(s) + '.' + str(n) + '/' + str(prefix))
    else:
-      if ((v < 0) | (v > 255)):
-         error('Bad subnode ID')
       if v != 0:
          prefix = 64;
+         if v < 0:   # Negative value -> set 0, to use first subnet (0)!
+            v = 0
+         if v > 255:
+            error('Bad subnode ID')
       elif n != 0:
          prefix = 56;   # NorNet + Provider + Site + Host
       elif s != 0:
