@@ -1,0 +1,21 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
+from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+
+from NorNetProviderSetup import *;
+
+
+print 'NodeVNet=', makeNorNetIP(1,1,2,123, 6)
+print 'NodeNet= ', makeNorNetIP(1,1,2,0, 6)
+print 'NodeNet0=', makeNorNetIP(1,1,2,-1, 6)
+print 'Site=    ', makeNorNetIP(1,1,0,0, 6)
+print 'Provider=', makeNorNetIP(1,0,0,0, 6)
+print 'NorNet=  ', makeNorNetIP(0,0,0,0, 6)
+print ''
+
+print 'Node=    ', makeNorNetIP(1,1,1,0, 4)
+print 'Site=    ', makeNorNetIP(1,1,0,0, 4)
+print 'Provider=', makeNorNetIP(1,0,0,0, 4)
+print 'NorNet=  ', makeNorNetIP(0,0,0,0, 4)
