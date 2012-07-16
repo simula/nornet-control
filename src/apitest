@@ -23,6 +23,7 @@
 import sys;
 import xmlrpclib;
 import re;
+import os;
 import hashlib;
 import datetime;
 
@@ -486,6 +487,23 @@ def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix, interfa
       debianFile.write('iface lo inet loopback\n\n')
 
 
+   # ====== Fedora /etc/sysconfig/network-scripts/ifcfg-* ===================
+   if variant == 'Fedora':
+      if(configNamePrefix == None):
+         configNamePrefix = 'node-' + node['node_name'] + '-'
+      if interfaceOverride == None:
+         interface = node['node_nornet_interface']
+      else:
+         interface = interfaceOverride
+      for i in range(0, 256):
+         configurationName = configNamePrefix + 'ifcfg-' + interface + ':' + str(i)
+         try:
+            os.unlink(configurationName)
+         except OSError:
+            print configurationName
+            continue
+
+
    site = getNorNetSiteOfNode(fullSiteList, node)
    if site == None:
       error('Node ' + node['node_name'] + ' does not belong to a NorNet site')
@@ -572,8 +590,6 @@ def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix, interfa
                      fedoraFile.write('IPV6ADDR=' + str(address) + '\n')
                      if providerIndex == site['site_default_provider_index']:
                         fedoraFile.write('IPV6_DEFAULTGW=' + str(gateway.ip) + '\n')
-#                     else:
-#                        fedoraFile.write('IPV6ADDR_SECONDARIES=' + str(address) + '\n')
 
                   if providerIndex == site['site_default_provider_index']:
                      for i in range(0, NorNet_MaxDNSServers - 1):
