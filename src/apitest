@@ -233,13 +233,17 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
          for version in [ 4, 6 ]:
             if ((version == 6) and (v4only == True)):
                continue
+            fullNorNetNetwork    = makeNorNetIP(0, 0, 0, 0, version)
             localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, version)
-            outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + ' to ' + str(localProviderNetwork) + '\n')
+            outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + \
+                             ' to ' + str(localProviderNetwork) + '\n')
 
-         # ====== TOS rule ==================================================
-         # If TOS is set, select outgoing provider accordingly
-         if routingTableTOS != 0x00:
-            outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableTOSPref) + ' tos ' + hex(routingTableTOS) + '\n')
+            # ====== TOS rule ===============================================
+            # If TOS is set, select outgoing provider accordingly
+            if routingTableTOS != 0x00:
+               outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableTOSPref) + \
+                                ' from ' + str(fullNorNetNetwork) + \
+                                ' tos ' + hex(routingTableTOS) + '\n')
 
          # ====== Source rules ==============================================
          # Otherwise, use source address to determine the outgoing provider.
@@ -247,7 +251,8 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
             if ((version == 6) and (v4only == True)):
                continue
             localProviderNetwork = makeNorNetIP(localProviderIndex, 0, 0, 0, version)
-            outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableSourcePref) + ' from ' + str(localProviderNetwork) + '\n')
+            outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableSourcePref) + \
+                             ' from ' + str(localProviderNetwork) + '\n')
 
       elif (state == 'stop'):
          outputFile.write('   remove-table ' + str(routingTableID) + '\n')
