@@ -500,7 +500,6 @@ def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix, interfa
          try:
             os.unlink(configurationName)
          except OSError:
-            print configurationName
             continue
 
 
