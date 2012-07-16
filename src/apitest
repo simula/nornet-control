@@ -470,7 +470,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
 
 
 # ###### Generate node configuration ########################################
-def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix):
+def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix, interfaceOverride):
    log('Making node configuration for ' + node['node_name'] + ' ...')
 
    # ====== Debian /etc/network/interfaces ==================================
@@ -499,10 +499,12 @@ def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix):
          if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
             provider = providerList[providerIndex]
-            if providerIndex == site['site_default_provider_index']:
+            if interfaceOverride == None:
                interface = node['node_nornet_interface']
             else:
-               interface = node['node_nornet_interface'] + ':' + str(providerIndex)
+               interface = interfaceOverride
+            if providerIndex != site['site_default_provider_index']:
+               interface = interface + ':' + str(providerIndex)
 
 
             # ====== Debian /etc/network/interfaces =========================
@@ -599,5 +601,5 @@ makeNorNetConfiguration(False)
 fullSiteList = fetchNorNetSiteList()
 node = fetchNorNetNode('altenessen.gamma.site')
 if node != None:
-   makeNodeConfiguration(fullSiteList, node, 'Debian', None)
-   makeNodeConfiguration(fullSiteList, node, 'Fedora', '')
+   makeNodeConfiguration(fullSiteList, node, 'Debian', None, None)
+   makeNodeConfiguration(fullSiteList, node, 'Fedora', None, 'p2p1')
