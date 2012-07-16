@@ -515,7 +515,7 @@ def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix, interfa
 
             # ====== Fedora /etc/sysconfig/network-scripts/ifcfg-* ==========
             if variant == 'Fedora':
-               if(configNamePrefix == None):
+               if configNamePrefix == None:
                   configNamePrefix = 'node-' + node['node_name'] + '-'
                configurationName = configNamePrefix + 'ifcfg-' + interface
                fedoraFile = makeConfigFile('Node', configurationName, False)
@@ -602,4 +602,11 @@ fullSiteList = fetchNorNetSiteList()
 node = fetchNorNetNode('altenessen.gamma.site')
 if node != None:
    makeNodeConfiguration(fullSiteList, node, 'Debian', None, None)
-   makeNodeConfiguration(fullSiteList, node, 'Fedora', None, 'p2p1')
+
+node = fetchNorNetNode('sognsvann.beta.site')
+if node != None:
+   makeNodeConfiguration(fullSiteList, node, 'Fedora', '', 'p2p1')
+
+#node = fetchNorNetNode('fornebu.alpha.site')
+#if node != None:
+#   makeNodeConfiguration(fullSiteList, node, 'Fedora', '', 'eth0')
