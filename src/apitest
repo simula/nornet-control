@@ -504,13 +504,26 @@ def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix):
             else:
                interface = node['node_nornet_interface'] + ':' + str(providerIndex)
 
+
             # ====== Debian /etc/network/interfaces =========================
             if variant == 'Debian':
                debianFile.write('\n# ====== ' + provider['provider_long_name'] + ' (' + \
                                 str(provider['provider_index']) + ') ======\n')
                debianFile.write('auto ' + interface + '\n')
 
+            # ====== Fedora /etc/sysconfig/network-scripts/ifcfg-* ==========
+            if variant == 'Fedora':
+               if(configNamePrefix == None):
+                  configNamePrefix = 'node-' + node['node_name'] + '-'
+               configurationName = configNamePrefix + 'ifcfg-' + interface
+               fedoraFile = makeConfigFile('Node', configurationName, False)
+               fedoraFile.write('DEVICE=' + interface + '\n')
+               fedoraFile.write('ONBOOT=yes\n')
+               fedoraFile.write('BOOTPROTO=static\n')
 
+            fedoraDnsServer = 1
+
+            # ====== Generate IP configuration ==============================
             for version in [ 4, 6 ]:
                address = makeNorNetIP(providerIndex, siteIndex, nodeAddress,                -1, version)
                gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
@@ -544,16 +557,28 @@ def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix):
 
                      debianFile.write('\n')
 
-               # ====== Debian /etc/network/interfaces ======================
-               elif variant == 'Fedora':
-                  if(configNamePrefix == None):
-                     configNamePrefix = 'node-' + node['node_name'] + '-'
-                  configurationName = configNamePrefix + 'ifcfg-' + interface
-                  fedoraFile = makeConfigFile('Node', configurationName, False)
+               # ====== Fedora /etc/sysconfig/network-scripts/ifcfg-* =======
+               if variant == 'Fedora':
+                  if version == 4:
+                     fedoraFile.write('IPADDR=' + str(address.ip) + '\n')
+                     fedoraFile.write('NETMASK=' + str(address.netmask) + '\n')
+                     if providerIndex == site['site_default_provider_index']:
+                        fedoraFile.write('GATEWAY=' + str(gateway.ip) + '\n')
+                  else:
+                     fedoraFile.write('IPV6INIT=yes\n')
+                     fedoraFile.write('IPV6_AUTOCONF=no\n')
+                     fedoraFile.write('IPV6ADDR=' + str(address) + '\n')
+                     if providerIndex == site['site_default_provider_index']:
+                        fedoraFile.write('IPV6_DEFAULTGW=' + str(gateway.ip) + '\n')
+#                     else:
+#                        fedoraFile.write('IPV6ADDR_SECONDARIES=' + str(address) + '\n')
 
-
-                  #if providerIndex == site['site_default_provider_index']:
-
+                  if providerIndex == site['site_default_provider_index']:
+                     for i in range(0, NorNet_MaxDNSServers - 1):
+                        dns = IPAddress(getTagValue(site['site_tags'], 'nornet_site_dns' + str(1 + i), '0.0.0.0'))
+                        if ((dns != IPv4Address('0.0.0.0')) and (dns.version == version)):
+                           fedoraFile.write('DNS' + str(fedoraDnsServer) + '=' + str(dns) + '\n')
+                           fedoraDnsServer = fedoraDnsServer + 1
 
 
    # ====== Debian /etc/network/interfaces ==================================
@@ -575,3 +600,4 @@ fullSiteList = fetchNorNetSiteList()
 node = fetchNorNetNode('altenessen.gamma.site')
 if node != None:
    makeNodeConfiguration(fullSiteList, node, 'Debian', None)
+   makeNodeConfiguration(fullSiteList, node, 'Fedora', '')
