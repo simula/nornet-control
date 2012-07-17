@@ -166,9 +166,10 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
 
       # ====== Set DNS servers ==============================================
       for i in range(0, NorNet_MaxDNSServers - 1):
-         if len(dnsServers) > i:
-            if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_dns' + str(1 + i), str(IPNetwork(dnsServers[i]).ip)) <= 0:
-               error('Unable to add "nornet_site_dns' + str(1 + i) + '" tag to site ' + siteName)
+         if i >= len(dnsServers):
+            break
+         if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_dns' + str(1 + i), str(IPNetwork(dnsServers[i]).ip)) <= 0:
+            error('Unable to add "nornet_site_dns' + str(1 + i) + '" tag to site ' + siteName)
 
       if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tb_internal_interface', tbInternalInterface) <= 0:
          error('Unable to add "nornet_site_tb_internal_interface" tag to site ' + siteName)
@@ -263,7 +264,11 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                  ((onlyDefault == False) and (providerIndex != siteDefProviderIndex)) ):
                providerName = getNorNetProviderInfo(providerIndex)[1]
 
-               ifHostName        = nodeName.split('.')[0] + '-' + str.lower(providerName) + '.' + str.lower(siteDomain)
+               if providerIndex == siteDefProviderIndex:
+                  # Interface of default provider must use the hostname!
+                  ifHostName     = nodeName.split('.')[0] + '.' + str.lower(siteDomain)
+               else:
+                  ifHostName     = nodeName.split('.')[0] + '-' + str.lower(providerName) + '.' + str.lower(siteDomain)
                ifIPv4            = makeNorNetIP(providerIndex, siteIndex, nodeAddress, 0, 4)
                ifGateway         = makeNorNetIP(providerIndex, siteIndex, 1, 0, 4)
                ifProviderNetwork = makeNorNetIP(providerIndex, 0, 0, 0, 4)
