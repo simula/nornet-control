@@ -510,8 +510,9 @@ def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix, interfa
    nodeAddress = node['node_address']
 
    # ====== Get node information ============================================
-   providerList = getNorNetProvidersForSite(site)
-   for onlyDefault in [ True, False ]:
+   providerList    = getNorNetProvidersForSite(site)
+   ipv6Secondaries = []
+   for onlyDefault in [ False, True  ]:   # NOTE: non-default providers first!
       for providerIndex in providerList:
          if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
@@ -538,7 +539,7 @@ def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix, interfa
                fedoraFile = makeConfigFile('Node', configurationName, False)
                fedoraFile.write('DEVICE=' + interface + '\n')
                fedoraFile.write('ONBOOT=yes\n')
-               fedoraFile.write('BOOTPROTO=static\n')
+               fedoraFile.write('BOOTPROTO=static\n\n')
 
             fedoraDnsServer = 1
 
@@ -584,16 +585,28 @@ def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix, interfa
                      if providerIndex == site['site_default_provider_index']:
                         fedoraFile.write('GATEWAY=' + str(gateway.ip) + '\n')
                   else:
-                     fedoraFile.write('IPV6INIT=yes\n')
-                     fedoraFile.write('IPV6_AUTOCONF=no\n')
-                     fedoraFile.write('IPV6ADDR=' + str(address) + '\n')
-                     if providerIndex == site['site_default_provider_index']:
-                        fedoraFile.write('IPV6_DEFAULTGW=' + str(gateway.ip) + '\n')
+                     if providerIndex != site['site_default_provider_index']:
+                        ipv6Secondaries.append(address)
 
-                  if providerIndex == site['site_default_provider_index']:
-                     for i in range(0, NorNet_MaxDNSServers - 1):
-                        dns = IPAddress(getTagValue(site['site_tags'], 'nornet_site_dns' + str(1 + i), '0.0.0.0'))
-                        if ((dns != IPv4Address('0.0.0.0')) and (dns.version == version)):
+                     else:
+                        fedoraFile.write('\nIPV6INIT=yes\n')
+                        fedoraFile.write('IPV6_AUTOCONF=no\n')
+                        fedoraFile.write('IPV6ADDR=' + str(address) + '\n')
+                        fedoraFile.write('IPV6_DEFAULTGW=' + str(gateway.ip) + '\n')
+                        fedoraFile.write('IPV6ADDR_SECONDARIES="')
+                        i = 0
+                        for secondaryAddress in ipv6Secondaries:
+                           if i > 0:
+                              fedoraFile.write(' ')
+                           fedoraFile.write(str(secondaryAddress))
+                           i = i + +1
+                        fedoraFile.write('"\n')
+
+                  for i in range(0, NorNet_MaxDNSServers - 1):
+                     dns = IPAddress(getTagValue(site['site_tags'], 'nornet_site_dns' + str(1 + i), '0.0.0.0'))
+                     if ((dns != IPv4Address('0.0.0.0')) and (dns.version == version)):
+                        if ((providerIndex == site['site_default_provider_index']) or
+                            (version == 4)):
                            fedoraFile.write('DNS' + str(fedoraDnsServer) + '=' + str(dns) + '\n')
                            fedoraDnsServer = fedoraDnsServer + 1
 
@@ -617,11 +630,12 @@ fullSiteList = fetchNorNetSiteList()
 node = fetchNorNetNode('altenessen.gamma.site')
 if node != None:
    makeNodeConfiguration(fullSiteList, node, 'Debian', None, None)
+   makeNodeConfiguration(fullSiteList, node, 'Fedora', None, 'p2p1')
 
 node = fetchNorNetNode('sognsvann.beta.site')
 if node != None:
-   makeNodeConfiguration(fullSiteList, node, 'Fedora', '', 'p2p1')
+   makeNodeConfiguration(fullSiteList, node, 'Fedora', None, 'p2p1')
 
 #node = fetchNorNetNode('fornebu.alpha.site')
 #if node != None:
-#   makeNodeConfiguration(fullSiteList, node, 'Fedora', '', 'eth0')
+#   makeNodeConfiguration(fullSiteList, node, 'Fedora', None, 'eth0')
