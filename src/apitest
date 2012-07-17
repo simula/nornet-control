@@ -635,12 +635,12 @@ makeNorNetConfiguration(False)
 fullSiteList = fetchNorNetSiteList()
 node = fetchNorNetNode('altenessen.gamma.site')
 if node != None:
-   makeNodeConfiguration(fullSiteList, node, None,   'Debian', None)
+   makeNodeConfiguration(fullSiteList, node, None, 'Debian', None)
    makeNodeConfiguration(fullSiteList, node, 'p2p1', 'Fedora', None)
 
 node = fetchNorNetNode('sognsvann.beta.site')
 if node != None:
-   makeNodeConfiguration(fullSiteList, node, 'None', 'Fedora', None)
+   makeNodeConfiguration(fullSiteList, node, None, 'Fedora', None)
 
 node = fetchNorNetNode('fornebu.alpha.site')
 if node != None:
