@@ -44,8 +44,7 @@ def createTestConfiguration(userName, sliceName):
    removeNorNetSite("Gamma Test Site")
 
    # ====== Add test sites ==================================================
-   dnsServers = [ getPLCAddress(),
-                  makeNorNetIP(1, 1, 21, -1, 4), makeNorNetIP(1, 1, 21, -1, 6) ]
+   dnsServers = [ makeNorNetIP(1, 1, 21, -1, 4), makeNorNetIP(1, 1, 21, -1, 6) ]
 
    siteAlphaNorNetIndex = 1
    siteAlpha = makeNorNetSite('Alpha Test Site', 'TA', 'ta', 'http://www.alpha.site', 'alpha.site',
