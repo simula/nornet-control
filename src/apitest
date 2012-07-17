@@ -511,7 +511,6 @@ def makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeAddress,
          configurationName = configNamePrefix + 'ifcfg-' + interfaceName + ':' + str(i)
          try:
             os.unlink(configurationName)
-            print 'del=',configurationName
          except OSError:
             continue
 
