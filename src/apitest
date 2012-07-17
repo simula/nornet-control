@@ -471,14 +471,30 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
 
 
 # ###### Generate node configuration ########################################
-def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix, interfaceOverride):
-   log('Making node configuration for ' + node['node_name'] + ' ...')
+def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, configNamePrefix):
+   if interfaceOverride == None:
+      interface = node['node_nornet_interface']
+   else:
+      interface = interfaceOverride
+
+   site = getNorNetSiteOfNode(fullSiteList, node)
+   if site == None:
+      error('Node ' + nodeName + ' does not belong to a NorNet site')
+
+   return(makeNodeConfigurationForGivenNode(fullSiteList, site, node['node_name'], node['node_address'],
+                                            interface, variant, configNamePrefix))
+
+
+# ###### Generate node configuration ########################################
+def makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeAddress, interfaceName,
+                                      variant, configNamePrefix):
+   log('Making node configuration for ' + nodeName + ' ...')
 
    # ====== Debian /etc/network/interfaces ==================================
    debianFile = None
    if variant == 'Debian':
       if configNamePrefix == None:
-         configNamePrefix = 'node-' + node['node_name'] + '-'
+         configNamePrefix = 'node-' + nodeName + '-'
       configurationName = configNamePrefix + 'interfaces'
       debianFile = makeConfigFile('Node', configurationName, False)
 
@@ -490,26 +506,18 @@ def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix, interfa
    # ====== Fedora /etc/sysconfig/network-scripts/ifcfg-* ===================
    if variant == 'Fedora':
       if(configNamePrefix == None):
-         configNamePrefix = 'node-' + node['node_name'] + '-'
-      if interfaceOverride == None:
-         interface = node['node_nornet_interface']
-      else:
-         interface = interfaceOverride
+         configNamePrefix = 'node-' + nodeName + '-'
       for i in range(0, 256):
-         configurationName = configNamePrefix + 'ifcfg-' + interface + ':' + str(i)
+         configurationName = configNamePrefix + 'ifcfg-' + interfaceName + ':' + str(i)
          try:
             os.unlink(configurationName)
+            print 'del=',configurationName
          except OSError:
             continue
 
 
-   site = getNorNetSiteOfNode(fullSiteList, node)
-   if site == None:
-      error('Node ' + node['node_name'] + ' does not belong to a NorNet site')
-   siteIndex   = site['site_index']
-   nodeAddress = node['node_address']
-
    # ====== Get node information ============================================
+   siteIndex       = site['site_index']
    providerList    = getNorNetProvidersForSite(site)
    ipv6Secondaries = []
    for onlyDefault in [ False, True  ]:   # NOTE: non-default providers first!
@@ -517,13 +525,10 @@ def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix, interfa
          if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
             provider = providerList[providerIndex]
-            if interfaceOverride == None:
-               interface = node['node_nornet_interface']
+            if providerIndex == site['site_default_provider_index']:
+               interface = interfaceName
             else:
-               interface = interfaceOverride
-            if providerIndex != site['site_default_provider_index']:
-               interface = interface + ':' + str(providerIndex)
-
+               interface = interfaceName + ':' + str(providerIndex)
 
             # ====== Debian /etc/network/interfaces =========================
             if variant == 'Debian':
@@ -534,9 +539,11 @@ def makeNodeConfiguration(fullSiteList, node, variant, configNamePrefix, interfa
             # ====== Fedora /etc/sysconfig/network-scripts/ifcfg-* ==========
             if variant == 'Fedora':
                if configNamePrefix == None:
-                  configNamePrefix = 'node-' + node['node_name'] + '-'
+                  configNamePrefix = 'node-' + nodeName + '-'
                configurationName = configNamePrefix + 'ifcfg-' + interface
                fedoraFile = makeConfigFile('Node', configurationName, False)
+               fedoraFile.write('# ====== ' + provider['provider_long_name'] + ' (' + \
+                                str(provider['provider_index']) + ') ======\n')
                fedoraFile.write('DEVICE=' + interface + '\n')
                fedoraFile.write('ONBOOT=yes\n')
                fedoraFile.write('BOOTPROTO=static\n\n')
@@ -629,13 +636,15 @@ makeNorNetConfiguration(False)
 fullSiteList = fetchNorNetSiteList()
 node = fetchNorNetNode('altenessen.gamma.site')
 if node != None:
-   makeNodeConfiguration(fullSiteList, node, 'Debian', None, None)
-   makeNodeConfiguration(fullSiteList, node, 'Fedora', None, 'p2p1')
+   makeNodeConfiguration(fullSiteList, node, None,   'Debian', None)
+   makeNodeConfiguration(fullSiteList, node, 'p2p1', 'Fedora', None)
 
 node = fetchNorNetNode('sognsvann.beta.site')
 if node != None:
-   makeNodeConfiguration(fullSiteList, node, 'Fedora', None, 'p2p1')
+   makeNodeConfiguration(fullSiteList, node, 'None', 'Fedora', None)
 
-#node = fetchNorNetNode('fornebu.alpha.site')
-#if node != None:
-#   makeNodeConfiguration(fullSiteList, node, 'Fedora', None, 'eth0')
+node = fetchNorNetNode('fornebu.alpha.site')
+if node != None:
+  makeNodeConfiguration(fullSiteList, node, 'eth0', 'Fedora', None)
+
+makeNodeConfigurationForGivenNode(fullSiteList, fullSiteList[1], 'plc.alpha.site', 21, 'eth0', 'Fedora', None)
