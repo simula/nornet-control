@@ -640,7 +640,7 @@ if node != None:
 
 node = fetchNorNetNode('sognsvann.beta.site')
 if node != None:
-   makeNodeConfiguration(fullSiteList, node, None, 'Fedora', None)
+   makeNodeConfiguration(fullSiteList, node, 'p2p1', 'Fedora', None)
 
 node = fetchNorNetNode('fornebu.alpha.site')
 if node != None:
