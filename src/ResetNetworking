@@ -32,14 +32,22 @@ if [ -e /etc/init.d/network ] ; then
    /etc/init.d/network stop
 elif [ -e /etc/init.d/networking ] ; then
    log "Stopping networking (Debian/Ubuntu)"
-   /etc/init.d/networking stop
+   service networking stop
 fi
+
+
+log "Unconfiguring remaining tunnels"
+TUNNELS=`( ip tunnel show && ip -6 tunnel show ) | awk '/[a-Z0-9\-]*:/ { print $1 }'`
+for tunnel in $TUNNELS ; do
+   echo "Unconfiguring $tunnel ..."
+   echo "ip tunnel del $tunnel"
+   ip tunnel del $tunnel
+done
 
 
 log "Unconfiguring remaining interfaces"
 # Possibly, some interfaces are still up. Get rid of them!
-# INTERFACES=`ifconfig | awk '/^[a-Z]/ { print $1 }'`
-INTERFACES=`ip addr show | awk '/[0-9]*: [a-Z0-9]*:/ { print $2 }'`
+INTERFACES=`ifconfig -a | awk '/^[a-Z]/ { print $1 }'`
 for interface in $INTERFACES ; do
    echo "Unconfiguring $interface ..."
 
@@ -86,5 +94,5 @@ if [ -e /etc/init.d/network ] ; then
    /etc/init.d/network start
 elif [ -e /etc/init.d/networking ] ; then
    log "Starting networking (Debian/Ubuntu)"
-   /etc/init.d/networking start
+   service networking start
 fi
