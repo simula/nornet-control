@@ -63,6 +63,28 @@ log-result ()
 }
 
 
+# ###### Check whether any interface has a given address configured #########
+check-local-address ()
+{
+   local addressToFind="$1"
+
+   addressList=""
+   if [[ "$addressToFind" =~ : ]] ; then
+      addressList=`ip -6 addr show | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g"`
+   else
+      addressList=`ip -4 addr show | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+)\/([0-9]+) / { print $2 }' | sed -e "s/\/[0-9]*//g"`
+   fi
+
+   for address in $addressList ; do
+    echo "A=<$address> B=<$addressToFind>"
+      if [ "$address" = "$addressToFind" ] ; then
+         return 1
+      fi
+   done
+   return 0
+}
+
+
 # ###### Tunnel removal #####################################################
 remove-tunnel ()
 {
@@ -116,7 +138,7 @@ make-tunnel ()
    # Create the tunnel
    if [ $addToExistingTunnel -eq 0 ] ; then
       remove-tunnel "$interface" "$tunnelKey" "$from" "$tos" "$fwmark"
-      ip $outerV6option tunnel add $interface mode $mode local $outerLocalIP remote $outerRemoteIP ttl 255 $greoption  $tunnelOptions
+      ip $outerV6option tunnel add $interface mode $mode local $outerLocalIP remote $outerRemoteIP ttl 255 $greoption $tunnelOptions
    fi
    # Configure an address and turn the interface up
    if [ "$innerV6option" = "" ] ; then
@@ -153,7 +175,7 @@ show-tunnel ()
       ping -W3 -c3 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
    fi
    log-result $success
-   
+
    if [ $success -eq 1 ] ; then
       return 0
    else
@@ -298,13 +320,13 @@ make-nat ()
    fi
 }
 
-   
+
 # ###### Add Source NAT rule ################################################
 remove-nat ()
 {
    local sourceNetwork="$1"       # Source network (e.g. 10.0.0.0/8)
    local range="$2"               # Public IP range (optional)
-   
+
    if [ "$range" = "" ] ; then
       while iptables -t nat -D POSTROUTING -s "$sourceNetwork" -j MASQUERADE 2>/dev/null ; do
          dummy=1
