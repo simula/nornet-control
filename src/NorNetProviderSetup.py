@@ -99,11 +99,9 @@ def makeNorNetIP(provider, site, node, subnode, version):
          prefix = 16;    # NorNet + Provider
       else:
          prefix = 8;     # NorNet
-      if NorNet_IPv4Prefix.prefixlen > 8:
-         error('Bad prefix length for NorNet_IPv4Prefix')
-      a = IPv4Network('0.' + str(p) + '.' + str(s) + '.' + str(n) + '/' + str(prefix))
+      a = IPv4Address('0.' + str(p) + '.' + str(s) + '.' + str(n))
       a = int(NorNet_IPv4Prefix) | int(a)
-      return IPv4Network(str(IPv4Address(a)) + '/' + str(NorNet_IPv4Prefix.prefixlen))
+      return IPv4Network(str(IPv4Address(a)) + '/' + str(prefix))
 
    # ====== IPv6 handling ===================================================
    else:
@@ -123,14 +121,12 @@ def makeNorNetIP(provider, site, node, subnode, version):
          prefix = 40;    # NorNet + Provider
       else:
          prefix = 32;    # NorNet
-      if NorNet_IPv6Prefix.prefixlen > 32:
-         error('Bad prefix length for NorNet_IPv6Prefix')
-      a = IPv6Network('0:0:' + \
+      a = IPv6Address('0:0:' + \
                       str.replace(hex((p << 8) | s), '0x', '') + ':' + \
                       str.replace(hex((nodeNet << 8) | v), '0x', '') + '::' + \
-                      str.replace(hex(nodeNum), '0x', '') + '/' + str(prefix))
+                      str.replace(hex(nodeNum), '0x', ''))
       a = int(NorNet_IPv6Prefix) | int(a)
-      return IPv6Network(str(IPv6Address(a)) + '/' + str(NorNet_IPv6Prefix.prefixlen))
+      return IPv6Network(str(IPv6Address(a)) + '/' + str(prefix))
 
 
 # ###### Get NorNet information from address ################################
