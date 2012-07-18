@@ -634,6 +634,8 @@ loginToPLC()
 makeProviderConfiguration()
 makeNorNetConfiguration(False)
 
+fullSiteList = fetchNorNetSiteList()
+
 
 node = fetchNorNetNode('altenessen.gamma.site')
 if node != None:
@@ -661,5 +663,4 @@ makeNodeConfigurationForGivenNode(fullSiteList, fullSiteList[1], 'plc.alpha.site
 #except:
    #error('Unable to find my site!')
 
-#fullSiteList = fetchNorNetSiteList()
 #makeTunnelBoxConfiguration(fullSiteList, site, False)
