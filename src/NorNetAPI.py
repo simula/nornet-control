@@ -32,7 +32,7 @@ from NorNetProviderSetup import *;
 
 
 
-NorNetPLC_Address       = '132.252.156.21'
+NorNetPLC_Address       = '10.1.1.21'
 NorNetPLC_Root_User     = 'root@localhost.localdomain'
 NorNetPLC_Root_Password = 'nntb-root'
 

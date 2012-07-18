@@ -44,11 +44,13 @@ fi
 
 
 if [ "$state" = "reset" -o "$state" = "coldstart" ] ; then
-   ip rule flush
-   ip rule del lookup local || true
-   ip rule add from all lookup local   pref 0
-   ip rule add from all lookup main    pref 32766
-   ip rule add from all lookup default pref 32767
+   for version in 4 6 ; do
+      ip -${version} rule flush
+      ip -${version} rule del lookup local || true
+      ip -${version} rule add from all lookup local   pref 0
+      ip -${version} rule add from all lookup main    pref 32766
+      ip -${version} rule add from all lookup default pref 32767
+   done
    ip route flush cache
    iptables -t nat -F POSTROUTING
    if [ "$state" = "coldstart" ] ; then
