@@ -50,8 +50,8 @@ NorNet_ProviderList = {
 NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
 
 # Prefixes for the internal IPv4 and IPv6 networks
-NorNet_IPv4Prefix = '10'          # /8 prefix for internal IPv4 space (e.g. '10')
-NorNet_IPv6Prefix = 'fd00:0000'   # /32 prefix for internal IPv6 space (e.g. 'fd00:0000')
+NorNet_IPv4Prefix = IPv4Network('10.0.0.0/8')       # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
+NorNet_IPv6Prefix = IPv6Network('fd00:0000::/32')   # /32 prefix for internal IPv6 space (e.g. 'fd00:0000::/32')
 
 # Maximum number of DNS servers (e.g. 2+2 = 2x IPv4 + 2x IPv6)
 NorNet_MaxDNSServers = 4
@@ -99,8 +99,11 @@ def makeNorNetIP(provider, site, node, subnode, version):
          prefix = 16;    # NorNet + Provider
       else:
          prefix = 8;     # NorNet
-      return IPv4Network(NorNet_IPv4Prefix + '.' + \
-                         str(p) + '.' + str(s) + '.' + str(n) + '/' + str(prefix))
+      if NorNet_IPv4Prefix.prefixlen > 8:
+         error('Bad prefix length for NorNet_IPv4Prefix')
+      a = IPv4Network('0.' + str(p) + '.' + str(s) + '.' + str(n) + '/' + str(prefix))
+      a = int(NorNet_IPv4Prefix) | int(a)
+      return IPv4Network(str(IPv4Address(a)) + '/' + str(NorNet_IPv4Prefix.prefixlen))
 
    # ====== IPv6 handling ===================================================
    else:
@@ -120,10 +123,56 @@ def makeNorNetIP(provider, site, node, subnode, version):
          prefix = 40;    # NorNet + Provider
       else:
          prefix = 32;    # NorNet
-      return IPv6Network(NorNet_IPv6Prefix + ':' + \
-                          str.replace(hex((p << 8) | s), '0x', '') + ':' + \
-                          str.replace(hex((nodeNet << 8) | v), '0x', '') + '::' + \
-                          str.replace(hex(nodeNum), '0x', '') + '/' + str(prefix))
+      if NorNet_IPv6Prefix.prefixlen > 32:
+         error('Bad prefix length for NorNet_IPv6Prefix')
+      a = IPv6Network('0:0:' + \
+                      str.replace(hex((p << 8) | s), '0x', '') + ':' + \
+                      str.replace(hex((nodeNet << 8) | v), '0x', '') + '::' + \
+                      str.replace(hex(nodeNum), '0x', '') + '/' + str(prefix))
+      a = int(NorNet_IPv6Prefix) | int(a)
+      return IPv6Network(str(IPv6Address(a)) + '/' + str(NorNet_IPv6Prefix.prefixlen))
+
+
+# ###### Get NorNet information from address ################################
+def getNorNetInformationForAddress(address):
+   norNetInformation = None
+   if NorNet_IPv6Prefix.Contains(address):
+      a = int(address)
+      b = int((a >> 64) & 0xffffffff)
+      norNetInformation = {
+         'address':        address,
+         'provider_index': (b & 0xff000000) >> 24,
+         'site_index':     (b & 0x00ff0000) >> 16,
+         'node_index':     (b & 0x0000ff00) >> 8,
+         'vnet_index':     (b & 0x000000ff)
+      }
+
+   if NorNet_IPv4Prefix.Contains(address):
+      a = int(address)
+      norNetInformation = {
+         'address':        address,
+         'provider_index': (a & 0x00ff0000) >> 16,
+         'site_index':     (a & 0x0000ff00) >> 8,
+         'node_index':     (a & 0x000000ff),
+         'vnet_index':     None
+      }
+
+   return norNetInformation
+
+
+# ###### Get NorNet information about myself (host) #########################
+def getMyNorNetInformation():
+   localAddressList = getLocalAddresses(6)
+   for address in localAddressList:
+      if NorNet_IPv6Prefix.Contains(address):
+         return getNorNetInformationForAddress(address)
+
+   localAddressList = getLocalAddresses(4)
+   for address in localAddressList:
+      if NorNet_IPv4Prefix.Contains(address):
+         return getNorNetInformationForAddress(address)
+
+   return None
 
 
 # ###### Get NorNet tunnel inner IPv4 address ###############################

@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 from NorNetProviderSetup import *;
+from NorNetTools         import *;
 
 
 print 'NodeVNet=', makeNorNetIP(1,1,2,123, 6)
@@ -19,3 +20,32 @@ print 'Node=    ', makeNorNetIP(1,1,1,0, 4)
 print 'Site=    ', makeNorNetIP(1,1,0,0, 4)
 print 'Provider=', makeNorNetIP(1,0,0,0, 4)
 print 'NorNet=  ', makeNorNetIP(0,0,0,0, 4)
+
+
+
+addressList = getLocalAddresses(4)
+print addressList
+
+for a in addressList:
+   print str(a),NorNet_IPv4Prefix.Contains(a),NorNet_IPv6Prefix.Contains(a)
+
+
+## ###### Get NorNet information about myself (host) #########################
+#def getMyNorNetInformation():
+   #localAddressList = getLocalAddresses(6)
+   #for address in addressList:
+      #if NorNet_IPv6Prefix.Contains(address):
+         #return getNorNetInformationForAddress(address)
+
+   #localAddressList = getLocalAddresses(4)
+   #for address in addressList:
+      #if NorNet_IPv4Prefix.Contains(address):
+         #return getNorNetInformationForAddress(address)
+
+   #return None
+
+
+print getMyNorNetInformation()
+
+print getNorNetInformationForAddress(makeNorNetIP(100,65,22,0, 4))
+print getNorNetInformationForAddress(makeNorNetIP(100,65,22,123,6))
