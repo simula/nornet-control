@@ -84,6 +84,7 @@ def makeSiteConfiguration(fullSiteList, site, v4only):
    siteIndex        = site['site_index']
    siteShortName    = str.lower(site['site_short_name'])
    siteProviderList = getNorNetProvidersForSite(site)
+   defProvTbIPv4    = None
    for providerIndex in siteProviderList:
       provider            = siteProviderList[providerIndex]
       providerShortName   = provider['provider_short_name']
@@ -91,8 +92,15 @@ def makeSiteConfiguration(fullSiteList, site, v4only):
       providerNetworkIPv6 = makeNorNetIP(providerIndex, siteIndex, 0, 0, 6)
       outputFile.write(siteShortName + '_' + providerShortName + '_network_ipv4="' + str(providerNetworkIPv4) + '"\n')
       outputFile.write(siteShortName + '_' + providerShortName + '_network_ipv6="' + str(providerNetworkIPv6) + '"\n')
+      if providerIndex == site['site_default_provider_index']:
+         defProvTbIPv4 = provider['provider_tunnelbox_ipv4']
+
+   if defProvTbIPv4 == None:
+     error('Tunnelbox address of default provider has not been defined?!')
 
    makeTunnelBoxConfiguration(fullSiteList, site, None, v4only)
+   makeTunnelboxBootstrap(siteIndex, site['site_default_provider_index'], defProvTbIPv4,
+                          'tunnelbox-' +  site['site_short_name'])
 
    outputFile.close()
    return configurationName
@@ -397,6 +405,72 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
    outputFile.write('   log-result 1\n')
 
 
+def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, configNamePrefix):
+   localSite = {
+      'site_index'              : localSiteIndex,
+      'site_long_name'          : 'My Site',
+      'site_short_name'         : 'MS'
+   }
+   localProvider = {
+      'provider_index'          : localProviderIndex,
+      'provider_long_name'      : 'Local Provider',
+      'provider_short_name'     : 'local',
+      'provider_tunnelbox_ipv4' : localAddress
+   }
+   remoteSite = {
+      'site_index'              : NorNet_SiteIndex_Central,
+      'site_long_name'          : 'Central Site',
+      'site_short_name'         : 'NN'
+   }
+   remoteProvider = {
+      'provider_index'          : NorNet_CentralSite_BootstrapProviderIndex,
+      'provider_long_name'      : 'Local Provider',
+      'provider_short_name'     : 'local',
+      'provider_tunnelbox_ipv4' : NorNet_CentralSite_BootstrapTunnelbox
+   }
+
+   if configNamePrefix == None:
+      configNamePrefix = 'tunnelbox-' + localSite['site_short_name']
+   configurationName = configNamePrefix + '-bootstrap'
+   outputFile = makeConfigFile('Tunnelbox', configurationName, True)
+   log('Making tunnelbox bootstrap for site ' + str(localSiteIndex) + ' ...')
+
+
+   tunnel        = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, 4)
+   remoteNetwork = makeNorNetIP(remoteProvider['provider_index'], remoteSite['site_index'], 0, 0, 4)
+
+   outputFile.write('\nif [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
+   outputFile.write('   log-action "Tearing down tunnel to central site ..."\n')
+   outputFile.write('   remove-tunnel ' + \
+                    tunnel['tunnel_interface'] + ' ' + \
+                    hex(tunnel['tunnel_key'])  + '\n')
+   outputFile.write('   log-result 1\n')
+   outputFile.write('fi\n')
+
+   outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
+   outputFile.write('   log-action "Setting up tunnel to central site ..."\n')
+   outputFile.write('   make-tunnel ' + \
+                    tunnel['tunnel_interface']                 + ' ' + \
+                    hex(tunnel['tunnel_key'])                  + ' ' + \
+                    str(tunnel['tunnel_local_outer_address'])  + ' ' + \
+                    str(tunnel['tunnel_remote_outer_address']) + ' ' + \
+                    str(tunnel['tunnel_local_inner_address'])  + ' ' + \
+                    str(tunnel['tunnel_remote_inner_address']) + '\n')
+   outputFile.write('   make-route main ' + \
+                    str(remoteNetwork) + ' ' +
+                    tunnel['tunnel_interface'] + ' ' + \
+                    str(tunnel['tunnel_remote_inner_address']) + ' ' + \
+                    'metric 5\n')
+   outputFile.write('   log-result 1\n')
+   outputFile.write('fi\n')
+
+   outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" -o  "$state" = "status" ] ; then\n')
+   outputFile.write('   log-action "Trying to contact PLC at ' + str(getPLCAddress()) + ' ..."\n')
+   outputFile.write('   show-tunnel ' + tunnel['tunnel_interface'] + ' ' + \
+                    '0.0.0.0 ' + str(getPLCAddress()) + ' ""\n')
+   outputFile.write('fi\n')
+
+
 # ###### Generate tunnelbox configuration ###################################
 def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only):
    if configNamePrefix == None:
@@ -628,100 +702,34 @@ def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, config
 # ###########################################################################
 
 
-def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, configNamePrefix):
-   localSite = {
-      'site_index'              : localSiteIndex,
-      'site_long_name'          : 'My Site',
-      'site_short_name'         : 'MS'
-   }
-   localProvider = {
-      'provider_index'          : localProviderIndex,
-      'provider_long_name'      : 'Local Provider',
-      'provider_short_name'     : 'local',
-      'provider_tunnelbox_ipv4' : localAddress
-   }
-   remoteSite = {
-      'site_index'              : NorNet_SiteIndex_Central,
-      'site_long_name'          : 'Central Site',
-      'site_short_name'         : 'NN'
-   }
-   remoteProvider = {
-      'provider_index'          : NorNet_CentralSite_BootstrapProviderIndex,
-      'provider_long_name'      : 'Local Provider',
-      'provider_short_name'     : 'local',
-      'provider_tunnelbox_ipv4' : NorNet_CentralSite_BootstrapTunnelbox
-   }
-
-   if configNamePrefix == None:
-      configNamePrefix = 'tunnelbox-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-bootstrap'
-   outputFile = makeConfigFile('Tunnelbox', configurationName, True)
-   log('Making tunnelbox bootstrap for site ' + str(localSiteIndex) + ' ...')
-
-
-   tunnel        = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, 4)
-   remoteNetwork = makeNorNetIP(remoteProvider['provider_index'], remoteSite['site_index'], 0, 0, 4)
-
-   outputFile.write('\nif [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
-   outputFile.write('   log-action "Tearing down tunnel to central site ..."\n')
-   outputFile.write('   remove-tunnel ' + \
-                    tunnel['tunnel_interface'] + ' ' + \
-                    hex(tunnel['tunnel_key'])  + '\n')
-   outputFile.write('   log-result 1\n')
-   outputFile.write('fi\n')
-
-   outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
-   outputFile.write('   log-action "Setting up tunnel to central site ..."\n')
-   outputFile.write('   make-tunnel ' + \
-                    tunnel['tunnel_interface']                 + ' ' + \
-                    hex(tunnel['tunnel_key'])                  + ' ' + \
-                    str(tunnel['tunnel_local_outer_address'])  + ' ' + \
-                    str(tunnel['tunnel_remote_outer_address']) + ' ' + \
-                    str(tunnel['tunnel_local_inner_address'])  + ' ' + \
-                    str(tunnel['tunnel_remote_inner_address']) + '\n')
-   outputFile.write('   make-route main ' + \
-                    str(remoteNetwork) + ' ' +
-                    tunnel['tunnel_interface'] + ' ' + \
-                    str(tunnel['tunnel_remote_inner_address']) + ' ' + \
-                    'metric 5\n')
-   outputFile.write('   log-result 1\n')
-   outputFile.write('fi\n')
-
-   outputFile.write('\nif [ "$state" = "start" -o  "$state" = "status" ] ; then\n')
-   outputFile.write('   log-action "Trying to contact PLC at ' + str(getPLCAddress()) + ' ..."\n')
-   outputFile.write('   ping -W3 -c3 -i0.2 -q ' + str(getPLCAddress()) + '\n')
-   outputFile.write('   log-result 1\n')
-   outputFile.write('fi\n')
-
-
 # Beta Tunnelbox
 makeTunnelboxBootstrap(2, 1, '132.252.156.71', 'tunnelbox')
 
 
-#log('***** This is NorNet version 1.0! *****')
-#loginToPLC()
+log('***** This is NorNet version 1.0! *****')
+loginToPLC()
 
-#fullSiteList = fetchNorNetSiteList()
-
-
-#makeProviderConfiguration()
-#makeNorNetConfiguration(False)
+fullSiteList = fetchNorNetSiteList()
 
 
-#node = fetchNorNetNode('altenessen.gamma.site')
-#if node != None:
-   #makeNodeConfiguration(fullSiteList, node, None, 'Debian', None)
-   #makeNodeConfiguration(fullSiteList, node, 'p2p1', 'Fedora', None)
+makeProviderConfiguration()
+makeNorNetConfiguration(False)
 
-#node = fetchNorNetNode('sognsvann.beta.site')
-#if node != None:
-   #makeNodeConfiguration(fullSiteList, node, 'p2p1', 'Fedora', None)
 
-#node = fetchNorNetNode('fornebu.alpha.site')
-#if node != None:
-  #makeNodeConfiguration(fullSiteList, node, 'eth0', 'Fedora', None)
+node = fetchNorNetNode('altenessen.gamma.site')
+if node != None:
+   makeNodeConfiguration(fullSiteList, node, None, 'Debian', None)
+   makeNodeConfiguration(fullSiteList, node, 'p2p1', 'Fedora', None)
 
-#makeNodeConfigurationForGivenNode(fullSiteList, fullSiteList[1], 'plc.alpha.site', 21, 'eth0', 'Fedora', None)
+node = fetchNorNetNode('sognsvann.beta.site')
+if node != None:
+   makeNodeConfiguration(fullSiteList, node, 'p2p1', 'Fedora', None)
+
+node = fetchNorNetNode('fornebu.alpha.site')
+if node != None:
+  makeNodeConfiguration(fullSiteList, node, 'eth0', 'Fedora', None)
+
+makeNodeConfigurationForGivenNode(fullSiteList, fullSiteList[1], 'plc.alpha.site', 21, 'eth0', 'Fedora', None)
 
 
 
