@@ -471,21 +471,6 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
 
 
 # ###### Generate node configuration ########################################
-def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, configNamePrefix):
-   if interfaceOverride == None:
-      interface = node['node_nornet_interface']
-   else:
-      interface = interfaceOverride
-
-   site = getNorNetSiteOfNode(fullSiteList, node)
-   if site == None:
-      error('Node ' + nodeName + ' does not belong to a NorNet site')
-
-   return(makeNodeConfigurationForGivenNode(fullSiteList, site, node['node_name'], node['node_address'],
-                                            interface, variant, configNamePrefix))
-
-
-# ###### Generate node configuration ########################################
 def makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeAddress, interfaceName,
                                       variant, configNamePrefix):
    log('Making node configuration for ' + nodeName + ' ...')
@@ -623,16 +608,33 @@ def makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeAddress,
    return True
 
 
+# ###### Generate node configuration ########################################
+def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, configNamePrefix):
+   if interfaceOverride == None:
+      interface = node['node_nornet_interface']
+   else:
+      interface = interfaceOverride
+
+   site = getNorNetSiteOfNode(fullSiteList, node)
+   if site == None:
+      error('Node ' + nodeName + ' does not belong to a NorNet site')
+
+   return(makeNodeConfigurationForGivenNode(fullSiteList, site, node['node_name'], node['node_address'],
+                                            interface, variant, configNamePrefix))
+
+
+
 # ###########################################################################
 
 
 log('***** This is NorNet version 1.0! *****')
 loginToPLC()
 
+
 makeProviderConfiguration()
 makeNorNetConfiguration(False)
 
-fullSiteList = fetchNorNetSiteList()
+
 node = fetchNorNetNode('altenessen.gamma.site')
 if node != None:
    makeNodeConfiguration(fullSiteList, node, None, 'Debian', None)
@@ -647,3 +649,17 @@ if node != None:
   makeNodeConfiguration(fullSiteList, node, 'eth0', 'Fedora', None)
 
 makeNodeConfigurationForGivenNode(fullSiteList, fullSiteList[1], 'plc.alpha.site', 21, 'eth0', 'Fedora', None)
+
+
+
+#myNorNetInformation = getMyNorNetInformation()
+#if myNorNetInformation == None:
+   #error('Unable to get information about my site, provider and node. Check IP configuration!')
+
+#try:
+   #site = fullSiteList[myNorNetInformation['site_index']]
+#except:
+   #error('Unable to find my site!')
+
+#fullSiteList = fetchNorNetSiteList()
+#makeTunnelBoxConfiguration(fullSiteList, site, False)
