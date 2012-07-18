@@ -68,6 +68,9 @@ for version in 4 6 ; do
    ip -${version} rule add from all lookup default pref 32767
 done
 
+iptables -t nat -F POSTROUTING
+iptables -t nat -F PREROUTING
+
 ip -4 route flush cache
 ip -6 route flush cache
 
