@@ -92,7 +92,7 @@ def makeSiteConfiguration(fullSiteList, site, v4only):
       outputFile.write(siteShortName + '_' + providerShortName + '_network_ipv4="' + str(providerNetworkIPv4) + '"\n')
       outputFile.write(siteShortName + '_' + providerShortName + '_network_ipv6="' + str(providerNetworkIPv6) + '"\n')
 
-   makeTunnelBoxConfiguration(fullSiteList, site, v4only)
+   makeTunnelBoxConfiguration(fullSiteList, site, None, v4only)
 
    outputFile.close()
    return configurationName
@@ -186,9 +186,10 @@ def _getTablePref(opIndex, level):
 
 
 # ###### Generate tunnelbox configuration for given provider ################
-def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvider, pathNumber, v4only):
-   configurationName = 'tunnelbox-' + localSite['site_short_name'] + '-' + \
-                       localProvider['provider_short_name'] + '-config'
+def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvider, pathNumber, configNamePrefix, v4only):
+   if configNamePrefix == None:
+      configNamePrefix = 'tunnelbox-' + localSite['site_short_name']
+   configurationName = configNamePrefix + '-' + localProvider['provider_short_name'] + '-config'
    outputFile = makeConfigFile('Tunnelbox-Provider', configurationName, True)
    log('Making tunnelbox provider configuration for ' + \
        localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + ' ...')
@@ -399,8 +400,10 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
 
 
 # ###### Generate tunnelbox configuration ###################################
-def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
-   configurationName = 'tunnelbox-' + localSite['site_short_name'] + '-config'
+def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only):
+   if configNamePrefix == None:
+      configNamePrefix = 'tunnelbox-' + localSite['site_short_name']
+   configurationName = configNamePrefix + '-config'
    outputFile = makeConfigFile('Tunnelbox', configurationName, True)
    log('Making tunnelbox configuration for ' + localSite['site_long_name'] + ' ...')
 
@@ -438,7 +441,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, v4only):
             localProvider = localProviderList[localProviderIndex]
             tbpName = _makeTunnelboxProvider(fullSiteList, localSite,
                                              localProviderList, localProvider,
-                                             pathNumber, v4only)
+                                             pathNumber, configNamePrefix, v4only)
             outputFile.write('. ./' + tbpName +'\n')
             pathNumber = pathNumber + 1
 
@@ -630,11 +633,11 @@ def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, config
 log('***** This is NorNet version 1.0! *****')
 loginToPLC()
 
+fullSiteList = fetchNorNetSiteList()
+
 
 makeProviderConfiguration()
 makeNorNetConfiguration(False)
-
-fullSiteList = fetchNorNetSiteList()
 
 
 node = fetchNorNetNode('altenessen.gamma.site')
@@ -654,13 +657,18 @@ makeNodeConfigurationForGivenNode(fullSiteList, fullSiteList[1], 'plc.alpha.site
 
 
 
-#myNorNetInformation = getMyNorNetInformation()
-#if myNorNetInformation == None:
-   #error('Unable to get information about my site, provider and node. Check IP configuration!')
+myNorNetInformation = getMyNorNetInformation()
 
-#try:
-   #site = fullSiteList[myNorNetInformation['site_index']]
-#except:
-   #error('Unable to find my site!')
+myNorNetInformation = {
+ 'site_index' : 1
+}
 
-#makeTunnelBoxConfiguration(fullSiteList, site, False)
+if myNorNetInformation == None:
+   error('Unable to get information about my site, provider and node. Check IP configuration!')
+
+try:
+   site = fullSiteList[myNorNetInformation['site_index']]
+except:
+   error('Unable to find my site!')
+
+makeTunnelBoxConfiguration(fullSiteList, site, 'tunnelbox', False)
