@@ -29,7 +29,8 @@ from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 from NorNetTools import *;
 
 
-NorNet_MaxProviders = 8
+# ====== Adapt if necessary =================================================
+
 NorNet_ProviderList = {
 #   ID     Name                                Short Name (ASCII only!)
 # =====================================================================
@@ -46,9 +47,6 @@ NorNet_ProviderList = {
    222 : [ 'Deutsches Forschungsnetz',         'dfn'      ],
 }
 
-# TOS Settings for provider selection
-NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
-
 # Prefixes for the internal IPv4 and IPv6 networks
 NorNet_IPv4Prefix = IPv4Network('10.0.0.0/8')       # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
 NorNet_IPv6Prefix = IPv6Network('fd00:0000::/32')   # /32 prefix for internal IPv6 space (e.g. 'fd00:0000::/32')
@@ -59,6 +57,18 @@ NorNet_MaxDNSServers = 4
 # Source NAT range for IPv4 (to be set up at Central Site)
 # NorNet_CentralSiteIPv4NATRange = [ IPv4Address('132.252.156.240'), IPv4Address('132.252.156.249') ]
 NorNet_CentralSiteIPv4NATRange = [ IPv4Address('0.0.0.0'), IPv4Address('0.0.0.0') ]
+
+# Public tunnelbox IP of Central Site for Default Provider. Needed for bootstrapping other tunnelboxes!
+NorNet_CentralSite_BootstrapTunnelbox     = IPv4Address('132.252.156.70')
+NorNet_CentralSite_BootstrapProviderIndex = 1
+
+# TOS Settings for provider selection
+NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
+
+# ===========================================================================
+
+# Maximum number of providers per site
+NorNet_MaxProviders = 8
 
 # NorNet Internet connection to/from outside world goes via Site 1!
 NorNet_SiteIndex_Central    = 1
