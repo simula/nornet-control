@@ -1,6 +1,6 @@
 nornet (0.0.1~alpha1.1-1ubuntu1) quantal; urgency=low
 
-  * Initial Debian release (Closes: #531710).
-  * Initial Ubuntu release (LP: #325653).
+  * Initial Debian release (Closes: #xxxxxx).
+  * Initial Ubuntu release (LP: #xxxxxx).
 
- -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Fri, 20 Jul 2012 09:09:09 +0100
+ -- Thomas Dreibholz <dreibh@simula.no>  Fri, 20 Jul 2012 09:09:09 +0100
