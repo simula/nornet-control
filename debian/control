@@ -1,0 +1,23 @@
+Source: nornet
+Section: net
+Priority: optional
+Maintainer: Thomas Dreibholz <dreibh@simula.no>
+Homepage: http://www.nntb.no/
+Build-Depends: autotools-dev,
+               colorgcc,
+               debhelper (>= 9),
+               python-ipaddr,
+               python-netifaces
+Standards-Version: 3.9.2
+
+Package: nornet-tunnelbox
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         rsplib-tools,
+         iputils-ping,
+         iputils-tracepath,
+         traceroute
+Recommends: whois
+Description: NorNet Tunnelbox
+ WRITE DESCRIPTION HERE!
