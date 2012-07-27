@@ -14,6 +14,7 @@ Package: nornet-api
 Architecture: any
 Depends: python-ipaddr,
          python-netifaces,
+         rsplib-tools,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
@@ -23,16 +24,26 @@ Description: NorNet API
  .
  See http://www.nntb.no for details on NorNet!
 
-Package: nornet-tunnelbox
+Package: nornet-routing
 Architecture: any
 Depends: iputils-ping,
          iputils-tracepath,
          nornet-api,
-         rsplib-tools,
          traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet Tunnelbox
+Description: NorNet Routing Control
+ This package contains the scripts to configure the routing of NorNet
+ nodes.
+ .
+ See http://www.nntb.no for details on NorNet!
+
+Package: nornet-tunnelbox
+Architecture: any
+Depends: nornet-routing,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Tunnelbox Control
  This package contains the scripts to configure the tunnelboxes of NorNet
  sites.
  .
