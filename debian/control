@@ -3,21 +3,37 @@ Section: net
 Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: http://www.nntb.no/
-Build-Depends: autotools-dev,
-               colorgcc,
-               debhelper (>= 9),
+Build-Depends: debhelper (>= 9),
+               python (>= 2.7),
                python-ipaddr,
-               python-netifaces
-Standards-Version: 3.9.2
+               python-netifaces,
+               python-support
+Standards-Version: 3.9.3
+
+Package: nornet-api
+Architecture: any
+Depends: python-ipaddr,
+         python-netifaces,
+         ${misc:Depends},
+         ${python:Depends},
+         ${shlibs:Depends}
+Description: NorNet API
+ This package contains the NorNet Python API library. It contains functions
+ to communicate with the central server (MyPLC), based on XMLRPC.
+ .
+ See http://www.nntb.no for details on NorNet!
 
 Package: nornet-tunnelbox
 Architecture: any
-Depends: ${misc:Depends},
-         ${shlibs:Depends},
-         rsplib-tools,
-         iputils-ping,
+Depends: iputils-ping,
          iputils-tracepath,
-         traceroute
-Recommends: whois
+         nornet-api,
+         rsplib-tools,
+         traceroute,
+         ${misc:Depends},
+         ${shlibs:Depends}
 Description: NorNet Tunnelbox
- WRITE DESCRIPTION HERE!
+ This package contains the scripts to configure the tunnelboxes of NorNet
+ sites.
+ .
+ See http://www.nntb.no for details on NorNet!

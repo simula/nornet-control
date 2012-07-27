@@ -1,0 +1,29 @@
+#!/bin/bash
+
+VERSION=0.0.1~alpha1.1
+
+. ./debian.conf
+
+CHANGELOG_HEADER="`head -n1 debian/changelog`"
+PACKAGE=`echo $CHANGELOG_HEADER | sed -e "s/(.*//" -e "s/ //g"`
+
+if [ -e $PACKAGE-$VERSION ] ; then
+   rm -rf $PACKAGE-$VERSION
+fi
+mkdir $PACKAGE-$VERSION || exit 1
+
+
+# ---------------------------------------------------------
+mkdir $PACKAGE-$VERSION/src
+cp NEWS README BUGS COPYING ChangeLog *.lsm $PACKAGE-$VERSION
+cp src/*.py $PACKAGE-$VERSION/src
+cp src/*.1 $PACKAGE-$VERSION/src
+cp src/Routing-Setup $PACKAGE-$VERSION/src
+cp src/Tunnelbox-Setup $PACKAGE-$VERSION/src
+cp src/ResetNetworking $PACKAGE-$VERSION/src
+# find $PACKAGE-$VERSION/src -name "moc_*" | xargs rm -f
+# ---------------------------------------------------------
+
+
+tar czvf $PACKAGE-$VERSION.tar.gz $PACKAGE-$VERSION
+rm -rf $PACKAGE-$VERSION

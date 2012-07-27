@@ -1,0 +1,479 @@
+commit b0b69143828d981add7a4333ad71888d73031694
+Author: Dr. Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Fri Jul 20 20:46:20 2012 +0200
+
+    Script updates.
+
+commit 4e97dcfbe588777c476372ecd5f9bd1e860ada84
+Author: Dr. Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Fri Jul 20 20:42:40 2012 +0200
+
+    Wrote initial versions of Debian/Ubuntu packaging scripts for NorNet Control. They are not functional yet.
+
+commit c4f16ed75bcca3b43e47bb512afa97696d7e2b6f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 16:52:18 2012 +0200
+
+    Added function to check existence of local IP address.
+
+commit a56193c9b136193aca3b7c6589fc4fecb7c9bb48
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 15:41:26 2012 +0200
+
+    Tunnelbox setup script can now handle bootstrap configurations setup.
+
+commit 82eafee192cd1f058551202d322368ad3cf1fb3b
+Merge: 613f28d a6dee36
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 15:12:54 2012 +0200
+
+    Merge branch 'master' of https://github.com/simula/rn
+
+commit 613f28d20cb75fe0685a324d93f62f1a6f6cf6bc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 15:12:28 2012 +0200
+
+    Added export for tunnelbox bootstrap information.
+
+commit a6dee367fa41c05fe3c40dd7da77f28e996cd42d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 14:09:36 2012 +0200
+
+    Improved reset script.
+
+commit 15046b96c6b90fbd49897702549aa97b0c302512
+Merge: 5e73ebd 8e0c0ce
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 13:55:42 2012 +0200
+
+    Merge branch 'master' of https://github.com/simula/rn
+
+commit 5e73ebd20c4099c6c60089af77f4d1ce3b05ffec
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 13:55:18 2012 +0200
+
+    Configuration export update.
+
+commit d8f384b3bb34f5b23527daf8abbc351b0f1996e7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 13:55:07 2012 +0200
+
+    Also reset NAT table.
+
+commit c42dd9b0f20c30d2370214916774814237c29f9f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 13:53:45 2012 +0200
+
+    Added script to reset network configuration.
+
+commit 8e0c0ce39abc50b1dea300af5d66cde8fdfcac6c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 13:02:35 2012 +0200
+
+    Addess handling fix.
+
+commit 681613753e7171642b322f6231d279441ef77470
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 12:59:38 2012 +0200
+
+    A small update.
+
+commit 630c3c14ebba220215f140f3a1acc81cd9efbcc2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 11:57:39 2012 +0200
+
+    Minor update.
+
+commit 702b9c546c1de40158f119559b92194e6dfadf7d
+Merge: 6c705f4 990fe4b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 11:29:08 2012 +0200
+
+    Merge branch 'master' of github.com:simula/rn
+
+commit 6c705f43a428a710a035984bb76a509afa6fdeed
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 18 11:28:42 2012 +0200
+
+    Added some address handling functions.
+
+commit 990fe4b2c2f65ffb60bb5ae51da16ad86e8e3a50
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 17 14:27:44 2012 +0200
+
+    F16 interface name change.
+
+commit 04fbc9132412819cf944d387456286d04709faa1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 17 14:24:09 2012 +0200
+
+    Some fixes.
+
+commit 7eb9c8405ba1ae85ba0c723a9985d12897770734
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 17 14:07:57 2012 +0200
+
+    Removed debug output.
+
+commit 4bd605ea56d1639af967daa613634e1ea249f936
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 17 14:06:32 2012 +0200
+
+    Node configuration improvements.
+
+commit 7ccc777462af319629cf7cdfb85e1d980a07ae72
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 17 13:31:24 2012 +0200
+
+    Fedora Core 14 does not support IPv6 on sub-interfaces. Using IPV6ADDR_SECONDARIES instead.
+
+commit 6b2dc5bf6fbbfb057a1ec82c1e2b0fe6d3bb766e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 17 13:31:06 2012 +0200
+
+    DNS address update. Use NorNet-internal addressing.
+
+commit fefa704a2646cb740ac67e9b85844b261e9e253a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 17 13:17:25 2012 +0200
+
+    Hostname configuration fix for default provider's interface.
+
+commit c4386c8de4d3c0842df2904bdc35a02582a1ffb0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jul 16 16:39:29 2012 +0200
+
+    PLC IP is now within NorNet!
+
+commit 771b3b8a9a13dff4991d56b4d25b59021ea767e8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jul 16 14:31:40 2012 +0200
+
+    Removed debug output.
+
+commit 2944b6ee8e0dabfeeacef234c1ffdca809cb88dc
+Merge: ee8cc60 c107506
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jul 16 14:13:30 2012 +0200
+
+    Merge branch 'master' of https://github.com/simula/rn
+
+commit ee8cc60755a9c4c14009632a1cf497222111b63a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jul 16 14:13:06 2012 +0200
+
+    Fedora: remove outdated configuration first.
+
+commit c107506b8fed1c3f781da1494abaff121d4140f9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jul 16 13:56:33 2012 +0200
+
+    Configuration script update.
+
+commit 7236c0a907ba71d66ff406b5dc7f6a79d153513e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jul 16 13:47:06 2012 +0200
+
+    Allow to override interface name when dumping configuration file.
+
+commit 4be2a70993eb0bf3f75dd9b0e5e3420a0a654b26
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jul 16 13:32:41 2012 +0200
+
+    Added Fedora configuration output.
+
+commit 66a4cb625b8a720f0b77a3d7d7d243f7c61992fe
+Merge: fa5f340 522d5cf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jul 16 13:12:17 2012 +0200
+
+    Merge branch 'master' of https://github.com/simula/rn
+
+commit fa5f3401fcb3a59fcb6e403426a5895c792c0a6e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jul 16 13:11:51 2012 +0200
+
+    Debian configuration improvements.
+
+commit 522d5cf4e5a3f72a0c4d64e1cbe64ed26bf12f64
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jul 16 11:34:58 2012 +0200
+
+    - NorNet-specific TOS-based routing rules only apply to NorNet addresses. Otherwise, other communication is prevented (e.g. ssh to tunnelbox's public IP).
+    - Fixed "coldstart" option to also flush rules for IPv6.
+
+commit 71e6fcf57877bcac21aec91077b556a410fac700
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 13 19:29:50 2012 +0200
+
+    Added test.
+
+commit a3620b13b1928e4d441f0827cea4e7159ac41f47
+Merge: db6075b 67a7198
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 13 19:29:28 2012 +0200
+
+    Merge branch 'master' of github.com:simula/rn
+
+commit db6075bb48bed6449bc1635bcefd949b77e270eb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 13 19:29:15 2012 +0200
+
+    Added test.
+
+commit 67a7198a45d729ce3104b34c608e3626a242a1f5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 13 19:16:07 2012 +0200
+
+    Removed comment -> also setting gateway now.
+
+commit 7a57a43d27af875fd9d2f28ccad0408328e0e433
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 13 18:57:07 2012 +0200
+
+    Improved IP configuration handling.
+
+commit d29f20386bc6e19646cf78e1ca8ef6cf2a293d21
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 13 18:40:29 2012 +0200
+
+    Work-around for broken IPv6 sub-interface configuration under Ubuntu.
+
+commit 0343c3e01a13a6f6437390d5dfe8200f9c050afc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 13 16:49:59 2012 +0200
+
+    Some improvements on IP address configuration.
+
+commit a9d9d8f868206607c43540cb28c3ed6391e48b6a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 13 13:35:01 2012 +0200
+
+    - Improved IPv6 configuration.
+    - Improved DNS configuration.
+
+commit 0a21e137c5681e607ebbc47296369d9c8b8bb6c7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 13 11:22:34 2012 +0200
+
+    Added node configuration functionalities.
+
+commit ba9daf7e4e413acf802118f1bb6fda3339e36550
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 13 09:56:39 2012 +0200
+
+    Interface configuration bugfix.
+
+commit 4e292b76f19400055dd6e638f21a8dc1875df064
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 16:43:18 2012 +0200
+
+    Addess configuration improvements.
+
+commit 908ad87ac7282cfa4027a1169ae2b938a44d9529
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 15:51:08 2012 +0200
+
+    Flush the route cache after configuration is done.
+
+commit 9dac308992bd3548ab8d7bbb527a32530f814ce4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 15:31:31 2012 +0200
+
+    Some fixes.
+
+commit 535190753d529612a628603b0311c0b5cc05e2f8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 15:19:13 2012 +0200
+
+    Of course, new routing rules do not apply when the destination is directly connected.
+
+commit bf8d6855f7050d9dc5771708a195a11b53841336
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 15:07:41 2012 +0200
+
+    Minor improvement.
+
+commit ff870bb4734e7a6d8e9209615e6d7253ccd08569
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 15:04:01 2012 +0200
+
+    Improved ip rule precedence handling.
+
+commit 8d715be5530db2d7cd8f35a7c11463ea124027cd
+Merge: 9ba44c8 6a5442d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 14:35:53 2012 +0200
+
+    Merge branch 'master' of https://github.com/simula/rn
+
+commit 9ba44c84be4b81bb0dc01f7a9f42eb2693770628
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 14:35:41 2012 +0200
+
+    IPv6 configuration fix.
+
+commit 6a5442d6b6ef093d505a358c4bb9bdbda70e3f7c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 14:31:14 2012 +0200
+
+    A small fix for NAT configuration.
+
+commit 4f979259106a3b27e799ea9b33e452ebad4717f5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 14:26:21 2012 +0200
+
+    Added NAT rule configuration to routing script.
+
+commit eac33da3691e77955b2980bf3438d92f32c44f45
+Merge: c25a3f0 4a8e102
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 14:22:34 2012 +0200
+
+    Merge branch 'master' of https://github.com/simula/rn
+
+commit 4a8e10297e6e9c0edd47f59ba290c473b0b408db
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 14:21:55 2012 +0200
+
+    Added NAT configuration handling to tunnelbox script.
+
+commit ad38656332d44cb43c28a36c4aadd28a476cdeaf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 13:53:49 2012 +0200
+
+    Removed debug code.
+
+commit 80b5ea4faf3559c5ddab9efcf578926f01f2da99
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 13:52:42 2012 +0200
+
+    Site configuration improvements.
+
+commit b185c8270f5ddc2a26df9c5d2b942e905d148e67
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 11:27:12 2012 +0200
+
+    Log output fix.
+
+commit c25a3f0893e185f50a558773de548962e1edba10
+Merge: 31ff449 95272df
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 11:23:36 2012 +0200
+
+    Merge branch 'master' of https://github.com/simula/rn
+
+commit 95272df95d6a79b0c8e7922d19ba54adb718383e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 11:22:17 2012 +0200
+
+    Script improvements.
+
+commit 45f2b96b1df0ea510831e1bede547bc6d63091ce
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 10:59:30 2012 +0200
+
+    A small fix for tunnelbox address setting.
+
+commit 47cbc6263d41e48ecd3db9705a5e63bbad333449
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 10:45:22 2012 +0200
+
+    Set up default provider's tunnels first. They are needed for further routing tables.
+
+commit dfa00cf6b92f87fb0bbd9fb5db065dd5294c7469
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 12 10:35:51 2012 +0200
+
+    Tunnelbox configuration improvements.
+
+commit e0f038c9999cb503c905e096742f35100764a5f7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 11 15:50:48 2012 +0200
+
+    Tunnelbox configuration script now enables/disables IPv4 and IPv6 forwarding.
+
+commit 1c3ad607af85b55f9aec1c1f899efb45bb821f90
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 11 15:07:44 2012 +0200
+
+    Improved NorNet address space handling.
+
+commit fb1a9ca848c597d63d797805f4aa570e1f8d494f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 11 10:31:31 2012 +0200
+
+    Added handling of default routes to central site.
+
+commit 68704c978baac3aace8979768d77682f305349ed
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 10 19:24:11 2012 +0200
+
+    Fixed error message.
+
+commit 5c53cbcbd368521e6603dffa40cb827d20aa84eb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 10 19:23:40 2012 +0200
+
+    Fixed problem of setting wrong "alias" tag for interface.
+
+commit bd778e0086e0a7cfe5ff9bac8bbfd635c4ca1ca9
+Merge: 17d658a 74999ad
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 10 19:00:32 2012 +0200
+
+    Merge branch 'master' of https://github.com/simula/rn
+
+commit 17d658a7dfdd8a38a35e04a3ba4b66a34bb5fa4c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 10 18:58:59 2012 +0200
+
+    Test setup improvements.
+
+commit ac45bb43159d08e6a82113e12d08c9a1e6cae3d7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 10 18:13:56 2012 +0200
+
+    Minor script update.
+
+commit b559fc1edc984868d40fc713a0d1bde669e714b5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 10 17:06:01 2012 +0200
+
+    Improved status handling.
+
+commit 0314708f9463c11c1b1e2f7388eb5fcdcd5280ab
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 10 17:05:47 2012 +0200
+
+    Improved log output.
+
+commit 9c6e2fcc494b251a6160d10657a65c5fbb910ae6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 10 16:35:35 2012 +0200
+
+    Tunnel status checking improvement.
+
+commit 7df8bcd0a324178070d8eb6f45011311ed5ad09c
+Author: Thomas Dreibholz <dreibh@tre.simula.no>
+Date:   Tue Jul 10 16:18:18 2012 +0200
+
+    Fixed routing rule removal.
+
+commit 25c2f9865732174dccea7e42d7f488dcb476bde7
+Author: Thomas Dreibholz <dreibh@tre.simula.no>
+Date:   Tue Jul 10 13:40:06 2012 +0200
+
+    Use different metrics for different providers, in order to make choice of route unique.
+
+commit 4e04ade22fb661a27bcaa00a5a7c9a4154b8587e
+Author: Thomas Dreibholz <dreibh@tre.simula.no>
+Date:   Tue Jul 10 13:39:27 2012 +0200
+
+    Fixed IPv4 allocation problem in tunnel configuration.
+
+commit 9ab03254f930dfbae38821d312117aa4d73d9a85
+Author: NorNet Praesum Presum <nornetpp@nornet-c2.simula.no>
+Date:   Tue Jul 10 11:44:40 2012 +0200
+
+    Added NorNet Core configuration scripts.
