@@ -52,7 +52,12 @@ def loginToPLC():
    try:
       lines = tuple(open(NorNetPLC_ConfigFile, 'r'))
       for line in lines:
-         exec(line)
+         if re.match('^[ \t]*[#\n]', line):
+            just_a_comment_or_empty_line=1
+         elif re.match('[a-zA-Z_ \t]*=', line):
+            exec(line)
+         else:
+            error('Bad configuration line: ' + line)
 
    except Exception as e:
       error('Configuration file ' + NorNetPLC_ConfigFile + ' cannot be read: ' + str(e))
