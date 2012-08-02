@@ -31,10 +31,13 @@ from NorNetTools         import *;
 from NorNetProviderSetup import *;
 
 
+NorNetPLC_ConfigFile    = '/etc/nornet/nornet-config'
+# NorNetPLC_ConfigFile = 'nornet-config'
 
-NorNetPLC_Address       = '10.1.1.21'
-NorNetPLC_Root_User     = 'root@localhost.localdomain'
-NorNetPLC_Root_Password = 'nntb-root'
+
+NorNetPLC_Address       = None
+NorNetPLC_User          = None
+NorNetPLC_Password      = None
 
 
 
@@ -43,15 +46,35 @@ def loginToPLC():
    global plc_server
    global plc_authentication
 
-   log('Logging into PLC ...')
+
+   # ====== Obtain configuration from configuration file ====================
+   log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')
+   try:
+      lines = tuple(open(NorNetPLC_ConfigFile, 'r'))
+      for line in lines:
+         exec(line)
+
+   except Exception as e:
+      error('Configuration file ' + NorNetPLC_ConfigFile + ' cannot be read: ' + str(e))
+
+   if NorNetPLC_Address == None:
+      error('NorNetPLC_Address has not been set in configuration file!')
+   if NorNetPLC_User == None:
+      error('NorNetPLC_User has not been set in configuration file!')
+   if NorNetPLC_Password == None:
+      error('NorNetPLC_Password has not been set in configuration file!')
+
+
+   # ====== Log into PLC ====================================================
+   log('Logging into PLC ' + NorNetPLC_User + '/' + NorNetPLC_Address + ' ...')
    try:
       apiURL     = 'https://' + NorNetPLC_Address + '/PLCAPI/'
       plc_server = xmlrpclib.ServerProxy(apiURL, allow_none=True)
 
       plc_authentication = {}
       plc_authentication['AuthMethod'] = 'password'
-      plc_authentication['Username']   = NorNetPLC_Root_User
-      plc_authentication['AuthString'] = NorNetPLC_Root_Password
+      plc_authentication['Username']   = NorNetPLC_User
+      plc_authentication['AuthString'] = NorNetPLC_Password
 
       if plc_server.AuthCheck(plc_authentication) != 1:
          error('Authorization at PLC failed!')

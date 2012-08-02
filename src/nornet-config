@@ -1,0 +1,14 @@
+# This is the address of the PLC and the Central Site:
+NorNetPLC_Address  = '10.1.1.23'
+
+# These are the user name and corresponding password for accessing the PLC.
+# SECURITY ADVICE:
+# Use a user with restricted access permissions. For most operations (e.g.
+# obtaining the node configurations), it is just sufficient to read the PLC
+# database. Only modifying the configuration needs a more "powerful" user!
+NorNetPLC_User     = 'root@localhost.localdomain'
+NorNetPLC_Password = 'nntb-root'
+
+
+# This is the short name of the local site:
+NorNet_LocalSite_ShortName = 'TA'
