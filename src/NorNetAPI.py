@@ -42,13 +42,8 @@ NorNetPLC_Password      = None
 
 
 
-# ###### Log into PLC #######################################################
-def loginToPLC():
-   global plc_server
-   global plc_authentication
-
-
-   # ====== Obtain configuration from configuration file ====================
+# ###### Read configuration file ############################################
+def loadNorNetConfiguration():
    log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')
    try:
       lines = tuple(open(NorNetPLC_ConfigFile, 'r'))
@@ -70,6 +65,14 @@ def loginToPLC():
    if NorNetPLC_Password == None:
       error('NorNetPLC_Password has not been set in configuration file!')
 
+
+# ###### Log into PLC #######################################################
+def loginToPLC():
+   global plc_server
+   global plc_authentication
+
+   # ====== Obtain configuration from configuration file ====================
+   loadNorNetConfiguration()
 
    # ====== Log into PLC ====================================================
    log('Logging into PLC ' + NorNetPLC_User + '/' + NorNetPLC_Address + ' ...')
