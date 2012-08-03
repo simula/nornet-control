@@ -121,7 +121,7 @@ def getLocalDefaultProviderIndex():
 
 # ###### Get local tunnelbox's outer IPv4 address ###########################
 def getLocalTunnelboxDefaultProviderIPv4():
-   return NorNet_LocalSite_DefaultProviderIndex
+   return NorNet_LocalSite_TBDefaultProviderIPv4
 
 
 # ###### Find site ID #######################################################

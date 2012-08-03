@@ -20,13 +20,12 @@
 #
 
 
-site="$1"
-state="$2"
-bootstrap="$3"
+state="$1"
+bootstrap="$2"
 
 if [ "$state" != "start" -a "$state" != "stop" -a \
      "$state" != "restart" -a "$state" != "status" -a "$state" != "reset" -a "$state" != "coldstart" ] ; then
-   echo >&2 "Usage: $0 [Site] [start|stop|status|reset|coldstart] [-bootstrap]"
+   echo >&2 "Usage: $0 start|stop|status|reset|coldstart [-bootstrap]"
    exit 1
 fi
 
@@ -60,12 +59,12 @@ fi
 success=1
 if [ "$bootstrap" = "-bootstrap" ] ; then
     log "Entering BOOTSTRAP ..."
-    . ./tunnelbox-${site}-bootstrap || success=0
+    . ./tunnelbox-bootstrap || success=0
     log-action "Finished BOOTSTRAP ..."
 else
     log "Entering Tunnelbox setup ..."
     success=1
-    . ./tunnelbox-${site}-config || success=0
+    . ./tunnelbox-config || success=0
     log-action "Finished Tunnelbox setup ..."
     log-result $success
 fi
