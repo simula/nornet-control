@@ -27,3 +27,6 @@ NorNet_LocalSite_SiteIndex=1
 
 # This is the Provider Index of the local Default Provider:
 NorNet_LocalSite_DefaultProviderIndex=1
+
+# This is the local tunnelbox's outer IPv4 address for the default provider:
+NorNet_LocalSite_TBDefaultProviderIPv4='132.252.156.70'

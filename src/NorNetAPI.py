@@ -32,14 +32,15 @@ from NorNetProviderSetup import *;
 
 
 
-NorNetPLC_ConfigFile                  = '/etc/nornet/nornetapi-config'
+NorNetPLC_ConfigFile                   = '/etc/nornet/nornetapi-config'
 
-NorNetPLC_Address                     = None
-NorNetPLC_User                        = None
-NorNetPLC_Password                    = None
+NorNetPLC_Address                      = None
+NorNetPLC_User                         = None
+NorNetPLC_Password                     = None
 
-NorNet_LocalSite_SiteIndex            = None
-NorNet_LocalSite_DefaultProviderIndex = None
+NorNet_LocalSite_SiteIndex             = None
+NorNet_LocalSite_DefaultProviderIndex  = None
+NorNet_LocalSite_TBDefaultProviderIPv4 = None
 
 
 
@@ -51,7 +52,7 @@ def loadNorNetConfiguration():
       for line in lines:
          if re.match('^[ \t]*[#\n]', line):
             just_a_comment_or_empty_line=1
-         elif re.match('[a-zA-Z_ \t]*=', line):
+         elif re.match('^[a-zA-Z0-9_ \t]*=', line):
             exec(line) in globals()
          else:
             error('Bad configuration line: ' + line)
@@ -115,6 +116,11 @@ def getLocalSiteIndex():
 
 # ###### Get local Default Provider Index ###################################
 def getLocalDefaultProviderIndex():
+   return NorNet_LocalSite_DefaultProviderIndex
+
+
+# ###### Get local tunnelbox's outer IPv4 address ###########################
+def getLocalTunnelboxDefaultProviderIPv4():
    return NorNet_LocalSite_DefaultProviderIndex
 
 
