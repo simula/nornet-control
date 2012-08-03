@@ -38,27 +38,17 @@ from NorNetSiteSetup     import *;
 from NorNetConfiguration import *;
 
 
+# ###########################################################################
+
+
 
 # ###########################################################################
 
 
 
-
-# ###########################################################################
-
-
-log('***** This is NorNet version 1.0! *****')
 loginToPLC()
-
-fullSiteList = fetchNorNetSiteList()
-
-
 makeProviderConfiguration()
 makeNorNetConfiguration(False)
-
-
-# Beta Tunnelbox
-makeTunnelboxBootstrap(2, 1, '132.252.156.71', 'tunnelbox')
 
 
 node = fetchNorNetNode('altenessen.gamma.site')
@@ -77,14 +67,13 @@ if node != None:
 makeNodeConfigurationForGivenNode(fullSiteList, fullSiteList[1], 'plc.alpha.site', 21, 'eth0', 'Fedora', None)
 
 
+myNorNetInformation = getMyNorNetInformation()
+if myNorNetInformation == None:
+   error('Unable to get information about my site, provider and node. Check IP configuration!')
 
-#myNorNetInformation = getMyNorNetInformation()
-#if myNorNetInformation == None:
-   #error('Unable to get information about my site, provider and node. Check IP configuration!')
+try:
+   site = fullSiteList[myNorNetInformation['site_index']]
+except:
+   error('Unable to find my site!')
 
-#try:
-   #site = fullSiteList[myNorNetInformation['site_index']]
-#except:
-   #error('Unable to find my site!')
-
-#makeTunnelBoxConfiguration(fullSiteList, site, 'tunnelbox', False)
+makeTunnelBoxConfiguration(fullSiteList, site, 'tunnelbox', False)
