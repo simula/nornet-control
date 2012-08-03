@@ -62,11 +62,10 @@ if localTBDefaultProviderIPv4 == None:
 
 
 # ====== Bootstrap Mode =====================================================
-if bootstrapOnly:
-   makeTunnelboxBootstrap(localSiteIndex, localDefaultProviderIndex, localTBDefaultProviderIPv4, 'tunnelbox')
+makeTunnelboxBootstrap(localSiteIndex, localDefaultProviderIndex, localTBDefaultProviderIPv4, 'tunnelbox')
 
 # ====== Full Mode ==========================================================
-else:
+if not bootstrapOnly:
    fullSiteList = fetchNorNetSiteList()
    localSite    = None
    try:
