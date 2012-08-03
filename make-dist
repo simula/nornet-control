@@ -21,6 +21,7 @@ cp src/*.1 $PACKAGE-$VERSION/src
 cp src/*-config $PACKAGE-$VERSION/src
 cp src/Routing-Setup $PACKAGE-$VERSION/src
 cp src/Tunnelbox-Setup $PACKAGE-$VERSION/src
+cp src/Make-Tunnelbox-Configuration $PACKAGE-$VERSION/src
 cp src/ResetNetworking $PACKAGE-$VERSION/src
 # find $PACKAGE-$VERSION/src -name "moc_*" | xargs rm -f
 # ---------------------------------------------------------
