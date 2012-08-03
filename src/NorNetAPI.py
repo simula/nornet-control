@@ -31,14 +31,15 @@ from NorNetTools         import *;
 from NorNetProviderSetup import *;
 
 
+
 NorNetPLC_ConfigFile                  = '/etc/nornet/nornetapi-config'
+
+NorNetPLC_Address                     = None
+NorNetPLC_User                        = None
+NorNetPLC_Password                    = None
 
 NorNet_LocalSite_SiteIndex            = None
 NorNet_LocalSite_DefaultProviderIndex = None
-
-NorNetPLC_Address       = None
-NorNetPLC_User          = None
-NorNetPLC_Password      = None
 
 
 
@@ -51,7 +52,7 @@ def loadNorNetConfiguration():
          if re.match('^[ \t]*[#\n]', line):
             just_a_comment_or_empty_line=1
          elif re.match('[a-zA-Z_ \t]*=', line):
-            exec(line)
+            exec(line) in globals()
          else:
             error('Bad configuration line: ' + line)
 
@@ -105,6 +106,16 @@ def getPLCServer():
 # ###### Get PLC authentication object ######################################
 def getPLCAuthentication():
    return plc_authentication
+
+
+# ###### Get local Site Index ###############################################
+def getLocalSiteIndex():
+   return NorNet_LocalSite_SiteIndex
+
+
+# ###### Get local Default Provider Index ###################################
+def getLocalDefaultProviderIndex():
+   return NorNet_LocalSite_DefaultProviderIndex
 
 
 # ###### Find site ID #######################################################
