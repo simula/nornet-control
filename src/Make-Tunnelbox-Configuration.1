@@ -1,0 +1,53 @@
+.\" Tunnelbox Setup
+.\" Copyright (C) 2012 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd August 3, 2012
+.Dt Make-Tunnelbox-Configuration 1
+.Os Make-Tunnelbox-Configuration
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Make-Tunnelbox-Configuration
+.Nd NorNet Tunnelbox Configuration Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Make-Tunnelbox-Configuration
+.Op Fl bootstrap
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Make-Tunnelbox-Configuration
+generates the configurations scripts for Tunnelbox-Setup. It provides two
+modes: in the "bootstrap" mode, it uses the known local Site Index and Default
+Provider Index (both read from nornetapi-config) to write a configuration to
+just setup the tunnel via the default provider to the central site. In "full"
+mode, it contacts the Central Site PLC and generates the configuration scripts
+for all tunnels.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following options are available:
+.Bl -tag -width indent
+.It Fl bootstrap
+Activates bootstrap mode. Otherwise, full mode is used.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Make-Tunnelbox-Configuration -bootstrap
+.It Make-Tunnelbox-Configuration
+.El
