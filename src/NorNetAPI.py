@@ -31,7 +31,10 @@ from NorNetTools         import *;
 from NorNetProviderSetup import *;
 
 
-NorNetPLC_ConfigFile    = '/etc/nornet/nornetapi-config'
+NorNetPLC_ConfigFile                  = '/etc/nornet/nornetapi-config'
+
+NorNet_LocalSite_SiteIndex            = None
+NorNet_LocalSite_DefaultProviderIndex = None
 
 NorNetPLC_Address       = None
 NorNetPLC_User          = None
