@@ -41,6 +41,7 @@ Description: NorNet Routing Control
 Package: nornet-tunnelbox
 Architecture: any
 Depends: nornet-routing,
+         python (>= 2.7),
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Tunnelbox Control
