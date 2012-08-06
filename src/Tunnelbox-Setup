@@ -57,12 +57,11 @@ fi
 
 
 success=1
+bootstrap=0
 selectedProviders=""
 while [ "$1" != "" ] ; do
    if [ "$1" = "-bootstrap" ] ; then
-       log "Entering BOOTSTRAP ..."
-       . ./tunnelbox-bootstrap || success=0
-       log-action "Finished BOOTSTRAP ..."
+      bootstrap=1
    elif [ "$1" = "-providers" ] ; then
       selectedProviders="$2"
       shift
@@ -74,10 +73,17 @@ while [ "$1" != "" ] ; do
 done
 
 
-log "Entering Tunnelbox setup ..."
 success=1
-. ./tunnelbox-config || success=0
-log-action "Finished Tunnelbox setup ..."
+if [ $bootstrap -eq 1 ] ; then
+   log "Entering BOOTSTRAP ..."
+   . ./tunnelbox-bootstrap || success=0
+   log-action "Finished BOOTSTRAP ..."
+else
+   log "Entering Tunnelbox setup ..."
+   . ./tunnelbox-config || success=0
+   log-action "Finished Tunnelbox setup ..."
+fi
+
 
 log-result $success
 if [ $success -eq 0 ] ; then
