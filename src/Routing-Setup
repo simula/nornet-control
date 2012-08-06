@@ -337,3 +337,20 @@ remove-nat ()
       done
    fi
 }
+
+
+# ###### Check whether a provider is in a list of available providers #######
+checkProviders () {
+   local availableProviders="$1"
+   local selectedProviders="$2"
+   local oldIFS=$IFS
+   IFS=","
+   for provider in $selectedProviders ; do
+      echo "p=$provider"
+      if [[ ! $availableProviders =~ ^$|^$provider$|^$provider,|,$provider,|,$provider$ ]] ; then
+         echo >&2 "ERROR: Provider \"$provider\" is not in the list of available providers \"$availableProviders\"!"
+         exit 1
+      fi
+   done
+   IFS=$oldIFS
+}

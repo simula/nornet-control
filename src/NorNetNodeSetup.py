@@ -499,6 +499,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
 
 
    # ====== Configure tunnels and routing ===================================
+   outputFile.write('availableProviders="')
    pathNumber        = 0
    for onlyDefault in [ True, False ]:
       for localProviderIndex in localProviderList:
@@ -508,8 +509,16 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
             tbpName = _makeTunnelboxProvider(fullSiteList, localSite,
                                              localProviderList, localProvider,
                                              pathNumber, configNamePrefix, v4only)
-            outputFile.write('. ./' + tbpName +'\n')
+            outputFile.write(tbpName + ' ')
             pathNumber = pathNumber + 1
+   outputFile.write('"\n')
+
+   outputFile.write('for provider in $availableProviders ; do\n')
+   outputFile.write('if [[ "$selectedProviders" =~ ^$|^$provider$|^$provider,|,$provider,|,$provider$ ]] ; then\n')
+   outputFile.write('   . ./' + tbpName + '\n')
+   outputFile.write('else\n')
+   outputFile.write('   echo "Skipping ' + tbpName + '"\n')
+   outputFile.write('fi\n')
 
 
    # ====== Make local setup ================================================

@@ -20,15 +20,15 @@
 #
 
 
+# ###### Main program #######################################################
 state="$1"
-bootstrap="$2"
+shift
 
 if [ "$state" != "start" -a "$state" != "stop" -a \
      "$state" != "restart" -a "$state" != "status" -a "$state" != "reset" -a "$state" != "coldstart" ] ; then
-   echo >&2 "Usage: $0 start|stop|status|reset|coldstart [-bootstrap]"
+   echo >&2 "Usage: $0 start|stop|status|reset|coldstart [-providers list_of_providers] [-bootstrap]"
    exit 1
 fi
-
 
 WORK_DIRECTORY="."
 if [ ! -e "$WORK_DIRECTORY/Routing-Setup" ] ; then
@@ -57,17 +57,27 @@ fi
 
 
 success=1
-if [ "$bootstrap" = "-bootstrap" ] ; then
-    log "Entering BOOTSTRAP ..."
-    . ./tunnelbox-bootstrap || success=0
-    log-action "Finished BOOTSTRAP ..."
-else
-    log "Entering Tunnelbox setup ..."
-    success=1
-    . ./tunnelbox-config || success=0
-    log-action "Finished Tunnelbox setup ..."
-    log-result $success
-fi
+selectedProviders=""
+while [ "$1" != "" ] ; do
+   if [ "$1" = "-bootstrap" ] ; then
+       log "Entering BOOTSTRAP ..."
+       . ./tunnelbox-bootstrap || success=0
+       log-action "Finished BOOTSTRAP ..."
+   elif [ "$1" = "-providers" ] ; then
+      selectedProviders="$2"
+      shift
+   else
+      echo >&2 "ERROR: Bad argument $1"
+      exit 1
+   fi
+   shift
+done
+
+
+log "Entering Tunnelbox setup ..."
+success=1
+. ./tunnelbox-config || success=0
+log-action "Finished Tunnelbox setup ..."
 
 log-result $success
 if [ $success -eq 0 ] ; then
