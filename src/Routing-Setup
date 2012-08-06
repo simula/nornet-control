@@ -261,7 +261,9 @@ add-table-selector ()
    local v6option=""
    local selectorOptions=""
    while [ "$1" != "" ] ; do
-      if [ "$1" = "from" ] ; then
+      if [ "$1" = "not" ] ; then
+         selectorOptions="$selectorOptions not"
+      elif [ "$1" = "from" ] ; then
          selectorOptions="$selectorOptions from $2"
          if [[ "$2" =~ : ]] ; then
             v6option="-6"
