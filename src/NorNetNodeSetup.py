@@ -245,16 +245,19 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
             if routingTableTOS != 0x00:
                outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableTOSPref) + \
                                 ' from ' + str(fullNorNetNetwork) + \
-                                ' tos ' + hex(routingTableTOS) + '\n')
+                                ' tos ' + hex(routingTableTOS) + \
+                                ' to ' + str(fullNorNetNetwork) + '\n')
 
          # ====== Source rules ==============================================
          # Otherwise, use source address to determine the outgoing provider.
          for version in [ 4, 6 ]:
             if ((version == 6) and (v4only == True)):
                continue
+            fullNorNetNetwork    = makeNorNetIP(0, 0, 0, 0, version)
             localProviderNetwork = makeNorNetIP(localProviderIndex, 0, 0, 0, version)
             outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableSourcePref) + \
-                             ' from ' + str(localProviderNetwork) + '\n')
+                             ' from ' + str(localProviderNetwork) + \
+                             ' to ' + str(fullNorNetNetwork) + '\n')
 
       elif (state == 'stop'):
          outputFile.write('   remove-table ' + str(routingTableID) + '\n')
@@ -353,18 +356,31 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                   outputFile.write('   log-result 1\n')
 
 
-      # ====== Default route to central site ================================
-      if (state == 'start'):
-         if (localSiteIndex != NorNet_SiteIndex_Central):
+      ## ====== Default route to central site ================================
+      if ((localSiteIndex != NorNet_SiteIndex_Central) and
+          (localProviderIndex == localSite['site_default_provider_index'])):
+         routingTableID       = _getTableID(256)
+         routingTableDestPref = _getTablePref(256, 4)
+         if (state == 'start'):
+            outputFile.write('   log "Setting up DEFAULT route to central site"\n')
+            outputFile.write('   make-table ' + str(routingTableID) + '   # DEFAULT to CENTRAL SITE\n')
             for version in [ 4, 6 ]:
                if ((version == 6) and (v4only == True)):
                   continue
-               defaultTunnel = _getDefaultTunnel(fullSiteList, localSite, version)
+               defaultTunnel     = _getDefaultTunnel(fullSiteList, localSite, version)
+               fullNorNetNetwork = makeNorNetIP(0, 0, 0, 0, version)
+
+               outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableDestPref) + \
+                                ' from ' + str(fullNorNetNetwork) + '\n')
                outputFile.write('   make-route ' + \
                                 str(routingTableID) + ' ' +
                                 'default ' +
                                 defaultTunnel['tunnel_interface'] + ' ' + \
-                                str(defaultTunnel['tunnel_remote_inner_address']) + '   # DEFAULT to CENTRAL SITE\n')
+                                str(defaultTunnel['tunnel_remote_inner_address']) + '\n')
+
+         elif (state == 'stop'):
+            outputFile.write('   log "Tearing down DEFAULT route to central site"\n')
+            outputFile.write('   remove-table ' + str(routingTableID) + '\n')
 
       outputFile.write('fi\n\n')
       pathNumber = pathNumber + 1
