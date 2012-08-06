@@ -35,7 +35,7 @@ from NorNetTools         import *;
 from NorNetAPI           import *;
 from NorNetProviderSetup import *;
 from NorNetSiteSetup     import *;
-from NorNetConfiguration import *;
+from NorNetNodeSetup     import *;
 
 
 # ###########################################################################

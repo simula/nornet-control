@@ -23,8 +23,8 @@
 import sys;
 
 # NorNet
-from NorNetAPI           import *;
-from NorNetConfiguration import *;
+from NorNetAPI       import *;
+from NorNetNodeSetup import *;
 
 
 # ====== Handle arguments ===================================================
