@@ -500,7 +500,9 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
 
    # ====== Configure tunnels and routing ===================================
    outputFile.write('availableProviders="')
-   pathNumber        = 0
+   providerList   = []
+   configFileList = []
+   pathNumber     = 0
    for onlyDefault in [ True, False ]:
       for localProviderIndex in localProviderList:
          if ( ((onlyDefault == True)  and (localProviderIndex == localSite['site_default_provider_index'])) or \
@@ -509,16 +511,32 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
             tbpName = _makeTunnelboxProvider(fullSiteList, localSite,
                                              localProviderList, localProvider,
                                              pathNumber, configNamePrefix, v4only)
-            outputFile.write(tbpName + ' ')
+            providerList.append(localProvider['provider_short_name'])
+            configFileList.append(tbpName)
+            if pathNumber > 0:
+               outputFile.write(' ')
+            outputFile.write(localProvider['provider_short_name'])
             pathNumber = pathNumber + 1
    outputFile.write('"\n')
 
-   outputFile.write('for provider in $availableProviders ; do\n')
-   outputFile.write('if [[ "$selectedProviders" =~ ^$|^$provider$|^$provider,|,$provider,|,$provider$ ]] ; then\n')
-   outputFile.write('   . ./' + tbpName + '\n')
-   outputFile.write('else\n')
-   outputFile.write('   echo "Skipping ' + tbpName + '"\n')
-   outputFile.write('fi\n')
+   outputFile.write('checkProviders "')
+   i = 0
+   for provider in providerList:
+      if i > 0:
+         outputFile.write(',')
+      outputFile.write(provider)
+      i = i + 1
+   outputFile.write('" "$selectedProviders"\n')
+
+   i = 0
+   for provider in providerList:
+      outputFile.write('if [[ "$selectedProviders" =~ ^$|^' + provider + '$|^' + provider + ',|,' + provider + ',|,' + provider + '$ ]] ; then\n')
+      outputFile.write('   echo "Configuring ' + configFileList[i] + '"\n')
+      outputFile.write('   . ./' + configFileList[i] + '\n')
+      outputFile.write('else\n')
+      outputFile.write('   echo "Skipping ' + configFileList[i] + '"\n')
+      outputFile.write('fi\n')
+      i = i + 1
 
 
    # ====== Make local setup ================================================
