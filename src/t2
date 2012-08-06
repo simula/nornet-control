@@ -1,0 +1,13 @@
+#!/bin/bash
+
+providers="dfn,telekom"
+
+for provider in dfn telenor uninett telekom ; do
+   if [[ $providers =~ ^$|^$provider$|^$provider,|,$provider,|,$provider$ ]] ; then
+      echo "p=$provider"
+
+   else
+      echo "SKIP $provider"
+   fi
+done
+
