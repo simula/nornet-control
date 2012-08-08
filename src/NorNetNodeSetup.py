@@ -275,7 +275,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                              ' to ' + str(localProviderNetwork) + '   && \\\n')
 
       if ((state == 'start') or (state == 'stop')):
-         outputFile.write('   log-result $RESULT_GOOD || log-result $BAD_RESULT\n')
+         outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
 
 
       # ====== Create provider-specific tunnels and routes ==================
@@ -362,7 +362,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    str(tunnel['tunnel_remote_inner_address']) + ' ' + \
                                    'metric ' + str(metric) + '   && \\\n')
 
-               outputFile.write('   log-result $RESULT_GOOD || log-result $BAD_RESULT\n')
+               outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
 
 
       ## ====== Default route to central site ================================
@@ -471,7 +471,7 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, con
    outputFile.write('   remove-tunnel ' + \
                     tunnel['tunnel_interface'] + ' ' + \
                     hex(tunnel['tunnel_key'])  + '   && \\\n')
-   outputFile.write('   log-result $RESULT_GOOD || log-result $BAD_RESULT\n')
+   outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    outputFile.write('fi\n')
 
    outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
@@ -488,14 +488,14 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, con
                     tunnel['tunnel_interface'] + ' ' + \
                     str(tunnel['tunnel_remote_inner_address']) + ' ' + \
                     'metric 5   && \\\n')
-   outputFile.write('   log-result $RESULT_GOOD || log-result $BAD_RESULT\n')
+   outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    outputFile.write('fi\n')
 
    outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" -o  "$state" = "status" ] ; then\n')
    outputFile.write('   log-action "Trying to contact PLC at ' + str(getPLCAddress()) + ' ..."\n')
    outputFile.write('   show-tunnel ' + tunnel['tunnel_interface'] + ' ' + \
                     '0.0.0.0 ' + str(getPLCAddress()) + ' ""   && \\\n')
-   outputFile.write('   log-result $RESULT_GOOD || log-result $BAD_RESULT\n')
+   outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    outputFile.write('fi\n')
 
 
