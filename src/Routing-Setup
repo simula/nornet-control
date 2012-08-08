@@ -251,12 +251,13 @@ make-table ()
 }
 
 
-# ###### Add selector for routing table #####################################
-add-table-selector ()
+# ###### Add or remove selector for routing table ###########################
+add-or-remove-table-selector ()
 {
-   local tableID="$1"             # Table ID
-   local preference="$2"          # Selected preference
-   shift ; shift
+   local action="$1"              # Action ("add" or "remove")
+   local tableID="$2"             # Table ID
+   local preference="$3"          # Selected preference
+   shift ; shift ; shift
 
    local v6option=""
    local selectorOptions=""
@@ -288,8 +289,21 @@ add-table-selector ()
       shift
    done
 
-   # echo ip $v6option rule add $selectorOptions lookup $tableID pref $preference
-   ip $v6option rule add $selectorOptions lookup $tableID pref $preference
+   ip $v6option rule $action $selectorOptions lookup $tableID pref $preference
+}
+
+
+# ###### Add selector for routing table #####################################
+add-table-selector ()
+{
+   add-or-remove-table-selector add $@
+}
+
+
+# ###### Remove selector for routing table ##################################
+remove-table-selector ()
+{
+   add-or-remove-table-selector del $@
 }
 
 
