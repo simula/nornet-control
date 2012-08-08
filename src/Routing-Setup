@@ -63,6 +63,9 @@ log-result ()
       echo -en "\x1b[${line}G\x1b[30;47;5mFAILED!\x1b[0m\n"
       let _BadResults=$_BadResults+1
       let _BadResults=$_BadResults+1
+   elif [ "$result" = "" ] ; then
+      echo >&2 "ERROR: No result given for log-result?!"
+      exit 1
    else
       echo -en "\x1b[${line}G\x1b[0m$result\n"
    fi
@@ -143,6 +146,15 @@ remove-tunnel ()
 # ###### Tunnel setup #######################################################
 make-tunnel ()
 {
+
+   #let xx=$xx+1
+   #if [ $xx -eq 4 ] ; then
+   #   echo "--- TEST ERROR ---"
+   #   xx=1
+   #   return 1
+   #fi
+
+
    local interface="$1"           # Interface name (fire*, seks*, gre*)
    local tunnelKey="$2"           # Tunnel key, must be unique between sites
    local outerLocalIP="$3"        # Outer Local IP
