@@ -77,15 +77,13 @@ success=1
 if [ $bootstrap -eq 1 ] ; then
    log "Entering BOOTSTRAP ..."
    . ./tunnelbox-bootstrap || success=0
-   log-action "Finished BOOTSTRAP ..."
+   log-action "Finished BOOTSTRAP"
 else
    log "Entering Tunnelbox setup ..."
    . ./tunnelbox-config || success=0
-   log-action "Finished Tunnelbox setup ..."
+   log-action "Finished Tunnelbox setup"
 fi
 
 
 log-result $success
-if [ $success -eq 0 ] ; then
-   exit 1
-fi
+exit-with-result
