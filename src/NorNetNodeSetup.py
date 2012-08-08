@@ -201,7 +201,9 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
       if ((state == 'start') or (state == 'stop')):
          outputFile.write('if [ "$state" = "' + state + '" -o "$state" = "restart" ] ; then\n')
          if state == 'start':
-            outputFile.write('   log-and-reset-summary\n')
+            outputFile.write('   if [ "$state" = "restart" ] ; then\n')
+            outputFile.write('      log-and-reset-summary\n')
+            outputFile.write('   fi\n')
       else:
          outputFile.write('if [ "$state" = "' + state + '" ] ; then\n')
 
