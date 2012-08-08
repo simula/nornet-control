@@ -76,7 +76,6 @@ check-local-address ()
    fi
 
    for address in $addressList ; do
-    echo "A=<$address> B=<$addressToFind>"
       if [ "$address" = "$addressToFind" ] ; then
          return 1
       fi
@@ -135,26 +134,34 @@ make-tunnel ()
    fi
 
    # ====== Tunnel setup ====================================================
+   success=1
    # Create the tunnel
+   # echo "$interface: tunnel [$innerLocalIP <-> $innerRemoteIP] via [$outerLocalIP <-> $outerRemoteIP]"
+   if check-local-address "$outerLocalIP" ; then
+      echo -e "\n$outerLocalIP is not a local address! Something is wrong!"
+      success=0
+   fi
    if [ $addToExistingTunnel -eq 0 ] ; then
       remove-tunnel "$interface" "$tunnelKey" "$from" "$tos" "$fwmark"
-      ip $outerV6option tunnel add $interface mode $mode local $outerLocalIP remote $outerRemoteIP ttl 255 $greoption $tunnelOptions
+      ip $outerV6option tunnel add $interface mode $mode local $outerLocalIP remote $outerRemoteIP ttl 255 $greoption $tunnelOptions || success=0
    fi
    # Configure an address and turn the interface up
    if [ "$innerV6option" = "" ] ; then
-      ip addr add $innerLocalIP peer $innerRemoteIP dev $interface
+      ip addr add $innerLocalIP peer $innerRemoteIP dev $interface || success=0
    else
-      ip $innerV6option addr add $innerLocalIP/64 dev $interface
+      ip $innerV6option addr add $innerLocalIP/64 dev $interface || success=0
    fi
    ip link set dev $interface up
    # Turn off Reverse Path filtering, since it prevents routing packets
    # from interface when this interface has no route to the source!
-   sysctl -q net.ipv4.conf.$interface.rp_filter=0
+   sysctl -q net.ipv4.conf.$interface.rp_filter=0 || success=0
    # Also, turn off Reverse Path filter on all interfaces.
    # If it is turned on, it supersedes all per-interface settings!
-   sysctl -q net.ipv4.conf.all.rp_filter=0
+   sysctl -q net.ipv4.conf.all.rp_filter=0 || success=0
 
-   # echo "$interface: tunnel [$innerLocalIP <-> $innerRemoteIP] via [$outerLocalIP <-> $outerRemoteIP]"
+   if [ $success -ne 1 ] ; then
+      return 1
+   fi
 }
 
 
