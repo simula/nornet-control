@@ -470,8 +470,8 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, con
    outputFile.write('   log-action "Tearing down tunnel to central site ..."\n')
    outputFile.write('   remove-tunnel ' + \
                     tunnel['tunnel_interface'] + ' ' + \
-                    hex(tunnel['tunnel_key'])  + '\n')
-   outputFile.write('   log-result $RESULT_GOOD\n')
+                    hex(tunnel['tunnel_key'])  + '   && \\\n')
+   outputFile.write('   log-result $RESULT_GOOD || log-result $BAD_RESULT\n')
    outputFile.write('fi\n')
 
    outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
@@ -482,19 +482,20 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, con
                     str(tunnel['tunnel_local_outer_address'])  + ' ' + \
                     str(tunnel['tunnel_remote_outer_address']) + ' ' + \
                     str(tunnel['tunnel_local_inner_address'])  + ' ' + \
-                    str(tunnel['tunnel_remote_inner_address']) + '\n')
+                    str(tunnel['tunnel_remote_inner_address']) + '  && \\\n')
    outputFile.write('   make-route main ' + \
                     str(remoteNetwork) + ' ' +
                     tunnel['tunnel_interface'] + ' ' + \
                     str(tunnel['tunnel_remote_inner_address']) + ' ' + \
-                    'metric 5\n')
-   outputFile.write('   log-result $RESULT_GOOD\n')
+                    'metric 5   && \\\n')
+   outputFile.write('   log-result $RESULT_GOOD || log-result $BAD_RESULT\n')
    outputFile.write('fi\n')
 
    outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" -o  "$state" = "status" ] ; then\n')
    outputFile.write('   log-action "Trying to contact PLC at ' + str(getPLCAddress()) + ' ..."\n')
    outputFile.write('   show-tunnel ' + tunnel['tunnel_interface'] + ' ' + \
-                    '0.0.0.0 ' + str(getPLCAddress()) + ' ""\n')
+                    '0.0.0.0 ' + str(getPLCAddress()) + ' ""   && \\\n')
+   outputFile.write('   log-result $RESULT_GOOD || log-result $BAD_RESULT\n')
    outputFile.write('fi\n')
 
 
