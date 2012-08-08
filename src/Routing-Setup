@@ -88,6 +88,18 @@ exit-with-result ()
 }
 
 
+# ###### Log summary and reset ##############################################
+log-summary-and-reset ()
+{
+   if [ $_BadResults -eq 0 ] ; then
+      log-result $RESULT_GOOD
+   else
+      log-result $RESULT_BAD
+   fi
+   _BadResults=0
+}
+
+
 # ###### Log summary and exit with result ###################################
 log-summary-and-exit-with-result ()
 {

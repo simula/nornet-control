@@ -200,6 +200,8 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
    for state in stateList:
       if ((state == 'start') or (state == 'stop')):
          outputFile.write('if [ "$state" = "' + state + '" -o "$state" = "restart" ] ; then\n')
+         if state == 'start':
+            outputFile.write('   log-summary-and-reset\n')
       else:
          outputFile.write('if [ "$state" = "' + state + '" ] ; then\n')
 
@@ -347,9 +349,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    str(routingTableID) + ' ' +
                                    str(remoteNetwork) + ' ' +
                                    tunnel['tunnel_interface'] + ' ' + \
-                                   str(tunnel['tunnel_remote_inner_address']) + '   && \\   # via ' + \
-                                   localProvider['provider_long_name'] + ' <--> ' + \
-                                   remoteProvider['provider_long_name'] + ' tunnel\n')
+                                   str(tunnel['tunnel_remote_inner_address']) + '   && \\\n')
 
                   # ====== Entry into global routing table ==================
                   metric = 10 + pathNumber
@@ -360,9 +360,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    str(remoteNetwork) + ' ' +
                                    tunnel['tunnel_interface'] + ' ' + \
                                    str(tunnel['tunnel_remote_inner_address']) + ' ' + \
-                                   'metric ' + str(metric) + '   && \\   # via ' + \
-                                   localProvider['provider_long_name'] + ' <--> ' + \
-                                   remoteProvider['provider_long_name'] + ' tunnel\n')
+                                   'metric ' + str(metric) + '   && \\\n')
 
                outputFile.write('   log-result $RESULT_GOOD || log-result $BAD_RESULT\n')
 
