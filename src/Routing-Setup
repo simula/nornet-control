@@ -223,11 +223,10 @@ show-tunnel ()
 
    success=0
    if [[ "$innerRemoteIP" =~ : ]] ; then
-      ping6 -W3 -c3 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
+      ping6 -w3 -c1 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
    else
-      ping -W3 -c3 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
+      ping -w3 -c1 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
    fi
-   log-result $success
 
    if [ $success -eq 1 ] ; then
       return 0
