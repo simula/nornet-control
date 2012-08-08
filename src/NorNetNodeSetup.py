@@ -359,7 +359,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    remoteProvider['provider_long_name'] + ' tunnel\n')
 
                if ((state == 'start') or (state == 'stop')):
-                  outputFile.write('   log-result 1\n')
+                  outputFile.write('   log-result $RESULT_GOOD\n')
 
 
       ## ====== Default route to central site ================================
@@ -418,7 +418,7 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
       elif state == 'stop':
          outputFile.write('   remove-address ' + localInterface + ' ' + str(localAddress) + '\n')
 
-   outputFile.write('   log-result 1\n')
+   outputFile.write('   log-result $RESULT_GOOD\n')
 
 
 def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, configNamePrefix):
@@ -460,7 +460,7 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, con
    outputFile.write('   remove-tunnel ' + \
                     tunnel['tunnel_interface'] + ' ' + \
                     hex(tunnel['tunnel_key'])  + '\n')
-   outputFile.write('   log-result 1\n')
+   outputFile.write('   log-result $RESULT_GOOD\n')
    outputFile.write('fi\n')
 
    outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
@@ -477,7 +477,7 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, con
                     tunnel['tunnel_interface'] + ' ' + \
                     str(tunnel['tunnel_remote_inner_address']) + ' ' + \
                     'metric 5\n')
-   outputFile.write('   log-result 1\n')
+   outputFile.write('   log-result $RESULT_GOOD\n')
    outputFile.write('fi\n')
 
    outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" -o  "$state" = "status" ] ; then\n')
@@ -509,14 +509,14 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
    outputFile.write('   log-action "Turning off IP forwarding ..."\n')
    outputFile.write('   sysctl -q net.ipv4.ip_forward=0\n')
    outputFile.write('   sysctl -q net.ipv6.conf.all.forwarding=0\n')
-   outputFile.write('   log-result 1\n')
+   outputFile.write('   log-result $RESULT_GOOD\n')
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'stop', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex, v4only)
    if localSiteIndex == NorNet_SiteIndex_Central:
       outputFile.write('   log-action "Turning off IPv4 NAT ..."\n')
       outputFile.write('   remove-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '"\n')
-      outputFile.write('   log-result 1\n')
+      outputFile.write('   log-result $RESULT_GOOD\n')
    outputFile.write('fi\n\n')
 
 
@@ -567,21 +567,21 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
    outputFile.write('   sysctl -q net.ipv4.ip_forward=1\n')
    outputFile.write('   sysctl -q net.ipv6.conf.all.forwarding=1\n')
    outputFile.write('   sysctl -q net.ipv4.tcp_ecn=1\n')
-   outputFile.write('   log-result 1\n')
+   outputFile.write('   log-result $RESULT_GOOD\n')
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'start', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex, v4only)
    if localSiteIndex == NorNet_SiteIndex_Central:
       outputFile.write('   log-action "Turning on IPv4 NAT ..."\n')
       outputFile.write('   make-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '"\n')
-      outputFile.write('   log-result 1\n')
+      outputFile.write('   log-result $RESULT_GOOD\n')
    outputFile.write('fi\n\n')
 
 
    outputFile.write('\nif [ "$state" = "stop" -o "$state" = "start" -o "$state" = "restart" ] ; then\n')
    outputFile.write('   log-action "Flushing route cache ..."\n')
    outputFile.write('   ip route flush cache\n')
-   outputFile.write('   log-result 1\n')
+   outputFile.write('   log-result $RESULT_GOOD\n')
    outputFile.write('fi\n')
 
    outputFile.close()
