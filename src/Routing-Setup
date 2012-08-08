@@ -47,18 +47,41 @@ log-action ()
 }
 
 
+
 # ###### Write log result information #######################################
+RESULT_GOOD=1
+RESULT_BAD=0
+_BadResults=0
 log-result ()
 {
    local result="$1"
    local line=128
 
-   if [ "$result" = "1" ] ; then
+   if [ "$result" = "$RESULT_GOOD" ] ; then
       echo -en "\x1b[${line}G\x1b[32mOK\x1b[0m\n"
-   elif [ "$result" = "0" ] ; then
+   elif [ "$result" = "$RESULT_BAD" ] ; then
       echo -en "\x1b[${line}G\x1b[30;47;5mFAILED!\x1b[0m\n"
+      let _BadResults=$_BadResult+1
    else
       echo -en "\x1b[${line}G\x1b[0m$result\n"
+   fi
+}
+
+
+# ###### Reset error counter ################################################
+log-reset-result ()
+{
+   _BadResults=0
+}
+
+
+# ###### Exit with result ###################################################
+exit-with-result ()
+{
+   if [ $_BadResults -eq 0 ] ; then
+      exit 0
+   else
+      exit 1
    fi
 }
 
