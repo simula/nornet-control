@@ -22,8 +22,6 @@
 
 # ###### Main program #######################################################
 state="$1"
-shift
-
 if [ "$state" != "start" -a "$state" != "stop" -a \
      "$state" != "restart" -a "$state" != "status" -a "$state" != "reset" -a "$state" != "coldstart" ] ; then
    echo >&2 "Usage: $0 start|stop|status|reset|coldstart [-providers list_of_providers] [-bootstrap]"
@@ -59,6 +57,7 @@ fi
 success=1
 bootstrap=0
 selectedProviders=""
+shift
 while [ "$1" != "" ] ; do
    if [ "$1" = "-bootstrap" ] ; then
       bootstrap=1

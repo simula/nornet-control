@@ -63,6 +63,9 @@ log-result ()
       echo -en "\x1b[${line}G\x1b[30;47;5mFAILED!\x1b[0m\n"
       let _BadResults=$_BadResults+1
       let _BadResults=$_BadResults+1
+   elif [ "$result" = "" ] ; then
+      echo >&2 "ERROR: No result given for log-result?!"
+      exit 1
    else
       echo -en "\x1b[${line}G\x1b[0m$result\n"
    fi
@@ -89,15 +92,23 @@ exit-with-result ()
 
 
 # ###### Log summary and exit with result ###################################
-log-summary-and-exit-with-result ()
+log-summary-and-return-result ()
 {
    if [ $_BadResults -eq 0 ] ; then
       log-result $RESULT_GOOD
-      exit 0
+      return 0
    else
       log-result $RESULT_BAD
-      exit 1
+      return 1
    fi
+}
+
+
+# ###### Log summary and reset ##############################################
+log-and-reset-summary ()
+{
+   log-summary-and-return-result || true
+   _BadResults=0
 }
 
 
@@ -135,6 +146,15 @@ remove-tunnel ()
 # ###### Tunnel setup #######################################################
 make-tunnel ()
 {
+
+   #let xx=$xx+1
+   #if [ $xx -eq 4 ] ; then
+   #   echo "--- TEST ERROR ---"
+   #   xx=1
+   #   return 1
+   #fi
+
+
    local interface="$1"           # Interface name (fire*, seks*, gre*)
    local tunnelKey="$2"           # Tunnel key, must be unique between sites
    local outerLocalIP="$3"        # Outer Local IP
@@ -215,11 +235,10 @@ show-tunnel ()
 
    success=0
    if [[ "$innerRemoteIP" =~ : ]] ; then
-      ping6 -W3 -c3 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
+      ping6 -w3 -c1 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
    else
-      ping -W3 -c3 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
+      ping -w3 -c1 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
    fi
-   log-result $success
 
    if [ $success -eq 1 ] ; then
       return 0
