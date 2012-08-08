@@ -212,12 +212,12 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
       elif (state == 'status'):
          action = 'Checking'
 
-      routingTableID = _getTableID(localProviderIndex)
-      if (state == 'start'):
-         routingTableDestPref   = _getTablePref(localProviderIndex, 0)
-         routingTableTOSPref    = _getTablePref(localProviderIndex, 1)
-         routingTableSourcePref = _getTablePref(localProviderIndex, 2)
+      routingTableID         = _getTableID(localProviderIndex)
+      routingTableDestPref   = _getTablePref(localProviderIndex, 0)
+      routingTableTOSPref    = _getTablePref(localProviderIndex, 1)
+      routingTableSourcePref = _getTablePref(localProviderIndex, 2)
 
+      if (state == 'start'):
          if pathNumber + 1 < len(NorNet_TOSSettings):
             routingTableTOS = NorNet_TOSSettings[pathNumber + 1]
          else:
@@ -261,6 +261,12 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
 
       elif (state == 'stop'):
          outputFile.write('   remove-table ' + str(routingTableID) + '\n')
+         for version in [ 4, 6 ]:
+            if ((version == 6) and (v4only == True)):
+               continue
+            localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, version)
+            outputFile.write('   remove-table-selector main ' + str(routingTableDestPref) + \
+                             ' to ' + str(localProviderNetwork) + '\n')
 
 
 

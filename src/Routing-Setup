@@ -289,7 +289,11 @@ add-or-remove-table-selector ()
       shift
    done
 
-   ip $v6option rule $action $selectorOptions lookup $tableID pref $preference
+   if [ "$action" = "del" ] ; then
+      ip $v6option rule del $selectorOptions lookup $tableID pref $preference 2>/dev/null || true
+   else
+      ip $v6option rule $action $selectorOptions lookup $tableID pref $preference
+   fi
 }
 
 
