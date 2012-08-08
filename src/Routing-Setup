@@ -61,17 +61,19 @@ log-result ()
       echo -en "\x1b[${line}G\x1b[32mOK\x1b[0m\n"
    elif [ "$result" = "$RESULT_BAD" ] ; then
       echo -en "\x1b[${line}G\x1b[30;47;5mFAILED!\x1b[0m\n"
-      let _BadResults=$_BadResult+1
+      let _BadResults=$_BadResults+1
+      let _BadResults=$_BadResults+1
    else
       echo -en "\x1b[${line}G\x1b[0m$result\n"
    fi
 }
 
 
-# ###### Reset error counter ################################################
-log-reset-result ()
+# ###### Exit with error ####################################################
+log-bad-result-and-exit ()
 {
-   _BadResults=0
+   log-result $RESULT_BAD
+   exit 1
 }
 
 
@@ -81,6 +83,19 @@ exit-with-result ()
    if [ $_BadResults -eq 0 ] ; then
       exit 0
    else
+      exit 1
+   fi
+}
+
+
+# ###### Log summary and exit with result ###################################
+log-summary-and-exit-with-result ()
+{
+   if [ $_BadResults -eq 0 ] ; then
+      log-result $RESULT_GOOD
+      exit 0
+   else
+      log-result $RESULT_BAD
       exit 1
    fi
 }

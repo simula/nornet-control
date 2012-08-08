@@ -211,6 +211,8 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
          action = 'Tearing down'
       elif (state == 'status'):
          action = 'Checking'
+      outputFile.write('   log "' + action + ' connectivity for provider ' + \
+                       localProvider['provider_long_name'] + ' ..."\n')
 
       routingTableID         = _getTableID(localProviderIndex)
       routingTableDestPref   = _getTablePref(localProviderIndex, 0)
@@ -223,10 +225,10 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
          else:
             routingTableTOS = 0x00
 
-         outputFile.write('   log "' + action + ' connectivity of provider ' + \
-                          localProvider['provider_long_name'] + '"\n')
+         outputFile.write('   log-action "Creating rules and tables for provider ' + \
+                          localProvider['provider_long_name'] + ' ..."\n')
          outputFile.write('   make-table ' + str(routingTableID) + '   # ' + \
-                          localProvider['provider_long_name'] + ' table\n')
+                          localProvider['provider_long_name'] + ' table   && \\\n')
 
          # ====== Destination rules =========================================
          # For directly connected NorNet networks, skip further rules and go
@@ -238,7 +240,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
             fullNorNetNetwork    = makeNorNetIP(0, 0, 0, 0, version)
             localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, version)
             outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + \
-                             ' to ' + str(localProviderNetwork) + '\n')
+                             ' to ' + str(localProviderNetwork) + '   && \\\n')
 
             # ====== TOS rule ===============================================
             # If TOS is set, select outgoing provider accordingly
@@ -246,7 +248,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableTOSPref) + \
                                 ' from ' + str(fullNorNetNetwork) + \
                                 ' tos ' + hex(routingTableTOS) + \
-                                ' to ' + str(fullNorNetNetwork) + '\n')
+                                ' to ' + str(fullNorNetNetwork) + '   && \\\n')
 
          # ====== Source rules ==============================================
          # Otherwise, use source address to determine the outgoing provider.
@@ -257,17 +259,21 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
             localProviderNetwork = makeNorNetIP(localProviderIndex, 0, 0, 0, version)
             outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableSourcePref) + \
                              ' from ' + str(localProviderNetwork) + \
-                             ' to ' + str(fullNorNetNetwork) + '\n')
+                             ' to ' + str(fullNorNetNetwork) + '   && \\\n')
 
       elif (state == 'stop'):
-         outputFile.write('   remove-table ' + str(routingTableID) + '\n')
+         outputFile.write('   log-action "Removing rules and tables for provider ' + \
+                          localProvider['provider_long_name'] + ' ..."\n')
+         outputFile.write('   remove-table ' + str(routingTableID) + '   && \\\n')
          for version in [ 4, 6 ]:
             if ((version == 6) and (v4only == True)):
                continue
             localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, version)
             outputFile.write('   remove-table-selector main ' + str(routingTableDestPref) + \
-                             ' to ' + str(localProviderNetwork) + '\n')
+                             ' to ' + str(localProviderNetwork) + '   && \\\n')
 
+      if ((state == 'start') or (state == 'stop')):
+         outputFile.write('   log-result $RESULT_GOOD || log-result $BAD_RESULT\n')
 
 
       # ====== Create provider-specific tunnels and routes ==================
@@ -313,12 +319,12 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    str(tunnel['tunnel_remote_outer_address']) + ' ' + \
                                    str(tunnel['tunnel_local_inner_address'])  + ' ' + \
                                    str(tunnel['tunnel_remote_inner_address']) + ' ' + \
-                                   '"' + options + '"\n')
+                                   '"' + options + '" && \\\n')
                elif (state == 'stop'):
                   if not ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
                      outputFile.write('   remove-tunnel ' + \
                                       tunnel['tunnel_interface'] + ' ' + \
-                                      hex(tunnel['tunnel_key'])  + '\n')
+                                      hex(tunnel['tunnel_key'])  + '   && \\\n')
                elif (state == 'status'):
                   outputFile.write('   show-tunnel ' + \
                                    tunnel['tunnel_interface'] + ' ' + \
@@ -331,7 +337,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    remoteProvider['provider_long_name'] + \
                                    ' (' + str(remoteProvider['provider_index']) + ') <--> ' + \
                                    localProvider['provider_long_name'] + \
-                                   ' (' + str(localProvider['provider_index']) + ')]"\n')
+                                   ' (' + str(localProvider['provider_index']) + ')]"   && \\\n')
 
 
                # ====== Create routing table entries ========================
@@ -341,7 +347,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    str(routingTableID) + ' ' +
                                    str(remoteNetwork) + ' ' +
                                    tunnel['tunnel_interface'] + ' ' + \
-                                   str(tunnel['tunnel_remote_inner_address']) + '   # via ' + \
+                                   str(tunnel['tunnel_remote_inner_address']) + '   && \\   # via ' + \
                                    localProvider['provider_long_name'] + ' <--> ' + \
                                    remoteProvider['provider_long_name'] + ' tunnel\n')
 
@@ -354,12 +360,11 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    str(remoteNetwork) + ' ' +
                                    tunnel['tunnel_interface'] + ' ' + \
                                    str(tunnel['tunnel_remote_inner_address']) + ' ' + \
-                                   'metric ' + str(metric) + '   # via ' + \
+                                   'metric ' + str(metric) + '   && \\   # via ' + \
                                    localProvider['provider_long_name'] + ' <--> ' + \
                                    remoteProvider['provider_long_name'] + ' tunnel\n')
 
-               if ((state == 'start') or (state == 'stop')):
-                  outputFile.write('   log-result $RESULT_GOOD\n')
+               outputFile.write('   log-result $RESULT_GOOD || log-result $BAD_RESULT\n')
 
 
       ## ====== Default route to central site ================================
@@ -388,8 +393,16 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
             outputFile.write('   log "Tearing down DEFAULT route to central site"\n')
             outputFile.write('   remove-table ' + str(routingTableID) + '\n')
 
+
+      outputFile.write('   log-action "' + action + ' connectivity for provider ' + \
+                       localProvider['provider_long_name'] + ' finished"\n')
+
       outputFile.write('fi\n\n')
       pathNumber = pathNumber + 1
+
+
+   outputFile.write('log-summary-and-exit-with-result\n')
+   pathNumber = pathNumber + 1
 
    outputFile.close()
    return configurationName
