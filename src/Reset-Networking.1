@@ -1,0 +1,43 @@
+.\" Routing Setup
+.\" Copyright (C) 2012 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd July 27, 2012
+.Dt Reset-Networking 1
+.Os Reset-Networking
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Reset-Networking
+.Nd NorNet Reset Networking Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Reset-Networking
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Reset-Networking
+resets the network configuration, i.e.:
+.Bl -tag -width indent
+.It All IPv4 and IPv6 addresses are removed, except for 127.0.0.1 and ::1.
+.It All interfaces are turned down, except for loopback.
+.It All routing rules are removed, except for the standard ones.
+.It The PREROUTING and POSTROUTING chains of the "nat" table are flushed.
+.It The IPv4 and IPv6 route caches are flushed.
+.It Finally, the network service (Debian/Ubuntu, Fedora) is restartet. This
+should result in restoring a working network configuration.
+.El
+.Pp
