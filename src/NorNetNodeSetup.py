@@ -201,7 +201,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
       if ((state == 'start') or (state == 'stop')):
          outputFile.write('if [ "$state" = "' + state + '" -o "$state" = "restart" ] ; then\n')
          if state == 'start':
-            outputFile.write('   log-summary-and-reset\n')
+            outputFile.write('   log-and-reset-summary\n')
       else:
          outputFile.write('if [ "$state" = "' + state + '" ] ; then\n')
 
@@ -399,7 +399,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
       pathNumber = pathNumber + 1
 
 
-   outputFile.write('log-summary-and-exit-with-result\n')
+   outputFile.write('log-summary-and-return-result\n')
    pathNumber = pathNumber + 1
 
    outputFile.close()
@@ -547,25 +547,19 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
             providerList.append(localProvider['provider_short_name'])
             configFileList.append(tbpName)
             if pathNumber > 0:
-               outputFile.write(' ')
+               outputFile.write(',')
             outputFile.write(localProvider['provider_short_name'])
             pathNumber = pathNumber + 1
    outputFile.write('"\n')
 
-   outputFile.write('checkProviders "')
-   i = 0
-   for provider in providerList:
-      if i > 0:
-         outputFile.write(',')
-      outputFile.write(provider)
-      i = i + 1
-   outputFile.write('" "$selectedProviders"\n')
+   outputFile.write('checkProviders "$availableProviders" "$selectedProviders"\n')
 
+   outputFile.write('success=1\n')
    i = 0
    for provider in providerList:
       outputFile.write('if [[ "$selectedProviders" =~ ^$|^' + provider + '$|^' + provider + ',|,' + provider + ',|,' + provider + '$ ]] ; then\n')
       outputFile.write('   echo "Configuring ' + configFileList[i] + '"\n')
-      outputFile.write('   . ./' + configFileList[i] + '\n')
+      outputFile.write('   . ./' + configFileList[i] + ' || success=0\n')
       outputFile.write('else\n')
       outputFile.write('   echo "Skipping ' + configFileList[i] + '"\n')
       outputFile.write('fi\n')
@@ -575,24 +569,24 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
    # ====== Make local setup ================================================
    outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
    outputFile.write('   log-action "Turning on IP forwarding..."\n')
-   outputFile.write('   sysctl -q net.ipv4.ip_forward=1\n')
-   outputFile.write('   sysctl -q net.ipv6.conf.all.forwarding=1\n')
-   outputFile.write('   sysctl -q net.ipv4.tcp_ecn=1\n')
-   outputFile.write('   log-result $RESULT_GOOD\n')
+   outputFile.write('   sysctl -q net.ipv4.ip_forward=1 && \\\n')
+   outputFile.write('   sysctl -q net.ipv6.conf.all.forwarding=1 && \\\n')
+   outputFile.write('   sysctl -q net.ipv4.tcp_ecn=1 && \\\n')
+   outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'start', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex, v4only)
    if localSiteIndex == NorNet_SiteIndex_Central:
       outputFile.write('   log-action "Turning on IPv4 NAT ..."\n')
-      outputFile.write('   make-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '"\n')
-      outputFile.write('   log-result $RESULT_GOOD\n')
+      outputFile.write('   make-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '" && \\n')
+      outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    outputFile.write('fi\n\n')
 
 
    outputFile.write('\nif [ "$state" = "stop" -o "$state" = "start" -o "$state" = "restart" ] ; then\n')
    outputFile.write('   log-action "Flushing route cache ..."\n')
-   outputFile.write('   ip route flush cache\n')
-   outputFile.write('   log-result $RESULT_GOOD\n')
+   outputFile.write('   ip route flush cache && \\\n')
+   outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    outputFile.write('fi\n')
 
    outputFile.close()
