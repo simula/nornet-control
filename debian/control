@@ -6,14 +6,12 @@ Homepage: http://www.nntb.no/
 Build-Depends: debhelper (>= 9),
                python (>= 2.7),
                python-ipaddr,
-               python-netifaces,
                python-support
 Standards-Version: 3.9.3
 
 Package: nornet-api
 Architecture: any
 Depends: python-ipaddr,
-         python-netifaces,
          rsplib-tools,
          ${misc:Depends},
          ${python:Depends},
