@@ -52,7 +52,7 @@ def loadNorNetConfiguration():
       for line in lines:
          if re.match('^[ \t]*[#\n]', line):
             just_a_comment_or_empty_line=1
-         elif re.match('^[a-zA-Z0-9_ \t]*=', line):
+         elif re.match('^[a-zA-Z0-9_]*[ \t]*=', line):
             exec(line) in globals()
          else:
             error('Bad configuration line: ' + line)
