@@ -32,25 +32,17 @@
 ### END INIT INFO
 
 
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-NAME=rspregistrar
+NAME="nornet-tunnelbox"
 DESC="NorNet Tunnelbox"
-PIDFILE=/var/run/$NAME.pid
-DAEMON=/usr/bin/Tunnelbox-Setup
-DAEMON_ARGS="-quiet -daemonpidfile=$PIDFILE -logfile=/var/log/$NAME.log -loglevel=3 -logcolor=off"
-
-test -x $DAEMON || exit 0
+NORNET_DIRECTORY="/etc/nornet"
+LOGFILE="/var/log/nornet-tunnelbox.log"
+PATH=$NORNET_DIRECTORY:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 
-# Make sure that SCTP is available
-modprobe sctp > /dev/null 2>&1
-# sysctl net.sctp.addip_enable=1
-# sysctl net.sctp.auth_enable=1
 
-
-# Include rsplib defaults if available
-if [ -f /etc/default/nornet-tunnelbox ] ; then
-   . /etc/default/nornet-tunnelbox
+# Check whether NorNet directory is existing
+if [ ! -e "$NORNET_DIRECTORY" ] ; then
+   exit 0
 fi
 
 # Load the VERBOSE setting and other rcS variables
@@ -64,40 +56,27 @@ fi
 
 set -e
 
+cd "$NORNET_DIRECTORY"
+
 case "$1" in
-  start)
-   echo -n "Starting $DESC: "
-   start-stop-daemon --start  --pidfile $PIDFILE \
-      --exec $DAEMON -- $DAEMON_ARGS
-   echo "$NAME."
-   ;;
-  stop)
-   echo -n "Stopping $DESC: "
-   start-stop-daemon --stop --quiet --pidfile $PIDFILE \
-      --exec $DAEMON
-   echo "$NAME."
-   ;;
-  force-reload)
-   start-stop-daemon --stop --test --quiet --pidfile \
-      $PIDFILE --exec $DAEMON \
-   && $0 restart \
-   || exit 0
-   ;;
   restart)
-   echo -n "Restarting $DESC: "
-   start-stop-daemon --stop --quiet --pidfile \
-      $PIDFILE --exec $DAEMON
-   sleep 1
-   start-stop-daemon --start --quiet --pidfile \
-      $PIDFILE --exec $DAEMON -- $DAEMON_ARGS
+  start)
+  stop)
+   echo -n "Starting $DESC: "
+   Tunnelbox-Setup "$1" >>$LOGFILE
    echo "$NAME."
+   ;;
+  configure)
+   Make-Tunnelbox-Configuration -bootstrap
+   Tunnelbox-Setup start -bootstrap
+   Make-Tunnelbox-Configuration
    ;;
   status)
-   status_of_proc -p $PIDFILE $DAEMON $NAME && exit 0 || exit $?
+   Tunnelbox-Setup status
    ;;
   *)
    N=/etc/init.d/$NAME
-   echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
+   echo "Usage: $N {start|stop|restart|configure|status}" >&2
    exit 1
    ;;
 esac
