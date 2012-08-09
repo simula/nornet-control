@@ -81,7 +81,7 @@ if [ $bootstrap -eq 1 ] ; then
       log-action "Finished BOOTSTRAP"
    else
       echo >&2 "###### tunnelbox-bootstrap does not exist. Tunnelbox needs to be configured first! ######"
-      exit 1
+      exit 0
    fi
 else
    if [ -e ./tunnelbox-config ] ; then
@@ -90,7 +90,7 @@ else
       log-action "Finished Tunnelbox setup"
    else
       echo >&2 "###### tunnelbox-config does not exist. Tunnelbox needs to be configured first! ######"
-      exit 1
+      exit 0
    fi
 fi
 
