@@ -28,12 +28,13 @@ if [ "$state" != "start" -a "$state" != "stop" -a \
    exit 1
 fi
 
+
 WORK_DIRECTORY="."
-if [ ! -e "$WORK_DIRECTORY/Routing-Setup" ] ; then
-   echo >&2 "ERROR: $WORK_DIRECTORY/Routing-Setup not found!"
-   exit 1
+if [ -e "$WORK_DIRECTORY/Routing-Setup" ] ; then
+   . ./$WORK_DIRECTORY/Routing-Setup
+else
+   . Routing-Setup || ( echo >&2 "ERROR: Routing-Setup not found!" && exit 1 )
 fi
-. ./$WORK_DIRECTORY/Routing-Setup
 
 
 if [ "$state" = "reset" -o "$state" = "coldstart" ] ; then
