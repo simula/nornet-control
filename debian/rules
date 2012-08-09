@@ -3,10 +3,12 @@
 %:
 	dh $@ --with python2
 
+# Use setup.py to install the API module into the right directory.
 override_dh_auto_install:
+	# NOTE: This is for the package "nornet-api", hence the folloring --root parameter!
 	set -e && for pyvers in $(shell pyversions -vr); do \
 		python$$pyvers setup.py install --no-compile -O0 --install-layout=deb \
-						--root $(CURDIR)/debian/nornet; \
+						--root $(CURDIR)/debian/nornet-api ; \
 	done
 
 # Use upstream ChangeLog for installation
