@@ -16,14 +16,13 @@ mkdir $PACKAGE-$VERSION || exit 1
 # ---------------------------------------------------------
 mkdir $PACKAGE-$VERSION/src
 cp NEWS README BUGS COPYING ChangeLog *.lsm $PACKAGE-$VERSION
-cp src/*.py $PACKAGE-$VERSION/src
-cp src/*.1 $PACKAGE-$VERSION/src
-cp src/*-config $PACKAGE-$VERSION/src
-cp src/Routing-Setup $PACKAGE-$VERSION/src
-cp src/Tunnelbox-Setup $PACKAGE-$VERSION/src
-cp src/Make-Tunnelbox-Configuration $PACKAGE-$VERSION/src
-cp src/Reset-Networking $PACKAGE-$VERSION/src
-# find $PACKAGE-$VERSION/src -name "moc_*" | xargs rm -f
+cp src/*.py $PACKAGE-$VERSION
+cp src/*.1 $PACKAGE-$VERSION
+cp src/*-config $PACKAGE-$VERSION
+cp src/Routing-Setup $PACKAGE-$VERSION
+cp src/Tunnelbox-Setup $PACKAGE-$VERSION
+cp src/Make-Tunnelbox-Configuration $PACKAGE-$VERSION
+cp src/Reset-Networking $PACKAGE-$VERSION
 # ---------------------------------------------------------
 
 

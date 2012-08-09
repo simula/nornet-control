@@ -3,6 +3,12 @@
 %:
 	dh $@ --with python2
 
+override_dh_auto_install:
+	set -e && for pyvers in $(shell pyversions -vr); do \
+		python$$pyvers setup.py install --no-compile -O0 --install-layout=deb \
+						--root $(CURDIR)/debian/nornet; \
+	done
+
 # Use upstream ChangeLog for installation
 override_dh_installchangelogs:
 	dh_installchangelogs -k ChangeLog

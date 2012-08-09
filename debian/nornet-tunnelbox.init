@@ -65,6 +65,9 @@ case "$1" in
    Tunnelbox-Setup "$1" >>$LOGFILE
    echo "$NAME."
    ;;
+  force-reload)
+   Tunnelbox-Setup coldstart >>$LOGFILE
+   ;;
   configure)
    Make-Tunnelbox-Configuration -bootstrap
    Tunnelbox-Setup start -bootstrap
