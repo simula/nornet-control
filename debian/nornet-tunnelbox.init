@@ -35,6 +35,7 @@
 NAME="nornet-tunnelbox"
 DESC="NorNet Tunnelbox"
 NORNET_DIRECTORY="/etc/nornet"
+NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
 LOGFILE="/var/log/nornet-tunnelbox.log"
 PATH=$NORNET_DIRECTORY:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -59,9 +60,7 @@ set -e
 cd "$NORNET_DIRECTORY"
 
 case "$1" in
-  restart)
-  start)
-  stop)
+  start|stop|restart)
    echo -n "Starting $DESC: "
    Tunnelbox-Setup "$1" >>$LOGFILE
    echo "$NAME."
