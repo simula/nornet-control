@@ -187,9 +187,9 @@ for DISTRIBUTION in $DISTRIBUTIONS ; do
 
    # Build source package including signature:
    # debuild -sa -S -k'Thomas Dreibholz <dreibh@iem.uni-due.de>' -i
-   debuild -sa -S "-k$MAINTAINER" -i || exit 1
+#   debuild -sa -S "-k$MAINTAINER" -i || exit 1
    # Build source package without signature:
-   # debuild -us -uc -S "-k$MAINTAINER" -i || exit 1
+ debuild -us -uc -S "-k$MAINTAINER" -i || exit 1
 
 
    # Important: In /etc/pbuilderrc, set COMPONENTS="main universe"!

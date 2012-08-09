@@ -75,13 +75,23 @@ done
 
 success=1
 if [ $bootstrap -eq 1 ] ; then
-   log "Entering BOOTSTRAP ..."
-   . ./tunnelbox-bootstrap || success=0
-   log-action "Finished BOOTSTRAP"
+   if [ -e ./tunnelbox-bootstrap ] ; then
+      log "Entering BOOTSTRAP ..."
+      . ./tunnelbox-bootstrap || success=0
+      log-action "Finished BOOTSTRAP"
+   else
+      echo >&2 "###### tunnelbox-bootstrap does not exist. Tunnelbox needs to be configured first! ######"
+      exit 1
+   fi
 else
-   log "Entering Tunnelbox setup ..."
-   . ./tunnelbox-config || success=0
-   log-action "Finished Tunnelbox setup"
+   if [ -e ./tunnelbox-config ] ; then
+      log "Entering Tunnelbox setup ..."
+      . ./tunnelbox-config || success=0
+      log-action "Finished Tunnelbox setup"
+   else
+      echo >&2 "###### tunnelbox-config does not exist. Tunnelbox needs to be configured first! ######"
+      exit 1
+   fi
 fi
 
 

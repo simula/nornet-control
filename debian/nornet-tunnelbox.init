@@ -62,7 +62,7 @@ cd "$NORNET_DIRECTORY"
 case "$1" in
   start|stop|restart)
    echo -n "Starting $DESC: "
-   Tunnelbox-Setup "$1" >>$LOGFILE
+   Tunnelbox-Setup "$1" >>$LOGFILE && \
    echo "$NAME."
    ;;
   force-reload)
