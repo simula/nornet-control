@@ -23,9 +23,8 @@
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
-# Needs package python-netifaces (Fedora Core, Ubuntu, Debian)!
-from netifaces import interfaces, ifaddresses, AF_INET, AF_INET6
-
+import os;
+import re;
 import sys;
 import datetime;
 
@@ -65,17 +64,24 @@ def makeConfigFile(type, configurationName, setInfoVariable):
 
 # ###### Obtain local addresses of host #####################################
 def getLocalAddresses(version):
-   if version == 4:
-      type = AF_INET
-   else:
-      type = AF_INET6
+   addressList = []
+   ipOption    = '-' + str(version)
 
-   addressList   = []
-   interfaceList = interfaces()
-   for interfaceName in interfaceList:
-      try:
-         addressList.append(IPAddress(ifaddresses(interfaceName)[type][0]['addr']))
-      except:
-         dummy=0
+   try:
+      lines  = tuple(os.popen('/sbin/ip ' + ipOption + ' addr show'))
+   except Exception as e:
+      error('Unable to call /sbin/ip to obtain interface addresses: ' + str(e))
+
+   for line in lines:
+      match = re.search('(^[ \t]*inet6[ \t]*)([0-9a-zA-Z:]*)([ \t]*)', line)
+      if match != None:
+         v6Address = IPv6Address(match.group(2))
+         if not v6Address.is_link_local:
+            addressList.append(v6Address)
+      else:
+         match = re.search('(^[ \t]*inet[ \t]*)([0-9\.]*)([ \t]*)', line)
+         if match != None:
+            v4Address = IPv4Address(match.group(2))
+            addressList.append(v4Address)
 
    return addressList

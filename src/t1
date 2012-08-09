@@ -7,45 +7,30 @@ from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, 
 from NorNetProviderSetup import *;
 from NorNetTools         import *;
 
+import os;
+import re;
 
-print 'NodeVNet=', makeNorNetIP(1,1,2,123, 6)
-print 'NodeNet= ', makeNorNetIP(1,1,2,0, 6)
-print 'NodeNet0=', makeNorNetIP(1,1,2,-1, 6)
-print 'Site=    ', makeNorNetIP(1,1,0,0, 6)
-print 'Provider=', makeNorNetIP(1,0,0,0, 6)
-print 'NorNet=  ', makeNorNetIP(0,0,0,0, 6)
-print ''
 
-print 'Node=    ', makeNorNetIP(1,1,1,0, 4)
-print 'Site=    ', makeNorNetIP(1,1,0,0, 4)
-print 'Provider=', makeNorNetIP(1,0,0,0, 4)
-print 'NorNet=  ', makeNorNetIP(0,0,0,0, 4)
+#print 'NodeVNet=', makeNorNetIP(1,1,2,123, 6)
+#print 'NodeNet= ', makeNorNetIP(1,1,2,0, 6)
+#print 'NodeNet0=', makeNorNetIP(1,1,2,-1, 6)
+#print 'Site=    ', makeNorNetIP(1,1,0,0, 6)
+#print 'Provider=', makeNorNetIP(1,0,0,0, 6)
+#print 'NorNet=  ', makeNorNetIP(0,0,0,0, 6)
+#print ''
+
+#print 'Node=    ', makeNorNetIP(1,1,1,0, 4)
+#print 'Site=    ', makeNorNetIP(1,1,0,0, 4)
+#print 'Provider=', makeNorNetIP(1,0,0,0, 4)
+#print 'NorNet=  ', makeNorNetIP(0,0,0,0, 4)
 
 
 
 addressList = getLocalAddresses(4)
-print addressList
+print "v4 = ", addressList
+
+addressList = getLocalAddresses(6)
+print "v6 = ", addressList
 
 for a in addressList:
    print str(a),NorNet_IPv4Prefix.Contains(a),NorNet_IPv6Prefix.Contains(a)
-
-
-## ###### Get NorNet information about myself (host) #########################
-#def getMyNorNetInformation():
-   #localAddressList = getLocalAddresses(6)
-   #for address in addressList:
-      #if NorNet_IPv6Prefix.Contains(address):
-         #return getNorNetInformationForAddress(address)
-
-   #localAddressList = getLocalAddresses(4)
-   #for address in addressList:
-      #if NorNet_IPv4Prefix.Contains(address):
-         #return getNorNetInformationForAddress(address)
-
-   #return None
-
-
-print getMyNorNetInformation()
-
-print getNorNetInformationForAddress(makeNorNetIP(100,65,22,0, 4))
-print getNorNetInformationForAddress(makeNorNetIP(100,65,22,123,6))
