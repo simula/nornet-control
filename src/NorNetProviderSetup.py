@@ -215,7 +215,7 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
       m = hashlib.md5()
       m.update(address)
       s = m.hexdigest()
-      address = (long(s[0:4], 16) & 0xfffc) | side
+      address = (int(s[0:4], 16) & 0xfffc) | side
       address = int(IPv4Address('192.168.0.0')) | address
       return IPv4Address(address)
    else:

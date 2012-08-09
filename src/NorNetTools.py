@@ -32,13 +32,13 @@ import datetime;
 
 # ###### Print log message ##################################################
 def log(logstring):
-   print datetime.datetime.utcnow().isoformat() + ' ' + logstring;
+   print(datetime.datetime.utcnow().isoformat() + ' ' + logstring);
 
 
 # ###### Abort with error ###################################################
 def error(logstring):
-   print datetime.datetime.utcnow().isoformat() + \
-         ' ===== ERROR: ' + logstring + " =====";
+   print(datetime.datetime.utcnow().isoformat() + \
+         ' ===== ERROR: ' + logstring + " =====");
    sys.exit(1)
 
 

@@ -21,7 +21,13 @@
 
 
 import re;
-import xmlrpclib;
+import sys;
+
+# XML-RPC
+if sys.version_info < (3,0,0):
+   import xmlrpclib;
+else:
+   import xmlrpc.client;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPAddress, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
@@ -53,7 +59,7 @@ def loadNorNetConfiguration():
          if re.match('^[ \t]*[#\n]', line):
             just_a_comment_or_empty_line=1
          elif re.match('^[a-zA-Z0-9_]*[ \t]*=', line):
-            exec(line) in globals()
+            exec((line), globals())
          else:
             error('Bad configuration line: ' + line)
 
@@ -80,7 +86,10 @@ def loginToPLC():
    log('Logging into PLC ' + NorNetPLC_User + '/' + NorNetPLC_Address + ' ...')
    try:
       apiURL     = 'https://' + NorNetPLC_Address + '/PLCAPI/'
-      plc_server = xmlrpclib.ServerProxy(apiURL, allow_none=True)
+      if sys.version_info < (3,0,0):
+         plc_server = xmlrpclib.ServerProxy(apiURL, allow_none=True)
+      else:
+         plc_server = xmlrpc.client.ServerProxy(apiURL, allow_none=True)
 
       plc_authentication = {}
       plc_authentication['AuthMethod'] = 'password'
