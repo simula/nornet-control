@@ -35,7 +35,7 @@
 NAME="nornet-tunnelbox"
 DESC="NorNet Tunnelbox"
 NORNET_DIRECTORY="/etc/nornet"
-NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
+# NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
 LOGFILE="/var/log/nornet-tunnelbox.log"
 PATH=$NORNET_DIRECTORY:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -69,6 +69,8 @@ case "$1" in
    Make-Tunnelbox-Configuration -bootstrap
    Tunnelbox-Setup start -bootstrap
    Make-Tunnelbox-Configuration
+   Tunnelbox-Setup start
+   Tunnelbox-Setup status
    ;;
   status)
    Tunnelbox-Setup status
