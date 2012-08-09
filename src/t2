@@ -1,37 +1,23 @@
 #!/bin/bash
 
-providers="dfn,telekom"
-
-for provider in dfn telenor uninett telekom ; do
-   if [[ "$providers" =~ ^$|^$provider$|^$provider,|,$provider,|,$provider$ ]] ; then
-      echo "p=$provider"
-
-   else
-      echo "SKIP $provider"
-   fi
-done
+. ./Routing-Setup
 
 
-echo "-----"
+set -e
 
 
-availableProviders="dfn,telekom,tele2"
-selectedProviders="dfn,telekom,uninett"
+x=1
 
-
-checkProviders () {
-   local availableProviders="$1"
-   local selectedProviders="$2"
-   local oldIFS=$IFS
-   IFS=","
-   for provider in $selectedProviders ; do
-      echo "p=$provider"
-      if [[ ! "$availableProviders" =~ ^$|^$provider$|^$provider,|,$provider,|,$provider$ ]] ; then
-         echo >&2 "ERROR: Provider \"$provider\" is not in the list of available providers \"$availableProviders\"!"
-         exit 1
-      fi
-   done
-   IFS=$oldIFS
+test1 ()
+{
+   echo "<TEST-A>"
+   return 0
 }
 
-checkProviders "$availableProviders" "$selectedProviders"
+test2 ()
+{
+   echo "<TEST-BAD>"
+   return 1
+}
+
+test1 && test2 && test1 && log-result $RESULT_GOOD || log-result $RESULT_BAD
