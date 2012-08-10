@@ -46,34 +46,37 @@ from NorNetNodeSetup     import *;
 
 
 
-loginToPLC()
-makeProviderConfiguration()
-makeNorNetConfiguration(False)
+#loginToPLC()
+#makeProviderConfiguration()
+#makeNorNetConfiguration(False)
 
 
-node = fetchNorNetNode('altenessen.gamma.site')
-if node != None:
-   makeNodeConfiguration(fullSiteList, node, None, 'Debian', None)
-   makeNodeConfiguration(fullSiteList, node, 'p2p1', 'Fedora', None)
+#node = fetchNorNetNode('altenessen.gamma.site')
+#if node != None:
+   #makeNodeConfiguration(fullSiteList, node, None, 'Debian', None)
+   #makeNodeConfiguration(fullSiteList, node, 'p2p1', 'Fedora', None)
 
-node = fetchNorNetNode('sognsvann.beta.site')
-if node != None:
-   makeNodeConfiguration(fullSiteList, node, 'p2p1', 'Fedora', None)
+#node = fetchNorNetNode('sognsvann.beta.site')
+#if node != None:
+   #makeNodeConfiguration(fullSiteList, node, 'p2p1', 'Fedora', None)
 
-node = fetchNorNetNode('fornebu.alpha.site')
-if node != None:
-  makeNodeConfiguration(fullSiteList, node, 'eth0', 'Fedora', None)
+#node = fetchNorNetNode('fornebu.alpha.site')
+#if node != None:
+  #makeNodeConfiguration(fullSiteList, node, 'eth0', 'Fedora', None)
 
-makeNodeConfigurationForGivenNode(fullSiteList, fullSiteList[1], 'plc.alpha.site', 21, 'eth0', 'Fedora', None)
+#makeNodeConfigurationForGivenNode(fullSiteList, fullSiteList[1], 'plc.alpha.site', 21, 'eth0', 'Fedora', None)
 
 
-myNorNetInformation = getMyNorNetInformation()
-if myNorNetInformation == None:
-   error('Unable to get information about my site, provider and node. Check IP configuration!')
+#myNorNetInformation = getMyNorNetInformation()
+#if myNorNetInformation == None:
+   #error('Unable to get information about my site, provider and node. Check IP configuration!')
 
-try:
-   site = fullSiteList[myNorNetInformation['site_index']]
-except:
-   error('Unable to find my site!')
+#try:
+   #site = fullSiteList[myNorNetInformation['site_index']]
+#except:
+   #error('Unable to find my site!')
 
-makeTunnelBoxConfiguration(fullSiteList, site, 'tunnelbox', False)
+#makeTunnelBoxConfiguration(fullSiteList, site, 'tunnelbox', False)
+
+
+makeNTPConfiguration(None, None, 'ntp')

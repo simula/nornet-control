@@ -752,3 +752,58 @@ def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, config
 
    return(makeNodeConfigurationForGivenNode(fullSiteList, site, node['node_name'], node['node_address'],
                                             interface, variant, configNamePrefix))
+
+
+# ###### Generate NTP configuration #########################################
+def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
+   if configNamePrefix == None:
+      configNamePrefix = 'ntp-' + localSite['site_short_name']
+   configurationName = configNamePrefix + '-config'
+   outputFile = open(configurationName, 'w')
+
+   ntpServerList = []
+   if localSite != None:
+      for i in range(0, NorNet_MaxNTPServers - 1):
+         ntpServer = IPAddress(getTagValue(localSite['site_tags'], 'nornet_site_ntp' + str(1 + i), '0.0.0.0'))
+         if ntp != IPv4Address('0.0.0.0'):
+            ntpServerList.append(ntpServer)
+
+   outputFile.write('# ====== Drift File ======\n')
+   outputFile.write('driftfile /var/lib/ntp/ntp.drift\n\n')
+
+   outputFile.write('# ====== Statistics ======\n')
+   outputFile.write('statsdir /var/log/ntpstats/\n')
+   outputFile.write('filegen loopstats file loopstats type day enable\n')
+   outputFile.write('filegen peerstats file peerstats type day enable\n')
+   outputFile.write('filegen clockstats file clockstats type day enable\n\n')
+
+   outputFile.write('# ====== Access Restrictions ======\n')
+   outputFile.write('restrict default ignore\n')
+   for version in [ 4, 6 ]:
+      fullNorNetNetwork = makeNorNetIP(0, 0, 0, 0, version)
+      outputFile.write('restrict ' + str(fullNorNetNetwork) + ' nomodify\n')
+   outputFile.write('\n')
+
+   if fullSiteList != None:
+      outputFile.write('# ====== NorNet Central Site NTP ======\n')
+      centralSite = fullSiteList[NorNet_SiteIndex_Central]
+      providerList = getNorNetProvidersForSite(NorNet_SiteIndex_Central)
+      for providerIndex in providerList:
+         provider = providerList[providerIndex]
+         if providerIndex == centralSite['site_default_provider_index']:
+            for version in [ 4, 6 ]:
+               centralSiteTB = makeNorNetIP(providerIndex, NorNet_SiteIndex_Central, NorNet_NodeIndex_Tunnelbox, -1, version)
+               outputFile.write('server ' + str(centralSiteTB) + '\n')
+               outputFile.write('restrict ' + str(centralSiteTB) + '\n')
+      outputFile.write('\n')
+
+   outputFile.write('# ====== External NTP Servers ======\n')
+   for ntpServer in ntpServerList:
+      outputFile.write('server ' + ntpServer + '\n')
+      outputFile.write('restrict ' + ntpServer + '\n')
+
+   outputFile.write('\n# ====== Fudge Clock ======\n')
+   outputFile.write('server 127.0.0.1\n')
+   outputFile.write('restrict 127.0.0.1\n')
+   outputFile.write('restrict ::1\n')
+   outputFile.write('fudge 127.0.0.1 stratum 10\n')
