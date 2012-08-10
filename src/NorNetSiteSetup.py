@@ -61,6 +61,8 @@ def makeNorNetTagTypes():
    makeTagType('site/nornet', 'NorNet Site Central Site Tunnelbox NAT Range IPv4', 'nornet_site_tb_nat_range_ipv4')
    for i in range(0, NorNet_MaxDNSServers - 1):
       makeTagType('site/nornet', 'NorNet Site DNS Server ' + str(1 + i),  'nornet_site_dns' + str(1 + i))
+   for i in range(0, NorNet_MaxNTPServers - 1):
+      makeTagType('site/nornet', 'NorNet Site NTP Server ' + str(1 + i),  'nornet_site_ntp' + str(1 + i))
 
    for i in range(0, NorNet_MaxProviders - 1):
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Index',        'nornet_site_tbp' + str(i) + '_index')
@@ -93,7 +95,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
                    siteNorNetIndex, siteCity, siteProvince, cityCountry, siteCountryCode,
                    siteLatitude, siteLogitude,
                    providerList, defaultProvider, tbInternalInterface,
-                   dnsServers):
+                   dnsServers, ntpServers):
    try:
       # ====== Add site =====================================================
       log('Adding site ' + siteName + ' ...')
@@ -169,6 +171,13 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
             break
          if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_dns' + str(1 + i), str(IPNetwork(dnsServers[i]).ip)) <= 0:
             error('Unable to add "nornet_site_dns' + str(1 + i) + '" tag to site ' + siteName)
+
+      # ====== Set NTP servers ==============================================
+      for i in range(0, NorNet_MaxNTPServers - 1):
+         if i >= len(ntpServers):
+            break
+         if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_ntp' + str(1 + i), str(IPNetwork(ntpServers[i]).ip)) <= 0:
+            error('Unable to add "nornet_site_ntp' + str(1 + i) + '" tag to site ' + siteName)
 
       if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tb_internal_interface', tbInternalInterface) <= 0:
          error('Unable to add "nornet_site_tb_internal_interface" tag to site ' + siteName)

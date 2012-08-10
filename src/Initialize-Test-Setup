@@ -48,13 +48,17 @@ def createTestConfiguration(userName, sliceName):
    plcNodeIndex      = norNetInformation['node_index']
    dnsServers = [ makeNorNetIP(NorNet_SiteIndex_Central, NorNet_CentralSite_BootstrapProviderIndex, plcNodeIndex, -1, 4),
                   makeNorNetIP(NorNet_SiteIndex_Central, NorNet_CentralSite_BootstrapProviderIndex, plcNodeIndex, -1, 6) ]
+   ntpServers = [ IPv4Address('192.53.103.108'),
+                  IPv4Address('192.53.103.104'),
+                  IPv4Address('192.53.103.103') ]   # The PTB servers (very reliable sources)
+
 
    siteAlphaNorNetIndex = 1
    siteAlpha = makeNorNetSite('Alpha Test Site', 'TA', 'ta', 'http://www.alpha.site', 'alpha.site',
                               siteAlphaNorNetIndex, 'Ullevål', 'Østlandet', 'Norge', 'NO', 10.0, 50.0, [
                                  [ 'Uninett', 'eth0', IPv4Address('132.252.156.70'), IPv6Address('fd55:5555::70') ],
                                  [ 'Telenor', 'eth0', IPv4Address('169.254.100.70'), IPv6Address('::') ]
-                              ], 'Uninett', 'eth0', dnsServers)
+                              ], 'Uninett', 'eth0', dnsServers, ntpServers)
    siteAlphaPCUID = makeNorNetPCU(siteAlpha, 'pcu', 'alpha.site', IPv4Address('132.252.156.2'),
                                   'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 
@@ -63,7 +67,7 @@ def createTestConfiguration(userName, sliceName):
                               siteBetaNorNetIndex, 'Bygdøy',  'Østlandet', 'Norge', 'NO', 15.0, 55.0, [
                                  [ 'Uninett', 'eth0', IPv4Address('132.252.156.71'), IPv6Address('fd55:5555::71') ],
                                  [ 'Telenor', 'eth0', IPv4Address('169.254.100.71'), IPv6Address('::') ]
-                              ], 'Uninett', 'eth0', dnsServers)
+                              ], 'Uninett', 'eth0', dnsServers, ntpServers)
    siteBetaPCUID = makeNorNetPCU(siteBeta, 'pcu', 'beta.site', IPv4Address('132.252.156.3'),
                                  'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 
@@ -73,7 +77,7 @@ def createTestConfiguration(userName, sliceName):
                                  [ 'Uninett', 'eth0', IPv4Address('132.252.156.72'), IPv6Address('::') ],
                                  [ 'Telenor', 'eth0', IPv4Address('169.254.100.72'), IPv6Address('::') ],
                                  [ 'Deutsches Forschungsnetz', 'eth0', IPv4Address('172.31.255.72'),  IPv6Address('::') ]
-                              ], 'Deutsches Forschungsnetz', 'eth0', dnsServers)
+                              ], 'Deutsches Forschungsnetz', 'eth0', dnsServers, ntpServers)
    siteGammaPCUID = makeNorNetPCU(siteGamma, 'pcu', 'gamma.site', IPv4Address('132.252.156.4'),
                                   'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 

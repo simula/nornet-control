@@ -65,6 +65,9 @@ NorNet_CentralSite_BootstrapProviderIndex = 1
 # TOS Settings for provider selection
 NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
 
+# Maximum number of NTP servers (e.g. 4+4 = 4x IPv4 + 4x IPv6)
+NorNet_MaxNTPServers = 8
+
 # ===========================================================================
 
 # Maximum number of providers per site
