@@ -782,6 +782,8 @@ def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
    for version in [ 4, 6 ]:
       fullNorNetNetwork = makeNorNetIP(0, 0, 0, 0, version)
       outputFile.write('restrict ' + str(fullNorNetNetwork) + ' nomodify\n')
+   outputFile.write('restrict 127.0.0.1\n')
+   outputFile.write('restrict ::1\n')
    outputFile.write('\n')
 
    if ((localSite == None) or (localSite['site_index'] != NorNet_SiteIndex_Central)):
@@ -804,7 +806,5 @@ def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
       outputFile.write('restrict ' + str(ntpServer) + '\n')
 
    outputFile.write('\n# ====== Fudge Clock ======\n')
-   outputFile.write('server 127.0.0.1\n')
-   outputFile.write('restrict 127.0.0.1\n')
-   outputFile.write('restrict ::1\n')
-   outputFile.write('fudge 127.0.0.1 stratum 10\n')
+   outputFile.write('server 127.127.1.0\n')
+   outputFile.write('fudge 127.127.1.0 stratum 10\n')
