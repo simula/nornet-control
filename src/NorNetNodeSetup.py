@@ -26,7 +26,7 @@ import hashlib;
 import datetime;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
 from NorNetTools         import *;
@@ -765,7 +765,7 @@ def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
    if localSite != None:
       for i in range(0, NorNet_MaxNTPServers - 1):
          ntpServer = IPAddress(getTagValue(localSite['site_tags'], 'nornet_site_ntp' + str(1 + i), '0.0.0.0'))
-         if ntp != IPv4Address('0.0.0.0'):
+         if ntpServer != IPv4Address('0.0.0.0'):
             ntpServerList.append(ntpServer)
 
    outputFile.write('# ====== Drift File ======\n')
@@ -784,23 +784,24 @@ def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
       outputFile.write('restrict ' + str(fullNorNetNetwork) + ' nomodify\n')
    outputFile.write('\n')
 
-   if fullSiteList != None:
-      outputFile.write('# ====== NorNet Central Site NTP ======\n')
-      centralSite = fullSiteList[NorNet_SiteIndex_Central]
-      providerList = getNorNetProvidersForSite(NorNet_SiteIndex_Central)
-      for providerIndex in providerList:
-         provider = providerList[providerIndex]
-         if providerIndex == centralSite['site_default_provider_index']:
-            for version in [ 4, 6 ]:
-               centralSiteTB = makeNorNetIP(providerIndex, NorNet_SiteIndex_Central, NorNet_NodeIndex_Tunnelbox, -1, version)
-               outputFile.write('server ' + str(centralSiteTB) + '\n')
-               outputFile.write('restrict ' + str(centralSiteTB) + '\n')
-      outputFile.write('\n')
+   if ((localSite == None) or (localSite['site_index'] != NorNet_SiteIndex_Central)):
+      if fullSiteList != None:
+         outputFile.write('# ====== NorNet Central Site NTP ======\n')
+         centralSite  = fullSiteList[NorNet_SiteIndex_Central]
+         providerList = getNorNetProvidersForSite(centralSite)
+         for providerIndex in providerList:
+            provider = providerList[providerIndex]
+            if providerIndex == centralSite['site_default_provider_index']:
+               for version in [ 4, 6 ]:
+                  centralSiteTB = makeNorNetIP(providerIndex, NorNet_SiteIndex_Central, NorNet_NodeIndex_Tunnelbox, -1, version)
+                  outputFile.write('server ' + str(centralSiteTB) + '\n')
+                  outputFile.write('restrict ' + str(centralSiteTB) + '\n')
+         outputFile.write('\n')
 
    outputFile.write('# ====== External NTP Servers ======\n')
    for ntpServer in ntpServerList:
-      outputFile.write('server ' + ntpServer + '\n')
-      outputFile.write('restrict ' + ntpServer + '\n')
+      outputFile.write('server ' + str(ntpServer) + '\n')
+      outputFile.write('restrict ' + str(ntpServer) + '\n')
 
    outputFile.write('\n# ====== Fudge Clock ======\n')
    outputFile.write('server 127.0.0.1\n')
