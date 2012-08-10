@@ -777,7 +777,7 @@ def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
    outputFile.write('filegen peerstats file peerstats type day enable\n')
    outputFile.write('filegen clockstats file clockstats type day enable\n\n')
 
-   outputFile.write('# ====== Access Restrictions ======\n')
+   outputFile.write('# ====== Generic Access Restrictions ======\n')
    outputFile.write('restrict default ignore\n')
    for version in [ 4, 6 ]:
       fullNorNetNetwork = makeNorNetIP(0, 0, 0, 0, version)
@@ -796,9 +796,20 @@ def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
             if providerIndex == centralSite['site_default_provider_index']:
                for version in [ 4, 6 ]:
                   centralSiteTB = makeNorNetIP(providerIndex, NorNet_SiteIndex_Central, NorNet_NodeIndex_Tunnelbox, -1, version)
-                  outputFile.write('server ' + str(centralSiteTB) + '\n')
-                  outputFile.write('restrict ' + str(centralSiteTB) + '\n')
+                  outputFile.write('server ' + str(centralSiteTB.ip) + '   # CENTRAL SITE\n')
+                  outputFile.write('restrict ' + str(centralSiteTB.ip) + '\n')
          outputFile.write('\n')
+
+   outputFile.write('# ====== NorNet Peers ======\n')
+   for remoteSiteIndex in fullSiteList:
+      if ( ((localSite == None) or (remoteSiteIndex != localSite['site_index'])) and
+           (remoteSiteIndex != NorNet_SiteIndex_Central) ):
+         for version in [ 4, 6 ]:
+            remoteSite = fullSiteList[remoteSiteIndex]
+            peerTB = makeNorNetIP(remoteSite['site_default_provider_index'], remoteSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+            outputFile.write('peer ' + str(peerTB.ip) + '   # ' + remoteSite['site_long_name'] + '\n')
+            outputFile.write('restrict ' + str(peerTB.ip) + '\n')
+   outputFile.write('\n')
 
    outputFile.write('# ====== External NTP Servers ======\n')
    for ntpServer in ntpServerList:
