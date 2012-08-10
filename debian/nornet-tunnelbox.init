@@ -38,7 +38,8 @@ NORNET_DIRECTORY="/etc/nornet"
 # NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
 LOGFILE="/var/log/nornet-tunnelbox.log"
 PATH=$NORNET_DIRECTORY:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-
+ACTION="$1"
+shift
 
 
 # Check whether NorNet directory is existing
@@ -59,14 +60,17 @@ set -e
 
 cd "$NORNET_DIRECTORY"
 
-case "$1" in
+# Log what is going on ...
+echo "`env LANG=C date --utc +%FT%H:%M:%S`: ###### $0 $@ ######"  >>$LOGFILE
+
+case "$ACTION" in
   start|stop|restart)
    echo -n "Starting $DESC: "
-   Tunnelbox-Setup "$1" >>$LOGFILE && \
+   Tunnelbox-Setup "$ACTION" $@ >>$LOGFILE && \
    echo "$NAME."
    ;;
   force-reload)
-   Tunnelbox-Setup coldstart >>$LOGFILE
+   Tunnelbox-Setup coldstart $@ >>$LOGFILE
    ;;
   configure)
    Make-Tunnelbox-Configuration -bootstrap
@@ -80,7 +84,7 @@ case "$1" in
    ;;
   *)
    N=/etc/init.d/$NAME
-   echo "Usage: $N {start|stop|restart|configure|status}" >&2
+   echo "Usage: $N {start|stop|restart|force-reload|configure|status}" >&2
    exit 1
    ;;
 esac

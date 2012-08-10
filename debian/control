@@ -38,7 +38,8 @@ Description: NorNet Routing Control
 
 Package: nornet-tunnelbox
 Architecture: any
-Depends: nornet-routing,
+Depends: lsb-base (>= 3.2-14),
+         nornet-routing,
          python (>= 2.7),
          ${misc:Depends},
          ${shlibs:Depends}
