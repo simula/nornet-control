@@ -78,6 +78,8 @@ case "$ACTION" in
    Make-Tunnelbox-Configuration
    Tunnelbox-Setup start
    Tunnelbox-Setup status
+   cp ntp-config /etc/ntp.config
+   service ntp restart
    ;;
   status)
    Tunnelbox-Setup status
