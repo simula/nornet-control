@@ -520,6 +520,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
    # ====== Remove local setup ==============================================
    outputFile.write('if [ "$selectedProviders" == "" ] ; then\n')
    outputFile.write('   if [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
+   outputFile.write('      log "Tearing down local networks ..."\n')
    outputFile.write('      log-action "Turning off IP forwarding ..."\n')
    outputFile.write('      sysctl -q net.ipv4.ip_forward=0   && \\\n')
    outputFile.write('      sysctl -q net.ipv6.conf.all.forwarding=0   && \\\n')
@@ -572,6 +573,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
    # ====== Make local setup ================================================
    outputFile.write('\nif [ "$selectedProviders" == "" ] ; then\n')
    outputFile.write('   if [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
+   outputFile.write('      log "Setting up local networks ..."\n')
    outputFile.write('      log-action "Turning on IP forwarding..."\n')
    outputFile.write('      sysctl -q net.ipv4.ip_forward=1 && \\\n')
    outputFile.write('      sysctl -q net.ipv6.conf.all.forwarding=1 && \\\n')
