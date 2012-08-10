@@ -60,9 +60,9 @@ bootstrap=0
 selectedProviders=""
 shift
 while [ "$1" != "" ] ; do
-   if [ "$1" = "-bootstrap" ] ; then
+   if [ "$1" = "-bootstrap" -o "$1" = "--bootstrap" ] ; then
       bootstrap=1
-   elif [ "$1" = "-providers" ] ; then
+   elif [ "$1" = "-providers" -o "$1" = "--providers" ] ; then
       selectedProviders="$2"
       shift
    else
