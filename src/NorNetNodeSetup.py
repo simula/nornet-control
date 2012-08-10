@@ -417,7 +417,7 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
       action = 'Setting up'
    elif (state == 'stop'):
       action = 'Tearing down'
-   outputFile.write('      log-action "' + action + ' local networks for ' + \
+   outputFile.write('\n      log-action "' + action + ' local networks for ' + \
                     localProvider['provider_long_name'] + ' ..."\n')
 
    for version in [ 4, 6 ]:
@@ -430,7 +430,7 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
       elif state == 'stop':
          outputFile.write('      remove-address ' + localInterface + ' ' + str(localAddress) + '   && \\\n')
 
-   outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n\n')
+   outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
 
 
 def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, configNamePrefix):
@@ -523,12 +523,12 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
    outputFile.write('      log-action "Turning off IP forwarding ..."\n')
    outputFile.write('      sysctl -q net.ipv4.ip_forward=0   && \\\n')
    outputFile.write('      sysctl -q net.ipv6.conf.all.forwarding=0   && \\\n')
-   outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n\n')
+   outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'stop', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex, v4only)
    if localSiteIndex == NorNet_SiteIndex_Central:
-      outputFile.write('      log-action "Turning off IPv4 NAT ..."\n')
+      outputFile.write('\n      log-action "Turning off IPv4 NAT ..."\n')
       outputFile.write('      remove-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '"   && \\\n')
       outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    outputFile.write('   fi\n')
@@ -576,13 +576,13 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
    outputFile.write('      sysctl -q net.ipv4.ip_forward=1 && \\\n')
    outputFile.write('      sysctl -q net.ipv6.conf.all.forwarding=1 && \\\n')
    outputFile.write('      sysctl -q net.ipv4.tcp_ecn=1 && \\\n')
-   outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n\n')
+   outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
 
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'start', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex, v4only)
    if localSiteIndex == NorNet_SiteIndex_Central:
-      outputFile.write('      log-action "Turning on IPv4 NAT ..."\n')
+      outputFile.write('\n      log-action "Turning on IPv4 NAT ..."\n')
       outputFile.write('      make-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '" && \\\n')
       outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    outputFile.write('   fi\n')
