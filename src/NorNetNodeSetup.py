@@ -781,7 +781,7 @@ def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
    outputFile.write('restrict default ignore\n')
    for version in [ 4, 6 ]:
       fullNorNetNetwork = makeNorNetIP(0, 0, 0, 0, version)
-      outputFile.write('restrict ' + str(fullNorNetNetwork) + ' nomodify\n')
+      outputFile.write('restrict ' + str(fullNorNetNetwork.ip) + ' mask ' + str(fullNorNetNetwork.netmask) + ' nomodify\n')
    outputFile.write('\n')
 
    if ((localSite == None) or (localSite['site_index'] != NorNet_SiteIndex_Central)):
