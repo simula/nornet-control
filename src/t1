@@ -9,6 +9,7 @@ from NorNetTools         import *;
 
 import os;
 import re;
+#from socket import *;
 
 
 #print 'NodeVNet=', makeNorNetIP(1,1,2,123, 6)
@@ -26,11 +27,23 @@ import re;
 
 
 
-addressList = getLocalAddresses(4)
-print "v4 = ", addressList
+#addressList = getLocalAddresses(4)
+#print "v4 = ", addressList
 
-addressList = getLocalAddresses(6)
-print "v6 = ", addressList
+#addressList = getLocalAddresses(6)
+#print "v6 = ", addressList
 
-for a in addressList:
-   print str(a),NorNet_IPv4Prefix.Contains(a),NorNet_IPv6Prefix.Contains(a)
+#for a in addressList:
+   #print str(a),NorNet_IPv4Prefix.Contains(a),NorNet_IPv6Prefix.Contains(a)
+
+
+## ###### Resolve hostname and return first address ##########################
+#def resolveHostname(name, protocol=0):
+   #try:
+      #result = getaddrinfo(name, 123, protocol)
+      #print result
+      #return(IPAddress(result[0][4][0]))
+   #except:
+      #return None
+
+print resolveHostname('ntp1.uio.no', AF_INET6)

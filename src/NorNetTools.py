@@ -23,6 +23,8 @@
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
+from socket import getaddrinfo, AF_INET, AF_INET6;
+
 import os;
 import re;
 import sys;
@@ -85,3 +87,13 @@ def getLocalAddresses(version):
             addressList.append(v4Address)
 
    return addressList
+
+
+# ###### Resolve hostname and return first address ##########################
+def resolveHostname(name, protocol=0):
+   try:
+      result = getaddrinfo(name, 123, protocol)
+      print result
+      return(IPAddress(result[0][4][0]))
+   except:
+      return None

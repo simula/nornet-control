@@ -65,8 +65,8 @@ NorNet_CentralSite_BootstrapProviderIndex = 1
 # TOS Settings for provider selection
 NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
 
-# Maximum number of NTP servers (e.g. 4+4 = 4x IPv4 + 4x IPv6)
-NorNet_MaxNTPServers = 8
+# Maximum number of NTP servers (e.g. 6+6 = 6x IPv4 + 6x IPv6)
+NorNet_MaxNTPServers = 12
 
 # ===========================================================================
 
@@ -74,7 +74,7 @@ NorNet_MaxNTPServers = 8
 NorNet_MaxProviders = 8
 
 # NorNet Internet connection to/from outside world goes via Site 1!
-NorNet_SiteIndex_Central    = 1
+NorNet_SiteIndex_Central = 1
 
 # NorNet Tunnelbox is always Node 1!
 NorNet_NodeIndex_Tunnelbox  = 1

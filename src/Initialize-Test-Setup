@@ -48,9 +48,17 @@ def createTestConfiguration(userName, sliceName):
    plcNodeIndex      = norNetInformation['node_index']
    dnsServers = [ makeNorNetIP(NorNet_SiteIndex_Central, NorNet_CentralSite_BootstrapProviderIndex, plcNodeIndex, -1, 4),
                   makeNorNetIP(NorNet_SiteIndex_Central, NorNet_CentralSite_BootstrapProviderIndex, plcNodeIndex, -1, 6) ]
-   ntpServers = [ IPv4Address('192.53.103.108'),
-                  IPv4Address('192.53.103.104'),
-                  IPv4Address('192.53.103.103') ]   # The PTB servers (very reliable sources)
+   ntpServerNames = [ 'ntp1.ptb.de', 'ntp2.ptb.de', 'ntp3.ptb.de',   # The PTB servers (very reliable sources)
+                      'ntp1.uio.no', 'ntp2.uio.no' ]                 # UiO (nearby)
+
+   ntpServers = []
+   for ntpServer in ntpServerNames:
+      ntpAddress = resolveHostname(ntpServer, AF_INET6)
+      if ntpAddress != None:
+         ntpServers.append(ntpAddress)
+      ntpAddress = resolveHostname(ntpServer, AF_INET)
+      if ntpAddress != None:
+         ntpServers.append(ntpAddress)
 
 
    siteAlphaNorNetIndex = 1
