@@ -93,7 +93,6 @@ def getLocalAddresses(version):
 def resolveHostname(name, protocol=0):
    try:
       result = getaddrinfo(name, 123, protocol)
-      print result
       return(IPAddress(result[0][4][0]))
    except:
       return None
