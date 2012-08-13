@@ -187,21 +187,12 @@ def _getTablePref(opIndex, level):
 
 # ###### Make IPv6 link-local address for GRE tunnel ########################
 def _makeGRELinkLocal(a, b):
-   if a <= b:
-      low  = int(a)
-      high = int(b)
-      side = 1
-   else:
-      low  = int(b)
-      high = int(a)
-      side = 2
-
    result = IPv6Network('fe80::' + \
-                        str.replace(hex((low >> 16) & 0xffff),  '0x', '') + ':' + \
-                        str.replace(hex(low & 0xffff),          '0x', '') + ':' + \
-                        str.replace(hex((high >> 16) & 0xffff), '0x', '') + ':' + \
-                        str.replace(hex(high & 0xffff),         '0x', '') + ':' + \
-                        str(side) + '/80')
+                        str.replace(hex((int(a) >> 16) & 0xffff), '0x', '') + ':' + \
+                        str.replace(hex(int(a) & 0xffff),         '0x', '') + ':' + \
+                        str.replace(hex((int(b) >> 16) & 0xffff), '0x', '') + ':' + \
+                        str.replace(hex(int(b) & 0xffff),         '0x', '') + \
+                        '/64')
    return(result)
 
 
@@ -902,7 +893,7 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, configNamePrefi
    outputFile.write('iquerySecName           internalUser\n')
    outputFile.write('rouser                  internalUser\n')
    outputFile.write('# defaultMonitors         yes\n')
-   outputFile.write('linkUpDownNotifications yes\n\n')
+   outputFile.write('# linkUpDownNotifications yes\n\n')
 
    outputFile.write('# ====== Disk Monitoring (UCD-SNMP-MIB::dskTable) ======\n')
    outputFile.write('includeAllDisks 10%\n\n')

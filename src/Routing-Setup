@@ -205,9 +205,18 @@ make-tunnel ()
    if [ $addToExistingTunnel -eq 0 ] ; then
       remove-tunnel "$interface" "$tunnelKey" "$from" "$tos" "$fwmark"
       ip $outerV6option tunnel add $interface mode $mode local $outerLocalIP remote $outerRemoteIP ttl 255 $greoption $tunnelOptions || success=0
-      if [ "$v6linklocal" != "" ] ; then
-         ip -6 addr add dev $interface $v6linklocal
-      fi
+   fi
+   ip link set dev $interface up
+   # Set IPv6 link-local address manually
+   # NOTE: snmpd assumes IPv6 addresses to be unique. GRE tunnels will have non-unique link-local addresses.
+   #       Therefore, snmpd complains about (error on subcontainer 'ia_addr' insert (-1))
+   #       Solution: Add new link-local address (unique) and remove automatically-generated one.
+   if [ "$v6linklocal" != "" ] ; then
+      ADDRESSES=`ip -6 addr show dev $interface | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [l]/ { print $2 }'`
+      ip -6 addr add dev $interface $v6linklocal      
+      for address in $ADDRESSES ; do
+         ip -6 addr del $address dev $interface   # Get rid of the automatically-generated address.
+      done
    fi
    # Configure an address and turn the interface up
    if [ "$innerV6option" = "" ] ; then
