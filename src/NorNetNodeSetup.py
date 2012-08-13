@@ -24,6 +24,7 @@ import sys;
 import re;
 import hashlib;
 import datetime;
+import codecs;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
@@ -754,12 +755,20 @@ def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, config
                                             interface, variant, configNamePrefix))
 
 
+# ###### Write Automatic Configuration Information ##########################
+def _writeAutoConfigInformation(outputFile):
+   outputFile.write('# ################ AUTOMATICALLY-GENERATED FILE! ################\n')
+   outputFile.write('# #### Changes will be overwritten by NorNet config scripts! ####\n')
+   outputFile.write('# ################ AUTOMATICALLY-GENERATED FILE! ################\n\n')
+
+
 # ###### Generate NTP configuration #########################################
 def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
    if configNamePrefix == None:
       configNamePrefix = 'ntp-' + localSite['site_short_name']
    configurationName = configNamePrefix + '-config'
-   outputFile = open(configurationName, 'w')
+   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+   _writeAutoConfigInformation(outputFile)
 
    ntpServerList = []
    if localSite != None:
@@ -819,3 +828,35 @@ def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
    outputFile.write('\n# ====== Fudge Clock ======\n')
    outputFile.write('server 127.127.1.0\n')
    outputFile.write('fudge 127.127.1.0 stratum 10\n')
+
+   outputFile.close()
+
+
+# ###### Generate SNMP configuration ########################################
+def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, configNamePrefix, name, description):
+   if configNamePrefix == None:
+      configNamePrefix = 'snmpd-' + localSite['site_short_name']
+   configurationName = configNamePrefix + '-config'
+   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+   _writeAutoConfigInformation(outputFile)
+
+   country      = getTagValue(localSite['site_tags'], 'nornet_site_country', '???')
+   province     = getTagValue(localSite['site_tags'], 'nornet_site_province', None)
+   city         = getTagValue(localSite['site_tags'], 'nornet_site_city',    '???')
+
+   outputFile.write('sysName = "' + name + '.' + localSite['site_domain'] + '"\n')
+   outputFile.write('sysDesrc = "' + localSite['site_long_name'] + ' ' + description + '"\n')
+   outputFile.write('sysLocation = "' + city)
+   if province !=  None:
+      outputFile.write(', ' + province)
+   outputFile.write('/' + country + '"\n')
+
+   techUsers = fetchUsersOfNorNetSite(fullUserList, localSite, 'tech')
+   if techUsers != None:
+      outputFile.write('sysContact = "' +
+                       techUsers[0]['user_title'] + ' ' +
+                       techUsers[0]['user_first_name'] + ' ' +
+                       techUsers[0]['user_last_name'] + ' ' +
+                       '<' + techUsers[0]['user_email'] + '>"\n')
+
+   outputFile.close()

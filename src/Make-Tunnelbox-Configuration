@@ -67,6 +67,7 @@ makeTunnelboxBootstrap(localSiteIndex, localDefaultProviderIndex, localTBDefault
 # ====== Full Mode ==========================================================
 if not bootstrapOnly:
    fullSiteList = fetchNorNetSiteList()
+   fullUserList = fetchNorNetUserList()
    localSite    = None
    try:
       localSite = fullSiteList[localSiteIndex]
@@ -75,3 +76,4 @@ if not bootstrapOnly:
 
    makeTunnelBoxConfiguration(fullSiteList, localSite, 'tunnelbox', False)
    makeNTPConfiguration(fullSiteList, localSite, 'ntp')
+   makeSNMPConfiguration(fullSiteList, fullUserList, localSite, 'snmpd', 'tunnelbox', 'Tunnelbox')
