@@ -849,19 +849,19 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, configNamePrefi
    country      = getTagValue(localSite['site_tags'], 'nornet_site_country', '???')
    province     = getTagValue(localSite['site_tags'], 'nornet_site_province', None)
    city         = getTagValue(localSite['site_tags'], 'nornet_site_city',    '???')
-   outputFile.write('sysName     "' + name + '.' + localSite['site_domain'] + '"\n')
-   outputFile.write('sysDesrc    "' + localSite['site_long_name'] + ' ' + description + '"\n')
-   outputFile.write('sysLocation "' + city)
+   outputFile.write('sysName     ' + name + '.' + localSite['site_domain'] + '\n')
+   outputFile.write('sysDescr    ' + localSite['site_long_name'] + ' ' + description + '\n')
+   outputFile.write('sysLocation ' + city)
    if province !=  None:
       outputFile.write(', ' + province)
-   outputFile.write('/' + country + '"\n')
+   outputFile.write('/' + country + '\n')
    techUsers = fetchUsersOfNorNetSite(fullUserList, localSite, 'tech')
    if techUsers != None:
-      outputFile.write('sysContact  "' +
+      outputFile.write('sysContact  ' +
                        techUsers[0]['user_title'] + ' ' +
                        techUsers[0]['user_first_name'] + ' ' +
                        techUsers[0]['user_last_name'] + ' ' +
-                       '<' + techUsers[0]['user_email'] + '>"\n')
+                       '<' + techUsers[0]['user_email'] + '>\n')
    outputFile.write('sysServices 72\n\n')
 
 
@@ -871,7 +871,12 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, configNamePrefi
    outputFile.write('rocommunity6 public ::1\n')
    outputFile.write('rocommunity6 public ' + str(makeNorNetIP(0, 0, 0, 0, 6)) + '\n\n')
 
-
+   outputFile.write('# ====== Active Monitoring ======\n')
+   outputFile.write('iquerySecName           internalUser\n')
+   outputFile.write('rouser                  internalUser\n')
+   outputFile.write('# defaultMonitors         yes\n')
+   outputFile.write('linkUpDownNotifications yes\n\n')
+   
    outputFile.write('# ====== Disk Monitoring (UCD-SNMP-MIB::dskTable) ======\n')
    outputFile.write('includeAllDisks 10%\n\n')
 
