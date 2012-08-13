@@ -162,7 +162,8 @@ def fetchNorNetSite(siteNameToFind):
 
    try:
       norNetSiteList = dict([])
-      fullSiteList   = plc_server.GetSites(plc_authentication, filter)
+      fullSiteList   = plc_server.GetSites(plc_authentication, filter,
+                                           ['site_id', 'abbreviated_name', 'name', 'url', 'latitude', 'longitude'])
       for site in fullSiteList:
          siteID       = int(site['site_id'])
          siteTagsList = plc_server.GetSiteTags(plc_authentication,
@@ -189,6 +190,9 @@ def fetchNorNetSite(siteNameToFind):
             'site_short_name'             : siteAbbrev,
             'site_long_name'              : str(site['name']),
             'site_domain'                 : siteDomain,
+            'site_latitude'               : site['latitude'],
+            'site_longitude'              : site['longitude'],
+            'site_url'                    : site['url'],
             'site_tags'                   : siteTagsList,
             'site_default_provider_index' : siteDefProviderIndex
          }
@@ -254,7 +258,7 @@ def lookupNodeID(nodeName):
       return(0)
 
 
-# ###### Fetch list of NorNet Nodes #########################################
+# ###### Fetch list of NorNet nodes #########################################
 def fetchNorNetNode(nodeNameToFind):
    global plc_server
    global plc_authentication
@@ -266,7 +270,8 @@ def fetchNorNetNode(nodeNameToFind):
 
    try:
       norNetNodeList = dict([])
-      fullNodeList   = plc_server.GetNodes(plc_authentication, filter)
+      fullNodeList   = plc_server.GetNodes(plc_authentication, filter,
+                                           ['node_id', 'site_id', 'hostname', 'model', 'boot_state'])
       for node in fullNodeList:
          nodeID       = int(node['node_id'])
          nodeSiteID   = int(node['site_id'])
@@ -307,7 +312,7 @@ def fetchNorNetNode(nodeNameToFind):
       return(norNetNodeList)
 
    except Exception as e:
-      error('Unable to fetch NorNet Node list: ' + str(e))
+      error('Unable to fetch NorNet node list: ' + str(e))
 
 
 # ###### Fetch list of NorNet sites #########################################
@@ -326,6 +331,75 @@ def getNorNetSiteOfNode(fullSiteList, node):
          return fullSiteList[siteIndex]
 
    return None
+
+
+# ###### Fetch list of NorNet users #########################################
+def fetchNorNetUser(userNameToFind):
+   global plc_server
+   global plc_authentication
+
+   if userNameToFind == None:   # Get full list
+      filter = { 'enabled' : True }
+   else:              # Only perform lookup for given name
+      filter = { 'enabled' : True,
+                 'email'   : userNameToFind }
+
+   try:
+      norNetUserList = dict([])
+      fullUserList   = plc_server.GetPersons(plc_authentication, filter,
+                                             [ 'person_id', 'title', 'first_name', 'last_name', 'email', 'phone', 'roles' ])
+      for user in fullUserList:
+         userID = int(user['person_id'])
+         norNetUser = {
+            'user_id'         : userID,
+            'user_title'      : user['title'],
+            'user_first_name' : user['first_name'],
+            'user_last_name'  : user['last_name'],
+            'user_email'      : user['email'],
+            'user_phone'      : user['phone'],
+            'user_roles'      : user['roles']
+         }
+
+         if userNameToFind != None:
+            return(norNetUser)
+
+         norNetUserList[userID] = norNetUser
+
+      if len(norNetUserList) == 0:
+         return None
+      return(norNetUserList)
+
+   except Exception as e:
+      error('Unable to fetch NorNet user list: ' + str(e))
+
+
+# ###### Fetch list of NorNet users #########################################
+def fetchNorNetUserList():
+   log('Fetching NorNet user list ...')
+   return fetchNorNetUser(None)
+
+
+# ###### Get users of NorNet Site ###########################################
+def fetchUsersOfNorNetSite(fullUserList, site, role):
+   filter = { 'site_id' : site['site_id'] }
+   try:
+      siteList = plc_server.GetSites(plc_authentication, filter,
+                                     [ 'person_ids' ])
+      userIDs = siteList[0]['person_ids']
+
+      selectedUsers = []
+      for userID in userIDs:
+         if role == None:
+            selectedUsers.append(fullUserList[userID])
+         elif role in fullUserList[userID]['user_roles']:
+            selectedUsers.append(fullUserList[userID])
+
+      if len(selectedUsers) == 0:
+         return None
+      return(selectedUsers)
+
+   except Exception as e:
+      error('Unable to fetch NorNet users list of site ' + site['site_long_name'] + ': ' + str(e))
 
 
 # ###### Find person ID #####################################################
