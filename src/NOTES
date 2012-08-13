@@ -2,3 +2,6 @@ NTP:
 - The tunnelboxes of all sites are NTP peers, except for the Central Site tunnelbox.
 - The Central Site tunnelbox is only server (provides time, but does not get time from other tunnelboxes).
 
+SNMP:
+- snmpd does not like non-unique IPv6 link-local addresses (although they are on different interfaces, which is perfectly okay). GRE tunnels may have non-unique IPv6 link-local addresses, since they are automatically generated.
+Solution: Make-Tunnelbox-Configuration sets the link-local addresses of GRE tunnels explicitly. The automatically-generated addresses are removed.
