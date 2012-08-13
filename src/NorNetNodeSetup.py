@@ -185,6 +185,26 @@ def _getTablePref(opIndex, level):
    return 1000 + (1000 * level) + opIndex
 
 
+# ###### Make IPv6 link-local address for GRE tunnel ########################
+def _makeGRELinkLocal(a, b):
+   if a <= b:
+      low  = int(a)
+      high = int(b)
+      side = 1
+   else:
+      low  = int(b)
+      high = int(a)
+      side = 2
+
+   result = IPv6Network('fe80::' + \
+                        str.replace(hex((low >> 16) & 0xffff),  '0x', '') + ':' + \
+                        str.replace(hex(low & 0xffff),          '0x', '') + ':' + \
+                        str.replace(hex((high >> 16) & 0xffff), '0x', '') + ':' + \
+                        str.replace(hex(high & 0xffff),         '0x', '') + ':' + \
+                        str(side) + '/80')
+   return(result)
+
+
 # ###### Generate tunnelbox configuration for given provider ################
 def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvider, pathNumber, configNamePrefix, v4only):
    if configNamePrefix == None:
@@ -316,6 +336,9 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                   options = ''
                   if ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
                      options = '--add-to-existing-tunnel'
+                  elif ((v4only == False) and (version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
+                     options = '--v6-linklocal ' + str(_makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
+                                                                         tunnel['tunnel_remote_outer_address']))
                   outputFile.write('   make-tunnel ' + \
                                    tunnel['tunnel_interface']                 + ' ' + \
                                    hex(tunnel['tunnel_key'])                  + ' ' + \

@@ -23,10 +23,10 @@ NorNetPLC_Password='nntb-root'
 # local site. For other nodes, the variables do not have to be set!
 
 # This is the Site Index of the local site:
-NorNet_LocalSite_SiteIndex=1
+NorNet_LocalSite_SiteIndex=3
 
 # This is the Provider Index of the local Default Provider:
 NorNet_LocalSite_DefaultProviderIndex=1
 
 # This is the local tunnelbox's outer IPv4 address for the default provider:
-NorNet_LocalSite_TBDefaultProviderIPv4='132.252.156.70'
+NorNet_LocalSite_TBDefaultProviderIPv4='132.252.156.72'
