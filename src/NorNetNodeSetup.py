@@ -840,23 +840,42 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, configNamePrefi
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
    _writeAutoConfigInformation(outputFile)
 
+
+   outputFile.write('# ====== Agent ======\n')
+   outputFile.write('agentAddress udp:161,udp6:[::1]:161\n\n')
+
+
+   outputFile.write('# ====== System Information ======\n')
    country      = getTagValue(localSite['site_tags'], 'nornet_site_country', '???')
    province     = getTagValue(localSite['site_tags'], 'nornet_site_province', None)
    city         = getTagValue(localSite['site_tags'], 'nornet_site_city',    '???')
-
-   outputFile.write('sysName = "' + name + '.' + localSite['site_domain'] + '"\n')
-   outputFile.write('sysDesrc = "' + localSite['site_long_name'] + ' ' + description + '"\n')
-   outputFile.write('sysLocation = "' + city)
+   outputFile.write('sysName     "' + name + '.' + localSite['site_domain'] + '"\n')
+   outputFile.write('sysDesrc    "' + localSite['site_long_name'] + ' ' + description + '"\n')
+   outputFile.write('sysLocation "' + city)
    if province !=  None:
       outputFile.write(', ' + province)
    outputFile.write('/' + country + '"\n')
-
    techUsers = fetchUsersOfNorNetSite(fullUserList, localSite, 'tech')
    if techUsers != None:
-      outputFile.write('sysContact = "' +
+      outputFile.write('sysContact  "' +
                        techUsers[0]['user_title'] + ' ' +
                        techUsers[0]['user_first_name'] + ' ' +
                        techUsers[0]['user_last_name'] + ' ' +
                        '<' + techUsers[0]['user_email'] + '>"\n')
+   outputFile.write('sysServices 72\n\n')
+
+
+   outputFile.write('# ====== Access Control ======\n')
+   outputFile.write('rocommunity public 127.0.0.1\n')
+   outputFile.write('rocommunity public ' + str(makeNorNetIP(0, 0, 0, 0, 4)) + '\n')
+   outputFile.write('rocommunity6 public ::1\n')
+   outputFile.write('rocommunity6 public ' + str(makeNorNetIP(0, 0, 0, 0, 6)) + '\n\n')
+
+
+   outputFile.write('# ====== Disk Monitoring (UCD-SNMP-MIB::dskTable) ======\n')
+   outputFile.write('includeAllDisks 10%\n\n')
+
+   outputFile.write('# ====== Load Monitoring (UCD-SNMP-MIB::laTable) ======\n')
+   outputFile.write('load 12 10 5\n')
 
    outputFile.close()
