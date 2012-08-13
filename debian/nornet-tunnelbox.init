@@ -73,13 +73,31 @@ case "$ACTION" in
    Tunnelbox-Setup coldstart $@ >>$LOGFILE
    ;;
   configure)
+   # ====== Get new configuration into temporary directory ==================
+   echo "Getting new configuration ..."
+   rm -rf updated-config
+   mkdir updated-config         
+   cd updated-config
    Make-Tunnelbox-Configuration -bootstrap
    Tunnelbox-Setup start -bootstrap
    Make-Tunnelbox-Configuration
    Tunnelbox-Setup start
    Tunnelbox-Setup status
+   # ====== Everything went well, move configuration ========================
+   echo "Overwriting old configuration ..."
+   cd ..
+   rm -f tunnelbox*-config tunnelbox-bootstrap ntp-config snmpd-config
+   mv updated-config/*-config .
+   mv updated-config/*-bootstrap .
+   echo "Copying configuration files to /etc ..."
    cp ntp-config /etc/ntp.config
+   cp snmpd-config /etc/snmp/snmpd.conf
+   echo "Restarting services ..."
    service ntp restart
+   service snmpd restart
+   echo "Removing temporary directory ..."
+   rmdir updated-config
+   echo "Done."
    ;;
   status)
    Tunnelbox-Setup status
