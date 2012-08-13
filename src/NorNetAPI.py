@@ -39,7 +39,7 @@ from NorNetProviderSetup import *;
 
 
 NorNetPLC_ConfigFile                   = '/etc/nornet/nornetapi-config'
-NorNetPLC_ConfigFile = 'nornetapi-config'
+# !!! TEST ONLY !!! NorNetPLC_ConfigFile = 'nornetapi-config'
 
 
 NorNetPLC_Address                      = None
