@@ -872,11 +872,15 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, configNamePrefi
    outputFile.write('rocommunity6 public ' + str(makeNorNetIP(0, 0, 0, 0, 6)) + '\n\n')
 
    outputFile.write('# ====== Active Monitoring ======\n')
+   outputFile.write('trapcommunity           public\n')
+   outputFile.write('trapsink                ' + str(makeNorNetIP(localSite['site_default_provider_index'],
+                                                     NorNet_SiteIndex_Monitor,
+                                                     NorNet_NodeIndex_Monitor, -1, 4).ip) + '\n')
    outputFile.write('iquerySecName           internalUser\n')
    outputFile.write('rouser                  internalUser\n')
    outputFile.write('# defaultMonitors         yes\n')
    outputFile.write('linkUpDownNotifications yes\n\n')
-   
+
    outputFile.write('# ====== Disk Monitoring (UCD-SNMP-MIB::dskTable) ======\n')
    outputFile.write('includeAllDisks 10%\n\n')
 

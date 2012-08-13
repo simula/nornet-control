@@ -42,6 +42,7 @@ Depends: lsb-base (>= 3.2-14),
          nornet-routing,
          ntp,
          python (>= 2.7),
+         snmpd,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Tunnelbox Control

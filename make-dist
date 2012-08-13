@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-VERSION=0.1.0~alpha1.3
+VERSION=0.1.0~alpha1.4
 
 . ./debian.conf
 
