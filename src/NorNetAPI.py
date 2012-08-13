@@ -162,7 +162,8 @@ def fetchNorNetSite(siteNameToFind):
 
    try:
       norNetSiteList = dict([])
-      fullSiteList   = plc_server.GetSites(plc_authentication, filter)
+      fullSiteList   = plc_server.GetSites(plc_authentication, filter,
+                                           ['site_id', 'abbreviated_name', 'name', 'url', 'latitude', 'longitude'])
       for site in fullSiteList:
          siteID       = int(site['site_id'])
          siteTagsList = plc_server.GetSiteTags(plc_authentication,
@@ -189,6 +190,9 @@ def fetchNorNetSite(siteNameToFind):
             'site_short_name'             : siteAbbrev,
             'site_long_name'              : str(site['name']),
             'site_domain'                 : siteDomain,
+            'site_latitude'               : site['latitude'],
+            'site_longitude'              : site['longitude'],
+            'site_url'                    : site['url'],
             'site_tags'                   : siteTagsList,
             'site_default_provider_index' : siteDefProviderIndex
          }
@@ -266,7 +270,8 @@ def fetchNorNetNode(nodeNameToFind):
 
    try:
       norNetNodeList = dict([])
-      fullNodeList   = plc_server.GetNodes(plc_authentication, filter)
+      fullNodeList   = plc_server.GetNodes(plc_authentication, filter,
+                                           ['node_id', 'site_id', 'hostname', 'model', 'boot_state'])
       for node in fullNodeList:
          nodeID       = int(node['node_id'])
          nodeSiteID   = int(node['site_id'])
