@@ -190,11 +190,8 @@ make-tunnel ()
    local v6linklocal=""
    if [[ "$miscOptions" =~ --add-to-existing-tunnel ]] ; then
       addToExistingTunnel=1
-   elif [[ "$miscOptions" =~ (--v6-linklocal)([ \t]*)[a-fA-F0-9:.]*$ ] ; then
-      echo A=${#BASH_REMATCH[0]}
-      echo B=${#BASH_REMATCH[1]}
-      echo C=${#BASH_REMATCH[2]}
-      v6linklocal="fe80::1/80"
+   elif [[ "$miscOptions" =~ (--v6-linklocal)([ \t]*)([a-fA-F0-9:./]*)$ ]] ; then
+      v6linklocal="${BASH_REMATCH[3]}"
    fi
 
    # ====== Tunnel setup ====================================================
@@ -208,6 +205,9 @@ make-tunnel ()
    if [ $addToExistingTunnel -eq 0 ] ; then
       remove-tunnel "$interface" "$tunnelKey" "$from" "$tos" "$fwmark"
       ip $outerV6option tunnel add $interface mode $mode local $outerLocalIP remote $outerRemoteIP ttl 255 $greoption $tunnelOptions || success=0
+      if [ "$v6linklocal" != "" ] ; then
+         ip -6 addr add dev $interface $v6linklocal
+      fi
    fi
    # Configure an address and turn the interface up
    if [ "$innerV6option" = "" ] ; then
