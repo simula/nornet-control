@@ -5,7 +5,8 @@
 auto lo
 iface lo inet loopback
 
-# The primary network interface
+
+# ====== Uninett Interface ================================================
 auto eth0
 iface eth0 inet static
 	address 132.252.156.72
@@ -20,6 +21,8 @@ iface eth0 inet6 static
         netmask 64
         gateway fd55:5555::1
 
+
+# ====== Telenor Interface ================================================
 auto eth0:1
 iface eth0:1 inet static
 	address 169.254.100.72
@@ -29,6 +32,8 @@ iface eth0:1 inet static
 	up   service nornet-tunnelbox start -providers telenor
 	down service nornet-tunnelbox stop  -providers telenor
 
+
+# ====== DFN Interface ====================================================
 auto eth0:2
 iface eth0:2 inet static
 	address 172.31.255.72
