@@ -49,6 +49,6 @@ if localSite == None:
 
 fullUserList = fetchNorNetUserList()
 
-makeNodeConfiguration(fullSiteList, node, interface, distribution, None)
+makeNodeConfiguration(fullSiteList, node, interface, distribution, '')
 makeNTPConfiguration(fullSiteList, localSite, 'ntp')
 makeSNMPConfiguration(fullSiteList, fullUserList, localSite, 'snmpd', 'node', 'Node')
