@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-VERSION=0.1.0~alpha1.4
+VERSION=0.1.0~alpha1.6
 
 . ./debian.conf
 
@@ -21,7 +21,7 @@ cp src/*.1 $PACKAGE-$VERSION
 cp src/*-config $PACKAGE-$VERSION
 cp src/Routing-Setup $PACKAGE-$VERSION
 cp src/Tunnelbox-Setup $PACKAGE-$VERSION
-cp src/Make-Tunnelbox-Configuration $PACKAGE-$VERSION
+cp src/Make-*-Configuration $PACKAGE-$VERSION
 cp src/Reset-Networking $PACKAGE-$VERSION
 # ---------------------------------------------------------
 
