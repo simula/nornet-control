@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# ###### NorNet PLC configuration ###########################################
+# NOTE:
+# The following information is needed to access the PLC at the Central Site.
+# It is mandatory for all NorNet PLC-database operations!
+
+# This is the address of the PLC and the Central Site:
+NorNetPLC_Address='10.1.1.23'
+
+# These are the user name and corresponding password for accessing the PLC.
+# SECURITY ADVICE:
+# Use a user with restricted access permissions. For most operations (e.g.
+# obtaining the node configurations), it is just sufficient to read the PLC
+# database. Only modifying the configuration needs a more "powerful" user!
+NorNetPLC_User='root@localhost.localdomain'
+NorNetPLC_Password='nntb-root'
+
+
+# ###### NorNet Tunnelbox configuration #####################################
+# NOTE:
+# The following information is only necessary to bootstrap a tunnelbox on the
+# local site. For other nodes, the variables do not have to be set!
+
+# This is the Site Index of the local site:
+NorNet_LocalSite_SiteIndex=2
+
+# This is the Provider Index of the local Default Provider:
+NorNet_LocalSite_DefaultProviderIndex=1
+
+# This is the local tunnelbox's outer IPv4 address for the default provider:
+NorNet_LocalSite_TBDefaultProviderIPv4='132.252.156.71'
