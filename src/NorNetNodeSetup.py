@@ -693,8 +693,8 @@ def makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeAddress,
                      debianFile.write('   netmask ' + str(address.netmask) + '\n')
                   else:
                      if providerIndex != site['site_default_provider_index']:   # NOTE: Work-around for buggy Ubuntu ifupdown!
-                        debianFile.write('   up /sbin/ip -6 addr add ' + str(address) + ' dev ' + interface + '\n')
-                        debianFile.write('   up /sbin/ip -6 addr del ' + str(address) + ' dev ' + interface + '\n')
+                        debianFile.write('   up   /sbin/ip -6 addr add ' + str(address) + ' dev ' + interface + '\n')
+                        debianFile.write('   down /sbin/ip -6 addr del ' + str(address) + ' dev ' + interface + '\n')
                      else:
                         debianFile.write('\niface ' + interface + ' inet6 static\n')
                         debianFile.write('   address ' + str(address.ip) + '\n')

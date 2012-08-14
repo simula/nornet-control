@@ -39,7 +39,7 @@ from NorNetProviderSetup import *;
 
 
 NorNetPLC_ConfigFile                   = '/etc/nornet/nornetapi-config'
-# !!! TEST ONLY !!! NorNetPLC_ConfigFile = 'nornetapi-config'
+NorNetPLC_FallbackConfigFile           = 'nornetapi-config'
 
 
 NorNetPLC_Address                      = None
@@ -56,17 +56,24 @@ NorNet_LocalSite_TBDefaultProviderIPv4 = None
 def loadNorNetConfiguration():
    log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')
    try:
-      lines = tuple(open(NorNetPLC_ConfigFile, 'r'))
-      for line in lines:
-         if re.match('^[ \t]*[#\n]', line):
-            just_a_comment_or_empty_line=1
-         elif re.match('^[a-zA-Z0-9_]*[ \t]*=', line):
-            exec((line), globals())
-         else:
-            error('Bad configuration line: ' + line)
+      inputFile = open(NorNetPLC_ConfigFile, 'r')
 
-   except Exception as e:
-      error('Configuration file ' + NorNetPLC_ConfigFile + ' cannot be read: ' + str(e))
+   except:
+      try:
+         log('###### Cannot open ' + NorNetPLC_ConfigFile + ', trying fallback file ' + NorNetPLC_FallbackConfigFile + ' ... ######')
+         inputFile = open(NorNetPLC_FallbackConfigFile, 'r')
+
+      except Exception as e:
+         error('Configuration file ' + NorNetPLC_FallbackConfigFile + ' cannot be read: ' + str(e))
+
+   lines = tuple(inputFile)
+   for line in lines:
+      if re.match('^[ \t]*[#\n]', line):
+         just_a_comment_or_empty_line=1
+      elif re.match('^[a-zA-Z0-9_]*[ \t]*=', line):
+         exec((line), globals())
+      else:
+         error('Bad configuration line: ' + line)
 
    if NorNetPLC_Address == None:
       error('NorNetPLC_Address has not been set in configuration file!')
