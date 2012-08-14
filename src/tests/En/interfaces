@@ -9,36 +9,35 @@ iface lo inet loopback
 # ====== Uninett Interface ================================================
 auto eth0
 iface eth0 inet static
-	address 132.252.156.72
+	address 132.252.156.70
 	netmask 255.255.255.0
 	gateway 132.252.156.1
 	dns-nameservers 8.8.8.8 8.8.4.4
-	up   service nornet-tunnelbox start -providers uninett
-	down service nornet-tunnelbox stop  -providers uninett
+        up   service nornet-tunnelbox start -providers uninett
+        down service nornet-tunnelbox stop  -providers uninett
 
 iface eth0 inet6 static
-        address fd55:5555::72
-        netmask 64
-        gateway fd55:5555::1
+	address fd55:5555::70
+	netmask 64
+	gateway fd55:5555::1
 
 
 # ====== Telenor Interface ================================================
 auto eth0:1
 iface eth0:1 inet static
-	address 169.254.100.72
+	address 169.254.100.70
 	netmask 255.255.255.0
 	gateway 169.254.100.1
 	dns-nameservers 8.8.8.8 8.8.4.4
-	up   service nornet-tunnelbox start -providers telenor
-	down service nornet-tunnelbox stop  -providers telenor
+        up   service nornet-tunnelbox start -providers telenor
+        down service nornet-tunnelbox stop  -providers telenor
 
 
 # ====== DFN Interface ====================================================
+# !!! NOT USED HERE !!!
 auto eth0:2
 iface eth0:2 inet static
-	address 172.31.255.72
+	address 172.31.255.70
 	netmask 255.255.255.0
 	gateway 172.31.255.1
 	dns-nameservers 8.8.8.8 8.8.4.4
-	up   service nornet-tunnelbox start -providers dfn
-	down service nornet-tunnelbox stop  -providers dfn

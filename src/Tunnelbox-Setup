@@ -73,11 +73,11 @@ while [ "$1" != "" ] ; do
 done
 
 
-success=1
+ts_success=1
 if [ $bootstrap -eq 1 ] ; then
    if [ -e ./tunnelbox-bootstrap ] ; then
       log "Entering BOOTSTRAP ..."
-      . ./tunnelbox-bootstrap || success=0
+      . ./tunnelbox-bootstrap || ts_success=0
       log-action "Finished BOOTSTRAP"
    else
       echo >&2 "###### tunnelbox-bootstrap does not exist. Tunnelbox needs to be configured first! ######"
@@ -86,7 +86,7 @@ if [ $bootstrap -eq 1 ] ; then
 else
    if [ -e ./tunnelbox-config ] ; then
       log "Entering Tunnelbox setup ..."
-      . ./tunnelbox-config || success=0
+      . ./tunnelbox-config || ts_success=0
       log-action "Finished Tunnelbox setup"
    else
       echo >&2 "###### tunnelbox-config does not exist. Tunnelbox needs to be configured first! ######"
@@ -95,5 +95,5 @@ else
 fi
 
 
-log-result $success
+log-result $ts_success
 exit-with-result
