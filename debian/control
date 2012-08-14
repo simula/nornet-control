@@ -38,6 +38,7 @@ Description: NorNet Routing Control
 
 Package: nornet-tunnelbox
 Architecture: any
+Conflicts: nornet-node
 Depends: lsb-base (>= 3.2-14),
          nornet-routing,
          ntp,
@@ -53,6 +54,7 @@ Description: NorNet Tunnelbox Control
 
 Package: nornet-node
 Architecture: any
+Conflicts: nornet-tunnelbox
 Depends: lsb-base (>= 3.2-14),
          ntp,
          python (>= 2.7),

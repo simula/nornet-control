@@ -1,6 +1,28 @@
-#!/bin/sh
+#!/bin/sh -e
 
-sudo rm -f /var/cache/pbuilder/result/* && \
-./build-deb && \
-ls -al /var/cache/pbuilder/result/*.deb && \
-sudo dpkg -i /var/cache/pbuilder/result/*.deb
+mode=0
+if [ "$1" = "tunnelbox" ] ; then
+   mode=1
+elif [ "$1" = "node" ] ; then
+   mode=2
+else
+   echo >&2 "Usage: $0 [tunnelbox|node]"
+   exit 1
+fi
+
+sudo rm -f /var/cache/pbuilder/result/*
+./build-deb
+ls -al /var/cache/pbuilder/result/*.deb
+
+
+if [ $mode -eq 1 ] ; then
+   sudo dpkg -i \
+      /var/cache/pbuilder/result/nornet-api*.deb \
+      /var/cache/pbuilder/result/nornet-routing*.deb \
+      /var/cache/pbuilder/result/nornet-tunnelbox*.deb
+else
+   sudo dpkg -i \
+      /var/cache/pbuilder/result/nornet-api*.deb \
+      /var/cache/pbuilder/result/nornet-routing*.deb \
+      /var/cache/pbuilder/result/nornet-node*.deb
+fi
