@@ -50,3 +50,17 @@ Description: NorNet Tunnelbox Control
  sites.
  .
  See http://www.nntb.no for details on NorNet!
+
+Package: nornet-node
+Architecture: any
+Depends: lsb-base (>= 3.2-14),
+         ntp,
+         python (>= 2.7),
+         snmpd,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Node Control
+ This package contains the scripts to configure a generic node on a NorNet
+ site.
+ .
+ See http://www.nntb.no for details on NorNet!
