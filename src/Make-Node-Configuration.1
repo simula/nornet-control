@@ -1,0 +1,56 @@
+.\" Node Setup
+.\" Copyright (C) 2012 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd August 14, 2012
+.Dt Make-Node-Configuration 1
+.Os Make-Node-Configuration
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Make-Node-Configuration
+.Nd NorNet Node Configuration Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Make-Node-Configuration
+NodeName
+Interface
+Debian|Fedora
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Make-Node-Configuration
+generates a Linux node configuration.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following options are available:
+.Bl -tag -width indent
+.It NodeName
+The name of the node (hostname for lookup in database).
+.It Interface
+The name of the NorNet interface (usually eth0 or similar).
+.It Debian|Fedora
+The name of the network configuration script style (currently "Debian" for
+/etc/network/interfaces or "Fedora" for
+/etc/sysconfig/network-scripts/ifcfg-*).
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Make-Node-Configuration altenessen.gamma.site eth0 Debian
+.It Make-Node-Configuration sognsvann.alpha.site p2p1 Fedora
+.El
