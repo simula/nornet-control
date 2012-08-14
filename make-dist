@@ -1,30 +1,37 @@
 #!/bin/sh -e
 
-VERSION=0.1.0~alpha1.6
-
 . ./debian.conf
+
 
 CHANGELOG_HEADER="`head -n1 debian/changelog`"
 PACKAGE=`echo $CHANGELOG_HEADER | sed -e "s/(.*//" -e "s/ //g"`
+UPSTREAM_VERSION=`echo $CHANGELOG_HEADER | sed -e "s/[a-Z0-9 ]*(//" -e "s/).*//" -e "s/[0-9]*$//" -e "s/ //g" -e "s/^[0-9]*://" -e "s/-[^ ]*$//g"`
 
-if [ -e $PACKAGE-$VERSION ] ; then
-   rm -rf $PACKAGE-$VERSION
+echo "######################################################################"
+echo "CHANGELOG_HEADER:   $CHANGELOG_HEADER"
+echo "PACKAGE:            $PACKAGE"
+echo "UPSTREAM_VERSION:   $UPSTREAM_VERSION"
+echo "######################################################################"
+
+
+if [ -e $PACKAGE-$UPSTREAM_VERSION ] ; then
+   rm -rf $PACKAGE-$UPSTREAM_VERSION
 fi
-mkdir $PACKAGE-$VERSION || exit 1
+mkdir $PACKAGE-$UPSTREAM_VERSION || exit 1
 
 
 # ---------------------------------------------------------
-mkdir $PACKAGE-$VERSION/src
-cp NEWS README BUGS COPYING ChangeLog *.lsm $PACKAGE-$VERSION
-cp src/*.py $PACKAGE-$VERSION
-cp src/*.1 $PACKAGE-$VERSION
-cp src/*-config $PACKAGE-$VERSION
-cp src/Routing-Setup $PACKAGE-$VERSION
-cp src/Tunnelbox-Setup $PACKAGE-$VERSION
-cp src/Make-*-Configuration $PACKAGE-$VERSION
-cp src/Reset-Networking $PACKAGE-$VERSION
+mkdir $PACKAGE-$UPSTREAM_VERSION/src
+cp NEWS README BUGS COPYING ChangeLog *.lsm $PACKAGE-$UPSTREAM_VERSION
+cp src/*.py $PACKAGE-$UPSTREAM_VERSION
+cp src/*.1 $PACKAGE-$UPSTREAM_VERSION
+cp src/*-config $PACKAGE-$UPSTREAM_VERSION
+cp src/Routing-Setup $PACKAGE-$UPSTREAM_VERSION
+cp src/Tunnelbox-Setup $PACKAGE-$UPSTREAM_VERSION
+cp src/Make-*-Configuration $PACKAGE-$UPSTREAM_VERSION
+cp src/Reset-Networking $PACKAGE-$UPSTREAM_VERSION
 # ---------------------------------------------------------
 
 
-tar czvf $PACKAGE-$VERSION.tar.gz $PACKAGE-$VERSION
-rm -rf $PACKAGE-$VERSION
+tar czvf $PACKAGE-$UPSTREAM_VERSION.tar.gz $PACKAGE-$UPSTREAM_VERSION
+rm -rf $PACKAGE-$UPSTREAM_VERSION
