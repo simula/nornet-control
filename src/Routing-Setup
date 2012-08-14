@@ -99,16 +99,16 @@ log-summary-and-return-result ()
       return 0
    else
       log-result $RESULT_BAD
+      _BadResults=0
       return 1
    fi
 }
 
 
-# ###### Log summary and reset ##############################################
-log-and-reset-summary ()
+# ###### Log summary ########################################################
+log-summary ()
 {
    log-summary-and-return-result || true
-   _BadResults=0
 }
 
 

@@ -213,7 +213,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
          outputFile.write('if [ "$state" = "' + state + '" -o "$state" = "restart" ] ; then\n')
          if state == 'start':
             outputFile.write('   if [ "$state" = "restart" ] ; then\n')
-            outputFile.write('      log-and-reset-summary\n')
+            outputFile.write('      log-summary\n')
             outputFile.write('   fi\n')
       else:
          outputFile.write('if [ "$state" = "' + state + '" ] ; then\n')
@@ -573,12 +573,12 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
 
    outputFile.write('checkProviders "$availableProviders" "$selectedProviders"\n')
 
-   outputFile.write('success=1\n')
+   outputFile.write('tbc_success=1\n')
    i = 0
    for provider in providerList:
       outputFile.write('if [[ "$selectedProviders" =~ ^$|^' + provider + '$|^' + provider + ',|,' + provider + ',|,' + provider + '$ ]] ; then\n')
       outputFile.write('   echo "Configuring ' + configFileList[i] + '"\n')
-      outputFile.write('   . ./' + configFileList[i] + ' || success=0\n')
+      outputFile.write('   . ./' + configFileList[i] + ' || tbc_success=0\n')
       outputFile.write('else\n')
       outputFile.write('   echo "Skipping ' + configFileList[i] + '"\n')
       outputFile.write('fi\n')
@@ -610,6 +610,10 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
    outputFile.write('   log-action "Flushing route cache ..."\n')
    outputFile.write('   ip route flush cache && \\\n')
    outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
+   outputFile.write('fi\n\n')
+
+   outputFile.write('if [ $tbc_success -eq 0 ] ; then\n')
+   outputFile.write('  return 1\n')
    outputFile.write('fi\n')
 
    outputFile.close()
