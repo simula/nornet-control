@@ -50,6 +50,9 @@ NorNet_LocalSite_SiteIndex             = None
 NorNet_LocalSite_DefaultProviderIndex  = None
 NorNet_LocalSite_TBDefaultProviderIPv4 = None
 
+NorNet_LocalNode_Hostname              = None
+NorNet_LocalNode_NorNetInterface       = None
+
 
 
 # ###### Read configuration file ############################################
@@ -140,6 +143,16 @@ def getLocalDefaultProviderIndex():
 # ###### Get local tunnelbox's outer IPv4 address ###########################
 def getLocalTunnelboxDefaultProviderIPv4():
    return NorNet_LocalSite_TBDefaultProviderIPv4
+
+
+# ###### Get local node hostname ############################################
+def getLocalNodeHostname():
+   return NorNet_LocalNode_Hostname
+
+
+# ###### Get local node hostname ############################################
+def getLocalNodeNorNetInterface():
+   return NorNet_LocalNode_NorNetInterface
 
 
 # ###### Find site ID #######################################################

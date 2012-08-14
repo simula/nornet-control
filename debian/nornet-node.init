@@ -1,0 +1,122 @@
+#!/bin/sh
+# $Id: rsplib-registrar.init 2682 2012-06-08 11:29:28Z dreibh $
+#
+# --------------- NorNet -- The Multi-Homing Testbed Project ----------------
+#
+# Copyright (C) 2012 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
+
+### BEGIN INIT INFO
+# Provides:          nornet-node
+# Required-Start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: NorNet Node
+# Description:       This service provides a NorNet Node.
+### END INIT INFO
+
+
+NAME="nornet-node"
+DESC="NorNet Node"
+NORNET_DIRECTORY="/etc/nornet"
+# NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
+LOGFILE="/var/log/nornet-node.log"
+PATH=$NORNET_DIRECTORY:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+ACTION="$1"
+shift
+
+
+# Check whether NorNet directory is existing
+if [ ! -e "$NORNET_DIRECTORY" ] ; then
+   exit 0
+fi
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.2-14) to ensure that this file is present
+# and status_of_proc is working.
+. /lib/lsb/init-functions
+
+
+set -e
+
+cd "$NORNET_DIRECTORY"
+
+# Load configuration from API config file
+NotNet_LocalNode_Hostname=""
+NotNet_LocalNode_NorNetInterface=""
+if [ ! -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+if [ "$NotNet_LocalNode_Hostname" = "" ] ; then
+   echo >&2 "ERROR: NotNet_LocalNode_Hostname is not set!"
+   exit 1
+fi
+if [ "$NotNet_LocalNode_NorNetInterface" = "" ] ; then
+   echo >&2 "ERROR: NotNet_LocalNode_NorNetInterface is not set!"
+   exit 1
+fi
+
+# Log what is going on ...
+echo "`env LANG=C date --utc +%FT%H:%M:%S`: ###### $0 $@ ######"  >>$LOGFILE
+
+case "$ACTION" in
+  start|stop|restart)
+   echo -n "Starting $DESC: "
+   echo "$NAME."
+   ;;
+  force-reload)
+   ;;
+  configure)
+   # ====== Get new configuration into temporary directory ==================
+   echo "Getting new configuration ..."
+   rm -rf updated-config
+   mkdir updated-config
+   cd updated-config
+   Make-Node-Configuration "$NotNet_LocalNode_Hostname" "$NotNet_LocalNode_NorNetInterface" Debian
+   # ====== Everything went well, move configuration ========================
+   echo "Overwriting old configuration ..."
+   cd ..
+   rm -f interfaces ntp-config snmpd-config
+   mv updated-config/*-config .
+   mv updated-config/interfaces .
+   echo "Copying configuration files to /etc ..."
+   cp interfaces /etc/network/interfaces
+   cp ntp-config /etc/ntp.config
+   cp snmpd-config /etc/snmp/snmpd.conf
+   echo "Restarting services ..."
+   service networking restart
+   service ntp restart
+   service snmpd restart
+   echo "Removing temporary directory ..."
+   rmdir updated-config
+   echo "Done."
+   ;;
+  status)
+   ;;
+  *)
+   N=/etc/init.d/$NAME
+   echo "Usage: $N {start|stop|restart|force-reload|configure|status}" >&2
+   exit 1
+   ;;
+esac
+
+exit 0
