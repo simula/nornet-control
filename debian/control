@@ -12,7 +12,6 @@ Standards-Version: 3.9.3
 Package: nornet-api
 Architecture: any
 Depends: python-ipaddr,
-         rsplib-tools,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
@@ -36,10 +35,31 @@ Description: NorNet Routing Control
  .
  See http://www.nntb.no for details on NorNet!
 
+Package: nornet-management-tools
+Architecture: any
+Depends: apt-file,
+         colordiff,
+         git,
+         joe,
+         lsb-base (>= 3.2-14),
+         openssh-server,
+         rsplib-tools,
+         snmp,
+         subnetcalc,
+         traceroute,
+         whois,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Management Tools
+ This metapackage contains basic software nor NorNet node management. The
+ software installed provides a common working environment.
+ .
+ See http://www.nntb.no for details on NorNet!
+
 Package: nornet-tunnelbox
 Architecture: any
 Conflicts: nornet-node
-Depends: lsb-base (>= 3.2-14),
+Depends: nornet-management-tools,
          nornet-routing,
          ntp,
          python (>= 2.7),
@@ -55,9 +75,10 @@ Description: NorNet Tunnelbox Control
 Package: nornet-node
 Architecture: any
 Conflicts: nornet-tunnelbox
-Depends: lsb-base (>= 3.2-14),
+Depends: nornet-management-tools,
          ntp,
          python (>= 2.7),
+         rsplib-services,
          snmpd,
          ${misc:Depends},
          ${shlibs:Depends}
