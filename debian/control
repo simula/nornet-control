@@ -55,23 +55,6 @@ Description: NorNet Management Tools
  .
  See http://www.nntb.no for details on NorNet!
 
-Package: nornet-tunnelbox
-Architecture: any
-Conflicts: nornet-node
-Depends: nornet-api,
-         nornet-management-tools,
-         nornet-routing,
-         ntp,
-         python (>= 2.7),
-         snmpd,
-         ${misc:Depends},
-         ${shlibs:Depends}
-Description: NorNet Tunnelbox Control
- This package contains the scripts to configure the tunnelboxes of NorNet
- sites.
- .
- See http://www.nntb.no for details on NorNet!
-
 Package: nornet-node
 Architecture: any
 Conflicts: nornet-tunnelbox
@@ -86,5 +69,23 @@ Depends: nornet-api,
 Description: NorNet Node Control
  This package contains the scripts to configure a generic node on a NorNet
  site.
+ .
+ See http://www.nntb.no for details on NorNet!
+
+Package: nornet-tunnelbox
+Architecture: any
+Conflicts: nornet-node
+Depends: nmap,
+         nornet-api,
+         nornet-management-tools,
+         nornet-routing,
+         ntp,
+         python (>= 2.7),
+         snmpd,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Tunnelbox Control
+ This package contains the scripts to configure the tunnelboxes of NorNet
+ sites.
  .
  See http://www.nntb.no for details on NorNet!
