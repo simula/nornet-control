@@ -36,8 +36,7 @@ Description: NorNet Routing Control
 
 Package: nornet-management-tools
 Architecture: any
-Depends: apt-file,
-         colordiff,
+Depends:colordiff,
          git,
          joe,
          lsb-base (>= 3.2-14),
@@ -51,6 +50,20 @@ Depends: apt-file,
          ${shlibs:Depends}
 Description: NorNet Management Tools
  This metapackage contains basic software nor NorNet node management. The
+ software installed provides a common working environment.
+ .
+ See http://www.nntb.no for details on NorNet!
+
+Package: nornet-development-tools
+Architecture: any
+Depends: apt-file,
+         debhelper,
+         devscripts,
+         nornet-management-tools,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Management Tools
+ This metapackage contains basic software nor NorNet development. The
  software installed provides a common working environment.
  .
  See http://www.nntb.no for details on NorNet!
