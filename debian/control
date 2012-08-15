@@ -25,7 +25,6 @@ Package: nornet-routing
 Architecture: any
 Depends: iputils-ping,
          iputils-tracepath,
-         nornet-api,
          traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -59,7 +58,8 @@ Description: NorNet Management Tools
 Package: nornet-tunnelbox
 Architecture: any
 Conflicts: nornet-node
-Depends: nornet-management-tools,
+Depends: nornet-api,
+         nornet-management-tools,
          nornet-routing,
          ntp,
          python (>= 2.7),
@@ -75,7 +75,8 @@ Description: NorNet Tunnelbox Control
 Package: nornet-node
 Architecture: any
 Conflicts: nornet-tunnelbox
-Depends: nornet-management-tools,
+Depends: nornet-api,
+         nornet-management-tools,
          ntp,
          python (>= 2.7),
          rsplib-services,
