@@ -72,6 +72,25 @@ Description: NorNet Node Control
  .
  See http://www.nntb.no for details on NorNet!
 
+Package: nornet-monitor
+Architecture: any
+Conflicts: nornet-tunnelbox
+Depends: nagios3,
+         nagios3-doc,
+         nornet-api,
+         nornet-management-tools,
+         ntp,
+         postfix
+         ${misc:Depends},
+         python (>= 2.7),
+         rsplib-services,
+         snmpd,
+         ${shlibs:Depends}
+Description: NorNet Monitor
+ This package contains the scripts to configure a generic monitoring station.
+ .
+ See http://www.nntb.no for details on NorNet!
+
 Package: nornet-tunnelbox
 Architecture: any
 Conflicts: nornet-node
