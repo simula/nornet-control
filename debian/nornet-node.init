@@ -64,8 +64,10 @@ cd "$NORNET_DIRECTORY"
 NotNet_LocalNode_Hostname=""
 NotNet_LocalNode_NorNetInterface=""
 if [ ! -e ./nornetapi-config ] ; then
-   . ./nornetapi-config
+   echo >&2 "ERROR: $NORNET_DIRECTORY/nornetapi-config does not exist!"
+   exit 0
 fi
+. ./nornetapi-config
 if [ "$NotNet_LocalNode_Hostname" = "" ] ; then
    echo >&2 "ERROR: NotNet_LocalNode_Hostname is not set!"
    exit 1
