@@ -63,7 +63,7 @@ def createTestConfiguration(userName, sliceName):
 
    siteAlphaNorNetIndex = 1
    siteAlpha = makeNorNetSite('Alpha Test Site', 'TA', 'ta', 'http://www.alpha.site', 'alpha.site',
-                              siteAlphaNorNetIndex, 'Ullevål', 'Østlandet', 'Norge', 'NO', 10.0, 50.0, [
+                              siteAlphaNorNetIndex, 'Fornebu', 'Østlandet', 'Norge', 'NO', 59.895933, 10.627635, [
                                  [ 'Uninett', 'eth0', IPv4Address('132.252.156.70'), IPv6Address('fd55:5555::70') ],
                                  [ 'Telenor', 'eth0', IPv4Address('169.254.100.70'), IPv6Address('::') ]
                               ], 'Uninett', 'eth0', dnsServers, ntpServers)
@@ -72,7 +72,7 @@ def createTestConfiguration(userName, sliceName):
 
    siteBetaNorNetIndex = 2
    siteBeta  = makeNorNetSite('Beta Test Site', 'TB', 'tb', 'http://www.beta.site', 'beta.site',
-                              siteBetaNorNetIndex, 'Bygdøy',  'Østlandet', 'Norge', 'NO', 15.0, 55.0, [
+                              siteBetaNorNetIndex, 'Blindern',  'Østlandet', 'Norge', 'NO', 59.944086, 10.719056, [
                                  [ 'Uninett', 'eth0', IPv4Address('132.252.156.71'), IPv6Address('fd55:5555::71') ],
                                  [ 'Telenor', 'eth0', IPv4Address('169.254.100.71'), IPv6Address('::') ]
                               ], 'Uninett', 'eth0', dnsServers, ntpServers)
@@ -81,7 +81,7 @@ def createTestConfiguration(userName, sliceName):
 
    siteGammaNorNetIndex = 3
    siteGamma = makeNorNetSite('Gamma Test Site', 'TC', 'tc', 'http://www.gamma.site', 'gamma.site',
-                              siteGammaNorNetIndex, 'Essen',  'Nordrhein-Westfalen', 'Deutschland', 'DE', 12.5, 40.0, [
+                              siteGammaNorNetIndex, 'Essen',  'Nordrhein-Westfalen', 'Deutschland', 'DE', 51.476144, 7.011656, [
                                  [ 'Uninett', 'eth0', IPv4Address('132.252.156.72'), IPv6Address('::') ],
                                  [ 'Telenor', 'eth0', IPv4Address('169.254.100.72'), IPv6Address('::') ],
                                  [ 'Deutsches Forschungsnetz', 'eth0', IPv4Address('172.31.255.72'),  IPv6Address('::') ]
