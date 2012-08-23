@@ -30,18 +30,18 @@ from NorNetProviderSetup import *;
 from NorNetSiteSetup     import *;
 
 
-
-# ###### Make test setup ####################################################
-# WARNING: A previous test setup is completely REMOVED!
-def createTestConfiguration(userName, sliceName):
-   # ====== Add tag types ===================================================
-   makeNorNetTagTypes()
-
-
+# ###### Remove test setup ##################################################
+def removeTestConfiguration():
    # ====== Remove test sites ===============================================
    removeNorNetSite("Alpha Test Site")
    removeNorNetSite("Beta Test Site")
    removeNorNetSite("Gamma Test Site")
+
+
+# ###### Make test setup ####################################################
+def createTestConfiguration(userName, sliceName):
+   # ====== Add tag types ===================================================
+   makeNorNetTagTypes()
 
    # ====== Add test sites ==================================================
    norNetInformation = getNorNetInformationForAddress(getPLCAddress())
@@ -145,6 +145,26 @@ def createTestConfiguration(userName, sliceName):
 
 
 
+createSetup = False
+removeSetup = False
+
+if len(sys.argv) > 1:
+   if sys.argv[1] == '-create':
+      createSetup = True
+   elif sys.argv[1] == '-remove':
+      removeSetup = True
+   elif sys.argv[1] == '-renew':
+      createSetup = True
+      removeSetup = True
+   else:
+      error('Usage: ' + sys.argv[0] + ' [-create|-remove|-renew]')
+else:
+      error('Usage: ' + sys.argv[0] + ' [-create|-remove|-renew]')
+
+
 log('***** This is NorNet *****')
 loginToPLC()
-createTestConfiguration('dreibh@simula.no', 'nn_test')
+if removeSetup == True:
+   removeTestConfiguration()
+if createSetup == True:
+   createTestConfiguration('dreibh@simula.no', 'nn_test')
