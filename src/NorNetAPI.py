@@ -266,6 +266,33 @@ def getNorNetProvidersForSite(norNetSite):
       error('Unable to get NorNet providers for site ' + norNetSite['site_long_name'] + ': ' + str(e))
 
 
+# ###### Find PCU ID for node ID ############################################
+def lookupPCUIDforNode(nodeID):
+   try:
+      pcu = plc_server.GetNodes(plc_authentication,
+                               { 'node_id' : nodeID }, ['pcu_ids'])
+      if len(pcu) > 0:
+         pcuID = int(pcu[0]['pcu_ids'][0])
+         return(pcuID)
+      else:
+         return(0)
+
+   except:
+      return(0)
+
+
+# ###### Find PCU ID ########################################################
+def lookupPCUID(pcuName):
+   try:
+      pcu = plc_server.GetPCUs(plc_authentication,
+                               {'hostname': pcuName}, ['pcu_id'])
+      pcuID = int(pcu[0]['pcu_id'])
+      return(pcuID)
+
+   except:
+      return(0)
+
+
 # ###### Find node ID #######################################################
 def lookupNodeID(nodeName):
    try:

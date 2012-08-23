@@ -90,6 +90,19 @@ def removeNorNetSite(siteName):
       getPLCServer().DeleteSite(getPLCAuthentication(), siteID)
 
 
+# ###### Add or update site tag #############################################
+def _addOrUpdateSiteTag(siteID, tagName, tagValue):
+   filter = {
+      'tagname' : tagName,
+      'site_id' : siteID
+   }
+   tags = getPLCServer().GetSiteTags(getPLCAuthentication(), filter, ['site_tag_id'])
+   if len(tags) == 0:
+      return getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, tagName, tagValue)
+   else:
+      return getPLCServer().UpdateSiteTag(getPLCAuthentication(), tags[0]['site_tag_id'], tagValue)
+
+
 # ###### Create NorNet site #################################################
 def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDomain,
                    siteNorNetIndex, siteCity, siteProvince, cityCountry, siteCountryCode,
@@ -109,24 +122,29 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
       site['latitude']         = siteLatitude
       site['longitude']        = siteLogitude
       site['max_slices']       = 10
-      siteID = getPLCServer().AddSite(getPLCAuthentication(), site)
+      siteID = lookupSiteID(siteName)
+      if siteID == 0:
+         siteID = getPLCServer().AddSite(getPLCAuthentication(), site)
+      else:
+         if getPLCServer().UpdateSite(getPLCAuthentication(), siteID, site) != 1:
+            siteID = 0
       if siteID <= 0:
-         error('Unable to add site ' + siteName)
+         error('Unable to add/update site ' + siteName)
 
       # ====== Set NorNet tags ==============================================
-      if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_is_managed_site', '1') <= 0:
+      if _addOrUpdateSiteTag(siteID, 'nornet_is_managed_site', '1') <= 0:
          error('Unable to add "nornet_is_managed_site" tag to site ' + siteName)
-      if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_index', str(siteNorNetIndex)) <= 0:
+      if _addOrUpdateSiteTag(siteID, 'nornet_site_index', str(siteNorNetIndex)) <= 0:
          error('Unable to add "nornet_site_index" tag to site ' + siteName)
-      if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_city', siteCity) <= 0:
+      if _addOrUpdateSiteTag(siteID, 'nornet_site_city', siteCity) <= 0:
          error('Unable to add "nornet_site_city" tag to site ' + siteName)
-      if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_domain', siteNorNetDomain) <= 0:
+      if _addOrUpdateSiteTag(siteID, 'nornet_site_domain', siteNorNetDomain) <= 0:
          error('Unable to add "nornet_site_domain" tag to site ' + siteName)
-      if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_province', siteProvince) <= 0:
+      if _addOrUpdateSiteTag(siteID, 'nornet_site_province', siteProvince) <= 0:
          error('Unable to add "nornet_site_province" tag to site ' + siteName)
-      if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_country', cityCountry) <= 0:
+      if _addOrUpdateSiteTag(siteID, 'nornet_site_country', cityCountry) <= 0:
          error('Unable to add "nornet_site_country" tag to site ' + siteName)
-      if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_country_code', siteCountryCode) <= 0:
+      if _addOrUpdateSiteTag(siteID, 'nornet_site_country_code', siteCountryCode) <= 0:
          error('Unable to add "nornet_site_country_code" tag to site ' + siteName)
 
       # ====== Set providers ================================================
@@ -143,7 +161,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
             if providerIndex <= 0:
                error("Bad provider " + provider)
             if providerName == defaultProvider:
-               if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_default_provider_index', str(providerIndex)) <= 0:
+               if _addOrUpdateSiteTag(siteID, 'nornet_site_default_provider_index', str(providerIndex)) <= 0:
                   error('Unable to add "nornet_site_default_provider_index" tag to site ' + siteName)
                gotDefaultProvider = True
 
@@ -151,13 +169,13 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
             providerIPv4      = IPv4Address(provider[2])
             providerIPv6      = IPv6Address(provider[3])
 
-            if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tbp' + str(i) + '_index', str(providerIndex)) <= 0:
+            if _addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_index', str(providerIndex)) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_index" tag to site ' + siteName)
-            if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tbp' + str(i) + '_interface', providerInterface) <= 0:
+            if _addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_interface', providerInterface) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_interface" tag to site ' + siteName)
-            if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tbp' + str(i) + '_address_ipv4', str(providerIPv4)) <= 0:
+            if _addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_address_ipv4', str(providerIPv4)) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_ipv4" tag to site ' + siteName)
-            if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tbp' + str(i) + '_address_ipv6', str(providerIPv6)) <= 0:
+            if _addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_address_ipv6', str(providerIPv6)) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_ipv6" tag to site ' + siteName)
 
          i = i + 1
@@ -169,17 +187,17 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
       for i in range(0, NorNet_MaxDNSServers - 1):
          if i >= len(dnsServers):
             break
-         if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_dns' + str(1 + i), str(IPNetwork(dnsServers[i]).ip)) <= 0:
+         if _addOrUpdateSiteTag(siteID, 'nornet_site_dns' + str(1 + i), str(IPNetwork(dnsServers[i]).ip)) <= 0:
             error('Unable to add "nornet_site_dns' + str(1 + i) + '" tag to site ' + siteName)
 
       # ====== Set NTP servers ==============================================
       for i in range(0, NorNet_MaxNTPServers - 1):
          if i >= len(ntpServers):
             break
-         if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_ntp' + str(1 + i), str(IPNetwork(ntpServers[i]).ip)) <= 0:
+         if _addOrUpdateSiteTag(siteID, 'nornet_site_ntp' + str(1 + i), str(IPNetwork(ntpServers[i]).ip)) <= 0:
             error('Unable to add "nornet_site_ntp' + str(1 + i) + '" tag to site ' + siteName)
 
-      if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tb_internal_interface', tbInternalInterface) <= 0:
+      if _addOrUpdateSiteTag(siteID, 'nornet_site_tb_internal_interface', tbInternalInterface) <= 0:
          error('Unable to add "nornet_site_tb_internal_interface" tag to site ' + siteName)
 
       # ====== Set Source NAT range at Central Site =========================
@@ -187,10 +205,10 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
          a = NorNet_CentralSiteIPv4NATRange[0]
          b = NorNet_CentralSiteIPv4NATRange[1]
          if ((a != IPv4Address('0.0.0.0')) and (b != IPv4Address('0.0.0.0'))):
-            if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tb_nat_range_ipv4', str(a) + '-' + str(b)) <= 0:
+            if _addOrUpdateSiteTag(siteID, 'nornet_site_tb_nat_range_ipv4', str(a) + '-' + str(b)) <= 0:
                error('Unable to add "nornet_site_tb_nat_range_ipv4" tag to site ' + siteName)
          else:
-            if getPLCServer().AddSiteTag(getPLCAuthentication(), siteID, 'nornet_site_tb_nat_range_ipv4', '') <= 0:
+            if _addOrUpdateSiteTag(siteID, 'nornet_site_tb_nat_range_ipv4', '') <= 0:
                error('Unable to add "nornet_site_tb_nat_range_ipv4" tag to site ' + siteName)
 
    except Exception as e:
@@ -215,9 +233,14 @@ def makeNorNetPCU(site, hostName, siteNorNetDomain, publicIPv4Address,
       pcu['ip']       = str(publicIPv4Address)
       pcu['hostname'] = pcuHostName
 
-      pcuID = getPLCServer().AddPCU(getPLCAuthentication(), site['site_id'], pcu)
+      pcuID = lookupPCUID(pcuHostName)
+      if pcuID == 0:
+         pcuID = getPLCServer().AddPCU(getPLCAuthentication(), site['site_id'], pcu)
+      else:
+         if getPLCServer().UpdatePCU(getPLCAuthentication(), pcuID, pcu) != 1:
+            pcuID = 0
       if pcuID <= 0:
-         error('Unable to add PCU ' + pcuHostName)
+         error('Unable to add/update PCU ' + pcuHostName)
 
       return pcuID
 
@@ -322,9 +345,23 @@ def updateNorNetInterfaces(node, site, norNetInterface):
       error('Updating interfaces of node ' + str(nodeID) + ' has failed: ' + str(e))
 
 
+# ###### Add or update Node tag #############################################
+def _addOrUpdateNodeTag(nodeID, tagName, tagValue):
+   filter = {
+      'tagname' : tagName,
+      'node_id' : nodeID
+   }
+   tags = getPLCServer().GetNodeTags(getPLCAuthentication(), filter, ['node_tag_id'])
+   if len(tags) == 0:
+      return getPLCServer().AddNodeTag(getPLCAuthentication(), nodeID, tagName, tagValue)
+   else:
+      return getPLCServer().UpdateNodeTag(getPLCAuthentication(), tags[0]['node_tag_id'], tagValue)
+
+
 # ###### Create NorNet node #################################################
 def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
-                   pcuID, pcuPort, norNetInterface):
+                   pcuID, pcuPort, norNetInterface,
+                   model, bootState):
    nodeHostName = nodeNiceName   # Domain to be added below!
 
    # ====== Get site information ============================================
@@ -342,23 +379,31 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
 
       node = {}
       node['hostname']   = nodeHostName
-      node['boot_state'] = 'reinstall'
-      node['model']      = 'Amiga 5000'
-      nodeID = getPLCServer().AddNode(getPLCAuthentication(), site['site_id'], node)
+      node['model']      = model
+      node['boot_state'] = bootState
+      nodeID = lookupNodeID(nodeHostName)
+      if nodeID == 0:
+         nodeID = getPLCServer().AddNode(getPLCAuthentication(), site['site_id'], node)
+      else:
+         if getPLCServer().UpdateNode(getPLCAuthentication(), nodeID, node) != 1:
+            nodeID = 0
       if nodeID <= 0:
-         error('Unable to add node ' + nodeHostName)
+         error('Unable to add/update node ' + nodeHostName)
 
-      if getPLCServer().AddNodeTag(getPLCAuthentication(), nodeID, 'nornet_is_managed_node', '1') <= 0:
+      if _addOrUpdateNodeTag(nodeID, 'nornet_is_managed_node', '1') <= 0:
          error('Unable to add "nornet_is_managed_node" tag to node ' + nodeHostName)
-      if getPLCServer().AddNodeTag(getPLCAuthentication(), nodeID, 'nornet_node_index', str(nodeNorNetIndex)) <= 0:
+      if _addOrUpdateNodeTag(nodeID, 'nornet_node_index', str(nodeNorNetIndex)) <= 0:
          error('Unable to add "nornet_node_index" tag to node ' + nodeHostName)
-      if getPLCServer().AddNodeTag(getPLCAuthentication(), nodeID, 'nornet_node_address', str(nodeNorNetIndex + addressBase)) <= 0:
+      if _addOrUpdateNodeTag(nodeID, 'nornet_node_address', str(nodeNorNetIndex + addressBase)) <= 0:
          error('Unable to add "nornet_node_address" tag to node ' + nodeHostName)
-      if getPLCServer().AddNodeTag(getPLCAuthentication(), nodeID, 'nornet_node_interface', norNetInterface) <= 0:
+      if _addOrUpdateNodeTag(nodeID, 'nornet_node_interface', norNetInterface) <= 0:
          error('Unable to add "nornet_node_interface" tag to node ' + nodeHostName)
 
       # ====== Add node to PCU ==============================================
       if pcuID > 0:
+         oldPCUID = lookupPCUIDforNode(nodeID)
+         if oldPCUID != 0:
+            getPLCServer().DeleteNodeFromPCU(getPLCAuthentication(), nodeID, oldPCUID)
          if getPLCServer().AddNodeToPCU(getPLCAuthentication(), nodeID, pcuID, pcuPort) != 1:
             error('Unable to add node ' + nodeHostName + " to PCU " + str(pcuID) + ", port " + str(pcuPort))
 

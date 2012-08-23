@@ -30,18 +30,18 @@ from NorNetProviderSetup import *;
 from NorNetSiteSetup     import *;
 
 
-
-# ###### Make test setup ####################################################
-# WARNING: A previous test setup is completely REMOVED!
-def createTestConfiguration(userName, sliceName):
-   # ====== Add tag types ===================================================
-   makeNorNetTagTypes()
-
-
+# ###### Remove test setup ##################################################
+def removeTestConfiguration():
    # ====== Remove test sites ===============================================
    removeNorNetSite("Alpha Test Site")
    removeNorNetSite("Beta Test Site")
    removeNorNetSite("Gamma Test Site")
+
+
+# ###### Make test setup ####################################################
+def createTestConfiguration(userName, sliceName):
+   # ====== Add tag types ===================================================
+   makeNorNetTagTypes()
 
    # ====== Add test sites ==================================================
    norNetInformation = getNorNetInformationForAddress(getPLCAddress())
@@ -63,7 +63,7 @@ def createTestConfiguration(userName, sliceName):
 
    siteAlphaNorNetIndex = 1
    siteAlpha = makeNorNetSite('Alpha Test Site', 'TA', 'ta', 'http://www.alpha.site', 'alpha.site',
-                              siteAlphaNorNetIndex, 'Ullevål', 'Østlandet', 'Norge', 'NO', 10.0, 50.0, [
+                              siteAlphaNorNetIndex, 'Fornebu', 'Østlandet', 'Norge', 'NO', 59.895933, 10.627635, [
                                  [ 'Uninett', 'eth0', IPv4Address('132.252.156.70'), IPv6Address('fd55:5555::70') ],
                                  [ 'Telenor', 'eth0', IPv4Address('169.254.100.70'), IPv6Address('::') ]
                               ], 'Uninett', 'eth0', dnsServers, ntpServers)
@@ -72,7 +72,7 @@ def createTestConfiguration(userName, sliceName):
 
    siteBetaNorNetIndex = 2
    siteBeta  = makeNorNetSite('Beta Test Site', 'TB', 'tb', 'http://www.beta.site', 'beta.site',
-                              siteBetaNorNetIndex, 'Bygdøy',  'Østlandet', 'Norge', 'NO', 15.0, 55.0, [
+                              siteBetaNorNetIndex, 'Blindern',  'Østlandet', 'Norge', 'NO', 59.944086, 10.719056, [
                                  [ 'Uninett', 'eth0', IPv4Address('132.252.156.71'), IPv6Address('fd55:5555::71') ],
                                  [ 'Telenor', 'eth0', IPv4Address('169.254.100.71'), IPv6Address('::') ]
                               ], 'Uninett', 'eth0', dnsServers, ntpServers)
@@ -81,7 +81,7 @@ def createTestConfiguration(userName, sliceName):
 
    siteGammaNorNetIndex = 3
    siteGamma = makeNorNetSite('Gamma Test Site', 'TC', 'tc', 'http://www.gamma.site', 'gamma.site',
-                              siteGammaNorNetIndex, 'Essen',  'Nordrhein-Westfalen', 'Deutschland', 'DE', 12.5, 40.0, [
+                              siteGammaNorNetIndex, 'Essen',  'Nordrhein-Westfalen', 'Deutschland', 'DE', 51.476144, 7.011656, [
                                  [ 'Uninett', 'eth0', IPv4Address('132.252.156.72'), IPv6Address('::') ],
                                  [ 'Telenor', 'eth0', IPv4Address('169.254.100.72'), IPv6Address('::') ],
                                  [ 'Deutsches Forschungsnetz', 'eth0', IPv4Address('172.31.255.72'),  IPv6Address('::') ]
@@ -97,21 +97,24 @@ def createTestConfiguration(userName, sliceName):
    i = 0
    for name in names:
       n = makeNorNetNode(siteAlpha, name, 1 + i, firstAddressIndex,
-                     siteAlphaPCUID, 1 + i, 'eth0')
+                         siteAlphaPCUID, 1 + i, 'eth0',
+                         'Amiga 5000', 'reinstall')
       i = i + 1
 
    names = sorted(['bjordammen', 'maridalsvannet', 'sognsvann', 'svartkulp', 'skjennungen', 'tryvann'])
    i = 0
    for name in names:
       makeNorNetNode(siteBeta, name, 1 + i, firstAddressIndex,
-                     siteBetaPCUID, 1 + i, 'eth0')
+                     siteBetaPCUID, 1 + i, 'eth0',
+                     'Amiga 5000', 'reinstall')
       i = i + 1
 
    names = sorted(['altenessen', 'baldeneysee', 'borbeck', 'zollvererin'])
    i = 0
    for name in names:
       makeNorNetNode(siteGamma, name, 1 + i, firstAddressIndex,
-                     siteGammaPCUID, 1 + i, 'eth0')
+                     siteGammaPCUID, 1 + i, 'eth0',
+                     'Amiga 5000', 'reinstall')
       i = i + 1
 
 
@@ -145,6 +148,26 @@ def createTestConfiguration(userName, sliceName):
 
 
 
+createSetup = False
+removeSetup = False
+
+if len(sys.argv) > 1:
+   if sys.argv[1] == '-create':
+      createSetup = True
+   elif sys.argv[1] == '-remove':
+      removeSetup = True
+   elif sys.argv[1] == '-renew':
+      createSetup = True
+      removeSetup = True
+   else:
+      error('Usage: ' + sys.argv[0] + ' [-create|-remove|-renew]')
+else:
+      error('Usage: ' + sys.argv[0] + ' [-create|-remove|-renew]')
+
+
 log('***** This is NorNet *****')
 loginToPLC()
-createTestConfiguration('dreibh@simula.no', 'nn_test')
+if removeSetup == True:
+   removeTestConfiguration()
+if createSetup == True:
+   createTestConfiguration('dreibh@simula.no', 'nn_test')
