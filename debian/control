@@ -89,7 +89,8 @@ Description: NorNet Node Control
 Package: nornet-monitor
 Architecture: any
 Conflicts: nornet-tunnelbox
-Depends: nagios3,
+Depends: libapache2-mod-php5,
+         nagios3,
          nagios3-doc,
          nornet-api,
          nornet-management-tools,
