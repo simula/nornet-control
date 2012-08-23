@@ -233,9 +233,14 @@ def makeNorNetPCU(site, hostName, siteNorNetDomain, publicIPv4Address,
       pcu['ip']       = str(publicIPv4Address)
       pcu['hostname'] = pcuHostName
 
-      pcuID = getPLCServer().AddPCU(getPLCAuthentication(), site['site_id'], pcu)
+      pcuID = lookupPCUID(pcuHostName)
+      if pcuID == 0:
+         pcuID = getPLCServer().AddPCU(getPLCAuthentication(), site['site_id'], pcu)
+      else:
+         if getPLCServer().UpdatePCU(getPLCAuthentication(), pcuID, pcu) != 1:
+            pcuID = 0
       if pcuID <= 0:
-         error('Unable to add PCU ' + pcuHostName)
+         error('Unable to add/update PCU ' + pcuHostName)
 
       return pcuID
 
@@ -355,7 +360,8 @@ def _addOrUpdateNodeTag(nodeID, tagName, tagValue):
 
 # ###### Create NorNet node #################################################
 def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
-                   pcuID, pcuPort, norNetInterface):
+                   pcuID, pcuPort, norNetInterface,
+                   model, bootState):
    nodeHostName = nodeNiceName   # Domain to be added below!
 
    # ====== Get site information ============================================
@@ -373,8 +379,8 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
 
       node = {}
       node['hostname']   = nodeHostName
-      node['boot_state'] = 'reinstall'
-      node['model']      = 'Amiga 5000'
+      node['model']      = model
+      node['boot_state'] = bootState
       nodeID = lookupNodeID(nodeHostName)
       if nodeID == 0:
          nodeID = getPLCServer().AddNode(getPLCAuthentication(), site['site_id'], node)
@@ -395,6 +401,9 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
 
       # ====== Add node to PCU ==============================================
       if pcuID > 0:
+         oldPCUID = lookupPCUIDforNode(nodeID)
+         if oldPCUID != 0:
+            getPLCServer().DeleteNodeFromPCU(getPLCAuthentication(), nodeID, oldPCUID)
          if getPLCServer().AddNodeToPCU(getPLCAuthentication(), nodeID, pcuID, pcuPort) != 1:
             error('Unable to add node ' + nodeHostName + " to PCU " + str(pcuID) + ", port " + str(pcuPort))
 
