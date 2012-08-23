@@ -340,6 +340,19 @@ def updateNorNetInterfaces(node, site, norNetInterface):
       error('Updating interfaces of node ' + str(nodeID) + ' has failed: ' + str(e))
 
 
+# ###### Add or update Node tag #############################################
+def _addOrUpdateNodeTag(nodeID, tagName, tagValue):
+   filter = {
+      'tagname' : tagName,
+      'node_id' : nodeID
+   }
+   tags = getPLCServer().GetNodeTags(getPLCAuthentication(), filter, ['node_tag_id'])
+   if len(tags) == 0:
+      return getPLCServer().AddNodeTag(getPLCAuthentication(), nodeID, tagName, tagValue)
+   else:
+      return getPLCServer().UpdateNodeTag(getPLCAuthentication(), tags[0]['node_tag_id'], tagValue)
+
+
 # ###### Create NorNet node #################################################
 def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
                    pcuID, pcuPort, norNetInterface):
@@ -362,17 +375,22 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
       node['hostname']   = nodeHostName
       node['boot_state'] = 'reinstall'
       node['model']      = 'Amiga 5000'
-      nodeID = getPLCServer().AddNode(getPLCAuthentication(), site['site_id'], node)
+      nodeID = lookupNodeID(nodeHostName)
+      if nodeID == 0:
+         nodeID = getPLCServer().AddNode(getPLCAuthentication(), site['site_id'], node)
+      else:
+         if getPLCServer().UpdateNode(getPLCAuthentication(), nodeID, node) != 1:
+            nodeID = 0
       if nodeID <= 0:
-         error('Unable to add node ' + nodeHostName)
+         error('Unable to add/update node ' + nodeHostName)
 
-      if getPLCServer().AddNodeTag(getPLCAuthentication(), nodeID, 'nornet_is_managed_node', '1') <= 0:
+      if _addOrUpdateNodeTag(nodeID, 'nornet_is_managed_node', '1') <= 0:
          error('Unable to add "nornet_is_managed_node" tag to node ' + nodeHostName)
-      if getPLCServer().AddNodeTag(getPLCAuthentication(), nodeID, 'nornet_node_index', str(nodeNorNetIndex)) <= 0:
+      if _addOrUpdateNodeTag(nodeID, 'nornet_node_index', str(nodeNorNetIndex)) <= 0:
          error('Unable to add "nornet_node_index" tag to node ' + nodeHostName)
-      if getPLCServer().AddNodeTag(getPLCAuthentication(), nodeID, 'nornet_node_address', str(nodeNorNetIndex + addressBase)) <= 0:
+      if _addOrUpdateNodeTag(nodeID, 'nornet_node_address', str(nodeNorNetIndex + addressBase)) <= 0:
          error('Unable to add "nornet_node_address" tag to node ' + nodeHostName)
-      if getPLCServer().AddNodeTag(getPLCAuthentication(), nodeID, 'nornet_node_interface', norNetInterface) <= 0:
+      if _addOrUpdateNodeTag(nodeID, 'nornet_node_interface', norNetInterface) <= 0:
          error('Unable to add "nornet_node_interface" tag to node ' + nodeHostName)
 
       # ====== Add node to PCU ==============================================
