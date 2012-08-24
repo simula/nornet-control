@@ -28,6 +28,7 @@ from socket import getaddrinfo, AF_INET, AF_INET6;
 import os;
 import re;
 import sys;
+import codecs;
 import datetime;
 
 
@@ -53,7 +54,7 @@ def getTagValue(tagList, tagName, default):
 
 # ###### Create a configuration file ########################################
 def makeConfigFile(type, configurationName, setInfoVariable):
-   outputFile = open(configurationName, 'w')
+   outputFile = codecs.open(configurationName, 'w', 'utf-8')
    outputFile.write('# ===== ' + type + ' configuration ===============\n')
    now = datetime.datetime.utcnow().isoformat()
    info = str.replace(str.lower(configurationName), '-', '_')

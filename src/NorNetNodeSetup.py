@@ -479,37 +479,42 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, con
    log('Making tunnelbox bootstrap for site ' + str(localSiteIndex) + ' ...')
 
 
-   tunnel        = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, 4)
-   remoteNetwork = makeNorNetIP(remoteProvider['provider_index'], remoteSite['site_index'], 0, 0, 4)
+   if localSiteIndex != NorNet_SiteIndex_Central:
+      tunnel         = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, 4)
+      remoteNetwork  = makeNorNetIP(remoteProvider['provider_index'], remoteSite['site_index'], 0, 0, 4)
+      interfaceToPLC = tunnel['tunnel_interface']
 
-   outputFile.write('\nif [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
-   outputFile.write('   log-action "Tearing down tunnel to central site ..."\n')
-   outputFile.write('   remove-tunnel ' + \
-                    tunnel['tunnel_interface'] + ' ' + \
-                    hex(tunnel['tunnel_key'])  + '   && \\\n')
-   outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-   outputFile.write('fi\n')
+      outputFile.write('\nif [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
+      outputFile.write('   log-action "Tearing down tunnel to central site ..."\n')
+      outputFile.write('   remove-tunnel ' + \
+                       tunnel['tunnel_interface'] + ' ' + \
+                       hex(tunnel['tunnel_key'])  + '   && \\\n')
+      outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
+      outputFile.write('fi\n')
 
-   outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
-   outputFile.write('   log-action "Setting up tunnel to central site ..."\n')
-   outputFile.write('   make-tunnel ' + \
-                    tunnel['tunnel_interface']                 + ' ' + \
-                    hex(tunnel['tunnel_key'])                  + ' ' + \
-                    str(tunnel['tunnel_local_outer_address'])  + ' ' + \
-                    str(tunnel['tunnel_remote_outer_address']) + ' ' + \
-                    str(tunnel['tunnel_local_inner_address'])  + ' ' + \
-                    str(tunnel['tunnel_remote_inner_address']) + '  && \\\n')
-   outputFile.write('   make-route main ' + \
-                    str(remoteNetwork) + ' ' +
-                    tunnel['tunnel_interface'] + ' ' + \
-                    str(tunnel['tunnel_remote_inner_address']) + ' ' + \
-                    'metric 5   && \\\n')
-   outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-   outputFile.write('fi\n')
+      outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
+      outputFile.write('   log-action "Setting up tunnel to central site ..."\n')
+      outputFile.write('   make-tunnel ' + \
+                       tunnel['tunnel_interface']                 + ' ' + \
+                       hex(tunnel['tunnel_key'])                  + ' ' + \
+                       str(tunnel['tunnel_local_outer_address'])  + ' ' + \
+                       str(tunnel['tunnel_remote_outer_address']) + ' ' + \
+                       str(tunnel['tunnel_local_inner_address'])  + ' ' + \
+                       str(tunnel['tunnel_remote_inner_address']) + '  && \\\n')
+      outputFile.write('   make-route main ' + \
+                       str(remoteNetwork) + ' ' +
+                       tunnel['tunnel_interface'] + ' ' + \
+                       str(tunnel['tunnel_remote_inner_address']) + ' ' + \
+                       'metric 5   && \\\n')
+      outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
+      outputFile.write('fi\n')
+   else:
+      interfaceToPLC = 'ANY'
+
 
    outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" -o  "$state" = "status" ] ; then\n')
    outputFile.write('   log-action "Trying to contact PLC at ' + str(getPLCAddress()) + ' ..."\n')
-   outputFile.write('   show-tunnel ' + tunnel['tunnel_interface'] + ' ' + \
+   outputFile.write('   show-tunnel ' + interfaceToPLC + ' ' + \
                     '0.0.0.0 ' + str(getPLCAddress()) + ' ""   && \\\n')
    outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    outputFile.write('fi\n')
