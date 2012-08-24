@@ -3,8 +3,8 @@
 $nagios_cfg_file = "/etc/nagios3/nagios.cfg";
 $nagios_status_dat_file = "/var/cache/nagios3/status.dat";
 
-$nagmap_map_centre = '59.933,11.059569';
-$nagmap_map_zoom = 4;
+$nagmap_map_centre = '62,11';
+$nagmap_map_zoom = 5;
 $nagmap_bubble_links = 0;
 
 ###do not edit below unless you know what you are doing
