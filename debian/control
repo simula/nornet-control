@@ -38,6 +38,7 @@ Package: nornet-management
 Architecture: any
 Depends: colordiff,
          git,
+         gpm,
          joe,
          lsb-base (>= 3.2-14),
          netperfmeter,
