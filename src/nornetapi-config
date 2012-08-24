@@ -34,7 +34,7 @@ NorNet_LocalSite_TBDefaultProviderIPv4='132.252.156.70'
 
 # ###### NorNet Node configuration ##########################################
 # This is the full hostname of the node:
-NorNet_LocalNode_Hostname='tunnelbox.alpha.site'
+NorNet_LocalNode_Hostname='tunnelbox.simula.site'
 
 # This is the name of the NorNet interface (with the site's provider
 # networks) of the node:
