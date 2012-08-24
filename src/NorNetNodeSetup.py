@@ -941,7 +941,8 @@ def makeNagiosConfiguration(fullSiteList, configNamePrefix):
             outputFile.write('   address       ' + str(tunnelboxIP.ip) + '\n')
             outputFile.write('   notes         latlng: ' + str(site['site_latitude']) + ',' + str(site['site_longitude']) + '\n')
             outputFile.write('   check_command check_ping!100.0,20%!500.0,60%\n')
-            outputFile.write('   parents       ' + centralSite['site_long_name'] + '\n')
+            if siteIndex != NorNet_SiteIndex_Central:
+               outputFile.write('   parents       ' + centralSite['site_long_name'] + '\n')
             outputFile.write('}\n\n')
 
    outputFile.close()
