@@ -34,13 +34,14 @@ Description: NorNet Routing Control
  .
  See http://www.nntb.no for details on NorNet!
 
-Package: nornet-management-tools
+Package: nornet-management
 Architecture: any
-Depends: apt-file,
-         colordiff,
+Depends: colordiff,
          git,
+         gpm,
          joe,
          lsb-base (>= 3.2-14),
+         netperfmeter,
          openssh-server,
          rsplib-tools,
          snmp,
@@ -55,11 +56,25 @@ Description: NorNet Management Tools
  .
  See http://www.nntb.no for details on NorNet!
 
+Package: nornet-development
+Architecture: any
+Depends: apt-file,
+         debhelper,
+         devscripts,
+         nornet-management,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Development Tools
+ This metapackage contains basic software nor NorNet development. The
+ software installed provides a common working environment.
+ .
+ See http://www.nntb.no for details on NorNet!
+
 Package: nornet-node
 Architecture: any
 Conflicts: nornet-tunnelbox
 Depends: nornet-api,
-         nornet-management-tools,
+         nornet-management,
          ntp,
          python (>= 2.7),
          rsplib-services,
@@ -75,7 +90,8 @@ Description: NorNet Node Control
 Package: nornet-monitor
 Architecture: any
 Conflicts: nornet-tunnelbox
-Depends: nagios3,
+Depends: libapache2-mod-php5,
+         nagios3,
          nagios3-doc,
          nornet-api,
          nornet-management-tools,
@@ -96,7 +112,7 @@ Architecture: any
 Conflicts: nornet-node
 Depends: nmap,
          nornet-api,
-         nornet-management-tools,
+         nornet-management,
          nornet-routing,
          ntp,
          python (>= 2.7),
