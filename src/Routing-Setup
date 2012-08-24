@@ -62,7 +62,6 @@ log-result ()
    elif [ "$result" = "$RESULT_BAD" ] ; then
       echo -en "\x1b[${line}G\x1b[30;47;5mFAILED!\x1b[0m\n"
       let _BadResults=$_BadResults+1
-      let _BadResults=$_BadResults+1
    elif [ "$result" = "" ] ; then
       echo >&2 "ERROR: No result given for log-result?!"
       exit 1
