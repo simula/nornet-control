@@ -934,10 +934,10 @@ def makeNagiosConfiguration(fullSiteList, configNamePrefix):
             outputFile.write('define host {\n')
             outputFile.write('   use           generic-host\n')
             outputFile.write('   host_name     ' + site['site_long_name'] + '\n')
-            outputFile.write('   alias         ' + site['site_long_name'] + ', ' + city)
+            outputFile.write('   alias         ' + site['site_long_name'] + ' (' + city)
             if province !=  None:
                outputFile.write(', ' + province)
-            outputFile.write('/' + country + '\n')
+            outputFile.write('/' + country + ')\n')
             outputFile.write('   address       ' + str(tunnelboxIP.ip) + '\n')
             outputFile.write('   notes         latlng: ' + str(site['site_latitude']) + ',' + str(site['site_longitude']) + '\n')
             outputFile.write('   check_command check_ping!100.0,20%!500.0,60%\n')

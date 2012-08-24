@@ -191,8 +191,8 @@ def fetchNorNetSite(siteNameToFind):
                                                [ 'site_id', 'tagname', 'value' ])
          if int(getTagValue(siteTagsList, 'nornet_is_managed_site', '-1')) < 1:
             continue
-         siteName             = str(site['name'])
-         siteAbbrev           = str(site['abbreviated_name'])
+         siteName             = site['name']
+         siteAbbrev           = site['abbreviated_name']
          siteIndex            = int(getTagValue(siteTagsList, 'nornet_site_index', '-1'))
          siteDomain           = getTagValue(siteTagsList, 'nornet_site_domain', '')
          siteDefProviderIndex = int(getTagValue(siteTagsList, 'nornet_site_default_provider_index', '-1'))
@@ -208,7 +208,7 @@ def fetchNorNetSite(siteNameToFind):
             'site_id'                     : siteID,
             'site_index'                  : siteIndex,
             'site_short_name'             : siteAbbrev,
-            'site_long_name'              : str(site['name']),
+            'site_long_name'              : site['name'],
             'site_domain'                 : siteDomain,
             'site_latitude'               : site['latitude'],
             'site_longitude'              : site['longitude'],
