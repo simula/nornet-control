@@ -36,7 +36,8 @@ Description: NorNet Routing Control
 
 Package: nornet-management
 Architecture: any
-Depends: colordiff,
+Depends: apt-show-versions,
+         colordiff,
          git,
          gpm,
          joe,
@@ -96,14 +97,15 @@ Depends: libapache2-mod-php5,
          nornet-api,
          nornet-management-tools,
          ntp,
-         postfix
-         ${misc:Depends},
+         postfix,
          python (>= 2.7),
          rsplib-services,
          snmpd,
+         ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Monitor
- This package contains the scripts to configure a generic monitoring station.
+ This package contains the scripts to configure a generic monitoring station
+ on a NorNet central site.
  .
  See http://www.nntb.no for details on NorNet!
 
