@@ -383,6 +383,7 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
       node['boot_state'] = bootState
       nodeID = lookupNodeID(nodeHostName)
       if nodeID == 0:
+         node['boot_state'] = 'reinstall'   # New nodes need reinstall ...
          nodeID = getPLCServer().AddNode(getPLCAuthentication(), site['site_id'], node)
       else:
          if getPLCServer().UpdateNode(getPLCAuthentication(), nodeID, node) != 1:

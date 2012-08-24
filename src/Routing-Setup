@@ -213,7 +213,7 @@ make-tunnel ()
    #       Solution: Add new link-local address (unique) and remove automatically-generated one.
    if [ "$v6linklocal" != "" ] ; then
       ADDRESSES=`ip -6 addr show dev $interface | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [l]/ { print $2 }'`
-      ip -6 addr add dev $interface $v6linklocal      
+      ip -6 addr add dev $interface $v6linklocal
       for address in $ADDRESSES ; do
          ip -6 addr del $address dev $interface   # Get rid of the automatically-generated address.
       done
@@ -246,7 +246,7 @@ show-tunnel ()
    local innerRemoteIP="$3"       # Inner Remote IP
    local description="$4"         # Description
 
-   # echo -en "Pinging $innerRemoteIP (peer of tunnel interface $interface) ..."
+   # echo -en "Pinging $innerRemoteIP (peer on interface $interface) ..."
 
    success=0
    if [[ "$innerRemoteIP" =~ : ]] ; then
