@@ -46,7 +46,7 @@ else:
 localSiteIndex             = getLocalSiteIndex()
 localDefaultProviderIndex  = getLocalDefaultProviderIndex()
 localTBDefaultProviderIPv4 = getLocalTunnelboxDefaultProviderIPv4()
-
+localNodeNorNetInterface   = getLocalNodeNorNetInterface()
 
 # ====== Some checks ========================================================
 if localSiteIndex == None:
@@ -59,10 +59,14 @@ if ((localDefaultProviderIndex < 1) or (localDefaultProviderIndex > 255)):
     error('Bad NorNet_LocalSite_DefaultProviderIndex ' + str(localDefaultProviderIndex))
 if localTBDefaultProviderIPv4 == None:
    error('NorNet_LocalSite_TBDefaultProviderIPv4 has not been set in configuration file!')
+if localNodeNorNetInterface == None:
+   error('NotNet_LocalNode_NorNetInterface has not been set in configuration file!')
 
 
 # ====== Bootstrap Mode =====================================================
-makeTunnelboxBootstrap(localSiteIndex, localDefaultProviderIndex, localTBDefaultProviderIPv4, 'tunnelbox')
+makeTunnelboxBootstrap(localSiteIndex, localDefaultProviderIndex,
+                       localNodeNorNetInterface, localTBDefaultProviderIPv4,
+                       'tunnelbox')
 
 # ====== Full Mode ==========================================================
 if not bootstrapOnly:

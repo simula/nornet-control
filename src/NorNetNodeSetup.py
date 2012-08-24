@@ -93,7 +93,8 @@ def makeSiteConfiguration(fullSiteList, site, v4only):
      error('Tunnelbox address of default provider has not been defined?!')
 
    makeTunnelBoxConfiguration(fullSiteList, site, None, v4only)
-   makeTunnelboxBootstrap(siteIndex, site['site_default_provider_index'], defProvTbIPv4,
+   makeTunnelboxBootstrap(siteIndex, site['site_default_provider_index'],
+                          'xxxxx', defProvTbIPv4,
                           'tunnelbox-' +  site['site_short_name'])
 
    outputFile.close()
@@ -448,7 +449,8 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
    outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
 
 
-def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, configNamePrefix):
+# ###### Generate tunnelbox bootstrap configuration for local network #######
+def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, localAddress, configNamePrefix):
    localSite = {
       'site_index'              : localSiteIndex,
       'site_long_name'          : 'My Site',
@@ -479,6 +481,7 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, con
    log('Making tunnelbox bootstrap for site ' + str(localSiteIndex) + ' ...')
 
 
+   # ====== Non-Central Site tunnelbox ======================================
    if localSiteIndex != NorNet_SiteIndex_Central:
       tunnel         = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, 4)
       remoteNetwork  = makeNorNetIP(remoteProvider['provider_index'], remoteSite['site_index'], 0, 0, 4)
@@ -508,8 +511,22 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, con
                        'metric 5   && \\\n')
       outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
       outputFile.write('fi\n')
+
+   # ====== Central-Site tunnelbox ==========================================
    else:
-      interfaceToPLC = 'ANY'
+      interfaceToPLC = localInterface
+      outputFile.write('\nif [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
+      for version in [ 4, 6 ]:
+         localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+         outputFile.write('   make-address ' + localInterface + ' ' + str(localAddress) + '   && \\\n')
+      outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
+      outputFile.write('fi\n')
+      outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
+      for version in [ 4, 6 ]:
+         localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+         outputFile.write('   remove-address ' + localInterface + ' ' + str(localAddress) + '   && \\\n')
+      outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
+      outputFile.write('fi\n')
 
 
    outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" -o  "$state" = "status" ] ; then\n')
@@ -517,6 +534,10 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localAddress, con
    outputFile.write('   show-tunnel ' + interfaceToPLC + ' ' + \
                     '0.0.0.0 ' + str(getPLCAddress()) + ' ""   && \\\n')
    outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
+   outputFile.write('fi\n\n')
+
+   outputFile.write('\nif [ $_BadResults -gt 0 ] ; then\n')
+   outputFile.write('   return 1\n')
    outputFile.write('fi\n')
 
 
