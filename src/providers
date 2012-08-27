@@ -1,0 +1,37 @@
+
+   localProviderList = getNorNetProvidersForSite(localSite)
+   for localProviderIndex in localProviderList:
+      localProvider = localProviderList[localProviderIndex]
+      for version in [ 4, 6 ]:
+         address = makeNorNetIP(localProviderIndex, localSite['site_index'], localNode, -1, version)
+         outputFile.write(str(address.ip) + '\t' + name + '-' + localProvider['provider_short_name'] + '.' + localSite['site_domain'] + '\n')
+
+         for remoteSiteIndex  in fullSiteList:
+            if remoteSiteIndex == localSite['site_index']:
+               continue
+            remoteSite         = fullSiteList[remoteSiteIndex]
+            remoteProviderList = getNorNetProvidersForSite(remoteSite)
+            for remoteProviderIndex in remoteProviderList:
+               remoteProvider = remoteProviderList[remoteProviderIndex]
+               tunnel         = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
+               outputFile.write(str(tunnel['tunnel_local_inner_address']) + '\t' + \
+                                str.lower(localSite['site_short_name']) + '-' + \
+                                localProvider['provider_short_name'] + '-' + \
+                                str.lower(remoteSite['site_short_name']) + '-' + \
+                                remoteProvider['provider_short_name'] + '\n')
+               outputFile.write(str(tunnel['tunnel_remote_inner_address']) + '\t' + \
+                                str.lower(remoteSite['site_short_name']) + '-' + \
+                                remoteProvider['provider_short_name'] + '-' + \
+                                str.lower(localSite['site_short_name']) + '-' + \
+                                localProvider['provider_short_name'] +
+                                '.' + localSite['site_domain'] + '\n')
+                               
+               
+               #name + '-' + localProvider['provider_short_name'] + '.' + localSite['site_domain'] + '\n')
+               
+               
+      #'tunnel_local_outer_address'  : localOuterAddress,
+      #'tunnel_remote_outer_address' : remoteOuterAddress,
+      #'tunnel_local_inner_address'  : localInnerAddress,
+      #'tunnel_remote_inner_address' : remoteInnerAddress,
+         

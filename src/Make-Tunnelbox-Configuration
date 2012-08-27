@@ -81,3 +81,5 @@ if not bootstrapOnly:
    makeTunnelBoxConfiguration(fullSiteList, localSite, 'tunnelbox', False)
    makeNTPConfiguration(fullSiteList, localSite, 'ntp')
    makeSNMPConfiguration(fullSiteList, fullUserList, localSite, 'snmpd', 'tunnelbox', 'Tunnelbox')
+   makeHostnameConfiguration(fullSiteList, fullUserList, localSite, 'hostname', 'tunnelbox')
+   makeHostsConfiguration(fullSiteList, fullUserList, localSite, NorNet_NodeIndex_Tunnelbox, 'hosts', 'tunnelbox')

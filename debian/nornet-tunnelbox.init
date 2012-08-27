@@ -89,9 +89,12 @@ case "$ACTION" in
    mv updated-config/*-config .
    mv updated-config/*-bootstrap .
    echo "Copying configuration files to /etc ..."
+   cp hostname-config /etc/hostname
+   cp hosts-config /etc/hosts
    cp ntp-config /etc/ntp.config
    cp snmpd-config /etc/snmp/snmpd.conf
    echo "Restarting services ..."
+   hostname `cat /etc/hostname`
    service ntp restart
    service snmpd restart
    echo "Removing temporary directory ..."

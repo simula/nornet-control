@@ -77,7 +77,7 @@ NorNet_MaxProviders = 8
 NorNet_SiteIndex_Central = 1
 
 # NorNet Tunnelbox is always Node 1!
-NorNet_NodeIndex_Tunnelbox  = 1
+NorNet_NodeIndex_Tunnelbox = 1
 
 # NorNet Monitor is Node 2 on the Central Site!
 NorNet_SiteIndex_Monitor  = 1
