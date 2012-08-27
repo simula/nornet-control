@@ -19,10 +19,12 @@ if [ $mode -eq 1 ] ; then
    sudo dpkg -i \
       /var/cache/pbuilder/result/nornet-api*.deb \
       /var/cache/pbuilder/result/nornet-routing*.deb \
+      /var/cache/pbuilder/result/nornet-management*.deb \
       /var/cache/pbuilder/result/nornet-tunnelbox*.deb
 else
    sudo dpkg -i \
       /var/cache/pbuilder/result/nornet-api*.deb \
       /var/cache/pbuilder/result/nornet-routing*.deb \
+      /var/cache/pbuilder/result/nornet-management*.deb \
       /var/cache/pbuilder/result/nornet-node*.deb
 fi
