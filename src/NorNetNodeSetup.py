@@ -518,13 +518,13 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
       outputFile.write('\nif [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
       for version in [ 4, 6 ]:
          localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
-         outputFile.write('   make-address ' + localInterface + ' ' + str(localAddress) + '   && \\\n')
+         outputFile.write('   remove-address ' + localInterface + ' ' + str(localAddress) + '   && \\\n')
       outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
       outputFile.write('fi\n')
       outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
       for version in [ 4, 6 ]:
          localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
-         outputFile.write('   remove-address ' + localInterface + ' ' + str(localAddress) + '   && \\\n')
+         outputFile.write('   make-address ' + localInterface + ' ' + str(localAddress) + '   && \\\n')
       outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
       outputFile.write('fi\n')
 
