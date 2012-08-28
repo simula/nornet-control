@@ -147,7 +147,7 @@ def createTestConfiguration(userName, sliceName):
       i = i + 1
 
    firstAddressIndex = 100
-   names = sorted(['troll', 'nisse', 'katt', 'hund', 'mus', 'sau', 'bil', 'buss'])
+   names = sorted(['troll', 'nisse', 'katt', 'hund', 'mus', 'sau', 'bjoern', 'reinsdyr'])
    i = 0
    for name in names:
       makeNorNetNode(siteEpsilon, name, 1 + i, firstAddressIndex,
