@@ -61,19 +61,19 @@ set -e
 cd "$NORNET_DIRECTORY"
 
 # Load configuration from API config file
-NotNet_LocalNode_Hostname=""
-NotNet_LocalNode_NorNetInterface=""
+NorNet_LocalNode_Hostname=""
+NorNet_LocalNode_NorNetInterface=""
 if [ ! -e ./nornetapi-config ] ; then
    echo >&2 "ERROR: $NORNET_DIRECTORY/nornetapi-config does not exist!"
    exit 0
 fi
 . ./nornetapi-config
-if [ "$NotNet_LocalNode_Hostname" = "" ] ; then
-   echo >&2 "ERROR: NotNet_LocalNode_Hostname is not set!"
+if [ "$NorNet_LocalNode_Hostname" = "" ] ; then
+   echo >&2 "ERROR: NorNet_LocalNode_Hostname is not set!"
    exit 1
 fi
-if [ "$NotNet_LocalNode_NorNetInterface" = "" ] ; then
-   echo >&2 "ERROR: NotNet_LocalNode_NorNetInterface is not set!"
+if [ "$NorNet_LocalNode_NorNetInterface" = "" ] ; then
+   echo >&2 "ERROR: NorNet_LocalNode_NorNetInterface is not set!"
    exit 1
 fi
 
@@ -103,7 +103,7 @@ get-new-configuration-into-temp-directory ()
    rm -rf updated-config
    mkdir updated-config
    cd updated-config
-   Make-Node-Configuration "$NotNet_LocalNode_Hostname" "$NotNet_LocalNode_NorNetInterface" Debian
+   Make-Node-Configuration "$NorNet_LocalNode_Hostname" "$NorNet_LocalNode_NorNetInterface" Debian
    cd ..
 }
 
