@@ -133,6 +133,7 @@ check_and_configure ()
 }
 
 
+# ###### Main program #######################################################
 case "$ACTION" in
   start|stop|restart)
    echo -n "Starting $DESC: "
