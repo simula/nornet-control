@@ -102,9 +102,12 @@ case "$ACTION" in
    mv updated-config/interfaces .
    echo "Copying configuration files to /etc ..."
    cp interfaces /etc/network/interfaces
+   cp hostname-config /etc/hostname
+   cp hosts-config /etc/hosts
    cp ntp-config /etc/ntp.config
    cp snmpd-config /etc/snmp/snmpd.conf
    echo "Restarting services ..."
+   hostname `cat /etc/hostname`
    service networking restart
    service ntp restart
    service snmpd restart
