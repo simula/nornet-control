@@ -22,7 +22,7 @@
 #
 
 ### BEGIN INIT INFO
-# Provides:          nornet-node
+# Provides:          nornet-monitor
 # Required-Start:    $local_fs $remote_fs $network $syslog
 # Required-Stop:     $local_fs $remote_fs $network $syslog
 # Default-Start:     2 3 4 5
@@ -32,11 +32,11 @@
 ### END INIT INFO
 
 
-NAME="nornet-node"
+NAME="nornet-monitor"
 DESC="NorNet Node"
 NORNET_DIRECTORY="/etc/nornet"
 # NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
-LOGFILE="/var/log/nornet-node.log"
+LOGFILE="/var/log/nornet-monitor.log"
 PATH=$NORNET_DIRECTORY:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 ACTION="$1"
 shift
@@ -119,9 +119,9 @@ check_and_configure ()
 {
    get_new_monitor_configuration
    if needs_update nagios-config /etc/nagios3/nornet.cfg $1 ; then
-      echo "Interface configuration has been updated => restarting Nagios service ..."
+      echo "Nagios configuration has been updated => restarting Nagios service ..."
       cp nagios-config /etc/nagios3/nornet.cfg
-      service networking restart
+      service nagios3 reload   # "reload" is sufficient here => faster!
    fi
 }
 
@@ -137,11 +137,11 @@ case "$ACTION" in
   configure)
      rm -f nagios-config
      # All configuration files are gone. The tests below will trigger update.
-     check_and_configure -update-all
+     check_and_configure -update-all >>$LOGFILE
      ;;
   check-and-configure)
      # Compare with existing configuration, update only if necessary.
-     check_and_configure
+     check_and_configure >>$LOGFILE
      ;;
   status)
      ;;
