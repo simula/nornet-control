@@ -114,7 +114,7 @@ def createTestConfiguration(userName, sliceName):
    names = sorted(['akerbrygge', 'bygdoey', 'ekeberg', 'fornebu', 'frogner', 'grefsen', 'majorstuen', 'ullevaal'])
    i = 0
    for name in names:
-      n = makeNorNetNode(siteAlpha, name, 1 + i, firstAddressIndex,
+      n = makeNorNetNode(siteAlpha, name, i + firstAddressIndex,
                          siteAlphaPCUID, 1 + i, 'eth0',
                          'Amiga 5000', 'reinstall')
       i = i + 1
@@ -123,7 +123,7 @@ def createTestConfiguration(userName, sliceName):
    names = sorted(['aaklungen', 'bjordammen', 'maridalsvannet', 'sognsvann', 'svartkulp', 'skjennungen', 'trollvann', 'tryvann'])
    i = 0
    for name in names:
-      makeNorNetNode(siteBeta, name, 1 + i, firstAddressIndex,
+      makeNorNetNode(siteBeta, name, i + firstAddressIndex,
                      siteBetaPCUID, 1 + i, 'eth0',
                      'Amiga 5000', 'reinstall')
       i = i + 1
@@ -132,7 +132,7 @@ def createTestConfiguration(userName, sliceName):
    names = sorted(['altenessen', 'baldeneysee', 'borbeck', 'kettwig', 'kray', 'kupferdreh', 'steele', 'zollvererin'])
    i = 0
    for name in names:
-      makeNorNetNode(siteGamma, name, 1 + i, firstAddressIndex,
+      makeNorNetNode(siteGamma, name, i + firstAddressIndex,
                      siteGammaPCUID, 1 + i, 'eth0',
                      'Amiga 5000', 'reinstall')
       i = i + 1
@@ -141,7 +141,7 @@ def createTestConfiguration(userName, sliceName):
    names = sorted(['roed', 'groenn', 'blaa', 'graa', 'svart', 'hvit', 'orange', 'gull'])
    i = 0
    for name in names:
-      makeNorNetNode(siteDelta, name, 1 + i, firstAddressIndex,
+      makeNorNetNode(siteDelta, name, i + firstAddressIndex,
                      siteDeltaPCUID, 1 + i, 'eth0',
                      'Amiga 5000', 'reinstall')
       i = i + 1
@@ -150,7 +150,7 @@ def createTestConfiguration(userName, sliceName):
    names = sorted(['troll', 'nisse', 'katt', 'hund', 'mus', 'sau', 'bil', 'buss'])
    i = 0
    for name in names:
-      makeNorNetNode(siteEpsilon, name, 1 + i, firstAddressIndex,
+      makeNorNetNode(siteEpsilon, name, i + firstAddressIndex,
                      siteEpsilonPCUID, 1 + i, 'eth0',
                      'Amiga 5000', 'reinstall')
       i = i + 1

@@ -335,19 +335,15 @@ def fetchNorNetNode(nodeNameToFind):
             continue
          nodeIndex = int(getTagValue(nodeTagsList, 'nornet_node_index', '-1'))
          if nodeIndex < 1:
-            error('Node ' + nodeName + ' has invalid NorNet Node Index')
-         nodeAddress = int(getTagValue(nodeTagsList, 'nornet_node_address', '-1'))
-         if nodeAddress < 1:
-            error('Node ' + nodeName + ' has invalid address base')
+            error('Node ' + nodeNameToFind + ' has invalid NorNet Node Index')
          nodeInterface = getTagValue(nodeTagsList, 'nornet_node_interface', '')
          if nodeInterface == '':
-            error('Node ' + nodeName + ' has invalid NorNet interface name')
+            error('Node ' + nodeNameToFind + ' has invalid NorNet interface name')
 
          norNetNode = {
             'node_id'               : nodeID,
             'node_site_id'          : nodeSiteID,
             'node_index'            : nodeIndex,
-            'node_address'          : nodeAddress,
             'node_name'             : node['hostname'],
             'node_nornet_interface' : nodeInterface,
             'node_model'            : node['model'],

@@ -647,7 +647,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
 
 
 # ###### Generate node configuration ########################################
-def makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeAddress, interfaceName,
+def makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, interfaceName,
                                       variant, configNamePrefix):
    log('Making node configuration for ' + nodeName + ' ...')
 
@@ -712,7 +712,7 @@ def makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeAddress,
 
             # ====== Generate IP configuration ==============================
             for version in [ 4, 6 ]:
-               address = makeNorNetIP(providerIndex, siteIndex, nodeAddress,                -1, version)
+               address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  -1, version)
                gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
 
                # ====== Debian /etc/network/interfaces ======================
@@ -795,7 +795,7 @@ def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, config
    if site == None:
       error('Node ' + nodeName + ' does not belong to a NorNet site')
 
-   return(makeNodeConfigurationForGivenNode(fullSiteList, site, node['node_name'], node['node_address'],
+   return(makeNodeConfigurationForGivenNode(fullSiteList, site, node['node_name'], node['node_index'],
                                             interface, variant, configNamePrefix))
 
 
