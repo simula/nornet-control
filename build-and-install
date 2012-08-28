@@ -5,8 +5,10 @@ if [ "$1" = "tunnelbox" ] ; then
    mode=1
 elif [ "$1" = "node" ] ; then
    mode=2
+elif [ "$1" = "monitor" ] ; then
+   mode=3
 else
-   echo >&2 "Usage: $0 [tunnelbox|node]"
+   echo >&2 "Usage: $0 [tunnelbox|node|monitor]"
    exit 1
 fi
 
@@ -21,10 +23,16 @@ if [ $mode -eq 1 ] ; then
       /var/cache/pbuilder/result/nornet-routing*.deb \
       /var/cache/pbuilder/result/nornet-management*.deb \
       /var/cache/pbuilder/result/nornet-tunnelbox*.deb
-else
+elsif [ ¤mode -eq 2 ] ; then
    sudo dpkg -i \
       /var/cache/pbuilder/result/nornet-api*.deb \
       /var/cache/pbuilder/result/nornet-routing*.deb \
       /var/cache/pbuilder/result/nornet-management*.deb \
       /var/cache/pbuilder/result/nornet-node*.deb
+else
+   sudo dpkg -i \
+      /var/cache/pbuilder/result/nornet-api*.deb \
+      /var/cache/pbuilder/result/nornet-routing*.deb \
+      /var/cache/pbuilder/result/nornet-management*.deb \
+      /var/cache/pbuilder/result/nornet-monitor*.deb
 fi
