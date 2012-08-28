@@ -38,6 +38,7 @@ Package: nornet-management
 Architecture: any
 Depends: apt-show-versions,
          colordiff,
+         cron,
          git,
          gpm,
          joe,
@@ -95,12 +96,10 @@ Depends: libapache2-mod-php5,
          nagios3,
          nagios3-doc,
          nornet-api,
+         nornet-node,
          nornet-management-tools,
-         ntp,
          postfix,
          python (>= 2.7),
-         rsplib-services,
-         snmpd,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Monitor
