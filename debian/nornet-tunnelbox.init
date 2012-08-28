@@ -63,6 +63,76 @@ cd "$NORNET_DIRECTORY"
 # Log what is going on ...
 echo "`env LANG=C date --utc +%FT%H:%M:%S`: ###### $0 $@ ######"  >>$LOGFILE
 
+
+# ###### Check whether file needs an update #################################
+needs_update ()
+{
+   if [ "$3" = "-update-all" ] ; then
+      # Force renewal of configuration
+      return 0
+   fi
+   if [ ! -e "$2" ] ; then
+      # Target does not exist => update needed!
+      return 0
+   fi
+   if ! diff -q "$1" "$2" ; then
+      # Target differs => update needed!
+      return 0
+   fi
+   return 1
+}
+
+
+# ###### Get new configuration into temporary directory #####################
+get_new_tunnelbox_configuration ()
+{
+   echo "Getting new configuration ..."
+   rm -rf updated-config
+   mkdir updated-config
+   cd updated-config
+   if ! Make-Tunnelbox-Configuration ; then
+      echo "NOTE: Unable to obtain full configuration, trying BOOTSTRAP instead ..."
+      Make-Tunnelbox-Configuration -bootstrap
+      Tunnelbox-Setup start -bootstrap
+      echo "NOTE: Retrying to obtain full configuration ..."
+      Make-Tunnelbox-Configuration
+   fi
+   cd ..
+   mv updated-config/* .
+   rmdir updated-config
+}
+
+
+# ###### Check configuration for updates and apply if necessary #############
+check_and_configure ()
+{
+   get_new_tunnelbox_configuration
+
+   # FIXME: How to compare configs?
+   Tunnelbox-Setup start
+
+   if needs_update hostname-config /etc/hostname $1 ; then
+      echo "Hostname has been updated => setting new hostname ..."
+      cp hostname-config /etc/hostname
+      hostname `cat /etc/hostname`
+   fi
+   if needs_update hosts-config /etc/hosts $1 ; then
+      echo "Hosts file has been updated => installing it ..."
+      cp hosts-config /etc/hosts
+   fi
+   if needs_update ntp-config /etc/ntp.config $1 ; then
+      echo "NTP configuration has been updated => restarting NTP service ..."
+      cp ntp-config /etc/ntp.config
+      service ntp restart
+   fi
+   if needs_update snmpd-config /etc/snmp/snmpd.conf $1 ; then
+      echo "SNMP configuration has been updated => restarting SNMP service ..."
+      cp snmpd-config /etc/snmp/snmpd.conf
+      service snmpd restart
+   fi
+}
+
+
 case "$ACTION" in
   start|stop|restart)
    echo -n "Starting $DESC: "
@@ -73,42 +143,17 @@ case "$ACTION" in
    Tunnelbox-Setup coldstart $@ >>$LOGFILE
    ;;
   configure)
-  (
-   # ====== Get new configuration into temporary directory ==================
-   echo "Getting new configuration ..."
-   rm -rf updated-config
-   mkdir updated-config
-   cd updated-config
-   Make-Tunnelbox-Configuration -bootstrap
-   Tunnelbox-Setup start -bootstrap
-   Make-Tunnelbox-Configuration
-   Tunnelbox-Setup start
-   # ====== Everything went well, move configuration ========================
-   echo "Overwriting old configuration ..."
-   cd ..
-   rm -f tunnelbox*-config tunnelbox-bootstrap ntp-config snmpd-config
-   mv updated-config/*-config .
-   mv updated-config/*-bootstrap .
-   echo "Copying configuration files to /etc ..."
-   cp hostname-config /etc/hostname
-   cp hosts-config /etc/hosts
-   cp ntp-config /etc/ntp.config
-   cp snmpd-config /etc/snmp/snmpd.conf
-   echo "Restarting services ..."
-   hostname `cat /etc/hostname`
-   service ntp restart
-   service snmpd restart
-   echo "Removing temporary directory ..."
-   rmdir updated-config
-   echo "Done."
-   ) >>$LOGFILE
-   ;;
-  status)
-   Tunnelbox-Setup status
-   ;;
+     rm -f tunnelbox*-config tunnelbox-bootstrap ntp-config snmpd-config
+     # All configuration files are gone. The tests below will trigger update.
+     check_and_configure -update-all >>$LOGFILE
+     ;;
+  check-and-configure)
+     # Compare with existing configuration, update only if necessary.
+     check_and_configure >>$LOGFILE
+     ;;
   *)
    N=/etc/init.d/$NAME
-   echo "Usage: $N {start|stop|restart|force-reload|configure|status}" >&2
+   echo "Usage: $N {start|stop|restart|force-reload|configure|check-and-configure|status}" >&2
    exit 1
    ;;
 esac
