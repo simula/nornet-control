@@ -87,9 +87,9 @@ needs_update ()
 get_new_tunnelbox_configuration ()
 {
    echo "Getting new configuration ..."
-   rm -rf updated-config
-   mkdir updated-config
-   cd updated-config
+   rm -rf updated-tunnelbox-config
+   mkdir updated-tunnelbox-config
+   cd updated-tunnelbox-config
    if ! Make-Tunnelbox-Configuration ; then
       echo "NOTE: Unable to obtain full configuration, trying BOOTSTRAP instead ..."
       Make-Tunnelbox-Configuration -bootstrap
@@ -98,8 +98,8 @@ get_new_tunnelbox_configuration ()
       Make-Tunnelbox-Configuration
    fi
    cd ..
-   mv updated-config/* .
-   rmdir updated-config
+   mv updated-tunnelbox-config/* .
+   rmdir updated-tunnelbox-config
 }
 
 

@@ -101,46 +101,27 @@ needs_update ()
 
 
 # ###### Get new configuration into temporary directory #####################
-get_new_node_configuration ()
+get_new_monitor_configuration ()
 {
    echo "Getting new configuration ..."
-   rm -rf updated-node-config
-   mkdir updated-node-config
-   cd updated-node-config
-   Make-Node-Configuration "$NorNet_LocalNode_Hostname" "$NorNet_LocalNode_NorNetInterface" Debian
+   rm -rf updated-monitor-config
+   mkdir updated-monitor-config
+   cd updated-monitor-config
+   Make-Monitor-Configuration
    cd ..
-   mv updated-node-config/* .
-   rmdir updated-node-config
+   mv updated-monitor-config/* .
+   rmdir updated-monitor-config
 }
 
 
 # ###### Check configuration for updates and apply if necessary #############
 check_and_configure ()
 {
-   get_new_node_configuration
-   if needs_update interfaces /etc/network/interfaces $1 ; then
-      echo "Interface configuration has been updated => restarting networking service ..."
-      cp interfaces /etc/network/interfaces
+   get_new_monitor_configuration
+   if needs_update nagios-config /etc/nagios3/nornet.cfg $1 ; then
+      echo "Interface configuration has been updated => restarting Nagios service ..."
+      cp nagios-config /etc/nagios3/nornet.cfg
       service networking restart
-   fi
-   if needs_update hostname-config /etc/hostname $1 ; then
-      echo "Hostname has been updated => setting new hostname ..."
-      cp hostname-config /etc/hostname
-      hostname `cat /etc/hostname`
-   fi
-   if needs_update hosts-config /etc/hosts $1 ; then
-      echo "Hosts file has been updated => installing it ..."
-      cp hosts-config /etc/hosts
-   fi
-   if needs_update ntp-config /etc/ntp.config $1 ; then
-      echo "NTP configuration has been updated => restarting NTP service ..."
-      cp ntp-config /etc/ntp.config
-      service ntp restart
-   fi
-   if needs_update snmpd-config /etc/snmp/snmpd.conf $1 ; then
-      echo "SNMP configuration has been updated => restarting SNMP service ..."
-      cp snmpd-config /etc/snmp/snmpd.conf
-      service snmpd restart
    fi
 }
 
@@ -154,7 +135,7 @@ case "$ACTION" in
   force-reload)
      ;;
   configure)
-     rm -f interfaces hosts-config hostname-config ntp-config snmpd-config nagios-config
+     rm -f nagios-config
      # All configuration files are gone. The tests below will trigger update.
      check_and_configure -update-all
      ;;
