@@ -37,13 +37,30 @@ distribution = sys.argv[3]
 
 # ====== Get configuration ==================================================
 loginToPLC()
+fullSiteList = fetchNorNetSiteList()
 
 node = fetchNorNetNode(nodeName)
 if node == None:
-   error('Unable to find node ' + nodeName + ' in database!')
+   print('Unable to find node ' + nodeName + ' in database => just using INDEX from configuration file!')
+   if getLocalNodeIndex() == None:
+      error('NorNet_LocalNode_Index has not been set in configuration file!')
+   if getLocalNodeNorNetInterface() == None:
+      error('NorNet_LocalNode_NorNetInterface has not been set in configuration file!')
+   domain = getDomainFromFQDN(nodeName)
+   localSite = getNorNetSiteOfDomain(fullSiteList, domain)
+   if localSite == None:
+      error('Unable to find site for domain ' + domain + ' in database!')
+   node = {
+     'node_id'               : -1,
+     'node_site_id'          : localSite['site_id'],
+     'node_index'            : getLocalNodeIndex(),
+     'node_name'             : nodeName,
+     'node_model'            : 'Amiga 5000',
+     'node_nornet_interface' : getLocalNodeNorNetInterface()
+  }
+print node
 
-fullSiteList = fetchNorNetSiteList()
-localSite    = getNorNetSiteOfNode(fullSiteList, node)
+localSite = getNorNetSiteOfNode(fullSiteList, node)
 if localSite == None:
    error('Unable to find site of node ' + nodeName + ' in database!')
 
