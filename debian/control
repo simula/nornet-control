@@ -90,7 +90,7 @@ Description: NorNet Node Control
  See http://www.nntb.no for details on NorNet!
 
 Package: nornet-monitor
-Architecture: any
+Architecture: all
 Conflicts: nornet-tunnelbox
 Depends: libapache2-mod-php5,
          nagios3,
