@@ -97,3 +97,20 @@ def resolveHostname(name, protocol=0):
       return(IPAddress(result[0][4][0]))
    except:
       return None
+
+
+# ###### Get hostname from FQDN #############################################
+def getHostnameFromFQDN(fqdn):
+   match = re.search('^([a-zA-Z0-9\-]*)\.(.*)', fqdn)
+   if match != None:
+      return match.group(1)
+   else:
+      return fqdn
+
+# ###### Get hostname from FQDN #############################################
+def getDomainFromFQDN(fqdn):
+   match = re.search('^([a-zA-Z0-9\-]*)\.(.*)', fqdn)
+   if match != None:
+      return match.group(2)
+   else:
+      return ''
