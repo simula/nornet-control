@@ -23,7 +23,7 @@ if [ $mode -eq 1 ] ; then
       /var/cache/pbuilder/result/nornet-routing*.deb \
       /var/cache/pbuilder/result/nornet-management*.deb \
       /var/cache/pbuilder/result/nornet-tunnelbox*.deb
-elsif [ ¤mode -eq 2 ] ; then
+elif [ $mode -eq 2 ] ; then
    sudo dpkg -i \
       /var/cache/pbuilder/result/nornet-api*.deb \
       /var/cache/pbuilder/result/nornet-routing*.deb \
