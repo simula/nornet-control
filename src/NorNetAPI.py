@@ -51,6 +51,7 @@ NorNet_LocalSite_DefaultProviderIndex  = None
 NorNet_LocalSite_TBDefaultProviderIPv4 = None
 
 NorNet_LocalNode_Hostname              = None
+NorNet_LocalNode_Index                 = None
 NorNet_LocalNode_NorNetInterface       = None
 
 
@@ -148,6 +149,11 @@ def getLocalTunnelboxDefaultProviderIPv4():
 # ###### Get local node hostname ############################################
 def getLocalNodeHostname():
    return NorNet_LocalNode_Hostname
+
+
+# ###### Get local node index ###############################################
+def getLocalNodeIndex():
+   return NorNet_LocalNode_Index
 
 
 # ###### Get local node hostname ############################################
@@ -368,15 +374,20 @@ def fetchNorNetNodeList():
    return fetchNorNetNode(None)
 
 
+# ###### Get NorNet Site for given domain ###################################
+def getNorNetSiteOfDomain(fullSiteList, domain):
+   for siteIndex in fullSiteList:
+      if domain == fullSiteList[siteIndex]['site_domain']:
+         return fullSiteList[siteIndex]
+   return None
+
+
 # ###### Get NorNet Site of NorNet node #####################################
 def getNorNetSiteOfNode(fullSiteList, node):
-   nodeID = node['node_id']
    siteID = node['node_site_id']
-
    for siteIndex in fullSiteList:
       if siteID == fullSiteList[siteIndex]['site_id']:
          return fullSiteList[siteIndex]
-
    return None
 
 
