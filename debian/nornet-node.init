@@ -84,6 +84,10 @@ echo "`env LANG=C date --utc +%FT%H:%M:%S`: ###### $0 $@ ######"  >>$LOGFILE
 # ###### Check whether file needs an update #################################
 needs_update ()
 {
+   if [ "$3" = "-update-all" ] ; then
+      # Force renewal of configuration
+      return 0
+   fi
    if [ ! -e "$2" ] ; then
       # Target does not exist => update needed!
       return 0
@@ -105,15 +109,8 @@ get_new_configuration_into_temp_directory ()
    cd updated-config
    Make-Node-Configuration "$NorNet_LocalNode_Hostname" "$NorNet_LocalNode_NorNetInterface" Debian
    cd ..
-}
-
-
-# ###### Remove temporary directory #########################################
-remove_temp_directory ()
-{
-   echo "Removing temporary directory ..."
+   mv updated-config/* .
    rmdir updated-config
-   echo "Done."
 }
 
 
@@ -121,31 +118,30 @@ remove_temp_directory ()
 check_and_configure ()
 {
    get_new_configuration_into_temp_directory
-   if needs_update interfaces /etc/network/interfaces ; then
+   if needs_update interfaces /etc/network/interfaces $1 ; then
       echo "Interface configuration has been updated => restarting networking service ..."
       cp interfaces /etc/network/interfaces
       service networking restart
    fi
-   if needs_update hostname-config /etc/hostname ; then
+   if needs_update hostname-config /etc/hostname $1 ; then
       echo "Hostname has been updated => setting new hostname ..."
       cp hostname-config /etc/hostname
       hostname `cat /etc/hostname`
    fi
-   if needs_update hosts-config /etc/hosts ; then
+   if needs_update hosts-config /etc/hosts $1 ; then
       echo "Hosts file has been updated => updating it ..."
       cp hosts-config /etc/hosts
    fi
-   if needs_update ntp-config /etc/ntp.config ; then
+   if needs_update ntp-config /etc/ntp.config $1 ; then
       echo "NTP configuration has been updated => restarting NTP service ..."
       cp ntp-config /etc/ntp.config
       service ntp restart
    fi
-   if needs_update snmpd-config /etc/snmp/snmpd.conf ; then
+   if needs_update snmpd-config /etc/snmp/snmpd.conf $1 ; then
       echo "NTP configuration has been updated => restarting NTP service ..."
       cp snmpd-config /etc/snmp/snmpd.conf
       service snmpd restart
    fi
-   remove_temp_directory
 }
 
 
@@ -158,9 +154,9 @@ case "$ACTION" in
   force-reload)
      ;;
   configure)
-     rm -f interfaces hosts-config hostname-config  ntp-config snmpd-config
+     rm -f interfaces hosts-config hostname-config ntp-config snmpd-config nagios-config
      # All configuration files are gone. The tests below will trigger update.
-     check_and_configure
+     check_and_configure -update-all
      ;;
   check-and-configure)
      # Compare with existing configuration, update only if necessary.

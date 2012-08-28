@@ -56,11 +56,12 @@ def getTagValue(tagList, tagName, default):
 def makeConfigFile(type, configurationName, setInfoVariable):
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
    outputFile.write('# ===== ' + type + ' configuration ===============\n')
-   now = datetime.datetime.utcnow().isoformat()
-   info = str.replace(str.lower(configurationName), '-', '_')
-   outputFile.write('# Generated on ' + now + '\n\n')
-   if setInfoVariable == True:
-      outputFile.write(info + '="' + now + '"\n\n')
+   
+   #now = datetime.datetime.utcnow().isoformat()
+   #info = str.replace(str.lower(configurationName), '-', '_')
+   #outputFile.write('# Generated on ' + now + '\n\n')
+   #if setInfoVariable == True:
+   #   outputFile.write(info + '="' + now + '"\n\n')
 
    return outputFile
 
