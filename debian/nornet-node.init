@@ -80,48 +80,89 @@ fi
 # Log what is going on ...
 echo "`env LANG=C date --utc +%FT%H:%M:%S`: ###### $0 $@ ######"  >>$LOGFILE
 
-case "$ACTION" in
-  start|stop|restart)
-   echo -n "Starting $DESC: "
-   echo "$NAME."
-   ;;
-  force-reload)
-   ;;
-  configure)
-   # ====== Get new configuration into temporary directory ==================
+
+# ###### Check whether file needs an update #################################
+needs-update ()
+{
+   if [ ! -e "$2" ] ; then
+      # Target does not exist => update needed!
+      return 0
+   fi
+   if ! diff -q "$1" "$2" ; then
+      # Target differs => update needed!
+      return 0
+   fi
+   return 1
+}
+
+
+# ###### Get new configuration into temporary directory #####################
+get-new-configuration-into-temp-directory ()
+{
    echo "Getting new configuration ..."
    rm -rf updated-config
    mkdir updated-config
    cd updated-config
    Make-Node-Configuration "$NotNet_LocalNode_Hostname" "$NotNet_LocalNode_NorNetInterface" Debian
-   # ====== Everything went well, move configuration ========================
-   echo "Overwriting old configuration ..."
    cd ..
-   rm -f interfaces ntp-config snmpd-config
-   mv updated-config/*-config .
-   mv updated-config/interfaces .
-   echo "Copying configuration files to /etc ..."
-   cp interfaces /etc/network/interfaces
-   cp hostname-config /etc/hostname
-   cp hosts-config /etc/hosts
-   cp ntp-config /etc/ntp.config
-   cp snmpd-config /etc/snmp/snmpd.conf
-   echo "Restarting services ..."
-   hostname `cat /etc/hostname`
-   service networking restart
-   service ntp restart
-   service snmpd restart
+}
+
+
+# ###### Remove temporary directory #########################################
+remove-temp-directory ()
+{
    echo "Removing temporary directory ..."
    rmdir updated-config
    echo "Done."
-   ;;
+}
+
+
+# ###### Main program #######################################################
+case "$ACTION" in
+  start|stop|restart)
+     echo -n "Starting $DESC: "
+     echo "$NAME."
+     ;;
+  force-reload)
+     ;;
+  configure)
+     rm -f interfaces hosts-config hostname-config  ntp-config snmpd-config
+     # All configuration files are gone. The tests below will trigger update.
+  check-and-configure)
+     get-new-configuration-into-temp-directory
+     if needs-update interfaces /etc/network/interfaces ; then
+        echo "Interface configuration has been updated => restarting networking service ..."
+        cp interfaces /etc/network/interfaces
+        service networking restart
+     fi
+     if needs-update hostname-config /etc/hostname ; then
+        echo "Hostname has been updated => setting new hostname ..."
+        cp hostname-config /etc/hostname
+        hostname `cat /etc/hostname`
+     fi
+     if needs-update hosts-config /etc/hosts ; then
+        echo "Hosts file has been updated => updating it ..."
+        cp hosts-config /etc/hosts
+     fi
+     if needs-update ntp-config /etc/ntp.config ; then
+        echo "NTP configuration has been updated => restarting NTP service ..."
+        cp ntp-config /etc/ntp.config
+        service ntp restart
+     fi
+     if needs-update snmpd-config /etc/snmp/snmpd.conf ; then
+        echo "NTP configuration has been updated => restarting NTP service ..."
+        cp snmpd-config /etc/snmp/snmpd.conf
+        service snmpd restart
+     fi
+     remove-temp-directory
+     ;;
   status)
-   ;;
+     ;;
   *)
-   N=/etc/init.d/$NAME
-   echo "Usage: $N {start|stop|restart|force-reload|configure|status}" >&2
-   exit 1
-   ;;
+     N=/etc/init.d/$NAME
+     echo "Usage: $N {start|stop|restart|force-reload|configure|check-and-configure|status}" >&2
+     exit 1
+     ;;
 esac
 
 exit 0
