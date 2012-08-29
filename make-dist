@@ -30,7 +30,7 @@ mkdir $PACKAGE-$UPSTREAM_VERSION/cron-apt
 cp src/cron-apt/5-install $PACKAGE-$UPSTREAM_VERSION/cron-apt/
 mkdir $PACKAGE-$UPSTREAM_VERSION/grub
 cp src/grub/*_theme $PACKAGE-$UPSTREAM_VERSION/grub/
-cp src/grub/grub $PACKAGE-$UPSTREAM_VERSION/grub/
+cp src/grub/grub-defaults $PACKAGE-$UPSTREAM_VERSION/grub/
 cp src/grub/*.jpeg $PACKAGE-$UPSTREAM_VERSION/grub/
 mkdir $PACKAGE-$UPSTREAM_VERSION/pbuilder
 cp src/pbuilder/pbuilderrc $PACKAGE-$UPSTREAM_VERSION/pbuilder/

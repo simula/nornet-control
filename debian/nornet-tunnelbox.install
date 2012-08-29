@@ -3,4 +3,4 @@ Tunnelbox-Setup                      /usr/bin
 cron-apt/5-install                   /etc/cron-apt/action.d
 grub/07_nornet_tunnelbox_theme       /etc/grub.d
 grub/Splash-Tunnelbox1-1024x768.jpeg /boot
-grub/grub                            /etc/default
+grub/grub-defaults                   /etc/nornet
