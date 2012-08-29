@@ -77,7 +77,7 @@ Description: NorNet Development Tools
 Package: nornet-tunnelbox
 Architecture: any
 Conflicts: nornet-node
-Depends: grub,
+Depends: grub2,
          nmap,
          nornet-api,
          nornet-management,
@@ -96,7 +96,7 @@ Description: NorNet Tunnelbox Control
 Package: nornet-node
 Architecture: any
 Conflicts: nornet-tunnelbox
-Depends: grub,
+Depends: grub2,
          nornet-api,
          nornet-management,
          ntp,
