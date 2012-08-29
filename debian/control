@@ -39,6 +39,7 @@ Architecture: any
 Depends: apt-show-versions,
          colordiff,
          cron,
+         cron-apt,
          git,
          gpm,
          joe,
@@ -64,6 +65,7 @@ Depends: apt-file,
          debhelper,
          devscripts,
          nornet-management,
+         pbuilder,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Development Tools
