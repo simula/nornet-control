@@ -1,1 +1,5 @@
-Make-Node-Configuration   /usr/bin
+Make-Node-Configuration         /usr/bin
+cron-apt/5-install              /etc/cron-apt/action.d
+grub/06_nornet_node_theme       /etc/grub.d
+grub/Splash-Node1-1024x768.jpeg /boot
+grub/grub-defaults                   /etc/nornet
