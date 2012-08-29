@@ -13,13 +13,13 @@ iface eth0 inet static
 	netmask 255.255.255.0
 	gateway 132.252.156.1
 	dns-nameservers 8.8.8.8 8.8.4.4
-        up   service nornet-tunnelbox start -providers uninett
-        down service nornet-tunnelbox stop  -providers uninett
 
 iface eth0 inet6 static
 	address fd55:5555::70
 	netmask 64
 	gateway fd55:5555::1
+        up   service nornet-tunnelbox start -providers uninett
+        down service nornet-tunnelbox stop  -providers uninett
 
 
 # ====== Telenor Interface ================================================
