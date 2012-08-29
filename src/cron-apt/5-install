@@ -1,0 +1,3 @@
+-f install
+dist-upgrade -y -o APT::Get::Show-Upgraded=true
+autoremove -y
