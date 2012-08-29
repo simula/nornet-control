@@ -46,4 +46,25 @@ import re;
    #except:
       #return None
 
-print resolveHostname('ntp1.uio.no', AF_INET6)
+#print resolveHostname('ntp1.uio.no', AF_INET6)
+
+
+# ###### Get hostname from FQDN #############################################
+def getHostnameFromFQDN(fqdn):
+   match = re.search('^([a-zA-Z0-9\-]*)\.(.*)', domain)
+   if match != None:
+      return match.group(1)
+   else:
+      return fqdn
+
+# ###### Get hostname from FQDN #############################################
+def getDomainFromFQDN(fqdn):
+   match = re.search('^([a-zA-Z0-9\-]*)\.(.*)', domain)
+   if match != None:
+      return match.group(2)
+   else:
+      return ''
+
+
+domain = 'xy-ms-123-XY.alpha.site'
+print getHostnameFromFQDN(domain), '\t', getDomainFromFQDN(domain), '\n'

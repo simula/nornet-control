@@ -61,64 +61,114 @@ set -e
 cd "$NORNET_DIRECTORY"
 
 # Load configuration from API config file
-NotNet_LocalNode_Hostname=""
-NotNet_LocalNode_NorNetInterface=""
+NorNet_LocalNode_Hostname=""
+NorNet_LocalNode_NorNetInterface=""
 if [ ! -e ./nornetapi-config ] ; then
    echo >&2 "ERROR: $NORNET_DIRECTORY/nornetapi-config does not exist!"
    exit 0
 fi
 . ./nornetapi-config
-if [ "$NotNet_LocalNode_Hostname" = "" ] ; then
-   echo >&2 "ERROR: NotNet_LocalNode_Hostname is not set!"
+if [ "$NorNet_LocalNode_Hostname" = "" ] ; then
+   echo >&2 "ERROR: NorNet_LocalNode_Hostname is not set!"
    exit 1
 fi
-if [ "$NotNet_LocalNode_NorNetInterface" = "" ] ; then
-   echo >&2 "ERROR: NotNet_LocalNode_NorNetInterface is not set!"
+if [ "$NorNet_LocalNode_NorNetInterface" = "" ] ; then
+   echo >&2 "ERROR: NorNet_LocalNode_NorNetInterface is not set!"
    exit 1
 fi
 
 # Log what is going on ...
 echo "`env LANG=C date --utc +%FT%H:%M:%S`: ###### $0 $@ ######"  >>$LOGFILE
 
+
+# ###### Check whether file needs an update #################################
+needs_update ()
+{
+   if [ "$3" = "-update-all" ] ; then
+      # Force renewal of configuration
+      return 0
+   fi
+   if [ ! -e "$2" ] ; then
+      # Target does not exist => update needed!
+      return 0
+   fi
+   if ! diff -q "$1" "$2" ; then
+      # Target differs => update needed!
+      return 0
+   fi
+   return 1
+}
+
+
+# ###### Get new configuration into temporary directory #####################
+get_new_node_configuration ()
+{
+   echo "Getting new configuration ..."
+   rm -rf updated-node-config
+   mkdir updated-node-config
+   cd updated-node-config
+   Make-Node-Configuration "$NorNet_LocalNode_Hostname" "$NorNet_LocalNode_NorNetInterface" Debian
+   cd ..
+   mv updated-node-config/* .
+   rmdir updated-node-config
+}
+
+
+# ###### Check configuration for updates and apply if necessary #############
+check_and_configure ()
+{
+   get_new_node_configuration
+   if needs_update interfaces /etc/network/interfaces $1 ; then
+      echo "Interface configuration has been updated => restarting networking service ..."
+      cp interfaces /etc/network/interfaces
+      service networking restart
+   fi
+   if needs_update hostname-config /etc/hostname $1 ; then
+      echo "Hostname has been updated => setting new hostname ..."
+      cp hostname-config /etc/hostname
+      hostname `cat /etc/hostname`
+   fi
+   if needs_update hosts-config /etc/hosts $1 ; then
+      echo "Hosts file has been updated => installing it ..."
+      cp hosts-config /etc/hosts
+   fi
+   if needs_update ntp-config /etc/ntp.config $1 ; then
+      echo "NTP configuration has been updated => restarting NTP service ..."
+      cp ntp-config /etc/ntp.config
+      service ntp restart
+   fi
+   if needs_update snmpd-config /etc/snmp/snmpd.conf $1 ; then
+      echo "SNMP configuration has been updated => restarting SNMP service ..."
+      cp snmpd-config /etc/snmp/snmpd.conf
+      service snmpd restart
+   fi
+}
+
+
+# ###### Main program #######################################################
 case "$ACTION" in
   start|stop|restart)
-   echo -n "Starting $DESC: "
-   echo "$NAME."
-   ;;
+     echo -n "Starting $DESC: "
+     echo "$NAME."
+     ;;
   force-reload)
-   ;;
+     ;;
   configure)
-   # ====== Get new configuration into temporary directory ==================
-   echo "Getting new configuration ..."
-   rm -rf updated-config
-   mkdir updated-config
-   cd updated-config
-   Make-Node-Configuration "$NotNet_LocalNode_Hostname" "$NotNet_LocalNode_NorNetInterface" Debian
-   # ====== Everything went well, move configuration ========================
-   echo "Overwriting old configuration ..."
-   cd ..
-   rm -f interfaces ntp-config snmpd-config
-   mv updated-config/*-config .
-   mv updated-config/interfaces .
-   echo "Copying configuration files to /etc ..."
-   cp interfaces /etc/network/interfaces
-   cp ntp-config /etc/ntp.config
-   cp snmpd-config /etc/snmp/snmpd.conf
-   echo "Restarting services ..."
-   service networking restart
-   service ntp restart
-   service snmpd restart
-   echo "Removing temporary directory ..."
-   rmdir updated-config
-   echo "Done."
-   ;;
+     rm -f interfaces hosts-config hostname-config ntp-config snmpd-config nagios-config
+     # All configuration files are gone. The tests below will trigger update.
+     check_and_configure -update-all
+     ;;
+  check-and-configure)
+     # Compare with existing configuration, update only if necessary.
+     check_and_configure
+     ;;
   status)
-   ;;
+     ;;
   *)
-   N=/etc/init.d/$NAME
-   echo "Usage: $N {start|stop|restart|force-reload|configure|status}" >&2
-   exit 1
-   ;;
+     N=/etc/init.d/$NAME
+     echo "Usage: $N {start|stop|restart|force-reload|configure|check-and-configure|status}" >&2
+     exit 1
+     ;;
 esac
 
 exit 0

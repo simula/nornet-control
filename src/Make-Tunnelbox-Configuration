@@ -60,7 +60,7 @@ if ((localDefaultProviderIndex < 1) or (localDefaultProviderIndex > 255)):
 if localTBDefaultProviderIPv4 == None:
    error('NorNet_LocalSite_TBDefaultProviderIPv4 has not been set in configuration file!')
 if localNodeNorNetInterface == None:
-   error('NotNet_LocalNode_NorNetInterface has not been set in configuration file!')
+   error('NorNet_LocalNode_NorNetInterface has not been set in configuration file!')
 
 
 # ====== Bootstrap Mode =====================================================
@@ -81,3 +81,5 @@ if not bootstrapOnly:
    makeTunnelBoxConfiguration(fullSiteList, localSite, 'tunnelbox', False)
    makeNTPConfiguration(fullSiteList, localSite, 'ntp')
    makeSNMPConfiguration(fullSiteList, fullUserList, localSite, 'snmpd', 'tunnelbox', 'Tunnelbox')
+   makeHostnameConfiguration(fullSiteList, fullUserList, localSite, 'hostname', 'tunnelbox')
+   makeHostsConfiguration(fullSiteList, fullUserList, localSite, NorNet_NodeIndex_Tunnelbox, 'hosts', 'tunnelbox')

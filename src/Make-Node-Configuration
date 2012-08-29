@@ -29,26 +29,44 @@ from NorNetNodeSetup import *;
 
 # ====== Handle arguments ===================================================
 if len(sys.argv) < 4:
-   error('Usage: ' + sys.argv[0] + ' NodeName Interface Debian|Fedora')
-nodeName     = sys.argv[1]
+   error('Usage: ' + sys.argv[0] + ' FQDN Interface Debian|Fedora')
+fqdn         = sys.argv[1]
 interface    = sys.argv[2]
 distribution = sys.argv[3]
 
 
 # ====== Get configuration ==================================================
 loginToPLC()
-
-node = fetchNorNetNode(nodeName)
-if node == None:
-   error('Unable to find node ' + nodeName + ' in database!')
-
 fullSiteList = fetchNorNetSiteList()
-localSite    = getNorNetSiteOfNode(fullSiteList, node)
+
+node = fetchNorNetNode(fqdn)
+if node == None:
+   print('Unable to find node ' + fqdn + ' in database => just using INDEX from configuration file!')
+   if getLocalNodeIndex() == None:
+      error('NorNet_LocalNode_Index has not been set in configuration file!')
+   if getLocalNodeNorNetInterface() == None:
+      error('NorNet_LocalNode_NorNetInterface has not been set in configuration file!')
+   domain = getDomainFromFQDN(fqdn)
+   localSite = getNorNetSiteOfDomain(fullSiteList, domain)
+   if localSite == None:
+      error('Unable to find site for domain ' + domain + ' in database!')
+   node = {
+     'node_id'               : -1,
+     'node_site_id'          : localSite['site_id'],
+     'node_index'            : getLocalNodeIndex(),
+     'node_name'             : getHostnameFromFQDN(fqdn),
+     'node_model'            : 'Amiga 6000',
+     'node_nornet_interface' : getLocalNodeNorNetInterface()
+  }
+
+localSite = getNorNetSiteOfNode(fullSiteList, node)
 if localSite == None:
-   error('Unable to find site of node ' + nodeName + ' in database!')
+   error('Unable to find site of node ' + fqdn + ' in database!')
 
 fullUserList = fetchNorNetUserList()
 
 makeNodeConfiguration(fullSiteList, node, interface, distribution, '')
 makeNTPConfiguration(fullSiteList, localSite, 'ntp')
 makeSNMPConfiguration(fullSiteList, fullUserList, localSite, 'snmpd', 'node', 'Node')
+makeHostnameConfiguration(fullSiteList, fullUserList, localSite, 'hostname', getHostnameFromFQDN(fqdn))
+makeHostsConfiguration(fullSiteList, fullUserList, localSite, NorNet_NodeIndex_Tunnelbox, 'hosts', getHostnameFromFQDN(fqdn))

@@ -70,10 +70,9 @@ def makeNorNetTagTypes():
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv4', 'nornet_site_tbp' + str(i) + '_address_ipv4')
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv6', 'nornet_site_tbp' + str(i) + '_address_ipv6')
 
-   makeTagType('node/nornet',      'NorNet Managed Node',         'nornet_is_managed_node')
-   makeTagType('node/nornet',      'NorNet Node Index',           'nornet_node_index')
-   makeTagType('node/nornet',      'NorNet Node Address Index',   'nornet_node_address')
-   makeTagType('node/nornet',      'NorNet Node Interface',       'nornet_node_interface')
+   makeTagType('node/nornet',      'NorNet Managed Node',             'nornet_is_managed_node')
+   makeTagType('node/nornet',      'NorNet Node Index',               'nornet_node_index')
+   makeTagType('node/nornet',      'NorNet Node Interface',           'nornet_node_interface')
 
    makeTagType('interface/nornet', 'NorNet Managed Interface',        'nornet_is_managed_interface')
    makeTagType('interface/nornet', 'NorNet Interface Provider Index', 'nornet_ifprovider_index')
@@ -272,10 +271,9 @@ def updateNorNetInterfaces(node, site, norNetInterface):
    siteDefProviderIndex = int(site['site_default_provider_index'])
    nodeID               = int(node['node_id'])
    nodeIndex            = int(node['node_index'])
-   nodeAddress          = int(node['node_address'])
    nodeName             = node['node_name']
    for providerIndex in providerList:
-      ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeAddress, 0, 4)
+      ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 0, 4)
       newAddressList.append(IPv4Address(ifIPv4.ip))
 
 
@@ -300,7 +298,7 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                   ifHostName     = nodeName.split('.')[0] + '.' + str.lower(siteDomain)
                else:
                   ifHostName     = nodeName.split('.')[0] + '-' + str.lower(providerName) + '.' + str.lower(siteDomain)
-               ifIPv4            = makeNorNetIP(providerIndex, siteIndex, nodeAddress, 0, 4)
+               ifIPv4            = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 0, 4)
                ifGateway         = makeNorNetIP(providerIndex, siteIndex, 1, 0, 4)
                ifProviderNetwork = makeNorNetIP(providerIndex, 0, 0, 0, 4)
                ifAlias           = providerIndex
@@ -359,7 +357,7 @@ def _addOrUpdateNodeTag(nodeID, tagName, tagValue):
 
 
 # ###### Create NorNet node #################################################
-def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
+def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
                    pcuID, pcuPort, norNetInterface,
                    model, bootState):
    nodeHostName = nodeNiceName   # Domain to be added below!
@@ -395,8 +393,6 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex, addressBase,
          error('Unable to add "nornet_is_managed_node" tag to node ' + nodeHostName)
       if _addOrUpdateNodeTag(nodeID, 'nornet_node_index', str(nodeNorNetIndex)) <= 0:
          error('Unable to add "nornet_node_index" tag to node ' + nodeHostName)
-      if _addOrUpdateNodeTag(nodeID, 'nornet_node_address', str(nodeNorNetIndex + addressBase)) <= 0:
-         error('Unable to add "nornet_node_address" tag to node ' + nodeHostName)
       if _addOrUpdateNodeTag(nodeID, 'nornet_node_interface', norNetInterface) <= 0:
          error('Unable to add "nornet_node_interface" tag to node ' + nodeHostName)
 

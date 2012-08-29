@@ -27,7 +27,7 @@
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
 .Nm Make-Node-Configuration
-NodeName
+FQDN
 Interface
 Debian|Fedora
 .\" ###### Description ######################################################
@@ -39,8 +39,8 @@ generates a Linux node configuration.
 .Sh ARGUMENTS
 The following options are available:
 .Bl -tag -width indent
-.It NodeName
-The name of the node (hostname for lookup in database).
+.It FQDN
+The name of the node (fully-qualified domain name for lookup in database).
 .It Interface
 The name of the NorNet interface (usually eth0 or similar).
 .It Debian|Fedora

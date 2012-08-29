@@ -56,11 +56,12 @@ def getTagValue(tagList, tagName, default):
 def makeConfigFile(type, configurationName, setInfoVariable):
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
    outputFile.write('# ===== ' + type + ' configuration ===============\n')
-   now = datetime.datetime.utcnow().isoformat()
-   info = str.replace(str.lower(configurationName), '-', '_')
-   outputFile.write('# Generated on ' + now + '\n\n')
-   if setInfoVariable == True:
-      outputFile.write(info + '="' + now + '"\n\n')
+   
+   #now = datetime.datetime.utcnow().isoformat()
+   #info = str.replace(str.lower(configurationName), '-', '_')
+   #outputFile.write('# Generated on ' + now + '\n\n')
+   #if setInfoVariable == True:
+   #   outputFile.write(info + '="' + now + '"\n\n')
 
    return outputFile
 
@@ -97,3 +98,20 @@ def resolveHostname(name, protocol=0):
       return(IPAddress(result[0][4][0]))
    except:
       return None
+
+
+# ###### Get hostname from FQDN #############################################
+def getHostnameFromFQDN(fqdn):
+   match = re.search('^([a-zA-Z0-9\-]*)\.(.*)', fqdn)
+   if match != None:
+      return match.group(1)
+   else:
+      return fqdn
+
+# ###### Get hostname from FQDN #############################################
+def getDomainFromFQDN(fqdn):
+   match = re.search('^([a-zA-Z0-9\-]*)\.(.*)', fqdn)
+   if match != None:
+      return match.group(2)
+   else:
+      return ''

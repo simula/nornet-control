@@ -51,6 +51,7 @@ NorNet_LocalSite_DefaultProviderIndex  = None
 NorNet_LocalSite_TBDefaultProviderIPv4 = None
 
 NorNet_LocalNode_Hostname              = None
+NorNet_LocalNode_Index                 = None
 NorNet_LocalNode_NorNetInterface       = None
 
 
@@ -148,6 +149,11 @@ def getLocalTunnelboxDefaultProviderIPv4():
 # ###### Get local node hostname ############################################
 def getLocalNodeHostname():
    return NorNet_LocalNode_Hostname
+
+
+# ###### Get local node index ###############################################
+def getLocalNodeIndex():
+   return NorNet_LocalNode_Index
 
 
 # ###### Get local node hostname ############################################
@@ -329,19 +335,15 @@ def fetchNorNetNode(nodeNameToFind):
             continue
          nodeIndex = int(getTagValue(nodeTagsList, 'nornet_node_index', '-1'))
          if nodeIndex < 1:
-            error('Node ' + nodeName + ' has invalid NorNet Node Index')
-         nodeAddress = int(getTagValue(nodeTagsList, 'nornet_node_address', '-1'))
-         if nodeAddress < 1:
-            error('Node ' + nodeName + ' has invalid address base')
+            error('Node ' + nodeNameToFind + ' has invalid NorNet Node Index')
          nodeInterface = getTagValue(nodeTagsList, 'nornet_node_interface', '')
          if nodeInterface == '':
-            error('Node ' + nodeName + ' has invalid NorNet interface name')
+            error('Node ' + nodeNameToFind + ' has invalid NorNet interface name')
 
          norNetNode = {
             'node_id'               : nodeID,
             'node_site_id'          : nodeSiteID,
             'node_index'            : nodeIndex,
-            'node_address'          : nodeAddress,
             'node_name'             : node['hostname'],
             'node_nornet_interface' : nodeInterface,
             'node_model'            : node['model'],
@@ -368,15 +370,20 @@ def fetchNorNetNodeList():
    return fetchNorNetNode(None)
 
 
+# ###### Get NorNet Site for given domain ###################################
+def getNorNetSiteOfDomain(fullSiteList, domain):
+   for siteIndex in fullSiteList:
+      if domain == fullSiteList[siteIndex]['site_domain']:
+         return fullSiteList[siteIndex]
+   return None
+
+
 # ###### Get NorNet Site of NorNet node #####################################
 def getNorNetSiteOfNode(fullSiteList, node):
-   nodeID = node['node_id']
    siteID = node['node_site_id']
-
    for siteIndex in fullSiteList:
       if siteID == fullSiteList[siteIndex]['site_id']:
          return fullSiteList[siteIndex]
-
    return None
 
 

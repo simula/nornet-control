@@ -22,21 +22,21 @@
 #
 
 ### BEGIN INIT INFO
-# Provides:          nornet-tunnelbox
+# Provides:          nornet-monitor
 # Required-Start:    $local_fs $remote_fs $network $syslog
 # Required-Stop:     $local_fs $remote_fs $network $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: NorNet Tunnelbox
-# Description:       This service provides a NorNet Tunnelbox.
+# Short-Description: NorNet Node
+# Description:       This service provides a NorNet Node.
 ### END INIT INFO
 
 
-NAME="nornet-tunnelbox"
-DESC="NorNet Tunnelbox"
+NAME="nornet-monitor"
+DESC="NorNet Node"
 NORNET_DIRECTORY="/etc/nornet"
 # NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
-LOGFILE="/var/log/nornet-tunnelbox.log"
+LOGFILE="/var/log/nornet-monitor.log"
 PATH=$NORNET_DIRECTORY:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 ACTION="$1"
 shift
@@ -59,6 +59,23 @@ fi
 set -e
 
 cd "$NORNET_DIRECTORY"
+
+# Load configuration from API config file
+NorNet_LocalNode_Hostname=""
+NorNet_LocalNode_NorNetInterface=""
+if [ ! -e ./nornetapi-config ] ; then
+   echo >&2 "ERROR: $NORNET_DIRECTORY/nornetapi-config does not exist!"
+   exit 0
+fi
+. ./nornetapi-config
+if [ "$NorNet_LocalNode_Hostname" = "" ] ; then
+   echo >&2 "ERROR: NorNet_LocalNode_Hostname is not set!"
+   exit 1
+fi
+if [ "$NorNet_LocalNode_NorNetInterface" = "" ] ; then
+   echo >&2 "ERROR: NorNet_LocalNode_NorNetInterface is not set!"
+   exit 1
+fi
 
 # Log what is going on ...
 echo "`env LANG=C date --utc +%FT%H:%M:%S`: ###### $0 $@ ######"  >>$LOGFILE
@@ -84,51 +101,27 @@ needs_update ()
 
 
 # ###### Get new configuration into temporary directory #####################
-get_new_tunnelbox_configuration ()
+get_new_monitor_configuration ()
 {
    echo "Getting new configuration ..."
-   rm -rf updated-tunnelbox-config
-   mkdir updated-tunnelbox-config
-   cd updated-tunnelbox-config
-   if ! Make-Tunnelbox-Configuration ; then
-      echo "NOTE: Unable to obtain full configuration, trying BOOTSTRAP instead ..."
-      Make-Tunnelbox-Configuration -bootstrap
-      Tunnelbox-Setup start -bootstrap
-      echo "NOTE: Retrying to obtain full configuration ..."
-      Make-Tunnelbox-Configuration
-   fi
+   rm -rf updated-monitor-config
+   mkdir updated-monitor-config
+   cd updated-monitor-config
+   Make-Monitor-Configuration
    cd ..
-   mv updated-tunnelbox-config/* .
-   rmdir updated-tunnelbox-config
+   mv updated-monitor-config/* .
+   rmdir updated-monitor-config
 }
 
 
 # ###### Check configuration for updates and apply if necessary #############
 check_and_configure ()
 {
-   get_new_tunnelbox_configuration
-
-   # FIXME: How to compare configs?
-   Tunnelbox-Setup start
-
-   if needs_update hostname-config /etc/hostname $1 ; then
-      echo "Hostname has been updated => setting new hostname ..."
-      cp hostname-config /etc/hostname
-      hostname `cat /etc/hostname`
-   fi
-   if needs_update hosts-config /etc/hosts $1 ; then
-      echo "Hosts file has been updated => installing it ..."
-      cp hosts-config /etc/hosts
-   fi
-   if needs_update ntp-config /etc/ntp.config $1 ; then
-      echo "NTP configuration has been updated => restarting NTP service ..."
-      cp ntp-config /etc/ntp.config
-      service ntp restart
-   fi
-   if needs_update snmpd-config /etc/snmp/snmpd.conf $1 ; then
-      echo "SNMP configuration has been updated => restarting SNMP service ..."
-      cp snmpd-config /etc/snmp/snmpd.conf
-      service snmpd restart
+   get_new_monitor_configuration
+   if needs_update nagios-config /etc/nagios3/nornet.cfg $1 ; then
+      echo "Nagios configuration has been updated => restarting Nagios service ..."
+      cp nagios-config /etc/nagios3/nornet.cfg
+      service nagios3 reload   # "reload" is sufficient here => faster!
    fi
 }
 
@@ -136,15 +129,13 @@ check_and_configure ()
 # ###### Main program #######################################################
 case "$ACTION" in
   start|stop|restart)
-   echo -n "Starting $DESC: "
-   Tunnelbox-Setup "$ACTION" $@ >>$LOGFILE && \
-   echo "$NAME."
-   ;;
+     echo -n "Starting $DESC: "
+     echo "$NAME."
+     ;;
   force-reload)
-   Tunnelbox-Setup coldstart $@ >>$LOGFILE
-   ;;
+     ;;
   configure)
-     rm -f tunnelbox*-config tunnelbox-bootstrap ntp-config snmpd-config
+     rm -f nagios-config
      # All configuration files are gone. The tests below will trigger update.
      check_and_configure -update-all >>$LOGFILE
      ;;
@@ -152,11 +143,13 @@ case "$ACTION" in
      # Compare with existing configuration, update only if necessary.
      check_and_configure >>$LOGFILE
      ;;
+  status)
+     ;;
   *)
-   N=/etc/init.d/$NAME
-   echo "Usage: $N {start|stop|restart|force-reload|configure|check-and-configure|status}" >&2
-   exit 1
-   ;;
+     N=/etc/init.d/$NAME
+     echo "Usage: $N {start|stop|restart|force-reload|configure|check-and-configure|status}" >&2
+     exit 1
+     ;;
 esac
 
 exit 0

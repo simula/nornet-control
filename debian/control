@@ -38,6 +38,7 @@ Package: nornet-management
 Architecture: any
 Depends: apt-show-versions,
          colordiff,
+         cron,
          git,
          gpm,
          joe,
@@ -71,6 +72,24 @@ Description: NorNet Development Tools
  .
  See http://www.nntb.no for details on NorNet!
 
+Package: nornet-tunnelbox
+Architecture: any
+Conflicts: nornet-node
+Depends: nmap,
+         nornet-api,
+         nornet-management,
+         nornet-routing,
+         ntp,
+         python (>= 2.7),
+         snmpd,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Tunnelbox Control
+ This package contains the scripts to configure the tunnelboxes of NorNet
+ sites.
+ .
+ See http://www.nntb.no for details on NorNet!
+
 Package: nornet-node
 Architecture: any
 Conflicts: nornet-tunnelbox
@@ -89,40 +108,19 @@ Description: NorNet Node Control
  See http://www.nntb.no for details on NorNet!
 
 Package: nornet-monitor
-Architecture: any
+Architecture: all
 Conflicts: nornet-tunnelbox
 Depends: libapache2-mod-php5,
          nagios3,
          nagios3-doc,
-         nornet-api,
          nornet-management-tools,
-         ntp,
+         nornet-node,
          postfix,
          python (>= 2.7),
-         rsplib-services,
-         snmpd,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Monitor
  This package contains the scripts to configure a generic monitoring station
  on a NorNet central site.
- .
- See http://www.nntb.no for details on NorNet!
-
-Package: nornet-tunnelbox
-Architecture: any
-Conflicts: nornet-node
-Depends: nmap,
-         nornet-api,
-         nornet-management,
-         nornet-routing,
-         ntp,
-         python (>= 2.7),
-         snmpd,
-         ${misc:Depends},
-         ${shlibs:Depends}
-Description: NorNet Tunnelbox Control
- This package contains the scripts to configure the tunnelboxes of NorNet
- sites.
  .
  See http://www.nntb.no for details on NorNet!

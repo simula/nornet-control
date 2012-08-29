@@ -1,23 +1,26 @@
 #!/bin/bash
 
-. ./Routing-Setup
+echo "TEST" >a
+echo "TES2T" >b
 
 
-set -e
-
-
-x=1
-
-test1 ()
+# ###### Check whether file needs an update #################################
+needs-update ()
 {
-   echo "<TEST-A>"
-   return 0
-}
-
-test2 ()
-{
-   echo "<TEST-BAD>"
+   if [ ! -e "$2" ] ; then
+      # Target does not exist => update needed!
+      return 0
+   fi
+   if ! diff -q "$1" "$2" ; then
+      # Target differs => update needed!
+      return 0
+   fi
    return 1
 }
 
-test1 && test2 && test1 && log-result $RESULT_GOOD || log-result $RESULT_BAD
+
+if needs-update a a ; then
+   echo "differ"
+else
+   echo "not differ"
+fi

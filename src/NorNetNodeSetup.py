@@ -647,7 +647,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
 
 
 # ###### Generate node configuration ########################################
-def makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeAddress, interfaceName,
+def makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, interfaceName,
                                       variant, configNamePrefix):
    log('Making node configuration for ' + nodeName + ' ...')
 
@@ -712,7 +712,7 @@ def makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeAddress,
 
             # ====== Generate IP configuration ==============================
             for version in [ 4, 6 ]:
-               address = makeNorNetIP(providerIndex, siteIndex, nodeAddress,                -1, version)
+               address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  -1, version)
                gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
 
                # ====== Debian /etc/network/interfaces ======================
@@ -795,7 +795,7 @@ def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, config
    if site == None:
       error('Node ' + nodeName + ' does not belong to a NorNet site')
 
-   return(makeNodeConfigurationForGivenNode(fullSiteList, site, node['node_name'], node['node_address'],
+   return(makeNodeConfigurationForGivenNode(fullSiteList, site, node['node_name'], node['node_index'],
                                             interface, variant, configNamePrefix))
 
 
@@ -971,4 +971,36 @@ def makeNagiosConfiguration(fullSiteList, configNamePrefix):
                outputFile.write('   parents       ' + centralSite['site_long_name'] + '\n')
             outputFile.write('}\n\n')
 
+   outputFile.close()
+
+   
+# ###### Generate hostname configuration ####################################
+def makeHostnameConfiguration(fullSiteList, fullUserList, localSite, configNamePrefix, name):
+   if configNamePrefix == None:
+      configNamePrefix = 'hostname-' + localSite['site_short_name']
+   configurationName = configNamePrefix + '-config'
+   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+   outputFile.write(name + '.' + localSite['site_domain'] + '\n')
+   outputFile.close()
+   
+   
+# ###### Generate hosts configuration #######################################
+def makeHostsConfiguration(fullSiteList, fullUserList, localSite, localNode, configNamePrefix, name):
+   if configNamePrefix == None:
+      configNamePrefix = 'hosts-' + localSite['site_domain']
+   configurationName = configNamePrefix + '-config'
+   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+   
+   _writeAutoConfigInformation(outputFile)
+   
+   outputFile.write('127.0.0.1\tlocalhost\n')
+   outputFile.write('127.0.0.1\t' + name + '\n')
+   outputFile.write('127.0.0.1\t' + name + '.' + localSite['site_domain'] + '\n\n')
+
+   outputFile.write('::1\tip6-localhost ip6-loopback\n')
+   outputFile.write('fe00::0\tip6-localnet\n')
+   outputFile.write('ff00::0\tip6-mcastprefix\n')
+   outputFile.write('ff02::1\tip6-allnodes\n')
+   outputFile.write('ff02::2\tip6-allrouters\n\n')
+   
    outputFile.close()
