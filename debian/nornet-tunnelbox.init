@@ -109,7 +109,7 @@ check_and_configure ()
    get_new_tunnelbox_configuration
 
    # FIXME: How to compare configs?
-   Tunnelbox-Setup start
+   Tunnelbox-Setup start || true
 
    if needs_update hostname-config /etc/hostname $1 ; then
       echo "Hostname has been updated => setting new hostname ..."
