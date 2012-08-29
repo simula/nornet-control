@@ -1,2 +1,5 @@
-Make-Tunnelbox-Configuration   /usr/bin
-Tunnelbox-Setup                /usr/bin
+Make-Tunnelbox-Configuration         /usr/bin
+Tunnelbox-Setup                      /usr/bin
+grub/06_nornet_tunnelbox_theme       /etc/grub.d
+grub/Splash-Tunnelbox1-1024x768.jpeg /boot
+grub/grub                            /etc/default
