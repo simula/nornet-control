@@ -74,28 +74,8 @@ Description: NorNet Development Tools
  .
  See http://www.nntb.no for details on NorNet!
 
-Package: nornet-tunnelbox
-Architecture: any
-Conflicts: nornet-node
-Depends: grub2,
-         nmap,
-         nornet-api,
-         nornet-management,
-         nornet-routing,
-         ntp,
-         python (>= 2.7),
-         snmpd,
-         ${misc:Depends},
-         ${shlibs:Depends}
-Description: NorNet Tunnelbox Control
- This package contains the scripts to configure the tunnelboxes of NorNet
- sites.
- .
- See http://www.nntb.no for details on NorNet!
-
 Package: nornet-node
 Architecture: any
-Conflicts: nornet-tunnelbox
 Depends: grub2,
          nornet-api,
          nornet-management,
@@ -111,9 +91,27 @@ Description: NorNet Node Control
  .
  See http://www.nntb.no for details on NorNet!
 
+Package: nornet-tunnelbox
+Architecture: any
+Depends: grub2,
+         nmap,
+         nornet-api,
+         nornet-management,
+         nornet-node,
+         nornet-routing,
+         ntp,
+         python (>= 2.7),
+         snmpd,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Tunnelbox Control
+ This package contains the scripts to configure the tunnelboxes of NorNet
+ sites.
+ .
+ See http://www.nntb.no for details on NorNet!
+
 Package: nornet-monitor
 Architecture: all
-Conflicts: nornet-tunnelbox
 Depends: libapache2-mod-php5,
          nagios3,
          nagios3-doc,

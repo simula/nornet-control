@@ -110,41 +110,22 @@ check_and_configure ()
 
    # FIXME: How to compare configs?
    Tunnelbox-Setup start || true
-
-   if needs_update hostname-config /etc/hostname $1 ; then
-      echo "Hostname has been updated => setting new hostname ..."
-      cp hostname-config /etc/hostname
-      hostname `cat /etc/hostname`
-   fi
-   if needs_update hosts-config /etc/hosts $1 ; then
-      echo "Hosts file has been updated => installing it ..."
-      cp hosts-config /etc/hosts
-   fi
-   if needs_update ntp-config /etc/ntp.config $1 ; then
-      echo "NTP configuration has been updated => restarting NTP service ..."
-      cp ntp-config /etc/ntp.config
-      service ntp restart
-   fi
-   if needs_update snmpd-config /etc/snmp/snmpd.conf $1 ; then
-      echo "SNMP configuration has been updated => restarting SNMP service ..."
-      cp snmpd-config /etc/snmp/snmpd.conf
-      service snmpd restart
-   fi
 }
 
 
 # ###### Main program #######################################################
 case "$ACTION" in
   start|stop|restart)
-   echo -n "Starting $DESC: "
-   Tunnelbox-Setup "$ACTION" $@ >>$LOGFILE && \
-   echo "$NAME."
+   #echo -n "Starting $DESC: "
+   #Tunnelbox-Setup "$ACTION" $@ >>$LOGFILE && \
+   #echo "$NAME."
+   echo "****** Start/Stop via ifupdown -- See /etc/network/interfaces! ******"
    ;;
   force-reload)
    Tunnelbox-Setup coldstart $@ >>$LOGFILE
    ;;
   configure)
-     rm -f tunnelbox*-config tunnelbox-bootstrap ntp-config snmpd-config
+     rm -f tunnelbox*-config tunnelbox-bootstrap
      # All configuration files are gone. The tests below will trigger update.
      check_and_configure -update-all >>$LOGFILE
      ;;

@@ -1,4 +1,4 @@
-nornet (0.1.0~alpha1.21-1ubuntu1) quantal; urgency=high
+nornet (0.1.0~alpha1.22-1ubuntu1) quantal; urgency=high
 
   * Initial Debian release (Closes: #xxxxxx).
   * Initial Ubuntu release (LP: #xxxxxx).
