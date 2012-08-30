@@ -9,7 +9,7 @@ include('./config.php');
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <title>NagMap</title>
+    <title>NorNet Kontrollsenteret på Fornebu</title>
     <?php include("style.php"); ?>
     <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
     <script type="text/javascript">
@@ -56,7 +56,10 @@ var grey_blank = new google.maps.MarkerImage(
     echo '
       </script>
       </head>
-      <body style="margin:0px; padding:0px;" onload="initialize()">
+      <body style="margin:0px; padding:0px;" onload="initialize()" bgcolor="#ff0000">
+        <! -- BEGIN NorNet -->
+       <large><strong><center>NorNet Kontrollsenteret</center></strong></large>
+        <! -- END NorNet -->
         <div id="map_canvas" style="width:100%; height:100%"></div>
       </body>
     ';
