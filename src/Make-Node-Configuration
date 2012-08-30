@@ -66,7 +66,8 @@ if localSite == None:
 fullUserList = fetchNorNetUserList()
 
 makeNodeConfiguration(fullSiteList, node, interface, distribution, '')
-makeNTPConfiguration(fullSiteList, localSite, 'ntp')
-makeSNMPConfiguration(fullSiteList, fullUserList, localSite, 'snmpd', 'node', 'Node')
+
 makeHostnameConfiguration(fullSiteList, fullUserList, localSite, 'hostname', getHostnameFromFQDN(fqdn))
 makeHostsConfiguration(fullSiteList, fullUserList, localSite, NorNet_NodeIndex_Tunnelbox, 'hosts', getHostnameFromFQDN(fqdn))
+makeNTPConfiguration(fullSiteList, localSite, 'ntp')
+makeSNMPConfiguration(fullSiteList, fullUserList, localSite, 'snmpd', 'node', 'Node')
