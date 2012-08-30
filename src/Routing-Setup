@@ -55,7 +55,7 @@ _BadResults=0
 log-result ()
 {
    local result="$1"
-   local line=128
+   local line=120
 
    if [ "$result" = "$RESULT_GOOD" ] ; then
       echo -en "\x1b[${line}G\x1b[32mOK\x1b[0m\n"
