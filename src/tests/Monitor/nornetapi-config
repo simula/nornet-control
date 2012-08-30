@@ -22,7 +22,7 @@ NorNetPLC_Password='nntb-root'
 NorNet_LocalNode_Hostname='monitor.simula.nornet'
 
 # Node Index; needed,if if the node is not a PLC-managed node:
-# This is also the case for tunnelboxes!
+# This is also the case for tunnelboxes (in this case: always 1)!
 NorNet_LocalNode_Index="7"
 
 # This is the name of the NorNet interface (with the site's provider
