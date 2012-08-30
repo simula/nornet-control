@@ -154,7 +154,7 @@ case "$ACTION" in
   force-reload)
      ;;
   configure)
-     rm -f interfaces hosts-config hostname-config ntp-config snmpd-config nagios-config
+     rm -f interfaces hosts-config hostname-config ntp-config snmpd-config
      # All configuration files are gone. The tests below will trigger update.
      check_and_configure -update-all
      ;;
