@@ -149,19 +149,19 @@ check_and_configure ()
 # ###### Main program #######################################################
 case "$ACTION" in
   start|stop|restart)
-     echo -n "Starting $DESC: "
-     echo "$NAME."
+     #echo -n "Starting $DESC: "
+     #echo "$NAME."
      ;;
   force-reload)
      ;;
   configure)
      rm -f interfaces hosts-config hostname-config ntp-config snmpd-config
      # All configuration files are gone. The tests below will trigger update.
-     check_and_configure -update-all
+     check_and_configure -update-all >>$LOGFILE
      ;;
   check-and-configure)
      # Compare with existing configuration, update only if necessary.
-     check_and_configure
+     check_and_configure >>$LOGFILE
      ;;
   status)
      ;;

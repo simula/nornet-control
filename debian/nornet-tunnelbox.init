@@ -67,15 +67,16 @@ echo "`env LANG=C date --utc +%FT%H:%M:%S`: ###### $0 $@ ######"  >>$LOGFILE
 # ###### Check whether file needs an update #################################
 needs_update ()
 {
-   if [ "$3" = "-update-all" ] ; then
+   if [ ! -e "$1" ] ; then
+      # There is nothing to update
+      return 1
+   elif [ "$3" = "-update-all" ] ; then
       # Force renewal of configuration
       return 0
-   fi
-   if [ ! -e "$2" ] ; then
+   elif [ ! -e "$2" ] ; then
       # Target does not exist => update needed!
       return 0
-   fi
-   if ! diff -q "$1" "$2" ; then
+   elif ! diff -q "$1" "$2" ; then
       # Target differs => update needed!
       return 0
    fi
