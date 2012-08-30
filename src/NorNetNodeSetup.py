@@ -786,9 +786,8 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
 
 # ###### Generate node configuration ########################################
 def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, configNamePrefix):
-   if node['node_index'] == NorNet_NodeIndex_Tunnelbox:
-      print('TUNNELBOX!\n')
-      return True
+   if int(node['node_index']) == NorNet_NodeIndex_Tunnelbox:
+      return True 
   
    if interfaceOverride == None:
       interface = node['node_nornet_interface']
