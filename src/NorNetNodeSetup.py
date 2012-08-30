@@ -647,7 +647,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
 
 
 # ###### Generate node configuration ########################################
-def makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, interfaceName,
+def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, interfaceName,
                                       variant, configNamePrefix):
    log('Making node configuration for ' + nodeName + ' ...')
 
@@ -786,6 +786,10 @@ def makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, i
 
 # ###### Generate node configuration ########################################
 def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, configNamePrefix):
+   if node['node_index'] == NorNet_NodeIndex_Tunnelbox:
+      print('TUNNELBOX!\n')
+      return True
+  
    if interfaceOverride == None:
       interface = node['node_nornet_interface']
    else:
@@ -795,8 +799,8 @@ def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, config
    if site == None:
       error('Node ' + nodeName + ' does not belong to a NorNet site')
 
-   return(makeNodeConfigurationForGivenNode(fullSiteList, site, node['node_name'], node['node_index'],
-                                            interface, variant, configNamePrefix))
+   return(_makeNodeConfigurationForGivenNode(fullSiteList, site, node['node_name'], node['node_index'],
+                                             interface, variant, configNamePrefix))
 
 
 # ###### Write Automatic Configuration Information ##########################
