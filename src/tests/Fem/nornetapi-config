@@ -17,6 +17,19 @@ NorNetPLC_User='root@localhost.localdomain'
 NorNetPLC_Password='nntb-root'
 
 
+# ###### NorNet Node configuration ##########################################
+# This is the full hostname of the node:
+NorNet_LocalNode_Hostname='tunnelbox.trondheim.site'
+
+# Node Index; needed,if if the node is not a PLC-managed node:
+# This is also the case for tunnelboxes (in this case: always 1)!
+NorNet_LocalNode_Index="1"
+
+# This is the name of the NorNet interface (with the site's provider
+# networks) of the node:
+NorNet_LocalNode_NorNetInterface='eth0'
+
+
 # ###### NorNet Tunnelbox configuration #####################################
 # NOTE:
 # The following information is only necessary to bootstrap a tunnelbox on the
@@ -30,12 +43,3 @@ NorNet_LocalSite_DefaultProviderIndex=1
 
 # This is the local tunnelbox's outer IPv4 address for the default provider:
 NorNet_LocalSite_TBDefaultProviderIPv4='132.252.156.74'
-
-
-# ###### NorNet Node configuration ##########################################
-# This is the full hostname of the node:
-NorNet_LocalNode_Hostname='tunnelbox.trondheim.site'
-
-# This is the name of the NorNet interface (with the site's provider
-# networks) of the node:
-NorNet_LocalNode_NorNetInterface='eth0'
