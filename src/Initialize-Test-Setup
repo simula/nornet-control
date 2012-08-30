@@ -77,40 +77,40 @@ def createTestConfiguration(userName, sliceName, action):
                                      'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 
       siteBetaNorNetIndex = 2
-      siteBeta  = makeNorNetSite('Universitetet i Stavanger', 'UiS', 'uis', 'http://www.stavanger.nornet', 'stavanger.nornet',
+      siteBeta  = makeNorNetSite('Universitetet i Stavanger', 'UiS', 'uis', 'http://www.uis.nornet', 'uis.nornet',
                                  siteBetaNorNetIndex, 'Stavanger',  'Rogaland', 'Norge', 'NO', 58.940799,5.703049, [
                                     [ 'Uninett', 'eth0', IPv4Address('132.252.156.71'), IPv6Address('fd55:5555::71') ],
                                     [ 'Telenor', 'eth0', IPv4Address('169.254.100.71'), IPv6Address('::') ]
                                  ], 'Uninett', 'eth0', dnsServers, ntpServers)
-      siteBetaPCUID = makeNorNetPCU(siteBeta, 'pcu', 'stavanger.nornet', IPv4Address('132.252.156.3'),
+      siteBetaPCUID = makeNorNetPCU(siteBeta, 'pcu', 'uis.nornet', IPv4Address('132.252.156.3'),
                                     'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 
       siteGammaNorNetIndex = 3
-      siteGamma = makeNorNetSite('Universität Duisburg-Essen', 'UDE', 'ude', 'http://www.essen.nornet', 'essen.nornet',
+      siteGamma = makeNorNetSite('Universität Duisburg-Essen', 'UDE', 'ude', 'http://www.ude.nornet', 'ude.nornet',
                                  siteGammaNorNetIndex, 'Essen',  'Nordrhein-Westfalen', 'Deutschland', 'DE', 51.476144, 7.011656, [
                                     [ 'Uninett', 'eth0', IPv4Address('132.252.156.72'), IPv6Address('::') ],
                                     [ 'Telenor', 'eth0', IPv4Address('169.254.100.72'), IPv6Address('::') ],
                                     [ 'Deutsches Forschungsnetz', 'eth0', IPv4Address('172.31.255.72'),  IPv6Address('::') ]
                                  ], 'Deutsches Forschungsnetz', 'eth0', dnsServers, ntpServers)
-      siteGammaPCUID = makeNorNetPCU(siteGamma, 'pcu', 'essen.nornet', IPv4Address('132.252.156.4'),
+      siteGammaPCUID = makeNorNetPCU(siteGamma, 'pcu', 'ude.nornet', IPv4Address('132.252.156.4'),
                                      'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 
       siteDeltaNorNetIndex = 4
-      siteDelta = makeNorNetSite('Universitetet i Tromsø', 'UiT', 'uit', 'http://www.tromsoe.nornet', 'tromsoe.nornet',
+      siteDelta = makeNorNetSite('Universitetet i Tromsø', 'UiT', 'uit', 'http://www.uit.nornet', 'uit.nornet',
                                  siteDeltaNorNetIndex, 'Tromsø',  'Troms', 'Norge', 'NO', 69.681897,18.980541, [
                                     [ 'Uninett', 'eth0', IPv4Address('132.252.156.73'), IPv6Address('::') ],
                                     [ 'Telenor', 'eth0', IPv4Address('169.254.100.73'), IPv6Address('::') ]
                                  ], 'Uninett', 'eth0', dnsServers, ntpServers)
-      siteDeltaPCUID = makeNorNetPCU(siteDelta, 'pcu', 'tromsoe.nornet', IPv4Address('132.252.156.5'),
+      siteDeltaPCUID = makeNorNetPCU(siteDelta, 'pcu', 'uit.nornet', IPv4Address('132.252.156.5'),
                                      'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 
       siteEpsilonNorNetIndex = 5
-      siteEpsilon = makeNorNetSite('Universitetet i Trondheim', 'NTNU', 'ntnu', 'http://www.trondheim.nornet', 'trondheim.nornet',
+      siteEpsilon = makeNorNetSite('Universitetet i Trondheim', 'NTNU', 'ntnu', 'http://www.ntnu.nornet', 'ntnu.nornet',
                                  siteEpsilonNorNetIndex, 'Trondheim',  'Sør-Trøndelag', 'Norge', 'NO', 63.419034,10.4022, [
                                     [ 'Uninett', 'eth0', IPv4Address('132.252.156.74'), IPv6Address('::') ],
                                     [ 'Telenor', 'eth0', IPv4Address('169.254.100.74'), IPv6Address('::') ]
                                  ], 'Uninett', 'eth0', dnsServers, ntpServers)
-      siteEpsilonPCUID = makeNorNetPCU(siteEpsilon, 'pcu', 'trondheim.nornet', IPv4Address('132.252.156.6'),
+      siteEpsilonPCUID = makeNorNetPCU(siteEpsilon, 'pcu', 'ntnu.nornet', IPv4Address('132.252.156.6'),
                                      'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
 
       # ====== Add test nodes ==================================================

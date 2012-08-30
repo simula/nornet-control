@@ -19,11 +19,7 @@ NorNetPLC_Password='nntb-root'
 
 # ###### NorNet Node configuration ##########################################
 # This is the full hostname of the node:
-NorNet_LocalNode_Hostname='tunnelbox.trondheim.site'
-
-# Node Index; needed,if if the node is not a PLC-managed node:
-# This is also the case for tunnelboxes (in this case: always 1)!
-NorNet_LocalNode_Index="1"
+NorNet_LocalNode_Hostname='trondheim.ntnu.nornet'
 
 # This is the name of the NorNet interface (with the site's provider
 # networks) of the node:
