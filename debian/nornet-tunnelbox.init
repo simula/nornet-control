@@ -116,10 +116,9 @@ check_and_configure ()
 # ###### Main program #######################################################
 case "$ACTION" in
   start|stop|restart)
-   #echo -n "Starting $DESC: "
-   #Tunnelbox-Setup "$ACTION" $@ >>$LOGFILE && \
-   #echo "$NAME."
-   echo "****** Start/Stop via ifupdown -- See /etc/network/interfaces! ******"
+   echo -n "Starting $DESC: "
+   Tunnelbox-Setup "$ACTION" $@ >>$LOGFILE && \
+   echo "$NAME."
    ;;
   force-reload)
    Tunnelbox-Setup coldstart $@ >>$LOGFILE

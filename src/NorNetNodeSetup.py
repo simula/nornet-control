@@ -602,7 +602,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
    outputFile.write('tbc_success=1\n')
    i = 0
    for provider in providerList:
-      outputFile.write('if [[ "$selectedProviders" =~ ^$|^' + provider + '$|^' + provider + ',|,' + provider + ',|,' + provider + '$ ]] ; then\n')
+      outputFile.write('if [[ "$selectedProviders" =~ ^\\*$|^' + provider + '$|^' + provider + ',|,' + provider + ',|,' + provider + '$ ]] ; then\n')
       outputFile.write('   echo "Configuring ' + configFileList[i] + '"\n')
       outputFile.write('   . ./' + configFileList[i] + ' || tbc_success=0\n')
       outputFile.write('else\n')
