@@ -1,0 +1,16 @@
+#!/bin/sh
+
+echo "--- IFCONFIG ---"
+ifconfig | grep "inet " | sort
+
+echo "--- ip addr ---"
+ip addr show | grep "inet " | sort
+ip -6 addr show | grep "inet6 " | sort
+
+echo "--- ip route ---"
+ip route show | sort
+ip -6 route show | sort
+
+echo "--- ip rule ---"
+ip rule show | sort
+ip -6 rule show | sort
