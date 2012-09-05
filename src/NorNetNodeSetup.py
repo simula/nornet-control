@@ -562,9 +562,9 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
    outputFile.write('if [ "$selectedProviders" == "" ] ; then\n')
    outputFile.write('   if [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
    outputFile.write('      log "Tearing down local networks ..."\n')
-   outputFile.write('      log-action "Turning off IP forwarding ..."\n')
-   outputFile.write('      sysctl -q net.ipv4.ip_forward=0   && \\\n')
-   outputFile.write('      sysctl -q net.ipv6.conf.all.forwarding=0   && \\\n')
+   # outputFile.write('      log-action "Turning off IP forwarding ..."\n')
+   # outputFile.write('      sysctl -q net.ipv4.ip_forward=0   && \\\n')
+   # outputFile.write('      sysctl -q net.ipv6.conf.all.forwarding=0   && \\\n')
    outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'stop', localInterface,
@@ -615,10 +615,10 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
    outputFile.write('\nif [ "$selectedProviders" == "" ] ; then\n')
    outputFile.write('   if [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
    outputFile.write('      log "Setting up local networks ..."\n')
-   outputFile.write('      log-action "Turning on IP forwarding..."\n')
-   outputFile.write('      sysctl -q net.ipv4.ip_forward=1 && \\\n')
-   outputFile.write('      sysctl -q net.ipv6.conf.all.forwarding=1 && \\\n')
+   outputFile.write('      log-action "Turning on ECN ..."\n')
    outputFile.write('      sysctl -q net.ipv4.tcp_ecn=1 && \\\n')
+   # outputFile.write('      sysctl -q net.ipv4.ip_forward=1 && \\\n')
+   # outputFile.write('      sysctl -q net.ipv6.conf.all.forwarding=1 && \\\n')
    outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
 
    for localProviderIndex in localProviderList:
@@ -787,8 +787,8 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
 # ###### Generate node configuration ########################################
 def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, configNamePrefix):
    if int(node['node_index']) == NorNet_NodeIndex_Tunnelbox:
-      return True 
-  
+      return True
+
    if interfaceOverride == None:
       interface = node['node_nornet_interface']
    else:
@@ -976,7 +976,7 @@ def makeNagiosConfiguration(fullSiteList, configNamePrefix):
 
    outputFile.close()
 
-   
+
 # ###### Generate hostname configuration ####################################
 def makeHostnameConfiguration(fullSiteList, fullUserList, localSite, configNamePrefix, name):
    if configNamePrefix == None:
@@ -985,17 +985,17 @@ def makeHostnameConfiguration(fullSiteList, fullUserList, localSite, configNameP
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
    outputFile.write(name + '.' + localSite['site_domain'] + '\n')
    outputFile.close()
-   
-   
+
+
 # ###### Generate hosts configuration #######################################
 def makeHostsConfiguration(fullSiteList, fullUserList, localSite, localNode, configNamePrefix, name):
    if configNamePrefix == None:
       configNamePrefix = 'hosts-' + localSite['site_domain']
    configurationName = configNamePrefix + '-config'
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
-   
+
    _writeAutoConfigInformation(outputFile)
-   
+
    outputFile.write('127.0.0.1\tlocalhost\n')
    outputFile.write('127.0.0.1\t' + name + '\n')
    outputFile.write('127.0.0.1\t' + name + '.' + localSite['site_domain'] + '\n\n')
@@ -1005,5 +1005,5 @@ def makeHostsConfiguration(fullSiteList, fullUserList, localSite, localNode, con
    outputFile.write('ff00::0\tip6-mcastprefix\n')
    outputFile.write('ff02::1\tip6-allnodes\n')
    outputFile.write('ff02::2\tip6-allrouters\n\n')
-   
+
    outputFile.close()
