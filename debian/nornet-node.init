@@ -135,7 +135,7 @@ check_and_configure ()
    fi
    if needs_update ntp-config /etc/ntp.conf $1 ; then
       echo "NTP configuration has been updated => restarting NTP service ..."
-      cp ntp-config /etc/ntp.config
+      cp ntp-config /etc/ntp.conf
       service ntp restart
    fi
    if needs_update snmpd-config /etc/snmp/snmpd.conf $1 ; then
