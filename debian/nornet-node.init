@@ -133,7 +133,7 @@ check_and_configure ()
       echo "Hosts file has been updated => installing it ..."
       cp hosts-config /etc/hosts
    fi
-   if needs_update ntp-config /etc/ntp.config $1 ; then
+   if needs_update ntp-config /etc/ntp.conf $1 ; then
       echo "NTP configuration has been updated => restarting NTP service ..."
       cp ntp-config /etc/ntp.config
       service ntp restart

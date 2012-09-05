@@ -129,10 +129,12 @@ case "$ACTION" in
      # All configuration files are gone. The tests below will trigger update.
      check_and_configure -update-all >>$LOGFILE
      Tunnelbox-Setup start -providers "*" >>$LOGFILE
+     service nornet-node configure
      ;;
   check-and-configure)
      # Compare with existing configuration, update only if necessary.
      check_and_configure >>$LOGFILE
+     service nornet-node check-and-configure
      ;;
   *)
    N=/etc/init.d/$NAME
