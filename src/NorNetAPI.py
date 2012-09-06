@@ -322,7 +322,7 @@ def fetchNorNetNode(nodeNameToFind):
       filter = { 'hostname':  nodeNameToFind }
 
    try:
-      norNetNodeList = dict([])
+      norNetNodeList = []
       fullNodeList   = plc_server.GetNodes(plc_authentication, filter,
                                            ['node_id', 'site_id', 'hostname', 'model', 'boot_state'])
       for node in fullNodeList:
@@ -354,7 +354,7 @@ def fetchNorNetNode(nodeNameToFind):
          if nodeNameToFind != None:
             return(norNetNode)
 
-         norNetNodeList[nodeIndex] = norNetNode
+         norNetNodeList.append(norNetNode)
 
       if len(norNetNodeList) == 0:
          return None

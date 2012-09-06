@@ -238,8 +238,7 @@ def makeSite(site, norNetInformation, dnsServers, ntpServers):
 # ###### Make test setup ####################################################
 def getBootISOs(isoDirectory):
    allNorNetNodes = fetchNorNetNodeList()
-   for nodeIndex in allNorNetNodes:
-      node   = allNorNetNodes[nodeIndex]
+   for node in allNorNetNodes:
       nodeID = node['node_id']
       print 'N=',nodeID
    #getPLCServer().AddSliceToNodes(getPLCAuthentication(), sliceID, nodeIDs)
@@ -362,8 +361,7 @@ if sliceID != 0:
    # ====== Add slice to all nodes ==========================================
    nodeIDs = []
    allNorNetNodes = fetchNorNetNodeList()
-   for nodeIndex in allNorNetNodes:
-      node = allNorNetNodes[nodeIndex]
+   for node in allNorNetNodes:
       nodeIDs.append(int(node['node_id']))
    getPLCServer().AddSliceToNodes(getPLCAuthentication(), sliceID, nodeIDs)
 
