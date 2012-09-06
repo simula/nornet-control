@@ -235,36 +235,14 @@ def makeSite(site, norNetInformation, dnsServers, ntpServers):
       makeNorNetNode(newSite, node[2], address, newPCU, port, 'eth0', 'Amiga 5000', 'reinstall')
 
 
-
 # ###### Make test setup ####################################################
-def createTestConfiguration(userName, sliceName, action):
-
-   # ====== Add person to all test sites ====================================
-   personID = lookupPersonID(userName)
-   if personID == 0:
-      error('Unable to find user ' + userName + '\n')
-   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'user', personID)
-   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'pi',   personID)
-   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'tech', personID)
-
-   allNorNetSites = fetchNorNetSiteList()
-   for siteIndex in allNorNetSites:
-      site = allNorNetSites[siteIndex]
-      getPLCServer().AddPersonToSite(getPLCAuthentication(), personID, site['site_id'])
-      if site['site_id'] == NorNet_SiteIndex_Central:
-         getPLCServer().SetPersonPrimarySite(getPLCAuthentication(), personID, site['site_id'])
-
-
-   # ====== Add slice to all nodes ==========================================
-   sliceID = lookupSliceID(sliceName)
-   if sliceID == 0:
-      error('Unable to find slice ' + sliceName + '\n')
-   nodeIDs = []
+def getBootISOs(isoDirectory):
    allNorNetNodes = fetchNorNetNodeList()
    for nodeIndex in allNorNetNodes:
-      node = allNorNetNodes[nodeIndex]
-      nodeIDs.append(int(node['node_id']))
-   getPLCServer().AddSliceToNodes(getPLCAuthentication(), sliceID, nodeIDs)
+      node   = allNorNetNodes[nodeIndex]
+      nodeID = node['node_id']
+      print 'N=',nodeID
+   #getPLCServer().AddSliceToNodes(getPLCAuthentication(), sliceID, nodeIDs)
 
 
 # ###### Perform site action ################################################
@@ -330,33 +308,36 @@ if str.upper(sys.argv[2]) == 'ALL':
 else:
    i = 2
 
-userID  = 0
-sliceID = 0
+userID       = 0
+sliceID      = 0
+isoDirectory = None
 while i < len(sys.argv):
-   match = re.search('^--user=(.*)', sys.argv[i])
-   if match != None:
-      userName = match.group(1)
+   match = re.search('^--([a-z]*)=(.*)', sys.argv[i])
+   if ((match != None) and (match.group(1) == 'user')):
+      userName = match.group(2)
       userID   = lookupPersonID(userName)
       if userID == 0:
          error('Unable to find user ' + userName + '\n')
 
+   elif ((match != None) and (match.group(1) == 'slice')):
+      sliceName = match.group(2)
+      sliceID   = lookupSliceID(sliceName)
+      if sliceID == 0:
+         error('Unable to find slice ' + sliceName + '\n')
+
+   elif ((match != None) and (match.group(1) == 'isodirectory')):
+      isoDirectory = match.group(2)
+
    else:
-      match = re.search('^--slice=(.*)', sys.argv[i])
-      if match != None:
-         sliceName = match.group(1)
-         sliceID   = lookupSliceID(sliceName)
-         if sliceID == 0:
-            error('Unable to find slice ' + sliceName + '\n')
-      else:
-         found = None
-         for site in norNetSetup:
-            if ((site['site_long_name'] == sys.argv[i]) or
-                (site['site_short_name'] == sys.argv[i])):
-               found = site
-               break
-         if found == None:
-            error('Site "' + sys.argv[i] + '" is not defined!')
-         performAction(action, found)
+      found = None
+      for site in norNetSetup:
+         if ((site['site_long_name'] == sys.argv[i]) or
+             (site['site_short_name'] == sys.argv[i])):
+            found = site
+            break
+      if found == None:
+         error('Site "' + sys.argv[i] + '" is not defined!')
+      performAction(action, found)
 
    i = i + 1
 
@@ -385,3 +366,7 @@ if sliceID != 0:
       node = allNorNetNodes[nodeIndex]
       nodeIDs.append(int(node['node_id']))
    getPLCServer().AddSliceToNodes(getPLCAuthentication(), sliceID, nodeIDs)
+
+# ====== Get boot ISOs ======================================================
+if isoDirectory != None:
+   getBootISOs(isoDirectory)
