@@ -240,7 +240,7 @@ def getBootISOs(isoDirectory):
    allNorNetNodes = fetchNorNetNodeList()
    for node in allNorNetNodes:
       nodeID = node['node_id']
-      print 'N=',nodeID
+      #print 'N=',nodeID
    #getPLCServer().AddSliceToNodes(getPLCAuthentication(), sliceID, nodeIDs)
 
 
