@@ -109,6 +109,10 @@ check_and_configure ()
 {
    get_new_tunnelbox_configuration
 
+   # Permanently enable forwarding in sysctl configuration.
+   sed -e "s/^[ \t]*[#]*[ \t]*net.ipv4.ip_forward[ \t]*=.*$/net.ipv4.ip_forward=1/" \
+       -e "s/^[ \t]*[#]*[ \t]*net.ipv6.conf.all.forwarding[ \t]*=.*$/net.ipv6.conf.all.forwarding=1/" </etc/sysctl.conf >/etc/nornet/sysctl-config && mv /etc/nornet/sysctl-config /etc/sysctl.conf
+
    # FIXME: How to compare configs?
    Tunnelbox-Setup start || true
 }
@@ -129,10 +133,12 @@ case "$ACTION" in
      # All configuration files are gone. The tests below will trigger update.
      check_and_configure -update-all >>$LOGFILE
      Tunnelbox-Setup start -providers "*" >>$LOGFILE
+     service nornet-node configure
      ;;
   check-and-configure)
      # Compare with existing configuration, update only if necessary.
      check_and_configure >>$LOGFILE
+     service nornet-node check-and-configure
      ;;
   *)
    N=/etc/init.d/$NAME

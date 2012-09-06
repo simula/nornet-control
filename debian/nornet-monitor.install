@@ -1,1 +1,3 @@
-Make-Monitor-Configuration   /usr/bin
+Make-Monitor-Configuration         /usr/bin
+grub/08_nornet_monitor_theme       /etc/grub.d
+grub/Splash-Monitor1-1024x768.jpeg /boot

@@ -28,8 +28,6 @@ auto eth1
 iface eth1 inet static
    address 169.254.100.70
    netmask 255.255.255.0
-   # !!! gateway 169.254.100.1
-   # !!! dns-nameservers 8.8.8.8 8.8.4.4
    up   service nornet-tunnelbox start -providers telenor
    down service nornet-tunnelbox stop  -providers telenor
 
@@ -40,5 +38,3 @@ auto eth2
 iface eth2 inet static
    address 172.31.255.70
    netmask 255.255.255.0
-   # !!! gateway 172.31.255.1
-   # !!! dns-nameservers 8.8.8.8 8.8.4.4
