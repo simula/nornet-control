@@ -112,7 +112,9 @@ Description: NorNet Tunnelbox Control
 
 Package: nornet-monitor
 Architecture: all
-Depends: libapache2-mod-php5,
+Conflicts: tntnet
+Depends: apache2,
+         libapache2-mod-php5,
          nagios3,
          nagios3-doc,
          nornet-management-tools,
