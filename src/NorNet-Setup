@@ -19,6 +19,7 @@
 #
 # Contact: dreibh@simula.no
 
+import re;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
@@ -284,8 +285,10 @@ if len(sys.argv) > 2:
       action = 'renew'
    elif sys.argv[1] == 'remove':
       action = 'remove'
+   elif sys.argv[1] == 'manage':
+      action = 'manage'
 if action == '':
-   error('Usage: ' + sys.argv[0] + ' add|renew|remove Site|ALL [Site] ...')
+   error('Usage: ' + sys.argv[0] + ' add|renew|remove|manage Site|ALL [Site] ... [--user=user_name] [--slice=slice_name]')
 
 
 log('***** Welcome to NorNet! *****')
@@ -317,23 +320,68 @@ if ((action == 'add') or (action == 'renew')):
 
 
 # ====== Remove or create sites =============================================
-if str.upper(sys.argv[2]) != 'ALL':
-   i = 2
-   while i < len(sys.argv):
-      found = None
-      for site in norNetSetup:
-         if ((site['site_long_name'] == sys.argv[i]) or
-             (site['site_short_name'] == sys.argv[i])):
-            found = site
-            break
-      if found == None:
-         error('Site "' + sys.argv[i] + '" is not defined!')
-      performAction(action, found)
-      i = i + 1
-
-else:
+if str.upper(sys.argv[2]) == 'ALL':
    if ((action == 'remove') or (action == 'renew')):
       removeSite(None)
    if action != 'remove':
       for site in norNetSetup:
          performAction(action, site)
+   i = 3
+else:
+   i = 2
+
+userID  = 0
+sliceID = 0
+while i < len(sys.argv):
+   match = re.search('^--user=(.*)', sys.argv[i])
+   if match != None:
+      userName = match.group(1)
+      userID   = lookupPersonID(userName)
+      if userID == 0:
+         error('Unable to find user ' + userName + '\n')
+
+   else:
+      match = re.search('^--slice=(.*)', sys.argv[i])
+      if match != None:
+         sliceName = match.group(1)
+         sliceID   = lookupSliceID(sliceName)
+         if sliceID == 0:
+            error('Unable to find slice ' + sliceName + '\n')
+      else:
+         found = None
+         for site in norNetSetup:
+            if ((site['site_long_name'] == sys.argv[i]) or
+                (site['site_short_name'] == sys.argv[i])):
+               found = site
+               break
+         if found == None:
+            error('Site "' + sys.argv[i] + '" is not defined!')
+         performAction(action, found)
+
+   i = i + 1
+
+
+# ====== Set user ===========================================================
+if userID != 0:
+   log('Setting PI for all sites ...')
+   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'user', userID)
+   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'pi',   userID)
+   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'tech', userID)
+   # ====== Add user to all sites ===========================================
+   allNorNetSites = fetchNorNetSiteList()
+   for siteIndex in allNorNetSites:
+      site = allNorNetSites[siteIndex]
+      getPLCServer().AddPersonToSite(getPLCAuthentication(), userID, site['site_id'])
+      if site['site_id'] == NorNet_SiteIndex_Central:
+         getPLCServer().SetPersonPrimarySite(getPLCAuthentication(), userID, site['site_id'])
+
+# ====== Set slice ==========================================================
+if sliceID != 0:
+   log('Adding slice to all nodes ...')
+   # ====== Add slice to all nodes ==========================================
+   nodeIDs = []
+   allNorNetNodes = fetchNorNetNodeList()
+   for nodeIndex in allNorNetNodes:
+      node = allNorNetNodes[nodeIndex]
+      nodeIDs.append(int(node['node_id']))
+   getPLCServer().AddSliceToNodes(getPLCAuthentication(), sliceID, nodeIDs)

@@ -1,26 +1,13 @@
-#!/bin/bash
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
-echo "TEST" >a
-echo "TES2T" >b
+import sys;
+import re;
 
+i = 1
+while i < len(sys.argv):
+   match = re.search('^--user=(.*)', sys.argv[i])
+   if match != None:
+      print 'USR=',match.group(1)
 
-# ###### Check whether file needs an update #################################
-needs-update ()
-{
-   if [ ! -e "$2" ] ; then
-      # Target does not exist => update needed!
-      return 0
-   fi
-   if ! diff -q "$1" "$2" ; then
-      # Target differs => update needed!
-      return 0
-   fi
-   return 1
-}
-
-
-if needs-update a a ; then
-   echo "differ"
-else
-   echo "not differ"
-fi
+   i = i + 1
