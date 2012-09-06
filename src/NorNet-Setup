@@ -56,24 +56,151 @@ norNetSetup = [
       [ 105, 6, 'grefsen'    ],
       [ 106, 7, 'majorstuen' ],
       [ 107, 8, 'ullevaal'   ]
+   ] },
+
+ { 'site_index'        : 2,
+   'site_long_name'    : 'Universitetet i Stavanger',
+   'site_short_name'   : 'UiS',
+   'site_url'          : 'http://www.uis.nornet',
+   'site_domain'       : 'uis.nornet',
+   'site_city'         : 'Stavanger',
+   'site_province'     : 'Rogaland',
+   'site_country'      : 'Norge',
+   'site_country_code' : 'NO',
+   'site_latitude'     : 58.940799,
+   'site_longitude'    : 5.703049,
+   'site_pcu'          : [ IPv4Address('132.252.156.3'), 'pcu-root', 'a-secret-password' ],
+   'site_providers' : [
+      [ 'Uninett', 'eth0', IPv4Address('132.252.156.71'), IPv6Address('fd55:5555::71') ],
+      [ 'Telenor', 'eth1', IPv4Address('169.254.100.71'), IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'aaklungen'      ],
+      [ 101, 2, 'bjordammen'     ],
+      [ 102, 3, 'maridalsvannet' ],
+      [ 103, 4, 'sognsvann'      ],
+      [ 104, 5, 'svartkulp'      ],
+      [ 105, 6, 'skjennungen'    ],
+      [ 106, 7, 'trollvann'      ],
+      [ 107, 8, 'tryvann'        ]
+   ] },
+
+ { 'site_index'        : 3,
+   'site_long_name'    : 'Universität Duisburg-Essen',
+   'site_short_name'   : 'UDE',
+   'site_url'          : 'http://www.ude.nornet',
+   'site_domain'       : 'ude.nornet',
+   'site_city'         : 'Essen',
+   'site_province'     : 'Nordrhein-Westfalen',
+   'site_country'      : 'Deutschland',
+   'site_country_code' : 'DE',
+   'site_latitude'     : 51.476144,
+   'site_longitude'    : 7.011656,
+   'site_pcu'          : [ IPv4Address('132.252.156.4'), 'pcu-root', 'a-secret-password' ],
+   'site_providers' : [
+      [ 'Deutsches Forschungsnetz', 'eth0', IPv4Address('172.31.255.72'),  IPv6Address('::') ],
+      [ 'Uninett',                  'eth1', IPv4Address('132.252.156.72'), IPv6Address('fd55:5555::72') ],
+      [ 'Telenor',                  'eth2', IPv4Address('169.254.100.72'), IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'altenessen'  ],
+      [ 101, 2, 'baldeneysee' ],
+      [ 102, 3, 'borbeck'     ],
+      [ 103, 4, 'kettwig'     ],
+      [ 104, 5, 'kray'        ],
+      [ 105, 6, 'kupferdreh'  ],
+      [ 106, 7, 'steele'      ],
+      [ 107, 8, 'zollverein'  ]
+   ] },
+
+ { 'site_index'        : 4,
+   'site_long_name'    : 'Universitetet i Tromsø',
+   'site_short_name'   : 'UiT',
+   'site_url'          : 'http://www.uit.nornet',
+   'site_domain'       : 'uit.nornet',
+   'site_city'         : 'Tromsø',
+   'site_province'     : 'Troms',
+   'site_country'      : 'Norge',
+   'site_country_code' : 'NO',
+   'site_latitude'     : 69.681897,
+   'site_longitude'    : 18.980541,
+   'site_pcu'          : [ IPv4Address('132.252.156.5'), 'pcu-root', 'a-secret-password' ],
+   'site_providers' : [
+      [ 'Uninett', 'eth0', IPv4Address('132.252.156.73'), IPv6Address('fd55:5555::73') ],
+      [ 'Telenor', 'eth1', IPv4Address('169.254.100.73'), IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'roed'   ],
+      [ 101, 2, 'groenn' ],
+      [ 102, 3, 'blaa'   ],
+      [ 103, 4, 'graa'   ],
+      [ 104, 5, 'svart'  ],
+      [ 105, 6, 'hvit'   ],
+      [ 106, 7, 'orange' ],
+      [ 107, 8, 'gull'   ]
+   ] },
+
+ { 'site_index'        : 5,
+   'site_long_name'    : 'Universitetet i Trondheim',
+   'site_short_name'   : 'NTNU',
+   'site_url'          : 'http://www.ntnu.nornet',
+   'site_domain'       : 'ntnu.nornet',
+   'site_city'         : 'Trondheim',
+   'site_province'     : 'Sør-Trøndelag',
+   'site_country'      : 'Norge',
+   'site_country_code' : 'NO',
+   'site_latitude'     : 63.419034,
+   'site_longitude'    : 10.4022,
+   'site_pcu'          : [ IPv4Address('132.252.156.6'), 'pcu-root', 'a-secret-password' ],
+   'site_providers' : [
+      [ 'Uninett', 'eth0', IPv4Address('132.252.156.74'), IPv6Address('fd55:5555::74') ],
+      [ 'Telenor', 'eth1', IPv4Address('169.254.100.74'), IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'troll'    ],
+      [ 101, 2, 'nisse'    ],
+      [ 102, 3, 'katt'     ],
+      [ 103, 4, 'hund'     ],
+      [ 104, 5, 'mus'      ],
+      [ 105, 6, 'sau'      ],
+      [ 106, 7, 'bjoern'   ],
+      [ 107, 8, 'reinsdyr' ]
+   ] },
+
+ { 'site_index'        : 6,
+   'site_long_name'    : 'Universitetet på Svalbard',
+   'site_short_name'   : 'UNIS',
+   'site_url'          : 'http://www.unis.nornet',
+   'site_domain'       : 'unis.nornet',
+   'site_city'         : 'Longyearbyen',
+   'site_province'     : 'Svalbard',
+   'site_country'      : 'Norge',
+   'site_country_code' : 'NO',
+   'site_latitude'     : 78.222972,
+   'site_longitude'    : 15.648537,
+   'site_pcu'          : [ IPv4Address('132.252.156.7'), 'pcu-root', 'a-secret-password' ],
+   'site_providers' : [
+      [ 'Uninett', 'eth0', IPv4Address('132.252.156.75'), IPv6Address('fd55:5555::75') ],
+      [ 'Telenor', 'eth1', IPv4Address('169.254.100.75'), IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'isbjoern' ],
+      [ 101, 2, 'hval'     ]
    ] }
+
 ]
-
-
-      #siteAlphaNorNetIndex = 1
-      #siteAlpha = makeNorNetSite('Simula Research Laboratory', 'SRL', 'srl', 'http://www.simula.nornet', 'simula.nornet',
-                                 #siteAlphaNorNetIndex, 'Fornebu', 'Østlandet', 'Norge', 'NO', 59.895933, 10.627635, [
-                                    #[ 'Uninett', 'eth0', IPv4Address('132.252.156.70'), IPv6Address('fd55:5555::70') ],
-                                    #[ 'Telenor', 'eth0', IPv4Address('169.254.100.70'), IPv6Address('::') ]
-                                 #], 'Uninett', 'eth0', dnsServers, ntpServers)
-      #siteAlphaPCUID = makeNorNetPCU(siteAlpha, 'pcu', 'simula.nornet', IPv4Address('132.252.156.2'),
-                                     #'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
-
 
 
 # ###### Remove site ########################################################
 def removeSite(site):
-   removeNorNetSite(site['site_long_name'])
+   if site == None:
+      fullSiteList = fetchNorNetSiteList()
+      if fullSiteList != None:
+         for siteIndex in fullSiteList:
+            site = fullSiteList[siteIndex]
+            removeNorNetSite(site['site_long_name'])
+   else:
+      removeNorNetSite(site['site_long_name'])
 
 
 # ###### Add site ###########################################################
@@ -110,120 +237,6 @@ def makeSite(site, norNetInformation, dnsServers, ntpServers):
 
 # ###### Make test setup ####################################################
 def createTestConfiguration(userName, sliceName, action):
-   if (action == 'create-all' or action == 'renew-all'):
-      siteAlphaNorNetIndex = 1
-      siteAlpha = makeNorNetSite('Simula Research Laboratory', 'SRL', 'srl', 'http://www.simula.nornet', 'simula.nornet',
-                                 siteAlphaNorNetIndex, 'Fornebu', 'Østlandet', 'Norge', 'NO', 59.895933, 10.627635, [
-                                    [ 'Uninett', 'eth0', IPv4Address('132.252.156.70'), IPv6Address('fd55:5555::70') ],
-                                    [ 'Telenor', 'eth0', IPv4Address('169.254.100.70'), IPv6Address('::') ]
-                                 ], 'Uninett', 'eth0', dnsServers, ntpServers)
-      siteAlphaPCUID = makeNorNetPCU(siteAlpha, 'pcu', 'simula.nornet', IPv4Address('132.252.156.2'),
-                                     'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
-
-      siteBetaNorNetIndex = 2
-      siteBeta  = makeNorNetSite('Universitetet i Stavanger', 'UiS', 'uis', 'http://www.uis.nornet', 'uis.nornet',
-                                 siteBetaNorNetIndex, 'Stavanger',  'Rogaland', 'Norge', 'NO', 58.940799,5.703049, [
-                                    [ 'Uninett', 'eth0', IPv4Address('132.252.156.71'), IPv6Address('fd55:5555::71') ],
-                                    [ 'Telenor', 'eth0', IPv4Address('169.254.100.71'), IPv6Address('::') ]
-                                 ], 'Uninett', 'eth0', dnsServers, ntpServers)
-      siteBetaPCUID = makeNorNetPCU(siteBeta, 'pcu', 'uis.nornet', IPv4Address('132.252.156.3'),
-                                    'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
-
-      siteGammaNorNetIndex = 3
-      siteGamma = makeNorNetSite('Universität Duisburg-Essen', 'UDE', 'ude', 'http://www.ude.nornet', 'ude.nornet',
-                                 siteGammaNorNetIndex, 'Essen',  'Nordrhein-Westfalen', 'Deutschland', 'DE', 51.476144, 7.011656, [
-                                    [ 'Uninett', 'eth0', IPv4Address('132.252.156.72'), IPv6Address('::') ],
-                                    [ 'Telenor', 'eth0', IPv4Address('169.254.100.72'), IPv6Address('::') ],
-                                    [ 'Deutsches Forschungsnetz', 'eth0', IPv4Address('172.31.255.72'),  IPv6Address('::') ]
-                                 ], 'Deutsches Forschungsnetz', 'eth0', dnsServers, ntpServers)
-      siteGammaPCUID = makeNorNetPCU(siteGamma, 'pcu', 'ude.nornet', IPv4Address('132.252.156.4'),
-                                     'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
-
-      siteDeltaNorNetIndex = 4
-      siteDelta = makeNorNetSite('Universitetet i Tromsø', 'UiT', 'uit', 'http://www.uit.nornet', 'uit.nornet',
-                                 siteDeltaNorNetIndex, 'Tromsø',  'Troms', 'Norge', 'NO', 69.681897,18.980541, [
-                                    [ 'Uninett', 'eth0', IPv4Address('132.252.156.73'), IPv6Address('::') ],
-                                    [ 'Telenor', 'eth0', IPv4Address('169.254.100.73'), IPv6Address('::') ]
-                                 ], 'Uninett', 'eth0', dnsServers, ntpServers)
-      siteDeltaPCUID = makeNorNetPCU(siteDelta, 'pcu', 'uit.nornet', IPv4Address('132.252.156.5'),
-                                     'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
-
-      siteEpsilonNorNetIndex = 5
-      siteEpsilon = makeNorNetSite('Universitetet i Trondheim', 'NTNU', 'ntnu', 'http://www.ntnu.nornet', 'ntnu.nornet',
-                                 siteEpsilonNorNetIndex, 'Trondheim',  'Sør-Trøndelag', 'Norge', 'NO', 63.419034,10.4022, [
-                                    [ 'Uninett', 'eth0', IPv4Address('132.252.156.74'), IPv6Address('::') ],
-                                    [ 'Telenor', 'eth0', IPv4Address('169.254.100.74'), IPv6Address('::') ]
-                                 ], 'Uninett', 'eth0', dnsServers, ntpServers)
-      siteEpsilonPCUID = makeNorNetPCU(siteEpsilon, 'pcu', 'ntnu.nornet', IPv4Address('132.252.156.6'),
-                                     'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
-
-      # ====== Add test nodes ==================================================
-      firstAddressIndex = 100
-
-      names = sorted(['akerbrygge', 'bygdoey', 'ekeberg', 'fornebu', 'frogner', 'grefsen', 'majorstuen', 'ullevaal'])
-      i = 0
-      for name in names:
-         n = makeNorNetNode(siteAlpha, name, i + firstAddressIndex,
-                            siteAlphaPCUID, 1 + i, 'eth0',
-                            'Amiga 5000', 'reinstall')
-         i = i + 1
-
-      firstAddressIndex = 100
-      names = sorted(['aaklungen', 'bjordammen', 'maridalsvannet', 'sognsvann', 'svartkulp', 'skjennungen', 'trollvann', 'tryvann'])
-      i = 0
-      for name in names:
-         makeNorNetNode(siteBeta, name, i + firstAddressIndex,
-                        siteBetaPCUID, 1 + i, 'eth0',
-                        'Amiga 5000', 'reinstall')
-         i = i + 1
-
-      firstAddressIndex = 100
-      names = sorted(['altenessen', 'baldeneysee', 'borbeck', 'kettwig', 'kray', 'kupferdreh', 'steele', 'zollvererin'])
-      i = 0
-      for name in names:
-         makeNorNetNode(siteGamma, name, i + firstAddressIndex,
-                        siteGammaPCUID, 1 + i, 'eth0',
-                        'Amiga 5000', 'reinstall')
-         i = i + 1
-
-      firstAddressIndex = 100
-      names = sorted(['roed', 'groenn', 'blaa', 'graa', 'svart', 'hvit', 'orange', 'gull'])
-      i = 0
-      for name in names:
-         makeNorNetNode(siteDelta, name, i + firstAddressIndex,
-                        siteDeltaPCUID, 1 + i, 'eth0',
-                        'Amiga 5000', 'reinstall')
-         i = i + 1
-
-      firstAddressIndex = 100
-      names = sorted(['troll', 'nisse', 'katt', 'hund', 'mus', 'sau', 'bjoern', 'reinsdyr'])
-      i = 0
-      for name in names:
-         makeNorNetNode(siteEpsilon, name, i + firstAddressIndex,
-                        siteEpsilonPCUID, 1 + i, 'eth0',
-                        'Amiga 5000', 'reinstall')
-         i = i + 1
-
-
-   if action == 'add-test1':
-      siteRhoNorNetIndex = 6
-      siteRho = makeNorNetSite('Universitetet på Svalbard', 'UNIS', 'unis', 'http://www.svalbard.nornet', 'svalbard.nornet',
-                                 siteRhoNorNetIndex, 'Longyearbyen',  'Svalbard', 'Norge', 'NO', 78.222972,15.648537, [
-                                    [ 'Uninett', 'eth0', IPv4Address('132.252.156.75'), IPv6Address('::') ],
-                                    [ 'Telenor', 'eth0', IPv4Address('169.254.100.75'), IPv6Address('::') ]
-                                 ], 'Uninett', 'eth0', dnsServers, ntpServers)
-      siteRhoPCUID = makeNorNetPCU(siteRho, 'pcu', 'svalbard.nornet', IPv4Address('132.252.156.7'),
-                                     'pcu-root', 'a-secret-password', 'ssh', 'Amiga 5099', 'Jeg vet ikke.')
-
-      firstAddressIndex = 100
-      names = sorted(['isbjoern', 'hval'])
-      i = 0
-      for name in names:
-         makeNorNetNode(siteRho, name, i + firstAddressIndex,
-                        siteRhoPCUID, 1 + i, 'eth0',
-                        'Amiga 5000', 'reinstall')
-         i = i + 1
-
 
    # ====== Add person to all test sites ====================================
    personID = lookupPersonID(userName)
@@ -253,6 +266,14 @@ def createTestConfiguration(userName, sliceName, action):
    getPLCServer().AddSliceToNodes(getPLCAuthentication(), sliceID, nodeIDs)
 
 
+# ###### Perform site action ################################################
+def performAction(action, site):
+   if ((action == 'remove') or (action == 'renew')):
+      removeSite(site)
+   if ((action == 'add') or (action == 'renew')):
+      makeSite(site, norNetInformation, dnsServers, ntpServers)
+
+
 
 # ###### Main program #######################################################
 action = ''
@@ -264,7 +285,7 @@ if len(sys.argv) > 2:
    elif sys.argv[1] == 'remove':
       action = 'remove'
 if action == '':
-   error('Usage: ' + sys.argv[0] + ' [add|remote] [Site] ...')
+   error('Usage: ' + sys.argv[0] + ' add|renew|remove Site|ALL [Site] ...')
 
 
 log('***** Welcome to NorNet! *****')
@@ -296,23 +317,23 @@ if ((action == 'add') or (action == 'renew')):
 
 
 # ====== Remove or create sites =============================================
-i = 2
-while i < len(sys.argv):
-   found = None
-   for site in norNetSetup:
-      #site = norNetSetup[siteNumber]
-      print site
-      if ((site['site_long_name'] == sys.argv[i]) or
-          (site['site_short_name'] == sys.argv[i])):
-         found = site
-         break
+if str.upper(sys.argv[2]) != 'ALL':
+   i = 2
+   while i < len(sys.argv):
+      found = None
+      for site in norNetSetup:
+         if ((site['site_long_name'] == sys.argv[i]) or
+             (site['site_short_name'] == sys.argv[i])):
+            found = site
+            break
+      if found == None:
+         error('Site "' + sys.argv[i] + '" is not defined!')
+      performAction(action, found)
+      i = i + 1
 
-   if found == None:
-      error('Site "' + sys.argv[i] + '" is not defined!')
-
+else:
    if ((action == 'remove') or (action == 'renew')):
-      removeSite(found)
-   if ((action == 'add') or (action == 'renew')):
-      makeSite(found, norNetInformation, dnsServers, ntpServers)
-
-   i = i + 1
+      removeSite(None)
+   if action != 'remove':
+      for site in norNetSetup:
+         performAction(action, site)
