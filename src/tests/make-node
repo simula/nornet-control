@@ -7,7 +7,8 @@ fi
 
 sudo cp $1/interfaces /etc/network/interfaces && \
 sudo mkdir -p /etc/nornet && \
-sudo cp $1/nornetapi-config /etc/nornet
+sudo cp $1/nornetapi-config /etc/nornet && \
+sudo rm /etc/udev/rules.d/70-persistent-net.rules
 
 if [ -e /etc/init.d/nornet-tunnelbox ] ; then
    echo "Reconfiguring Tunnelbox ..."
