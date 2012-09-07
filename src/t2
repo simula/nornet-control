@@ -1,13 +1,8 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+#!/bin/sh
 
-import sys;
-import re;
-
-i = 1
-while i < len(sys.argv):
-   match = re.search('^--user=(.*)', sys.argv[i])
-   if match != None:
-      print 'USR=',match.group(1)
-
-   i = i + 1
+INTERFACES=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//"`
+sysctl -w net.ipv4.conf.default.rp_filter=0 || true
+sysctl -w net.ipv4.conf.all.rp_filter=0 || true
+for interface in $INTERFACES ; do
+   sysctl -w net.ipv4.conf.$interface.rp_filter=0 || true
+done
