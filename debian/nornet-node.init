@@ -120,9 +120,14 @@ check_and_configure ()
 {
    get_new_node_configuration
    if needs_update interfaces /etc/network/interfaces $1 ; then
-      echo "Interface configuration has been updated => restarting networking service ..."
-      cp interfaces /etc/network/interfaces
-      service networking restart
+      if [ ! -e /etc/init.d/nornet-tunnelbox ] ; then
+         echo "Interface configuration has been updated => restarting networking service ..."
+         cp interfaces /etc/network/interfaces
+         service networking restart
+      else
+         echo "##### WARNING: nornet-node is supposed to install new /etc/network/interfaces on tunnelbox?! ######"
+         echo "/etc/network/interfaces will be kept as is!"
+      fi
    fi
    if needs_update hostname-config /etc/hostname $1 ; then
       echo "Hostname has been updated => setting new hostname ..."
