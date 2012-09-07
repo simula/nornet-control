@@ -1,0 +1,31 @@
+# ===== Node configuration ===============
+# ====== Loopback ======
+auto lo
+iface lo inet loopback
+
+
+# ====== Telenor (100) ======
+auto eth0:100
+iface eth0:100 inet static
+   address 10.100.1.7
+   netmask 255.255.255.0
+   up   /sbin/ip -6 addr add fd00:0:6401::7/64 dev eth0:100
+   down /sbin/ip -6 addr del fd00:0:6401::7/64 dev eth0:100
+
+# ====== Uninett (1) ======
+auto eth0
+iface eth0 inet static
+   address 10.1.1.7
+   netmask 255.255.255.0
+   gateway 10.1.1.1
+   dns-nameservers 10.1.1.23
+   dns-search simula.nornet
+
+
+iface eth0 inet6 static
+   address fd00:0:101::7
+   netmask 64
+   gateway fd00:0:101::1
+   dns-nameservers fd00:0:101::17
+   dns-search simula.nornet
+
