@@ -20,6 +20,8 @@
 # Contact: dreibh@simula.no
 
 import re;
+import os;
+import base64;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
@@ -239,9 +241,22 @@ def makeSite(site, norNetInformation, dnsServers, ntpServers):
 def getBootISOs(isoDirectory):
    allNorNetNodes = fetchNorNetNodeList()
    for node in allNorNetNodes:
-      nodeID = node['node_id']
-      #print 'N=',nodeID
-   #getPLCServer().AddSliceToNodes(getPLCAuthentication(), sliceID, nodeIDs)
+      nodeID   = node['node_id']
+      nodeName = node['node_name']
+      isoName  = os.path.normpath(os.path.join(isoDirectory, nodeName + '.iso'))
+      if not os.path.exists(isoName):
+         log('Downloading ' + isoName + ' ...')
+         try:
+            isoBase64 = getPLCServer().GetBootMedium(getPLCAuthentication(), nodeID, 'node-iso' , '', [])
+            iso       = base64.b64decode(isoBase64)
+            outputFile = open(isoName, 'w')
+            outputFile.write(iso)
+            outputFile.close()
+         except:
+            error('Unable to generate ' + isoName + '!')
+
+      else:
+         log('Not downloading ' + isoName + ', it already exists!')
 
 
 # ###### Perform site action ################################################
