@@ -19,22 +19,22 @@ iface eth0 inet6 static
    netmask 64
    gateway fd55:5555::1
    # NOTE: NorNet configuration is here, since it requires IPv4 *and* IPv6!
-   up   service nornet-tunnelbox start -providers uninett
-   down service nornet-tunnelbox stop  -providers uninett
+   up   service nornet-tunnelbox start -providers uninett || true
+   down service nornet-tunnelbox stop  -providers uninett || true
 
 
 # ====== Telenor Interface ================================================
-auto eth0:1
-iface eth0:1 inet static
+auto eth1
+iface eth1 inet static
    address 169.254.100.73
    netmask 255.255.255.0
-   up   service nornet-tunnelbox start -providers telenor
-   down service nornet-tunnelbox stop  -providers telenor
+   up   service nornet-tunnelbox start -providers telenor || true
+   down service nornet-tunnelbox stop  -providers telenor || true
 
 
 # ====== DFN Interface ====================================================
 # !!! NOT USED HERE !!!
-auto eth0:2
-iface eth0:2 inet static
+auto eth2
+iface eth2 inet static
    address 172.31.255.73
    netmask 255.255.255.0
