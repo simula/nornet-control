@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 if [ "$1" = "" ] ; then
    echo >&2 "Usage: $0 config_directory"
@@ -8,3 +8,9 @@ fi
 sudo cp $1/interfaces /etc/network/interfaces && \
 sudo mkdir -p /etc/nornet && \
 sudo cp $1/nornetapi-config /etc/nornet
+
+if [ -e /etc/init.d/nornet-node ] ; then
+
+echo "sudo apt-get install -y nornet-node"
+echo "sudo apt-get install -y nornet-tunnelbox"
+echo "sudo apt-get install -y nornet-monitor"
