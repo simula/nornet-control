@@ -54,10 +54,10 @@ norNetSetup = [
       [ 100, 1, 'akerbrygge' ],
       [ 101, 2, 'bygdoey'    ],
       [ 102, 3, 'ekeberg'    ],
-      [ 103, 4, 'fornebu'    ],
-      [ 104, 5, 'frogner'    ],
-      [ 105, 6, 'grefsen'    ],
-      [ 106, 7, 'majorstuen' ],
+      [ 103, 4, 'frogner'    ],
+      [ 104, 5, 'grefsen'    ],
+      [ 105, 6, 'majorstuen' ],
+      [ 106, 7, 'nordberg'   ],
       [ 107, 8, 'ullevaal'   ]
    ] },
 
