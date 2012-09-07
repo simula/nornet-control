@@ -76,6 +76,7 @@ Description: NorNet Development Tools
 
 Package: nornet-node
 Architecture: any
+Conflicts: miredo
 Depends: grub2,
          nornet-api,
          nornet-management,
