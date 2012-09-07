@@ -1,12 +1,12 @@
 #!/bin/sh -e
 
-mode=0
-if [ "$1" = "tunnelbox" ] ; then
-   mode=1
-elif [ "$1" = "node" ] ; then
-   mode=2
+PACKAGES=""
+if [ "$1" = "node" ] ; then
+   PACKAGES="nornet-api nornet-routing nornet-management nornet-node"
+elif [ "$1" = "tunnelbox" ] ; then
+   PACKAGES="nornet-api nornet-routing nornet-management nornet-node nornet-tunnelbox"
 elif [ "$1" = "monitor" ] ; then
-   mode=3
+   PACKAGES="nornet-api nornet-routing nornet-management nornet-node nornet-monitor"
 else
    echo >&2 "Usage: $0 [tunnelbox|node|monitor]"
    exit 1
@@ -14,27 +14,13 @@ fi
 
 sudo rm -f /var/cache/pbuilder/result/*
 ./build-deb
-ls -al /var/cache/pbuilder/result/*.deb
 
+for package in $PACKAGES ; do
+   echo "Purging ${package} ..."
+   dpkg -P ${package} || true
+done
 
-if [ $mode -eq 1 ] ; then
-   sudo dpkg -i \
-      /var/cache/pbuilder/result/nornet-api*.deb \
-      /var/cache/pbuilder/result/nornet-routing*.deb \
-      /var/cache/pbuilder/result/nornet-management*.deb \
-      /var/cache/pbuilder/result/nornet-node*.deb \
-      /var/cache/pbuilder/result/nornet-tunnelbox*.deb
-elif [ $mode -eq 2 ] ; then
-   sudo dpkg -i \
-      /var/cache/pbuilder/result/nornet-api*.deb \
-      /var/cache/pbuilder/result/nornet-routing*.deb \
-      /var/cache/pbuilder/result/nornet-management*.deb \
-      /var/cache/pbuilder/result/nornet-node*.deb
-else
-   sudo dpkg -i \
-      /var/cache/pbuilder/result/nornet-api*.deb \
-      /var/cache/pbuilder/result/nornet-routing*.deb \
-      /var/cache/pbuilder/result/nornet-management*.deb \
-      /var/cache/pbuilder/result/nornet-node*.deb \
-      /var/cache/pbuilder/result/nornet-monitor*.deb
-fi
+for package in $PACKAGES ; do
+   echo "Installing ${package} ..."
+   dpkg -i /var/cache/pbuilder/result/${package}*.deb
+done
