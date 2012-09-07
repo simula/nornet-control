@@ -24,8 +24,8 @@ iface eth0 inet6 static
 
 
 # ====== Telenor Interface ================================================
-auto eth0:1
-iface eth0:1 inet static
+auto eth1
+iface eth1 inet static
    address 169.254.100.74
    netmask 255.255.255.0
    up   service nornet-tunnelbox start -providers telenor
@@ -34,7 +34,7 @@ iface eth0:1 inet static
 
 # ====== DFN Interface ====================================================
 # !!! NOT USED HERE !!!
-auto eth0:2
-iface eth0:2 inet static
+auto eth2
+iface eth2 inet static
    address 172.31.255.74
    netmask 255.255.255.0
