@@ -17,10 +17,10 @@ sudo rm -f /var/cache/pbuilder/result/*
 
 for package in $PACKAGES ; do
    echo "Purging ${package} ..."
-   dpkg -P ${package} || true
+   sudo dpkg -P ${package} || true
 done
 
 for package in $PACKAGES ; do
    echo "Installing ${package} ..."
-   dpkg -i /var/cache/pbuilder/result/${package}*.deb
+   sudo dpkg -i /var/cache/pbuilder/result/${package}*.deb
 done
