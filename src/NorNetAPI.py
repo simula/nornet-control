@@ -22,6 +22,7 @@
 
 import re;
 import sys;
+import codecs;
 
 # XML-RPC
 if sys.version_info < (3,0,0):
@@ -85,6 +86,10 @@ def loadNorNetConfiguration():
       error('NorNetPLC_User has not been set in configuration file!')
    if NorNetPLC_Password == None:
       error('NorNetPLC_Password has not been set in configuration file!')
+
+   sys.stdout = codecs.getwriter('utf8')(sys.stdout)
+   sys.stderr = codecs.getwriter('utf8')(sys.stderr)
+   sys.stdin  = codecs.getreader('utf8')(sys.stdin)
 
 
 # ###### Log into PLC #######################################################
