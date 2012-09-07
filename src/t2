@@ -1,8 +1,8 @@
 #!/bin/sh
 
 INTERFACES=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//"`
-sysctl -w net.ipv4.conf.default.rp_filter=0 || true
-sysctl -w net.ipv4.conf.all.rp_filter=0 || true
+sysctl -q -w net.ipv4.conf.default.rp_filter=0 || true
+sysctl -q -w net.ipv4.conf.all.rp_filter=0 || true
 for interface in $INTERFACES ; do
-   sysctl -w net.ipv4.conf.$interface.rp_filter=0 || true
+   sysctl -q -w net.ipv4.conf.$interface.rp_filter=0 || true
 done
