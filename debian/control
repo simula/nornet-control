@@ -50,6 +50,7 @@ Depends: apt-show-versions,
          snmp,
          subnetcalc,
          traceroute,
+         virtualbox-guest-utils,
          whois,
          ${misc:Depends},
          ${shlibs:Depends}
