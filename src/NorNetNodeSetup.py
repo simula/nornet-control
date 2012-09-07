@@ -529,6 +529,13 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
       outputFile.write('fi\n')
 
 
+   outputFile.write('\nif [ "$state" = "stop" -o "$state" = "start" -o "$state" = "restart" ] ; then\n')
+   outputFile.write('   log-action "Flushing route cache ..."\n')
+   outputFile.write('   ip route flush cache && \\\n')
+   outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
+   outputFile.write('fi\n')
+
+
    outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" -o  "$state" = "status" ] ; then\n')
    outputFile.write('   log-action "Trying to contact PLC at ' + str(getPLCAddress()) + ' ..."\n')
    outputFile.write('   show-tunnel ' + interfaceToPLC + ' ' + \
