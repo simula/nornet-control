@@ -36,14 +36,14 @@
 # ###### Write log information ##############################################
 log ()
 {
-   echo -e "\x1b[1;34m`date --utc +%FT%H:%M:%S`: $@\x1b[0m"
+   echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: $@\x1b[0m"
 }
 
 
 # ###### Write log action information #######################################
 log-action ()
 {
-   echo -en "\x1b[34m`date --utc +%FT%H:%M:%S`: $@\x1b[0m"
+   echo -en "\x1b[34m`date +%FT%H:%M:%S`: $@\x1b[0m"
 }
 
 
