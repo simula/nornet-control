@@ -203,8 +203,7 @@ def createTestConfiguration(userName, sliceName, action):
       error('Unable to find slice ' + sliceName + '\n')
    nodeIDs = []
    allNorNetNodes = fetchNorNetNodeList()
-   for nodeIndex in allNorNetNodes:
-      node = allNorNetNodes[nodeIndex]
+   for node in allNorNetNodes:
       nodeIDs.append(int(node['node_id']))
    getPLCServer().AddSliceToNodes(getPLCAuthentication(), sliceID, nodeIDs)
 
