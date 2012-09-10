@@ -81,9 +81,9 @@ norNetSetup = [
       [ 100, 1, 'aaklungen'      ],
       [ 101, 2, 'bjordammen'     ],
       [ 102, 3, 'maridalsvannet' ],
-      [ 103, 4, 'sognsvann'      ],
-      [ 104, 5, 'svartkulp'      ],
-      [ 105, 6, 'skjennungen'    ],
+      [ 103, 4, 'skjennungen'    ],
+      [ 104, 5, 'sognsvann'      ],
+      [ 105, 6, 'svartkulp'      ],
       [ 106, 7, 'trollvann'      ],
       [ 107, 8, 'tryvann'        ]
    ] },
@@ -133,14 +133,14 @@ norNetSetup = [
       [ 'Telenor', 'eth1', IPv4Address('169.254.100.73'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'roed'   ],
-      [ 101, 2, 'groenn' ],
-      [ 102, 3, 'blaa'   ],
-      [ 103, 4, 'graa'   ],
-      [ 104, 5, 'svart'  ],
-      [ 105, 6, 'hvit'   ],
-      [ 106, 7, 'orange' ],
-      [ 107, 8, 'gull'   ]
+      [ 100, 1, 'blaa'   ],
+      [ 101, 2, 'graa'   ],
+      [ 102, 3, 'groenn' ],
+      [ 103, 4, 'gull'   ],
+      [ 104, 5, 'hvit'   ],
+      [ 105, 6, 'orange' ],
+      [ 106, 7, 'roed'   ],
+      [ 107, 8, 'svart'  ]
    ] },
 
  { 'site_index'        : 5,
@@ -160,14 +160,14 @@ norNetSetup = [
       [ 'Telenor', 'eth1', IPv4Address('169.254.100.74'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'troll'    ],
-      [ 101, 2, 'nisse'    ],
+      [ 100, 1, 'bjoern'   ],
+      [ 101, 2, 'hund'     ],
       [ 102, 3, 'katt'     ],
-      [ 103, 4, 'hund'     ],
-      [ 104, 5, 'mus'      ],
-      [ 105, 6, 'sau'      ],
-      [ 106, 7, 'bjoern'   ],
-      [ 107, 8, 'reinsdyr' ]
+      [ 103, 4, 'mus'      ],
+      [ 104, 5, 'nisse'    ],
+      [ 105, 6, 'reinsdyr' ],
+      [ 106, 7, 'sau'      ],
+      [ 107, 8, 'troll'    ]
    ] },
 
  { 'site_index'        : 6,
@@ -187,8 +187,8 @@ norNetSetup = [
       [ 'Telenor', 'eth1', IPv4Address('169.254.100.75'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'isbjoern' ],
-      [ 101, 2, 'hval'     ]
+      [ 100, 1, 'hval'     ],
+      [ 101, 2, 'isbjoern' ]
    ] }
 
 ]
