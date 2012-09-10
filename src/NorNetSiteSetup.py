@@ -108,6 +108,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
                    siteLatitude, siteLogitude,
                    providerList, defaultProvider, tbInternalInterface,
                    dnsServers, ntpServers):
+   siteName = unicode(siteName)   # Check whether name is in UTF-8!
    try:
       # ====== Add site =====================================================
       log('Adding site ' + siteName + ' ...')
@@ -211,7 +212,8 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
                error('Unable to add "nornet_site_tb_nat_range_ipv4" tag to site ' + siteName)
 
    except Exception as e:
-      error('Adding site ' + siteName + ' has failed: ' + str(e))
+      raise
+      #error('Adding site ' + siteName + ' has failed: ' + str(e))
 
    return fetchNorNetSite(siteName)
 
