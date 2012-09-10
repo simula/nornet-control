@@ -1,76 +1,102 @@
 <?php
 $page = $_SERVER['PHP_SELF'];
-$sec = "30"; 
+$sec = "300"; 
 header("Refresh: $sec; url=$page");
-$nagmap_version = '0.11';
+$nagmap_version = '1.0';
 include('./config.php');
+// include('./call.php');
 ?>
 <html>
   <head>
+    <link rel="shortcut icon" href="favicon.ico" />
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel=StyleSheet href="style.css" type="text/css" media=screen>
     <title>NorNet Kontrollsenter på Simula, Fornebu</title>
-    <?php include("style.php"); ?>
     <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
     <script type="text/javascript">
+
     //static code from index.pnp
     function initialize() {
-        var myOptions = {
-          zoom: <?php echo ("$nagmap_map_zoom"); ?>, 
-          center: new google.maps.LatLng(<?php echo ("$nagmap_map_centre"); ?>),
-          mapTypeId: google.maps.MapTypeId.HYBRID
-        };
-        var map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
-	
-var red_blank = new google.maps.MarkerImage(
-  'http://www.google.com/mapfiles/marker.png', 
-  new google.maps.Size(20,34), 
-  new google.maps.Point(10,34));
+      var myOptions = {
+        zoom: <?php echo ("$nagmap_map_zoom"); ?>, 
+        center: new google.maps.LatLng(<?php echo ("$nagmap_map_centre"); ?>),
+        mapTypeId: google.maps.MapTypeId.HYBRID
+      };
+      window.map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
 
-var blue_blank = new google.maps.MarkerImage(
-  'http://www.google.com/mapfiles/marker_white.png',
-  new google.maps.Size(20,34),
-  new google.maps.Point(10,34));
+      //defining marker images
+      var red_blank = new google.maps.MarkerImage(
+        'http://www.google.com/mapfiles/marker.png', 
+        new google.maps.Size(20,34), 
+        new google.maps.Point(10,34));
 
-var green_blank = new google.maps.MarkerImage(
-  'http://www.google.com/mapfiles/marker_green.png',
-  new google.maps.Size(20,34),
-  new google.maps.Point(10,34));
+      var blue_blank = new google.maps.MarkerImage(
+        'http://www.google.com/mapfiles/marker_white.png',
+        new google.maps.Size(20,34),
+        new google.maps.Point(10,34));
 
-var yellow_blank = new google.maps.MarkerImage(
-  'http://www.google.com/mapfiles/marker_yellow.png',
-  new google.maps.Size(20,34),
-  new google.maps.Point(10,34));
+      var green_blank = new google.maps.MarkerImage(
+        'http://www.google.com/mapfiles/marker_green.png',
+        new google.maps.Size(20,34),
+        new google.maps.Point(10,34));
 
-var grey_blank = new google.maps.MarkerImage(
-  'http://www.google.com/mapfiles/marker_grey.png',
-  new google.maps.Size(20,34),
-  new google.maps.Point(10,34));
+      var yellow_blank = new google.maps.MarkerImage(
+        'http://www.google.com/mapfiles/marker_yellow.png',
+        new google.maps.Size(20,34),
+        new google.maps.Point(10,34));
 
-//generating dynamic code from here...
+      var grey_blank = new google.maps.MarkerImage(
+        'http://www.google.com/mapfiles/marker_grey.png',
+        new google.maps.Size(20,34),
+        new google.maps.Point(10,34));
+
+// generating dynamic code from here... 
+// if the page ends here, there is something seriously wrong, please contact maco@blava.net for help
+
 <?php 
   include('marker.php');
   if ($javascript != "") { 
     echo $javascript; 
-    echo '};';
+    echo '};'; //end of initialize function
     echo '
       </script>
       </head>
-      <body style="margin:0px; padding:0px;" onload="initialize()" bgcolor="#ff0000">
-        <! -- BEGIN NorNet -->
-       <large><strong><center>NorNet Kontrollsenter på Simula, Fornebu</center></strong></large>
-        <! -- END NorNet -->
-        <div id="map_canvas" style="width:100%; height:100%"></div>
-      </body>
+      <body style="margin:0px; padding:0px;" onload="initialize()">';
+    echo '
+      <! -- BEGIN NorNet -->
+      <h1 style="margin:0px; padding:0px;">Velkommen til NorNet Kontrollsenter på Simula, Fornebu</h1>
+      <! -- END NorNet -->
     ';
+    if ($nagmap_sidebar == '1') {
+      sort($sidebar['ok']);
+      sort($sidebar['warning']);
+      sort($sidebar['critical']);
+      sort($sidebar['unknown']);
+      echo '<div id="map_canvas" style="width:80%; height:95%; float: left"></div>';
+      echo '<div id="sidebar" class="sidebar" style="padding-left: 10px; height:95%; overflow:auto;">'
+        .'<span class="ok">ok:'.$stats['ok']
+          ." (".round((100/($stats['warning']+$stats['critical']+$stats['unknown']+$stats['ok']))*($stats['ok']))."%)</span><br>"
+        .'<span class="problem">problem:'.($stats['warning']+$stats['critical']+$stats['unknown'])
+          ." (".round((100/($stats['warning']+$stats['critical']+$stats['unknown']+$stats['ok']))*($stats['warning']+$stats['critical']+$stats['unknown']))."%)</span><hr noshade>";
+      foreach (array('critical','unknown','warning','ok') as $severity) { 
+        foreach ($sidebar[$severity] as $entry) {
+          echo $entry;
+        }
+      }
+      echo '</div>';
+    } else {
+      echo '<div id="map_canvas" style="width:100%; height:100%; float: left"></div>';
+    }
   } else {
-    echo '};';
+    
+    echo '};'; //end of initialize function
     echo '</script><head><body>';
-    echo "<br><h3>There is no data to display. You either did not set NagMap properly or there is a software bug. Please contact maco@blava.net for free assistance.</h3></body>";
+    echo "<br><h3>There is no data to display. You either did not set NagMap properly or there is a software bug. Please contact maco@blava.net for free assistance.</h3>";
   }
 
 ?>
 
+</body>
 </html>
 
-dreibh@monitor:~/src/nagmap$ 

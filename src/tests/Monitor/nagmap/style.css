@@ -1,0 +1,51 @@
+.bubble {
+  font-family: arial;
+  font-size: 10pt;
+}
+
+body {
+   background: red;
+}
+
+hr {
+  border: 1;
+  color: #02266B;
+}
+
+h1 {
+  font-family: arial;
+  font-size: 16pt;
+  text-align: center;
+  color: white;
+}
+
+h3 {
+  font-family: arial;
+  color: white;
+}
+
+.sidebar {
+  font-family: arial;
+  font-size: 12pt;
+  background: white;
+}
+
+.ok, a.ok, a.ok:visited {
+  text-decoration: none;
+  color: #02266B;
+}
+
+a.warning, a.warning:visited {
+  text-decoration: none;
+  color: orange; 
+}
+
+a:hover {
+  background: white;
+  font-weight: bold;
+}
+
+.problem, a.critical, a.critical:visited {
+  text-decoration: none;
+  color: red;
+}
