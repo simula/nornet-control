@@ -978,7 +978,10 @@ def makeNagiosConfiguration(fullSiteList, configNamePrefix):
    _writeAutoConfigInformation(outputFile)
 
    if fullSiteList != None:
-      centralSite = fullSiteList[NorNet_SiteIndex_Central]
+      try:
+         centralSite = fullSiteList[NorNet_SiteIndex_Central]
+      except:
+         centralSite = None   # Some test state.
 
       for onlyDefault in [ True, False ]:
          for siteIndex in fullSiteList:
@@ -1003,7 +1006,7 @@ def makeNagiosConfiguration(fullSiteList, configNamePrefix):
                outputFile.write('   address       ' + str(tunnelboxIP.ip) + '\n')
                outputFile.write('   notes         latlng: ' + str(site['site_latitude']) + ',' + str(site['site_longitude']) + '\n')
                outputFile.write('   check_command check_ping!100.0,20%!500.0,60%\n')
-               if siteIndex != NorNet_SiteIndex_Central:
+               if ((siteIndex != NorNet_SiteIndex_Central) and (centralSite != None)):
                   outputFile.write('   parents       ' + centralSite['site_long_name'] + '\n')
                outputFile.write('}\n\n')
 
