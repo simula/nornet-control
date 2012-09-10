@@ -110,9 +110,9 @@ check_and_configure ()
    get_new_tunnelbox_configuration
 
    # Permanently make important settings in sysctl configuration.
-   sed -e "s/^[ \t]*[#]*[ \t]*net.ipv4.ip_forward[ \t]*=.*$/net.ipv4.ip_forward=1   # ON (1) for NorNet Tunnelbox!/" \
-       -e "s/^[ \t]*[#]*[ \t]*net.ipv6.conf.all.forwarding[ \t]*=.*$/net.ipv6.conf.all.forwarding=1   # ON (1) for NorNet Tunnelbox!/" \
-       -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.send_redirects[ \t]*=.*$/net.ipv4.conf.all.send_redirects=0   # OFF (0) for NorNet Tunnelbox!/" \
+   sed -e "s/^[ \t]*[#]*[ \t]*net.ipv4.ip_forward[ \t]*=.*$/net.ipv4.ip_forward=1/" \
+       -e "s/^[ \t]*[#]*[ \t]*net.ipv6.conf.all.forwarding[ \t]*=.*$/net.ipv6.conf.all.forwarding=1/" \
+       -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.send_redirects[ \t]*=.*$/net.ipv4.conf.all.send_redirects=0/" \
        </etc/sysctl.conf >/etc/nornet/sysctl-config && mv /etc/nornet/sysctl-config /etc/sysctl.conf && sudo sysctl -p
 
    # FIXME: How to compare configs?

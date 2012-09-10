@@ -627,14 +627,21 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
    outputFile.write('      INTERFACES=`ip link show | awk \'/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }\' | sed -e "s/:$//"`\n')
    outputFile.write('      sysctl -q -w net.ipv4.conf.default.rp_filter=0 || true\n')
    outputFile.write('      sysctl -q -w net.ipv4.conf.all.rp_filter=0 || true\n')
+   outputFile.write('      sysctl -q -w net.ipv4.conf.default.send_redirects=0 || true\n')
+   outputFile.write('      sysctl -q -w net.ipv4.conf.all.send_redirects=0 || true\n')
    outputFile.write('      for interface in $INTERFACES ; do\n')
    outputFile.write('         sysctl -q -w net.ipv4.conf.$interface.rp_filter=0 || true\n')
+   outputFile.write('         sysctl -q -w net.ipv4.conf.$interface.send_redirects=0 || true\n')
    outputFile.write('      done\n')
+   outputFile.write('      log-result $RESULT_GOOD\n')
 
    outputFile.write('      log-action "Turning on ECN ..."\n')
    outputFile.write('      sysctl -q -w net.ipv4.tcp_ecn=1 && \\\n')
-   # outputFile.write('      sysctl -q -w net.ipv4.ip_forward=1 && \\\n')
-   # outputFile.write('      sysctl -q -w net.ipv6.conf.all.forwarding=1 && \\\n')
+   outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
+
+   outputFile.write('      log-action "Turning on Forwarding ..."\n')
+   outputFile.write('      sysctl -q -w net.ipv4.ip_forward=1 && \\\n')
+   outputFile.write('      sysctl -q -w net.ipv6.conf.all.forwarding=1 && \\\n')
    outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
 
    for localProviderIndex in localProviderList:

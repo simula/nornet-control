@@ -150,9 +150,9 @@ check_and_configure ()
    fi
 
    # Permanently make important settings in sysctl configuration.
-   sed -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.accept_redirects[ \t]*=.*$/net.ipv4.conf.all.accept_redirects=0   # OFF (0) for NorNet Node!/" \
-       -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.secure_redirects[ \t]*=.*$/net.ipv4.conf.all.secure_redirects=0   # OFF (0) for NorNet Node!/" \
-       -e "s/^[ \t]*[#]*[ \t]*net.ipv6.conf.all.accept_redirects[ \t]*=.*$/net.ipv6.conf.all.accept_redirects=0   # OFF (0) for NorNet Node!/" \
+   sed -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.accept_redirects[ \t]*=.*$/net.ipv4.conf.all.accept_redirects=0/" \
+       -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.secure_redirects[ \t]*=.*$/net.ipv4.conf.all.secure_redirects=0/" \
+       -e "s/^[ \t]*[#]*[ \t]*net.ipv6.conf.all.accept_redirects[ \t]*=.*$/net.ipv6.conf.all.accept_redirects=0/" \
        </etc/sysctl.conf >/etc/nornet/sysctl-config && mv /etc/nornet/sysctl-config /etc/sysctl.conf && sudo sysctl -p
 
 }
