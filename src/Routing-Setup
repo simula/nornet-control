@@ -230,12 +230,14 @@ make-tunnel ()
    sysctl -q -w net.ipv4.conf.$interface.rp_filter=0        || success=0
    sysctl -q -w net.ipv4.conf.$interface.accept_redirects=0 || success=0
    sysctl -q -w net.ipv4.conf.$interface.send_redirects=0   || success=0
+   sysctl -q -w net.ipv4.conf.$interface.secure_redirects=0 || success=0
    sysctl -q -w net.ipv6.conf.$interface.accept_redirects=0 || success=0
    # Also, turn off Reverse Path filter and ICMP Redirects on all interfaces.
    # If it is turned on, it supersedes all per-interface settings!
    sysctl -q -w net.ipv4.conf.all.rp_filter=0        || success=0
    sysctl -q -w net.ipv4.conf.all.accept_redirects=0 || success=0
    sysctl -q -w net.ipv4.conf.all.send_redirects=0   || success=0
+   sysctl -q -w net.ipv4.conf.all.secure_redirects=0 || success=0
    sysctl -q -w net.ipv6.conf.all.accept_redirects=0 || success=0
    if [ $success -ne 1 ] ; then
       return 1
