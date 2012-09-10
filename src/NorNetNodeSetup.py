@@ -977,34 +977,38 @@ def makeNagiosConfiguration(fullSiteList, configNamePrefix):
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
    _writeAutoConfigInformation(outputFile)
 
-   centralSite = fullSiteList[NorNet_SiteIndex_Central]
+   if fullSiteList != None:
+      try:
+         centralSite = fullSiteList[NorNet_SiteIndex_Central]
+      except:
+         centralSite = None   # Some test state.
 
-   for onlyDefault in [ True, False ]:
-      for siteIndex in fullSiteList:
-         if ( ((onlyDefault == True)  and (siteIndex == NorNet_SiteIndex_Central)) or \
-              ((onlyDefault == False) and (siteIndex != NorNet_SiteIndex_Central)) ):
+      for onlyDefault in [ True, False ]:
+         for siteIndex in fullSiteList:
+            if ( ((onlyDefault == True)  and (siteIndex == NorNet_SiteIndex_Central)) or \
+                 ((onlyDefault == False) and (siteIndex != NorNet_SiteIndex_Central)) ):
 
-            site        = fullSiteList[siteIndex]
-            country     = getTagValue(site['site_tags'], 'nornet_site_country', '???')
-            province    = getTagValue(site['site_tags'], 'nornet_site_province', None)
-            city        = getTagValue(site['site_tags'], 'nornet_site_city',    '???')
+               site        = fullSiteList[siteIndex]
+               country     = getTagValue(site['site_tags'], 'nornet_site_country', '???')
+               province    = getTagValue(site['site_tags'], 'nornet_site_province', None)
+               city        = getTagValue(site['site_tags'], 'nornet_site_city',    '???')
 
-            tunnelboxIP = makeNorNetIP(site['site_default_provider_index'], siteIndex, NorNet_NodeIndex_Tunnelbox, -1, 4)
+               tunnelboxIP = makeNorNetIP(site['site_default_provider_index'], siteIndex, NorNet_NodeIndex_Tunnelbox, -1, 4)
 
-            outputFile.write('# ====== ' + site['site_long_name'] + ' ======\n')
-            outputFile.write('define host {\n')
-            outputFile.write('   use           generic-host\n')
-            outputFile.write('   host_name     ' + site['site_long_name'] + '\n')
-            outputFile.write('   alias         ' + site['site_long_name'] + ' (' + city)
-            if province !=  None:
-               outputFile.write(', ' + province)
-            outputFile.write('/' + country + ')\n')
-            outputFile.write('   address       ' + str(tunnelboxIP.ip) + '\n')
-            outputFile.write('   notes         latlng: ' + str(site['site_latitude']) + ',' + str(site['site_longitude']) + '\n')
-            outputFile.write('   check_command check_ping!100.0,20%!500.0,60%\n')
-            if siteIndex != NorNet_SiteIndex_Central:
-               outputFile.write('   parents       ' + centralSite['site_long_name'] + '\n')
-            outputFile.write('}\n\n')
+               outputFile.write('# ====== ' + site['site_long_name'] + ' ======\n')
+               outputFile.write('define host {\n')
+               outputFile.write('   use           generic-host\n')
+               outputFile.write('   host_name     ' + site['site_long_name'] + '\n')
+               outputFile.write('   alias         ' + site['site_long_name'] + ' (' + city)
+               if province !=  None:
+                  outputFile.write(', ' + province)
+               outputFile.write('/' + country + ')\n')
+               outputFile.write('   address       ' + str(tunnelboxIP.ip) + '\n')
+               outputFile.write('   notes         latlng: ' + str(site['site_latitude']) + ',' + str(site['site_longitude']) + '\n')
+               outputFile.write('   check_command check_ping!100.0,20%!500.0,60%\n')
+               if ((siteIndex != NorNet_SiteIndex_Central) and (centralSite != None)):
+                  outputFile.write('   parents       ' + centralSite['site_long_name'] + '\n')
+               outputFile.write('}\n\n')
 
    outputFile.close()
 
