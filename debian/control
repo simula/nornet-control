@@ -50,6 +50,7 @@ Depends: apt-show-versions,
          snmp,
          subnetcalc,
          traceroute,
+         virtualbox-guest-utils,
          whois,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -76,6 +77,7 @@ Description: NorNet Development Tools
 
 Package: nornet-node
 Architecture: any
+Conflicts: miredo
 Depends: grub2,
          nornet-api,
          nornet-management,

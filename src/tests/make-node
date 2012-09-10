@@ -5,9 +5,17 @@ if [ "$1" = "" ] ; then
    exit 1
 fi
 
+sudo /etc/init.d/networking stop
+
 sudo cp $1/interfaces /etc/network/interfaces && \
 sudo mkdir -p /etc/nornet && \
 sudo cp $1/nornetapi-config /etc/nornet
+
+if [ -e /etc/udev/rules.d/70-persistent-net.rules ] ; then
+   sudo rm /etc/udev/rules.d/70-persistent-net.rules
+fi
+
+sudo /etc/init.d/networking start
 
 if [ -e /etc/init.d/nornet-tunnelbox ] ; then
    echo "Reconfiguring Tunnelbox ..."

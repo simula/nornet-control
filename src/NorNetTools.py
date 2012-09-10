@@ -34,13 +34,13 @@ import datetime;
 
 # ###### Print log message ##################################################
 def log(logstring):
-   print(datetime.datetime.utcnow().isoformat() + ' ' + logstring);
+   print(datetime.datetime.now().isoformat() + ' ' + logstring);
 
 
 # ###### Abort with error ###################################################
 def error(logstring):
-   print(datetime.datetime.utcnow().isoformat() + \
-         ' ===== ERROR: ' + logstring + " =====");
+   print(datetime.datetime.now().isoformat() + \
+         ' ===== ERROR: ' + logstring + ' =====');
    sys.exit(1)
 
 
@@ -56,8 +56,8 @@ def getTagValue(tagList, tagName, default):
 def makeConfigFile(type, configurationName, setInfoVariable):
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
    outputFile.write('# ===== ' + type + ' configuration ===============\n')
-   
-   #now = datetime.datetime.utcnow().isoformat()
+
+   #now = datetime.datetime.now().isoformat()
    #info = str.replace(str.lower(configurationName), '-', '_')
    #outputFile.write('# Generated on ' + now + '\n\n')
    #if setInfoVariable == True:

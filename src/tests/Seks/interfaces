@@ -1,0 +1,40 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+
+# ====== Uninett Interface ================================================
+auto eth0
+iface eth0 inet static
+   address 132.252.156.75
+   netmask 255.255.255.0
+   gateway 132.252.156.1
+   dns-nameservers 8.8.8.8 8.8.4.4
+
+iface eth0 inet6 static
+   address fd55:5555::75
+   netmask 64
+   gateway fd55:5555::1
+   # NOTE: NorNet configuration is here, since it requires IPv4 *and* IPv6!
+   up   service nornet-tunnelbox start -providers uninett || true
+   down service nornet-tunnelbox stop  -providers uninett || true
+
+
+# ====== Telenor Interface ================================================
+auto eth1
+iface eth1 inet static
+   address 169.254.100.75
+   netmask 255.255.255.0
+   up   service nornet-tunnelbox start -providers telenor || true
+   down service nornet-tunnelbox stop  -providers telenor || true
+
+
+# ====== DFN Interface ====================================================
+# !!! NOT USED HERE !!!
+auto eth2
+iface eth2 inet static
+   address 172.31.255.75
+   netmask 255.255.255.0

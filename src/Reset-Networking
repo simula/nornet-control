@@ -23,7 +23,7 @@
 # ###### Write log information ##############################################
 log ()
 {
-   echo -e "\x1b[1;34m`date --utc +%FT%H:%M:%S`: $@\x1b[0m"
+   echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: $@\x1b[0m"
 }
 
 
@@ -108,5 +108,5 @@ if [ -e /etc/init.d/network ] ; then
 elif [ -e /etc/init.d/networking ] ; then
    log "Restarting networking (Debian/Ubuntu)"
    /etc/init.d/networking stop || true
-   /etc/init.d/networking start   
+   /etc/init.d/networking start
 fi

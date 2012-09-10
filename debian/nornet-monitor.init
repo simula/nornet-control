@@ -78,7 +78,7 @@ if [ "$NorNet_LocalNode_NorNetInterface" = "" ] ; then
 fi
 
 # Log what is going on ...
-echo "`env LANG=C date --utc +%FT%H:%M:%S`: ###### $0 $@ ######"  >>$LOGFILE
+echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $@ ######"  >>$LOGFILE
 
 
 # ###### Check whether file needs an update #################################
