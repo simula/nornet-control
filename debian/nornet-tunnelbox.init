@@ -61,7 +61,7 @@ set -e
 cd "$NORNET_DIRECTORY"
 
 # Log what is going on ...
-echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $@ ######"  >>$LOGFILE
+echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE
 
 
 # ###### Check whether file needs an update #################################
