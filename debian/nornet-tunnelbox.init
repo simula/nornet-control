@@ -116,7 +116,7 @@ check_and_configure ()
        </etc/sysctl.conf >/etc/nornet/sysctl-config && mv /etc/nornet/sysctl-config /etc/sysctl.conf && sudo sysctl -p
 
    # FIXME: How to compare configs?
-   Tunnelbox-Setup start || true
+   Tunnelbox-Setup start -event "check_and_configure" || true
 }
 
 
@@ -134,7 +134,7 @@ case "$ACTION" in
      rm -f tunnelbox*-config tunnelbox-bootstrap
      # All configuration files are gone. The tests below will trigger update.
      check_and_configure -update-all >>$LOGFILE
-     Tunnelbox-Setup start -providers "*" >>$LOGFILE
+     Tunnelbox-Setup start -providers "*" -event "MANUAL CONFIGURE" >>$LOGFILE
      service nornet-node configure
      ;;
   check-and-configure)
