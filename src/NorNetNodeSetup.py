@@ -970,7 +970,7 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, configNamePrefi
 
 
 # ###### Generate Nagios configuration ######################################
-def makeNagiosConfiguration(fullSiteList, configNamePrefix):
+def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
    if configNamePrefix == None:
       configNamePrefix = 'nagios-' + localSite['site_short_name']
    configurationName = configNamePrefix + '-config'
@@ -984,31 +984,51 @@ def makeNagiosConfiguration(fullSiteList, configNamePrefix):
          centralSite = None   # Some test state.
 
       for onlyDefault in [ True, False ]:
-         for siteIndex in fullSiteList:
-            if ( ((onlyDefault == True)  and (siteIndex == NorNet_SiteIndex_Central)) or \
-                 ((onlyDefault == False) and (siteIndex != NorNet_SiteIndex_Central)) ):
+         for localSiteIndex in fullSiteList:
+            if ( ((onlyDefault == True)  and (localSiteIndex == NorNet_SiteIndex_Central)) or \
+                 ((onlyDefault == False) and (localSiteIndex != NorNet_SiteIndex_Central)) ):
 
-               site        = fullSiteList[siteIndex]
-               country     = getTagValue(site['site_tags'], 'nornet_site_country', '???')
-               province    = getTagValue(site['site_tags'], 'nornet_site_province', None)
-               city        = getTagValue(site['site_tags'], 'nornet_site_city',    '???')
+               # ====== Site ================================================
+               localSite         = fullSiteList[localSiteIndex]
+               localProviderList = getNorNetProvidersForSite(localSite)
+               country           = getTagValue(localSite['site_tags'], 'nornet_site_country', '???')
+               province          = getTagValue(localSite['site_tags'], 'nornet_site_province', None)
+               city              = getTagValue(localSite['site_tags'], 'nornet_site_city',    '???')
+               tunnelboxIP       = makeNorNetIP(localSite['site_default_provider_index'], localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, 4)
 
-               tunnelboxIP = makeNorNetIP(site['site_default_provider_index'], siteIndex, NorNet_NodeIndex_Tunnelbox, -1, 4)
-
-               outputFile.write('# ====== ' + site['site_long_name'] + ' ======\n')
+               outputFile.write('# ====== ' + localSite['site_long_name'] + ' ======\n')
                outputFile.write('define host {\n')
                outputFile.write('   use           generic-host\n')
-               outputFile.write('   host_name     ' + site['site_long_name'] + '\n')
-               outputFile.write('   alias         ' + site['site_long_name'] + ' (' + city)
+               outputFile.write('   host_name     ' + localSite['site_long_name'] + '\n')
+               outputFile.write('   alias         ' + localSite['site_long_name'] + ' (' + city)
                if province !=  None:
                   outputFile.write(', ' + province)
                outputFile.write('/' + country + ')\n')
                outputFile.write('   address       ' + str(tunnelboxIP.ip) + '\n')
-               outputFile.write('   notes         latlng: ' + str(site['site_latitude']) + ',' + str(site['site_longitude']) + '\n')
+               outputFile.write('   notes         latlng: ' + str(localSite['site_latitude']) + ',' + str(localSite['site_longitude']) + '\n')
                outputFile.write('   check_command check_ping!100.0,20%!500.0,60%\n')
-               if ((siteIndex != NorNet_SiteIndex_Central) and (centralSite != None)):
+               if ((localSiteIndex != NorNet_SiteIndex_Central) and (centralSite != None)):
                   outputFile.write('   parents       ' + centralSite['site_long_name'] + '\n')
                outputFile.write('}\n\n')
+
+               # ====== Tunnels =============================================
+               for localProviderIndex in localProviderList:
+                  localProvider = localProviderList[localProviderIndex]
+                  for remoteSiteIndex in fullSiteList:
+                     if remoteSiteIndex == localSiteIndex:
+                        continue
+                     remoteSite         = fullSiteList[remoteSiteIndex]
+                     remoteProviderList = getNorNetProvidersForSite(remoteSite)
+                     for remoteProviderIndex in remoteProviderList:
+                        remoteProvider = remoteProviderList[remoteProviderIndex]
+                        for version in [ 4, 6 ]:
+                           tunnel        = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
+                           remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, 0, version)
+
+                           outputFile.write('# ' + tunnel['tunnel_interface'] + ' ' + \
+                                            str(tunnel['tunnel_local_inner_address']) + ' ' + \
+                                            str(tunnel['tunnel_remote_inner_address']) + '\n')
+
 
    outputFile.close()
 
