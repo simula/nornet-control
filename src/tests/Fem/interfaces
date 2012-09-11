@@ -19,8 +19,8 @@ iface eth0 inet6 static
    netmask 64
    gateway fd55:5555::1
    # NOTE: NorNet configuration is here, since it requires IPv4 *and* IPv6!
-   up   service nornet-tunnelbox start -providers uninett -event ifup   || true
-   down service nornet-tunnelbox stop  -providers uninett -event ifdown || true
+   up   /etc/init.d/nornet-tunnelbox start -providers uninett -event ifup   || true
+   down /etc/init.d/nornet-tunnelbox stop  -providers uninett -event ifdown || true
 
 
 # ====== Telenor Interface ================================================
@@ -28,8 +28,8 @@ auto eth1
 iface eth1 inet static
    address 169.254.100.74
    netmask 255.255.255.0
-   up   service nornet-tunnelbox start -providers telenor -event ifup   || true
-   down service nornet-tunnelbox stop  -providers telenor -event ifdown || true
+   up   /etc/init.d/nornet-tunnelbox start -providers telenor -event ifup   || true
+   down /etc/init.d/nornet-tunnelbox stop  -providers telenor -event ifdown || true
 
 
 # ====== DFN Interface ====================================================
