@@ -29,4 +29,5 @@ from NorNetNodeSetup import *;
 
 loginToPLC()
 fullSiteList = fetchNorNetSiteList()
-makeNagiosConfiguration(fullSiteList, 'nagios')
+fullNodeList = fetchNorNetNodeList()
+makeNagiosConfiguration(fullSiteList, fullNodeList, 'nagios')
