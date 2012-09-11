@@ -999,7 +999,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                outputFile.write('# ====== ' + localSite['site_long_name'] + ' ======\n')
                outputFile.write('define host {\n')
                outputFile.write('   use           generic-host\n')
-               outputFile.write('   host_name     ' + localSite['site_long_name'] + '\n')
+               outputFile.write('   host_name     ' + localSite['site_long_name'] + ' (' + localSite['site_short_name'] + ')\n')
                outputFile.write('   alias         ' + localSite['site_long_name'] + ' (' + city)
                if province !=  None:
                   outputFile.write(', ' + province)
@@ -1008,8 +1008,16 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                outputFile.write('   notes         latlng: ' + str(localSite['site_latitude']) + ',' + str(localSite['site_longitude']) + '\n')
                outputFile.write('   check_command check_ping!100.0,20%!500.0,60%\n')
                if ((localSiteIndex != NorNet_SiteIndex_Central) and (centralSite != None)):
-                  outputFile.write('   parents       ' + centralSite['site_long_name'] + '\n')
-               outputFile.write('}\n\n')
+                  outputFile.write('   parents       ' + centralSite['site_long_name'] + ' (' + centralSite['site_short_name'] + ')' +'\n')
+               outputFile.write('}\n')
+
+               # ====== Addresses ===========================================
+               for localProviderIndex in localProviderList:
+                  localProvider = localProviderList[localProviderIndex]
+                  for version in [ 4, 6 ]:
+                     localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+                     outputFile.write('# local: ' + str(localAddress) + ' ' + \
+                                      localSite['site_short_name'] + ' via ' + localProvider['provider_long_name'] + '\n')
 
                # ====== Tunnels =============================================
                for localProviderIndex in localProviderList:
@@ -1029,6 +1037,8 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                                             str(tunnel['tunnel_local_inner_address']) + ' ' + \
                                             str(tunnel['tunnel_remote_inner_address']) + '\n')
 
+
+               outputFile.write('\n')
 
    outputFile.close()
 
