@@ -130,6 +130,9 @@ case "$ACTION" in
   force-reload)
    Tunnelbox-Setup coldstart $@ >>$LOGFILE
    ;;
+  status)
+   Tunnelbox-Setup status -providers "*"
+   ;;
   configure)
      rm -f tunnelbox*-config tunnelbox-bootstrap
      # All configuration files are gone. The tests below will trigger update.
