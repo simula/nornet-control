@@ -24,7 +24,7 @@
 state="$1"
 if [ "$state" != "start" -a "$state" != "stop" -a \
      "$state" != "restart" -a "$state" != "status" -a "$state" != "reset" -a "$state" != "coldstart" ] ; then
-   echo >&2 "Usage: $0 start|stop|status|reset|coldstart [-providers list_of_providers] [-bootstrap]"
+   echo >&2 "Usage: $0 start|stop|status|reset|coldstart [-providers list_of_providers] [-event event_information] [-bootstrap]"
    exit 1
 fi
 
@@ -58,12 +58,16 @@ fi
 success=1
 bootstrap=0
 selectedProviders=""
+eventInfo=""
 shift
 while [ "$1" != "" ] ; do
    if [ "$1" = "-bootstrap" -o "$1" = "--bootstrap" ] ; then
       bootstrap=1
    elif [ "$1" = "-providers" -o "$1" = "--providers" ] ; then
       selectedProviders="$2"
+      shift
+   elif [ "$1" = "-event" -o "$1" = "--event" ] ; then
+      eventInfo=" ($2)"
       shift
    else
       echo >&2 "ERROR: Bad argument $1"
@@ -76,18 +80,18 @@ done
 ts_success=1
 if [ $bootstrap -eq 1 ] ; then
    if [ -e ./tunnelbox-bootstrap ] ; then
-      log "Entering BOOTSTRAP ..."
+      log "Entering BOOTSTRAP$eventInfo ..."
       . ./tunnelbox-bootstrap || ts_success=0
-      log-action "Finished BOOTSTRAP"
+      log-action "Finished BOOTSTRAP$eventInfo"
    else
       echo >&2 "###### tunnelbox-bootstrap does not exist. Tunnelbox needs to be configured first! ######"
       exit 0
    fi
 else
    if [ -e ./tunnelbox-config ] ; then
-      log "Entering Tunnelbox setup ..."
+      log "Entering Tunnelbox setup$eventInfo ..."
       . ./tunnelbox-config || ts_success=0
-      log-action "Finished Tunnelbox setup"
+      log-action "Finished Tunnelbox setup$eventInfo"
    else
       echo >&2 "###### tunnelbox-config does not exist. Tunnelbox needs to be configured first! ######"
       exit 0

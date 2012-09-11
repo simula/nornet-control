@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd August 10, 2012
+.Dd September 11, 2012
 .Dt Tunnelbox-Setup 1
 .Os Tunnelbox-Setup
 .\" ###### Name #############################################################
@@ -29,6 +29,7 @@
 .Nm Tunnelbox-Setup
 start|stop|status|reset|coldstart
 .Op -providers list_of_providers
+.Op -event event_information
 .Op -bootstrap
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
@@ -52,6 +53,11 @@ This option restricts the action to the given list of providers
 providers available at the tunnelbox.
 .br
 Use * to select all providers. By default, NO providers are selected!
+.It -event event_information
+This parameter adds the given event information to the log output. For
+example, the event information could contain a string like "interface xyz
+comes up" when the corresponding interface becomes active and triggers a
+tunnelbox reconfiguration.
 .It -bootstrap
 Only apply the bootstrap configuration, i.e. create a tunnel via the default
 provider to the Central Site.
