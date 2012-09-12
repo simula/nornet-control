@@ -1,3 +1,0 @@
-#!/bin/sh -e
-
-echo "`date`: IFUP++   IFACE=$IFACE MODE=$mode ADDRFAM=$ADDRFAM METHOD=$METHOD" >>/var/log/xy

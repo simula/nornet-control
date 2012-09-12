@@ -13,8 +13,8 @@ override_dh_auto_install:
 	# ifupdown scripts:
 	mkdir -p debian/nornet-tunnelbox/etc/network/if-up.d
 	mkdir -p debian/nornet-tunnelbox/etc/network/if-down.d
-	install -m 0755 debian/nornet-tunnelbox.ifup   debian/nornet-tunnelbox/etc/network/if-up.d/nornet-tunnelbox
-	install -m 0755 debian/nornet-tunnelbox.ifdown debian/nornet-tunnelbox/etc/network/if-down.d/nornet-tunnelbox
+	install -m 0755 debian/nornet-tunnelbox.ifupdown debian/nornet-tunnelbox/etc/network/if-up.d/nornet-tunnelbox
+	install -m 0755 debian/nornet-tunnelbox.ifupdown debian/nornet-tunnelbox/etc/network/if-down.d/nornet-tunnelbox
 
 # Use upstream ChangeLog for installation
 override_dh_installchangelogs:
