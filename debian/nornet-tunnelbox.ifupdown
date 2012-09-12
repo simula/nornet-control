@@ -26,8 +26,18 @@ cd /etc/nornet
 # env   >>$LOGFILE
 eval "provider=\$provider_for_if_$IFACE"
 if [ "$provider" != "" ] ; then
-   echo "Provider is $provider."   >>$LOGFILE
-   /etc/init.d/nornet-tunnelbox $MODE -providers $provider   >>$LOGFILE
+   eval "ipv4=\$ipv4_for_provider_$provider"
+   eval "ipv6=\$ipv6_for_provider_$provider"
+   echo "Provider is $provider ($ipv4, $ipv6)."   >>$LOGFILE
+   if [ "$ipv6" = "::" -a "$ADDRFAM" = "inet" ] ; then
+      echo "IPv4-only interface!"   >>$LOGFILE
+      /etc/init.d/nornet-tunnelbox $MODE -providers $provider -event "IF-$MODE/$PHASE"   >>$LOGFILE
+   elif  [ "$ipv6" != "::" -a "$ADDRFAM" = "inet6" ] ; then
+      echo "IPv4/IPv6 interface!"   >>$LOGFILE
+      /etc/init.d/nornet-tunnelbox $MODE -providers $provider -event "IF-$MODE/$PHASE"   >>$LOGFILE
+   else
+      echo "No action necessary."   >>$LOGFILE
+   fi
 else
    echo "Nothing to do for interface $IFACE."   >>$LOGFILE
 fi

@@ -564,6 +564,12 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
       outputFile.write('if_for_provider_' + \
                        localProvider['provider_short_name'] + '=' + \
                        '"' + str(localProvider['provider_tunnelbox_interface']).replace('-', '_') + '"\n')
+      outputFile.write('ipv4_for_provider_' + \
+                       localProvider['provider_short_name'] + '="' + \
+                       str(localProvider['provider_tunnelbox_ipv4']) + '"\n')
+      outputFile.write('ipv6_for_provider_' + \
+                       localProvider['provider_short_name'] + '="' + \
+                       str(localProvider['provider_tunnelbox_ipv6']) + '"\n')
    outputFile.close()
 
 
