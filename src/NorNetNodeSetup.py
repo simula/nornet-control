@@ -969,6 +969,38 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, configNamePrefi
    outputFile.close()
 
 
+# ###### Generate hostname configuration ####################################
+def makeHostnameConfiguration(fullSiteList, fullUserList, localSite, configNamePrefix, name):
+   if configNamePrefix == None:
+      configNamePrefix = 'hostname-' + localSite['site_short_name']
+   configurationName = configNamePrefix + '-config'
+   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+   outputFile.write(name + '.' + localSite['site_domain'] + '\n')
+   outputFile.close()
+
+
+# ###### Generate hosts configuration #######################################
+def makeHostsConfiguration(fullSiteList, fullUserList, localSite, localNode, configNamePrefix, name):
+   if configNamePrefix == None:
+      configNamePrefix = 'hosts-' + localSite['site_domain']
+   configurationName = configNamePrefix + '-config'
+   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+
+   _writeAutoConfigInformation(outputFile)
+
+   outputFile.write('127.0.0.1\tlocalhost\n')
+   outputFile.write('127.0.0.1\t' + name + '\n')
+   outputFile.write('127.0.0.1\t' + name + '.' + localSite['site_domain'] + '\n\n')
+
+   outputFile.write('::1\tip6-localhost ip6-loopback\n')
+   outputFile.write('fe00::0\tip6-localnet\n')
+   outputFile.write('ff00::0\tip6-mcastprefix\n')
+   outputFile.write('ff02::1\tip6-allnodes\n')
+   outputFile.write('ff02::2\tip6-allrouters\n\n')
+
+   outputFile.close()
+
+
 # ###### Generate Nagios configuration ######################################
 def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
    if configNamePrefix == None:
@@ -1019,6 +1051,10 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                      outputFile.write('# local: ' + str(localAddress) + ' ' + \
                                       localSite['site_short_name'] + ' via ' + localProvider['provider_long_name'] + '\n')
 
+                     outputFile.write('service {\n')
+                     outputFile.write('}\n')
+                                      
+
                # ====== Tunnels =============================================
                for localProviderIndex in localProviderList:
                   localProvider = localProviderList[localProviderIndex]
@@ -1039,37 +1075,5 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
 
 
                outputFile.write('\n')
-
-   outputFile.close()
-
-
-# ###### Generate hostname configuration ####################################
-def makeHostnameConfiguration(fullSiteList, fullUserList, localSite, configNamePrefix, name):
-   if configNamePrefix == None:
-      configNamePrefix = 'hostname-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-config'
-   outputFile = codecs.open(configurationName, 'w', 'utf-8')
-   outputFile.write(name + '.' + localSite['site_domain'] + '\n')
-   outputFile.close()
-
-
-# ###### Generate hosts configuration #######################################
-def makeHostsConfiguration(fullSiteList, fullUserList, localSite, localNode, configNamePrefix, name):
-   if configNamePrefix == None:
-      configNamePrefix = 'hosts-' + localSite['site_domain']
-   configurationName = configNamePrefix + '-config'
-   outputFile = codecs.open(configurationName, 'w', 'utf-8')
-
-   _writeAutoConfigInformation(outputFile)
-
-   outputFile.write('127.0.0.1\tlocalhost\n')
-   outputFile.write('127.0.0.1\t' + name + '\n')
-   outputFile.write('127.0.0.1\t' + name + '.' + localSite['site_domain'] + '\n\n')
-
-   outputFile.write('::1\tip6-localhost ip6-loopback\n')
-   outputFile.write('fe00::0\tip6-localnet\n')
-   outputFile.write('ff00::0\tip6-mcastprefix\n')
-   outputFile.write('ff02::1\tip6-allnodes\n')
-   outputFile.write('ff02::2\tip6-allrouters\n\n')
 
    outputFile.close()
