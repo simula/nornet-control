@@ -10,6 +10,11 @@ override_dh_auto_install:
 		python$$pyvers setup.py install --no-compile -O0 --install-layout=deb \
 						--root $(CURDIR)/debian/nornet-api ; \
 	done
+	# ifupdown scripts:
+	mkdir -p debian/nornet-tunnelbox/etc/network/if-up.d
+	mkdir -p debian/nornet-tunnelbox/etc/network/if-down.d
+	install -m 0755 debian/nornet-tunnelbox.ifup   debian/nornet-tunnelbox/etc/network/if-up.d/nornet-tunnelbox
+	install -m 0755 debian/nornet-tunnelbox.ifdown debian/nornet-tunnelbox/etc/network/if-down.d/nornet-tunnelbox
 
 # Use upstream ChangeLog for installation
 override_dh_installchangelogs:
@@ -18,8 +23,3 @@ override_dh_installchangelogs:
 # Do not compress example files
 override_dh_compress:
 	dh_compress -Xnornet-config
-
-# ifupdown scripts:
-binary-post-install/nornet-tunnelbox::
-	install -m 0755 debian/nornet-tunnelbox.ifup   debian/nornet-tunnelbox/etc/network/if-up.d/nornet-tunnelbox
-	install -m 0755 debian/nornet-tunnelbox.ifdown debian/nornet-tunnelbox/etc/network/if-down.d/nornet-tunnelbox
