@@ -485,9 +485,8 @@ getProvidersFromInterfaces () {
          else
             selectedProviders="$selectedProviders,$provider"
          fi
-      else
-         echo >&2 "ERROR: Interface \"$interface\" does not belong to a NorNet provider!"
-         exit 1
+      #else
+      #   echo >&2 "NOTE: Interface \"$interface\" does not belong to a NorNet provider -> skipping!"
       fi
    done
    IFS=$oldIFS

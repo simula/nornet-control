@@ -124,7 +124,8 @@ check_and_configure ()
 case "$ACTION" in
   start|stop|restart)
    echo -n "Starting $DESC: "
-   Tunnelbox-Setup "$ACTION" $@ >>$LOGFILE && \
+   INTERFACES=`find /var/run/network -name "ifup.*" | sed -e "s/\/var\/run\/network\/ifup.//g" | xargs -n128 echo | sed -e "s/ /,/g"`
+   Tunnelbox-Setup "$ACTION" -interfaces "$INTERFACES -event "init script action: $ACTION" " $@ >>$LOGFILE && \
    echo "$NAME."
    ;;
   force-reload)
