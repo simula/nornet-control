@@ -69,7 +69,7 @@ def makeProviderConfiguration():
 
 
 # ###### Generate site configuration ########################################
-def makeSiteConfiguration(fullSiteList, site, v4only):
+def makeSiteConfiguration(fullSiteList, site):
    configurationName = 'site-' + site['site_short_name'] + '-config'
    outputFile = makeConfigFile('Site', configurationName, True)
 
@@ -92,7 +92,7 @@ def makeSiteConfiguration(fullSiteList, site, v4only):
    if defProvTbIPv4 == None:
      error('Tunnelbox address of default provider has not been defined?!')
 
-   makeTunnelBoxConfiguration(fullSiteList, site, None, v4only)
+   makeTunnelBoxConfiguration(fullSiteList, site, None)
    makeTunnelboxBootstrap(siteIndex, site['site_default_provider_index'],
                           'xxxxx', defProvTbIPv4,
                           'tunnelbox-' +  site['site_short_name'])
@@ -102,7 +102,7 @@ def makeSiteConfiguration(fullSiteList, site, v4only):
 
 
 # ###### Generate sites configuration #######################################
-def makeNorNetConfiguration(v4only):
+def makeNorNetConfiguration():
    configurationName = 'nornet-config'
    outputFile = makeConfigFile('nornet', configurationName, True)
 
@@ -114,7 +114,7 @@ def makeNorNetConfiguration(v4only):
    for localSiteIndex in fullSiteList:
       localSite = fullSiteList[localSiteIndex]
 
-      siteConfigurationName = makeSiteConfiguration(fullSiteList, localSite, v4only)
+      siteConfigurationName = makeSiteConfiguration(fullSiteList, localSite)
       outputFile.write('. ./' + siteConfigurationName + '\n')
 
    outputFile.close()
@@ -198,7 +198,7 @@ def _makeGRELinkLocal(a, b):
 
 
 # ###### Generate tunnelbox configuration for given provider ################
-def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvider, pathNumber, configNamePrefix, v4only):
+def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvider, pathNumber, configNamePrefix):
    if configNamePrefix == None:
       configNamePrefix = 'tunnelbox-' + localSite['site_short_name']
    configurationName = configNamePrefix + '-' + localProvider['provider_short_name'] + '-config'
@@ -251,8 +251,6 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
          # to "main" table instead!
          providerList = getNorNetProvidersForSite(localSite)
          for version in [ 4, 6 ]:
-            if ((version == 6) and (v4only == True)):
-               continue
             fullNorNetNetwork    = makeNorNetIP(0, 0, 0, 0, version)
             localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, version)
             outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + \
@@ -269,8 +267,6 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
          # ====== Source rules ==============================================
          # Otherwise, use source address to determine the outgoing provider.
          for version in [ 4, 6 ]:
-            if ((version == 6) and (v4only == True)):
-               continue
             fullNorNetNetwork    = makeNorNetIP(0, 0, 0, 0, version)
             localProviderNetwork = makeNorNetIP(localProviderIndex, 0, 0, 0, version)
             outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableSourcePref) + \
@@ -282,8 +278,6 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                           localProvider['provider_long_name'] + ' ..."\n')
          outputFile.write('   remove-table ' + str(routingTableID) + '   && \\\n')
          for version in [ 4, 6 ]:
-            if ((version == 6) and (v4only == True)):
-               continue
             localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, version)
             outputFile.write('   remove-table-selector main ' + str(routingTableDestPref) + \
                              ' to ' + str(localProviderNetwork) + '   && \\\n')
@@ -314,8 +308,6 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                 remoteProvider['provider_long_name'] + ']:"\n')
 
             for version in [ 4, 6 ]:
-               if ((version == 6) and (v4only == True)):
-                  continue
                tunnel        = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
                remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, 0, version)
 
@@ -328,7 +320,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                   options = ''
                   if ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
                      options = '--add-to-existing-tunnel'
-                  elif ((v4only == False) and (version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
+                  elif ((version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
                      options = '--v6-linklocal ' + str(_makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
                                                                          tunnel['tunnel_remote_outer_address']))
                   outputFile.write('   make-tunnel ' + \
@@ -391,8 +383,6 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
             outputFile.write('   log "Setting up DEFAULT route to central site"\n')
             outputFile.write('   make-table ' + str(routingTableID) + '   # DEFAULT to CENTRAL SITE\n')
             for version in [ 4, 6 ]:
-               if ((version == 6) and (v4only == True)):
-                  continue
                defaultTunnel     = _getDefaultTunnel(fullSiteList, localSite, version)
                fullNorNetNetwork = makeNorNetIP(0, 0, 0, 0, version)
 
@@ -425,7 +415,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
 
 # ###### Generate tunnelbox configuration for local network #################
 def _makeTunnelboxNetwork(outputFile, state, localInterface,
-                          localProvider, localSiteIndex, v4only):
+                          localProvider, localSiteIndex):
    localProviderIndex = localProvider['provider_index']
 
    action = ''
@@ -437,9 +427,6 @@ def _makeTunnelboxNetwork(outputFile, state, localInterface,
                     localProvider['provider_long_name'] + ' ..."\n')
 
    for version in [ 4, 6 ]:
-      if ((version == 6) and (v4only == True)):
-         continue
-
       localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
       if state == 'start':
          outputFile.write('      make-address ' + localInterface + ' ' + str(localAddress) + '   && \\\n')
@@ -549,7 +536,7 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
 
 
 # ###### Generate tunnelbox configuration ###################################
-def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only):
+def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
    if configNamePrefix == None:
       configNamePrefix = 'tunnelbox-' + localSite['site_short_name']
    configurationName = configNamePrefix + '-config'
@@ -575,7 +562,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
    outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'stop', localInterface,
-                            localProviderList[localProviderIndex], localSiteIndex, v4only)
+                            localProviderList[localProviderIndex], localSiteIndex)
    if localSiteIndex == NorNet_SiteIndex_Central:
       outputFile.write('\n      log-action "Turning off IPv4 NAT ..."\n')
       outputFile.write('      remove-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '"   && \\\n')
@@ -595,7 +582,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
             localProvider = localProviderList[localProviderIndex]
             tbpName = _makeTunnelboxProvider(fullSiteList, localSite,
                                              localProviderList, localProvider,
-                                             pathNumber, configNamePrefix, v4only)
+                                             pathNumber, configNamePrefix)
             providerList.append(localProvider['provider_short_name'])
             configFileList.append(tbpName)
             if pathNumber > 0:
@@ -655,7 +642,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix, v4only
 
    for localProviderIndex in localProviderList:
       _makeTunnelboxNetwork(outputFile, 'start', localInterface,
-                            localProviderList[localProviderIndex], localSiteIndex, v4only)
+                            localProviderList[localProviderIndex], localSiteIndex)
    if localSiteIndex == NorNet_SiteIndex_Central:
       outputFile.write('\n      log-action "Turning on IPv4 NAT ..."\n')
       outputFile.write('      make-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '" && \\\n')
@@ -1053,7 +1040,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
 
                      outputFile.write('service {\n')
                      outputFile.write('}\n')
-                                      
+
 
                # ====== Tunnels =============================================
                for localProviderIndex in localProviderList:

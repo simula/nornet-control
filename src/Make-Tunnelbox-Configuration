@@ -78,4 +78,4 @@ if not bootstrapOnly:
    except:
       error('Cannot find local site ' + str(localSiteIndex) + ' at PLC database!')
 
-   makeTunnelBoxConfiguration(fullSiteList, localSite, 'tunnelbox', False)
+   makeTunnelBoxConfiguration(fullSiteList, localSite, 'tunnelbox')
