@@ -258,15 +258,17 @@ def getNorNetProvidersForSite(norNetSite):
          providerIndex = int(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_index', '-1'))
          if providerIndex <= 0:
             continue
-         providerInfo   = getNorNetProviderInfo(providerIndex)
-         providerTbIPv4 = IPv4Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv4', '0.0.0.0'))
-         providerTbIPv6 = IPv6Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::'))
+         providerInfo        = getNorNetProviderInfo(providerIndex)
+         providerTbIPv4      = IPv4Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv4', '0.0.0.0'))
+         providerTbIPv6      = IPv6Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::'))
+         providerTbInterface = getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_interface', '')
          norNetProvider = {
-            'provider_index'          : providerIndex,
-            'provider_short_name'     : providerInfo[1],
-            'provider_long_name'      : providerInfo[0],
-            'provider_tunnelbox_ipv4' : providerTbIPv4,
-            'provider_tunnelbox_ipv6' : providerTbIPv6
+            'provider_index'               : providerIndex,
+            'provider_short_name'          : providerInfo[1],
+            'provider_long_name'           : providerInfo[0],
+            'provider_tunnelbox_ipv4'      : providerTbIPv4,
+            'provider_tunnelbox_ipv6'      : providerTbIPv6,
+            'provider_tunnelbox_interface' : providerTbInterface
          }
 
          norNetProviderList[providerIndex] = norNetProvider
