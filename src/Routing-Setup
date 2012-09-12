@@ -447,7 +447,7 @@ remove-nat ()
 
 # ###### Check whether a provider is in a list of available providers #######
 checkProviders () {
-   local availableProviders="$1"
+   local availableProviders=`echo $1 | sed -e "s/ //g" -e "s/\t//g"`
    local selectedProviders="$2"
    local oldIFS=$IFS
    IFS=","
@@ -466,4 +466,29 @@ checkProviders () {
       done
    fi
    IFS=$oldIFS
+}
+
+
+# ###### Check whether a provider is in a list of available providers #######
+# IMPORTANT: No spaces, etc. are allowed within lists!
+getProvidersFromInterfaces () {
+   local interfaces=`echo $1 | sed -e "s/-/_/g" -e "s/ //g" -e "s/\t//g"`
+   local selectedProviders=""
+   local oldIFS=$IFS
+   IFS=","
+   for interface in $interfaces ; do
+      eval "provider=\$provider_for_if_$interface"
+      if [ "$provider" != "" ] ; then
+         if [ "$selectedProviders" = "" ] ; then
+            selectedProviders="$provider"
+         else
+            selectedProviders="$selectedProviders,$provider"
+         fi
+      else
+         echo >&2 "ERROR: Interface \"$interface\" does not belong to a NorNet provider!"
+         exit 1
+      fi
+   done
+   IFS=$oldIFS
+   echo $selectedProviders
 }

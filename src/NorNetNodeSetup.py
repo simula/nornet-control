@@ -570,6 +570,21 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
    outputFile.write('   fi\n')
    outputFile.write('fi\n\n')
 
+   # ====== Interface to provider mapping ===================================
+   for localProviderIndex in localProviderList:
+      localProvider = localProviderList[localProviderIndex]
+      outputFile.write('provider_for_if_' + \
+                       str(localProvider['provider_tunnelbox_interface']).replace('-', '_') + '=' + \
+                       '"' + localProvider['provider_short_name'] + '"\n')
+   outputFile.write('if [ "$selectedInterfaces" != "" ] ; then\n')
+   outputFile.write('   if [ "$selectedProviders" = "" ] ; then\n')
+   outputFile.write('      selectedProviders=`getProvidersFromInterfaces $selectedInterfaces`\n')
+   outputFile.write('   else\n')
+   outputFile.write('      echo >&2 "ERROR: Either specify providers or interfaces, but *not* both!"\n')
+   outputFile.write('      exit 1\n')
+   outputFile.write('   fi\n')
+   outputFile.write('fi\n\n')
+
    # ====== Configure tunnels and routing ===================================
    outputFile.write('availableProviders="')
    providerList   = []
