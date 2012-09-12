@@ -262,6 +262,8 @@ def getNorNetProvidersForSite(norNetSite):
          providerTbIPv4      = IPv4Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv4', '0.0.0.0'))
          providerTbIPv6      = IPv6Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::'))
          providerTbInterface = getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_interface', '')
+         if not re.match(r"^[a-zA-Z0-9_-]*$", providerTbInterface):
+            error('Bad interface name ' + providerTbInterface)
          norNetProvider = {
             'provider_index'               : providerIndex,
             'provider_short_name'          : providerInfo[1],
