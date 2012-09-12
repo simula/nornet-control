@@ -446,6 +446,7 @@ remove-nat ()
 
 
 # ###### Check whether a provider is in a list of available providers #######
+# IMPORTANT: No spaces, etc. are allowed within lists!
 checkProviders () {
    local availableProviders="$1"
    local selectedProviders="$2"
