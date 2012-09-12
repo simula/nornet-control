@@ -539,8 +539,8 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
 def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
    if configNamePrefix == None:
       configNamePrefix = 'tunnelbox-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-config'
-   outputFile = makeConfigFile('Tunnelbox', configurationName, True)
+   configurationName = configNamePrefix + '-providers'
+   tbProvidersConfig = configurationName
    log('Making tunnelbox configuration for ' + localSite['site_long_name'] + ' ...')
 
    localSiteIndex    = localSite['site_index']
@@ -552,7 +552,27 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
    fullNorNetIPv4    = makeNorNetIP(0, 0, 0, 0, 4)
 
 
+   # ====== Interface to provider mappings ==================================
+   outputFile = makeConfigFile('Tunnelbox ISP mapping', configurationName, True)
+   for localProviderIndex in localProviderList:
+      localProvider = localProviderList[localProviderIndex]
+      outputFile.write('provider_for_if_' + \
+                       str(localProvider['provider_tunnelbox_interface']).replace('-', '_') + '=' + \
+                       '"' + localProvider['provider_short_name'] + '"\n')
+   for localProviderIndex in localProviderList:
+      localProvider = localProviderList[localProviderIndex]
+      outputFile.write('if_for_provider_' + \
+                       localProvider['provider_short_name'] + '=' + \
+                       '"' + str(localProvider['provider_tunnelbox_interface']).replace('-', '_') + '"\n')
+   outputFile.close()
+
+
    # ====== Remove local setup ==============================================
+   configurationName = configNamePrefix + '-config'
+   outputFile = makeConfigFile('Tunnelbox', configurationName, True)
+
+   outputFile.write('. ./' + tbProvidersConfig + '\n\n')
+
    outputFile.write('if [ "$selectedProviders" == "" ] ; then\n')
    outputFile.write('   if [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
    outputFile.write('      log "Tearing down local networks ..."\n')
@@ -570,12 +590,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
    outputFile.write('   fi\n')
    outputFile.write('fi\n\n')
 
-   # ====== Interface to provider mapping ===================================
-   for localProviderIndex in localProviderList:
-      localProvider = localProviderList[localProviderIndex]
-      outputFile.write('provider_for_if_' + \
-                       str(localProvider['provider_tunnelbox_interface']).replace('-', '_') + '=' + \
-                       '"' + localProvider['provider_short_name'] + '"\n')
+   # ====== Configure tunnels and routing ===================================
    outputFile.write('if [ "$selectedInterfaces" != "" ] ; then\n')
    outputFile.write('   if [ "$selectedProviders" = "" ] ; then\n')
    outputFile.write('      selectedProviders=`getProvidersFromInterfaces $selectedInterfaces`\n')
@@ -585,7 +600,6 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
    outputFile.write('   fi\n')
    outputFile.write('fi\n\n')
 
-   # ====== Configure tunnels and routing ===================================
    outputFile.write('availableProviders="')
    providerList   = []
    configFileList = []
