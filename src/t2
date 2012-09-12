@@ -1,8 +1,36 @@
-#!/bin/sh
+#!/bin/bash
 
-INTERFACES=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//"`
-sysctl -q -w net.ipv4.conf.default.rp_filter=0 || true
-sysctl -q -w net.ipv4.conf.all.rp_filter=0 || true
-for interface in $INTERFACES ; do
-   sysctl -q -w net.ipv4.conf.$interface.rp_filter=0 || true
-done
+
+provider_for_if_eth0='uninett'
+provider_for_if_eth1='telenor'
+provider_for_if_eth2='dfn'
+provider_for_if_gre_1_2_3='hafslund'
+
+
+# ###### Check whether a provider is in a list of available providers #######
+# IMPORTANT: No spaces, etc. are allowed within lists!
+getProvidersFromInterfaces () {
+   local interfaces=`echo $1 | sed -e "s/-/_/g" -e "s/ //g" -e "s/\t//g"`
+   local selectedProviders=""
+   local oldIFS=$IFS
+   IFS=","
+   for interface in $interfaces ; do
+      eval "provider=\$provider_for_if_$interface"
+      if [ "$provider" != "" ] ; then
+         if [ "$selectedProviders" = "" ] ; then
+            selectedProviders="$provider"
+         else
+            selectedProviders="$selectedProviders,$provider"
+         fi
+      else
+         echo >&2 "ERROR: Interface \"$interface\" does not belong to a NorNet provider!"
+         exit 1
+      fi
+   done
+   IFS=$oldIFS
+   echo $selectedProviders
+}
+
+
+x=`getProvidersFromInterfaces "eth0, eth1,   eth2, gre-1-2-3"`
+echo $x
