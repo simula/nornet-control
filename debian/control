@@ -96,6 +96,7 @@ Description: NorNet Node Control
 Package: nornet-tunnelbox
 Architecture: any
 Depends: grub2,
+         ifupdown,
          nmap,
          nornet-api,
          nornet-management,

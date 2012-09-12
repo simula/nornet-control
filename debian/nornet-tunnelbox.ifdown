@@ -1,0 +1,3 @@
+#!/bin/sh -e
+
+echo "`date`: IFDOWN--   IFACE=$IFACE MODE=$mode ADDRFAM=$ADDRFAM METHOD=$METHOD" >>/var/log/xy
