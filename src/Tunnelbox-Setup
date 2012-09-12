@@ -24,7 +24,7 @@
 state="$1"
 if [ "$state" != "start" -a "$state" != "stop" -a \
      "$state" != "restart" -a "$state" != "status" -a "$state" != "reset" -a "$state" != "coldstart" ] ; then
-   echo >&2 "Usage: $0 start|stop|status|reset|coldstart [-providers list_of_providers] [-event event_information] [-bootstrap]"
+   echo >&2 "Usage: $0 start|stop|status|reset|coldstart [-providers list_of_providers] [-interfaces list_of_interfaces] [-event event_information] [-bootstrap]"
    exit 1
 fi
 
@@ -58,6 +58,7 @@ fi
 success=1
 bootstrap=0
 selectedProviders=""
+selectedInterfaces=""
 eventInfo=""
 shift
 while [ "$1" != "" ] ; do
@@ -65,6 +66,9 @@ while [ "$1" != "" ] ; do
       bootstrap=1
    elif [ "$1" = "-providers" -o "$1" = "--providers" ] ; then
       selectedProviders="$2"
+      shift
+   elif [ "$1" = "-interfaces" -o "$1" = "--interfaces" ] ; then
+      selectedInterfaces="$2"
       shift
    elif [ "$1" = "-event" -o "$1" = "--event" ] ; then
       eventInfo=" ($2)"

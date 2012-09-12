@@ -29,6 +29,7 @@
 .Nm Tunnelbox-Setup
 start|stop|status|reset|coldstart
 .Op -providers list_of_providers
+.Op -interfaces list_of_interfaces
 .Op -event event_information
 .Op -bootstrap
 .\" ###### Description ######################################################
@@ -53,6 +54,9 @@ This option restricts the action to the given list of providers
 providers available at the tunnelbox.
 .br
 Use * to select all providers. By default, NO providers are selected!
+.It -interfaces list_of_interfaces
+Alternatively, instead of specifying providers, it is possible to specify
+the corresponding interfaces with this option.
 .It -event event_information
 This parameter adds the given event information to the log output. For
 example, the event information could contain a string like "interface xyz
