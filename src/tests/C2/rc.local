@@ -4,6 +4,7 @@
 # You can put your own initialization stuff in here if you don't
 # want to do the full Sys V style init stuff.
 
+ip -6 addr add fd55:5555::b/64 dev eth3 || true
 ip addr add 169.254.100.11/24 dev eth1 || true
 ip addr add 172.31.255.11/24  dev eth1 || true
 ip addr add 132.252.156.11/24 dev eth1 || true
