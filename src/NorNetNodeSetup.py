@@ -1037,12 +1037,13 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
       except:
          centralSite = None   # Some test state.
 
+
       for onlyDefault in [ True, False ]:
          for localSiteIndex in fullSiteList:
             if ( ((onlyDefault == True)  and (localSiteIndex == NorNet_SiteIndex_Central)) or \
                  ((onlyDefault == False) and (localSiteIndex != NorNet_SiteIndex_Central)) ):
 
-               # ====== Site ================================================
+               # ====== Sites ===============================================
                localSite         = fullSiteList[localSiteIndex]
                localProviderList = getNorNetProvidersForSite(localSite)
                country           = getTagValue(localSite['site_tags'], 'nornet_site_country', '???')
@@ -1060,26 +1061,47 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                outputFile.write('/' + country + ')\n')
                outputFile.write('   address       ' + str(tunnelboxIP.ip) + '\n')
                outputFile.write('   notes         latlng: ' + str(localSite['site_latitude']) + ',' + str(localSite['site_longitude']) + '\n')
-               outputFile.write('   check_command check_ping!100.0,20%!500.0,60%\n')
-               if ((localSiteIndex != NorNet_SiteIndex_Central) and (centralSite != None)):
-                  outputFile.write('   parents       ' + centralSite['site_long_name'] + '\n')
-               outputFile.write('}\n')
-
-               # ====== Addresses ===========================================
+               outputFile.write('   check_command MySiteCheck!')
                for localProviderIndex in localProviderList:
                   localProvider = localProviderList[localProviderIndex]
                   for version in [ 4, 6 ]:
                      localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
-                     outputFile.write('# local: ' + str(localAddress) + ' ' + \
-                                      localSite['site_short_name'] + ' via ' + localProvider['provider_long_name'] + '\n')
+                     outputFile.write(str(localAddress) + ' ')
+               outputFile.write('\n')
+               if ((localSiteIndex != NorNet_SiteIndex_Central) and (centralSite != None)):
+                  outputFile.write('   parents       ' + centralSite['site_long_name'] + '\n')
+               outputFile.write('}\n\n')
 
-                     outputFile.write('service {\n')
-                     outputFile.write('}\n')
 
-
-               # ====== Tunnels =============================================
+               # ====== Internal/external tunnelbox addresses ===============
                for localProviderIndex in localProviderList:
                   localProvider = localProviderList[localProviderIndex]
+                  for version in [ 4, 6 ]:
+                     internalAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+                     if version == 4:
+                        externalAddress = localProvider['provider_tunnelbox_ipv4']
+                     else:
+                        externalAddress = localProvider['provider_tunnelbox_ipv6']
+
+                     outputFile.write('define service {\n')
+                     outputFile.write('   use                 generic-service\n')
+                     outputFile.write('   service_description Internal ' + localProvider['provider_long_name']  + ' ' + str(internalAddress.ip) + '\n')
+                     outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
+                     outputFile.write('   check_command       MyPingCheck!' + str(internalAddress.ip) + '\n')
+                     outputFile.write('}\n')
+
+                     if externalAddress != IPv6Address('::'):
+                        outputFile.write('define service {\n')
+                        outputFile.write('   use                 generic-service\n')
+                        outputFile.write('   service_description External ' + localProvider['provider_long_name']  + ' ' + str(externalAddress) + '\n')
+                        outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
+                        outputFile.write('   check_command       MyPingCheck!' + str(externalAddress) + '\n')
+                        outputFile.write('}\n')
+
+                  outputFile.write('\n')
+
+
+                  # ====== Tunnels ==========================================
                   for remoteSiteIndex in fullSiteList:
                      if remoteSiteIndex == localSiteIndex:
                         continue
@@ -1095,7 +1117,105 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                                             str(tunnel['tunnel_local_inner_address']) + ' ' + \
                                             str(tunnel['tunnel_remote_inner_address']) + '\n')
 
+                           outputFile.write('define service {\n')
+                           outputFile.write('   use generic-service\n')
+                           outputFile.write('   service_description Tunnel ' + \
+                                            str.upper(localSite['site_short_name']) + '-' + str.upper(remoteSite['site_short_name']) + ' ' + \
+                                            localProvider['provider_long_name'] + '/' + remoteProvider['provider_long_name'] + ' via ' + \
+                                            tunnel['tunnel_interface'] + ' local ' + str(tunnel['tunnel_local_inner_address']) + '\n')
+                           outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
+                           outputFile.write('   check_command       MyPingCheck!' + str(tunnel['tunnel_local_inner_address']) + '\n')
+                           outputFile.write('}\n')
+                           outputFile.write('define service {\n')
+                           outputFile.write('   use generic-service\n')
+                           outputFile.write('   service_description Tunnel ' + \
+                                            str.upper(localSite['site_short_name']) + '-' + str.upper(remoteSite['site_short_name']) + ' ' + \
+                                            localProvider['provider_long_name'] + '/' + remoteProvider['provider_long_name'] + ' via ' + \
+                                            tunnel['tunnel_interface'] + ' remote ' + str(tunnel['tunnel_remote_inner_address']) + '\n')
+                           outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
+                           outputFile.write('   check_command       MyPingCheck!' + str(tunnel['tunnel_remote_inner_address']) + '\n')
+                           outputFile.write('}\n')
+
+                  outputFile.write('\n')
 
                outputFile.write('\n')
+
+
+         # ====== Nodes =====================================================
+         siteNodes = []
+         for localNode in fullNodeList:
+            localNodeSite = getNorNetSiteOfNode(fullSiteList, localNode)
+            if localNodeSite['site_index'] == localSite['site_index']:
+               outputFile.write('define host {\n')
+               outputFile.write('   use                 generic-host\n')
+               outputFile.write('   service_description Node ' + localNode['node_name'] + '\n')
+               outputFile.write('   host_name           ' + localNode['node_name'] + '\n')
+               localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, localNode['node_index'], -1, 4)
+               outputFile.write('   check_command       MyPingCheck!' + str(localAddress.ip) + '\n')
+               outputFile.write('}\n\n')
+               siteNodes.append(localNode['node_name'])
+
+               for localProviderIndex in localProviderList:
+                  localProvider = localProviderList[localProviderIndex]
+                  for version in [ 4, 6 ]:
+                     localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, localNode['node_index'], -1, version)
+
+                     outputFile.write('define service {\n')
+                     outputFile.write('   use                 generic-service\n')
+                     outputFile.write('   service_description ' + localNode['node_name'] + '/' + localProvider['provider_long_name']  + ' ' + str(localAddress.ip) + '\n')
+                     outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
+                     outputFile.write('   check_command       MyPingCheck!' + str(localAddress.ip) + '\n')
+                     outputFile.write('}\n')
+
+         outputFile.write('\n')
+
+         # ====== Nodes at site hostgroup ===================================
+         if len(siteNodes) > 0:
+            outputFile.write('define hostgroup {\n')
+            outputFile.write('   hostgroup_name NorNet Nodes at ' + localSite['site_long_name'] + '\n')
+            outputFile.write('   members        ')
+            isFirst = True
+            for node in siteNodes:
+               if isFirst == True:
+                  isFirst = False
+               else:
+                  outputFile.write(', ')
+               outputFile.write(node)
+            outputFile.write('\n')
+            outputFile.write('}\n\n')
+
+
+      # ====== Tunnelboxes hostgroup ========================================
+      if len(fullSiteList) > 0:
+         outputFile.write('define hostgroup {\n')
+         outputFile.write('   hostgroup_name NorNet Tunnelboxes\n')
+         outputFile.write('   members    ')
+         isFirst = True
+         for localSiteIndex in fullSiteList:
+            localSite = fullSiteList[localSiteIndex]
+            if isFirst == True:
+               isFirst = False
+            else:
+               outputFile.write(', ')
+            outputFile.write(localSite['site_long_name'])
+         outputFile.write('\n')
+         outputFile.write('}\n\n')
+
+
+      # ====== Nodes hostgroup ==============================================
+      if len(fullNodeList) > 0:
+         outputFile.write('define hostgroup {\n')
+         outputFile.write('   hostgroup_name NorNet Nodes\n')
+         outputFile.write('   members        ')
+         isFirst = True
+         for localNode in fullNodeList:
+            if isFirst == True:
+               isFirst = False
+            else:
+               outputFile.write(', ')
+            outputFile.write(localNode['node_name'])
+         outputFile.write('\n')
+         outputFile.write('}\n')
+
 
    outputFile.close()
