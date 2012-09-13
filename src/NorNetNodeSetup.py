@@ -1160,7 +1160,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                            outputFile.write('define service {\n')
                            outputFile.write('   use                 generic-service\n')
                            outputFile.write('   service_description ' + localNode['node_name'] + '/' + localProvider['provider_long_name']  + ' ' + str(localAddress.ip) + '\n')
-                           outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
+                           outputFile.write('   host_name           ' + localNode['node_name'] + '\n')
                            outputFile.write('   check_command       MyPingCheck!' + str(localAddress.ip) + '\n')
                            outputFile.write('}\n')
 
@@ -1169,7 +1169,8 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                # ====== Nodes at site hostgroup =============================
                if len(siteNodes) > 0:
                   outputFile.write('define hostgroup {\n')
-                  outputFile.write('   hostgroup_name NorNet Nodes at ' + localSite['site_long_name'] + '\n')
+                  outputFile.write('   hostgroup_name nodes-' + str.lower(localSite['site_short_name']) + '\n')
+                  outputFile.write('   alias          Nodes of ' + localSite['site_long_name'] + '\n')
                   outputFile.write('   members        ')
                   isFirst = True
                   for node in siteNodes:
@@ -1187,8 +1188,9 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
       # ====== Tunnelboxes hostgroup ========================================
       if len(fullSiteList) > 0:
          outputFile.write('define hostgroup {\n')
-         outputFile.write('   hostgroup_name NorNet Tunnelboxes\n')
-         outputFile.write('   members    ')
+         outputFile.write('   hostgroup_name tunnelboxes\n')
+         outputFile.write('   alias          All Tunnelboxes\n')
+         outputFile.write('   members        ')
          isFirst = True
          for localSiteIndex in fullSiteList:
             localSite = fullSiteList[localSiteIndex]
@@ -1204,7 +1206,8 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
       # ====== Nodes hostgroup ==============================================
       if len(fullNodeList) > 0:
          outputFile.write('define hostgroup {\n')
-         outputFile.write('   hostgroup_name NorNet Nodes\n')
+         outputFile.write('   hostgroup_name nodes\n')
+         outputFile.write('   alias          All Nodes\n')
          outputFile.write('   members        ')
          isFirst = True
          for localNode in fullNodeList:
