@@ -1138,51 +1138,50 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
 
                   outputFile.write('\n')
 
+
+            # ====== Nodes ==================================================
+            siteNodes = []
+            for localNode in fullNodeList:
+               localNodeSite = getNorNetSiteOfNode(fullSiteList, localNode)
+               if localNodeSite['site_index'] == localSite['site_index']:
+                  outputFile.write('define host {\n')
+                  outputFile.write('   use                 generic-host\n')
+                  outputFile.write('   host_name           ' + localNode['node_name'] + '\n')
+                  localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, localNode['node_index'], -1, 4)
+                  outputFile.write('   check_command       MyPingCheck!' + str(localAddress.ip) + '\n')
+                  outputFile.write('}\n')
+                  siteNodes.append(localNode['node_name'])
+
+                  for localProviderIndex in localProviderList:
+                     localProvider = localProviderList[localProviderIndex]
+                     for version in [ 4, 6 ]:
+                        localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, localNode['node_index'], -1, version)
+
+                        outputFile.write('define service {\n')
+                        outputFile.write('   use                 generic-service\n')
+                        outputFile.write('   service_description ' + localNode['node_name'] + '/' + localProvider['provider_long_name']  + ' ' + str(localAddress.ip) + '\n')
+                        outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
+                        outputFile.write('   check_command       MyPingCheck!' + str(localAddress.ip) + '\n')
+                        outputFile.write('}\n')
+
+                  outputFile.write('\n')
+
+            # ====== Nodes at site hostgroup ================================
+            if len(siteNodes) > 0:
+               outputFile.write('define hostgroup {\n')
+               outputFile.write('   hostgroup_name NorNet Nodes at ' + localSite['site_long_name'] + '\n')
+               outputFile.write('   members        ')
+               isFirst = True
+               for node in siteNodes:
+                  if isFirst == True:
+                     isFirst = False
+                  else:
+                     outputFile.write(', ')
+                  outputFile.write(node)
                outputFile.write('\n')
+               outputFile.write('}\n')
 
-
-         # ====== Nodes =====================================================
-         siteNodes = []
-         for localNode in fullNodeList:
-            localNodeSite = getNorNetSiteOfNode(fullSiteList, localNode)
-            if localNodeSite['site_index'] == localSite['site_index']:
-               outputFile.write('define host {\n')
-               outputFile.write('   use                 generic-host\n')
-               outputFile.write('   service_description Node ' + localNode['node_name'] + '\n')
-               outputFile.write('   host_name           ' + localNode['node_name'] + '\n')
-               localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, localNode['node_index'], -1, 4)
-               outputFile.write('   check_command       MyPingCheck!' + str(localAddress.ip) + '\n')
-               outputFile.write('}\n\n')
-               siteNodes.append(localNode['node_name'])
-
-               for localProviderIndex in localProviderList:
-                  localProvider = localProviderList[localProviderIndex]
-                  for version in [ 4, 6 ]:
-                     localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, localNode['node_index'], -1, version)
-
-                     outputFile.write('define service {\n')
-                     outputFile.write('   use                 generic-service\n')
-                     outputFile.write('   service_description ' + localNode['node_name'] + '/' + localProvider['provider_long_name']  + ' ' + str(localAddress.ip) + '\n')
-                     outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
-                     outputFile.write('   check_command       MyPingCheck!' + str(localAddress.ip) + '\n')
-                     outputFile.write('}\n')
-
-         outputFile.write('\n')
-
-         # ====== Nodes at site hostgroup ===================================
-         if len(siteNodes) > 0:
-            outputFile.write('define hostgroup {\n')
-            outputFile.write('   hostgroup_name NorNet Nodes at ' + localSite['site_long_name'] + '\n')
-            outputFile.write('   members        ')
-            isFirst = True
-            for node in siteNodes:
-               if isFirst == True:
-                  isFirst = False
-               else:
-                  outputFile.write(', ')
-               outputFile.write(node)
             outputFile.write('\n')
-            outputFile.write('}\n\n')
 
 
       # ====== Tunnelboxes hostgroup ========================================
