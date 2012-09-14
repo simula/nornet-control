@@ -197,6 +197,33 @@ def _makeGRELinkLocal(a, b):
    return(result)
 
 
+# ###### Add routes to remote tunnel endpoints ##############################
+def _makeRemoteTunnelRoutesOnCentralRouter(fullSiteList, outputFile, nextHopInterface, nextHopAddress, remoteSite, version):
+   outgoingProviderList = getNorNetProvidersForSite(remoteSite)
+   for outgoingProviderIndex in outgoingProviderList:
+      outgoingProvider = outgoingProviderList[outgoingProviderIndex]
+      for peerSiteIndex in fullSiteList:
+         if peerSiteIndex == NorNet_SiteIndex_Central:   # Not to central site
+            continue
+         if peerSiteIndex == remoteSite['site_index']:   # Not the remote site
+            continue
+         peerSite         = fullSiteList[peerSiteIndex]
+         peerProviderList = getNorNetProvidersForSite(peerSite)
+
+         for incomingProviderIndex in peerProviderList:
+            incomingProvider = peerProviderList[incomingProviderIndex]
+            tunnel           = _getTunnel(remoteSite, outgoingProvider, peerSite, incomingProvider, version)
+
+            if tunnel['tunnel_local_inner_address'].ip < tunnel['tunnel_remote_inner_address'].ip:
+               # Route over remote site, but only if the "lower" side of the tunnel is on this site!
+               outputFile.write('   make-route ' + \
+                                      'main ' + \
+                                      str(tunnel['tunnel_local_inner_address']) + ' ' + \
+                                      nextHopInterface + ' ' + \
+                                      str(nextHopAddress) + '   && \\\n')
+
+
+
 # ###### Generate tunnelbox configuration for given provider ################
 def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvider, pathNumber, configNamePrefix):
    if configNamePrefix == None:
@@ -312,8 +339,8 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, 0, version)
 
                outputFile.write('   log-action "Tunnel ' + tunnel['tunnel_interface'] + ': ' + \
-                                str(tunnel['tunnel_local_inner_address'])  + ' <--> ' + \
-                                str(tunnel['tunnel_remote_inner_address']) + '"\n')
+                                str(tunnel['tunnel_local_inner_address'].ip)  + ' <--> ' + \
+                                str(tunnel['tunnel_remote_inner_address'].ip) + '"\n')
 
                # ====== Create tunnels ======================================
                if (state == 'start'):
@@ -328,8 +355,8 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    hex(tunnel['tunnel_key'])                  + ' ' + \
                                    str(tunnel['tunnel_local_outer_address'])  + ' ' + \
                                    str(tunnel['tunnel_remote_outer_address']) + ' ' + \
-                                   str(tunnel['tunnel_local_inner_address'])  + ' ' + \
-                                   str(tunnel['tunnel_remote_inner_address']) + ' ' + \
+                                   str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
+                                   str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
                                    '"' + options + '" && \\\n')
                elif (state == 'stop'):
                   if not ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
@@ -339,8 +366,8 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                elif (state == 'status'):
                   outputFile.write('   show-tunnel ' + \
                                    tunnel['tunnel_interface'] + ' ' + \
-                                   str(tunnel['tunnel_local_inner_address']) + ' ' + \
-                                   str(tunnel['tunnel_remote_inner_address']) + ' "' + \
+                                   str(tunnel['tunnel_local_inner_address'].ip) + ' ' + \
+                                   str(tunnel['tunnel_remote_inner_address'].ip) + ' "' + \
                                    localSite['site_long_name'] + \
                                    str(localSite['site_index']) + ' <-> ' + \
                                    remoteSite['site_long_name'] + \
@@ -358,7 +385,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    str(routingTableID) + ' ' +
                                    str(remoteNetwork) + ' ' +
                                    tunnel['tunnel_interface'] + ' ' + \
-                                   str(tunnel['tunnel_remote_inner_address']) + '   && \\\n')
+                                   str(tunnel['tunnel_remote_inner_address'].ip) + '   && \\\n')
 
                   # ====== Entry into global routing table ==================
                   metric = 10 + pathNumber
@@ -368,13 +395,24 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                    'main ' +
                                    str(remoteNetwork) + ' ' +
                                    tunnel['tunnel_interface'] + ' ' + \
-                                   str(tunnel['tunnel_remote_inner_address']) + ' ' + \
+                                   str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
                                    'metric ' + str(metric) + '   && \\\n')
+
+               # ====== Create routes for remote tunnel addresses ===========
+               if ((state == 'start') and
+                   (localSiteIndex == NorNet_SiteIndex_Central) and
+                   (localProviderIndex == localSite['site_default_provider_index']) and
+                   (remoteProviderIndex == remoteSite['site_default_provider_index'])):
+                  _makeRemoteTunnelRoutesOnCentralRouter(fullSiteList, outputFile,
+                                                         tunnel['tunnel_interface'],
+                                                         tunnel['tunnel_remote_inner_address'].ip,
+                                                         remoteSite, version),
+
 
                outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
 
 
-      ## ====== Default route to central site ================================
+      # ====== Default route to central site ================================
       if ((localSiteIndex != NorNet_SiteIndex_Central) and
           (localProviderIndex == localSite['site_default_provider_index'])):
          routingTableID       = _getTableID(256)
@@ -392,7 +430,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                                 str(routingTableID) + ' ' +
                                 'default ' +
                                 defaultTunnel['tunnel_interface'] + ' ' + \
-                                str(defaultTunnel['tunnel_remote_inner_address']) + '\n')
+                                str(defaultTunnel['tunnel_remote_inner_address'].ip) + '\n')
 
          elif (state == 'stop'):
             outputFile.write('   log "Tearing down DEFAULT route to central site"\n')
@@ -485,16 +523,16 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
       outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
       outputFile.write('   log-action "Setting up tunnel to central site ..."\n')
       outputFile.write('   make-tunnel ' + \
-                       tunnel['tunnel_interface']                 + ' ' + \
-                       hex(tunnel['tunnel_key'])                  + ' ' + \
-                       str(tunnel['tunnel_local_outer_address'])  + ' ' + \
-                       str(tunnel['tunnel_remote_outer_address']) + ' ' + \
-                       str(tunnel['tunnel_local_inner_address'])  + ' ' + \
-                       str(tunnel['tunnel_remote_inner_address']) + '  && \\\n')
+                       tunnel['tunnel_interface']                    + ' ' + \
+                       hex(tunnel['tunnel_key'])                     + ' ' + \
+                       str(tunnel['tunnel_local_outer_address'])     + ' ' + \
+                       str(tunnel['tunnel_remote_outer_address'])    + ' ' + \
+                       str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
+                       str(tunnel['tunnel_remote_inner_address'].ip) + '  && \\\n')
       outputFile.write('   make-route main ' + \
                        str(remoteNetwork) + ' ' +
                        tunnel['tunnel_interface'] + ' ' + \
-                       str(tunnel['tunnel_remote_inner_address']) + ' ' + \
+                       str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
                        'metric 5   && \\\n')
       outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
       outputFile.write('fi\n')
@@ -1114,26 +1152,26 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                            remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, 0, version)
 
                            outputFile.write('# ' + tunnel['tunnel_interface'] + ' ' + \
-                                            str(tunnel['tunnel_local_inner_address']) + ' ' + \
-                                            str(tunnel['tunnel_remote_inner_address']) + '\n')
+                                            str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
+                                            str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
 
                            outputFile.write('define service {\n')
                            outputFile.write('   use generic-service\n')
                            outputFile.write('   service_description Tunnel ' + \
                                             str.upper(localSite['site_short_name']) + '-' + str.upper(remoteSite['site_short_name']) + ' ' + \
                                             localProvider['provider_long_name'] + '/' + remoteProvider['provider_long_name'] + ' via ' + \
-                                            tunnel['tunnel_interface'] + ' local ' + str(tunnel['tunnel_local_inner_address']) + '\n')
+                                            tunnel['tunnel_interface'] + ' local ' + str(tunnel['tunnel_local_inner_address'].ip) + '\n')
                            outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
-                           outputFile.write('   check_command       MyPingCheck!' + str(tunnel['tunnel_local_inner_address']) + '\n')
+                           outputFile.write('   check_command       MyPingCheck!' + str(tunnel['tunnel_local_inner_address'].ip) + '\n')
                            outputFile.write('}\n')
                            outputFile.write('define service {\n')
                            outputFile.write('   use generic-service\n')
                            outputFile.write('   service_description Tunnel ' + \
                                             str.upper(localSite['site_short_name']) + '-' + str.upper(remoteSite['site_short_name']) + ' ' + \
                                             localProvider['provider_long_name'] + '/' + remoteProvider['provider_long_name'] + ' via ' + \
-                                            tunnel['tunnel_interface'] + ' remote ' + str(tunnel['tunnel_remote_inner_address']) + '\n')
+                                            tunnel['tunnel_interface'] + ' remote ' + str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
                            outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
-                           outputFile.write('   check_command       MyPingCheck!' + str(tunnel['tunnel_remote_inner_address']) + '\n')
+                           outputFile.write('   check_command       MyPingCheck!' + str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
                            outputFile.write('}\n')
 
                   outputFile.write('\n')

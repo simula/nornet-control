@@ -224,10 +224,10 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
       s = m.hexdigest()
       address = (int(s[0:4], 16) & 0xfffc) | side
       address = int(IPv4Address('192.168.0.0')) | address
-      return IPv4Address(address)
+      return IPv4Network(str(IPv4Address(address)) + '/30')
    else:
       address = address + str(side)
-      return IPv6Address(address)
+      return IPv6Network(address + '/64')
 
 
 # ###### Get NorNet interface IPv4 address ##################################
