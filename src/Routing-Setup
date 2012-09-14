@@ -417,8 +417,14 @@ make-nat ()
 {
    local sourceNetwork="$1"       # Source network (e.g. 10.0.0.0/8)
    local range="$2"               # Public IP range (optional)
+                                  # IP ranges to be ignored ...
+   shift ; shift
 
    remove-nat "$sourceNetwork" "$range"
+   while [ "$1" != "" ] ; do
+      iptables -t nat -A POSTROUTING -s "$sourceNetwork" -d "$1" -j ACCEPT
+      shift
+   done
    if [ "$range" = "" ] ; then
       iptables -t nat -A POSTROUTING -s "$sourceNetwork" -j MASQUERADE
    else
