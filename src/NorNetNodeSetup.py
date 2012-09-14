@@ -1122,7 +1122,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                   localProvider = localProviderList[localProviderIndex]
                   for version in [ 4, 6 ]:
                      localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
-                     outputFile.write(str(localAddress) + ' ')
+                     outputFile.write(str(localAddress.ip) + '!')
                outputFile.write('\n')
                if ((localSiteIndex != NorNet_SiteIndex_Central) and (centralSite != None)):
                   outputFile.write('   parents       ' + centralSite['site_long_name'] + '\n')
