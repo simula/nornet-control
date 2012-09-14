@@ -437,6 +437,22 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
             outputFile.write('   remove-table ' + str(routingTableID) + '\n')
 
 
+      # ====== Use main table to access tunnel endpoints ====================
+      routingTableDestPref = 256
+      for version in [ 4, 6 ]:
+         fullTunnelNet = makeNorNetTunnelIP(0, 0, 0, 0, version)
+         if (state == 'start'):
+            outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + \
+                             ' to ' + str(fullTunnelNet) + '\n')
+            outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + \
+                             ' from ' + str(fullTunnelNet) + '\n')
+         elif (state == 'stop'):
+            outputFile.write('   remove-table-selector main ' + str(routingTableDestPref) + \
+                             ' to ' + str(fullTunnelNet) + '\n')
+            outputFile.write('   remove-table-selector main ' + str(routingTableDestPref) + \
+                             ' from ' + str(fullTunnelNet) + '\n')
+
+
       outputFile.write('   log-action "' + action + ' connectivity for provider ' + \
                        localProvider['provider_long_name'] + ' finished"\n')
 
