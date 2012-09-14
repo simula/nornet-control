@@ -131,3 +131,17 @@ Description: NorNet Monitor
  on a NorNet central site.
  .
  See http://www.nntb.no for details on NorNet!
+
+Package: nornet-display
+Architecture: all
+Depends: firefox,
+         kde-desktop,
+         nornet-node,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Display
+ This package contains the packages to set up a display station for the
+ results of the monitoring station. It is in fact just a node with a web
+ browser and the necessary GUI.
+ .
+ See http://www.nntb.no for details on NorNet!
