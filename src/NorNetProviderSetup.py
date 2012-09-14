@@ -199,6 +199,12 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
    if ((incomingProvider < 0) | (incomingProvider > 255)):
       error('Bad provider ID')
 
+   if ((outgoingSite == 0) and (incomingSite == 0)):
+      if version == 4:
+         return IPv4Network('192.168.0.0/16')
+      else:
+         return IPv6Network('fdff:ffff::/32')
+
    if incomingSite < outgoingSite:
       side  = 1
       sLow  = incomingSite
