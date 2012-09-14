@@ -1,0 +1,130 @@
+#!/bin/bash
+# $Id: tbvpn 3180 2012-09-14 23:01:35Z dreibh $
+# ###########################################################################
+#              Thomas Dreibholz's Simulation Scripts Collection
+#                  Copyright (C) 2005-2011 Thomas Dreibholz
+#
+#               Author: Thomas Dreibholz, dreibh@iem.uni-due.de
+# ###########################################################################
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@iem.uni-due.de
+
+
+# ##### VPN Server Configuration ############################################
+#
+# sudo visudo ->
+#    demo    ALL = (ALL) NOPASSWD: /usr/sbin/pppd
+# ACHTUNG: Muß ganz am Schluß stehen, sonst hebt der Befehl für %admin den
+# NOPASSWD-Tag auf!
+#
+# sudo sysctl net.ipv4.ip_forward=1
+#
+# ###########################################################################
+
+
+# ---------------------------------------------------------
+SERVER_HOSTNAME="spitbol.simula.no"
+SERVER_SSHPORT="22"
+SERVER_USERNAME="dreibh"
+SERVER_USERID="$HOME/.ssh/id_dsa"
+UNIT=9   # -> ppp9
+SERVER_IFIPADDR=10.0.22.1
+CLIENT_IFIPADDR=10.0.22.2
+ROUTES_IPv4="10.0.0.0/8"
+ROUTES_IPv6="fd00::/8"
+# ---------------------------------------------------------
+
+
+PPPD="/usr/sbin/pppd"
+SSH="/usr/bin/ssh"
+PTY="$SSH -tC -p $SERVER_SSHPORT -l $SERVER_USERNAME -i $SERVER_USERID -o Batchmode=yes $SERVER_HOSTNAME
+        $SSH -tC -p 6122 -o Batchmode=yes nornetpp@nornet-c4.simula.no
+           $SSH -tC -p 6122 -o Batchmode=yes 169.254.100.11
+              $SSH -tC -o Batchmode=yes superuser@10.1.1.1
+                 sudo $PPPD nodetach notty passive auth +chap -pap mru 1500 mtu 1500 +ipv6"
+
+PTY=`echo $PTY | sed -e "s/\n//g" -e "s/  //g"`
+
+
+if ! test -f $PPPD ; then
+   echo 2>&1 "ERROR: $PPPD not found!"
+   exit 1
+fi
+if ! test -f $SSH ; then
+   echo 2>&1 "ERROR: $SSH not found!"
+   exit 1
+fi
+
+
+case "$1" in
+
+test)
+   echo $PTY
+   eval $PTY
+   exit 0
+   ;;
+
+restart)
+   $0 stop
+   $0 start
+   ;;
+
+start)
+   echo "Starting VPN to $SERVER_HOSTNAME ..."
+   if [ `ifconfig ppp$UNIT 2>/dev/null | wc --lines` -gt 0 ] ; then
+      echo >&2 "ERROR: ppp$UNIT exists -> exiting!"
+      exit 1
+   fi
+   # !!! Use debug options: debug dump
+   # !!! Add identifiers, otherwise it will take some time until interface is up!
+   #     Then, the following "ip route" calls may silently fail!
+   ${PPPD} unit $UNIT updetach debug dump auth mru 1500 mtu 1500 pty "$PTY" ipparam vpn ipv6 ::1,::2
+   for route in $ROUTES_IPv4 ; do
+      echo ip route add $route dev ppp$UNIT
+      ip route add $route dev ppp$UNIT
+   done
+   for route in $ROUTES_IPv6 ; do
+      echo ip -6 route add $route dev ppp$UNIT
+      ip -6 route add $route dev ppp$UNIT
+   done
+   ;;
+
+stop)
+   echo "Stopping VPN to $SERVER_HOSTNAME ..."
+   PID=`ps ax | grep "$SSH" | grep "$PPPD" | grep " unit $UNIT " | grep -v "grep " | awk '{print $1}'`
+   if [ "${PID}" != "" ]; then
+      kill $PID
+      echo "VPN successfully terminated!"
+   else
+      echo 2>&1 "ERROR: No PID for pppd daemon found!"
+      exit 1
+   fi
+   ;;
+
+config)
+   echo "SERVER_HOSTNAME=$SERVER_HOSTNAME"
+   echo "SERVER_USERNAME=$SERVER_USERNAME"
+   echo "SERVER_SSHPORT=$SERVER_SSHPORT"
+   echo "SERVER_USERID=$SERVER_USERID"
+   echo "SERVER_IFIPADDR=$SERVER_IFIPADDR"
+   echo "CLIENT_IFIPADDR=$CLIENT_IFIPADDR"
+   ;;
+
+*)
+   echo "Usage: vpn {start|stop|config}"
+   exit 1
+   ;;
+esac
