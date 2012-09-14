@@ -717,8 +717,10 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
       _makeTunnelboxNetwork(outputFile, 'start', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex)
    if localSiteIndex == NorNet_SiteIndex_Central:
+      fullTunnelNetIPv4 = makeNorNetTunnelIP(0, 0, 0, 0, 4)
       outputFile.write('\n      log-action "Turning on IPv4 NAT ..."\n')
-      outputFile.write('      make-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '" && \\\n')
+      outputFile.write('      make-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '" ' + \
+                       str(fullNorNetIPv4) + ' ' + str(fullTunnelNetIPv4) + '   && \\\n')
       outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    outputFile.write('   fi\n')
    outputFile.write('fi\n')

@@ -417,7 +417,7 @@ make-nat ()
 {
    local sourceNetwork="$1"       # Source network (e.g. 10.0.0.0/8)
    local range="$2"               # Public IP range (optional)
-                                  # IP ranges to be ignored ...
+                                  # IP ranges to be *excluded* from NAT ...
    shift ; shift
 
    remove-nat "$sourceNetwork" "$range"
