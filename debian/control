@@ -135,7 +135,7 @@ Description: NorNet Monitor
 Package: nornet-display
 Architecture: all
 Depends: firefox,
-         kde-desktop,
+         kubuntu-desktop,
          nornet-node,
          ${misc:Depends},
          ${shlibs:Depends}
