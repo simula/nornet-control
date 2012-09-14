@@ -218,7 +218,7 @@ def _makeRemoteTunnelRoutesOnCentralRouter(fullSiteList, outputFile, nextHopInte
                # Route over remote site, but only if the "lower" side of the tunnel is on this site!
                outputFile.write('   make-route ' + \
                                       'main ' + \
-                                      str(tunnel['tunnel_local_inner_address']) + ' ' + \
+                                      str(tunnel['tunnel_local_inner_address'].network) + '/' + str(tunnel['tunnel_local_inner_address'].prefixlen) + ' ' + \
                                       nextHopInterface + ' ' + \
                                       str(nextHopAddress) + '   && \\\n')
 
