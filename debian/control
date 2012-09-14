@@ -65,7 +65,6 @@ Architecture: any
 Depends: apt-file,
          debhelper,
          devscripts,
-         nornet-management,
          pbuilder,
          ${misc:Depends},
          ${shlibs:Depends}
