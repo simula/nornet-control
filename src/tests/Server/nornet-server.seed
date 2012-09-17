@@ -1,14 +1,16 @@
 # Localization
-d-i debian-installer/language           string de
+d-i debian-installer/language           string en
 d-i debian-installer/country            string NO
 d-i debian-installer/locale             string en_NO.UTF-8
 
+d-i console-setup/ask_detect            boolean false
 d-i console-keymaps-at/keymap           select no
+d-i keyboard-configuration/modelcode    string pc105
 d-i keyboard-configuration/xkb-keymap   select no
 
 # Network
-d-i netcfg/choose_interface   select auto
-d-i netcfg/disable_dhcp       boolean true
+d-i netcfg/choose_interface  select auto
+d-i netcfg/disable_dhcp      boolean true
 
 d-i netcfg/get_nameservers   string 8.8.8.8 8.8.4.4
 d-i netcfg/get_ipaddress     string 169.254.100.200
