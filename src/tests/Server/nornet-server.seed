@@ -1,7 +1,7 @@
 # Localization
 d-i debian-installer/language           string en
 d-i debian-installer/country            string NO
-d-i debian-installer/locale             string en_NO.UTF-8
+d-i debian-installer/locale             string en_US.UTF-8
 
 d-i console-setup/ask_detect            boolean false
 d-i console-keymaps-at/keymap           select no
@@ -60,6 +60,7 @@ d-i partman-auto/expert_recipe          string \
 
 # Mirror
 d-i mirror/country                                  string no
+d-i mirror/http/proxy                               string
 
 # Packages
 popularity-contest popularity-contest/participate   boolean false
@@ -74,10 +75,11 @@ d-i apt-setup/local0/key                            string http://keyserver.ubun
 d-i grub-installer/only_debian                      boolean true
 d-i grub-installer/with_other_os                    boolean true
 
-tasksel tasksel/first                               multiselect standard
-d-i pkgsel/include                                  string \
-   nornet-management
+tasksel tasksel/first                               multiselect ubuntu-server, standard
 d-i pkgsel/language-packs                           multiselect en, no, de
+d-i pkgsel/install-language-support boolean false
 d-i pkgsel/update-policy                            select unattended-upgrades
 d-i pkgsel/upgrade                                  select full-upgrade
 d-i pkgsel/updatedb                                 boolean true
+d-i pkgsel/include                                  string \
+   nornet-management
