@@ -1,11 +1,13 @@
 # Auto-Install
 auto-install/enable                     boolean true
+debconf debconf/priority                select critical
 
 # Localization
 d-i debian-installer/language           string en
 d-i debian-installer/country            string NO
 d-i debian-installer/keymap             string no-latin1
 d-i debian-installer/locale             string en_US.UTF-8
+locales/default_environment_locale      string en_US.UTF-8
 
 # Keyboard
 d-i console-setup/ask_detect            boolean false
@@ -14,15 +16,15 @@ d-i keyboard-configuration/layoutcode   string  no
 d-i keyboard-configuration/variantcode  string
 
 # Network
-d-i netcfg/choose_interface             select auto
-d-i netcfg/disable_autoconfig           boolean true
-d-i netcfg/disable_dhcp                 boolean true
+# d-i netcfg/choose_interface             select auto
+# d-i netcfg/disable_autoconfig           boolean true
+# d-i netcfg/disable_dhcp                 boolean true
 
-d-i netcfg/get_nameservers              string 8.8.8.8 8.8.4.4
-d-i netcfg/get_ipaddress                string 169.254.100.222
-d-i netcfg/get_netmask                  string 255.255.0.0
-d-i netcfg/get_gateway                  string 169.254.100.1
-d-i netcfg/confirm_static               boolean false
+# d-i netcfg/get_nameservers              string 8.8.8.8 8.8.4.4
+# d-i netcfg/get_ipaddress                string 169.254.100.222
+# d-i netcfg/get_netmask                  string 255.255.255.0
+# d-i netcfg/get_gateway                  string 169.254.100.1
+d-i netcfg/confirm_static               boolean true
 
 d-i netcfg/get_hostname                 string unassigned-hostname
 d-i netcfg/get_domain                   string unassigned-domain
@@ -34,6 +36,8 @@ d-i clock-setup/ntp-server              string ntp.ubuntu.com
 d-i time/zone                           string Europe/Oslo
 
 # User
+d-i passwd/root-login                   boolean false
+d-i passwd/make-user                    boolean true
 d-i passwd/user-fullname                string  NorNet Superuser
 d-i passwd/username                     string  superuser
 d-i passwd/user-password-crypted        password $1$AA4iiqIk$/Ju.DPCGpFYf4VK.1A70s.

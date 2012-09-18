@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cp lang $1/syslinux/ && \
+cp txt.cfg $1/syslinux/ && \
+cp *.seed $1/preseed/
