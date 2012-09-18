@@ -1,12 +1,17 @@
+# Auto-Install
+auto-install/enable                     boolean true
+
 # Localization
 d-i debian-installer/language           string en
 d-i debian-installer/country            string NO
+d-i debian-installer/keymap             string no-latin1
 d-i debian-installer/locale             string en_US.UTF-8
 
+# Keyboard
 d-i console-setup/ask_detect            boolean false
-d-i console-keymaps-at/keymap           select no
-d-i keyboard-configuration/modelcode    string pc105
-d-i keyboard-configuration/xkb-keymap   select no
+d-i keyboard-configuration/modelcode    string  pc105
+d-i keyboard-configuration/layoutcode   string  no
+d-i keyboard-configuration/variantcode  string
 
 # Network
 d-i netcfg/choose_interface             select auto
@@ -14,13 +19,13 @@ d-i netcfg/disable_autoconfig           boolean true
 d-i netcfg/disable_dhcp                 boolean true
 
 d-i netcfg/get_nameservers              string 8.8.8.8 8.8.4.4
-d-i netcfg/get_ipaddress                string 169.254.100.200
+d-i netcfg/get_ipaddress                string 169.254.100.222
 d-i netcfg/get_netmask                  string 255.255.0.0
 d-i netcfg/get_gateway                  string 169.254.100.1
-d-i netcfg/confirm_static               boolean true
+d-i netcfg/confirm_static               boolean false
 
-d-i netcfg/get_hostname                 string system
-d-i netcfg/get_domain                   string nornet
+d-i netcfg/get_hostname                 string unassigned-hostname
+d-i netcfg/get_domain                   string unassigned-domain
 
 # Time
 d-i clock-setup/utc                     boolean true
@@ -66,7 +71,7 @@ d-i mirror/http/proxy                               string
 popularity-contest popularity-contest/participate   boolean false
 d-i apt-setup/universe                              boolean true
 d-i apt-setup/multiverse                            boolean true
-d-i apt-setup/restricted                            boolean true
+d-i apt-setup/restricted                            boolean false
 d-i apt-setup/local0/repository                     string http://ppa.launchpad.net/dreibh/ppa/ubuntu precise main
 d-i apt-setup/local0/comment                        string Thomas Dreibholz's PPA
 d-i apt-setup/local0/source                         boolean true
@@ -77,7 +82,7 @@ d-i grub-installer/with_other_os                    boolean true
 
 tasksel tasksel/first                               multiselect ubuntu-server, standard
 d-i pkgsel/language-packs                           multiselect en, no, de
-d-i pkgsel/install-language-support boolean false
+d-i pkgsel/install-language-support                 boolean true
 d-i pkgsel/update-policy                            select unattended-upgrades
 d-i pkgsel/upgrade                                  select full-upgrade
 d-i pkgsel/updatedb                                 boolean true
