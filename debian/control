@@ -148,7 +148,8 @@ Description: NorNet Display
 Package: nornet-server
 Architecture: all
 Conflicts: nornet-node
-Depends: nornet-management,
+Depends: libicu48,
+         nornet-management,
          virtualbox,
          virtualbox-qt,
          xauth,
