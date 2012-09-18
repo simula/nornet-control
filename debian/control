@@ -144,3 +144,18 @@ Description: NorNet Display
  browser and the necessary GUI.
  .
  See http://www.nntb.no for details on NorNet!
+
+Package: nornet-server
+Architecture: all
+Conflicts: nornet-node
+Depends: nornet-management,
+         virtualbox,
+         virtualbox-qt,
+         xauth,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Server
+ This package contains the scripts to configure a generic server system
+ to host NorNet virtual machines.
+ .
+ See http://www.nntb.no for details on NorNet!
