@@ -1,18 +1,16 @@
 # Auto-Install
-auto-install/enable                     boolean true
+d-i auto-install/enable                 boolean true
 debconf debconf/priority                select critical
 
-# Localization
-d-i debian-installer/language           string en
+# Localization and Keyboard
+d-i debian-installer/language           string en_US:en
 d-i debian-installer/country            string NO
-d-i debian-installer/keymap             string no-latin1
 d-i debian-installer/locale             string en_US.UTF-8
-locales/default_environment_locale      string en_US.UTF-8
-
-# Keyboard
+d-i debian-installer/keymap             string no
 d-i console-setup/ask_detect            boolean false
-d-i keyboard-configuration/modelcode    string  pc105
-d-i keyboard-configuration/layoutcode   string  no
+d-i console-setup/layoutcode            string no
+d-i keyboard-configuration/modelcode    string pc105
+d-i keyboard-configuration/layoutcode   string no
 d-i keyboard-configuration/variantcode  string
 
 # Network
@@ -84,11 +82,22 @@ d-i apt-setup/local0/key                            string http://keyserver.ubun
 d-i grub-installer/only_debian                      boolean true
 d-i grub-installer/with_other_os                    boolean true
 
-tasksel tasksel/first                               multiselect ubuntu-server, standard
-d-i pkgsel/language-packs                           multiselect en, no, de
+tasksel tasksel/first                               multiselect ubuntu-server
+d-i pkgsel/language-packs                           multiselect en, nb, de
 d-i pkgsel/install-language-support                 boolean true
 d-i pkgsel/update-policy                            select unattended-upgrades
 d-i pkgsel/upgrade                                  select full-upgrade
 d-i pkgsel/updatedb                                 boolean true
 d-i pkgsel/include                                  string \
-   nornet-server
+   nornet-management
+
+# Post-Install
+d-i preseed/late_command                            string \
+ echo "====== NorNet Post-Install ======" ; \
+ in-target apt-get update ; \
+ in-target apt-get upgrade -y ; \
+ in-target apt-get dist-upgrade -y ; \
+ in-target apt-get autoremove -y ; \
+ in-target apt-get install -y nornet-server ; \
+ in-target apt-get clean ; \
+ in-target apt-file update
