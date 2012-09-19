@@ -99,5 +99,4 @@ d-i preseed/late_command                            string \
  in-target apt-get dist-upgrade -y ; \
  in-target apt-get autoremove -y ; \
  in-target apt-get install -y nornet-server ; \
- in-target apt-get clean ; \
- in-target apt-file update
+ in-target apt-get clean

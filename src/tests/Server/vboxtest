@@ -10,7 +10,7 @@ SYSTEM="$2"
 ISOFILE="$3"
 
 MEM_SIZE=1024     # MiB
-VRAM_SIZE=12      # MiB
+VRAM_SIZE=16      # MiB
 HD_SIZE=1024      # MiB
 HD_TYPE=Standard # "Fixed"
 
@@ -30,7 +30,7 @@ if [ "$ACTION" = "create" ] ; then
    VBoxManage modifyvm $SYSTEM --boot1 dvd --boot2 disk && \
    VBoxManage modifyvm $SYSTEM --memory $MEM_SIZE && \
    VBoxManage modifyvm $SYSTEM --bridgeadapter1 eth0 --nic1 bridged --nictype1 virtio && \
-   VBoxManage modifyvm $SYSTEM --vram $VRAM_SIZE --accelerate3d on --accelerate2dvideo on && \
+   VBoxManage modifyvm $SYSTEM --vram $VRAM_SIZE && \
    VBoxManage createhd --filename Harddisks/$SYSTEM.vdi --size $HD_SIZE --variant $HD_TYPE && \
    VBoxManage storagectl $SYSTEM --name "SATA Controller" --add sata --controller IntelAHCI && \
    VBoxManage storageattach $SYSTEM --storagectl "SATA Controller" --type hdd --port 0 --device 0 --medium Harddisks/$SYSTEM.vdi && \
