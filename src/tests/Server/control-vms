@@ -1,16 +1,17 @@
 #!/bin/sh
 
-if [ $# -ne 1 ] ; then
-   echo >&2 "Usage: $0 delay_in_seconds"
+if [ $# -lt 2 ] ; then
+   echo >&2 "Usage: $0 delay_in_seconds controlvm_parameters ..."
    exit 1
 fi
 DELAY="$1"
+shift
 
 VMs=`VBoxManage list vms | sed -e "s/ {.*}$//g"`
 for vm in $VMs ; do
    echo "Starting $vm ..."
 
-   vboxmanage startvm $vm --type headless
+   vboxmanage controlvm $vm $@
 
    echo "Waiting $DELAY seconds ..."
    sleep $DELAY
