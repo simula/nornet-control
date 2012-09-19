@@ -1,16 +1,20 @@
 #!/bin/sh
 
-if [ $# -ne 1 ] ; then
-   echo >&2 "Usage: $0 delay_in_seconds"
+if [ $# -lt 1 ] ; then
+   echo >&2 "Usage: $0 delay_in_seconds [-testonly]"
    exit 1
 fi
 DELAY="$1"
+TESTONLY="$2"
 
 VMs=`VBoxManage list vms | sed -e "s/ {.*}$//g"`
 for vm in $VMs ; do
    echo "Starting $vm ..."
 
-   vboxmanage startvm "$vm" --type headless
+   if [ ! "$TESTONLY" = "-testonly" ] ; then
+      vboxmanage startvm "$vm" --type headless
+   fi
 
    echo "Waiting $DELAY seconds ..."
+   sleep $DELAY
 done
