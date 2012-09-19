@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ $# -ne 2 ] ; then
+   echo >&2 "Usage: $0 ISO_directory number_of_machines"
+   exit 1
+fi
+
+DIRECTORY="$1"
+MACHINES="$2"
+
+
+ISOs=`find $DIRECTORY -name "*.iso" | sort -u`
+
+
+i=1
+for iso in $ISOs ; do
+   if [ $i -gt $MACHINES ] ; then
+      break
+   fi
+
+   system=`echo $iso | sed -e s/\.iso$//`
+
+   echo "=== $system -> $iso ==="
+
+   ./vboxtest create "$system" "$iso"
+
+   let i=$i+1
+done

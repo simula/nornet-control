@@ -9,10 +9,10 @@ ACTION="$1"
 SYSTEM="$2"
 ISOFILE="$3"
 
-MEM_SIZE=1024     # MiB
+MEM_SIZE=512      # MiB
 VRAM_SIZE=16      # MiB
-HD_SIZE=1024      # MiB
-HD_TYPE=Standard # "Fixed"
+HD_SIZE=22000     # MiB
+HD_TYPE="Standard"   # "Standard" "Fixed"
 
 mkdir -p Harddisks
 
@@ -38,10 +38,3 @@ if [ "$ACTION" = "create" ] ; then
    echo VBoxManage startvm $SYSTEM
    # VBoxManage modifyvm $SYSTEM --dvd none
 fi
-
-
-#    VBoxManage modifyvm $SYSTEM --dvd $ISOFILE && \
-
-
-#    VBoxManage modifyvm $SYSTEM --memory $MEM_SIZE && \
-# VBoxManage storageattach OSX --storagectl “SATA Controller”    --type hdd --port 0 --device 0 --medium D:/MAC/OSX/OSX.vmdk
