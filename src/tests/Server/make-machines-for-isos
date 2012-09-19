@@ -18,7 +18,7 @@ for iso in $ISOs ; do
       break
    fi
 
-   system=`echo $iso | sed -e s/\.iso$//`
+   system=`echo $iso | sed -e "s/\.iso$//" -e "s/.*\///"`
 
    echo "=== $system -> $iso ==="
 
