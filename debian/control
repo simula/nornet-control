@@ -152,7 +152,6 @@ Depends: grub2,
          libicu48,
          nornet-management,
          virtualbox,
-         virtualbox-qt,
          xauth,
          ${misc:Depends},
          ${shlibs:Depends}
