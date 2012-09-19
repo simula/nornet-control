@@ -1,0 +1,6 @@
+#!/bin/sh
+
+mkdir p HOME/ISOs || true
+
+rm -f $HOME/ISOs/*.iso && \
+./NorNet-Setup manage --isodirectory=$HOME/ISOs
