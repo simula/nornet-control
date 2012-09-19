@@ -9,6 +9,7 @@ TESTONLY="$2"
 
 VMs=`VBoxManage list vms | sed -e "s/ {.*}$//g"`
 for vm in $VMs ; do
+   vm=`eval echo $vm`
    echo "Starting $vm ..."
 
    if [ ! "$TESTONLY" = "-testonly" ] ; then
