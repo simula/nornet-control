@@ -1,0 +1,5 @@
+1. Repository:
+git://git.onelab.eu/build.git
+
+2. Fedora Mirror
+./vbuild-fedora-mirror.sh -f f16 -a x86_64 -e
