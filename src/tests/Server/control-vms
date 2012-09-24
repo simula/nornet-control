@@ -9,9 +9,10 @@ shift
 
 VMs=`VBoxManage list vms | sed -e "s/ {.*}$//g"`
 for vm in $VMs ; do
-   echo "Starting $vm ..."
+   vm=`eval echo $vm`
+   echo "Controlling $vm ($@) ..."
 
-   vboxmanage controlvm $vm $@
+   vboxmanage controlvm "$vm" $@
 
    echo "Waiting $DELAY seconds ..."
    sleep $DELAY
