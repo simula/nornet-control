@@ -4,7 +4,7 @@ $sec = "300";
 header("Refresh: $sec; url=$page");
 $nagmap_version = '1.0';
 include('./config.php');
-include('./call.php');
+// include('./call.php');
 ?>
 <html>
   <head>
@@ -62,10 +62,10 @@ include('./call.php');
     echo '
       </script>
       </head>
-      <body style="margin:0px; padding:0px;" onload="initialize()" bgcolor="#ff0000">';
+      <body style="margin:0px; padding:0px;" onload="initialize()">';
     echo '
       <! -- BEGIN NorNet -->
-      <large><strong><center>NorNet Kontrollsenter på Simula, Fornebu</center></strong></large>
+      <h1 style="margin:0px; padding:0px;">Velkommen til NorNet Kontrollsenter på Simula, Fornebu</h1>
       <! -- END NorNet -->
     ';
     if ($nagmap_sidebar == '1') {
@@ -73,8 +73,8 @@ include('./call.php');
       sort($sidebar['warning']);
       sort($sidebar['critical']);
       sort($sidebar['unknown']);
-      echo '<div id="map_canvas" style="width:90%; height:100%; float: left"></div>';
-      echo '<div id="sidebar" class="sidebar" style="padding-left: 10px; background: black; height:100%; overflow:auto;">'
+      echo '<div id="map_canvas" style="width:80%; height:95%; float: left"></div>';
+      echo '<div id="sidebar" class="sidebar" style="padding-left: 10px; height:95%; overflow:auto;">'
         .'<span class="ok">ok:'.$stats['ok']
           ." (".round((100/($stats['warning']+$stats['critical']+$stats['unknown']+$stats['ok']))*($stats['ok']))."%)</span><br>"
         .'<span class="problem">problem:'.($stats['warning']+$stats['critical']+$stats['unknown'])
