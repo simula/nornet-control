@@ -3,32 +3,76 @@
 providersOld="uninett telekom netcom telenor"
 providersNew="uninett hafslund dfn"
 
-# ###### Check two lists of providers and return providers removed ##########
-getRemovedProviders()
+# ###### Check whether a provider is in a list of available providers #######
+check-providers ()
 {
-   local oldProviders="$1"
-   local newProviders="$2"
+   local availableProviders="$1"
+   local selectedProviders=`echo $2 | sed -e "s/,/ /g"`
+   if [ "$selectedProviders" != "*" ] ; then
+      for b in $selectedProviders ; do
+         found=0
+         for a in $availableProviders ; do
+            if [ "$a" == "$b" ] ; then
+               found=1
+            fi
+         done
+         if [ $found -eq 0 ] ; then
+            echo >&2 "ERROR: Provider \"$b\" is not in the list of available providers \"$availableProviders\"!"
+            exit 1
+         fi
+      done
+   fi
+}
 
-   local removedProviders=""
-   for o in $oldProviders ; do
+# ###### Compare two lists of labels and return removed labels ##############
+get-removed-labels ()
+{
+   local oldLabels="$1"
+   local newLabels="$2"
+
+   local removedLabels=""
+   for o in $oldLabels ; do
       found=0
-      for n in $newProviders ; do
+      for n in $newLabels ; do
          if [ "$o" = "$n" ] ; then
             found=1
             break
          fi
       done
       if [ $found -eq 0 ] ; then
-         if [ "$removedProviders" = "" ] ; then
-            removedProviders="$o"
+         if [ "$removedLabels" = "" ] ; then
+            removedLabels="$o"
          else
-            removedProviders="$removedProviders $o"
+            removedLabels="$removedLabels $o"
          fi
       fi
    done
-   echo "$removedProviders"
+   echo "$removedLabels"
 }
 
 
+check-providers "$providersNew" "hafslund,dfn"
 
-getRemovedProviders "$providersOld" "$providersNew"
+
+get-removed-labels "$providersOld" "$providersNew"
+
+
+selectedProviders="uninett telekom netcom telenor"
+echo "SEL=$selectedProviders"
+
+for provider in $providersOld ; do
+   if [[ "$selectedProviders" =~ ^\\*$|^$provider$$|^$provider$([ ])|([ ])$provider$([ ])|([ ])$provider$$ ]] ; then\
+      echo "Configuring provider $provider ..."
+   else
+      echo "Skipping provider $provider ..."
+   fi
+done
+
+#    for provider in providerList:
+#       outputFile.write('if [[ "$selectedProviders" =~ ^\\*$|^$provider$$|^$provider$,|,$provider$,|,$provider$$ ]] ; then\n')
+#       outputFile.write('   echo "Configuring ' + configFileList[i] + '"\n')
+#       outputFile.write('   . ./' + configFileList[i] + ' || tbc_success=0\n')
+#       outputFile.write('else\n')
+#       outputFile.write('   echo "Skipping ' + configFileList[i] + '"\n')
+#       outputFile.write('fi\n')
+#       i = i + 1

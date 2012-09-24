@@ -608,6 +608,20 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
 
    # ====== Interface to provider mappings ==================================
    outputFile = makeConfigFile('Tunnelbox ISP mapping', configurationName, True)
+   outputFile.write('all_providers=\"')
+   firstProvider = True
+   for onlyDefault in [ True, False ]:
+      for localProviderIndex in localProviderList:
+         if ( ((onlyDefault == True)  and (localProviderIndex == localSite['site_default_provider_index'])) or \
+              ((onlyDefault == False) and (localProviderIndex != localSite['site_default_provider_index'])) ):
+            localProvider = localProviderList[localProviderIndex]
+            if firstProvider == True:
+               firstProvider = False
+            else:
+               outputFile.write(' ')
+            outputFile.write(localProvider['provider_short_name'])
+   outputFile.write('\"\n')
+
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
       outputFile.write('provider_for_if_' + \
@@ -624,6 +638,28 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
       outputFile.write('ipv6_for_provider_' + \
                        localProvider['provider_short_name'] + '="' + \
                        str(localProvider['provider_tunnelbox_ipv6']) + '"\n')
+
+      outputFile.write('tunnel_interfaces_for_provider_' + \
+                       localProvider['provider_short_name'] + '="')
+      firstInterface = True
+      for remoteSiteIndex in fullSiteList:
+         if remoteSiteIndex == localSiteIndex:
+            continue
+         remoteSite         = fullSiteList[remoteSiteIndex]
+         remoteProviderList = getNorNetProvidersForSite(remoteSite)
+         for remoteProviderIndex in remoteProviderList:
+            remoteProvider = remoteProviderList[remoteProviderIndex]
+            for version in [ 4, 6 ]:
+               tunnel = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
+               if tunnel['tunnel_over_ipv4'] != True:
+                  if firstInterface == True:
+                     firstInterface = False
+                  else:
+                     outputFile.write(' ')
+                  outputFile.write(tunnel['tunnel_interface'])
+
+      outputFile.write('"\n')
+
    outputFile.close()
 
 
@@ -653,45 +689,69 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
    # ====== Configure tunnels and routing ===================================
    outputFile.write('if [ "$selectedInterfaces" != "" ] ; then\n')
    outputFile.write('   if [ "$selectedProviders" = "" ] ; then\n')
-   outputFile.write('      selectedProviders=`getProvidersFromInterfaces $selectedInterfaces`\n')
+   outputFile.write('      selectedProviders=`get-providers-from-interfaces $selectedInterfaces`\n')
    outputFile.write('   else\n')
    outputFile.write('      echo >&2 "ERROR: Either specify providers or interfaces, but *not* both!"\n')
    outputFile.write('      exit 1\n')
    outputFile.write('   fi\n')
-   outputFile.write('fi\n\n')
+   outputFile.write('fi\n\n\n')
 
-   outputFile.write('availableProviders="')
-   providerList   = []
-   configFileList = []
-   pathNumber     = 0
+
+   # ====== Generate per-provider configurations ============================
+   pathNumber = 0
    for onlyDefault in [ True, False ]:
       for localProviderIndex in localProviderList:
          if ( ((onlyDefault == True)  and (localProviderIndex == localSite['site_default_provider_index'])) or \
               ((onlyDefault == False) and (localProviderIndex != localSite['site_default_provider_index'])) ):
-            localProvider = localProviderList[localProviderIndex]
             tbpName = _makeTunnelboxProvider(fullSiteList, localSite,
                                              localProviderList, localProvider,
                                              pathNumber, configNamePrefix)
-            providerList.append(localProvider['provider_short_name'])
-            configFileList.append(tbpName)
-            if pathNumber > 0:
-               outputFile.write(',')
-            outputFile.write(localProvider['provider_short_name'])
             pathNumber = pathNumber + 1
-   outputFile.write('"\n')
 
-   outputFile.write('checkProviders "$availableProviders" "$selectedProviders"\n')
+   outputFile.write('check-providers $all_providers "$selectedProviders"\n')
+   outputFile.write('for provider in $providersOld ; do\n')
+   outputFile.write('   if [[ "$selectedProviders" =~ ^\\*$|^$provider$$|^$provider$([ ])|([ ])$provider$([ ])|([ ])$provider$$ ]] ; then\n')
+   outputFile.write('      echo "Configuring provider $provider ..."\n')
+   outputFile.write('      . ./tunnelbox-$provider || tbc_success=0\n')
+   outputFile.write('   else\n')
+   outputFile.write('      echo "Skipping provider $provider ..."\n')
+   outputFile.write('   fi\n')
+   outputFile.write('done\n')
+   outputFile.write('\n')
 
-   outputFile.write('tbc_success=1\n')
-   i = 0
-   for provider in providerList:
-      outputFile.write('if [[ "$selectedProviders" =~ ^\\*$|^' + provider + '$|^' + provider + ',|,' + provider + ',|,' + provider + '$ ]] ; then\n')
-      outputFile.write('   echo "Configuring ' + configFileList[i] + '"\n')
-      outputFile.write('   . ./' + configFileList[i] + ' || tbc_success=0\n')
-      outputFile.write('else\n')
-      outputFile.write('   echo "Skipping ' + configFileList[i] + '"\n')
-      outputFile.write('fi\n')
-      i = i + 1
+
+   #outputFile.write('availableProviders="')
+   #providerList   = []
+   #configFileList = []
+   #pathNumber     = 0
+   #for onlyDefault in [ True, False ]:
+      #for localProviderIndex in localProviderList:
+         #if ( ((onlyDefault == True)  and (localProviderIndex == localSite['site_default_provider_index'])) or \
+              #((onlyDefault == False) and (localProviderIndex != localSite['site_default_provider_index'])) ):
+            #localProvider = localProviderList[localProviderIndex]
+            #tbpName = _makeTunnelboxProvider(fullSiteList, localSite,
+                                             #localProviderList, localProvider,
+                                             #pathNumber, configNamePrefix)
+            #providerList.append(localProvider['provider_short_name'])
+            #configFileList.append(tbpName)
+            #if pathNumber > 0:
+               #outputFile.write(',')
+            #outputFile.write(localProvider['provider_short_name'])
+            #pathNumber = pathNumber + 1
+
+   #outputFile.write('check-providers "$availableProviders" "$selectedProviders"\n')
+
+   #outputFile.write('tbc_success=1\n')
+
+   #i = 0
+   #for provider in providerList:
+      #outputFile.write('if [[ "$selectedProviders" =~ ^\\*$|^' + provider + '$|^' + provider + ',|,' + provider + ',|,' + provider + '$ ]] ; then\n')
+      #outputFile.write('   echo "Configuring ' + configFileList[i] + '"\n')
+      #outputFile.write('   . ./' + configFileList[i] + ' || tbc_success=0\n')
+      #outputFile.write('else\n')
+      #outputFile.write('   echo "Skipping ' + configFileList[i] + '"\n')
+      #outputFile.write('fi\n')
+      #i = i + 1
 
 
    # ====== Make local setup ================================================
