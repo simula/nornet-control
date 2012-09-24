@@ -708,7 +708,8 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
                                              pathNumber, configNamePrefix)
             pathNumber = pathNumber + 1
 
-   outputFile.write('check-providers $all_providers "$selectedProviders"\n')
+   outputFile.write('check-providers "$all_providers" "$selectedProviders"\n')
+   outputFile.write('tbc_success=1\n')
    outputFile.write('for provider in $providersOld ; do\n')
    outputFile.write('   if [[ "$selectedProviders" =~ ^\\*$|^$provider$$|^$provider$([ ])|([ ])$provider$([ ])|([ ])$provider$$ ]] ; then\n')
    outputFile.write('      echo "Configuring provider $provider ..."\n')
