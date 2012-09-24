@@ -1,36 +1,34 @@
 #!/bin/bash
 
+providersOld="uninett telekom netcom telenor"
+providersNew="uninett hafslund dfn"
 
-provider_for_if_eth0='uninett'
-provider_for_if_eth1='telenor'
-provider_for_if_eth2='dfn'
-provider_for_if_gre_1_2_3='hafslund'
+# ###### Check two lists of providers and return providers removed ##########
+getRemovedProviders()
+{
+   local oldProviders="$1"
+   local newProviders="$2"
 
-
-# ###### Check whether a provider is in a list of available providers #######
-# IMPORTANT: No spaces, etc. are allowed within lists!
-getProvidersFromInterfaces () {
-   local interfaces=`echo $1 | sed -e "s/-/_/g" -e "s/ //g" -e "s/\t//g"`
-   local selectedProviders=""
-   local oldIFS=$IFS
-   IFS=","
-   for interface in $interfaces ; do
-      eval "provider=\$provider_for_if_$interface"
-      if [ "$provider" != "" ] ; then
-         if [ "$selectedProviders" = "" ] ; then
-            selectedProviders="$provider"
-         else
-            selectedProviders="$selectedProviders,$provider"
+   local removedProviders=""
+   for o in $oldProviders ; do
+      found=0
+      for n in $newProviders ; do
+         if [ "$o" = "$n" ] ; then
+            found=1
+            break
          fi
-      else
-         echo >&2 "ERROR: Interface \"$interface\" does not belong to a NorNet provider!"
-         exit 1
+      done
+      if [ $found -eq 0 ] ; then
+         if [ "$removedProviders" = "" ] ; then
+            removedProviders="$o"
+         else
+            removedProviders="$removedProviders $o"
+         fi
       fi
    done
-   IFS=$oldIFS
-   echo $selectedProviders
+   echo "$removedProviders"
 }
 
 
-x=`getProvidersFromInterfaces "eth0, eth1,   eth2, gre-1-2-3"`
-echo $x
+
+getRemovedProviders "$providersOld" "$providersNew"
