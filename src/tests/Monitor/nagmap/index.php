@@ -4,7 +4,7 @@ $sec = "300";
 header("Refresh: $sec; url=$page");
 $nagmap_version = '1.0';
 include('./config.php');
-// include('./call.php');
+include('./call.php');
 ?>
 <html>
   <head>
@@ -20,8 +20,8 @@ include('./config.php');
     function initialize() {
       var myOptions = {
         zoom: <?php echo ("$nagmap_map_zoom"); ?>, 
-        center: new google.maps.LatLng(<?php echo ("$nagmap_map_centre"); ?>),
-        mapTypeId: google.maps.MapTypeId.HYBRID
+        center: new google.maps.LatLng(<?php echo $nagmap_map_centre ?>),
+        mapTypeId: google.maps.MapTypeId.<?php echo $nagmap_map_type ?>
       };
       window.map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
 
@@ -62,10 +62,10 @@ include('./config.php');
     echo '
       </script>
       </head>
-      <body style="margin:0px; padding:0px;" onload="initialize()">';
+      <body style="margin:0px; padding:0px;" onload="initialize()" bgcolor="#ff0000">';
     echo '
       <! -- BEGIN NorNet -->
-      <h1 style="margin:0px; padding:0px;">Velkommen til NorNet Kontrollsenter på Simula, Fornebu</h1>
+      <large><strong><center>NorNet Kontrollsenter på Simula, Fornebu</center></strong></large>
       <! -- END NorNet -->
     ';
     if ($nagmap_sidebar == '1') {
@@ -73,8 +73,8 @@ include('./config.php');
       sort($sidebar['warning']);
       sort($sidebar['critical']);
       sort($sidebar['unknown']);
-      echo '<div id="map_canvas" style="width:80%; height:95%; float: left"></div>';
-      echo '<div id="sidebar" class="sidebar" style="padding-left: 10px; height:95%; overflow:auto;">'
+      echo '<div id="map_canvas" style="width:90%; height:100%; float: left"></div>';
+      echo '<div id="sidebar" class="sidebar" style="padding-left: 10px; background: black; height:100%; overflow:auto;">'
         .'<span class="ok">ok:'.$stats['ok']
           ." (".round((100/($stats['warning']+$stats['critical']+$stats['unknown']+$stats['ok']))*($stats['ok']))."%)</span><br>"
         .'<span class="problem">problem:'.($stats['warning']+$stats['critical']+$stats['unknown'])
