@@ -711,7 +711,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
    outputFile.write('check-providers "$all_providers" "$selectedProviders"\n')
    outputFile.write('tbc_success=1\n')
    outputFile.write('for provider in $providersOld ; do\n')
-   outputFile.write('   if [[ "$selectedProviders" =~ ^\\*$|^$provider$$|^$provider$([ ])|([ ])$provider$([ ])|([ ])$provider$$ ]] ; then\n')
+   outputFile.write('   if [[ "$selectedProviders" =~ ^@ALL$|^$provider$$|^$provider$([ ])|([ ])$provider$([ ])|([ ])$provider$$ ]] ; then\n')
    outputFile.write('      echo "Configuring provider $provider ..."\n')
    outputFile.write('      . ./tunnelbox-$provider || tbc_success=0\n')
    outputFile.write('   else\n')

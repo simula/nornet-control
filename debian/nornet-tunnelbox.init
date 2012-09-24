@@ -132,13 +132,13 @@ case "$ACTION" in
    Tunnelbox-Setup coldstart $@ >>$LOGFILE
    ;;
   status)
-   Tunnelbox-Setup status -providers "*"
+   Tunnelbox-Setup status -providers "@ALL"
    ;;
   configure)
      rm -f tunnelbox*-config tunnelbox-bootstrap
      # All configuration files are gone. The tests below will trigger update.
      check_and_configure -update-all >>$LOGFILE
-     Tunnelbox-Setup start -providers "*" -event "MANUAL CONFIGURE" >>$LOGFILE
+     Tunnelbox-Setup start -providers "@ALL" -event "MANUAL CONFIGURE" >>$LOGFILE
      service nornet-node configure
      ;;
   check-and-configure)
