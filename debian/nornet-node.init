@@ -78,7 +78,7 @@ if [ "$NorNet_LocalNode_NorNetInterface" = "" ] ; then
 fi
 
 # Log what is going on ...
-echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE
+echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE 2>&1
 
 
 # ###### Check whether file needs an update #################################
@@ -169,11 +169,11 @@ case "$ACTION" in
   configure)
      rm -f interfaces hosts-config hostname-config ntp-config snmpd-config
      # All configuration files are gone. The tests below will trigger update.
-     check_and_configure -update-all >>$LOGFILE
+     check_and_configure -update-all >>$LOGFILE 2>&1
      ;;
   check-and-configure)
      # Compare with existing configuration, update only if necessary.
-     check_and_configure >>$LOGFILE
+     check_and_configure >>$LOGFILE 2>&1
      ;;
   status)
      ;;
