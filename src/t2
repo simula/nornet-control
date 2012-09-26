@@ -1,36 +1,81 @@
 #!/bin/bash
 
-
-provider_for_if_eth0='uninett'
-provider_for_if_eth1='telenor'
-provider_for_if_eth2='dfn'
-provider_for_if_gre_1_2_3='hafslund'
-
+providersOld="uninett telekom netcom telenor"
+providersNew="uninett hafslund dfn"
 
 # ###### Check whether a provider is in a list of available providers #######
-# IMPORTANT: No spaces, etc. are allowed within lists!
-getProvidersFromInterfaces () {
-   local interfaces=`echo $1 | sed -e "s/-/_/g" -e "s/ //g" -e "s/\t//g"`
-   local selectedProviders=""
-   local oldIFS=$IFS
-   IFS=","
-   for interface in $interfaces ; do
-      eval "provider=\$provider_for_if_$interface"
-      if [ "$provider" != "" ] ; then
-         if [ "$selectedProviders" = "" ] ; then
-            selectedProviders="$provider"
-         else
-            selectedProviders="$selectedProviders,$provider"
+check-providers ()
+{
+   local availableProviders="$1"
+   local selectedProviders=`echo $2 | sed -e "s/,/ /g"`
+   if [ "$selectedProviders" != "@ALL" ] ; then
+      for b in $selectedProviders ; do
+         found=0
+         for a in $availableProviders ; do
+            if [ "$a" == "$b" ] ; then
+               found=1
+            fi
+         done
+         if [ $found -eq 0 ] ; then
+            echo >&2 "ERROR: Provider \"$b\" is not in the list of available providers \"$availableProviders\"!"
+            exit 1
          fi
-      else
-         echo >&2 "ERROR: Interface \"$interface\" does not belong to a NorNet provider!"
-         exit 1
-      fi
-   done
-   IFS=$oldIFS
-   echo $selectedProviders
+      done
+   fi
 }
 
 
-x=`getProvidersFromInterfaces "eth0, eth1,   eth2, gre-1-2-3"`
-echo $x
+# ###### Compare two lists of labels and return removed labels ##############
+get-removed-labels ()
+{
+   local oldLabels="$1"
+   local newLabels="$2"
+
+   local removedLabels=""
+   for o in $oldLabels ; do
+      found=0
+      for n in $newLabels ; do
+         if [ "$o" = "$n" ] ; then
+            found=1
+            break
+         fi
+      done
+      if [ $found -eq 0 ] ; then
+         if [ "$removedLabels" = "" ] ; then
+            removedLabels="$o"
+         else
+            removedLabels="$removedLabels $o"
+         fi
+      fi
+   done
+   echo "$removedLabels"
+}
+
+
+check-providers "$providersNew" "hafslund,dfn"
+
+
+get-removed-labels "$providersOld" "$providersNew"
+
+
+selectedProviders="@ALL"
+echo "SEL=$selectedProviders"
+
+check-providers "$providersNew" "$selectedProviders"
+
+for provider in $providersOld ; do
+   if [[ "$selectedProviders" =~ ^\*$|^$provider$$|^$provider$([ ])|([ ])$provider$([ ])|([ ])$provider$$ ]] ; then\
+      echo "Configuring provider $provider ..."
+   else
+      echo "Skipping provider $provider ..."
+   fi
+done
+
+#    for provider in providerList:
+#       outputFile.write('if [[ "$selectedProviders" =~ ^\\*$|^$provider$$|^$provider$,|,$provider$,|,$provider$$ ]] ; then\n')
+#       outputFile.write('   echo "Configuring ' + configFileList[i] + '"\n')
+#       outputFile.write('   . ./' + configFileList[i] + ' || tbc_success=0\n')
+#       outputFile.write('else\n')
+#       outputFile.write('   echo "Skipping ' + configFileList[i] + '"\n')
+#       outputFile.write('fi\n')
+#       i = i + 1

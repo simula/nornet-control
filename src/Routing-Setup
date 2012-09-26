@@ -452,13 +452,11 @@ remove-nat ()
 
 
 # ###### Check whether a provider is in a list of available providers #######
-# IMPORTANT: No spaces, etc. are allowed within lists!
-checkProviders () {
-   local availableProviders=`echo $1 | sed -e "s/ //g" -e "s/\t//g"`
-   local selectedProviders="$2"
-   local oldIFS=$IFS
-   IFS=","
-   if [ "$selectedProviders" != "*" ] ; then
+check-providers ()
+{
+   local availableProviders="$1"
+   local selectedProviders=`echo $2 | sed -e "s/,/ /g"`
+   if [ "$selectedProviders" != "@ALL" ] ; then
       for b in $selectedProviders ; do
          found=0
          for a in $availableProviders ; do
@@ -472,13 +470,12 @@ checkProviders () {
          fi
       done
    fi
-   IFS=$oldIFS
 }
 
 
 # ###### Check whether a provider is in a list of available providers #######
 # IMPORTANT: No spaces, etc. are allowed within lists!
-getProvidersFromInterfaces () {
+get-providers-from-interfaces () {
    local interfaces=`echo $1 | sed -e "s/-/_/g" -e "s/ //g" -e "s/\t//g"`
    local selectedProviders=""
    local oldIFS=$IFS
