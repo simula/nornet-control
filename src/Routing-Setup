@@ -486,7 +486,7 @@ get-providers-from-interfaces () {
          if [ "$selectedProviders" = "" ] ; then
             selectedProviders="$provider"
          else
-            selectedProviders="$selectedProviders,$provider"
+            selectedProviders="$selectedProviders $provider"
          fi
       #else
       #   echo >&2 "NOTE: Interface \"$interface\" does not belong to a NorNet provider -> skipping!"
