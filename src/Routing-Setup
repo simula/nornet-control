@@ -473,33 +473,6 @@ check-providers ()
 }
 
 
-# ###### Compare two lists of labels and return removed labels ##############
-get-removed-labels ()
-{
-   local oldLabels="$1"
-   local newLabels="$2"
-
-   local removedLabels=""
-   for o in $oldLabels ; do
-      found=0
-      for n in $newLabels ; do
-         if [ "$o" = "$n" ] ; then
-            found=1
-            break
-         fi
-      done
-      if [ $found -eq 0 ] ; then
-         if [ "$removedLabels" = "" ] ; then
-            removedLabels="$o"
-         else
-            removedLabels="$removedLabels $o"
-         fi
-      fi
-   done
-   echo "$removedLabels"
-}
-
-
 # ###### Check whether a provider is in a list of available providers #######
 # IMPORTANT: No spaces, etc. are allowed within lists!
 get-providers-from-interfaces () {

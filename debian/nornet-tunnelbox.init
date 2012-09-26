@@ -1,6 +1,4 @@
 #!/bin/sh
-# $Id: rsplib-registrar.init 2682 2012-06-08 11:29:28Z dreibh $
-#
 # --------------- NorNet -- The Multi-Homing Testbed Project ----------------
 #
 # Copyright (C) 2012 by Thomas Dreibholz
@@ -84,9 +82,47 @@ needs_update ()
 }
 
 
-# ###### Get new configuration into temporary directory #####################
-get_new_tunnelbox_configuration ()
+# ###### Compare two lists of labels and return removed labels ##############
+get_removed_labels ()
 {
+   oldLabels="$1"
+   newLabels="$2"
+
+   removedLabels=""
+   for o in $oldLabels ; do
+      found=0
+      for n in $newLabels ; do
+         if [ "$o" = "$n" ] ; then
+            found=1
+            break
+         fi
+      done
+      if [ $found -eq 0 ] ; then
+         if [ "$removedLabels" = "" ] ; then
+            removedLabels="$o"
+         else
+            removedLabels="$removedLabels $o"
+         fi
+      fi
+   done
+   echo "$removedLabels"
+}
+
+
+# ###### Check configuration for updates and apply if necessary #############
+check_and_configure ()
+{
+   # ====== Permanently make important settings in sysctl configuration =====
+   sed -e "s/^[ \t]*[#]*[ \t]*net.ipv4.ip_forward[ \t]*=.*$/net.ipv4.ip_forward=1/" \
+       -e "s/^[ \t]*[#]*[ \t]*net.ipv6.conf.all.forwarding[ \t]*=.*$/net.ipv6.conf.all.forwarding=1/" \
+       -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.send_redirects[ \t]*=.*$/net.ipv4.conf.all.send_redirects=0/" \
+       </etc/sysctl.conf >/etc/nornet/sysctl-config
+   if needs_update sysctl-config /etc/sysctl.conf $1 ; then
+      mv /etc/nornet/sysctl-config /etc/sysctl.conf
+      sysctl -p
+   fi
+   
+   # ====== Get new configuration into temporary directory ==================
    echo "Getting new configuration ..."
    rm -rf updated-tunnelbox-config
    mkdir updated-tunnelbox-config
@@ -98,25 +134,34 @@ get_new_tunnelbox_configuration ()
       echo "NOTE: Retrying to obtain full configuration ..."
       Make-Tunnelbox-Configuration
    fi
+   . ./tunnelbox-providers
+   providersNew="$all_providers"
    cd ..
-   mv updated-tunnelbox-config/* .
-   rmdir updated-tunnelbox-config
-}
+   . ./tunnelbox-providers
+   providersOld="$all_providers"
+   providersRemoved=`get_removed_labels "$providersOld" "$providersNew"`
 
-
-# ###### Check configuration for updates and apply if necessary #############
-check_and_configure ()
-{
-   get_new_tunnelbox_configuration
-
-   # Permanently make important settings in sysctl configuration.
-   sed -e "s/^[ \t]*[#]*[ \t]*net.ipv4.ip_forward[ \t]*=.*$/net.ipv4.ip_forward=1/" \
-       -e "s/^[ \t]*[#]*[ \t]*net.ipv6.conf.all.forwarding[ \t]*=.*$/net.ipv6.conf.all.forwarding=1/" \
-       -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.send_redirects[ \t]*=.*$/net.ipv4.conf.all.send_redirects=0/" \
-       </etc/sysctl.conf >/etc/nornet/sysctl-config && mv /etc/nornet/sysctl-config /etc/sysctl.conf && sudo sysctl -p
-
-   # FIXME: How to compare configs?
-   Tunnelbox-Setup start -event "check_and_configure" || true
+   # ====== Apply changes ===================================================
+   for removedProvider in $providersRemoved ; do
+      Tunnelbox-Setup stop -providers "$removedProvider" -event "check_and_configure/removed provider" || true
+      rm -f tunnelbox-${removedProvider}-config
+   done
+   mv updated-tunnelbox-config/tunnelbox-bootstrap updated-tunnelbox-config/tunnelbox-providers updated-tunnelbox-config/tunnelbox-config .
+   for provider in $providersNew ; do
+      if needs_update updated-tunnelbox-config/tunnelbox-${provider}-config tunnelbox-${provider}-config $1 ; then
+         mv updated-tunnelbox-config/tunnelbox-${provider}-config .
+         echo "Provider ${provider} needs an update -> applying new setup ..."
+         Tunnelbox-Setup start -providers "$provider" -event "check_and_configure/updated provider" || true
+      else
+         echo "Provider ${provider} does not need an update."
+         rm -f updated-tunnelbox-config/tunnelbox-${provider}-config
+      fi
+   done
+   if ! rmdir updated-tunnelbox-config ; then
+      echo >&2 "ERROR: Something went wrong! updated-tunnelbox-config still contains unhandled configuration files!"
+      ls -al updated-tunnelbox-config >&2
+      exit 1
+   fi
 }
 
 

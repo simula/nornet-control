@@ -1,6 +1,4 @@
 #!/bin/sh
-# $Id: rsplib-registrar.init 2682 2012-06-08 11:29:28Z dreibh $
-#
 # --------------- NorNet -- The Multi-Homing Testbed Project ----------------
 #
 # Copyright (C) 2012 by Thomas Dreibholz
