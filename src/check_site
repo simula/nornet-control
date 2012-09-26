@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 #
 # NorNet Site Check Plugin for Nagios
 # Copyright (C) 2012 by Thomas Dreibholz
@@ -80,9 +80,9 @@ i=1
 for address in $ADDRESSES ; do
    if [ `grep "^PING OK" a-output.$i | wc --lines` -gt 0 ]  ; then
       let goodAddresses=$goodAddresses+1
-      summary="${summary}a${address}=OK "
+      summary="${summary}a/${address}=OK "
    else
-      summary="${summary}a${address}=BAD "
+      summary="${summary}a/${address}=BAD "
    fi
    let i=$i+1
 done
@@ -90,9 +90,9 @@ i=1
 for tunnel in $TUNNELS ; do
    if [ `grep "^PING OK" t-output.$i | wc --lines` -gt 0 ]  ; then
       let goodTunnels=$goodTunnels+1
-      summary="${summary}t${address}=OK "
+      summary="${summary}t/${tunnel}=OK "
    else
-      summary="${summary}t${address}=BAD "
+      summary="${summary}t/${tunnel}=BAD "
    fi
    let i=$i+1
 done
