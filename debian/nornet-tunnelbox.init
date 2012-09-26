@@ -121,7 +121,7 @@ check_and_configure ()
       mv /etc/nornet/sysctl-config /etc/sysctl.conf
       sysctl -p
    fi
-   
+
    # ====== Get new configuration into temporary directory ==================
    echo "Getting new configuration ..."
    rm -rf updated-tunnelbox-config
@@ -157,6 +157,8 @@ check_and_configure ()
          rm -f updated-tunnelbox-config/tunnelbox-${provider}-config
       fi
    done
+
+   # Check for problems
    if ! rmdir updated-tunnelbox-config ; then
       echo >&2 "ERROR: Something went wrong! updated-tunnelbox-config still contains unhandled configuration files!"
       ls -al updated-tunnelbox-config >&2
