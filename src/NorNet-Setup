@@ -76,6 +76,7 @@ norNetSetup = [
    'site_providers' : [
       [ 'Uninett', 'eth0', IPv4Address('132.252.156.71'), IPv6Address('fd55:5555::71') ],
       [ 'Telenor', 'eth1', IPv4Address('169.254.100.71'), IPv6Address('::') ]
+      # [ 'Deutsches Forschungsnetz', 'eth2', IPv4Address('172.31.255.71'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, 'aaklungen'      ],
@@ -231,7 +232,7 @@ def makeSite(site, norNetInformation, dnsServers, ntpServers):
       address = node[0]
       if address <= 0:
          address = i
-      port    = node[1]
+      port = node[1]
       if port <= 0:
         port = i
       makeNorNetNode(newSite, node[2], address, newPCU, port, 'eth0', 'Amiga 5000', 'reinstall')
