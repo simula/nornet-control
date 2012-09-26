@@ -689,7 +689,8 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
    # ====== Configure tunnels and routing ===================================
    outputFile.write('if [ "$selectedInterfaces" != "" ] ; then\n')
    outputFile.write('   if [ "$selectedProviders" = "" ] ; then\n')
-   outputFile.write('      selectedProviders=`get-providers-from-interfaces $selectedInterfaces`\n')
+   outputFile.write('      selectedProviders=`get-providers-from-interfaces "$selectedInterfaces"`\n')
+   outputFile.write('      echo "Selected providers $selectedProviders from interfaces $selectedInterfaces"\n')
    outputFile.write('   else\n')
    outputFile.write('      echo >&2 "ERROR: Either specify providers or interfaces, but *not* both!"\n')
    outputFile.write('      exit 1\n')
