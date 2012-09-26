@@ -1,0 +1,122 @@
+#!/bin/bash -e
+#
+# NorNet Site Check Plugin for Nagios
+# Copyright (C) 2012 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
+
+
+ADDRESSES=""
+TUNNELS=""
+WARN="300.0,10%"
+CRITICAL="500.0,15%"
+CHECK_PING="/usr/lib/nagios/plugins/check_ping"
+
+
+# ====== Handle arguments ===================================================
+while [ "$1" != "" ] ; do
+   if [ "$1" = "-A" ] ; then
+      ADDRESSES="$ADDRESSES $2"
+      shift
+   elif [ "$1" = "-T" ] ; then
+      TUNNELS="$TUNNELS $2"
+      shift
+   elif [ "$1" = "-w" ] ; then
+      WARN="$2"
+      shift
+   elif [ "$1" = "-c" ] ; then
+      CRITICAL="$2"
+      shift
+   else
+      echo >&2 "Usage: $0 [-A address] [-T tunnel] [-w warning] [-c critical] ..."
+      exit 1
+   fi
+   shift
+done
+
+
+# ====== Create temporary directory =========================================
+DIRECTORY=`mktemp -d`
+cd $DIRECTORY
+
+
+# ====== Run checks =========================================================
+a=1
+for address in $ADDRESSES ; do
+   $CHECK_PING -H $address -w $WARN -c $CRITICAL >a-output.$a &
+   let a=$a+1
+done
+t=1
+for tunnel in $TUNNELS ; do
+   $CHECK_PING -H $tunnel -w $WARN -c $CRITICAL >t-output.$t &
+   let t=$t+1
+done
+
+
+# ====== Wait for results ===================================================
+wait
+
+
+# ====== Analyse results ====================================================
+goodAddresses=0
+goodTunnels=0
+
+summary=""
+i=1
+for address in $ADDRESSES ; do
+   if [ `grep "^PING OK" a-output.$i | wc --lines` -gt 0 ]  ; then
+      let goodAddresses=$goodAddresses+1
+      summary="${summary}a${address}=OK "
+   else
+      summary="${summary}a${address}=BAD "
+   fi
+   let i=$i+1
+done
+i=1
+for tunnel in $TUNNELS ; do
+   if [ `grep "^PING OK" t-output.$i | wc --lines` -gt 0 ]  ; then
+      let goodTunnels=$goodTunnels+1
+      summary="${summary}t${address}=OK "
+   else
+      summary="${summary}t${address}=BAD "
+   fi
+   let i=$i+1
+done
+
+resultCode=3 ; resultText="UNKNOWN"
+if [ $goodAddresses -eq $a -a $goodTunnels -eq $t ] ; then
+   resultCode=0 ; resultText="OK"
+elif [ $goodAddresses -le 0 -o $goodTunnels -le 0 ] ; then
+   resultCode=2 ; resultText="CRITICAL"
+elif [ $goodAddresses -gt 0 -a $goodTunnels -gt 0 ] ; then
+   resultCode=1; resultText="WARN"
+fi
+
+
+# ====== Print the result ===================================================
+r=0 ; rmin=0 ; rmax=0 ; rcritical=0 ; rwarn=0
+let r=$goodAddresses+$goodTunnels
+rmin=0
+let rmax=$a+$t
+let rwarn=$rmax
+rcritical=1
+
+echo "SITECHECK $resultText A=$goodAddresses/$a T=$goodTunnels/$t S=${summary}| R=$r;$rwarn:;$rcritical:;$rmin;$rmax"
+
+
+# ====== Remove temporary directory =========================================
+rm -rf $DIRECTORY

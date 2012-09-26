@@ -1,0 +1,56 @@
+.\" Node Setup
+.\" Copyright (C) 2012 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd August 14, 2012
+.Dt check_site 1
+.Os check_site
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm check_site
+.Nd NorNet Site Check Plugin for Nagios
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm check_site
+.Op Fl A address
+.Op Fl T tunnel
+.Op Fl w warning
+.Op Fl c critical
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm check_site
+is a site check plugin for Nagios.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following options are available:
+.Bl -tag -width indent
+.It Fl A address
+Run check_ping for given address.
+.It Fl T tunnel
+Run check_ping for given tunnel address.
+.It Fl w warning
+Sets "warning" level for check_ping.
+.It Fl c critical
+Sets "critical" level for check_ping.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It check_site -A 10.1.1.1 -A 10.1.1.23 -A 10.1.2.3 -T 10.1.1.1 -T 10.1.1.99
+.El

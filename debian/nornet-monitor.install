@@ -1,3 +1,4 @@
 Make-Monitor-Configuration         /usr/bin
+check_site                         /usr/lib/nagios/plugins
 grub/08_nornet_monitor_theme       /etc/grub.d
 grub/Splash-Monitor1-1024x768.jpeg /boot
