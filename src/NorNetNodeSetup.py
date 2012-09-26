@@ -631,7 +631,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
       localProvider = localProviderList[localProviderIndex]
       outputFile.write('if_for_provider_' + \
                        localProvider['provider_short_name'] + '=' + \
-                       '"' + str(localProvider['provider_tunnelbox_interface']).replace('-', '_') + '"\n')
+                       '"' + str(localProvider['provider_tunnelbox_interface']).replace('-', '_').replace(':', '_sub_') + '"\n')
       outputFile.write('ipv4_for_provider_' + \
                        localProvider['provider_short_name'] + '="' + \
                        str(localProvider['provider_tunnelbox_ipv4']) + '"\n')

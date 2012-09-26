@@ -476,7 +476,7 @@ check-providers ()
 # ###### Check whether a provider is in a list of available providers #######
 # IMPORTANT: No spaces, etc. are allowed within lists!
 get-providers-from-interfaces () {
-   local interfaces=`echo $1 | sed -e "s/-/_/g" -e "s/ //g" -e "s/\t//g"`
+   local interfaces=`echo $1 | sed -e "s/-/_/g" -e "s/ //g" -e "s/\t//g" -e "s/:/_sub_/g"`
    local selectedProviders=""
    local oldIFS=$IFS
    IFS=","
