@@ -727,40 +727,6 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
    outputFile.write('\n')
 
 
-   #outputFile.write('availableProviders="')
-   #providerList   = []
-   #configFileList = []
-   #pathNumber     = 0
-   #for onlyDefault in [ True, False ]:
-      #for localProviderIndex in localProviderList:
-         #if ( ((onlyDefault == True)  and (localProviderIndex == localSite['site_default_provider_index'])) or \
-              #((onlyDefault == False) and (localProviderIndex != localSite['site_default_provider_index'])) ):
-            #localProvider = localProviderList[localProviderIndex]
-            #tbpName = _makeTunnelboxProvider(fullSiteList, localSite,
-                                             #localProviderList, localProvider,
-                                             #pathNumber, configNamePrefix)
-            #providerList.append(localProvider['provider_short_name'])
-            #configFileList.append(tbpName)
-            #if pathNumber > 0:
-               #outputFile.write(',')
-            #outputFile.write(localProvider['provider_short_name'])
-            #pathNumber = pathNumber + 1
-
-   #outputFile.write('check-providers "$availableProviders" "$selectedProviders"\n')
-
-   #outputFile.write('tbc_success=1\n')
-
-   #i = 0
-   #for provider in providerList:
-      #outputFile.write('if [[ "$selectedProviders" =~ ^\\*$|^' + provider + '$|^' + provider + ',|,' + provider + ',|,' + provider + '$ ]] ; then\n')
-      #outputFile.write('   echo "Configuring ' + configFileList[i] + '"\n')
-      #outputFile.write('   . ./' + configFileList[i] + ' || tbc_success=0\n')
-      #outputFile.write('else\n')
-      #outputFile.write('   echo "Skipping ' + configFileList[i] + '"\n')
-      #outputFile.write('fi\n')
-      #i = i + 1
-
-
    # ====== Make local setup ================================================
    outputFile.write('\nif [ "$selectedProviders" == "" ] ; then\n')
    outputFile.write('   if [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
