@@ -1155,7 +1155,17 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                   localProvider = localProviderList[localProviderIndex]
                   for version in [ 4, 6 ]:
                      localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
-                     outputFile.write(str(localAddress.ip) + '!')
+                     outputFile.write('-A ' + str(localAddress.ip) + ' ')
+               for remoteSiteIndex in fullSiteList:
+                  if remoteSiteIndex == localSiteIndex:
+                     continue
+                  remoteSite         = fullSiteList[remoteSiteIndex]
+                  remoteProviderList = getNorNetProvidersForSite(remoteSite)
+                  for remoteProviderIndex in remoteProviderList:
+                     remoteProvider = remoteProviderList[remoteProviderIndex]
+                     for version in [ 4, 6 ]:
+                        tunnel = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
+                        outputFile.write('-T ' + str(tunnel['tunnel_local_inner_address'].ip) + ' ')
                outputFile.write('\n')
                if ((localSiteIndex != NorNet_SiteIndex_Central) and (centralSite != None)):
                   outputFile.write('   parents       ' + centralSite['site_long_name'] + '\n')
