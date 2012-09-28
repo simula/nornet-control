@@ -1,22 +1,5 @@
-h1 {
-   text-align: center;
-   color:      white;
-}
-
-h2 {
-   text-align: left;
-}
-
-h3 {
-   text-align: left;
-}
-
-p.description {
-   text-align: justify;
-}
-
-p.center {
-   text-align: center;
+html {
+   overflow: hidden;
 }
 
 /*@font-face {
@@ -32,6 +15,35 @@ body {
    font-family:      serif;
 }
 
+h1 {
+   text-align: center;
+   color:      white;
+   font-size:  24pt;
+}
+
+h2 {
+   text-align: left;
+   margin:0px; padding:0px;
+   color: #02266B;
+}
+
+h3 {
+   text-align: left;
+   color: #02266B;
+}
+
+hr {
+   color: #02266B;
+}
+
+p.description {
+   text-align: justify;
+}
+
+p.center {
+   text-align: center;
+}
+
 .header {
    padding-left: 10px;
    height:       4%;
@@ -40,7 +52,7 @@ body {
 }
 
 .map {
-   width:      80%;
+   width:      75%;
    height:     92.5%;
    float:      left;
    background: #cccccc;
@@ -50,6 +62,12 @@ body {
    padding-left: 10px;
    height:       92.5%;
    overflow:     auto;
+}
+
+.clock {
+   margin:      0px;
+   padding:     10px;
+   font-weight: bold;
 }
 
 .footer {
