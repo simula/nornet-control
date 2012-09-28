@@ -1,0 +1,61 @@
+h1 {
+   text-align: center;
+   color:      white;
+}
+
+h2 {
+   text-align: left;
+}
+
+h3 {
+   text-align: left;
+}
+
+p.description {
+   text-align: justify;
+}
+
+p.center {
+   text-align: center;
+}
+
+/*@font-face {
+  font-family: 'UnifrakturCook';
+  font-style: normal;
+  font-weight: 700;
+  src: local('UnifrakturCook'), local('UnifrakturCook-Bold'), url(http://themes.googleusercontent.com/static/fonts/unifrakturcook/v5/ASwh69ykD8iaoYijVEU6Rm_7m0YPLwupdydlBc09ccE.woff) format('woff');
+}*/
+
+body {
+   background-image: url(graphics/backgrounds/background-essen.png);
+   height:           100%;
+   font-family:      serif;
+}
+
+.header {
+   padding-left: 10px;
+   height:       4%;
+   overflow:     auto;
+   background:   red;
+}
+
+.map {
+   width:      80%;
+   height:     92.5%;
+   float:      left;
+   background: #cccccc;
+}
+
+.sidebar {
+   padding-left: 10px;
+   height:       92.5%;
+   overflow:     auto;
+}
+
+.footer {
+   padding-left: 10px;
+   overflow:     auto;
+   height:       2.5%;
+   background:   red;
+   color:        white;
+}

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="no">
+
+<head>
+ <title>Velkommen til NorNet Kontrollsenter på Simula, Fornebu</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta name="Author" content="Thomas Dreibholz" />
+ <meta name="Description" content="My Homepage" />
+ <meta name="Keywords" content="Thomas Dreibholz, Homepage, Computer Science, University of Duisburg-Essen" />
+ <meta name="Classification" content="Homepage" />
+ <link rel="stylesheet" href="stylesheet.css" type="text/css" />
+ <link rel="shortcut icon" href="graphics/icons/icon-uniessen.png" />
+</head>
+
+
+<script type="text/javascript">
+
+function updateClock ( )
+{
+  var currentTime = new Date ( );
+
+  var currentHours   = currentTime.getHours ( );
+  var currentMinutes = currentTime.getMinutes ( );
+  var currentSeconds = currentTime.getSeconds ( );
+
+var myDays=
+
+["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+
+  // Pad the minutes and seconds with leading zeros, if required
+  currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
+  currentSeconds = ( currentSeconds < 10 ? "0" : "" ) + currentSeconds;
+
+//   // Choose either "AM" or "PM" as appropriate
+//   var timeOfDay = ( currentHours < 12 ) ? "AM" : "PM";
+//
+//   // Convert the hours component to 12-hour format if needed
+//   currentHours = ( currentHours > 12 ) ? currentHours - 12 : currentHours;
+//
+//   // Convert an hours component of "0" to "12"
+//   currentHours = ( currentHours == 0 ) ? 12 : currentHours;
+
+  // Compose the string for display
+  var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds
+   + " " + currentTime.toLocaleDateString();
+
+  // Update the time display
+  document.getElementById("clock").firstChild.nodeValue = currentTimeString;
+}
+
+</script>
+
+
+<body onload="updateClock(); setInterval('updateClock()', 1000 )">
+
+
+<div id="header" class="header">
+ <h1 style="margin:0px; padding:0px;">
+  Velkommen til NorNet Kontrollsenter på Simula, Fornebu
+ </h1>
+</div>
+
+<div id="map" class="map">
+ MAP
+</div>
+
+<div id="sidebar" class="sidebar">
+
+ <h2>Time</h2>
+ <center>
+  <object data="station-clock.svg" type="image/svg+xml" width="80%">
+   <param name="dial"               value="din 41091.1"/>
+   <param name="hourHand"           value="siemens"/>
+   <param name="minuteHand"         value="siemens"/>
+   <param name="secondHand"         value="din 41071.2"/>
+   <param name="minuteHandBehavior" value="stepping"/>
+   <param name="secondHandBehavior" value="swinging"/>
+   <param name="secondHandStopToGo" value="yes"/>
+   <param name="secondHandStopTime" value="1.5"/>
+   <param name="backgroundColor"    value="rgba(0,0,0,0)"/>
+   <param name="dialColor"          value="rgb(40,40,40)"/>
+   <param name="hourHandColor"      value="rgb(20,20,20)"/>
+   <param name="minuteHandColor"    value="rgb(20,20,20)"/>
+   <param name="secondHandColor"    value="rgb(160,50,40)"/>
+   <param name="axisCoverColor"     value="rgb(20,20,20)"/>
+   <param name="axisCoverRadius"    value="7"/>
+   <param name="updateInterval"     value="50"/>
+  </object>
+  <br />&nbsp;
+  <br /><span id="clock">&nbsp;</span>
+ </center>
+ <hr />
+
+ <h2>Problems</h2>
+  <ul>
+   <li>Test</li>
+  </ul>
+ <hr />
+
+ <h2>Sites</h2>
+  <ul>
+  <li>Simula</li>
+  </ul>
+ <hr />
+
+</div>
+
+<div id="footer" class="footer">
+ <center>
+  For mer informasjon om NorNet-prosjektet, se <a href="http://www.nntb.no">http://www.nntb.no</a>!
+ </center>
+</div>
+
+
+</body>
+
+</html>
