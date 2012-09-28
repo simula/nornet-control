@@ -1,18 +1,20 @@
-html {
-   overflow: hidden;
-}
-
+/*
 @font-face {
   font-family: 'UnifrakturCook';
   font-style: normal;
   font-weight: 700;
   src: local('UnifrakturCook'), local('UnifrakturCook-Bold'), url(http://themes.googleusercontent.com/static/fonts/unifrakturcook/v5/ASwh69ykD8iaoYijVEU6Rm_7m0YPLwupdydlBc09ccE.woff) format('woff');
 }
+*/
+
+html {
+   overflow: hidden;
+}
 
 body {
    background-image: url(graphics/backgrounds/background-essen.png);
    height:           100%;
-   font-family:      UnifrakturCook;
+   font-family:      serif;
    margin:           0px;
 }
 
