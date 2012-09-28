@@ -16,6 +16,9 @@
  <link rel="shortcut icon" href="graphics/icons/icon-uniessen.png" />
 </head>
 
+<body onload="initialize();">
+
+<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
 
 <script type="text/javascript">
 
@@ -151,38 +154,39 @@ function makeDisplay()
    setInterval('updateClock()', 1000)
 }
 
+var map;
+function initialize() {
+   makeDisplay();
+   var myOptions = {
+      zoom: 5,
+      center: new google.maps.LatLng(62.5,5),
+      mapTypeId: google.maps.MapTypeId.HYBRID
+   };
+   map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+}
+
 </script>
 
 
-<body onload="makeDisplay()">
 
 <div id="header" class="header">
  <h1 style="margin:0px; padding:0px;" id="header.title">&nbsp;</h1>
 </div>
 
-<div id="map" class="map">
+<div id="map_canvas" class="map">
  MAP
 </div>
 
 <div id="sidebar" class="sidebar">
- <p class="center">
-  <a href="javascript:" onclick="displayLanguage='NO'; makeDisplay();">
-   <img src="graphics/flags/flag-norway.png" alt="Norsk" width=32 />
-  </a>
-  /
-  <a href="javascript:" onclick="displayLanguage='EN'; makeDisplay();">
-   <img src="graphics/flags/flag-england.png" alt="English" width=32 />
-  </a>
-  /
-  <a href="javascript:" onclick="displayLanguage='DE'; makeDisplay();">
-   <img src="graphics/flags/flag-ddr.png" alt="Deutsch" width=32 />
-  </a>
- </p>
+ <h2 style="text-align: center;">
+  <a href="javascript:" onclick="displayLanguage='NO'; makeDisplay();"><img src="graphics/flags/flag-norway.png" alt="Norsk" width="32" /></a>
+  <a href="javascript:" onclick="displayLanguage='EN'; makeDisplay();"><img src="graphics/flags/flag-england.png" alt="English" width="32" /></a>
+  <a href="javascript:" onclick="displayLanguage='DE'; makeDisplay();"><img src="graphics/flags/flag-ddr.png" alt="Deutsch" width="32" /></a>
+ </h2>
  <hr />
 
  <h2 id="sidebar.clock">Time</h2>
- <center>
-  <p id="date" class="clock">&nbsp;</p>
+  <p class="clock">
   <object data="station-clock.svg" type="image/svg+xml" width="80%">
    <param name="dial"               value="din 41091.1"/>
    <param name="hourHand"           value="siemens"/>
@@ -201,29 +205,29 @@ function makeDisplay()
    <param name="axisCoverRadius"    value="7"/>
    <param name="updateInterval"     value="50"/>
   </object>
-  <p id="clock" class="clock">&nbsp;</p>
- </center>
+  <span id="clock">&nbsp;</span><br />
+  <span id="date">&nbsp;</span>
+  </p>
  <hr />
 
  <h2 id="sidebar.sites">Sites</h2>
   <ul>
-   <li>&#9786;Test</li>
+   <li class="description">&#9786;Test</li>
   </ul>
  <hr />
 
  <h2 id="sidebar.problems">Problems</h2>
+  <p class="description">
   <ul>
-   <li>&#9786;Ingen problem!&#9786;</li>
-   <li>&#9760;Test&#9785;</li>
+   <li class="description">&#9786;Ingen problem!&#9786;</li>
+   <li class="description">&#9760;Test&#9785;</li>
   </ul>
  <hr />
 
 </div>
 
 <div id="footer" class="footer">
- <center>
   For mer informasjon om NorNet-prosjektet, se <a href="http://www.nntb.no">http://www.nntb.no</a>!
- </center>
 </div>
 
 

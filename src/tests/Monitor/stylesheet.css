@@ -2,60 +2,61 @@ html {
    overflow: hidden;
 }
 
-/*@font-face {
+@font-face {
   font-family: 'UnifrakturCook';
   font-style: normal;
   font-weight: 700;
   src: local('UnifrakturCook'), local('UnifrakturCook-Bold'), url(http://themes.googleusercontent.com/static/fonts/unifrakturcook/v5/ASwh69ykD8iaoYijVEU6Rm_7m0YPLwupdydlBc09ccE.woff) format('woff');
-}*/
+}
 
 body {
    background-image: url(graphics/backgrounds/background-essen.png);
    height:           100%;
-   font-family:      serif;
+   font-family:      UnifrakturCook;
+   margin:           0px;
 }
 
 h1 {
    text-align: center;
    color:      white;
-   font-size:  24pt;
+   font-size:  28pt;
 }
 
 h2 {
    text-align: left;
-   margin:0px; padding:0px;
-   color: #02266B;
+   margin:     0px;
+   padding:    0px;
+   color:      #02266B;
 }
 
 h3 {
    text-align: left;
-   color: #02266B;
+   color:      #02266B;
 }
 
 hr {
    color: #02266B;
 }
 
-p.description {
-   text-align: justify;
+.description {
+   text-align:  justify;
+   font-family: serif;
 }
 
-p.center {
-   text-align: center;
+.center {
+   text-align:  center;
+   font-family: serif;
 }
 
 .header {
-   padding-left: 10px;
-   height:       4%;
-   overflow:     auto;
+   height:       5%;
    background:   red;
 }
 
 .map {
-   width:      75%;
+   width:      80%;
    height:     92.5%;
    float:      left;
-   background: #cccccc;
 }
 
 .sidebar {
@@ -68,6 +69,8 @@ p.center {
    margin:      0px;
    padding:     10px;
    font-weight: bold;
+   font-size:   12pt;
+   text-align:  center;
 }
 
 .footer {
