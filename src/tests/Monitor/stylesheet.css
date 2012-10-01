@@ -28,12 +28,24 @@ h2 {
    text-align: left;
    margin:     0px;
    padding:    0px;
+   font-size:  16pt;
    color:      #02266B;
 }
 
 h3 {
    text-align: left;
+   font-size:  14pt;
    color:      #02266B;
+}
+
+p {
+   text-align: left;
+   font-size:  12pt;
+   color:      #02266B;
+}
+
+li {
+   font-size:  12pt;
 }
 
 hr {
@@ -51,20 +63,38 @@ hr {
 }
 
 .header {
-   height:       5%;
+   position: fixed;
+   width: 100%;
+   height: 32pt;
+   top: 0;
+   right: 0;
+   bottom: auto;
+   left: 0;
+   overflow:     hidden;
    background:   red;
 }
 
 .map {
+   position:   fixed;
    width:      80%;
-   height:     92.5%;
+   height:     auto;
+   top:        32pt;
+   right:      0;
+   bottom:     16pt;
+   left:       0;
    float:      left;
+   background: yellow;
 }
 
 .sidebar {
-   padding-left: 10px;
-   height:       92.5%;
-   overflow:     auto;
+   position: fixed;
+   width:    20%;
+   height:   auto;
+   top:      32pt;
+   right:    0;
+   bottom:   16pt;
+   left:     auto;
+   overflow: auto;
 }
 
 .clock {
@@ -76,9 +106,15 @@ hr {
 }
 
 .footer {
+   position:     fixed;
+   width:        100%;
+   height:       16pt;
+   top:          auto;
+   right:        0;
+   bottom:       0;
+   left:         0;
    padding-left: 10px;
-   overflow:     auto;
-   height:       2.5%;
+   overflow:     hidden;
    background:   red;
    color:        white;
 }
