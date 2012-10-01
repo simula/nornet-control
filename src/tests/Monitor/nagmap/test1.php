@@ -143,6 +143,7 @@ function updateClock()
   document.getElementById("clock").firstChild.nodeValue = currentTimeString;
 }
 
+
 function makeDisplay()
 {
    makeSidebarContents()
@@ -155,6 +156,7 @@ function makeDisplay()
    setInterval('updateClock()', 1000)
    updateClock();
 }
+
 
 <?php
    include('marker.php');
