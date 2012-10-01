@@ -1,0 +1,29 @@
+hoststatus {
+	host_name=Simula Research Laboratory
+	last_hard_state=1
+}
+
+hoststatus {
+   host_name=Universitetet i Tromsø
+   last_hard_state=2
+}
+
+hoststatus {
+   host_name=Universitetet i Trondheim
+   last_hard_state=3
+}
+
+hoststatus {
+   host_name=Universitetet på Svalbard
+   last_hard_state=3
+}
+
+hoststatus {
+   host_name=Universitetet i Stavanger
+   last_hard_state=0
+}
+
+hoststatus {
+   host_name=Universität Duisburg-Essen
+   last_hard_state=0
+}
