@@ -138,16 +138,6 @@ function updateClock()
   document.getElementById("clock").firstChild.nodeValue = currentTimeString;
 }
 
-function makeDisplay()
-{
-   document.getElementById("sidebar.clock").firstChild.nodeValue    = clockLabel[displayLanguage];
-   document.getElementById("sidebar.problems").firstChild.nodeValue = problemsLabel[displayLanguage];
-   document.getElementById("sidebar.sites").firstChild.nodeValue    = sitesLabel[displayLanguage];
-   document.getElementById("header.title").firstChild.nodeValue     = titleLabel[displayLanguage];
-   updateClock();
-   setInterval('updateClock()', 1000)
-}
-
 var map;
 function initialize() {
    makeDisplay();
@@ -159,6 +149,29 @@ function initialize() {
    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 }
 
+function makeDisplay()
+{
+//    document.getElementById("sidebar.clock").firstChild.nodeValue    = clockLabel[displayLanguage];
+//    document.getElementById("sidebar.problems").firstChild.nodeValue = problemsLabel[displayLanguage];
+//    document.getElementById("sidebar.sites").firstChild.nodeValue    = sitesLabel[displayLanguage];
+//    document.getElementById("header.title").firstChild.nodeValue     = titleLabel[displayLanguage];
+   updateClock();
+   setInterval('updateClock()', 1000)
+   makeMapContents()
+   makeSidebarContents()
+}
+
+function makeMapContents()
+{
+}
+
+function makeSidebarContents()
+{
+   str = "<u>";
+   str += "xxxxx</u>";
+   document.getElementById("sidebar.sites.content").innerHTML = str;
+}
+
 </script>
 
 
@@ -168,7 +181,9 @@ function initialize() {
 </div>
 
 <div id="map_canvas" class="map">
- Please wait ...
+ <noscript>
+  <h2>NorNet Map requires JavaScript!</h2>
+ </noscript>
 </div>
 
 <div id="sidebar" class="sidebar">
@@ -180,7 +195,7 @@ function initialize() {
  <hr />
 
  <h2 id="sidebar.clock">Time</h2>
-  <p class="clock">
+<!--  <p class="clock">
   <object data="station-clock.svg" type="image/svg+xml" width="80%">
    <param name="dial"               value="din 41091.1"/>
    <param name="hourHand"           value="siemens"/>
@@ -198,23 +213,27 @@ function initialize() {
    <param name="axisCoverColor"     value="rgb(20,20,20)"/>
    <param name="axisCoverRadius"    value="7"/>
    <param name="updateInterval"     value="50"/>
-  </object>
+  </object>-->
   <span id="clock">&nbsp;</span><br />
   <span id="date">&nbsp;</span>
   </p>
  <hr />
 
  <h2 id="sidebar.sites">Sites</h2>
-  <ul>
-   <li class="description">&#9786;Test</li>
-  </ul>
+  <span id="sidebar.sites.content">
+   <ul>
+    <li class="description">&#9786;Test</li>
+   </ul>
+  </span>
  <hr />
 
  <h2 id="sidebar.problems">Problems</h2>
+  <span id="sidebar.sites.content">
   <ul>
    <li class="description">&#9786;Ingen problem!&#9786;</li>
    <li class="description">&#9760;Test&#9785;</li>
   </ul>
+  </span>
  <hr />
 
 </div>
