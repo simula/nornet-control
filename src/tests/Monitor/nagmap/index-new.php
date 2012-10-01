@@ -165,31 +165,31 @@ include('./config.php');
       };
       window.map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
 
-      //defining marker images
-      var red_blank = new google.maps.MarkerImage(
-        'http://www.google.com/mapfiles/marker.png',
-        new google.maps.Size(20,34),
-        new google.maps.Point(10,34));
-
-      var blue_blank = new google.maps.MarkerImage(
-        'http://www.google.com/mapfiles/marker_white.png',
-        new google.maps.Size(20,34),
-        new google.maps.Point(10,34));
-
-      var green_blank = new google.maps.MarkerImage(
-        'http://www.google.com/mapfiles/marker_green.png',
-        new google.maps.Size(20,34),
-        new google.maps.Point(10,34));
-
-      var yellow_blank = new google.maps.MarkerImage(
-        'http://www.google.com/mapfiles/marker_yellow.png',
-        new google.maps.Size(20,34),
-        new google.maps.Point(10,34));
-
-      var grey_blank = new google.maps.MarkerImage(
-        'http://www.google.com/mapfiles/marker_grey.png',
-        new google.maps.Size(20,34),
-        new google.maps.Point(10,34));
+//       //defining marker images
+//       var red_blank = new google.maps.MarkerImage(
+//         'http://www.google.com/mapfiles/marker.png',
+//         new google.maps.Size(20,34),
+//         new google.maps.Point(10,34));
+//
+//       var blue_blank = new google.maps.MarkerImage(
+//         'http://www.google.com/mapfiles/marker_white.png',
+//         new google.maps.Size(20,34),
+//         new google.maps.Point(10,34));
+//
+//       var green_blank = new google.maps.MarkerImage(
+//         'http://www.google.com/mapfiles/marker_green.png',
+//         new google.maps.Size(20,34),
+//         new google.maps.Point(10,34));
+//
+//       var yellow_blank = new google.maps.MarkerImage(
+//         'http://www.google.com/mapfiles/marker_yellow.png',
+//         new google.maps.Size(20,34),
+//         new google.maps.Point(10,34));
+//
+//       var grey_blank = new google.maps.MarkerImage(
+//         'http://www.google.com/mapfiles/marker_grey.png',
+//         new google.maps.Size(20,34),
+//         new google.maps.Point(10,34));
 
 
       makeSidebarContents();
