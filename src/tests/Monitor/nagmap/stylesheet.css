@@ -1,11 +1,11 @@
-/*
+
 @font-face {
   font-family: 'UnifrakturCook';
   font-style: normal;
-  font-weight: 700;
-  src: local('UnifrakturCook'), local('UnifrakturCook-Bold'), url(http://themes.googleusercontent.com/static/fonts/unifrakturcook/v5/ASwh69ykD8iaoYijVEU6Rm_7m0YPLwupdydlBc09ccE.woff) format('woff');
+  font-weight: 1000;
+  src: local('UnifrakturCook'), url(http://themes.googleusercontent.com/static/fonts/unifrakturcook/v5/ASwh69ykD8iaoYijVEU6Rm_7m0YPLwupdydlBc09ccE.woff) format('woff');
 }
-*/
+
 
 html {
    overflow: hidden;
@@ -14,62 +14,75 @@ html {
 body {
    background-image: url(graphics/backgrounds/background-essen.png);
    height:           100%;
-   font-family:      serif;
+   font-family:      sans;
    margin:           0px;
 }
 
 h1 {
-   text-align: center;
-   color:      white;
-   font-size:  28pt;
+   text-align:    center;
+   margin-top:    0pt;
+   margin-bottom: 0pt;
+   margin-top:    0pt;
+   margin-bottom: 0pt;
+   font-size:     28pt;
+   font-family:   UnifrakturCook;
+   color:         white;
 }
 
 h2 {
-   text-align: left;
-   margin:     0px;
-   padding:    0px;
-   font-size:  16pt;
-   color:      #02266B;
+   text-align:    left;
+   margin-left:   4pt;
+   margin-right:  4pt;
+   margin-top:    0pt;
+   margin-bottom: 0pt;
+   font-size:     24pt;
+   font-family:   UnifrakturCook;
+   color:         #02266B;
 }
 
 h3 {
+   text-align:   left;
+   margin-left:  8pt;
+   margin-right: 8pt;
+   font-size:    18pt;
+   font-family:  UnifrakturCook;
+   color:        #02266B;
+}
+
+p {
    text-align: left;
    font-size:  14pt;
    color:      #02266B;
 }
 
-p {
-   text-align: left;
-   font-size:  12pt;
-   color:      #02266B;
-}
-
 li {
-   font-size:  12pt;
+   font-size:  14pt;
 }
 
 hr {
-   color: #02266B;
+   color:        #02266B;
+   margin-left:  4pt;
+   margin-right: 4pt;
 }
 
 .description {
    text-align:  justify;
-   font-family: serif;
+   font-family: sans;
 }
 
 .center {
    text-align:  center;
-   font-family: serif;
+   font-family: sans;
 }
 
 .header {
-   position: fixed;
-   width: 100%;
-   height: 32pt;
-   top: 0;
-   right: 0;
-   bottom: auto;
-   left: 0;
+   position:     fixed;
+   width:        100%;
+   height:       36pt;
+   top:          0;
+   right:        0;
+   bottom:       auto;
+   left:         0;
    overflow:     hidden;
    background:   red;
 }
@@ -78,9 +91,9 @@ hr {
    position:   fixed;
    width:      80%;
    height:     auto;
-   top:        32pt;
+   top:        36pt;
    right:      0;
-   bottom:     16pt;
+   bottom:     20pt;
    left:       0;
    float:      left;
    background: yellow;
@@ -90,9 +103,9 @@ hr {
    position: fixed;
    width:    20%;
    height:   auto;
-   top:      32pt;
+   top:      36pt;
    right:    0;
-   bottom:   16pt;
+   bottom:   20pt;
    left:     auto;
    overflow: auto;
 }
@@ -111,17 +124,27 @@ hr {
 }
 
 .clock {
-   margin:      0px;
-   padding:     4pt;
+   margin-bottom: 8pt;
+}
+
+.time {
    font-weight: bold;
    font-size:   14pt;
    text-align:  center;
+   font-family: sans;
+}
+
+.date {
+   font-weight: bold;
+   font-size:   16pt;
+   text-align:  center;
+   font-family: UnifrakturCook;
 }
 
 .footer {
    position:     fixed;
    width:        100%;
-   height:       16pt;
+   height:       20pt;
    top:          auto;
    right:        0;
    bottom:       0;

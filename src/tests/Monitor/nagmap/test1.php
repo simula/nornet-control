@@ -1,6 +1,6 @@
 <html>
 <head>
- <title>Velkommen til NorNet Kontrollsenter på Simula, Fornebu</title>
+ <title>Velkommen til NorNet-Kontrollsenter på Simula, Fornebu</title>
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  <meta name="Author" content="Thomas Dreibholz" />
  <meta name="Description" content="My Homepage" />
@@ -90,7 +90,7 @@ monthNames['NO'][11] = "desember";
 titleLabel = new Array()
 titleLabel['EN'] = "Welcome to the NorNet Control Center at Simula, Fornebu";
 titleLabel['DE'] = "Willkommen im NorNet-Kontrollzentrum bei Simula, Fornebu";
-titleLabel['NO'] = "Velkommen til NorNet Kontrollsenter på Simula, Fornebu";
+titleLabel['NO'] = "Velkommen til NorNet-Kontrollsenter på Simula, Fornebu";
 
 clockLabel = new Array()
 clockLabel['EN'] = "Time";
@@ -131,12 +131,12 @@ function updateClock()
   var currentDateString = "";
   if( (displayLanguage == "NO") || (displayLanguage == "DE")) {
      currentDateString = weekdayNames[displayLanguage][currentWeekday] + ", " +
-                            currentDay + ". " + monthNames[displayLanguage][currentMonth];
+                            currentDay + ". " + monthNames[displayLanguage][currentMonth] + " " + currentYear;
 
   }
   else {
      currentDateString = weekdayNames[displayLanguage][currentWeekday] + ", " +
-                            monthNames[displayLanguage][currentMonth] + " " + currentDay;
+                            monthNames[displayLanguage][currentMonth] + " " + currentDay + ", " + currentYear;
 
   }
   document.getElementById("date").firstChild.nodeValue  = currentDateString;
@@ -148,7 +148,7 @@ function makeDisplay()
 {
    makeSidebarContents()
    makeMapContents();
-   document.getElementById("sidebar.clock").firstChild.nodeValue                = clockLabel[displayLanguage];
+//    document.getElementById("sidebar.clock").firstChild.nodeValue                = clockLabel[displayLanguage];
    document.getElementById("sidebar.sites").firstChild.nodeValue                = sitesLabel[displayLanguage];
    document.getElementById("sidebar.sites.problems.title").firstChild.nodeValue = problemsLabel[displayLanguage];
    document.getElementById("sidebar.sites.okay.title").firstChild.nodeValue     = okayLabel[displayLanguage];
@@ -286,7 +286,7 @@ function initialize() {
  <h1 style="margin:0px; padding:0px;" id="header.title">&nbsp;</h1>
 </div>
 
-<div id="map_canvas" class="map">
+<div id="map_canvas" class="map" style="height: 100%;">
  <noscript>
   <h2>NorNet Map requires JavaScript!</h2>
  </noscript>
@@ -302,8 +302,8 @@ function initialize() {
  </h2>
  <hr />
 
- <h2 id="sidebar.clock">Time</h2>
-  <p class="clock">
+<!--  <h2 id="sidebar.clock">Time</h2> -->
+  <p class="center">
   <object data="station-clock.svg" type="image/svg+xml" class="clock" width="80%">
    <param name="dial"               value="din 41091.1"/>
    <param name="hourHand"           value="siemens"/>
@@ -322,15 +322,14 @@ function initialize() {
    <param name="axisCoverRadius"    value="7"/>
    <param name="updateInterval"     value="50"/>
   </object>
-  <span id="clock">&nbsp;</span><br />
-  <span id="date">&nbsp;</span>
+  <span id="clock" class="time">&nbsp;</span><br />
+  <span id="date" class="date">&nbsp;</span>
   </p>
  <hr />
 
  <h2 id="sidebar.sites">Sites</h2>
   <span id="sidebar.sites.problems">Problems</span>
   <span id="sidebar.sites.okay">Okay</span>
-<!--  <hr /> -->
 
 </div>
 
