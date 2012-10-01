@@ -20,17 +20,78 @@ include('./config.php');
    echo '<script type="text/javascript">' . "\n";
 
    include('marker.php');
+   $status = nagmap_status();
 
 
    // ###### Make contents of the map #######################################
    echo "function makeMapContents() {\n";
-   echo "}\n\n";
+   foreach ($hosts as $h) {
+      if ((isset($h["latlng"])) and (isset($h["host_name"]))) {
+         // ====== Create position for sites ================================
+         echo '   // ====== ' . $h["nagios_host_name"] . ' ======' . "\n";
+         echo '   window.' . $h["host_name"] . '_position = new google.maps.LatLng(' . $h["latlng"] . ');' . "\n";
+
+         // ====== Create marker ============================================
+         $site       = $h["nagios_host_name"];
+         $siteStatus = $status[$site]["hoststatus"]["last_hard_state"];
+         $icon       = "http://www.google.com/mapfiles/marker_grey.png";
+         if ($siteStatus == 0) {
+            $icon = "http://www.google.com/mapfiles/marker_green.png";
+         }
+         elseif ($siteStatus == 1) {
+            $icon = "http://www.google.com/mapfiles/marker_orange.png";
+         }
+         elseif ($siteStatus == 2) {
+            $icon = "http://www.google.com/mapfiles/marker.png";
+         }
+
+         echo '   window.' . $h["host_name"] . '_marker   = new google.maps.Marker({'.
+            "\n" . '      title:    "' . $h["nagios_host_name"] . '",'.
+            "\n" . '      icon:     "' . $icon . '",'.
+            "\n" . '      map:      window.map,'.
+            "\n" . '      position: window.' . $h["host_name"] . '_position,'.
+            "\n" . '      visible:  true,'.
+            "\n" . '      zIndex:   1'.
+            "\n" . '   });' . "\n";
+
+         // ====== Create information window ================================
+         if (!isset($h["parents"])) {
+            $h["parents"] = Array();
+         };
+         $siteInfo = '<div class=\"bubble\"><b>'.$h["nagios_host_name"]."</b><br>Type: ".$h["use"].'</div>';
+         echo '   window.' . $h["host_name"] . '_information = new google.maps.InfoWindow({ content: "'. $siteInfo . '" });' . "\n";
+         echo '   google.maps.event.addListener(' . $h["host_name"] . '_marker, "click", function() { ' .$h["host_name"]. '_information.open(map,' . $h["host_name"] . '_marker) } );' . "\n";
+         echo "\n";
+
+//     if (!isset($h["parents"])) { $h["parents"] = Array(); };
+//     $info = '<div class=\"bubble\"><b>'.$h["nagios_host_name"]."</b><br>Type: ".$h["use"]
+//          .'<br>Address:'.$h["address"]
+//          .'<br>Number of parents:'.count($h["parents"]).','
+//          .'<br>Host status: '.$s[$h["nagios_host_name"]]["hoststatus"]["last_hard_state"]
+//          //.'<br>Services status: '.$s[$h["nagios_host_name"]]["servicestatus"]["last_hard_state"]
+//          .'<br>Combined / NagMap status: '.$s[$h["nagios_host_name"]]['status'].' : '.$s[$h["nagios_host_name"]]['status_human']
+//          .'<br><a href=\"/nagios/cgi-bin/statusmap.cgi\?host='.$h["nagios_host_name"].'\">Nagios map page</a>'
+//          .'<br><a href=\"/nagios/cgi-bin/extinfo.cgi\?type=1\&host='.$h["nagios_host_name"].'\">Nagios host page</a>';
+//     $links = '<br><a href=\"../cgi-bin/smokeping.cgi?target=LAN.'.$h["nagios_host_name"].'\">Smokeping statistics</a>'
+//          .'<br><a href=\"../devices/modules/mrtg_uptime/workdir/'.$h["nagios_host_name"].'.html\">Uptime Graph</a>';
+//     if ($nagmap_bubble_links == 1) {
+//       $info = $info.$links;
+//     }
+//     $info = $info.'<br><span style=\"font-size: 7pt\">NagMap by blava.net</span></div>';
+//
+//     $javascript .= ("window.".$h["host_name"]."_mark_infowindow = new google.maps.InfoWindow({ content: '$info'})\n");
+//
+//     $javascript .= ("google.maps.event.addListener(".$h["host_name"]."_mark, 'click', function() {"
+//       .$h["host_name"]."_mark_infowindow.open(map,".$h["host_name"]."_mark);\n
+//       });\n\n");
+
+      }
+   }
+   echo "};\n\n";
 
 
    // ###### Make contents of the sidebar ###################################
    echo "function makeSidebarContents() {\n";
-   $status = nagmap_status();
-
    $sitesContent = "";
    $problems = 0;
    $addedProblemsSection = false;
@@ -97,9 +158,6 @@ include('./config.php');
 
     //static code from index.pnp
     function initialize() {
-      makeSidebarContents();
-      makeMapContents();
-
       var myOptions = {
         zoom: <?php echo ("$nagmap_map_zoom"); ?>,
         center: new google.maps.LatLng(<?php echo $nagmap_map_centre ?>),
@@ -134,12 +192,15 @@ include('./config.php');
         new google.maps.Point(10,34));
 
 
+      makeSidebarContents();
+      makeMapContents();
+
 // generating dynamic code from here...
 // if the page ends here, there is something seriously wrong, please contact maco@blava.net for help
 
 <?php
-  if ($javascript != "") {
-    echo $javascript;
+//   if ($javascript != "") {
+//     echo $javascript;
     echo '};'; //end of initialize function
     echo '
       </script>
@@ -159,12 +220,12 @@ include('./config.php');
     } else {
       echo '<div id="map_canvas" style="width:100%; height:100%; float: left"></div>';
     }
-  } else {
-
-    echo '};'; //end of initialize function
-    echo '</script><head><body>';
-    echo "<br><h3>There is no data to display. You either did not set NagMap properly or there is a software bug. Please contact maco@blava.net for free assistance.</h3>";
-  }
+//   } else {
+//
+//     echo '};'; //end of initialize function
+//     echo '</script><head><body>';
+//     echo "<br><h3>There is no data to display. You either did not set NagMap properly or there is a software bug. Please contact maco@blava.net for free assistance.</h3>";
+//   }
 
 ?>
 
