@@ -1,19 +1,15 @@
 <html>
 <head>
- <title>Velkommen til NorNet-Kontrollsenter på Simula, Fornebu</title>
- <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
- <meta name="Author" content="Thomas Dreibholz" />
- <meta name="Description" content="My Homepage" />
- <meta name="Keywords" content="Thomas Dreibholz, Homepage, Computer Science, University of Duisburg-Essen" />
- <meta name="Classification" content="Homepage" />
- <link rel="stylesheet" href="stylesheet.css" type="text/css" />
- <link rel="shortcut icon" href="graphics/icons/icon-uniessen.png" />
-</head>
 
-<body onload="initialize();">
-
+<title>Velkommen til NorNet-Kontrollsenter på Simula, Fornebu</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Author" content="Thomas Dreibholz" />
+<meta name="Description" content="NorNet-Kontrollsenter" />
+<meta name="Keywords" content="NorNet-Kontrollsenter, NorNet Project, NorNet Prosjekt, Simula Research Laboratory, Thomas Dreibholz" />
+<meta name="Classification" content="Kontrollsenter" />
+<link rel="stylesheet" href="stylesheet.css" type="text/css" />
+<link rel="shortcut icon" href="graphics/icons/icon-uniessen.png" />
 <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
-
 <script type="text/javascript">
 
 var displayLanguage = "NO";
@@ -148,13 +144,25 @@ function makeDisplay()
 {
    makeSidebarContents()
    makeMapContents();
-//    document.getElementById("sidebar.clock").firstChild.nodeValue                = clockLabel[displayLanguage];
+   // document.getElementById("sidebar.clock").firstChild.nodeValue                = clockLabel[displayLanguage];
    document.getElementById("sidebar.sites").firstChild.nodeValue                = sitesLabel[displayLanguage];
    document.getElementById("sidebar.sites.problems.title").firstChild.nodeValue = problemsLabel[displayLanguage];
    document.getElementById("sidebar.sites.okay.title").firstChild.nodeValue     = okayLabel[displayLanguage];
    document.getElementById("header.title").firstChild.nodeValue                 = titleLabel[displayLanguage];
-   setInterval('updateClock()', 1000)
    updateClock();
+   setInterval('updateClock()', 1000)
+}
+
+
+
+function initialize() {
+   var myOptions = {
+      zoom: 5,
+      center: new google.maps.LatLng(62.5,5),
+      mapTypeId: google.maps.MapTypeId.HYBRID
+   };
+   window.map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+   makeDisplay();
 }
 
 
@@ -268,17 +276,12 @@ function makeDisplay()
    echo "}\n\n";
 ?>
 
-function initialize() {
-   var myOptions = {
-      zoom: 5,
-      center: new google.maps.LatLng(62.5,5),
-      mapTypeId: google.maps.MapTypeId.HYBRID
-   };
-   window.map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-   makeDisplay();
-}
-
 </script>
+
+</head>
+
+<body onload="initialize();">
+
 
 
 
@@ -304,7 +307,7 @@ function initialize() {
 
 <!--  <h2 id="sidebar.clock">Time</h2> -->
   <p class="center">
-  <object data="station-clock.svg" type="image/svg+xml" class="clock" width="80%">
+  <object data="station-clock.svg" type="image/svg+xml" class="clock">
    <param name="dial"               value="din 41091.1"/>
    <param name="hourHand"           value="siemens"/>
    <param name="minuteHand"         value="siemens"/>
