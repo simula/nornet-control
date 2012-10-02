@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# NorNet Site Check Plugin for Nagios
+# Copyright (C) 2012 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
+
+
+CHECK_PING="/usr/lib/nagios/plugins/check_ping"
+
+
+# ====== Handle arguments ===================================================
+if [ $# -lt 5 -o "$1" != "-L" -o "$3" != "-R" ] ; then
+   echo >&2 "Usage: $0 [-L local_site] [-R remote_site] check_ping_parameters"
+   exit 1
+fi
+LOCAL_SITE="$2"
+REMOTE_SITE="$4"
+shift ; shift ; shift ; shift
+CHECK_PING_PARAMETERS="$@"
+
+
+# ====== Run check_ping and add location information to output ==============
+$CHECK_PING $CHECK_PING_PARAMETERS | sed -e "s/- Packet loss/- L=\"$LOCAL_SITE\" R=\"$REMOTE_SITE\" Packet loss/"

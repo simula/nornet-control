@@ -18,44 +18,37 @@
 .\"
 .\" ###### Setup ############################################################
 .Dd October 1, 2012
-.Dt check_site 1
-.Os check_site
+.Dt check_tunnel 1
+.Os check_tunnel
 .\" ###### Name #############################################################
 .Sh NAME
-.Nm check_site
-.Nd NorNet Site Check Plugin for Nagios
+.Nm check_tunnel
+.Nd NorNet Tunnel Check Plugin for Nagios
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
-.Nm check_site
-.Op Fl L latitude,longitude
-.Op Fl A address
-.Op Fl T tunnel
-.Op Fl w warning
-.Op Fl c critical
+.Nm check_tunnel
+.Op Fl L local_site
+.Op Fl R remote_site
+.Op check_ping_parameters
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
-.Nm check_site
-is a site check plugin for Nagios.
+.Nm check_tunnel
+is a tunnel check plugin for Nagios. It is mainly a wrapper around check_ping
+which adds site information to the check_ping output.
 .Pp
 .\" ###### Arguments ########################################################
 .Sh ARGUMENTS
 The following options are available:
 .Bl -tag -width indent
-.It Fl L latitude,longitude
-Sets the location of the site. It is returned as result "as is"; it will then
-be written to the Nagios status file and can be processed further.
-.It Fl A address
-Run check_ping for given address.
-.It Fl T tunnel
-Run check_ping for given tunnel address.
-.It Fl w warning
-Sets "warning" level for check_ping.
-.It Fl c critical
-Sets "critical" level for check_ping.
+.It Fl L local_site
+Sets the name of the local site.
+.It Fl L remote_site
+Sets the name of the remote site.
+.It check_ping_parameters
+Sets the parameters for check_ping.
 .El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
-.It check_site -A 10.1.1.1 -A 10.1.1.23 -A 10.1.2.3 -T 10.1.1.1 -T 10.1.1.99
-.It check_site -L 51.476144,7.011656 -A 10.1.1.1 -A 10.1.1.23 -A 10.1.2.3 -T 10.1.1.1 -T 10.1.1.99
+.It ./check_tunnel -L 'Alpha Site' -R 'Beta Site' -H 10.1.1.23 -w 500ms,5% -c 1000ms,10%
 .El

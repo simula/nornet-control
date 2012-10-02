@@ -1149,7 +1149,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                outputFile.write('/' + country + ')\n')
                outputFile.write('   address       ' + str(tunnelboxIP.ip) + '\n')
                outputFile.write('   notes         latlng: ' + str(localSite['site_latitude']) + ',' + str(localSite['site_longitude']) + '\n')
-               outputFile.write('   check_command MySiteCheck!')
+               outputFile.write('   check_command MySiteCheck!-L ' + str(localSite['site_latitude']) + ',' + str(localSite['site_longitude']) + ' ')
                for localProviderIndex in localProviderList:
                   localProvider = localProviderList[localProviderIndex]
                   for version in [ 4, 6 ]:
@@ -1215,15 +1215,15 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                                             str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
                                             str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
 
-                           outputFile.write('define service {\n')
-                           outputFile.write('   use generic-service\n')
-                           outputFile.write('   service_description Tunnel ' + \
-                                            str.upper(localSite['site_short_name']) + '-' + str.upper(remoteSite['site_short_name']) + ' ' + \
-                                            localProvider['provider_long_name'] + '/' + remoteProvider['provider_long_name'] + ' via ' + \
-                                            tunnel['tunnel_interface'] + ' local ' + str(tunnel['tunnel_local_inner_address'].ip) + '\n')
-                           outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
-                           outputFile.write('   check_command       MyPingCheck!' + str(tunnel['tunnel_local_inner_address'].ip) + '\n')
-                           outputFile.write('}\n')
+                           #outputFile.write('define service {\n')
+                           #outputFile.write('   use generic-service\n')
+                           #outputFile.write('   service_description Tunnel ' + \
+                                            #str.upper(localSite['site_short_name']) + '-' + str.upper(remoteSite['site_short_name']) + ' ' + \
+                                            #localProvider['provider_long_name'] + '/' + remoteProvider['provider_long_name'] + ' via ' + \
+                                            #tunnel['tunnel_interface'] + ' local ' + str(tunnel['tunnel_local_inner_address'].ip) + '\n')
+                           #outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
+                           #outputFile.write('   check_command       MyTunnelCheck!' + str(tunnel['tunnel_local_inner_address'].ip) + '\n')
+                           #outputFile.write('}\n')
                            outputFile.write('define service {\n')
                            outputFile.write('   use generic-service\n')
                            outputFile.write('   service_description Tunnel ' + \
@@ -1231,7 +1231,10 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                                             localProvider['provider_long_name'] + '/' + remoteProvider['provider_long_name'] + ' via ' + \
                                             tunnel['tunnel_interface'] + ' remote ' + str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
                            outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
-                           outputFile.write('   check_command       MyPingCheck!' + str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
+                           outputFile.write('   check_command       MyTunnelCheck!' + \
+                                               '-L "' + localSite['site_long_name']  + '\" ' + \
+                                               '-R "' + remoteSite['site_long_name'] + '\" ' + \
+                                               '-H '  + str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
                            outputFile.write('}\n')
 
                   outputFile.write('\n')
