@@ -43,7 +43,7 @@
 
 <!--  <h2 id="sidebar.clock">Time</h2> -->
   <p class="center">
-  <object id="analog-clock" class="clock" data="station-clock.svg" type="image/svg+xml">
+  <object id="analog-clock" class="analog-clock" data="station-clock.svg" type="image/svg+xml">
    <param name="dial"               value="din 41091.1"/>
    <param name="hourHand"           value="siemens"/>
    <param name="minuteHand"         value="siemens"/>
