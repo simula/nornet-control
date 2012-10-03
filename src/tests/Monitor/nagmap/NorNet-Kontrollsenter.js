@@ -1,8 +1,30 @@
+//
+// NorNet Kontrollsenter JavaScript Functions
+// Copyright (C) 2012 by Thomas Dreibholz
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+// Contact: dreibh@simula.no
+//
+
+
 var displayLanguage = "NO";
+var weekdayNames    = Array();
+var monthNames      = Array();
 
-var weekdayNames = Array();
-var monthNames   = Array();
 
+// ###### String translations ###############################################
 weekdayNames['EN'] = new Array(7);
 weekdayNames['EN'][0] = "Sunday";
 weekdayNames['EN'][1] = "Monday";
@@ -11,6 +33,7 @@ weekdayNames['EN'][3] = "Wednesday";
 weekdayNames['EN'][4] = "Thursday";
 weekdayNames['EN'][5] = "Friday";
 weekdayNames['EN'][6] = "Saturday";
+
 monthNames['EN'] = new Array(12);
 monthNames['EN'][0]  = "January";
 monthNames['EN'][1]  = "February";
@@ -106,6 +129,7 @@ sitesLabel['DE'] = "Standorte";
 sitesLabel['NO'] = "Beliggenheter";
 
 
+// ###### Update digital clock ##############################################
 function updateClock()
 {
   var currentTime    = new Date();
@@ -137,6 +161,7 @@ function updateClock()
 }
 
 
+// ###### Update display contents ###########################################
 function updateDisplay()
 {
    // document.getElementById("sidebar.clock").firstChild.nodeValue                = clockLabel[displayLanguage];
@@ -155,6 +180,7 @@ function updateDisplay()
 }
 
 
+// ###### Initialize NorNet Kontrollsenter ##################################
 function makeKontrollsenter()
 {
    initializeNorNetMap();

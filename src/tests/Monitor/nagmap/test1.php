@@ -1,20 +1,19 @@
 <html>
-<head>
 
+<head>
 <title>Velkommen til NorNet-Kontrollsenter på Simula, Fornebu</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="Author" content="Thomas Dreibholz" />
 <meta name="Description" content="NorNet-Kontrollsenter" />
 <meta name="Keywords" content="NorNet-Kontrollsenter, NorNet Project, NorNet Prosjekt, Simula Research Laboratory, Thomas Dreibholz" />
 <meta name="Classification" content="Kontrollsenter" />
+
 <link rel="stylesheet" href="stylesheet.css" type="text/css" />
 <link rel="shortcut icon" href="graphics/icons/icon-uniessen.png" />
 
 <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
 <script src="NorNet-Map.php" type="text/javascript"></script>
 <script src="NorNet-Kontrollsenter.js" type="text/javascript"></script>
-
-
 </head>
 
 <body>
