@@ -109,25 +109,18 @@ foreach (array('critical', 'warning', 'unknown', 'ok') as $severity) {
          }
          elseif( ($severity == "ok") &&
                ($siteStatus == 0) ) {
-            $categoryContent = $categoryContent . '<li class="ok">&#128515;' . $site . '</li>';
-            $problems++;
+            $categoryContent = $categoryContent . '<li class="okay">&#128515;' . $site . '</li>';
          }
       }
    }
    if ($categoryContent != "") {
       if ( ($severity == "critical") || ($severity == "warning") ) {
-         if ($addedProblemsSection == false) {
-            $sitesContent = $sitesContent . '<h3 id="sidebar.sites.problems.title">Problems</h3>';
-            $addedProblemsSection = true;
-         }
-      }
-      else if ($severity == 'ok') {
-         $sitesContent = $sitesContent . '<h3 id="sidebar.sites.okay.title">Okay</h3>';
+         $addedProblemsSection = true;
       }
       $sitesContent = $sitesContent . "<ul>" . $categoryContent . "</ul>";
    }
    elseif ( ($severity == "warning") && ($problems == 0) ) {
-      $sitesContent = $sitesContent . '<h3 id="sites.noproblems">&#128515; Ingen problem! &#128515;</h3>';
+      $sitesContent = $sitesContent . '<p class="allsitesokay" id="sites.noproblems">xxx</p>';
    }
 
    if ($severity == "unknown") {
@@ -137,6 +130,9 @@ foreach (array('critical', 'warning', 'unknown', 'ok') as $severity) {
    else {
       echo "   document.getElementById(\"sidebar.sites.okay\").innerHTML = '" . $sitesContent . "';\n";
    }
+}
+if($problems == 0) {
+   echo "   document.getElementById(\"sites.noproblems\").innerHTML = noProblemLabel[displayLanguage];\n";
 }
 
 echo "}\n\n";

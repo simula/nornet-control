@@ -2,7 +2,7 @@
 @font-face {
   font-family: 'UnifrakturCook';
   font-style: normal;
-  font-weight: 1000;
+  font-weight: bold;
   src: local('UnifrakturCook'), url(http://themes.googleusercontent.com/static/fonts/unifrakturcook/v5/ASwh69ykD8iaoYijVEU6Rm_7m0YPLwupdydlBc09ccE.woff) format('woff');
 }
 
@@ -122,6 +122,13 @@ hr {
 .okay {
   color: green;
 }
+.allsitesokay {
+  color:           green;
+  text-align:      center;
+  text-decoration: underline;
+  font-size:       20pt;
+  font-family:     UnifrakturCook;
+}
 
 .clock {
    margin-bottom: 8pt;
@@ -150,8 +157,10 @@ hr {
    right:        0;
    bottom:       0;
    left:         0;
-   padding-left: 10px;
    overflow:     hidden;
    background:   red;
    color:        white;
+   text-align:   center;
+   font-size:    16pt;
+   font-family:  UnifrakturCook;
 }

@@ -32,16 +32,16 @@
 <div id="sidebar" class="sidebar">
  <h2 style="text-align: center;">
   <p class="center">
-  <a href="javascript:" onclick="displayLanguage='NO'; makeDisplay();"><img src="graphics/flags/flag-norway.png" alt="Norsk" width="32" /></a>
-  <a href="javascript:" onclick="displayLanguage='EN'; makeDisplay();"><img src="graphics/flags/flag-england.png" alt="English" width="32" /></a>
-  <a href="javascript:" onclick="displayLanguage='DE'; makeDisplay();"><img src="graphics/flags/flag-germany.png" alt="Deutsch" width="32" /></a>
+  <a href="javascript:" onclick="displayLanguage='NO'; updateDisplay();"><img src="graphics/flags/flag-norway.png" alt="Norsk" width="32" /></a>
+  <a href="javascript:" onclick="displayLanguage='EN'; updateDisplay();"><img src="graphics/flags/flag-england.png" alt="English" width="32" /></a>
+  <a href="javascript:" onclick="displayLanguage='DE'; updateDisplay();"><img src="graphics/flags/flag-germany.png" alt="Deutsch" width="32" /></a>
   </p>
  </h2>
  <hr />
 
 <!--  <h2 id="sidebar.clock">Time</h2> -->
   <p class="center">
-  <object data="station-clock.svg" type="image/svg+xml" class="clock">
+  <object id="analog-clock" class="clock" data="station-clock.svg" type="image/svg+xml">
    <param name="dial"               value="din 41091.1"/>
    <param name="hourHand"           value="siemens"/>
    <param name="minuteHand"         value="siemens"/>
@@ -66,13 +66,15 @@
  <hr />
 
  <h2 id="sidebar.sites">Sites</h2>
-  <span id="sidebar.sites.problems">Problems</span>
-  <span id="sidebar.sites.okay">Okay</span>
+  <h3 id="sidebar.sites.problems.title">Problems</h3>
+   <span id="sidebar.sites.problems"></span>
+  <h3 id="sidebar.sites.okay.title">Okay</h3>
+   <span id="sidebar.sites.okay"></span>
 
 </div>
 
 <div id="footer" class="footer">
-  For mer informasjon om NorNet-prosjektet, se <a href="http://www.nntb.no">http://www.nntb.no</a>!
+ <p class="footer" style="margin: 0px; padding: 0px;" id="footer.title">&nbsp;</p>
 </div>
 
 </body>

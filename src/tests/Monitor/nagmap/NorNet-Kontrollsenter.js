@@ -74,20 +74,31 @@ titleLabel['EN'] = "Welcome to the NorNet Control Center at Simula, Fornebu";
 titleLabel['DE'] = "Willkommen im NorNet-Kontrollzentrum bei Simula, Fornebu";
 titleLabel['NO'] = "Velkommen til NorNet-Kontrollsenter på Simula, Fornebu";
 
+footerLabel = new Array()
+footerLabel['EN'] = 'For further information on the NorNet Project, see <a href="http://www.nntb.no">http://www.nntb.no</a>!';
+footerLabel['DE'] = 'Für weitere Informationen zum NorNet-Prosjekt siehe <a href="http://www.nntb.no">http://www.nntb.no</a>!';
+footerLabel['NO'] = 'For mer informasjon om NorNet-prosjektet, se <a href="http://www.nntb.no">http://www.nntb.no</a>!';
+
+
 clockLabel = new Array()
 clockLabel['EN'] = "Time";
 clockLabel['DE'] = "Zeit";
 clockLabel['NO'] = "Klokka";
 
 problemsLabel = new Array()
-problemsLabel['EN'] = "Problems";
-problemsLabel['DE'] = "Probleme";
-problemsLabel['NO'] = "Problemer";
+problemsLabel['EN'] = "Problems:";
+problemsLabel['DE'] = "Probleme:";
+problemsLabel['NO'] = "Problemer:";
 
 okayLabel = new Array()
-okayLabel['EN'] = "Okay";
-okayLabel['DE'] = "In Ordnung";
-okayLabel['NO'] = "I orden";
+okayLabel['EN'] = "Okay:";
+okayLabel['DE'] = "In Ordnung:";
+okayLabel['NO'] = "I orden:";
+
+noProblemLabel = new Array()
+noProblemLabel['EN'] = "&#128515; No problem! &#128515;";
+noProblemLabel['DE'] = "&#128515; Kein Problem! &#128515;";
+noProblemLabel['NO'] = "&#128515; Ingen problem! &#128515;";
 
 sitesLabel = new Array()
 sitesLabel['EN'] = "Sites";
@@ -128,20 +139,25 @@ function updateClock()
 
 function updateDisplay()
 {
-   updateClock();
-   setInterval('updateClock()', 1000)
    // document.getElementById("sidebar.clock").firstChild.nodeValue                = clockLabel[displayLanguage];
    document.getElementById("sidebar.sites").firstChild.nodeValue                = sitesLabel[displayLanguage];
    document.getElementById("sidebar.sites.problems.title").firstChild.nodeValue = problemsLabel[displayLanguage];
    document.getElementById("sidebar.sites.okay.title").firstChild.nodeValue     = okayLabel[displayLanguage];
+   if(document.getElementById("sidebar.sites.noproblems") != null) {
+      document.getElementById("sidebar.sites.okay.title").firstChild.nodeValue = noProblemLabel[displayLanguage];
+   }
    document.getElementById("header.title").firstChild.nodeValue                 = titleLabel[displayLanguage];
-   makeSidebarContents()
+   document.getElementById("footer.title").innerHTML                            = footerLabel[displayLanguage];
+   updateClock();
+   setInterval('updateClock()', 1000)
    makeMapContents();
+   makeSidebarContents()
 }
 
 
 function makeKontrollsenter()
 {
+   initializeNorNetMap();
    updateDisplay();
 }
 
