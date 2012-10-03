@@ -66,7 +66,7 @@ foreach ($status as $hostName => $hostEntry) {
          $icon = "http://www.google.com/mapfiles/marker.png";
       }
 
-      echo '   window.' . $status[$hostName][""]["host_identifier"] . '_marker   = new google.maps.Marker({'.
+      echo '   window.' . $status[$hostName][""]["host_identifier"] . '_marker = new google.maps.Marker({'.
          "\n" . '      title:    "' . $hostName . '",'.
          "\n" . '      icon:     "' . $icon . '",'.
          "\n" . '      map:      window.map,'.
@@ -79,7 +79,7 @@ foreach ($status as $hostName => $hostEntry) {
       if (!isset($h["parents"])) {
          $h["parents"] = Array();
       };
-      $siteInfo = '<div class=\"bubble\"><b>'.$hostName."</b><br />xxxxx</div>";
+      $siteInfo = '<div class=\"bubble\"><b>'.$hostName."</b><br />xxxxx xxxxxxxxxxx yyyyyyyyyyyy hhhhhhhhhhhh xxxxxxxx</div>";
       echo '   window.' . $status[$hostName][""]["host_identifier"] . '_information = new google.maps.InfoWindow({ content: "'. $siteInfo . '" });' . "\n";
       echo '   google.maps.event.addListener(' . $status[$hostName][""]["host_identifier"] . '_marker, "click", function() { ' .$status[$hostName][""]["host_identifier"]. '_information.open(map,' . $status[$hostName][""]["host_identifier"] . '_marker) } );' . "\n";
       echo "\n";
