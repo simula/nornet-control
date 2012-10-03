@@ -1,4 +1,5 @@
 <html>
+
 <head>
 
 <title>Velkommen til NorNet-Kontrollsenter på Simula, Fornebu</title>
@@ -142,8 +143,7 @@ function updateClock()
 
 function makeDisplay()
 {
-   makeSidebarContents()
-   makeMapContents();
+//    makeSidebarContents()
    // document.getElementById("sidebar.clock").firstChild.nodeValue                = clockLabel[displayLanguage];
    document.getElementById("sidebar.sites").firstChild.nodeValue                = sitesLabel[displayLanguage];
    document.getElementById("sidebar.sites.problems.title").firstChild.nodeValue = problemsLabel[displayLanguage];
@@ -151,6 +151,7 @@ function makeDisplay()
    document.getElementById("header.title").firstChild.nodeValue                 = titleLabel[displayLanguage];
    updateClock();
    setInterval('updateClock()', 1000)
+   makeMapContents();
 }
 
 
@@ -165,23 +166,23 @@ function initialize() {
    makeDisplay();
 }
 
+window.onload=initialize;
 
 <?php
-   include('marker.php');
-   $status = nagmap_status();
-
+   include('NorNet-Status.php');
+   $status = getNorNetStatus();
 
    // ###### Make contents of the map #######################################
    echo "function makeMapContents() {\n";
-   foreach ($hosts as $h) {
-      if ((isset($h["latlng"])) and (isset($h["host_name"]))) {
+   foreach ($status as $hostName => $hostEntry) {
+      if (isset($status[$hostName][""]["location"])) {
          // ====== Create position for sites ================================
-         echo '   // ====== ' . $h["nagios_host_name"] . ' ======' . "\n";
-         echo '   window.' . $h["host_name"] . '_position = new google.maps.LatLng(' . $h["latlng"] . ');' . "\n";
+         echo '   // ====== ' . $hostName . ' ======' . "\n";
+         echo '   window.' . $status[$hostName][""]["host_identifier"] . '_position = new google.maps.LatLng(' . $status[$hostName][""]["location"] . ');' . "\n";
 
          // ====== Create marker ============================================
-         $site       = $h["nagios_host_name"];
-         $siteStatus = $status[$site]["hoststatus"]["last_hard_state"];
+         $site       = $hostName;
+         $siteStatus = $status[$site][""]["last_hard_state"];
          $icon       = "http://www.google.com/mapfiles/marker_grey.png";
          if ($siteStatus == 0) {
             $icon = "http://www.google.com/mapfiles/marker_green.png";
@@ -193,11 +194,11 @@ function initialize() {
             $icon = "http://www.google.com/mapfiles/marker.png";
          }
 
-         echo '   window.' . $h["host_name"] . '_marker   = new google.maps.Marker({'.
-            "\n" . '      title:    "' . $h["nagios_host_name"] . '",'.
+         echo '   window.' . $status[$hostName][""]["host_identifier"] . '_marker   = new google.maps.Marker({'.
+            "\n" . '      title:    "' . $hostName . '",'.
             "\n" . '      icon:     "' . $icon . '",'.
             "\n" . '      map:      window.map,'.
-            "\n" . '      position: window.' . $h["host_name"] . '_position,'.
+            "\n" . '      position: window.' . $status[$hostName][""]["host_identifier"] . '_position,'.
             "\n" . '      visible:  true,'.
             "\n" . '      zIndex:   1'.
             "\n" . '   });' . "\n";
@@ -206,13 +207,13 @@ function initialize() {
          if (!isset($h["parents"])) {
             $h["parents"] = Array();
          };
-         $siteInfo = '<div class=\"bubble\"><b>'.$h["nagios_host_name"]."</b><br>Type: ".$h["use"].'</div>';
-         echo '   window.' . $h["host_name"] . '_information = new google.maps.InfoWindow({ content: "'. $siteInfo . '" });' . "\n";
-         echo '   google.maps.event.addListener(' . $h["host_name"] . '_marker, "click", function() { ' .$h["host_name"]. '_information.open(map,' . $h["host_name"] . '_marker) } );' . "\n";
+         $siteInfo = '<div class=\"bubble\"><b>'.$hostName."</b><br />xxxxx</div>";
+         echo '   window.' . $status[$hostName][""]["host_identifier"] . '_information = new google.maps.InfoWindow({ content: "'. $siteInfo . '" });' . "\n";
+         echo '   google.maps.event.addListener(' . $status[$hostName][""]["host_identifier"] . '_marker, "click", function() { ' .$status[$hostName][""]["host_identifier"]. '_information.open(map,' . $status[$hostName][""]["host_identifier"] . '_marker) } );' . "\n";
          echo "\n";
       }
    }
-   echo "};\n\n";
+   echo "}\n\n";
 
 
    // ###### Make contents of the sidebar ###################################
@@ -222,27 +223,27 @@ function initialize() {
    $addedProblemsSection = false;
    foreach (array('critical', 'warning', 'unknown', 'ok') as $severity) {
       $categoryContent = "";
-      foreach ($hosts as $h) {
-         if ((isset($h["latlng"])) and (isset($h["host_name"]))) {
-            $site       = $h["nagios_host_name"];
-            $siteStatus = $status[$site]["hoststatus"]["last_hard_state"];
+      foreach ($status as $hostName => $hostEntry) {
+         if (isset($status[$hostName][""]["location"])) {
+            $site       = $hostName;
+            $siteStatus = $status[$hostName][""]["last_hard_state"];
 
             if( ($severity == "critical") &&
-                ($siteStatus == 2) ) {
+               ($siteStatus == 2) ) {
                $categoryContent = $categoryContent . '<li class="critical"><blink><strong>&#9760;</strong></blink>' . $site . '</li>';
                $problems++;
             }
             elseif( ($severity == "warning") &&
-                    ($siteStatus == 1) ) {
+                  ($siteStatus == 1) ) {
                $categoryContent = $categoryContent . '<li class="warning">&#128544;' . $site . '</li>';
                $problems++;
             }
             elseif( ($severity == "unknown") &&
-                    ($siteStatus > 2) ) {
+                  ($siteStatus > 2) ) {
                $categoryContent = $categoryContent . '<li class="unknown">&#128528;' . $site . '</li>';
             }
             elseif( ($severity == "ok") &&
-                    ($siteStatus == 0) ) {
+                  ($siteStatus == 0) ) {
                $categoryContent = $categoryContent . '<li class="ok">&#128515;' . $site . '</li>';
                $problems++;
             }
@@ -280,10 +281,7 @@ function initialize() {
 
 </head>
 
-<body onload="initialize();">
-
-
-
+<body>
 
 <div id="header" class="header">
  <h1 style="margin:0px; padding:0px;" id="header.title">&nbsp;</h1>
@@ -325,8 +323,9 @@ function initialize() {
    <param name="axisCoverRadius"    value="7"/>
    <param name="updateInterval"     value="50"/>
   </object>
-  <span id="clock" class="time">&nbsp;</span><br />
-  <span id="date" class="date">&nbsp;</span>
+  <br />
+  <span id="clock" class="time">--:--:--</span><br />
+  <span id="date" class="date">--</span>
   </p>
  <hr />
 

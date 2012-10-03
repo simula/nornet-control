@@ -66,6 +66,15 @@ function getNorNetStatus() {
             if ($parameterName == "host_name") {
                $hostName    = $value;
                $serviceName = "";
+
+               $identifier = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\xFF-\.\/\(\) ]/u', '_', trim($hostName));
+//                $identifier = str_replace('-','_',$identifier);
+//                $identifier = str_replace('.','_',$identifier);
+//                $identifier = str_replace('/','_',$identifier);
+//                $identifier = str_replace('(','_',$identifier);
+//                $identifier = str_replace(')','_',$identifier);
+//                $identifier = str_replace(' ','_',$identifier);
+               $status[$hostName][$serviceName]["host_identifier"] = $identifier;
             }
             elseif ($parameterName == "service_description") {
                $serviceName = $value;
@@ -93,7 +102,7 @@ function getNorNetStatus() {
                            $i++;
                         }
                      }
-                     $status[$hostName][$serviceName]['location']  = $location;
+                     $status[$hostName][$serviceName]["location"]  = $location;
                   }
 
                   // ====== Handle tunnel ===================================
@@ -112,8 +121,8 @@ function getNorNetStatus() {
                            $i++;
                         }
                      }
-                     $status[$hostName][$serviceName]['tunnel_local_host_name']  = $localHostName;
-                     $status[$hostName][$serviceName]['tunnel_remote_host_name'] = $remoteHostName;
+                     $status[$hostName][$serviceName]["tunnel_local_host_name"]  = $localHostName;
+                     $status[$hostName][$serviceName]["tunnel_remote_host_name"] = $remoteHostName;
                   }
                }
 
