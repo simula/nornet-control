@@ -28,6 +28,7 @@
 .Sh SYNOPSIS
 .Nm check_site
 .Op Fl L latitude,longitude
+.Op Fl F flags
 .Op Fl A address
 .Op Fl T tunnel
 .Op Fl w warning
@@ -44,6 +45,8 @@ The following options are available:
 .It Fl L latitude,longitude
 Sets the location of the site. It is returned as result "as is"; it will then
 be written to the Nagios status file and can be processed further.
+.It Fl F flags
+A comma-separated list of arbitrary flag values, to be added to the output.
 .It Fl A address
 Run check_ping for given address.
 .It Fl T tunnel
@@ -56,6 +59,7 @@ Sets "critical" level for check_ping.
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
-.It check_site -A 10.1.1.1 -A 10.1.1.23 -A 10.1.2.3 -T 10.1.1.1 -T 10.1.1.99
-.It check_site -L 51.476144,7.011656 -A 10.1.1.1 -A 10.1.1.23 -A 10.1.2.3 -T 10.1.1.1 -T 10.1.1.99
+.It check_site -A 10.1.1.1 -A 10.2.1.1 -T 192.168.77.87 -T 192.168.99.13
+.It check_site -L 51.476144,7.011656 -A 10.1.1.1 -A 10.2.1.1 -T 192.168.77.87 -T 192.168.99.13
+.It check_site -F Test1,Test2,Test3 -A 10.1.1.1 -A 10.2.1.1
 .El

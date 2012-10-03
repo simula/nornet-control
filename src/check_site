@@ -23,6 +23,7 @@
 ADDRESSES=""
 TUNNELS=""
 LOCATION=""
+FLAGS=""
 WARN="300.0,10%"
 CRITICAL="500.0,15%"
 CHECK_PING="/usr/lib/nagios/plugins/check_ping"
@@ -35,6 +36,9 @@ while [ "$1" != "" ] ; do
       shift
    elif [ "$1" = "-L" ] ; then
       LOCATION="$2"
+      shift
+   elif [ "$1" = "-F" ] ; then
+      FLAGS="$2"
       shift
    elif [ "$1" = "-T" ] ; then
       TUNNELS="$TUNNELS $2"
@@ -123,7 +127,11 @@ location=""
 if [ "$LOCATION" != "" ] ; then
    location="L=$LOCATION "
 fi
-echo "SITECHECK $resultText ${location}A=$goodAddresses/$a T=$goodTunnels/$t S=${summary}| R=$r;$rwarn:;$rcritical:;$rmin;$rmax"
+flags=""
+if [ "$FLAGS" != "" ] ; then
+   flags="F=$FLAGS "
+fi
+echo "SITECHECK $resultText ${location}${flags}A=$goodAddresses/$a T=$goodTunnels/$t S=${summary}| R=$r;$rwarn:;$rcritical:;$rmin;$rmax"
 
 
 # ====== Remove temporary directory =========================================

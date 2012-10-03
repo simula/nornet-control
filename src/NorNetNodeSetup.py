@@ -1149,7 +1149,10 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                outputFile.write('/' + country + ')\n')
                outputFile.write('   address       ' + str(tunnelboxIP.ip) + '\n')
                outputFile.write('   notes         latlng: ' + str(localSite['site_latitude']) + ',' + str(localSite['site_longitude']) + '\n')
-               outputFile.write('   check_command MySiteCheck!-L ' + str(localSite['site_latitude']) + ',' + str(localSite['site_longitude']) + ' ')
+               flags = ""
+               if localSiteIndex == NorNet_SiteIndex_Central:
+                  flags = "-F CENTRAL ";
+               outputFile.write('   check_command MySiteCheck!' + flags + '-L ' + str(localSite['site_latitude']) + ',' + str(localSite['site_longitude']) + ' ')
                for localProviderIndex in localProviderList:
                   localProvider = localProviderList[localProviderIndex]
                   for version in [ 4, 6 ]:
