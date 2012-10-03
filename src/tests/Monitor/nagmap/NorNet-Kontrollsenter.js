@@ -164,15 +164,15 @@ function updateClock()
 // ###### Update display contents ###########################################
 function updateDisplay()
 {
+   document.getElementById("header.title").firstChild.nodeValue                 = titleLabel[displayLanguage];
+   document.getElementById("footer.title").innerHTML                            = footerLabel[displayLanguage];
    // document.getElementById("sidebar.clock").firstChild.nodeValue                = clockLabel[displayLanguage];
    document.getElementById("sidebar.sites").firstChild.nodeValue                = sitesLabel[displayLanguage];
    document.getElementById("sidebar.sites.problems.title").firstChild.nodeValue = problemsLabel[displayLanguage];
    document.getElementById("sidebar.sites.okay.title").firstChild.nodeValue     = okayLabel[displayLanguage];
    if(document.getElementById("sidebar.sites.noproblems") != null) {
-      document.getElementById("sidebar.sites.okay.title").firstChild.nodeValue = noProblemLabel[displayLanguage];
+      document.getElementById("sidebar.sites.okay.title").firstChild.nodeValue  = noProblemLabel[displayLanguage];
    }
-   document.getElementById("header.title").firstChild.nodeValue                 = titleLabel[displayLanguage];
-   document.getElementById("footer.title").innerHTML                            = footerLabel[displayLanguage];
 
    updateClock();
    setInterval('updateClock()', 1000)
@@ -207,4 +207,4 @@ function makeKontrollsenter()
    updateDisplay();
 }
 
-window.onload=makeKontrollsenter;
+window.onload = makeKontrollsenter;
