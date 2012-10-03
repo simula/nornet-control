@@ -1,6 +1,7 @@
 hoststatus {
-	host_name=Simula Research Laboratory
-	last_hard_state=1
+   host_name=Simula Research Laboratory
+   last_hard_state=1
+   check_command=MySiteCheck!-L 59.8959,10.6276 -A 10.1.1.1 -A fd00:0:101::1 -A 10.100.1.1 -A fd00:0:6401::1 -T 192.168.239.62 -T fdff:ffff:201:164::2 -T 192.168.38.250 -T fdff:ffff:264:164::2 -T 192.168.125.182 -T fdff:ffff:301:164::2 -T 192.168.154.122 -T fdff:ffff:364:164::2 -T 192.168.230.222 -T fdff:ffff:3de:164::2 -T 192.168.128.218 -T fdff:ffff:401:164::2 -T 192.168.124.254 -T fdff:ffff:464:164::2 -T 192.168.162.238 -T fdff:ffff:501:164::2 -T 192.168.143.250 -T fdff:ffff:564:164::2 -T 192.168.44.238 -T fdff:ffff:601:164::2 -T 192.168.156.138 -T fdff:ffff:664:164::2 -T 192.168.11.190 -T fdff:ffff:6de:164::2
 }
 
 hoststatus {
@@ -27,3 +28,59 @@ hoststatus {
    host_name=Universität Duisburg-Essen
    last_hard_state=0
 }
+
+servicestatus {
+   host_name=Simula Research Laboratory
+   service_description=Tunnel SRL-NTNU Telenor/Telenor via gre5-100-100 remote 192.168.143.249
+   check_command=MyTunnelCheck!-L "Simula Research Laboratory" -R "Universitetet i Trondheim" -H 192.168.143.249
+   check_period=24x7
+   notification_period=24x7
+   check_interval=5.000000
+   retry_interval=1.000000
+   event_handler=
+   has_been_checked=1
+   should_be_scheduled=1
+   check_execution_time=4.056
+   check_latency=0.200
+   check_type=0
+   current_state=0
+   last_hard_state=0
+   last_event_id=13097
+   current_event_id=13126
+   current_problem_id=0
+   last_problem_id=4859
+   current_attempt=1
+   max_attempts=4
+   state_type=1
+   last_state_change=1348712314
+   last_hard_state_change=1348676374
+   last_time_ok=1349167447
+   last_time_warning=0
+   last_time_unknown=0
+   last_time_critical=1348712254
+   plugin_output=PING OK - L="Simula Research Laboratory" R="Universitetet i Trondheim" Packet loss = 0%, RTA = 2.10 ms
+   long_plugin_output=
+   performance_data=rta=2.098000ms;300.000000;500.000000;0.000000 pl=0%;10;15;0
+   last_check=1349167447
+   next_check=1349167747
+   check_options=0
+   current_notification_number=0
+   current_notification_id=4181
+   last_notification=0
+   next_notification=0
+   no_more_notifications=0
+   notifications_enabled=1
+   active_checks_enabled=1
+   passive_checks_enabled=1
+   event_handler_enabled=1
+   problem_has_been_acknowledged=0
+   acknowledgement_type=0
+   flap_detection_enabled=1
+   failure_prediction_enabled=1
+   process_performance_data=1
+   obsess_over_service=1
+   last_update=1349167735
+   is_flapping=0
+   percent_state_change=0.00
+   scheduled_downtime_depth=0
+   }
