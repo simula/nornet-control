@@ -1,12 +1,14 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="no">
 
 <head>
-<title>Velkommen til NorNet-Kontrollsenter på Simula, Fornebu</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="Author" content="Thomas Dreibholz" />
 <meta name="Description" content="NorNet-Kontrollsenter" />
 <meta name="Keywords" content="NorNet-Kontrollsenter, NorNet Project, NorNet Prosjekt, Simula Research Laboratory, Thomas Dreibholz" />
 <meta name="Classification" content="Kontrollsenter" />
+
+<title>Velkommen til NorNet-Kontrollsenter på Simula, Fornebu</title>
 
 <link rel="stylesheet" href="stylesheet.css" type="text/css" />
 <link rel="shortcut icon" href="graphics/icons/icon-uniessen.png" />
@@ -19,14 +21,15 @@
 <body>
 
 <div id="header" class="header">
- <h1 style="margin: 0px; padding: 0px;" id="header.title">&nbsp;</h1>
+ <h1 style="margin: 0px; padding: 0px;" id="header.title">
+  <noscript>
+   <h2>NorNet Map requires JavaScript!</h2>
+  </noscript>
+ </h1>
 </div>
 
-<div id="map_canvas" class="map" style="height: 100%;">
- <noscript>
-  <h2>NorNet Map requires JavaScript!</h2>
- </noscript>
-</div>
+
+<div id="map_canvas" class="map"></div>
 
 <div id="sidebar" class="sidebar">
  <h2 style="text-align: center;">
@@ -73,7 +76,7 @@
 </div>
 
 <div id="footer" class="footer">
- <p class="footer" style="margin: 0px; padding: 0px;" id="footer.title">&nbsp;</p>
+ <p class="footer" style="margin: 0px; padding: 0px;" id="footer.title">--</p>
 </div>
 
 </body>

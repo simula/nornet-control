@@ -176,7 +176,6 @@ function updateDisplay()
 
    updateClock();
    setInterval('updateClock()', 1000)
-   makeMapContents();
    makeSidebarContents()
 }
 
@@ -188,6 +187,7 @@ function makeKontrollsenter()
    var latitude   = 62.5;
    var longitude  = 5.0;
    var zoomLevel  = 5;
+   var timeout    = 60;
    var arguments = window.location.search.replace('?', '').split('&');
    for (var i = 0; i < arguments.length; i++) {
       option = arguments[i].split("=");
@@ -202,9 +202,21 @@ function makeKontrollsenter()
       }
    }
 
+   var url = window.location.protocol + "//" + window.location.hostname;
+   if(url.port >  "") {
+      url = url + ":" + window.location.port;
+   }
+   url = url + "/" + window.location.pathname;
+
    // ====== Initialize everything ==========================================
-   initializeNorNetMap(latitude, longitude, zoomLevel);
    updateDisplay();
+
+   initializeNorNetMap(latitude, longitude, zoomLevel);
+   makeMapContents();
+
+   // ====== Automatic page refresh =========================================
+   setTimeout("location.reload(false);", timeout * 1000);
+   // document.getElementById("footer.title").innerHTML = 'URL='+url;
 }
 
 window.onload = makeKontrollsenter;
