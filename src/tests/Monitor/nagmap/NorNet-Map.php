@@ -22,11 +22,11 @@
 
 
 // ###### Initialize NorNet map #############################################
-function initializeNorNetMap()
+function initializeNorNetMap(latitude, longitude, zoomLevel)
 {
    var myOptions = {
-      zoom: 5,
-      center: new google.maps.LatLng(62.5,5),
+      zoom:   zoomLevel,
+      center: new google.maps.LatLng(latitude, longitude),
       mapTypeId: google.maps.MapTypeId.HYBRID
    };
    window.map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
@@ -39,13 +39,15 @@ $status = getNorNetStatus();
 
 // ###### Make contents of the map ##########################################
 echo "function makeMapContents() {\n";
+
+// ====== Set up the sites ==================================================
 foreach ($status as $hostName => $hostEntry) {
    if (isset($status[$hostName][""]["location"])) {
-      // ====== Create position for sites ================================
+      // ====== Create position for sites ===================================
       echo '   // ====== ' . $hostName . ' ======' . "\n";
       echo '   window.' . $status[$hostName][""]["host_identifier"] . '_position = new google.maps.LatLng(' . $status[$hostName][""]["location"] . ');' . "\n";
 
-      // ====== Create marker ============================================
+      // ====== Create marker ===============================================
       $site       = $hostName;
       $siteStatus = $status[$site][""]["last_hard_state"];
       $icon       = "http://www.google.com/mapfiles/marker_grey.png";
@@ -68,7 +70,7 @@ foreach ($status as $hostName => $hostEntry) {
          "\n" . '      zIndex:   1'.
          "\n" . '   });' . "\n";
 
-      // ====== Create information window ================================
+      // ====== Create information window ===================================
       if (!isset($h["parents"])) {
          $h["parents"] = Array();
       };
@@ -78,6 +80,59 @@ foreach ($status as $hostName => $hostEntry) {
       echo "\n";
    }
 }
+
+// ====== Set up the links ==================================================
+foreach ($status as $hostName => $hostEntry) {
+   foreach ($hostEntry as $serviceName => $serviceEntry) {
+      if ($serviceName != "") {   // A real service!
+         if ( (isset($status[$hostName][$serviceName]["tunnel_local_host_name"])) &&
+              (isset($status[$hostName][$serviceName]["tunnel_remote_host_name"])) ) {
+            $tunnelState    = $status[$hostName][$serviceName]['last_hard_state'];
+            $localHostName  = $status[$hostName][$serviceName]['tunnel_local_host_name'];
+            $remoteHostName = $status[$hostName][$serviceName]['tunnel_remote_host_name'];
+
+            $localIdentifer  = $status[$hostName][$serviceName]['tunnel_local_identifier'];
+            $remoteIdentifer = $status[$hostName][$serviceName]['tunnel_remote_identifier'];
+
+            $state = $status[$hostName][$serviceName]['last_hard_state'];
+
+            if( ($state == 1) || ($state == 2) ||
+                (isset($status[$hostName][""]['is_central_site'])) ) {
+
+               $zIndex       = 10;
+               $strokeWeight = 5;
+               switch($state) {
+                  case 0:
+                     $linkColor = "#00ff00";
+                   break;
+                  case 1:
+                     $linkColor = "yellow";
+                     $zIndex    = 15;
+                   break;
+                  case 2:
+                     $linkColor    = "red";
+                     $strokeWeight = 10;
+                     $zIndex       = 20;
+                   break;
+                  default:
+                     $linkColor = "grey";
+                   break;
+               }
+
+               echo "   // ====== Tunnel ".$localHostName." to ".$remoteHostName." S=".$tunnelState." ======\n";
+               echo '   window.' . $localIdentifer . '_to_' . $remoteIdentifer . ' = new google.maps.Polyline({' . "\n" .
+                  '     path: [window.' . $localIdentifer . '_position, window.' . $remoteIdentifer . '_position],' . "\n" .
+                  '     zIndex:        ' . $zIndex . ',' . "\n" .
+                  '     strokeColor:   "' . $linkColor . '",' . "\n" .
+                  '     strokeOpacity: 0.9,' . "\n" .
+                  '     strokeWeight:  ' . $strokeWeight . '});' . "\n";
+               echo '   window.' . $localIdentifer . '_to_' . $remoteIdentifer . '.setMap(window.map);' . "\n\n";
+             }
+         }
+      }
+   }
+}
+
 echo "}\n\n";
 
 

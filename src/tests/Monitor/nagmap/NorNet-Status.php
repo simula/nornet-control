@@ -20,8 +20,15 @@
 //
 
 
+// ###### Make ASCII identifier from unicode host name ######################
+function makeIdentifierFromHostName($hostName) {
+   return(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\xFF-\.\/\(\) ]/u', '_', trim($hostName)));
+}
+
+
 # ###### Obtain NorNet status from Nagios's status.dat file =================
-function getNorNetStatus() {
+function getNorNetStatus()
+{
    include('NorNet-Configuration.php');
 
    $hostName    = "";
@@ -47,6 +54,16 @@ function getNorNetStatus() {
       }
       elseif (preg_match("/}/",$line)) {
          // End of entry
+//          if ( ($hostName != "") && ($serviceName != "") ) {
+//             if ( ($status[$hostName][$serviceName]['last_hard_state'] == 1) ||
+//                  ($status[$hostName][$serviceName]['last_hard_state'] == 2) ) {
+//                if ($status[$hostName][""]['last_hard_state'] != 2) {
+//                   // If there is a tunnel problem, put site at least into
+//                   // "warning" state!
+//                   $status[$hostName][""]['last_hard_state'] = 1;
+//                }
+//             }
+//          }
          $hostName    = "";
          $serviceName = "";
       }
@@ -66,15 +83,7 @@ function getNorNetStatus() {
             if ($parameterName == "host_name") {
                $hostName    = $value;
                $serviceName = "";
-
-               $identifier = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\xFF-\.\/\(\) ]/u', '_', trim($hostName));
-//                $identifier = str_replace('-','_',$identifier);
-//                $identifier = str_replace('.','_',$identifier);
-//                $identifier = str_replace('/','_',$identifier);
-//                $identifier = str_replace('(','_',$identifier);
-//                $identifier = str_replace(')','_',$identifier);
-//                $identifier = str_replace(' ','_',$identifier);
-               $status[$hostName][$serviceName]["host_identifier"] = $identifier;
+               $status[$hostName][$serviceName]["host_identifier"] = makeIdentifierFromHostName($hostName);
             }
             elseif ($parameterName == "service_description") {
                $serviceName = $value;
@@ -95,34 +104,36 @@ function getNorNetStatus() {
                   if (preg_match("/^MySiteCheck!/", $value)) {
                      $value = preg_replace("/^MySiteCheck!/", "", $value);
                      $args  = str_getcsv($value, ' ');
-                     $location = "";
                      for ($i = 0; $i < count($args); $i++) {
                         if ($args[$i] == "-L") {
-                           $location = $args[$i + 1];
+                           $status[$hostName][$serviceName]["location"] = $args[$i + 1];
                            $i++;
                         }
+                        elseif ($args[$i] == "-F") {
+                           if (preg_match("/^CENTRAL$|^CENTRAL,|,CENTRAL$/", $args[$i + 1])) {
+                              $status[$hostName][$serviceName]["is_central_site"] = 'YES';
+                              $i++;
+                           }
+                        }
                      }
-                     $status[$hostName][$serviceName]["location"]  = $location;
                   }
 
                   // ====== Handle tunnel ===================================
                   elseif (preg_match("/^MyTunnelCheck!/", $value)) {
                      $value = preg_replace("/^MyTunnelCheck!/", "", $value);
                      $args  = str_getcsv($value, ' ');
-                     $localHostName  = "";
-                     $remoteHostName = "";
                      for ($i = 0; $i < count($args); $i++) {
                         if ($args[$i] == "-L") {
-                           $localHostName = $args[$i + 1];
+                           $status[$hostName][$serviceName]["tunnel_local_host_name"]  = $args[$i + 1];
+                           $status[$hostName][$serviceName]["tunnel_local_identifier"] = makeIdentifierFromHostName($args[$i + 1]);
                            $i++;
                         }
                         else if ($args[$i] == "-R") {
-                           $remoteHostName = $args[$i + 1];
+                           $status[$hostName][$serviceName]["tunnel_remote_host_name"]  = $args[$i + 1];
+                           $status[$hostName][$serviceName]["tunnel_remote_identifier"] = makeIdentifierFromHostName($args[$i + 1]);
                            $i++;
                         }
                      }
-                     $status[$hostName][$serviceName]["tunnel_local_host_name"]  = $localHostName;
-                     $status[$hostName][$serviceName]["tunnel_remote_host_name"] = $remoteHostName;
                   }
                }
 

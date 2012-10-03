@@ -113,7 +113,7 @@ hr {
    height:     auto;
    top:        36pt;
    right:      0;
-   bottom:     20pt;
+   bottom:     28pt;
    left:       0;
    float:      left;
    background: #0000cc;
@@ -125,7 +125,7 @@ hr {
    height:   auto;
    top:      36pt;
    right:    0;
-   bottom:   20pt;
+   bottom:   28pt;
    left:     auto;
    overflow: auto;
 }
@@ -164,7 +164,7 @@ hr {
 
 .date {
    font-weight: bold;
-   font-size:   16pt;
+   font-size:   20pt;
    text-align:  center;
    font-family: UnifrakturCook;
 }
@@ -172,7 +172,7 @@ hr {
 .footer {
    position:     fixed;
    width:        100%;
-   height:       20pt;
+   height:       28pt;
    top:          auto;
    right:        0;
    bottom:       0;
@@ -181,6 +181,6 @@ hr {
    background:   red;
    color:        white;
    text-align:   center;
-   font-size:    16pt;
+   font-size:    22pt;
    font-family:  UnifrakturCook;
 }

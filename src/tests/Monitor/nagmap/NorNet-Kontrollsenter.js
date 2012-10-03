@@ -173,6 +173,7 @@ function updateDisplay()
    }
    document.getElementById("header.title").firstChild.nodeValue                 = titleLabel[displayLanguage];
    document.getElementById("footer.title").innerHTML                            = footerLabel[displayLanguage];
+
    updateClock();
    setInterval('updateClock()', 1000)
    makeMapContents();
@@ -183,7 +184,26 @@ function updateDisplay()
 // ###### Initialize NorNet Kontrollsenter ##################################
 function makeKontrollsenter()
 {
-   initializeNorNetMap();
+   // ====== Handle arguments in URL ========================================
+   var latitude   = 62.5;
+   var longitude  = 5.0;
+   var zoomLevel  = 5;
+   var arguments = window.location.search.replace('?', '').split('&');
+   for (var i = 0; i < arguments.length; i++) {
+      option = arguments[i].split("=");
+      if(option[0] == "latitude") {
+         latitude = parseFloat(option[1]);
+      }
+      if(option[0] == "longitude") {
+         longitude = parseFloat(option[1]);
+      }
+      else if(option[0] == "zoomlevel") {
+         zoomLevel = Math.round(parseFloat(option[1]));
+      }
+   }
+
+   // ====== Initialize everything ==========================================
+   initializeNorNetMap(latitude, longitude, zoomLevel);
    updateDisplay();
 }
 
