@@ -75,7 +75,14 @@ function getNorNetStatus() {
                   if (preg_match("/^MySiteCheck!/", $value)) {
                      $value = preg_replace("/^MySiteCheck!/", "", $value);
                      $args  = str_getcsv($value, ' ');
-                     echo $args;
+                     $location = "";
+                     for ($i = 0; $i < count($args); $i++) {
+                        if ($args[$i] == "-L") {
+                           $location = $args[$i + 1];
+                           $i++;
+                        }
+                     }
+                     $status[$hostName][$serviceName]['location']  = $location;
                   }
 
                   // ====== Handle tunnel ===================================
@@ -94,8 +101,8 @@ function getNorNetStatus() {
                            $i++;
                         }
                      }
-                     $status[$hostName][$serviceName]['local_host_name']  = $localHostName;
-                     $status[$hostName][$serviceName]['remote_host_name'] = $remoteHostName;
+                     $status[$hostName][$serviceName]['tunnel_local_host_name']  = $localHostName;
+                     $status[$hostName][$serviceName]['tunnel_remote_host_name'] = $remoteHostName;
                   }
                }
 
@@ -108,7 +115,7 @@ function getNorNetStatus() {
    foreach ($status as $hostName => $hostEntry) {
       foreach ($hostEntry as $serviceName => $serviceEntry) {
          foreach ($serviceEntry as $parameterName => $parameterEntry) {
-            echo "<br />".$hostName.".".$serviceName.".".$parameterName." = ".$parameterEntry;
+            echo "<br />".$hostName.".".$serviceName.".".$parameterName." = ".$parameterEntry."\n";
          }
       }
    }
@@ -121,6 +128,28 @@ echo "Test1\n";
 $status = getNorNetStatus();
 
 echo "<br/>Test2\n";
+
+   foreach ($status as $hostName => $hostEntry) {
+      if (isset($status[$hostName][""]["location"])) {
+         echo "<br />Host ".$hostName." at ".$status[$hostName][""]["location"]."\n";
+      }
+   }
+
+   foreach ($status as $hostName => $hostEntry) {
+      foreach ($hostEntry as $serviceName => $serviceEntry) {
+         if ($serviceName != "") {   // A real service!
+            if ( (isset($status[$hostName][$serviceName]["tunnel_local_host_name"])) &&
+                 (isset($status[$hostName][$serviceName]["tunnel_remote_host_name"])) ) {
+               $tunnelState    = $status[$hostName][$serviceName]['last_hard_state'];
+               $localHostName  = $status[$hostName][$serviceName]['tunnel_local_host_name'];
+               $remoteHostName = $status[$hostName][$serviceName]['tunnel_remote_host_name'];
+               echo "<br />Tunnel ".$localHostName." to ".$remoteHostName." S=".$tunnelState."\n";
+            }
+         }
+      }
+   }
+
+echo "<br/>Test3\n";
 
 ?>
 
