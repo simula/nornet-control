@@ -39,6 +39,16 @@ function requestNorNetStatus()
       }
    }
    xmlHttpRequest.send();
+
+   nodeLocation = "60.0,5.0";
+   locationArray = nodeLocation.split(",");
+   latitude  = parseFloat(locationArray[0]);
+   longitude = parseFloat(locationArray[1]);
+   latitude  = latitude + ((10 * Math.random()) - 5);
+   longitude = longitude + ((10 * Math.random()) - 5);
+   nodeLocation = latitude + "," + longitude;
+
+   document.getElementById("test1").innerHTML= nodeLocation;
 }
 
 </script>
@@ -48,6 +58,7 @@ function requestNorNetStatus()
 
 Status:<br />
 <div id="NorNetStatus">???</div>
+<div id="test1">???</div>
 
 </body>
 </html>

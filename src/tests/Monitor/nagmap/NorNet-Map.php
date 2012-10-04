@@ -48,9 +48,19 @@ echo "function makeMapContents() {\n";
 // ====== Set up the sites ==================================================
 foreach ($status as $hostName => $hostEntry) {
    if (isset($status[$hostName][""]["location"])) {
+      // ====== Get location ================================================
+      echo "siteLocation = '" . $status[$hostName][""]["location"] . "';\n";
+      echo "locationArray = siteLocation.split(',');" . "\n";
+      echo "latitude  = parseFloat(locationArray[0]);" . "\n";
+      echo "longitude = parseFloat(locationArray[1]);" . "\n";
+
+      // ====== Test mode ===================================================
+      echo "latitude  = latitude + ((10 * Math.random()) - 5);" . "\n";
+      echo "longitude = longitude + ((10 * Math.random()) - 5);" . "\n";
+
       // ====== Create position for sites ===================================
       echo '   // ====== ' . $hostName . ' ======' . "\n";
-      echo '   window.' . $status[$hostName][""]["host_identifier"] . '_position = new google.maps.LatLng(' . $status[$hostName][""]["location"] . ');' . "\n";
+      echo '   window.' . $status[$hostName][""]["host_identifier"] . '_position = new google.maps.LatLng(latitude, longitude);' . "\n";
 
       // ====== Create marker ===============================================
       $site       = $hostName;
