@@ -1,0 +1,53 @@
+<html>
+<head>
+
+<title>Velkommen til NorNet-Kontrollsenter på Simula, Fornebu</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Author" content="Thomas Dreibholz" />
+<meta name="Description" content="NorNet-Kontrollsenter" />
+<meta name="Keywords" content="NorNet-Kontrollsenter, NorNet Project, NorNet Prosjekt, Simula Research Laboratory, Thomas Dreibholz" />
+<meta name="Classification" content="Kontrollsenter" />
+<link rel="stylesheet" href="stylesheet.css" type="text/css" />
+<link rel="shortcut icon" href="graphics/icons/icon-uniessen.png" />
+
+<html>
+<head>
+<script type="text/javascript">
+
+function requestNorNetStatus()
+{
+   document.getElementById("NorNetStatus").innerHTML="";
+
+   var xmlHttpRequest = new XMLHttpRequest();
+   xmlHttpRequest.open("GET", "NorNet-Map.php", true);
+   xmlHttpRequest.onreadystatechange = function() {
+      if (xmlHttpRequest.readyState == 4) {
+         if (xmlHttpRequest.status == 200) {
+            document.getElementById("NorNetStatus").innerHTML="OK-1";
+            try {
+               eval(xmlHttpRequest.responseText);
+               xxx;
+               document.getElementById("NorNetStatus").innerHTML="OK-2";
+            }
+            catch(errorMessage) {
+               document.getElementById("NorNetStatus").innerHTML="ERROR: " + errorMessage;
+            }
+         }
+         else {
+            document.getElementById("NorNetStatus").innerHTML="BAD RESPONSE: " + xmlHttpRequest.status;
+         }
+      }
+   }
+   xmlHttpRequest.send();
+}
+
+</script>
+
+</head>
+<body onload="requestNorNetStatus();">
+
+Status:<br />
+<div id="NorNetStatus">???</div>
+
+</body>
+</html>
