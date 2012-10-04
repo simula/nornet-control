@@ -9,56 +9,139 @@
 <meta name="Classification" content="Kontrollsenter" />
 <link rel="stylesheet" href="stylesheet.css" type="text/css" />
 <link rel="shortcut icon" href="graphics/icons/icon-uniessen.png" />
-
+<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
 <html>
 <head>
 <script type="text/javascript">
 
-function requestNorNetStatus()
+
+// ###### Check existence of variable given by its name #####################
+function variableExists(variable)
 {
-   document.getElementById("NorNetStatus").innerHTML="";
+   return(eval("typeof(" + variable + ")") != "undefined");
+}
 
-   var xmlHttpRequest = new XMLHttpRequest();
-   xmlHttpRequest.open("GET", "NorNet-Map.php", true);
-   xmlHttpRequest.onreadystatechange = function() {
-      if (xmlHttpRequest.readyState == 4) {
-         if (xmlHttpRequest.status == 200) {
-            document.getElementById("NorNetStatus").innerHTML="OK-1";
-            try {
-               eval(xmlHttpRequest.responseText);
-               xxx;
-               document.getElementById("NorNetStatus").innerHTML="OK-2";
-            }
-            catch(errorMessage) {
-               document.getElementById("NorNetStatus").innerHTML="ERROR: " + errorMessage;
-            }
-         }
-         else {
-            document.getElementById("NorNetStatus").innerHTML="BAD RESPONSE: " + xmlHttpRequest.status;
-         }
-      }
+
+// ###### Get content of variable given by its name #########################
+function getVariable(variable)
+{
+   var value;
+   eval("value=(" + variable + ");");
+   return(value);
+}
+
+
+// ###### Set content of variable given by its name #########################
+function setVariable(variable, value)
+{
+   eval(variable + "=value;");
+}
+
+
+// ###### Initialize NorNet map #############################################
+function makeMap(latitude, longitude, zoomLevel)
+{
+   // If rendering in standards-compliant mode, no map will be shown. The
+   // height seems to be 0. When this function gets called, the layout has
+   // already been rendered. Then, add another <div> for the map => works.
+   document.getElementById("map_canvas").innerHTML = '<div id="my_map_canvas" style="width: 100%; height: 100%;">Map</div>';
+
+   var myOptions = {
+      zoom:   zoomLevel,
+      center: new google.maps.LatLng(latitude, longitude),
+      mapTypeId: google.maps.MapTypeId.HYBRID
+   };
+   window.map = new google.maps.Map(document.getElementById("my_map_canvas"), myOptions);
+}
+
+
+// ###### Create position ###################################################
+function makePosition(positionVariable, latitude, longitude)
+{
+   if ((!variableExists(positionVariable)) || (getVariable(positionVariable) == null)) {
+      setVariable(positionVariable, "null");
    }
-   xmlHttpRequest.send();
+   position = new google.maps.LatLng(latitude, longitude);
+   setVariable(positionVariable, position);
+}
 
-   nodeLocation = "60.0,5.0";
-   locationArray = nodeLocation.split(",");
-   latitude  = parseFloat(locationArray[0]);
-   longitude = parseFloat(locationArray[1]);
-   latitude  = latitude + ((10 * Math.random()) - 5);
-   longitude = longitude + ((10 * Math.random()) - 5);
-   nodeLocation = latitude + "," + longitude;
 
-   document.getElementById("test1").innerHTML= nodeLocation;
+// ###### Create position object ############################################
+function makeMarker(markerVariable, title, icon, positionVariable, zIndex)
+{
+   var marker;
+   if (variableExists(markerVariable) && (getVariable(markerVariable) != null)) {
+      marker = getVariable(markerVariable);
+   }
+   else {
+      marker = new google.maps.Marker();
+      setVariable(markerVariable, marker);
+   }
+   marker.setTitle(title);
+   marker.setIcon(icon);
+   marker.setPosition(getVariable(positionVariable));
+   marker.setVisible(true);
+   marker.setZIndex(zIndex);
+   marker.setMap(window.map);
+
+   document.getElementById("test2").innerHTML = marker.getPosition();
+}
+
+
+// ###### Create connection object ##########################################
+function makeConnection(connectionVariable, points, color, thickness, zIndex)
+{
+   var connection;
+   if (variableExists(connectionVariable) && (getVariable(connectionVariable) != null)) {
+      connection = getVariable(connectionVariable);
+   }
+   else {
+      connection = new google.maps.Polyline();
+      setVariable(connectionVariable, connection);
+   }
+   connection.setPath(points);
+   connection.setOptions({
+      zIndex: zIndex,
+      strokeColor: color,
+      strokeOpacity: 0.9,
+      strokeWeight: thickness
+   });
+   connection.setMap(window.map);
+}
+
+
+
+var x1=null;
+
+
+function test2() {
+   makePosition("window.p2", 50+ ((10 * Math.random()) - 5), 10+ ((10 * Math.random()) - 5));
+   makePosition("window.p1", 70+ ((10 * Math.random()) - 5), 20+ ((10 * Math.random()) - 5));
+   makeMarker("window.x1",  "Test 1", "http://www.google.com/mapfiles/marker_green.png", "window.p1", 1);
+   makeMarker("window.xx1", "Test 2", "http://www.google.com/mapfiles/marker_green.png", "window.p2", 1);
+
+   makeConnection("qqq", [ window.p1, window.p2 ], "orange", 5, 10);
+
+}
+
+function runTest()
+{
+   makeMap(60, 5, 3);
+
+   test2();
+
+   setInterval("test2();", 2500);
 }
 
 </script>
 
 </head>
-<body onload="requestNorNetStatus();">
+<body onload="runTest();">
 
 Status:<br />
-<div id="NorNetStatus">???</div>
-<div id="test1">???</div>
+<div id="test1">???</div><br/>
+<div id="test2">???</div><br/>
+<div id="map_canvas" style="width:100%; height:80%">...</div>
 
 </body>
 </html>

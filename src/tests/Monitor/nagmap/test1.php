@@ -14,7 +14,6 @@
 <link rel="shortcut icon" href="graphics/icons/icon-uniessen.png" />
 
 <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
-<script src="NorNet-Map.php" type="text/javascript"></script>
 <script src="NorNet-Kontrollsenter.js" type="text/javascript"></script>
 </head>
 

@@ -129,6 +129,28 @@ sitesLabel['DE'] = "Standorte";
 sitesLabel['NO'] = "Beliggenheter";
 
 
+// Dummy functions, to be replaced by dynamically-generated ones!
+function makeMapContents() {}
+function makeSidebarContents() {}
+
+
+// ###### Initialize NorNet map #############################################
+function makeMap(latitude, longitude, zoomLevel)
+{
+   // If rendering in standards-compliant mode, no map will be shown. The
+   // height seems to be 0. When this function gets called, the layout has
+   // already been rendered. Then, add another <div> for the map => works.
+   document.getElementById("map_canvas").innerHTML = '<div id="my_map_canvas" style="width: 100%; height: 100%;">Map</div>';
+
+   var myOptions = {
+      zoom:   zoomLevel,
+      center: new google.maps.LatLng(latitude, longitude),
+      mapTypeId: google.maps.MapTypeId.HYBRID
+   };
+   window.map = new google.maps.Map(document.getElementById("my_map_canvas"), myOptions);
+}
+
+
 // ###### Update digital clock ##############################################
 function updateClock()
 {
@@ -173,10 +195,37 @@ function updateDisplay()
    if(document.getElementById("sidebar.sites.noproblems") != null) {
       document.getElementById("sidebar.sites.okay.title").firstChild.nodeValue  = noProblemLabel[displayLanguage];
    }
+}
 
-   updateClock();
-   setInterval('updateClock()', 1000)
-   makeSidebarContents()
+
+// ###### Initialize NorNet Kontrollsenter ##################################
+function requestNorNetStatus()
+{
+   var xmlHttpRequest = new XMLHttpRequest();
+   xmlHttpRequest.open("GET", "NorNet-Map.php", true);
+   xmlHttpRequest.onreadystatechange = function() {
+      if (xmlHttpRequest.readyState == 4) {
+         if (xmlHttpRequest.status == 200) {
+            try {
+               eval(xmlHttpRequest.responseText);
+               document.getElementById("footer.title").innerHTML = "OK!";
+               updateDisplay();
+               makeSidebarContents();
+               makeMapContents();
+            }
+            catch(errorMessage) {
+               document.getElementById("footer.title").innerHTML = "ERROR: " + errorMessage;
+            }
+         }
+         else {
+            document.getElementById("footer.title").innerHTML = "BAD RESPONSE: " + xmlHttpRequest.status;
+         }
+         setTimeout("requestNorNetStatus()", 5000);
+      }
+   }
+
+   document.getElementById("footer.title").innerHTML = "Updating ...";
+   xmlHttpRequest.send();
 }
 
 
@@ -187,7 +236,7 @@ function makeKontrollsenter()
    var latitude   = 62.5;
    var longitude  = 5.0;
    var zoomLevel  = 5;
-   var timeout    = 60;
+//    var timeout    = 60;
    var arguments = window.location.search.replace('?', '').split('&');
    for (var i = 0; i < arguments.length; i++) {
       option = arguments[i].split("=");
@@ -209,13 +258,16 @@ function makeKontrollsenter()
    url = url + "/" + window.location.pathname;
 
    // ====== Initialize everything ==========================================
+   updateClock();
+   setInterval('updateClock()', 1000);
    updateDisplay();
+   makeMap(latitude, longitude, zoomLevel);
 
-   initializeNorNetMap(latitude, longitude, zoomLevel);
-   makeMapContents();
+   // Now, get the NorNet status by using AJAX ...
+   requestNorNetStatus();
 
    // ====== Automatic page refresh =========================================
-   setTimeout("location.reload(false);", timeout * 1000);
+//    setTimeout("location.reload(false);", timeout * 1000);
    // document.getElementById("footer.title").innerHTML = 'URL='+url;
 }
 
