@@ -134,23 +134,6 @@ function makeMapContents() {}
 function makeSidebarContents() {}
 
 
-// ###### Initialize NorNet map #############################################
-function makeMap(latitude, longitude, zoomLevel)
-{
-   // If rendering in standards-compliant mode, no map will be shown. The
-   // height seems to be 0. When this function gets called, the layout has
-   // already been rendered. Then, add another <div> for the map => works.
-   document.getElementById("map_canvas").innerHTML = '<div id="my_map_canvas" style="width: 100%; height: 100%;">Map</div>';
-
-   var myOptions = {
-      zoom:   zoomLevel,
-      center: new google.maps.LatLng(latitude, longitude),
-      mapTypeId: google.maps.MapTypeId.HYBRID
-   };
-   window.map = new google.maps.Map(document.getElementById("my_map_canvas"), myOptions);
-}
-
-
 // ###### Update digital clock ##############################################
 function updateClock()
 {

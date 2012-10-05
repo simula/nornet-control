@@ -39,12 +39,12 @@ foreach ($status as $hostName => $hostEntry) {
       echo "longitude = parseFloat(locationArray[1]);" . "\n";
 
       // ====== Test mode ===================================================
-      echo "latitude  = latitude + ((10 * Math.random()) - 5);" . "\n";
-      echo "longitude = longitude + ((10 * Math.random()) - 5);" . "\n";
+      // echo "latitude  = latitude + ((10 * Math.random()) - 5);" . "\n";
+      // echo "longitude = longitude + ((10 * Math.random()) - 5);" . "\n";
 
       // ====== Create position for sites ===================================
       echo '   // ====== ' . $hostName . ' ======' . "\n";
-      echo '   window.' . $status[$hostName][""]["host_identifier"] . '_position = new google.maps.LatLng(latitude, longitude);' . "\n";
+      echo '   makePosition("window.' . $status[$hostName][""]["host_identifier"] . '_position", latitude, longitude);' . "\n";
 
       // ====== Create marker ===============================================
       $site       = $hostName;
@@ -60,23 +60,12 @@ foreach ($status as $hostName => $hostEntry) {
          $icon = "http://www.google.com/mapfiles/marker.png";
       }
 
-      echo '   window.' . $status[$hostName][""]["host_identifier"] . '_marker = new google.maps.Marker({'.
-         "\n" . '      title:    "' . $hostName . '",'.
-         "\n" . '      icon:     "' . $icon . '",'.
-         "\n" . '      map:      window.map,'.
-         "\n" . '      position: window.' . $status[$hostName][""]["host_identifier"] . '_position,'.
-         "\n" . '      visible:  true,'.
-         "\n" . '      zIndex:   1'.
-         "\n" . '   });' . "\n";
-
-      // ====== Create information window ===================================
-      if (!isset($h["parents"])) {
-         $h["parents"] = Array();
-      };
-      $siteInfo = '<div class=\"bubble\"><b>'.$hostName."</b><br />xxxxx xxxxxxxxxxx yyyyyyyyyyyy hhhhhhhhhhhh xxxxxxxx</div>";
-      echo '   window.' . $status[$hostName][""]["host_identifier"] . '_information = new google.maps.InfoWindow({ content: "'. $siteInfo . '" });' . "\n";
-      echo '   google.maps.event.addListener(' . $status[$hostName][""]["host_identifier"] . '_marker, "click", function() { ' .$status[$hostName][""]["host_identifier"]. '_information.open(map,' . $status[$hostName][""]["host_identifier"] . '_marker) } );' . "\n";
-      echo "\n";
+      echo '   makeMarker("window.' . $status[$hostName][""]["host_identifier"] . '_marker", ' .
+           '"'. $hostName . '", ' .
+           '"' . $icon . '", ' .
+           '"window.' . $status[$hostName][""]["host_identifier"] . '_position", ' .
+           '1, ' .
+           '"INFO-TEXT!");' . "\n\n";
    }
 }
 
@@ -119,13 +108,11 @@ foreach ($status as $hostName => $hostEntry) {
                }
 
                echo "   // ====== Tunnel ".$localHostName." to ".$remoteHostName." S=".$tunnelState." ======\n";
-               echo '   window.' . $localIdentifer . '_to_' . $remoteIdentifer . ' = new google.maps.Polyline({' . "\n" .
-                  '     path: [window.' . $localIdentifer . '_position, window.' . $remoteIdentifer . '_position],' . "\n" .
-                  '     zIndex:        ' . $zIndex . ',' . "\n" .
-                  '     strokeColor:   "' . $linkColor . '",' . "\n" .
-                  '     strokeOpacity: 0.9,' . "\n" .
-                  '     strokeWeight:  ' . $strokeWeight . '});' . "\n";
-               echo '   window.' . $localIdentifer . '_to_' . $remoteIdentifer . '.setMap(window.map);' . "\n\n";
+               echo '   makeConnection("window.' . $localIdentifer . '_to_' . $remoteIdentifer . '", ' .
+                    '[ ' . $localIdentifer . '_position, window.' . $remoteIdentifer . '_position ], ' .
+                    '"' . $linkColor . '", ' .
+                    $strokeWeight . ', ' .
+                    '2);' . "\n";
              }
          }
       }

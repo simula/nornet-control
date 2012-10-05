@@ -25,6 +25,5 @@ $NorNet_Nagios_Status = "/var/cache/nagios3/status.dat";
 # The default map configuration:
 $NorNet_Map_Centre    = "62.5,5";
 $NorNet_Map_ZoomLevel = 5;
-$NorNet_Map_Type      = "HYBRID";
 
 ?>
