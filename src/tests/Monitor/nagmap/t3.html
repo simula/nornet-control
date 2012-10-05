@@ -9,7 +9,13 @@
 <meta name="Classification" content="Kontrollsenter" />
 <link rel="stylesheet" href="stylesheet.css" type="text/css" />
 <link rel="shortcut icon" href="graphics/icons/icon-uniessen.png" />
-<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+
+<!-- <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script> -->
+
+<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+
+
 <html>
 <head>
 <script type="text/javascript">
@@ -46,12 +52,48 @@ function makeMap(latitude, longitude, zoomLevel)
    // already been rendered. Then, add another <div> for the map => works.
    document.getElementById("map_canvas").innerHTML = '<div id="my_map_canvas" style="width: 100%; height: 100%;">Map</div>';
 
-   var myOptions = {
-      zoom:   zoomLevel,
-      center: new google.maps.LatLng(latitude, longitude),
-      mapTypeId: google.maps.MapTypeId.HYBRID
-   };
-   window.map = new google.maps.Map(document.getElementById("my_map_canvas"), myOptions);
+
+//    var myOptions = {
+//       zoom:   zoomLevel,
+//       center: new google.maps.LatLng(latitude, longitude),
+//       mapTypeId: google.maps.MapTypeId.HYBRID
+//    };
+//    window.map = new google.maps.Map(document.getElementById("my_map_canvas"), myOptions);
+
+
+   window.map = new OpenLayers.Map({
+      div:               "my_map_canvas",
+      numZoomLevels:     15,
+      allOverlays:       true,
+
+units: 'm',
+                projection: new OpenLayers.Projection("EPSG:900913"),
+                displayProjection: new OpenLayers.Projection("EPSG:4326"),
+
+      controls: [
+         new OpenLayers.Control.Navigation(),
+         new OpenLayers.Control.PanZoomBar(),
+         new OpenLayers.Control.LayerSwitcher({'ascending':false}),
+         new OpenLayers.Control.Permalink(),
+         new OpenLayers.Control.ScaleLine(),
+         new OpenLayers.Control.Permalink('permalink'),
+         new OpenLayers.Control.MousePosition(),
+         new OpenLayers.Control.OverviewMap(),
+         new OpenLayers.Control.KeyboardDefaults()
+      ]
+   });
+
+   window.mapnik     = new OpenLayers.Layer.OSM.Mapnik("Mapnik",{numZoomLevels: 19, alpha: true, isBaseLayer: true});
+   window.mapmarkers = new OpenLayers.Layer.Markers("Sites");
+   window.mapvectors = new OpenLayers.Layer.Vector("Connections");
+
+   window.map.addLayer(mapnik);
+   window.map.addLayer(window.mapmarkers);
+   window.map.addLayer(window.mapvectors);
+
+   window.map.setCenter(new OpenLayers.LonLat(longitude, latitude).transform(
+                           new OpenLayers.Projection("EPSG:4326"), window.map.getProjectionObject()),
+                        zoomLevel);
 }
 
 
@@ -59,9 +101,10 @@ function makeMap(latitude, longitude, zoomLevel)
 function makePosition(positionVariable, latitude, longitude)
 {
    if ((!variableExists(positionVariable)) || (getVariable(positionVariable) == null)) {
-      setVariable(positionVariable, "null");
+      setVariable(positionVariable, null);
    }
-   position = new google.maps.LatLng(latitude, longitude);
+   position = new OpenLayers.LonLat(longitude, latitude).transform(
+                 new OpenLayers.Projection("EPSG:4326"), window.map.getProjectionObject());
    setVariable(positionVariable, position);
 }
 
@@ -72,19 +115,13 @@ function makeMarker(markerVariable, title, icon, positionVariable, zIndex)
    var marker;
    if (variableExists(markerVariable) && (getVariable(markerVariable) != null)) {
       marker = getVariable(markerVariable);
+      window.mapmarkers.removeMarker(marker);
+      marker = null;
    }
-   else {
-      marker = new google.maps.Marker();
-      setVariable(markerVariable, marker);
-   }
-   marker.setTitle(title);
-   marker.setIcon(icon);
-   marker.setPosition(getVariable(positionVariable));
-   marker.setVisible(true);
-   marker.setZIndex(zIndex);
-   marker.setMap(window.map);
-
-   document.getElementById("test2").innerHTML = marker.getPosition();
+   marker = new OpenLayers.Marker(getVariable(positionVariable),
+                                    new OpenLayers.Icon(icon));
+   window.mapmarkers.addMarker(marker);
+   setVariable(markerVariable, marker);
 }
 
 
@@ -94,19 +131,22 @@ function makeConnection(connectionVariable, points, color, thickness, zIndex)
    var connection;
    if (variableExists(connectionVariable) && (getVariable(connectionVariable) != null)) {
       connection = getVariable(connectionVariable);
+      window.mapvectors.removeFeatures([connection], true);
    }
-   else {
-      connection = new google.maps.Polyline();
-      setVariable(connectionVariable, connection);
+
+   var linePoints = [];
+   for(i = 0;i < points.length; i++) {
+      linePoints[i] = new OpenLayers.Geometry.Point(points[i].lon, points[i].lat);
    }
-   connection.setPath(points);
-   connection.setOptions({
-      zIndex: zIndex,
-      strokeColor: color,
-      strokeOpacity: 0.9,
-      strokeWeight: thickness
-   });
-   connection.setMap(window.map);
+   var lineString = new OpenLayers.Geometry.LineString(linePoints);
+   var connection = new OpenLayers.Feature.Vector(lineString, null, {
+         strokeColor:   color,
+         strokeOpacity: 0.9,
+         strokeWidth:   thickness
+      });
+   window.mapvectors.addFeatures([connection]);
+
+   setVariable(connectionVariable, connection);
 }
 
 
@@ -115,18 +155,18 @@ var x1=null;
 
 
 function test2() {
-   makePosition("window.p2", 50+ ((10 * Math.random()) - 5), 10+ ((10 * Math.random()) - 5));
-   makePosition("window.p1", 70+ ((10 * Math.random()) - 5), 20+ ((10 * Math.random()) - 5));
-   makeMarker("window.x1",  "Test 1", "http://www.google.com/mapfiles/marker_green.png", "window.p1", 1);
-   makeMarker("window.xx1", "Test 2", "http://www.google.com/mapfiles/marker_green.png", "window.p2", 1);
+//    makePosition("window.p2", 50+ ((10 * Math.random()) - 5), 10+ ((10 * Math.random()) - 5));
+//    makePosition("window.p1", 70+ ((10 * Math.random()) - 5), 20+ ((10 * Math.random()) - 5));
+//    makeMarker("window.x1",  "Test 1", "http://www.google.com/mapfiles/marker_green.png", "window.p1", 1);
+//    makeMarker("window.xx1", "Test 2", "http://www.google.com/mapfiles/marker_green.png", "window.p2", 1);
 
-   makeConnection("qqq", [ window.p1, window.p2 ], "orange", 5, 10);
+//    makeConnection("qqq", [ window.p1, window.p2 ], "orange", 5, 10);
 
 }
 
 function runTest()
 {
-   makeMap(60, 5, 3);
+   makeMap(60, 5, 4);
 
    test2();
 
