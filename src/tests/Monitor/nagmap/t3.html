@@ -65,7 +65,6 @@ function makeMap(latitude, longitude, zoomLevel)
    // ====== Create the map =================================================
    window.map = new OpenLayers.Map({
       div:               "my_map_canvas",
-      numZoomLevels:     15,
       units:             "m",
       displayProjection: new OpenLayers.Projection("EPSG:4326"),
       layers: [
@@ -76,7 +75,6 @@ function makeMap(latitude, longitude, zoomLevel)
       ],
       controls: [
          new OpenLayers.Control.Navigation(),
-         new OpenLayers.Control.NavToolbar(),
          new OpenLayers.Control.PanZoomBar(),
          new OpenLayers.Control.LayerSwitcher({'ascending':false}),
          new OpenLayers.Control.Permalink(),
