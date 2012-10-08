@@ -207,7 +207,7 @@ function updateDisplay()
 
 
 // ###### Auto-mode control #################################################
-var autoMode = false;
+var autoMode = true;
 function toggleAutoMode()
 {
    autoMode = !autoMode;
