@@ -58,7 +58,10 @@ function makeMap(latitude, longitude, zoomLevel)
          new OpenLayers.Control.KeyboardDefaults()
       ]
    });
-   zoomToLocation(latitude, longitude, zoomLevel);
+   window.default_latitude  = latitude;
+   window.default_longitude = longitude;
+   window.default_zoomlevel = zoomLevel;
+   zoomToDefaultLocation();
 }
 
 
@@ -68,6 +71,22 @@ function zoomToLocation(latitude, longitude, zoomLevel)
    window.map.setCenter(new OpenLayers.LonLat(longitude, latitude).transform(
                            new OpenLayers.Projection("EPSG:4326"), window.map.getProjectionObject()),
                         zoomLevel);
+}
+
+// ###### Zoom to default location ##########################################
+function zoomToDefaultLocation()
+{
+   zoomToLocation(window.default_latitude, window.default_longitude, window.default_zoomlevel);
+}
+
+
+// ###### Zoom to site ######################################################
+function zoomToSite(site)
+{
+   zoomToLocation(site['latitude'],
+                  site['longitude'],
+                  9);
+   document.getElementById("footer.title").innerHTML = site['name'];
 }
 
 

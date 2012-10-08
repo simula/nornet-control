@@ -187,6 +187,12 @@ var x1=null;
 
 
 function test2() {
+   sites = new Array;
+   sites['Site 1'] = new Array;
+   sites['Site 1']['Name'] = 'Site #1';
+   sites['Site 1']['Latitude'] = 12.34;
+   sites['Site 1']['Longitude'] = 12.34;
+
    makePosition("window.p2", 50+ ((10 * Math.random()) - 5), 10+ ((10 * Math.random()) - 5));
    makePosition("window.p1", 70+ ((10 * Math.random()) - 5), 20+ ((10 * Math.random()) - 5));
    makeMarker("window.x1",  "Test 1", "http://www.google.com/mapfiles/marker_green.png", "window.p1", 1,"<div style='background: red;'><h1>Test 1</h1></div>");
@@ -194,6 +200,12 @@ function test2() {
 
    makeConnection("qqq", [ window.p1, window.p2 ], "orange", 5, 10);
 
+   document.getElementById("test1").innerHTML = "T=";
+
+   for(i = 0; i < 100; i++) {
+      document.getElementById("test1").innerHTML = document.getElementById("test1").innerHTML +
+         Math.round(Math.random());
+   }
 }
 
 function runTest()

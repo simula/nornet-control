@@ -206,6 +206,15 @@ function updateDisplay()
 }
 
 
+// ###### Auto-mode control #################################################
+var autoMode = false;
+function toggleAutoMode()
+{
+   autoMode = !autoMode;
+   document.getElementById("automode").setAttribute("class", ((autoMode == true) ? "selected" : "normal"));
+}
+
+
 // ###### Initialize NorNet Kontrollsenter ##################################
 function requestNorNetStatus()
 {
@@ -215,20 +224,47 @@ function requestNorNetStatus()
       if (xmlHttpRequest.readyState == 4) {
          if (xmlHttpRequest.status == 200) {
             try {
+               // ====== Handle results =====================================
                eval(xmlHttpRequest.responseText);
                document.getElementById("footer.title").innerHTML = "OK!";
                updateDisplay();
                makeSidebarContents();
                makeMapContents();
+
+               // ====== Auto-mode ==========================================
+               if(autoMode == true) {
+                  mapType = Math.round(Math.random());
+                  if(mapType == 1) {
+                     window.map.setBaseLayer(window.googlemap);
+                  }
+                  else {
+                     window.map.setBaseLayer(window.mapnik);
+                  }
+
+                  zoomToSite = Math.round(Math.random());
+                  if((zoomToSite == 1) && (window.mapContents.length > 0)) {
+                     selectedSite = Math.round(Math.random() * (window.mapContents.length - 1));
+                     zoomToSite(window.mapContents[selectedSite]);
+                  }
+                  else {
+                     zoomToDefaultLocation();
+                  }
+               }
             }
             catch(errorMessage) {
+               window.mapContents  = null;
+               makeMapContents     = function(){};
+               makeSidebarContents = function(){};
+               updateDisplay();
                document.getElementById("footer.title").innerHTML = "ERROR: " + errorMessage;
             }
          }
          else {
             document.getElementById("footer.title").innerHTML = "BAD RESPONSE: " + xmlHttpRequest.status;
          }
-         setTimeout("requestNorNetStatus()", 5000);
+
+         // ====== Schedule update ==========================================
+         setTimeout("requestNorNetStatus()", 20000);
       }
    }
 

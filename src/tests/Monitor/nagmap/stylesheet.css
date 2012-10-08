@@ -49,7 +49,7 @@ h1 {
    color:         white;
 }
 
-h2 {
+.h2 {
    text-align:    left;
    margin-left:   4pt;
    margin-right:  4pt;
@@ -69,6 +69,7 @@ h3 {
    color:        #02266B;
 }
 
+
 p {
    text-align: left;
    font-size:  14pt;
@@ -76,13 +77,17 @@ p {
 }
 
 img.normal {
-   padding:          1px;
-   border:           1px;
+   padding:          3px;
+   border:           2px;
+   border-style:     outset;
+   border-color:     #021a40;
 }
 
 img.selected {
-   padding:          1px;
-   border:           1px solid #021a40;
+   padding:          3px;
+   border:           2px;
+   border-style:     inset;
+   border-color:     #021a40;
    background-color: #ffff00;
 }
 
@@ -142,16 +147,16 @@ hr {
 }
 
 .critical {
-  color: red;
+  color:     red;
 }
 .warning {
-  color: orange;
+  color:     orange;
 }
 .unknown {
-  color: #555555;
+  color:     #555555;
 }
 .okay {
-  color: green;
+  color:     green;
 }
 .allsitesokay {
   color:           green;

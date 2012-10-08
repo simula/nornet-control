@@ -24,9 +24,9 @@
 <body>
 
 <div id="header" class="header">
- <h1 style="margin: 0px; padding: 0px;" id="header.title">
+ <h1 class="h1" style="margin: 0px; padding: 0px;" id="header.title">
   <noscript>
-   <h2>NorNet Map requires JavaScript!</h2>
+   <h2 class="h2">NorNet Map requires JavaScript!</h2>
   </noscript>
  </h1>
 </div>
@@ -35,14 +35,14 @@
 <div id="map_canvas" class="map"></div>
 
 <div id="sidebar" class="sidebar">
- <h2 style="text-align: center;">
-  <p id="languages" class="center">
-  ...
-  </p>
+ <h2 class="h2" style="text-align: center;">
+  <span id="languages" class="center">...</span>
+  &nbsp;|&nbsp;
+  <img class="normal" id="automode" onclick="toggleAutoMode();" src="Graphics/Control/AutoMode.png" alt="Auto Mode" height="21" />
  </h2>
  <hr />
 
-<!--  <h2 id="sidebar.clock">Time</h2> -->
+<!--  <h2 class="h2" id="sidebar.clock">Time</h2> -->
   <p class="center">
   <object id="analog-clock" class="analog-clock" data="station-clock.svg" type="image/svg+xml">
    <param name="dial"               value="din 41091.1"/>
@@ -68,10 +68,10 @@
   </p>
  <hr />
 
- <h2 id="sidebar.sites">Sites</h2>
-  <h3 id="sidebar.sites.problems.title">Problems</h3>
+ <h2><a class="h2" href="javascript:void(0)" onclick="zoomToDefaultLocation();"><span id="sidebar.sites">Sites</span></a></h2>
+  <h3 class="h3"><span id="sidebar.sites.problems.title">Problems</span></h3>
    <span id="sidebar.sites.problems"></span>
-  <h3 id="sidebar.sites.okay.title">Okay</h3>
+  <h3 class="h3"><span id="sidebar.sites.okay.title">Okay</span></h3>
    <span id="sidebar.sites.okay"></span>
 
 </div>

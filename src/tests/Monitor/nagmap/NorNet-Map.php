@@ -30,13 +30,20 @@ $status = getNorNetStatus();
 echo "function makeMapContents() {\n";
 
 // ====== Set up the sites ==================================================
+echo "   window.mapContents = new Array();\n";
+$sites = 0;
 foreach ($status as $hostName => $hostEntry) {
    if (isset($status[$hostName][""]["location"])) {
       // ====== Get location ================================================
-      echo "siteLocation = '" . $status[$hostName][""]["location"] . "';\n";
-      echo "locationArray = siteLocation.split(',');" . "\n";
-      echo "latitude  = parseFloat(locationArray[0]);" . "\n";
-      echo "longitude = parseFloat(locationArray[1]);" . "\n";
+      echo "   var siteLocation = '" . $status[$hostName][""]["location"] . "';\n";
+      echo "   var locationArray = siteLocation.split(',');" . "\n";
+      echo "   var latitude  = parseFloat(locationArray[0]);" . "\n";
+      echo "   var longitude = parseFloat(locationArray[1]);" . "\n";
+      $status[$hostName]['site_number'] = $sites;
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . '] = new Array();' . "\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["name"]      = "' . $hostName . '"' . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["latitude"]  = latitude'  . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["longitude"] = longitude' . ";\n";
 
       // ====== Test mode ===================================================
       // echo "latitude  = latitude + ((10 * Math.random()) - 5);" . "\n";
@@ -66,8 +73,10 @@ foreach ($status as $hostName => $hostEntry) {
            '"window.' . $status[$hostName][""]["host_identifier"] . '_position", ' .
            '1, ' .
            '"INFO-TEXT!");' . "\n\n";
+      $sites++;
    }
 }
+
 
 // ====== Set up the links ==================================================
 foreach ($status as $hostName => $hostEntry) {
@@ -136,21 +145,21 @@ foreach (array('critical', 'warning', 'unknown', 'ok') as $severity) {
 
          if( ($severity == "critical") &&
             ($siteStatus == 2) ) {
-            $categoryContent = $categoryContent . '<li class="critical"><blink><strong>&#9760;</strong></blink>' . $site . '</li>';
+            $categoryContent = $categoryContent . '<li class="critical"><li class="okay"><a class="critical" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);"><blink><strong>&#9760;</strong></blink>' . $site . '</a></li>';
             $problems++;
          }
          elseif( ($severity == "warning") &&
                ($siteStatus == 1) ) {
-            $categoryContent = $categoryContent . '<li class="warning">&#128544;' . $site . '</li>';
+            $categoryContent = $categoryContent . '<li class="warning"><li class="okay"><a class="warning" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);">&#128544;' . $site . '</a></li>';
             $problems++;
          }
          elseif( ($severity == "unknown") &&
                ($siteStatus > 2) ) {
-            $categoryContent = $categoryContent . '<li class="unknown">&#128528;' . $site . '</li>';
+            $categoryContent = $categoryContent . '<li class="unknown"><li class="okay"><a class="unknown" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);">&#128528;' . $site . '</a></li>';
          }
          elseif( ($severity == "ok") &&
                ($siteStatus == 0) ) {
-            $categoryContent = $categoryContent . '<li class="okay">&#128515;' . $site . '</li>';
+            $categoryContent = $categoryContent . '<li class="okay"><a class="okay" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);">&#128515;' . $site . '</a></li>';
          }
       }
    }
