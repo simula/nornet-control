@@ -97,9 +97,9 @@ monthNames['NO'][10] = "november";
 monthNames['NO'][11] = "desember";
 
 titleLabel = new Array()
-titleLabel['UK'] = "Welcome to the NorNet Control Center at Simula, Fornebu";
-titleLabel['DE'] = "Willkommen im NorNet-Kontrollzentrum bei Simula, Fornebu";
-titleLabel['NO'] = "Velkommen til NorNet-Kontrollsenter på Simula, Fornebu";
+titleLabel['UK'] = "Welcome to the NorNet Control Center at Simula Research Laboratory, Fornebu";
+titleLabel['DE'] = "Willkommen im NorNet-Kontrollzentrum bei Simula Research Laboratory, Fornebu";
+titleLabel['NO'] = "Velkommen til NorNet-Kontrollsenter på Simula Research Laboratory, Fornebu";
 
 footerLabel = new Array()
 footerLabel['UK'] = 'For further information on the NorNet Project, see <a href="http://www.nntb.no">http://www.nntb.no</a>!';

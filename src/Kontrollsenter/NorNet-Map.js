@@ -93,7 +93,7 @@ function zoomToSite(site)
 {
    zoomToLocation(site['latitude'],
                   site['longitude'],
-                  9);
+                  11);
    document.getElementById("footer.title").innerHTML = site['name'];
 }
 
