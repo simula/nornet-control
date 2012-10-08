@@ -216,6 +216,7 @@ function toggleAutoMode()
 
 
 // ###### Initialize NorNet Kontrollsenter ##################################
+var updateInterval = 30000;
 function requestNorNetStatus()
 {
    var xmlHttpRequest = new XMLHttpRequest();
@@ -241,8 +242,8 @@ function requestNorNetStatus()
                      window.map.setBaseLayer(window.mapnik);
                   }
 
-                  zoomToSite = Math.round(Math.random());
-                  if((zoomToSite == 1) && (window.mapContents.length > 0)) {
+                  showSelectedSite = Math.round(Math.random());
+                  if((showSelectedSite == 1) && (window.mapContents.length > 0)) {
                      selectedSite = Math.round(Math.random() * (window.mapContents.length - 1));
                      zoomToSite(window.mapContents[selectedSite]);
                   }
@@ -264,7 +265,10 @@ function requestNorNetStatus()
          }
 
          // ====== Schedule update ==========================================
-         setTimeout("requestNorNetStatus()", 20000);
+         if(updateInterval < 5000) {
+            updateInterval = 5000;   // The OpenLayers maps are quite computation-intensive ...
+         }
+         setTimeout("requestNorNetStatus()", updateInterval);
       }
    }
 
@@ -280,7 +284,6 @@ function makeKontrollsenter()
    var latitude   = 62.5;
    var longitude  = 5.0;
    var zoomLevel  = 5;
-//    var timeout    = 60;
    var arguments = window.location.search.replace('?', '').split('&');
    for (var i = 0; i < arguments.length; i++) {
       option = arguments[i].split("=");
@@ -292,6 +295,9 @@ function makeKontrollsenter()
       }
       else if(option[0] == "zoomlevel") {
          zoomLevel = Math.round(parseFloat(option[1]));
+      }
+      else if(option[0] == "update") {
+         updateInterval = 1000 * Math.round(parseFloat(option[1]));
       }
    }
 
@@ -312,7 +318,7 @@ function makeKontrollsenter()
 
    // ====== Automatic page refresh =========================================
 //    setTimeout("location.reload(false);", timeout * 1000);
-   // document.getElementById("footer.title").innerHTML = 'URL='+url;
+//    document.getElementById("footer.title").innerHTML = 'URL='+url;
 }
 
 window.onload = makeKontrollsenter;
