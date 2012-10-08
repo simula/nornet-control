@@ -32,7 +32,7 @@ html {
 }
 
 body {
-   background-image: url(graphics/backgrounds/background-essen.png);
+   background-image: url(Graphics/Backgrounds/Background-Essen.png);
    height:           100%;
    font-family:      sans;
    margin:           0px;
@@ -73,6 +73,17 @@ p {
    text-align: left;
    font-size:  14pt;
    color:      #02266B;
+}
+
+img.normal {
+   padding:          1px;
+   border:           1px;
+}
+
+img.selected {
+   padding:          1px;
+   border:           1px solid #021a40;
+   background-color: #ffff00;
 }
 
 li {

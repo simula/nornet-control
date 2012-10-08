@@ -24,29 +24,33 @@ var weekdayNames    = Array();
 var monthNames      = Array();
 
 
-// ###### String translations ###############################################
-weekdayNames['EN'] = new Array(7);
-weekdayNames['EN'][0] = "Sunday";
-weekdayNames['EN'][1] = "Monday";
-weekdayNames['EN'][2] = "Tuesday";
-weekdayNames['EN'][3] = "Wednesday";
-weekdayNames['EN'][4] = "Thursday";
-weekdayNames['EN'][5] = "Friday";
-weekdayNames['EN'][6] = "Saturday";
+// ###### Supported languages ###############################################
+supportedDisplayLanguages = [ 'NO', 'UK', 'DE' ];
 
-monthNames['EN'] = new Array(12);
-monthNames['EN'][0]  = "January";
-monthNames['EN'][1]  = "February";
-monthNames['EN'][2]  = "March";
-monthNames['EN'][3]  = "April";
-monthNames['EN'][4]  = "May";
-monthNames['EN'][5]  = "June";
-monthNames['EN'][6]  = "July";
-monthNames['EN'][7]  = "August";
-monthNames['EN'][8]  = "September";
-monthNames['EN'][9]  = "October";
-monthNames['EN'][10] = "November";
-monthNames['EN'][11] = "December";
+
+// ###### String translations ###############################################
+weekdayNames['UK'] = new Array(7);
+weekdayNames['UK'][0] = "Sunday";
+weekdayNames['UK'][1] = "Monday";
+weekdayNames['UK'][2] = "Tuesday";
+weekdayNames['UK'][3] = "Wednesday";
+weekdayNames['UK'][4] = "Thursday";
+weekdayNames['UK'][5] = "Friday";
+weekdayNames['UK'][6] = "Saturday";
+
+monthNames['UK'] = new Array(12);
+monthNames['UK'][0]  = "January";
+monthNames['UK'][1]  = "February";
+monthNames['UK'][2]  = "March";
+monthNames['UK'][3]  = "April";
+monthNames['UK'][4]  = "May";
+monthNames['UK'][5]  = "June";
+monthNames['UK'][6]  = "July";
+monthNames['UK'][7]  = "August";
+monthNames['UK'][8]  = "September";
+monthNames['UK'][9]  = "October";
+monthNames['UK'][10] = "November";
+monthNames['UK'][11] = "December";
 
 weekdayNames['DE'] = new Array(7);
 weekdayNames['DE'][0] = "Sonntag";
@@ -93,40 +97,48 @@ monthNames['NO'][10] = "november";
 monthNames['NO'][11] = "desember";
 
 titleLabel = new Array()
-titleLabel['EN'] = "Welcome to the NorNet Control Center at Simula, Fornebu";
+titleLabel['UK'] = "Welcome to the NorNet Control Center at Simula, Fornebu";
 titleLabel['DE'] = "Willkommen im NorNet-Kontrollzentrum bei Simula, Fornebu";
 titleLabel['NO'] = "Velkommen til NorNet-Kontrollsenter på Simula, Fornebu";
 
 footerLabel = new Array()
-footerLabel['EN'] = 'For further information on the NorNet Project, see <a href="http://www.nntb.no">http://www.nntb.no</a>!';
+footerLabel['UK'] = 'For further information on the NorNet Project, see <a href="http://www.nntb.no">http://www.nntb.no</a>!';
 footerLabel['DE'] = 'Für weitere Informationen zum NorNet-Prosjekt siehe <a href="http://www.nntb.no">http://www.nntb.no</a>!';
 footerLabel['NO'] = 'For mer informasjon om NorNet-prosjektet, se <a href="http://www.nntb.no">http://www.nntb.no</a>!';
 
 
 clockLabel = new Array()
-clockLabel['EN'] = "Time";
+clockLabel['UK'] = "Time";
 clockLabel['DE'] = "Zeit";
 clockLabel['NO'] = "Klokka";
 
 problemsLabel = new Array()
-problemsLabel['EN'] = "Problems:";
+problemsLabel['UK'] = "Problems:";
 problemsLabel['DE'] = "Probleme:";
 problemsLabel['NO'] = "Problemer:";
 
 okayLabel = new Array()
-okayLabel['EN'] = "Okay:";
+okayLabel['UK'] = "Okay:";
 okayLabel['DE'] = "In Ordnung:";
 okayLabel['NO'] = "I orden:";
 
 noProblemLabel = new Array()
-noProblemLabel['EN'] = "&#128515; No problem! &#128515;";
+noProblemLabel['UK'] = "&#128515; No problem! &#128515;";
 noProblemLabel['DE'] = "&#128515; Kein Problem! &#128515;";
 noProblemLabel['NO'] = "&#128515; Ingen problem! &#128515;";
 
 sitesLabel = new Array()
-sitesLabel['EN'] = "Sites";
+sitesLabel['UK'] = "Sites";
 sitesLabel['DE'] = "Standorte";
 sitesLabel['NO'] = "Beliggenheter";
+
+
+// ###### Set language ######################################################
+function setLanguage(language)
+{
+   displayLanguage = language;
+   updateDisplay();
+}
 
 
 // Dummy functions, to be replaced by dynamically-generated ones!
@@ -151,7 +163,7 @@ function updateClock()
 
   var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds;
   var currentDateString = "";
-  if( (displayLanguage == "NO") || (displayLanguage == "DE")) {
+  if( (displayLanguage != 'UK') ) {
      currentDateString = weekdayNames[displayLanguage][currentWeekday] + ", " +
                             currentDay + ". " + monthNames[displayLanguage][currentMonth] + " " + currentYear;
 
@@ -169,6 +181,19 @@ function updateClock()
 // ###### Update display contents ###########################################
 function updateDisplay()
 {
+   document.getElementById("languages").innerHTML = "";
+   for(i = 0;i < supportedDisplayLanguages.length; i++) {
+      document.getElementById("languages").innerHTML = document.getElementById("languages").innerHTML +
+         '<a href="javascript:" onclick="setLanguage(\'' +
+         supportedDisplayLanguages[i] + '\');"><img id="languages.' +
+         supportedDisplayLanguages[i] + '" class="' +
+         ((supportedDisplayLanguages[i] == displayLanguage) ? "selected" : "normal") +
+         '" src="Graphics/Flags/Flag-' +
+         supportedDisplayLanguages[i] + '.png" alt="' +
+         supportedDisplayLanguages[i] + '"" width="32" /></a> ';
+
+   }
+
    document.getElementById("header.title").firstChild.nodeValue                 = titleLabel[displayLanguage];
    document.getElementById("footer.title").innerHTML                            = footerLabel[displayLanguage];
    // document.getElementById("sidebar.clock").firstChild.nodeValue                = clockLabel[displayLanguage];
@@ -243,7 +268,7 @@ function makeKontrollsenter()
    // ====== Initialize everything ==========================================
    updateClock();
    setInterval('updateClock()', 1000);
-   updateDisplay();
+   setLanguage('NO');
    makeMap(latitude, longitude, zoomLevel);
 
    // Now, get the NorNet status by using AJAX ...

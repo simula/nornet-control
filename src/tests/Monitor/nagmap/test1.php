@@ -36,10 +36,8 @@
 
 <div id="sidebar" class="sidebar">
  <h2 style="text-align: center;">
-  <p class="center">
-  <a href="javascript:" onclick="displayLanguage='NO'; updateDisplay();"><img src="graphics/flags/flag-norway.png" alt="Norsk" width="32" /></a>
-  <a href="javascript:" onclick="displayLanguage='EN'; updateDisplay();"><img src="graphics/flags/flag-england.png" alt="English" width="32" /></a>
-  <a href="javascript:" onclick="displayLanguage='DE'; updateDisplay();"><img src="graphics/flags/flag-germany.png" alt="Deutsch" width="32" /></a>
+  <p id="languages" class="center">
+  ...
   </p>
  </h2>
  <hr />
