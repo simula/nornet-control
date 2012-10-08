@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="stylesheet.css" type="text/css" />
 <link rel="shortcut icon" href="graphics/icons/icon-uniessen.png" />
 
-<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+<script src="http://www.openlayers.org/api/2.12/OpenLayers.js"></script>
 <script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
 <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
 <script src="NorNet-Map.js" type="text/javascript"></script>

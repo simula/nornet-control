@@ -35,6 +35,12 @@ function makeMap(latitude, longitude, zoomLevel)
    window.mapmarkers = new OpenLayers.Layer.Markers("Sites");
    window.mapvectors = new OpenLayers.Layer.Vector("Connections");
 
+   // ====== Caching ========================================================
+   window.mapcache_read  = new OpenLayers.Control.CacheRead();
+   window.mapcache_read.activate();
+   window.mapcache_write = new OpenLayers.Control.CacheWrite();
+   window.mapcache_write.activate();
+
    // ====== Create the map =================================================
    window.map = new OpenLayers.Map({
       div:               "map_canvas",
@@ -47,6 +53,8 @@ function makeMap(latitude, longitude, zoomLevel)
          window.mapmarkers
       ],
       controls: [
+         window.mapcache_read,
+         window.mapcache_write,
          new OpenLayers.Control.Navigation(),
          new OpenLayers.Control.PanZoomBar(),
          new OpenLayers.Control.LayerSwitcher({'ascending':false}),
