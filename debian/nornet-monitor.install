@@ -1,4 +1,6 @@
+Kontrollsenter/Clock/*.svg                /var/www/Kontrollsenter/Clock/
 Kontrollsenter/Graphics/Backgrounds/*.png /var/www/Kontrollsenter/Graphics/Backgrounds/
+Kontrollsenter/Graphics/Control/*.png     /var/www/Kontrollsenter/Graphics/Control/
 Kontrollsenter/Graphics/Flags/*.png       /var/www/Kontrollsenter/Graphics/Flags/
 Kontrollsenter/Graphics/Icons/*.png       /var/www/Kontrollsenter/Graphics/Icons/
 Kontrollsenter/NorNet-*                   /var/www/Kontrollsenter
