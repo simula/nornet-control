@@ -41,7 +41,13 @@ cp src/Make-*-Configuration $PACKAGE-$UPSTREAM_VERSION
 cp src/Reset-Networking $PACKAGE-$UPSTREAM_VERSION
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter
 cp src/Kontrollsenter/NorNet-*.css src/Kontrollsenter/NorNet-*.js src/Kontrollsenter/NorNet-*.php src/Kontrollsenter/NorNet-*.html $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter
-
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Backgrounds
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Flags
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Icons
+cp -r src/Kontrollsenter/Graphics/Backgrounds/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Backgrounds
+cp -r src/Kontrollsenter/Graphics/Icons/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Icons
+cp -r src/Kontrollsenter/Graphics/Flags/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Flags
 # ---------------------------------------------------------
 
 
