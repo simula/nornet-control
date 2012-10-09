@@ -133,14 +133,6 @@ sitesLabel['DE'] = "Standorte";
 sitesLabel['NO'] = "Lokasjon";
 
 
-// ###### Set language ######################################################
-function setLanguage(language)
-{
-   displayLanguage = language;
-   updateDisplay();
-}
-
-
 // Dummy functions, to be replaced by dynamically-generated ones!
 function makeMapContents() {}
 function makeSidebarContents() {}
@@ -191,7 +183,6 @@ function updateDisplay()
          '" src="Graphics/Flags/Flag-' +
          supportedDisplayLanguages[i] + '.png" alt="' +
          supportedDisplayLanguages[i] + '"" width="32" /></a> ';
-
    }
 
    document.getElementById("header.title").firstChild.nodeValue                 = titleLabel[displayLanguage];
@@ -200,9 +191,18 @@ function updateDisplay()
    document.getElementById("sidebar.sites").firstChild.nodeValue                = sitesLabel[displayLanguage];
    document.getElementById("sidebar.sites.problems.title").firstChild.nodeValue = problemsLabel[displayLanguage];
    document.getElementById("sidebar.sites.okay.title").firstChild.nodeValue     = okayLabel[displayLanguage];
-   if(document.getElementById("sidebar.sites.noproblems") != null) {
-      document.getElementById("sidebar.sites.okay.title").firstChild.nodeValue  = noProblemLabel[displayLanguage];
+   if(document.getElementById("sites.noproblems") != null) {
+      document.getElementById("sites.noproblems").innerHTML = noProblemLabel[displayLanguage];
    }
+}
+
+
+// ###### Set language ######################################################
+function setLanguage(language)
+{
+   displayLanguage = language;
+   updateDisplay();
+   updateClock();
 }
 
 
