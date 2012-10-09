@@ -130,7 +130,7 @@ noProblemLabel['NO'] = "&#128515; Ingen problem! &#128515;";
 sitesLabel = new Array()
 sitesLabel['UK'] = "Sites";
 sitesLabel['DE'] = "Standorte";
-sitesLabel['NO'] = "Beliggenheter";
+sitesLabel['NO'] = "Lokasjon";
 
 
 // ###### Set language ######################################################
