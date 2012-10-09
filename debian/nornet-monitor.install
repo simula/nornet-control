@@ -1,4 +1,5 @@
 Kontrollsenter/Clock/*.svg                /var/www/Kontrollsenter/Clock/
+Kontrollsenter/Forward-*.html             /var/www/Kontrollsenter
 Kontrollsenter/Graphics/Backgrounds/*.png /var/www/Kontrollsenter/Graphics/Backgrounds/
 Kontrollsenter/Graphics/Control/*.png     /var/www/Kontrollsenter/Graphics/Control/
 Kontrollsenter/Graphics/Flags/*.png       /var/www/Kontrollsenter/Graphics/Flags/

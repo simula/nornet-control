@@ -208,9 +208,9 @@ function updateDisplay()
 
 // ###### Auto-mode control #################################################
 var autoMode = true;
-function toggleAutoMode()
+function setAutoMode(on)
 {
-   autoMode = !autoMode;
+   autoMode = on;
    document.getElementById("automode").setAttribute("class", ((autoMode == true) ? "selected" : "normal"));
 }
 
@@ -299,6 +299,9 @@ function makeKontrollsenter()
       else if(option[0] == "update") {
          updateInterval = 1000 * Math.round(parseFloat(option[1]));
       }
+      else if(option[0] == "auto") {
+         autoMode = (Math.round(parseFloat(option[1])) != 0);
+      }
    }
 
    var url = window.location.protocol + "//" + window.location.hostname;
@@ -308,6 +311,7 @@ function makeKontrollsenter()
    url = url + "/" + window.location.pathname;
 
    // ====== Initialize everything ==========================================
+   setAutoMode(autoMode);
    updateClock();
    setInterval('updateClock()', 1000);
    setLanguage('NO');
@@ -316,7 +320,7 @@ function makeKontrollsenter()
    // Now, get the NorNet status by using AJAX ...
    requestNorNetStatus();
 
-   // ====== Automatic page refresh =========================================
+//    // ====== Automatic page refresh =========================================
 //    setTimeout("location.reload(false);", timeout * 1000);
 //    document.getElementById("footer.title").innerHTML = 'URL='+url;
 }
