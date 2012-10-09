@@ -238,13 +238,8 @@ function requestNorNetStatus()
 
                // ====== Auto-mode ==========================================
                if(autoMode == true) {
-                  mapType = Math.round(Math.random());
-                  if(mapType == 1) {
-                     window.map.setBaseLayer(window.googlemap);
-                  }
-                  else {
-                     window.map.setBaseLayer(window.mapnik);
-                  }
+                  selectedMap = Math.round(Math.random() * (window.maplayers.length - 2));
+                  window.map.setBaseLayer(window.maplayers[selectedMap]);
 
                   showSelectedSite = Math.round(Math.random());
                   if((showSelectedSite == 1) && (window.mapContents.length > 0)) {

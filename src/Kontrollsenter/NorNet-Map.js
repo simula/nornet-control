@@ -45,16 +45,24 @@ function setVariable(variable, value)
 // ###### Initialize NorNet map #############################################
 function makeMap(latitude, longitude, zoomLevel)
 {
+   window.maplayers = new Array();
+
    // ====== Create Google map ==============================================
-   window.googlemap = new OpenLayers.Layer.Google("Google", { type: google.maps.MapTypeId.HYBRID });
+   window.googlemap1 = new OpenLayers.Layer.Google("Google Satellite", { type: google.maps.MapTypeId.HYBRID });
+   window.maplayers.push(window.googlemap1);
+   window.googlemap2 = new OpenLayers.Layer.Google("Google Terrain",   { type: google.maps.MapTypeId.TERRAIN });
+   window.maplayers.push(window.googlemap2);
 
    // ====== Create OSM map (Mapnik tiles) ==================================
    window.mapnik    = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
    window.mapnik.setOpacity(1.0);
+   window.maplayers.push(window.mapnik);
 
    // ====== Create layers for markers and vectors ==========================
-   window.mapmarkers = new OpenLayers.Layer.Markers("Sites");
    window.mapvectors = new OpenLayers.Layer.Vector("Connections");
+   window.maplayers.push(window.mapvectors);
+   window.mapmarkers = new OpenLayers.Layer.Markers("Sites");
+   window.maplayers.push(window.mapmarkers);
 
    // ====== Caching ========================================================
    window.mapcache_read  = new OpenLayers.Control.CacheRead();
@@ -67,12 +75,7 @@ function makeMap(latitude, longitude, zoomLevel)
       div:               "map_canvas",
       units:             "m",
       displayProjection: new OpenLayers.Projection("EPSG:4326"),
-      layers: [
-         window.googlemap,
-         window.mapnik,
-         window.mapvectors,
-         window.mapmarkers
-      ],
+      layers:            window.maplayers,
       controls: [
          window.mapcache_read,
          window.mapcache_write,
