@@ -45,18 +45,27 @@ function setVariable(variable, value)
 // ###### Initialize NorNet map #############################################
 function makeMap(latitude, longitude, zoomLevel)
 {
-   window.maplayers = new Array();
+   window.maplayers     = new Array();   // All layers
+   window.mapbaselayers = new Array();   // Only base layers
 
    // ====== Create Google map ==============================================
    window.googlemap1 = new OpenLayers.Layer.Google("Google Satellite", { type: google.maps.MapTypeId.HYBRID });
    window.maplayers.push(window.googlemap1);
+   window.mapbaselayers.push(window.googlemap1);
    window.googlemap2 = new OpenLayers.Layer.Google("Google Terrain",   { type: google.maps.MapTypeId.TERRAIN });
    window.maplayers.push(window.googlemap2);
+   window.mapbaselayers.push(window.googlemap2);
 
    // ====== Create OSM map (Mapnik tiles) ==================================
    window.mapnik    = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
    window.mapnik.setOpacity(1.0);
    window.maplayers.push(window.mapnik);
+   window.mapbaselayers.push(window.googlemap2);
+
+   // window.wstations = new OpenLayers.Layer.Vector.OWMClusterStations("Stations");
+   // window.maplayers.push(wstations);
+   window.wcity = new OpenLayers.Layer.Vector.OWMWeather("Weather");
+   window.maplayers.push(wcity);
 
    // ====== Create layers for markers and vectors ==========================
    window.mapvectors = new OpenLayers.Layer.Vector("Connections");
