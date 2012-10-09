@@ -106,6 +106,10 @@ footerLabel['UK'] = 'For further information on the NorNet Project, see <a href=
 footerLabel['DE'] = 'Für weitere Informationen zum NorNet-Prosjekt siehe <a href="http://www.nntb.no">http://www.nntb.no</a>!';
 footerLabel['NO'] = 'For mer informasjon om NorNet-prosjektet, se <a href="http://www.nntb.no">http://www.nntb.no</a>!';
 
+updatingLabel = new Array()
+updatingLabel['UK'] = "Updating ...";
+updatingLabel['DE'] = "Aktualisiere ...";
+updatingLabel['NO'] = "Oppdatering ...";
 
 clockLabel = new Array()
 clockLabel['UK'] = "Time";
@@ -272,7 +276,7 @@ function requestNorNetStatus()
       }
    }
 
-   document.getElementById("footer.title").innerHTML = "Updating ...";
+   document.getElementById("footer.title").innerHTML = updatingLabel[displayLanguage];
    xmlHttpRequest.send();
 }
 
