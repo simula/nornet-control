@@ -80,14 +80,14 @@ img.normal {
    padding:          3px;
    border:           2px;
    border-style:     outset;
-   border-color:     #021a40;
+   border-color:     #02266B;
 }
 
 img.selected {
    padding:          3px;
    border:           2px;
    border-style:     inset;
-   border-color:     #021a40;
+   border-color:     #02266B;
    background-color: #ffff00;
 }
 
@@ -193,7 +193,6 @@ hr {
    right:        0;
    bottom:       0;
    left:         0;
-   vertical-align:   middle;
    overflow:     hidden;
    background:   red;
    color:        white;
@@ -209,5 +208,5 @@ img.footerflag {
    padding:          2pt;
    border:           2px;
    border-style:     solid;
-   border-color:     #021a40;
+   border-color:     white;
 }

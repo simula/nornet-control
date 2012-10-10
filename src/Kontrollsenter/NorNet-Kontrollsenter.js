@@ -161,16 +161,16 @@ function updateClock()
   var currentDateString = "";
   if( (displayLanguage != 'UK') ) {
      currentDateString = weekdayNames[displayLanguage][currentWeekday] + ", " +
-                            currentDay + ". " + monthNames[displayLanguage][currentMonth] + " " + currentYear;
+                            currentDay + ".&nbsp;" + monthNames[displayLanguage][currentMonth] + "&nbsp;" + currentYear;
 
   }
   else {
      currentDateString = weekdayNames[displayLanguage][currentWeekday] + ", " +
-                            monthNames[displayLanguage][currentMonth] + " " + currentDay + ", " + currentYear;
+                            monthNames[displayLanguage][currentMonth] + "&nbsp;" + currentDay + ",&nbsp;" + currentYear;
 
   }
-  document.getElementById("date").firstChild.nodeValue  = currentDateString;
-  document.getElementById("clock").firstChild.nodeValue = currentTimeString;
+  document.getElementById("date").innerHTML  = currentDateString;
+  document.getElementById("clock").innerHTML = currentTimeString;
 }
 
 
