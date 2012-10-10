@@ -147,17 +147,25 @@ hr {
 }
 
 .critical {
-  color:     red;
+  color:          red;
+  vertical-align: middle;
 }
+
 .warning {
-  color:     orange;
+  color:          orange;
+  vertical-align: middle;
 }
+
 .unknown {
-  color:     #555555;
+  color:          #555555;
+  vertical-align: middle;
 }
+
 .okay {
-  color:     green;
+  color:          green;
+  vertical-align: middle;
 }
+
 .allsitesokay {
   color:           green;
   text-align:      center;

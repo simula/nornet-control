@@ -146,24 +146,25 @@ foreach (array('critical', 'warning', 'unknown', 'ok') as $severity) {
       if (isset($status[$hostName][""]["location"])) {
          $site       = $hostName;
          $siteStatus = $status[$hostName][""]["last_hard_state"];
+         $flag       = 'Graphics/Flags/Flag-' . $status[$hostName][""]["country_code"] . '.png';
 
          if( ($severity == "critical") &&
              ($siteStatus == 2) ) {
-            $categoryContent = $categoryContent . '<li class="critical"><li class="okay"><a class="critical" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);"><blink><strong>&#9760;</strong></blink>' . $site . '</a></li>';
+            $categoryContent = $categoryContent . '<li class="critical"><img class="critical" height="18pt" src="' . $flag . '" alt="" /><a class="critical" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);"><blink><strong>&#9760;</strong></blink>' . $site . '</a></li>';
             $problems++;
          }
          elseif( ($severity == "warning") &&
                  ($siteStatus == 1) ) {
-            $categoryContent = $categoryContent . '<li class="warning"><li class="okay"><a class="warning" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);">&#128544;' . $site . '</a></li>';
+            $categoryContent = $categoryContent . '<li class="warning"><img class="warning" height="18pt" src="' . $flag . '" alt="" /><a class="warning" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);">&#128544;' . $site . '</a></li>';
             $problems++;
          }
          elseif( ($severity == "unknown") &&
                  ($siteStatus > 2) ) {
-            $categoryContent = $categoryContent . '<li class="unknown"><li class="okay"><a class="unknown" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);">&#128528;' . $site . '</a></li>';
+            $categoryContent = $categoryContent . '<li class="unknown"><img class="unknown" height="18pt" src="' . $flag . '" alt="" /><a class="unknown" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);">&#128528;' . $site . '</a></li>';
          }
          elseif( ($severity == "ok") &&
                  ($siteStatus == 0) ) {
-            $categoryContent = $categoryContent . '<li class="okay"><a class="okay" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);">&#128515;' . $site . '</a></li>';
+            $categoryContent = $categoryContent . '<li class="okay"><img class="okay" height="18pt" src="' . $flag . '" alt="" /><a class="okay" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);">&#128515;' . $site . '</a></li>';
          }
       }
    }
