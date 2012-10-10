@@ -41,9 +41,13 @@ foreach ($status as $hostName => $hostEntry) {
       echo "   var longitude = parseFloat(locationArray[1]);" . "\n";
       $status[$hostName]['site_number'] = $sites;
       echo '   window.mapContents[' . $status[$hostName]['site_number'] . '] = new Array();' . "\n";
-      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["name"]      = "' . $hostName . '"' . ";\n";
-      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["latitude"]  = latitude'  . ";\n";
-      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["longitude"] = longitude' . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["name"]          = "' . $hostName . '"' . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["latitude"]      = latitude'  . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["longitude"]     = longitude' . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["city"]          = "' . $status[$hostName][""]["city"] . '"' . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["province"]      = "' . $status[$hostName][""]["province"] . '"' . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["country"]       = "' . $status[$hostName][""]["country"] . '"' . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["country_code"]  = "' . $status[$hostName][""]["country_code"] . '"' . ";\n";
 
       // ====== Test mode ===================================================
       // echo "latitude  = latitude + ((10 * Math.random()) - 5);" . "\n";
@@ -144,21 +148,21 @@ foreach (array('critical', 'warning', 'unknown', 'ok') as $severity) {
          $siteStatus = $status[$hostName][""]["last_hard_state"];
 
          if( ($severity == "critical") &&
-            ($siteStatus == 2) ) {
+             ($siteStatus == 2) ) {
             $categoryContent = $categoryContent . '<li class="critical"><li class="okay"><a class="critical" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);"><blink><strong>&#9760;</strong></blink>' . $site . '</a></li>';
             $problems++;
          }
          elseif( ($severity == "warning") &&
-               ($siteStatus == 1) ) {
+                 ($siteStatus == 1) ) {
             $categoryContent = $categoryContent . '<li class="warning"><li class="okay"><a class="warning" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);">&#128544;' . $site . '</a></li>';
             $problems++;
          }
          elseif( ($severity == "unknown") &&
-               ($siteStatus > 2) ) {
+                 ($siteStatus > 2) ) {
             $categoryContent = $categoryContent . '<li class="unknown"><li class="okay"><a class="unknown" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);">&#128528;' . $site . '</a></li>';
          }
          elseif( ($severity == "ok") &&
-               ($siteStatus == 0) ) {
+                 ($siteStatus == 0) ) {
             $categoryContent = $categoryContent . '<li class="okay"><a class="okay" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);">&#128515;' . $site . '</a></li>';
          }
       }

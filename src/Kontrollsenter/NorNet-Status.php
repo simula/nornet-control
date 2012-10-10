@@ -109,6 +109,22 @@ function getNorNetStatus()
                            $status[$hostName][$serviceName]["location"] = $args[$i + 1];
                            $i++;
                         }
+                        elseif ($args[$i] == "-Sb") {
+                           $status[$hostName][$serviceName]["city"] = $args[$i + 1];
+                           $i++;
+                        }
+                        elseif ($args[$i] == "-Sp") {
+                           $status[$hostName][$serviceName]["province"] = $args[$i + 1];
+                           $i++;
+                        }
+                        elseif ($args[$i] == "-Sl") {
+                           $status[$hostName][$serviceName]["country"] = $args[$i + 1];
+                           $i++;
+                        }
+                        elseif ($args[$i] == "-Sc") {
+                           $status[$hostName][$serviceName]["country_code"] = $args[$i + 1];
+                           $i++;
+                        }
                         elseif ($args[$i] == "-F") {
                            if (preg_match("/^CENTRAL$|^CENTRAL,|,CENTRAL$/", $args[$i + 1])) {
                               $status[$hostName][$serviceName]["is_central_site"] = 'YES';

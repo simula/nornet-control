@@ -127,7 +127,28 @@ function zoomToSite(site)
    zoomToLocation(site['latitude'],
                   site['longitude'],
                   12);
-   document.getElementById("footer.title").innerHTML = '"' + site['name'] + '"';
+
+   var label = ""
+   if(site['country_code'] != "") {
+      label = label + '<img class="footerflag" src="Graphics/Flags/Flag-' + site['country_code'] + '.png" alt="" />&nbsp;';
+   }
+   label = label + site['name'];
+   if(site['city'] != "") {
+      label = label + ", " + site['city'];
+   }
+   if(site['province'] != "") {
+      label = label + ", " + site['province'];
+   }
+   if(site['country'] != "") {
+      if( (site['city'] != "") || (site['province'] != "") ) {
+         label = label + '/';
+      }
+      else {
+         label = label + ', ';
+      }
+      label = label + site['country'];
+   }
+   document.getElementById("footer.title").innerHTML = label;
 }
 
 

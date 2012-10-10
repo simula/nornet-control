@@ -193,10 +193,21 @@ hr {
    right:        0;
    bottom:       0;
    left:         0;
+   vertical-align:   middle;
    overflow:     hidden;
    background:   red;
    color:        white;
    text-align:   center;
    font-size:    22pt;
    font-family:  UnifrakturCook;
+}
+
+img.footerflag {
+   height:           18pt;
+   vertical-align:   text-top;
+   margin:           2pt;
+   padding:          2pt;
+   border:           2px;
+   border-style:     solid;
+   border-color:     #021a40;
 }
