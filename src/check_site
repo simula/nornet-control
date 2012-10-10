@@ -23,6 +23,10 @@
 ADDRESSES=""
 TUNNELS=""
 LOCATION=""
+CITY=""
+PROVINCE=""
+COUNTRY=""
+COUNTRYCODE=""
 FLAGS=""
 WARN="300.0,10%"
 CRITICAL="500.0,15%"
@@ -36,6 +40,18 @@ while [ "$1" != "" ] ; do
       shift
    elif [ "$1" = "-L" ] ; then
       LOCATION="$2"
+      shift
+   elif [ "$1" = "-Sb" ] ; then
+      CITY="$2"
+      shift
+   elif [ "$1" = "-Sp" ] ; then
+      PROVINCE="$2"
+      shift
+   elif [ "$1" = "-Sl" ] ; then
+      COUNTRY="$2"
+      shift
+   elif [ "$1" = "-Sc" ] ; then
+      COUNTRYCODE="$2"
       shift
    elif [ "$1" = "-F" ] ; then
       FLAGS="$2"
@@ -127,11 +143,27 @@ location=""
 if [ "$LOCATION" != "" ] ; then
    location="L=$LOCATION "
 fi
+city=""
+if [ "$CITY" != "" ] ; then
+   city="Sb=\"$CITY\" "
+fi
+province=""
+if [ "$PROVINCE" != "" ] ; then
+   province="Sp=\"$PROVINCE\" "
+fi
+country=""
+if [ "$COUNTRY" != "" ] ; then
+   country="Sl=\"$COUNTRY\" "
+fi
+countryCode=""
+if [ "$COUNTRYCODE" != "" ] ; then
+   countryCode="Sc=\"$COUNTRYCODE\" "
+fi
 flags=""
 if [ "$FLAGS" != "" ] ; then
    flags="F=$FLAGS "
 fi
-echo "SITECHECK $resultText ${location}${flags}A=$goodAddresses/$a T=$goodTunnels/$t S=${summary}| R=$r;$rwarn:;$rcritical:;$rmin;$rmax"
+echo "SITECHECK $resultText ${location}${city}${province}${country}${countryCode}${flags}A=$goodAddresses/$a T=$goodTunnels/$t S=${summary}| R=$r;$rwarn:;$rcritical:;$rmin;$rmax"
 
 
 # ====== Remove temporary directory =========================================

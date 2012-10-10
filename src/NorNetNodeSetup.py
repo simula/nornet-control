@@ -1134,6 +1134,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                # ====== Sites ===============================================
                localSite         = fullSiteList[localSiteIndex]
                localProviderList = getNorNetProvidersForSite(localSite)
+               countryCode       = getTagValue(localSite['site_tags'], 'nornet_site_country_code', '??')
                country           = getTagValue(localSite['site_tags'], 'nornet_site_country', '???')
                province          = getTagValue(localSite['site_tags'], 'nornet_site_province', None)
                city              = getTagValue(localSite['site_tags'], 'nornet_site_city',    '???')
@@ -1152,7 +1153,12 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                flags = ""
                if localSiteIndex == NorNet_SiteIndex_Central:
                   flags = "-F CENTRAL ";
-               outputFile.write('   check_command MySiteCheck!' + flags + '-L ' + str(localSite['site_latitude']) + ',' + str(localSite['site_longitude']) + ' ')
+               outputFile.write('   check_command MySiteCheck!' + flags + \
+                  '-L ' + str(localSite['site_latitude']) + ',' + str(localSite['site_longitude']) + ' ' + \
+                  '-Sb "' + city + '" ' + \
+                  '-Sp "' + province + '" ' + \
+                  '-Sl "' + country + '" ' + \
+                  '-Sc "' + countryCode + '" ');
                for localProviderIndex in localProviderList:
                   localProvider = localProviderList[localProviderIndex]
                   for version in [ 4, 6 ]:
