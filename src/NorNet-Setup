@@ -40,7 +40,7 @@ norNetSetup = [
    'site_url'          : 'http://www.simula.nornet',
    'site_domain'       : 'simula.nornet',
    'site_city'         : 'Fornebu',
-   'site_province'     : 'Østlandet',
+   'site_province'     : 'Akershus',
    'site_country'      : 'Norge',
    'site_country_code' : 'NO',
    'site_latitude'     : 59.895933,
