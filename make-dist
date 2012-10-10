@@ -49,6 +49,7 @@ mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Control
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Flags
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Icons
 cp -r src/Kontrollsenter/Graphics/Backgrounds/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Backgrounds/
+cp -r src/Kontrollsenter/Graphics/Backgrounds/*.svg $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Backgrounds/
 cp -r src/Kontrollsenter/Graphics/Control/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Control/
 cp -r src/Kontrollsenter/Graphics/Icons/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Icons/
 cp -r src/Kontrollsenter/Graphics/Flags/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Flags/
