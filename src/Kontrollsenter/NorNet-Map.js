@@ -152,9 +152,9 @@ function makePosition(positionVariable, latitude, longitude)
 function removeMarker(markerVariable)
 {
    if (variableExists(markerVariable) && (getVariable(markerVariable) != null)) {
-      var marker = getVariable(markerVariable);
-      marker.featureReference.destroy();   // Remove the Feature
-      window.mapmarkers.removeMarker(marker);
+      var markerFeature = getVariable(markerVariable);
+      window.mapmarkers.removeMarker(markerFeature.markerReference);
+      markerFeature.destroyMarker();
       setVariable(markerVariable, null);
    }
 }
@@ -167,12 +167,12 @@ function makeMarker(markerVariable, title, icon, positionVariable, zIndex, infoT
 
    var markerFeature = new OpenLayers.Feature(window.mapmarkers, getVariable(positionVariable));
    markerFeature.closeBox              = true;
-   markerFeature.popupClass            =  OpenLayers.Class(OpenLayers.Popup.FramedCloud, { 'autoSize': true });
+   markerFeature.popupClass            = OpenLayers.Class(OpenLayers.Popup.FramedCloud, { 'autoSize': true });
    markerFeature.data.popupContentHTML = infoText;
    markerFeature.data.overflow         = "auto";
    markerFeature.data.icon             = new OpenLayers.Icon(icon);
 
-   var marker      = markerFeature.createMarker();
+   markerFeature.markerReference       = markerFeature.createMarker();
    var markerClick = function (event) {
       if (this.popup == null) {
          this.popup = this.createPopup(this.closeBox);
@@ -184,11 +184,10 @@ function makeMarker(markerVariable, title, icon, positionVariable, zIndex, infoT
       currentPopup = this.popup;
       OpenLayers.Event.stop(event);
    };
-   marker.events.register("mousedown", markerFeature, markerClick);
-   marker.featureReference = markerFeature;   // Store reference to Feature for later disposal.
-   window.mapmarkers.addMarker(marker);
+   markerFeature.markerReference.events.register("mousedown", markerFeature, markerClick);
+   window.mapmarkers.addMarker(markerFeature.markerReference);
 
-   setVariable(markerVariable, marker);
+   setVariable(markerVariable, markerFeature);
 }
 
 
