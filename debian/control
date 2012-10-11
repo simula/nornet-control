@@ -50,7 +50,6 @@ Depends: apt-show-versions,
          snmp,
          subnetcalc,
          traceroute,
-         virtualbox-guest-utils,
          whois,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -84,6 +83,7 @@ Depends: grub2,
          python (>= 2.7),
          rsplib-services,
          snmpd,
+         virtualbox-guest-utils,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Node Control
