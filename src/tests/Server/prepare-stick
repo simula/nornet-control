@@ -1,5 +1,10 @@
-#!/bin/sh
+#!/bin/sh -e
 
-cp lang $1/syslinux/ && \
-cp txt.cfg $1/syslinux/ && \
+if [ $# -lt 1 ] ; then
+   echo >&2 "Usage: $0 [Stick Directory]"
+   exit 1
+fi
+
+cp lang $1/syslinux/
+cp txt.cfg $1/syslinux/
 cp *.seed $1/preseed/
