@@ -218,6 +218,7 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
 
          norNetSite = {
             'site_id'                     : siteID,
+            'site_enabled'                : site['enabled'],
             'site_index'                  : siteIndex,
             'site_short_name'             : siteAbbrev,
             'site_long_name'              : site['name'],

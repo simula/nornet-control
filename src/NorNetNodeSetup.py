@@ -1150,9 +1150,12 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                outputFile.write('/' + country + ')\n')
                outputFile.write('   address       ' + str(tunnelboxIP.ip) + '\n')
                outputFile.write('   notes         latlng: ' + str(localSite['site_latitude']) + ',' + str(localSite['site_longitude']) + '\n')
-               flags = ""
+               flags = '-F "';
+               if localSite['site_enabled'] == False:
+                  flags = flags + "DISABLED,";
                if localSiteIndex == NorNet_SiteIndex_Central:
-                  flags = "-F CENTRAL ";
+                  flags = flags + "CENTRAL";
+               flags = flags + '" ';
                outputFile.write('   check_command MySiteCheck!' + flags + \
                   '-L ' + str(localSite['site_latitude']) + ',' + str(localSite['site_longitude']) + ' ' + \
                   '-Sb "' + city + '" ' + \
@@ -1181,6 +1184,10 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
 
 
                # ====== Internal/external tunnelbox addresses ===============
+               if localSite['site_enabled'] == False:
+                  # Skip tunnels, if site is disabled!
+                  continue;
+
                for localProviderIndex in localProviderList:
                   localProvider = localProviderList[localProviderIndex]
                   for version in [ 4, 6 ]:
@@ -1212,7 +1219,10 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                   for remoteSiteIndex in fullSiteList:
                      if remoteSiteIndex == localSiteIndex:
                         continue
-                     remoteSite         = fullSiteList[remoteSiteIndex]
+                     remoteSite = fullSiteList[remoteSiteIndex]
+                     if remoteSite['site_enabled'] == False:
+                        # Skip tunnels, if site is disabled!
+                        continue;
                      remoteProviderList = getNorNetProvidersForSite(remoteSite)
                      for remoteProviderIndex in remoteProviderList:
                         remoteProvider = remoteProviderList[remoteProviderIndex]
@@ -1322,7 +1332,8 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
          outputFile.write('   members        ')
          isFirst = True
          for localNode in fullNodeList:
-            if getNorNetSiteOfNode(fullSiteList, localNode) == None:
+            site = getNorNetSiteOfNode(fullSiteList, localNode)
+            if ((site == None) or (site['site_enabled'] == False)):
                # The site is not enabled => skip this node!
                continue;
 
