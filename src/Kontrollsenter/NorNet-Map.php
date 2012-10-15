@@ -148,6 +148,10 @@ foreach (array('critical', 'warning', 'unknown', 'ok') as $severity) {
          $siteStatus = $status[$hostName][""]["last_hard_state"];
          $flag       = 'Graphics/Flags/Flag-' . $status[$hostName][""]["country_code"] . '.png';
 
+//          if (isset($status[$hostName][""]['is_disabled_site'])) {
+//             $siteStatus = 3;
+//          }
+
          if( ($severity == "critical") &&
              ($siteStatus == 2) ) {
             $categoryContent = $categoryContent . '<li class="critical"><img class="critical" height="18pt" src="' . $flag . '" alt="" /><a class="critical" href="javascript:void(0);" onclick="zoomToSite(window.mapContents[' . $status[$hostName]['site_number'] . ']);"><blink><strong>&#9760;</strong></blink>' . $site . '</a></li>';
