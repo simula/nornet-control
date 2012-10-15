@@ -23,7 +23,7 @@ NorNetPLC_Password='nntb-root'
 NorNet_LocalNode_Index="1"
 
 # This is the full hostname of the node:
-NorNet_LocalNode_Hostname='svalbard.unis.nornet'
+NorNet_LocalNode_Hostname='trondheim.ntnu.nornet'
 
 # This is the name of the NorNet interface (with the site's provider
 # networks) of the node:
