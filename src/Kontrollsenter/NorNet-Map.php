@@ -140,7 +140,7 @@ echo "function makeSidebarContents() {\n";
 $sitesContent = "";
 $problems = 0;
 $addedProblemsSection = false;
-foreach (array('critical', 'warning', 'unknown', 'ok') as $severity) {
+foreach (array('critical', 'warning', 'ok', 'unknown') as $severity) {
    $categoryContent = "";
    foreach ($status as $hostName => $hostEntry) {
       if (isset($status[$hostName][""]["location"])) {
@@ -148,9 +148,9 @@ foreach (array('critical', 'warning', 'unknown', 'ok') as $severity) {
          $siteStatus = $status[$hostName][""]["last_hard_state"];
          $flag       = 'Graphics/Flags/Flag-' . $status[$hostName][""]["country_code"] . '.png';
 
-//          if (isset($status[$hostName][""]['is_disabled_site'])) {
-//             $siteStatus = 3;
-//          }
+         if (isset($status[$hostName][""]['is_disabled_site'])) {
+            $siteStatus = 3;
+         }
 
          if( ($severity == "critical") &&
              ($siteStatus == 2) ) {
@@ -172,21 +172,22 @@ foreach (array('critical', 'warning', 'unknown', 'ok') as $severity) {
          }
       }
    }
+
    if ($categoryContent != "") {
       if ( ($severity == "critical") || ($severity == "warning") ) {
          $addedProblemsSection = true;
       }
       $sitesContent = $sitesContent . "<ul>" . $categoryContent . "</ul>";
    }
-   elseif ( ($severity == "warning") && ($problems == 0) ) {
-      $sitesContent = $sitesContent . '<p class="allsitesokay" id="sites.noproblems">xxx</p>';
-   }
 
-   if ($severity == "unknown") {
+   if ($severity == "warning") {
+      if ($problems == 0) {
+         $sitesContent = $sitesContent . '<p class="allsitesokay" id="sites.noproblems">xxx</p>';
+      }
       echo "   document.getElementById(\"sidebar.sites.problems\").innerHTML = '" . $sitesContent . "';\n";
       $sitesContent = "";
    }
-   else {
+   else if ($severity == "unknown") {
       echo "   document.getElementById(\"sidebar.sites.okay\").innerHTML = '" . $sitesContent . "';\n";
    }
 }
