@@ -130,6 +130,10 @@ function getNorNetStatus()
                               $status[$hostName][$serviceName]["is_central_site"] = 'YES';
                               $i++;
                            }
+                           if (preg_match("/^DISABLED$|^DISABLED,|,DISABLED$/", $args[$i + 1])) {
+                              $status[$hostName][$serviceName]["is_disabled_site"] = 'YES';
+                              $i++;
+                           }
                         }
                      }
                   }
