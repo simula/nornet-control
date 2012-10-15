@@ -1253,7 +1253,8 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                siteNodes = []
                for localNode in fullNodeList:
                   localNodeSite = getNorNetSiteOfNode(fullSiteList, localNode)
-                  if localNodeSite['site_index'] == localSite['site_index']:
+                  # localNodeSite may be Null, if the site is not enabled!
+                  if ((localNodeSite != None) and (localNodeSite['site_index'] == localSite['site_index'])):
                      outputFile.write('define host {\n')
                      outputFile.write('   use                 generic-host\n')
                      outputFile.write('   host_name           ' + localNode['node_name'] + '\n')
