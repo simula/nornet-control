@@ -28,6 +28,7 @@ from NorNetNodeSetup import *;
 
 
 loginToPLC()
-fullSiteList = fetchNorNetSiteList()
+fullSiteList = fetchNorNetSiteList(False)
+# NOTE: Site list also includes disabled sites!
 fullNodeList = fetchNorNetNodeList()
 makeNagiosConfiguration(fullSiteList, fullNodeList, 'nagios')
