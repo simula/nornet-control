@@ -1322,6 +1322,10 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
          outputFile.write('   members        ')
          isFirst = True
          for localNode in fullNodeList:
+            if getNorNetSiteOfNode(fullSiteList, localNode) == None:
+               # The site is not enabled => skip this node!
+               continue;
+
             if isFirst == True:
                isFirst = False
             else:
