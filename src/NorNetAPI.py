@@ -195,7 +195,6 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
                                            ['site_id', 'enabled', 'abbreviated_name', 'name', 'url', 'latitude', 'longitude'])
       for site in fullSiteList:
          if ((justEnabledSites == True) and (site['enabled'] == False)):
-            print 'SKIP=' + site['name'] + '\n';
             continue;
 
          siteID       = int(site['site_id'])
