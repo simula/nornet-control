@@ -1125,7 +1125,6 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
       except:
          centralSite = None   # Some test state.
 
-
       for onlyDefault in [ True, False ]:
          for localSiteIndex in fullSiteList:
             if ( ((onlyDefault == True)  and (localSiteIndex == NorNet_SiteIndex_Central)) or \
@@ -1215,48 +1214,48 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
 
 
                   # ====== Tunnels ==========================================
-                  for remoteSiteIndex in fullSiteList:
-                     if remoteSiteIndex == localSiteIndex:
-                        continue
-                     remoteSite = fullSiteList[remoteSiteIndex]
-                     if remoteSite['site_enabled'] == False:
-                        # Skip tunnels, if remote site is disabled!
-                        continue
-
-                     remoteProviderList = getNorNetProvidersForSite(remoteSite)
-                     for remoteProviderIndex in remoteProviderList:
-                        if ((localSite['site_enabled'] == False) and
-                            ((remoteSiteIndex != NorNet_SiteIndex_Central) or
-                            (localProviderIndex != localSite['site_default_provider_index']) or
-                            (remoteProviderIndex != remoteSite['site_default_provider_index']))):
-                           # Skip non-"Central Site"-tunnels via non-default provider, if site is disabled!
+                  if localSite['site_enabled'] == True:
+                     for remoteSiteIndex in fullSiteList:
+                        if remoteSiteIndex == localSiteIndex:
                            continue
+                        remoteSite = fullSiteList[remoteSiteIndex]
 
-                        remoteProvider = remoteProviderList[remoteProviderIndex]
-                        for version in [ 4, 6 ]:
-                           tunnel        = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
-                           remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, 0, version)
+                        remoteProviderList = getNorNetProvidersForSite(remoteSite)
+                        for remoteProviderIndex in remoteProviderList:
 
-                           outputFile.write('# ' + tunnel['tunnel_interface'] + ' ' + \
-                                            str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
-                                            str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
-                           if localSite['site_enabled'] == False:
-                              outputFile.write('# NOTE: This site is disabled!\n')
+                           if ((remoteSite['site_enabled'] == False) and
+                               ((localSiteIndex != NorNet_SiteIndex_Central) or
+                                (localProviderIndex != localSite['site_default_provider_index']) or
+                                (remoteProviderIndex != remoteSite['site_default_provider_index']))):
+                              # Skip non-"Central Site"-tunnels via non-default provider, if site is disabled!
+                              print 'SKIP=' + localSite['site_long_name'] + str(localProviderIndex)+ " - " + remoteSite['site_long_name'] + str(remoteProviderIndex) + "\n"
+                              continue
 
-                           outputFile.write('define service {\n')
-                           outputFile.write('   use generic-service\n')
-                           outputFile.write('   service_description Tunnel ' + \
-                                            str.upper(localSite['site_short_name']) + '-' + str.upper(remoteSite['site_short_name']) + ' ' + \
-                                            localProvider['provider_long_name'] + '/' + remoteProvider['provider_long_name'] + ' via ' + \
-                                            tunnel['tunnel_interface'] + ' remote ' + str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
-                           outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
-                           outputFile.write('   check_command       MyTunnelCheck!' + \
-                                               '-L "' + localSite['site_long_name']  + '\" ' + \
-                                               '-R "' + remoteSite['site_long_name'] + '\" ' + \
-                                               '-H '  + str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
-                           outputFile.write('}\n')
+                           remoteProvider = remoteProviderList[remoteProviderIndex]
+                           for version in [ 4, 6 ]:
+                              tunnel        = _getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
+                              remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, 0, version)
 
-                  outputFile.write('\n')
+                              outputFile.write('# ' + tunnel['tunnel_interface'] + ' ' + \
+                                             str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
+                                             str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
+                              if remoteSite['site_enabled'] == False:
+                                 outputFile.write('# NOTE: This site is disabled!\n')
+
+                              outputFile.write('define service {\n')
+                              outputFile.write('   use generic-service\n')
+                              outputFile.write('   service_description Tunnel ' + \
+                                             str.upper(localSite['site_short_name']) + '-' + str.upper(remoteSite['site_short_name']) + ' ' + \
+                                             localProvider['provider_long_name'] + '/' + remoteProvider['provider_long_name'] + ' via ' + \
+                                             tunnel['tunnel_interface'] + ' remote ' + str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
+                              outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
+                              outputFile.write('   check_command       MyTunnelCheck!' + \
+                                                '-L "' + localSite['site_long_name']  + '\" ' + \
+                                                '-R "' + remoteSite['site_long_name'] + '\" ' + \
+                                                '-H '  + str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
+                              outputFile.write('}\n')
+
+                     outputFile.write('\n')
 
 
                # ====== Nodes ===============================================
