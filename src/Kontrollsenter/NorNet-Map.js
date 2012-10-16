@@ -201,11 +201,6 @@ function removeMarker(markerVariable)
 }
 
 
- calculateOffset = function(size)
- {
-                    return new OpenLayers.Pixel(-(size.w/2), -size.h);
-                 };
-
 // ###### Create marker #####################################################
 function makeMarker(markerVariable, title, icon, positionVariable, zIndex, infoText)
 {
@@ -215,7 +210,7 @@ function makeMarker(markerVariable, title, icon, positionVariable, zIndex, infoT
    markerFeature.closeBox              = true;
    markerFeature.popupClass            = OpenLayers.Class(OpenLayers.Popup.FramedCloud, { 'autoSize': true });
    markerFeature.data.popupContentHTML = infoText;
-   markerFeature.data.overflow         = "auto";
+   markerFeature.data.overflow         = "hidden";
    markerFeature.data.icon             = new OpenLayers.Icon(icon,
                                                              new OpenLayers.Size(24,38), null,
                                                              function(size) {

@@ -223,3 +223,26 @@ img.footerflag {
    border-style:     solid;
    border-color:     white;
 }
+
+h2.popup {
+   text-align:      center;
+   text-decoration: underline;
+   margin-left:     4pt;
+   margin-right:    4pt;
+   margin-top:      0pt;
+   margin-bottom:   0pt;
+   font-size:       24pt;
+   font-family:     UnifrakturCook;
+   color:           #02266B;
+}
+
+img.popup {
+   text-align:     center;
+   width:          640px;
+   height:         480px;
+   vertical-align: text-top;
+   padding:        3px;
+   border:         2px;
+   border-style:   outset;
+   border-color:   #02266B;
+}

@@ -35,11 +35,14 @@ $sites = 0;
 foreach ($status as $hostName => $hostEntry) {
    if (isset($status[$hostName][""]["location"])) {
       // ====== Get location ================================================
+      $status[$hostName]['site_number'] = $sites;
+      $location = $status[$hostName][""]["city"] . ',' . $status[$hostName][""]["province"] . '/' . $status[$hostName][""]["country"];
+      $image    = 'Graphics/Sites/' . $hostName . '.jpeg';
+
       echo "   var siteLocation = '" . $status[$hostName][""]["location"] . "';\n";
       echo "   var locationArray = siteLocation.split(',');" . "\n";
       echo "   var latitude  = parseFloat(locationArray[0]);" . "\n";
       echo "   var longitude = parseFloat(locationArray[1]);" . "\n";
-      $status[$hostName]['site_number'] = $sites;
       echo '   window.mapContents[' . $status[$hostName]['site_number'] . '] = new Array();' . "\n";
       echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["name"]          = "' . $hostName . '"' . ";\n";
       echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["latitude"]      = latitude'  . ";\n";
@@ -78,7 +81,7 @@ foreach ($status as $hostName => $hostEntry) {
            '"' . $icon . '", ' .
            '"window.' . $status[$hostName][""]["host_identifier"] . '_position", ' .
            '1, ' .
-           '"INFO-TEXT!");' . "\n\n";
+           "'" . '<h2 class="popup">' . $hostName . '</h2><p class="center">' . $location . '</p><p class="center"><img class="popup" src="' . $image . '" alt="(No image: ' . $image . ')" /></p>' . "'" . ');' . "\n\n";
       $sites++;
    }
 }
