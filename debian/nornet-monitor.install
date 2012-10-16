@@ -5,6 +5,7 @@ Kontrollsenter/Graphics/Control/*.png     /var/www/Kontrollsenter/Graphics/Contr
 Kontrollsenter/Graphics/Flags/*.png       /var/www/Kontrollsenter/Graphics/Flags/
 Kontrollsenter/Graphics/Flags/*.svg       /var/www/Kontrollsenter/Graphics/Flags/
 Kontrollsenter/Graphics/Icons/*.png       /var/www/Kontrollsenter/Graphics/Icons/
+Kontrollsenter/Graphics/Markers/*.svg     /var/www/Kontrollsenter/Graphics/Markers/
 Kontrollsenter/NorNet-*                   /var/www/Kontrollsenter
 Make-Monitor-Configuration                /usr/bin
 check_site                                /usr/lib/nagios/plugins

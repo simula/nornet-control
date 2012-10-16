@@ -56,6 +56,15 @@ function makeMap(latitude, longitude, zoomLevel)
    window.maplayers.push(window.googlemap2);
    window.mapbaselayers.push(window.googlemap2);
 
+   // ====== Create Bing map ================================================
+   var apiKey = "AqTGBsziZHIJYYxgivLBf0hVdrAk9mWO5cQcb8Yux8sW5M8c8opEC2lZqKR1ZZXf";
+   window.bingmap1 = new OpenLayers.Layer.Bing( { name: "Bing Road", key: apiKey, type: "Road" } );
+   window.maplayers.push(window.bingmap1);
+   window.mapbaselayers.push(window.bingmap1);
+   window.bingmap2 = new OpenLayers.Layer.Bing( { name: "Bing Aerial", key: apiKey, type: "AerialWithLabels" } );
+   window.maplayers.push(window.bingmap2);
+   window.mapbaselayers.push(window.bingmap2);
+
    // ====== Create OSM map (Mapnik tiles) ==================================
    window.mapnik    = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
    window.mapnik.setOpacity(1.0);
@@ -185,6 +194,11 @@ function removeMarker(markerVariable)
 }
 
 
+ calculateOffset = function(size)
+ {
+                    return new OpenLayers.Pixel(-(size.w/2), -size.h);
+                 };
+
 // ###### Create marker #####################################################
 function makeMarker(markerVariable, title, icon, positionVariable, zIndex, infoText)
 {
@@ -195,8 +209,11 @@ function makeMarker(markerVariable, title, icon, positionVariable, zIndex, infoT
    markerFeature.popupClass            = OpenLayers.Class(OpenLayers.Popup.FramedCloud, { 'autoSize': true });
    markerFeature.data.popupContentHTML = infoText;
    markerFeature.data.overflow         = "auto";
-   markerFeature.data.icon             = new OpenLayers.Icon(icon);
-
+   markerFeature.data.icon             = new OpenLayers.Icon(icon,
+                                                             new OpenLayers.Size(24,38), null,
+                                                             function(size) {
+                                                                return new OpenLayers.Pixel(-(size.w/2), -size.h);
+                                                             });
    markerFeature.markerReference       = markerFeature.createMarker();
    var markerClick = function (event) {
       if (this.popup == null) {
