@@ -178,7 +178,8 @@ function removeMarker(markerVariable)
    if (variableExists(markerVariable) && (getVariable(markerVariable) != null)) {
       var markerFeature = getVariable(markerVariable);
       window.mapmarkers.removeMarker(markerFeature.markerReference);
-      markerFeature.destroyMarker();
+      // markerFeature.destroyMarker();
+      markerFeature.destroy();
       setVariable(markerVariable, null);
    }
 }
@@ -221,12 +222,13 @@ function removeConnection(connectionVariable)
    if (variableExists(connectionVariable) && (getVariable(connectionVariable) != null)) {
       var connection = getVariable(connectionVariable);
       window.mapvectors.removeFeatures([connection], true);
+      connection.destroy();
       setVariable(connectionVariable, null);
    }
 }
 
 // ###### Create connection #################################################
-function makeConnection(connectionVariable, points, color, thickness, zIndex)
+function makeConnection(connectionVariable, points, color, thickness, dashStyle, zIndex)
 {
    removeConnection(connectionVariable);
    var linePoints = [];
@@ -235,9 +237,11 @@ function makeConnection(connectionVariable, points, color, thickness, zIndex)
    }
    var lineString = new OpenLayers.Geometry.LineString(linePoints);
    var connection = new OpenLayers.Feature.Vector(lineString, null, {
-         strokeColor:   color,
-         strokeOpacity: 0.9,
-         strokeWidth:   thickness
+         strokeColor:     color,
+         strokeOpacity:   0.9,
+         strokeWidth:     thickness,
+         strokeDashstyle: dashStyle,
+         graphicZIndex:   zIndex
       });
    window.mapvectors.addFeatures([connection]);
 

@@ -100,24 +100,33 @@ foreach ($status as $hostName => $hostEntry) {
             if( ($state == 1) || ($state == 2) ||
                 (isset($status[$hostName][""]['is_central_site'])) ) {
 
-               $zIndex       = 10;
-               $strokeWeight = 5;
-               switch($state) {
-                  case 0:
-                     $linkColor = "#00ff00";
-                   break;
-                  case 1:
-                     $linkColor = "yellow";
-                     $zIndex    = 15;
-                   break;
-                  case 2:
-                     $linkColor    = "red";
-                     $strokeWeight = 10;
-                     $zIndex       = 20;
-                   break;
-                  default:
-                     $linkColor = "grey";
-                   break;
+               $zIndex = 10;
+               if (!isset($status[$remoteHostName][""]['is_disabled_site'])) {
+                  $strokeWeight    = 5;
+                  $strokeDashstyle = "solid";
+                  switch($state) {
+                     case 0:
+                        $linkColor = "#00ff00";
+                     break;
+                     case 1:
+                        $linkColor = "yellow";
+                        $zIndex    = 15;
+                     break;
+                     case 2:
+                        $linkColor    = "red";
+                        $strokeWeight = 10;
+                        $zIndex       = 20;
+                     break;
+                     default:
+                        $linkColor = "grey";
+                     break;
+                  }
+               }
+               else {
+                  $zIndex          = 15;
+                  $strokeWeight    = 5;
+                  $strokeDashstyle = "dash";
+                  $linkColor       = "grey";
                }
 
                echo "   // ====== Tunnel ".$localHostName." to ".$remoteHostName." S=".$tunnelState." ======\n";
@@ -125,6 +134,7 @@ foreach ($status as $hostName => $hostEntry) {
                     '[ ' . $localIdentifer . '_position, window.' . $remoteIdentifer . '_position ], ' .
                     '"' . $linkColor . '", ' .
                     $strokeWeight . ', ' .
+                    '"' . $strokeDashstyle . '", ' .
                     '2);' . "\n";
              }
          }
