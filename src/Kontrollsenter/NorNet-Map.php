@@ -61,14 +61,16 @@ foreach ($status as $hostName => $hostEntry) {
       $site       = $hostName;
       $siteStatus = $status[$site][""]["last_hard_state"];
       $icon       = "http://www.google.com/mapfiles/marker_grey.png";
-      if ($siteStatus == 0) {
-         $icon = "http://www.google.com/mapfiles/marker_green.png";
-      }
-      elseif ($siteStatus == 1) {
-         $icon = "http://www.google.com/mapfiles/marker_orange.png";
-      }
-      elseif ($siteStatus == 2) {
-         $icon = "http://www.google.com/mapfiles/marker.png";
+      if (!isset($status[$site][""]['is_disabled_site'])) {
+         if ($siteStatus == 0) {
+            $icon = "http://www.google.com/mapfiles/marker_green.png";
+         }
+         elseif ($siteStatus == 1) {
+            $icon = "http://www.google.com/mapfiles/marker_orange.png";
+         }
+         elseif ($siteStatus == 2) {
+            $icon = "http://www.google.com/mapfiles/marker.png";
+         }
       }
 
       echo '   makeMarker("window.' . $status[$hostName][""]["host_identifier"] . '_marker", ' .

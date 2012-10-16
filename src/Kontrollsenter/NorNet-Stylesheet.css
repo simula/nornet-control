@@ -162,6 +162,7 @@ hr {
   color:          #555555;
   vertical-align: middle;
   font-size:      12pt;
+  opacity:        0.6;
 }
 
 .okay {
