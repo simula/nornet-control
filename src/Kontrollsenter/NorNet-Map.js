@@ -48,6 +48,12 @@ function makeMap(latitude, longitude, zoomLevel)
    window.maplayers     = new Array();   // All layers
    window.mapbaselayers = new Array();   // Only base layers
 
+   // ====== Create OSM map (Mapnik tiles) ==================================
+   window.mapnik    = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+   window.mapnik.setOpacity(1.0);
+   window.maplayers.push(window.mapnik);
+   window.mapbaselayers.push(window.googlemap2);
+
    // ====== Create Google map ==============================================
    window.googlemap1 = new OpenLayers.Layer.Google("Google Satellite", { type: google.maps.MapTypeId.HYBRID });
    window.maplayers.push(window.googlemap1);
@@ -65,12 +71,13 @@ function makeMap(latitude, longitude, zoomLevel)
    window.maplayers.push(window.bingmap2);
    window.mapbaselayers.push(window.bingmap2);
 
-   // ====== Create OSM map (Mapnik tiles) ==================================
-   window.mapnik    = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
-   window.mapnik.setOpacity(1.0);
-   window.maplayers.push(window.mapnik);
-   window.mapbaselayers.push(window.googlemap2);
+   // ====== ... ============================================================
+//    window.wmsmap1 = new OpenLayers.Layer.WMS( "OpenLayers WMS",
+//                                               "http://vmap0.tiles.osgeo.org/wms/vmap0", {layers: 'basic'} );
+//    window.maplayers.push(window.wmsmap1);
+//    window.mapbaselayers.push(window.wmsmap1);
 
+   // ====== OpenWeather overlay ============================================
    // window.wstations = new OpenLayers.Layer.Vector.OWMClusterStations("Stations");
    // window.maplayers.push(wstations);
    window.wcity = new OpenLayers.Layer.Vector.OWMWeather("Weather");
