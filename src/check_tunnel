@@ -36,3 +36,8 @@ CHECK_PING_PARAMETERS="$@"
 
 # ====== Run check_ping and add location information to output ==============
 $CHECK_PING $CHECK_PING_PARAMETERS | sed -e "s/- Packet loss/- L=\"$LOCAL_SITE\" R=\"$REMOTE_SITE\" Packet loss/"
+resultCode=${PIPESTATUS[0]}   # Get the status of $CHECK_PING and *not* of sed (as with $?)!
+
+
+# ====== Exit with result code ==============================================
+exit $resultCode
