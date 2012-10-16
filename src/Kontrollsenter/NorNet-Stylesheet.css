@@ -149,21 +149,25 @@ hr {
 .critical {
   color:          red;
   vertical-align: middle;
+  font-size:      12pt;
 }
 
 .warning {
   color:          orange;
   vertical-align: middle;
+  font-size:      12pt;
 }
 
 .unknown {
   color:          #555555;
   vertical-align: middle;
+  font-size:      12pt;
 }
 
 .okay {
   color:          green;
   vertical-align: middle;
+  font-size:      12pt;
 }
 
 .allsitesokay {
