@@ -74,10 +74,10 @@ function makeMap(latitude, longitude, zoomLevel)
    window.maplayers.push(window.mapmarkers);
 
    // ====== Caching ========================================================
-   window.mapcache_read  = new OpenLayers.Control.CacheRead();
-   window.mapcache_read.activate();
-   window.mapcache_write = new OpenLayers.Control.CacheWrite();
-   window.mapcache_write.activate();
+//    window.mapcache_read  = new OpenLayers.Control.CacheRead();
+//    window.mapcache_read.activate();
+//    window.mapcache_write = new OpenLayers.Control.CacheWrite();
+//    window.mapcache_write.activate();
 
    // ====== Create the map =================================================
    window.map = new OpenLayers.Map({
@@ -86,8 +86,8 @@ function makeMap(latitude, longitude, zoomLevel)
       displayProjection: new OpenLayers.Projection("EPSG:4326"),
       layers:            window.maplayers,
       controls: [
-         window.mapcache_read,
-         window.mapcache_write,
+//          window.mapcache_read,
+//          window.mapcache_write,
          new OpenLayers.Control.Navigation(),
          new OpenLayers.Control.PanZoomBar(),
          new OpenLayers.Control.LayerSwitcher({'ascending':false}),
