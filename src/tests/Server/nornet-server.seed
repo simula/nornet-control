@@ -38,7 +38,7 @@ d-i passwd/root-login                   boolean false
 d-i passwd/make-user                    boolean true
 d-i passwd/user-fullname                string  NorNet Praesum Presum
 d-i passwd/username                     string  nornetpp
-d-i passwd/user-password-crypted        password 1$2hh1vAen$sNUcdcxMNav8a8aKOpi4X0
+d-i passwd/user-password-crypted        password $1$hZheDuz6$OLw7PO.t/y4eLVtMeW8eF0
 # NOTE: Example to add crypted password: echo "my password" | mkpasswd -s -H MD5
 d-i passwd/user-uid                     string  1000
 d-i passwd/user-default-groups          string  adm cdrom sudo dip plugdev lpadmin sambashare
