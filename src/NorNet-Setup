@@ -183,7 +183,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 7,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Universitetet i Bergen',
    'site_short_name'   : 'UiB',
    'site_url'          : 'http://www.uib.nornet',
@@ -207,7 +207,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 8,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Universitetet i Agder',
    'site_short_name'   : 'UiA',
    'site_url'          : 'http://www.uia.nornet',

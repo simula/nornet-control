@@ -98,7 +98,7 @@ monthNames['NO'][11] = "desember";
 
 titleLabel = new Array()
 titleLabel['UK'] = "Welcome to the NorNet Control Center at Simula Research Laboratory, Fornebu";
-titleLabel['DE'] = "Willkommen im NorNet-Kontrollzentrum bei Simula Research Laboratory, Fornebu";
+titleLabel['DE'] = "Willkommen im NorNet-Kontrollzentrum des Simula Research Laboratory, Fornebu";
 titleLabel['NO'] = "Velkommen til NorNet-Kontrollsenter på Simula Research Laboratory, Fornebu";
 
 footerLabel = new Array()
