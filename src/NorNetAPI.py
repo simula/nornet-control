@@ -179,23 +179,24 @@ def lookupSiteID(siteName):
 
 
 # ###### Fetch list of NorNet sites #########################################
-def fetchNorNetSite(siteNameToFind):
+def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
    global plc_server
    global plc_authentication
 
    if siteNameToFind == None:   # Get full list
-      filter = { 'is_public': True,
-                 'enabled':   True }
+      filter = { 'is_public': True }
    else:              # Only perform lookup for given name
       filter = { 'is_public': True,
-                 'enabled':   True,
                  'name':      siteNameToFind }
 
    try:
       norNetSiteList = dict([])
       fullSiteList   = plc_server.GetSites(plc_authentication, filter,
-                                           ['site_id', 'abbreviated_name', 'name', 'url', 'latitude', 'longitude'])
+                                           ['site_id', 'enabled', 'abbreviated_name', 'name', 'url', 'latitude', 'longitude'])
       for site in fullSiteList:
+         if ((justEnabledSites == True) and (site['enabled'] == False)):
+            continue;
+
          siteID       = int(site['site_id'])
          siteTagsList = plc_server.GetSiteTags(plc_authentication,
                                                { 'site_id' : siteID },
@@ -217,6 +218,7 @@ def fetchNorNetSite(siteNameToFind):
 
          norNetSite = {
             'site_id'                     : siteID,
+            'site_enabled'                : site['enabled'],
             'site_index'                  : siteIndex,
             'site_short_name'             : siteAbbrev,
             'site_long_name'              : site['name'],
@@ -242,9 +244,9 @@ def fetchNorNetSite(siteNameToFind):
 
 
 # ###### Fetch list of NorNet sites #########################################
-def fetchNorNetSiteList():
+def fetchNorNetSiteList(justEnabledSites = True):
    log('Fetching NorNet site list ...')
-   return fetchNorNetSite(None)
+   return fetchNorNetSite(None, justEnabledSites)
 
 
 # ###### Get the providers a site is connected to ###########################

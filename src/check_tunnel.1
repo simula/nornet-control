@@ -1,0 +1,54 @@
+.\" Node Setup
+.\" Copyright (C) 2012 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd October 1, 2012
+.Dt check_tunnel 1
+.Os check_tunnel
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm check_tunnel
+.Nd NorNet Tunnel Check Plugin for Nagios
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm check_tunnel
+.Op Fl L local_site
+.Op Fl R remote_site
+.Op check_ping_parameters
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm check_tunnel
+is a tunnel check plugin for Nagios. It is mainly a wrapper around check_ping
+which adds site information to the check_ping output.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following options are available:
+.Bl -tag -width indent
+.It Fl L local_site
+Sets the name of the local site.
+.It Fl L remote_site
+Sets the name of the remote site.
+.It check_ping_parameters
+Sets the parameters for check_ping.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It ./check_tunnel -L 'Alpha Site' -R 'Beta Site' -H 10.1.1.23 -w 500ms,5% -c 1000ms,10%
+.El

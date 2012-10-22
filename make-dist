@@ -36,8 +36,29 @@ mkdir $PACKAGE-$UPSTREAM_VERSION/pbuilder
 cp src/pbuilder/pbuilderrc $PACKAGE-$UPSTREAM_VERSION/pbuilder/
 cp src/Routing-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Tunnelbox-Setup $PACKAGE-$UPSTREAM_VERSION
+cp src/check_* $PACKAGE-$UPSTREAM_VERSION
 cp src/Make-*-Configuration $PACKAGE-$UPSTREAM_VERSION
 cp src/Reset-Networking $PACKAGE-$UPSTREAM_VERSION
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter
+cp src/Kontrollsenter/NorNet-*.css src/Kontrollsenter/NorNet-*.js src/Kontrollsenter/NorNet-*.php src/Kontrollsenter/NorNet-*.html src/Kontrollsenter/Forward-*.html $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter
+
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Backgrounds
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Control
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Flags
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Icons
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Markers
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Sites
+cp -r src/Kontrollsenter/Graphics/Backgrounds/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Backgrounds/
+cp -r src/Kontrollsenter/Graphics/Control/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Control/
+cp -r src/Kontrollsenter/Graphics/Flags/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Flags/
+cp -r src/Kontrollsenter/Graphics/Flags/*.svg $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Flags/
+cp -r src/Kontrollsenter/Graphics/Icons/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Icons/
+cp -r src/Kontrollsenter/Graphics/Markers/*.svg $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Markers/
+cp -r src/Kontrollsenter/Graphics/Sites/*.jpeg $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Sites/
+cp -r src/Kontrollsenter/Clock/station-clock.svg $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock/
+cp -r src/Kontrollsenter/Clock/License.pdf $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock/
 # ---------------------------------------------------------
 
 

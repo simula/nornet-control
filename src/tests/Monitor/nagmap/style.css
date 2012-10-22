@@ -21,7 +21,8 @@ h1 {
 
 h3 {
   font-family: arial;
-  color: white;
+  font-size: 16pt;
+  color: black;
 }
 
 .sidebar {
@@ -30,6 +31,20 @@ h3 {
   background: white;
 }
 
+.critical {
+  color: red;
+}
+.warning {
+  color: orange;
+}
+.unknown {
+  color: #555555;
+}
+.okay {
+  color: green;
+}
+
+
 .ok, a.ok, a.ok:visited {
   text-decoration: none;
   color: #02266B;
@@ -37,7 +52,7 @@ h3 {
 
 a.warning, a.warning:visited {
   text-decoration: none;
-  color: orange; 
+  color: orange;
 }
 
 a:hover {

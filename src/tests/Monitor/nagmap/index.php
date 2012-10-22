@@ -1,6 +1,6 @@
 <?php
 $page = $_SERVER['PHP_SELF'];
-$sec = "300"; 
+$sec = "300";
 header("Refresh: $sec; url=$page");
 $nagmap_version = '1.0';
 include('./config.php');
@@ -19,7 +19,7 @@ include('./config.php');
     //static code from index.pnp
     function initialize() {
       var myOptions = {
-        zoom: <?php echo ("$nagmap_map_zoom"); ?>, 
+        zoom: <?php echo ("$nagmap_map_zoom"); ?>,
         center: new google.maps.LatLng(<?php echo $nagmap_map_centre ?>),
         mapTypeId: google.maps.MapTypeId.<?php echo $nagmap_map_type ?>
       };
@@ -27,8 +27,8 @@ include('./config.php');
 
       //defining marker images
       var red_blank = new google.maps.MarkerImage(
-        'http://www.google.com/mapfiles/marker.png', 
-        new google.maps.Size(20,34), 
+        'http://www.google.com/mapfiles/marker.png',
+        new google.maps.Size(20,34),
         new google.maps.Point(10,34));
 
       var blue_blank = new google.maps.MarkerImage(
@@ -51,13 +51,13 @@ include('./config.php');
         new google.maps.Size(20,34),
         new google.maps.Point(10,34));
 
-// generating dynamic code from here... 
+// generating dynamic code from here...
 // if the page ends here, there is something seriously wrong, please contact maco@blava.net for help
 
-<?php 
+<?php
   include('marker.php');
-  if ($javascript != "") { 
-    echo $javascript; 
+  if ($javascript != "") {
+    echo $javascript;
     echo '};'; //end of initialize function
     echo '
       </script>
@@ -79,7 +79,7 @@ include('./config.php');
           ." (".round((100/($stats['warning']+$stats['critical']+$stats['unknown']+$stats['ok']))*($stats['ok']))."%)</span><br>"
         .'<span class="problem">problem:'.($stats['warning']+$stats['critical']+$stats['unknown'])
           ." (".round((100/($stats['warning']+$stats['critical']+$stats['unknown']+$stats['ok']))*($stats['warning']+$stats['critical']+$stats['unknown']))."%)</span><hr noshade>";
-      foreach (array('critical','unknown','warning','ok') as $severity) { 
+      foreach (array('critical','unknown','warning','ok') as $severity) {
         foreach ($sidebar[$severity] as $entry) {
           echo $entry;
         }
@@ -89,7 +89,7 @@ include('./config.php');
       echo '<div id="map_canvas" style="width:100%; height:100%; float: left"></div>';
     }
   } else {
-    
+
     echo '};'; //end of initialize function
     echo '</script><head><body>';
     echo "<br><h3>There is no data to display. You either did not set NagMap properly or there is a software bug. Please contact maco@blava.net for free assistance.</h3>";

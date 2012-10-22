@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="no">
+
+<head>
+<title>Forward</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+<script type="text/javascript">
+function doForwardning(url) {
+   window.location = url;
+}
+
+function forwarder() {
+   url = "NorNet-Kontrollsenter.html?latitude=62.5&amp;longitude=5.0&amp;zoomlevel=5&amp;auto=1&amp;update=30";
+   document.getElementById("url").innerHTML = '<a href="' + url + '">' + url + '</a>';
+   setTimeout('doForwardning("' + url + '");', 5000);
+}
+</script>
+</head>
+
+<body onload="forwarder()">
+
+<h1>Redirect</h1>
+<p>Forwarding to <span id="url">...</span> ...</p>
+
+<noscript><h1>Please activate JavaScript!</h1></noscript>
+
+</body>
+
+</html>

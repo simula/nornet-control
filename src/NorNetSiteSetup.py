@@ -103,7 +103,7 @@ def _addOrUpdateSiteTag(siteID, tagName, tagValue):
 
 
 # ###### Create NorNet site #################################################
-def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDomain,
+def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl, siteNorNetDomain,
                    siteNorNetIndex, siteCity, siteProvince, cityCountry, siteCountryCode,
                    siteLatitude, siteLogitude,
                    providerList, defaultProvider, tbInternalInterface,
@@ -117,11 +117,15 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
       site['abbreviated_name'] = siteAbbrvName
       site['login_base']       = siteLoginBase
       site['url']              = siteUrl
-      site['enabled']          = True
       site['is_public']        = True
       site['latitude']         = siteLatitude
       site['longitude']        = siteLogitude
       site['max_slices']       = 10
+      if siteEnabled == True:
+         site['enabled']       = True
+      else:
+         site['enabled']       = False
+
       siteID = lookupSiteID(siteName)
       if siteID == 0:
          siteID = getPLCServer().AddSite(getPLCAuthentication(), site)
@@ -212,10 +216,9 @@ def makeNorNetSite(siteName, siteAbbrvName, siteLoginBase, siteUrl, siteNorNetDo
                error('Unable to add "nornet_site_tb_nat_range_ipv4" tag to site ' + siteName)
 
    except Exception as e:
-      raise
-      #error('Adding site ' + siteName + ' has failed: ' + str(e))
+      error('Adding site ' + siteName + ' has failed: ' + str(e))
 
-   return fetchNorNetSite(siteName)
+   return fetchNorNetSite(siteName, False)
 
 
 # ###### Create NorNet PCU ##################################################

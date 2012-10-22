@@ -121,7 +121,7 @@ check_and_configure ()
       mv /etc/nornet/sysctl-config /etc/sysctl.conf
       sysctl -p
    fi
-   
+
    # ====== Get new configuration into temporary directory ==================
    echo "Getting new configuration ..."
    rm -rf updated-tunnelbox-config
@@ -157,6 +157,8 @@ check_and_configure ()
          rm -f updated-tunnelbox-config/tunnelbox-${provider}-config
       fi
    done
+
+   # Check for problems
    if ! rmdir updated-tunnelbox-config ; then
       echo >&2 "ERROR: Something went wrong! updated-tunnelbox-config still contains unhandled configuration files!"
       ls -al updated-tunnelbox-config >&2
@@ -170,7 +172,7 @@ case "$ACTION" in
   start|stop|restart)
    echo -n "Starting $DESC: "
    INTERFACES=`find /var/run/network -name "ifup.*" | sed -e "s/\/var\/run\/network\/ifup.//g" | xargs -n128 echo | sed -e "s/ /,/g"`
-   Tunnelbox-Setup "$ACTION" -interfaces "$INTERFACES" -event "init script action: $ACTION" $@ >>$LOGFILE 2>&1 && \
+   Tunnelbox-Setup "$ACTION" -interfaces "$INTERFACES" -event "init script action: $ACTION; interfaces=$INTERFACES" $@ >>$LOGFILE 2>&1 && \
    echo "$NAME."
    ;;
   force-reload)

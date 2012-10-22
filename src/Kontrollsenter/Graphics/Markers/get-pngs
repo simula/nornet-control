@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+while [ "$1" != "" ] ; do
+   input="$1"
+   output=`echo $1 | sed -e "s/.svg$/.png/g"`
+
+   echo "Converting $input to $output ..."
+   convert -quiet "$input" -sample 24x -transparent white "$output.png"
+   shift
+done
