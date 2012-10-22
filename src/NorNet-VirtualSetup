@@ -35,12 +35,13 @@ from NorNetSiteSetup     import *;
 
 norNetSetup = [
  { 'site_index'        : 1,
+   'site_enabled'      : True,
    'site_long_name'    : u'Simula Research Laboratory',
    'site_short_name'   : 'SRL',
    'site_url'          : 'http://www.simula.nornet',
    'site_domain'       : 'simula.nornet',
    'site_city'         : 'Fornebu',
-   'site_province'     : 'Østlandet',
+   'site_province'     : 'Akershus',
    'site_country'      : 'Norge',
    'site_country_code' : 'NO',
    'site_latitude'     : 59.895933,
@@ -62,62 +63,55 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 2,
-   'site_long_name'    : u'Universitetet i Stavanger',
-   'site_short_name'   : 'UiS',
-   'site_url'          : 'http://www.uis.nornet',
-   'site_domain'       : 'uis.nornet',
-   'site_city'         : 'Stavanger',
-   'site_province'     : 'Rogaland',
+   'site_enabled'      : True,
+   'site_long_name'    : u'Universitetet i Oslo',
+   'site_short_name'   : 'UiO',
+   'site_url'          : 'http://www.uio.nornet',
+   'site_domain'       : 'uio.nornet',
+   'site_city'         : 'Oslo',
+   'site_province'     : 'Oslo',
    'site_country'      : 'Norge',
    'site_country_code' : 'NO',
-   'site_latitude'     : 58.940799,
-   'site_longitude'    : 5.703049,
+   'site_latitude'     : 59.944034,
+   'site_longitude'    : 10.719013,
    'site_pcu'          : [ IPv4Address('132.252.156.3'), 'pcu-root', 'a-secret-password' ],
    'site_providers' : [
       [ 'Uninett', 'eth0', IPv4Address('132.252.156.71'), IPv6Address('fd55:5555::71') ],
       [ 'Telenor', 'eth1', IPv4Address('169.254.100.71'), IPv6Address('::') ]
-      # [ 'Deutsches Forschungsnetz', 'eth2', IPv4Address('172.31.255.71'),  IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'sognsvann'      ],
+      [ 101, 2, 'svartkulp'      ],
+      [ 102, 3, 'trollvann'      ],
+      [ 103, 4, 'tryvann'        ]
+   ] },
+
+ { 'site_index'        : 3,
+   'site_enabled'      : True,
+   'site_long_name'    : u'Høgskolen i Gjøvik',
+   'site_short_name'   : 'HiG',
+   'site_url'          : 'http://www.hig.nornet',
+   'site_domain'       : 'hig.nornet',
+   'site_city'         : 'Gjøvik',
+   'site_province'     : 'Oppland',
+   'site_country'      : 'Norge',
+   'site_country_code' : 'NO',
+   'site_latitude'     : 60.789615,
+   'site_longitude'    : 10.68166,
+   'site_pcu'          : [ IPv4Address('132.252.156.4'), 'pcu-root', 'a-secret-password' ],
+   'site_providers' : [
+      [ 'Uninett', 'eth0', IPv4Address('132.252.156.72'), IPv6Address('fd55:5555::72') ],
+      [ 'Telenor', 'eth1', IPv4Address('169.254.100.72'), IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, 'aaklungen'      ],
       [ 101, 2, 'bjordammen'     ],
       [ 102, 3, 'maridalsvannet' ],
-      [ 103, 4, 'skjennungen'    ],
-      [ 104, 5, 'sognsvann'      ],
-      [ 105, 6, 'svartkulp'      ],
-      [ 106, 7, 'trollvann'      ],
-      [ 107, 8, 'tryvann'        ]
-   ] },
-
- { 'site_index'        : 3,
-   'site_long_name'    : u'Universität Duisburg-Essen',
-   'site_short_name'   : 'UDE',
-   'site_url'          : 'http://www.ude.nornet',
-   'site_domain'       : 'ude.nornet',
-   'site_city'         : 'Essen',
-   'site_province'     : 'Nordrhein-Westfalen',
-   'site_country'      : 'Deutschland',
-   'site_country_code' : 'DE',
-   'site_latitude'     : 51.476144,
-   'site_longitude'    : 7.011656,
-   'site_pcu'          : [ IPv4Address('132.252.156.4'), 'pcu-root', 'a-secret-password' ],
-   'site_providers' : [
-      [ 'Deutsches Forschungsnetz', 'eth0', IPv4Address('172.31.255.72'),  IPv6Address('::') ],
-      [ 'Uninett',                  'eth1', IPv4Address('132.252.156.72'), IPv6Address('fd55:5555::72') ],
-      [ 'Telenor',                  'eth2', IPv4Address('169.254.100.72'), IPv6Address('::') ]
-   ],
-   'site_nodes' : [
-      [ 100, 1, 'altenessen'  ],
-      [ 101, 2, 'baldeneysee' ],
-      [ 102, 3, 'borbeck'     ],
-      [ 103, 4, 'kettwig'     ],
-      [ 104, 5, 'kray'        ],
-      [ 105, 6, 'kupferdreh'  ],
-      [ 106, 7, 'steele'      ],
-      [ 107, 8, 'zollverein'  ]
+      [ 103, 4, 'skjennungen'    ]
    ] },
 
  { 'site_index'        : 4,
+   'site_enabled'      : True,
    'site_long_name'    : u'Universitetet i Tromsø',
    'site_short_name'   : 'UiT',
    'site_url'          : 'http://www.uit.nornet',
@@ -137,14 +131,35 @@ norNetSetup = [
       [ 100, 1, 'blaa'   ],
       [ 101, 2, 'graa'   ],
       [ 102, 3, 'groenn' ],
-      [ 103, 4, 'gull'   ],
-      [ 104, 5, 'hvit'   ],
-      [ 105, 6, 'orange' ],
-      [ 106, 7, 'roed'   ],
-      [ 107, 8, 'svart'  ]
+      [ 103, 4, 'gull'   ]
    ] },
 
  { 'site_index'        : 5,
+   'site_enabled'      : True,
+   'site_long_name'    : u'Universitetet i Stavanger',
+   'site_short_name'   : 'UiS',
+   'site_url'          : 'http://www.uis.nornet',
+   'site_domain'       : 'uis.nornet',
+   'site_city'         : 'Stavanger',
+   'site_province'     : 'Rogaland',
+   'site_country'      : 'Norge',
+   'site_country_code' : 'NO',
+   'site_latitude'     : 58.940799,
+   'site_longitude'    : 5.703049,
+   'site_pcu'          : [ IPv4Address('132.252.156.6'), 'pcu-root', 'a-secret-password' ],
+   'site_providers' : [
+      [ 'Uninett', 'eth0', IPv4Address('132.252.156.74'), IPv6Address('fd55:5555::74') ],
+      [ 'Telenor', 'eth1', IPv4Address('169.254.100.74'), IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'hvit'   ],
+      [ 101, 2, 'orange' ],
+      [ 102, 3, 'roed'   ],
+      [ 103, 4, 'svart'  ]
+   ] },
+
+ { 'site_index'        : 6,
+   'site_enabled'      : False,
    'site_long_name'    : u'Universitetet i Trondheim',
    'site_short_name'   : 'NTNU',
    'site_url'          : 'http://www.ntnu.nornet',
@@ -155,23 +170,92 @@ norNetSetup = [
    'site_country_code' : 'NO',
    'site_latitude'     : 63.419034,
    'site_longitude'    : 10.4022,
-   'site_pcu'          : [ IPv4Address('132.252.156.6'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('132.252.156.7'), 'pcu-root', 'a-secret-password' ],
    'site_providers' : [
-      [ 'Uninett', 'eth0', IPv4Address('132.252.156.74'), IPv6Address('fd55:5555::74') ],
-      [ 'Telenor', 'eth1', IPv4Address('169.254.100.74'), IPv6Address('::') ]
+      [ 'Uninett', 'eth0', IPv4Address('132.252.156.75'), IPv6Address('fd55:5555::75') ],
+      [ 'Telenor', 'eth1', IPv4Address('169.254.100.75'), IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, 'bjoern'   ],
       [ 101, 2, 'hund'     ],
       [ 102, 3, 'katt'     ],
-      [ 103, 4, 'mus'      ],
-      [ 104, 5, 'nisse'    ],
-      [ 105, 6, 'reinsdyr' ],
-      [ 106, 7, 'sau'      ],
-      [ 107, 8, 'troll'    ]
+      [ 103, 4, 'mus'      ]
    ] },
 
- { 'site_index'        : 6,
+ { 'site_index'        : 7,
+   'site_enabled'      : True,
+   'site_long_name'    : u'Universitetet i Bergen',
+   'site_short_name'   : 'UiB',
+   'site_url'          : 'http://www.uib.nornet',
+   'site_domain'       : 'uib.nornet',
+   'site_city'         : 'Bergen',
+   'site_province'     : 'Hordaland',
+   'site_country'      : 'Norge',
+   'site_country_code' : 'NO',
+   'site_latitude'     : 60.388236,
+   'site_longitude'    : 5.322623,
+   'site_pcu'          : [ IPv4Address('132.252.156.8'), 'pcu-root', 'a-secret-password' ],
+   'site_providers' : [
+      [ 'Uninett', 'eth0', IPv4Address('132.252.156.76'), IPv6Address('fd55:5555::76') ],
+      [ 'Telenor', 'eth1', IPv4Address('169.254.100.76'), IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'nisse'    ],
+      [ 101, 2, 'troll'    ],
+      [ 102, 3, 'reinsdyr' ],
+      [ 103, 4, 'sau'      ]
+   ] },
+
+ { 'site_index'        : 8,
+   'site_enabled'      : True,
+   'site_long_name'    : u'Universitetet i Agder',
+   'site_short_name'   : 'UiA',
+   'site_url'          : 'http://www.uia.nornet',
+   'site_domain'       : 'uia.nornet',
+   'site_city'         : 'Kristiansand',
+   'site_province'     : 'Vest-Agder',
+   'site_country'      : 'Norge',
+   'site_country_code' : 'NO',
+   'site_latitude'     : 58.163736,
+   'site_longitude'    : 8.003276,
+   'site_pcu'          : [ IPv4Address('132.252.156.9'), 'pcu-root', 'a-secret-password' ],
+   'site_providers' : [
+      [ 'Uninett', 'eth0', IPv4Address('132.252.156.77'), IPv6Address('fd55:5555::77') ],
+      [ 'Telenor', 'eth1', IPv4Address('169.254.100.77'), IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'en'   ],
+      [ 101, 2, 'to'   ],
+      [ 102, 3, 'tre'  ],
+      [ 103, 4, 'fire' ]
+   ] },
+
+ { 'site_index'        : 9,
+   'site_enabled'      : False,
+   'site_long_name'    : u'Universitetet i Nordland',
+   'site_short_name'   : 'UiN',
+   'site_url'          : 'http://www.uin.nornet',
+   'site_domain'       : 'uin.nornet',
+   'site_city'         : 'Bodø',
+   'site_province'     : 'Nordland',
+   'site_country'      : 'Norge',
+   'site_country_code' : 'NO',
+   'site_latitude'     : 67.289645,
+   'site_longitude'    : 14.560402,
+   'site_pcu'          : [ IPv4Address('132.252.156.10'), 'pcu-root', 'a-secret-password' ],
+   'site_providers' : [
+      [ 'Uninett', 'eth0', IPv4Address('132.252.156.78'), IPv6Address('fd55:5555::78') ],
+      [ 'Telenor', 'eth1', IPv4Address('169.254.100.78'), IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'hydrogen'  ],
+      [ 101, 2, 'helium'    ],
+      [ 102, 3, 'litium'    ],
+      [ 103, 4, 'beryllium' ]
+   ] },
+
+ { 'site_index'        : 10,
+   'site_enabled'      : False,
    'site_long_name'    : u'Universitetet på Svalbard',
    'site_short_name'   : 'UNIS',
    'site_url'          : 'http://www.unis.nornet',
@@ -182,14 +266,45 @@ norNetSetup = [
    'site_country_code' : 'NO',
    'site_latitude'     : 78.222972,
    'site_longitude'    : 15.648537,
-   'site_pcu'          : [ IPv4Address('132.252.156.7'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('132.252.156.11'), 'pcu-root', 'a-secret-password' ],
    'site_providers' : [
-      [ 'Uninett', 'eth0', IPv4Address('132.252.156.75'), IPv6Address('fd55:5555::75') ],
-      [ 'Telenor', 'eth1', IPv4Address('169.254.100.75'), IPv6Address('::') ]
+      [ 'Uninett', 'eth0', IPv4Address('132.252.156.79'), IPv6Address('fd55:5555::79') ],
+      [ 'Telenor', 'eth1', IPv4Address('169.254.100.79'), IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, 'hval'     ],
-      [ 101, 2, 'isbjoern' ]
+      [ 101, 2, 'isbjoern' ],
+      [ 102, 3, 'isbre'    ],
+      [ 103, 4, 'nordlys'  ]
+   ] },
+
+ { 'site_index'        : 42,
+   'site_enabled'      : False,
+   'site_long_name'    : u'Universität Duisburg-Essen',
+   'site_short_name'   : 'UDE',
+   'site_url'          : 'http://www.ude.nornet',
+   'site_domain'       : 'ude.nornet',
+   'site_city'         : 'Essen',
+   'site_province'     : 'Nordrhein-Westfalen',
+   'site_country'      : 'Deutschland',
+   'site_country_code' : 'DE',
+   'site_latitude'     : 51.476144,
+   'site_longitude'    : 7.011656,
+   'site_pcu'          : [ IPv4Address('132.252.156.12'), 'pcu-root', 'a-secret-password' ],
+   'site_providers' : [
+      [ 'Deutsches Forschungsnetz', 'eth0', IPv4Address('172.31.255.100'),  IPv6Address('::') ],
+      [ 'Uninett',                  'eth1', IPv4Address('132.252.156.100'), IPv6Address('fd55:5555::100') ],
+      [ 'Telenor',                  'eth2', IPv4Address('169.254.100.100'), IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'altenessen'  ],
+      [ 101, 2, 'baldeneysee' ],
+      [ 102, 3, 'borbeck'     ],
+      [ 103, 4, 'kettwig'     ],
+      [ 104, 5, 'kray'        ],
+      [ 105, 6, 'kupferdreh'  ],
+      [ 106, 7, 'steele'      ],
+      [ 107, 8, 'zollverein'  ]
    ] }
 
 ]
@@ -215,7 +330,7 @@ def makeSite(site, norNetInformation, dnsServers, ntpServers):
    # ====== Make site ========================================================
    siteIndex = site['site_index']
 
-   newSite = makeNorNetSite(site['site_long_name'], site['site_short_name'], str.lower(site['site_short_name']),
+   newSite = makeNorNetSite(site['site_long_name'], site['site_short_name'], site['site_enabled'], str.lower(site['site_short_name']),
                             site['site_url'], site['site_domain'], siteIndex,
                             site['site_city'], site['site_province'], site['site_country'], site['site_country_code'],
                             site['site_latitude'], site['site_longitude'],
@@ -364,7 +479,7 @@ if userID != 0:
    getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'pi',   userID)
    getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'tech', userID)
    # ====== Add user to all sites ===========================================
-   allNorNetSites = fetchNorNetSiteList()
+   allNorNetSites = fetchNorNetSiteList(False)
    for siteIndex in allNorNetSites:
       site = allNorNetSites[siteIndex]
       getPLCServer().AddPersonToSite(getPLCAuthentication(), userID, site['site_id'])
