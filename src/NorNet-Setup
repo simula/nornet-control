@@ -81,10 +81,12 @@ norNetSetup = [
       [ 'Uninett', 'eth0', IPv4Address('129.240.66.60'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'sognsvann' ],
-      [ 101, 2, 'svartkulp' ],
-      [ 102, 3, 'trollvann' ],
-      [ 103, 4, 'tryvann'   ]
+      [ 100, 1, 'bjoervika' ],
+      [ 101, 2, 'ekeberg'   ],
+      [ 102, 3, 'furuset'   ],
+      [ 103, 4, 'grefsen'   ],
+      [ 104, 5, 'helsfyr'   ],
+      [ 105, 6, 'toyen'     ]
    ] },
 
  { 'site_index'        : 3,
@@ -104,10 +106,12 @@ norNetSetup = [
       [ 'Uninett', 'eth0', IPv4Address('128.39.49.154'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'aaklungen'      ],
-      [ 101, 2, 'bjordammen'     ],
-      [ 102, 3, 'maridalsvannet' ],
-      [ 103, 4, 'skjennungen'    ]
+      [ 100, 1, 'kapp'      ],
+      [ 101, 2, 'eina'      ],
+      [ 102, 3, 'raufoss'   ],
+      [ 103, 4, 'reinsvoll' ],
+      [ 104, 5, 'skreia'    ],
+      [ 105, 6, 'lena'      ]
    ] },
 
  { 'site_index'        : 4,
