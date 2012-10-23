@@ -52,14 +52,16 @@ norNetSetup = [
       [ 'Telenor', 'eth1', IPv4Address('77.88.71.151'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'akerbrygge' ],
-      [ 101, 2, 'bygdoey'    ],
-      [ 102, 3, 'ekeberg'    ],
-      [ 103, 4, 'frogner'    ],
-      [ 104, 5, 'grefsen'    ],
-      [ 105, 6, 'majorstuen' ],
-      [ 106, 7, 'nordberg'   ],
-      [ 107, 8, 'ullevaal'   ]
+      [ 100,  1, 'akerbrygge'   ],
+      [ 101,  2, 'bygdoey'      ],
+      [ 102,  3, 'tullinloekka' ],
+      [ 103,  4, 'solvang'      ],
+      [ 104,  5, 'ullevaal'     ],
+      [ 105,  6, 'frogner'      ],
+      [ 106,  7, 'nordberg'     ],
+      [ 107,  8, 'majorstuen'   ],
+      [ 108,  9, 'nordreaker'   ],
+      [ 109, 10, 'vestreaker'   ]
    ] },
 
  { 'site_index'        : 2,
