@@ -80,8 +80,17 @@ function makeMap(latitude, longitude, zoomLevel)
    // ====== OpenWeather overlay ============================================
    // window.wstations = new OpenLayers.Layer.Vector.OWMClusterStations("Stations");
    // window.maplayers.push(wstations);
+
    window.wcity = new OpenLayers.Layer.Vector.OWMWeather("Weather");
    window.maplayers.push(wcity);
+
+   window.wpercipitation = new OpenLayers.Layer.OWMComposite('PR', "Precipitation forecasts",  { opacity: 0.2 } );
+   window.wpercipitation.setVisibility(false);
+   window.maplayers.push(wpercipitation);
+
+   window.wclouds = new OpenLayers.Layer.OWMComposite('NT', "Clouds forecasts",  { opacity: 0.2 } );
+   window.wclouds.setVisibility(false);
+   window.maplayers.push(wclouds);
 
    // ====== Create layers for markers and vectors ==========================
    window.mapvectors = new OpenLayers.Layer.Vector("Connections");
@@ -99,6 +108,7 @@ function makeMap(latitude, longitude, zoomLevel)
    window.map = new OpenLayers.Map({
       div:               "map_canvas",
       units:             "m",
+      projection:        new OpenLayers.Projection("EPSG:900913"),
       displayProjection: new OpenLayers.Projection("EPSG:4326"),
       layers:            window.maplayers,
       controls: [
