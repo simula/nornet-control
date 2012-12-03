@@ -6,7 +6,7 @@
 # It is mandatory for all NorNet PLC-database operations!
 
 # This is the address of the PLC and the Central Site:
-NorNetPLC_Address='10.1.1.23'
+NorNetPLC_Address='10.1.1.2'
 
 # These are the user name and corresponding password for accessing the PLC.
 # SECURITY ADVICE:
@@ -23,11 +23,11 @@ NorNetPLC_Password='nntb-root'
 NorNet_LocalNode_Index="1"
 
 # This is the full hostname of the node:
-NorNet_LocalNode_Hostname='lysaker.simula.nornet'
+NorNet_LocalNode_Hostname='localhost.localdomain'
 
 # This is the name of the NorNet interface (with the site's provider
 # networks) of the node:
-NorNet_LocalNode_NorNetInterface='eth0'
+NorNet_LocalNode_NorNetInterface='p2p1'
 
 
 # ###### NorNet Tunnelbox configuration #####################################
