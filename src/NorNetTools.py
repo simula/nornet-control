@@ -30,6 +30,9 @@ import re;
 import sys;
 import codecs;
 import datetime;
+import crypt;
+import random;
+import string;
 
 
 # ###### Print log message ##################################################
@@ -115,3 +118,10 @@ def getDomainFromFQDN(fqdn):
       return match.group(2)
    else:
       return ''
+
+
+# ###### Make a crypted password ############################################
+def makeUnixPassword(password):
+   # Generate salt: 2-character random string
+   salt = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(2))
+   return crypt.crypt(password, salt)

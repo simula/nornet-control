@@ -1,0 +1,92 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# User Setup
+# Copyright (C) 2012 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+import re;
+import os;
+import base64;
+
+# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
+from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+
+# NorNet
+from NorNetTools         import *;
+from NorNetAPI           import *;
+from NorNetProviderSetup import *;
+from NorNetSiteSetup     import *;
+
+
+# ###### Main program #######################################################
+action = ''
+if len(sys.argv) > 2:
+   if sys.argv[1] == 'add':
+      action = 'add'
+   elif sys.argv[1] == 'renew':
+      action = 'renew'
+   elif sys.argv[1] == 'remove':
+      action = 'remove'
+if action == '':
+   error('Usage: ' + sys.argv[0] + ' add|renew|remove [--user=User] [--password=Password] [--firstname=Name] [--lastname=Name] [--phone=Phone] [--url=URL] [--publickey=Key]')
+
+
+userName  = None
+password  = makeUnixPassword('top-secret')
+publicKey = None
+title     = ''
+firstName = 'Ola'
+lastName  = 'Nordmann'
+phone     = ''
+url       = ''
+roles     = [ 'user' ]
+
+i = 1
+while i < len(sys.argv):
+   match = re.search('^--([a-z]*)=(.*)', sys.argv[i])
+   if ((match != None) and (match.group(1) == 'user')):
+      userName = match.group(2)
+   elif ((match != None) and (match.group(1) == 'title')):
+      title = match.group(2)
+   elif ((match != None) and (match.group(1) == 'firstname')):
+      firstName = match.group(2)
+   elif ((match != None) and (match.group(1) == 'lastname')):
+      lastName = match.group(2)
+   elif ((match != None) and (match.group(1) == 'phone')):
+      phone = match.group(2)
+   elif ((match != None) and (match.group(1) == 'url')):
+      url = match.group(2)
+   elif ((match != None) and (match.group(1) == 'password')):
+      password = match.group(2)
+   elif ((match != None) and (match.group(1) == 'publickey')):
+      publicKey = match.group(2)
+
+   i = i + 1
+
+
+log('***** Welcome to NorNet! *****')
+loginToPLC()
+
+
+if ((action == 'remove') or (action == 'renew')):
+   userID = lookupPersonID(userName)
+   if userID != 0:
+      removeNorNetUser(userName)
+
+if ((action == 'add') or (action == 'renew')):
+   makeNorNetUser(userName, password, title, firstName, lastName, phone, URL, publicKey, roles)

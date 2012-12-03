@@ -419,3 +419,49 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
 
    except Exception as e:
       error('Adding node ' + nodeHostName + ' has failed: ' + str(e))
+
+
+# ###### Remove NorNet user #################################################
+def removeNorNetUser(userName):
+   user = lookupPersonID(userName)
+   if user != None:
+      log('Removing NorNet user ' + userName + ' ...')
+      userID = user['person_id']
+      getPLCServer().DeletePerson(getPLCAuthentication(), userID)
+
+
+# ###### Create NorNet user #################################################
+def makeNorNetUser(userName, password, title, firstName, lastName, phone, URL, publicKey, roles):
+   try:
+      # ====== Add user =====================================================
+      log('Adding user ' + userName + ' ...')
+      user = {}
+      user['email']      = userName
+      user['password']   = password
+      user['first_name'] = firstName
+      user['last_name']  = lastName
+      user['url']        = url
+      user['phone']      = phone
+      user['url']        = url
+      if userEnabled == True:
+         user['enabled'] = True
+      else:
+         user['enabled'] = False
+
+      userID = lookupUserID(userName)
+      if userID == 0:
+         userID = getPLCServer().AddPerson(getPLCAuthentication(), user)
+         # NOTE: Directly call UpdatePerson to enable it!
+      if getPLCServer().UpdatePerson(getPLCAuthentication(), userID, user) == 1:
+         for role in roles:
+            getPLCServer().AddRoleToPerson(getPLCAuthentication(), role, userID)
+      else:
+        userID = 0
+
+      if userID <= 0:
+         error('Unable to add/update user ' + userName)
+
+   except Exception as e:
+      error('Adding user ' + userName + ' has failed: ' + str(e))
+
+   return fetchNorNetUser(userName, False)
