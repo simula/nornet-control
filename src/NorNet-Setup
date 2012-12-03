@@ -151,20 +151,72 @@ norNetSetup = [
    'site_province'     : 'Rogaland',
    'site_country'      : 'Norge',
    'site_country_code' : 'NO',
-   'site_latitude'     : 58.940799,
-   'site_longitude'    : 5.703049,
-   'site_pcu'          : [ IPv4Address('132.252.156.6'), 'pcu-root', 'a-secret-password' ],
+   'site_latitude'     : 58.938063,
+   'site_longitude'    : 5.691172,
+   'site_pcu'          : [ IPv4Address('152.94.1.7'), 'pcu-root', 'a-secret-password' ],
    'site_providers' : [
-      [ 'Uninett', 'eth1', IPv4Address('132.252.156.74'), IPv6Address('::') ],
+      [ 'Uninett', 'eth1', IPv4Address('152.94.1.7'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'hvit'   ],
-      [ 101, 2, 'orange' ],
-      [ 102, 3, 'roed'   ],
-      [ 103, 4, 'svart'  ]
+      [ 100, 1, 'mosteroey'  ],
+      [ 101, 2, 'klosteroey' ],
+      [ 102, 3, 'askje'      ],
+      [ 103, 4, 'sokn'       ],
+      [ 104, 5, 'rennesoey'  ],
+      [ 105, 6, 'fjoeloey'   ]
    ] },
 
  { 'site_index'        : 6,
+   'site_enabled'      : False,
+   'site_long_name'    : u'Universitetet i Bergen',
+   'site_short_name'   : 'UiB',
+   'site_url'          : 'http://www.uib.nornet',
+   'site_domain'       : 'uib.nornet',
+   'site_city'         : 'Bergen',
+   'site_province'     : 'Hordaland',
+   'site_country'      : 'Norge',
+   'site_country_code' : 'NO',
+   'site_latitude'     : 60.384904,
+   'site_longitude'    : 5.328636,
+   'site_pcu'          : [ IPv4Address('158.37.6.195'), 'pcu-root', 'a-secret-password' ],
+   'site_providers' : [
+      [ 'Uninett', 'eth1', IPv4Address('158.37.6.195'), IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'floeibanen'        ],
+      [ 101, 2, 'fisketorget'       ],
+      [ 102, 3, 'ulriksbanen'       ],
+      [ 103, 4, 'lungegaardsvannet' ],
+      [ 104, 5, 'bergenhus'         ],
+      [ 105, 6, 'sverresborg'       ]
+   ] },
+
+ { 'site_index'        : 7,
+   'site_enabled'      : False,
+   'site_long_name'    : u'Universitetet i Agder',
+   'site_short_name'   : 'UiA',
+   'site_url'          : 'http://www.uia.nornet',
+   'site_domain'       : 'uia.nornet',
+   'site_city'         : 'Kristiansand',
+   'site_province'     : 'Vest-Agder',
+   'site_country'      : 'Norge',
+   'site_country_code' : 'NO',
+   'site_latitude'     : 58.163833,
+   'site_longitude'    : 8.002936,
+   'site_pcu'          : [ IPv4Address('158.36.50.178'), 'pcu-root', 'a-secret-password' ],
+   'site_providers' : [
+      [ 'Uninett', 'eth1', IPv4Address('158.36.50.178'), IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'julenissen'  ],
+      [ 101, 2, 'fjoesnisse'  ],
+      [ 102, 3, 'gaardsnisse' ],
+      [ 103, 4, 'hagenisse'   ],
+      [ 104, 5, 'skipsnisse'  ],
+      [ 105, 6, 'kirkenisse'  ]
+   ] },
+
+ { 'site_index'        : 8,
    'site_enabled'      : False,
    'site_long_name'    : u'Universitetet i Trondheim',
    'site_short_name'   : 'NTNU',
@@ -186,54 +238,6 @@ norNetSetup = [
       [ 101, 2, 'hund'     ],
       [ 102, 3, 'katt'     ],
       [ 103, 4, 'mus'      ]
-   ] },
-
- { 'site_index'        : 7,
-   'site_enabled'      : False,
-   'site_long_name'    : u'Universitetet i Bergen',
-   'site_short_name'   : 'UiB',
-   'site_url'          : 'http://www.uib.nornet',
-   'site_domain'       : 'uib.nornet',
-   'site_city'         : 'Bergen',
-   'site_province'     : 'Hordaland',
-   'site_country'      : 'Norge',
-   'site_country_code' : 'NO',
-   'site_latitude'     : 60.388236,
-   'site_longitude'    : 5.322623,
-   'site_pcu'          : [ IPv4Address('132.252.156.8'), 'pcu-root', 'a-secret-password' ],
-   'site_providers' : [
-      [ 'Uninett', 'eth1', IPv4Address('132.252.156.76'), IPv6Address('fd55:5555::76') ],
-      [ 'Telenor', 'eth1', IPv4Address('169.254.100.76'), IPv6Address('::') ]
-   ],
-   'site_nodes' : [
-      [ 100, 1, 'nisse'    ],
-      [ 101, 2, 'troll'    ],
-      [ 102, 3, 'reinsdyr' ],
-      [ 103, 4, 'sau'      ]
-   ] },
-
- { 'site_index'        : 8,
-   'site_enabled'      : False,
-   'site_long_name'    : u'Universitetet i Agder',
-   'site_short_name'   : 'UiA',
-   'site_url'          : 'http://www.uia.nornet',
-   'site_domain'       : 'uia.nornet',
-   'site_city'         : 'Kristiansand',
-   'site_province'     : 'Vest-Agder',
-   'site_country'      : 'Norge',
-   'site_country_code' : 'NO',
-   'site_latitude'     : 58.163736,
-   'site_longitude'    : 8.003276,
-   'site_pcu'          : [ IPv4Address('132.252.156.9'), 'pcu-root', 'a-secret-password' ],
-   'site_providers' : [
-      [ 'Uninett', 'eth1', IPv4Address('132.252.156.77'), IPv6Address('fd55:5555::77') ],
-      [ 'Telenor', 'eth1', IPv4Address('169.254.100.77'), IPv6Address('::') ]
-   ],
-   'site_nodes' : [
-      [ 100, 1, 'en'   ],
-      [ 101, 2, 'to'   ],
-      [ 102, 3, 'tre'  ],
-      [ 103, 4, 'fire' ]
    ] },
 
  { 'site_index'        : 9,
