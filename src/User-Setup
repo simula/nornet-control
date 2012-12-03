@@ -43,10 +43,11 @@ if len(sys.argv) > 2:
    elif sys.argv[1] == 'remove':
       action = 'remove'
 if action == '':
-   error('Usage: ' + sys.argv[0] + ' add|renew|remove [--user=User] [--password=Password] [--firstname=Name] [--lastname=Name] [--phone=Phone] [--url=URL] [--publickey=Key]')
+   error('Usage: ' + sys.argv[0] + ' add|renew|remove [--user=User] [--site=Site] [--password=Password] [--firstname=Name] [--lastname=Name] [--phone=Phone] [--url=URL] [--publickey=Key] [--pi] [--tech]')
 
 
 userName  = None
+siteName  = None
 password  = makeUnixPassword('top-secret')
 publicKey = None
 title     = ''
@@ -56,25 +57,37 @@ phone     = ''
 url       = ''
 roles     = [ 'user' ]
 
-i = 1
+i = 2
 while i < len(sys.argv):
    match = re.search('^--([a-z]*)=(.*)', sys.argv[i])
-   if ((match != None) and (match.group(1) == 'user')):
-      userName = match.group(2)
-   elif ((match != None) and (match.group(1) == 'title')):
-      title = match.group(2)
-   elif ((match != None) and (match.group(1) == 'firstname')):
-      firstName = match.group(2)
-   elif ((match != None) and (match.group(1) == 'lastname')):
-      lastName = match.group(2)
-   elif ((match != None) and (match.group(1) == 'phone')):
-      phone = match.group(2)
-   elif ((match != None) and (match.group(1) == 'url')):
-      url = match.group(2)
-   elif ((match != None) and (match.group(1) == 'password')):
-      password = match.group(2)
-   elif ((match != None) and (match.group(1) == 'publickey')):
-      publicKey = match.group(2)
+   if match != None:
+      if match.group(1) == 'user':
+         userName = match.group(2)
+      elif match.group(1) == 'site':
+         siteName = match.group(2)
+      elif match.group(1) == 'title':
+         title = match.group(2)
+      elif match.group(1) == 'firstname':
+         firstName = match.group(2)
+      elif match.group(1) == 'lastname':
+         lastName = match.group(2)
+      elif match.group(1) == 'phone':
+         phone = match.group(2)
+      elif match.group(1) == 'url':
+         url = match.group(2)
+      elif match.group(1) == 'password':
+         password = match.group(2)
+      elif match.group(1) == 'publickey':
+         publicKey = match.group(2)
+      else:
+        error('Invalid option parameter: ' + sys.argv[i])
+   else:
+     if sys.argv[i] == '--tech':
+        roles.append('tech')
+     elif sys.argv[i] == '--pi':
+        roles.append('pi')
+     else:
+        error('Invalid role parameter: ' + sys.argv[i])
 
    i = i + 1
 
@@ -88,5 +101,13 @@ if ((action == 'remove') or (action == 'renew')):
    if userID != 0:
       removeNorNetUser(userName)
 
-if ((action == 'add') or (action == 'renew')):
-   makeNorNetUser(userName, password, title, firstName, lastName, phone, URL, publicKey, roles)
+if ((action == 'add') or (action == 'renew')):   
+
+   if siteName != None:
+      site = fetchNorNetSite(siteName)
+      if site == None:
+         error('Cannot find site ' + siteName)
+   else:
+      site = None  
+
+   makeNorNetUser(userName, password, site, title, firstName, lastName, phone, url, publicKey, roles)

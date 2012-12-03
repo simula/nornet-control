@@ -431,7 +431,7 @@ def removeNorNetUser(userName):
 
 
 # ###### Create NorNet user #################################################
-def makeNorNetUser(userName, password, title, firstName, lastName, phone, URL, publicKey, roles):
+def makeNorNetUser(userName, password, site, title, firstName, lastName, phone, url, publicKey, roles):
    try:
       # ====== Add user =====================================================
       log('Adding user ' + userName + ' ...')
@@ -443,18 +443,23 @@ def makeNorNetUser(userName, password, title, firstName, lastName, phone, URL, p
       user['url']        = url
       user['phone']      = phone
       user['url']        = url
-      if userEnabled == True:
-         user['enabled'] = True
-      else:
-         user['enabled'] = False
+      user['enabled']    = True
 
-      userID = lookupUserID(userName)
+      userID = lookupPersonID(userName)
       if userID == 0:
          userID = getPLCServer().AddPerson(getPLCAuthentication(), user)
          # NOTE: Directly call UpdatePerson to enable it!
       if getPLCServer().UpdatePerson(getPLCAuthentication(), userID, user) == 1:
+         if publicKey != None:
+            key = {}
+            key['key_type'] = 'ssh'
+            key['key']      = publicKey
+            getPLCServer().AddPersonKey(getPLCAuthentication(), userID, key)
          for role in roles:
             getPLCServer().AddRoleToPerson(getPLCAuthentication(), role, userID)
+         if site != None:
+            getPLCServer().AddPersonToSite(getPLCAuthentication(), userID, site['site_id'])
+            getPLCServer().SetPersonPrimarySite(getPLCAuthentication(), userID, site['site_id'])            
       else:
         userID = 0
 
@@ -464,4 +469,4 @@ def makeNorNetUser(userName, password, title, firstName, lastName, phone, URL, p
    except Exception as e:
       error('Adding user ' + userName + ' has failed: ' + str(e))
 
-   return fetchNorNetUser(userName, False)
+   return fetchNorNetUser(userName)
