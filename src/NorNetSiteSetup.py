@@ -438,6 +438,7 @@ def makeNorNetUser(userName, password, site, title, firstName, lastName, phone, 
       user = {}
       user['email']      = userName
       user['password']   = password
+      user['title']      = title
       user['first_name'] = firstName
       user['last_name']  = lastName
       user['url']        = url
@@ -459,7 +460,7 @@ def makeNorNetUser(userName, password, site, title, firstName, lastName, phone, 
             getPLCServer().AddRoleToPerson(getPLCAuthentication(), role, userID)
          if site != None:
             getPLCServer().AddPersonToSite(getPLCAuthentication(), userID, site['site_id'])
-            getPLCServer().SetPersonPrimarySite(getPLCAuthentication(), userID, site['site_id'])            
+            getPLCServer().SetPersonPrimarySite(getPLCAuthentication(), userID, site['site_id'])
       else:
         userID = 0
 
