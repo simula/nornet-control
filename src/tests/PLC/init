@@ -1,6 +1,7 @@
 #!/bin/sh
 
-./User-Setup add --user=dreibh@simula.no --firstname=Thomas --lastname=Dreibholz "--title=Priv.-Doz. Dr." --pi --tech --password=kpl07
+./User-Setup add --user=dreibh@simula.no --firstname=Thomas --lastname=Dreibholz "--title=Priv.-Doz. Dr." --pi --tech --password=kpl07 "--url=http://www.nntb.no"
+./User-Setup add --user=dummy@simula.nornet --firstname=Ola --lastname=Nordmann "--site=NorNet Testbed Central" --password=dummy-password "--url=http://www.nntb.no"
 
 
 # *After* adding the Slice!

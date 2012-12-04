@@ -117,7 +117,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 4,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Universitetet i Tromsø',
    'site_short_name'   : 'UiT',
    'site_url'          : 'http://www.uit.nornet',
@@ -142,7 +142,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 5,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Universitetet i Stavanger',
    'site_short_name'   : 'UiS',
    'site_url'          : 'http://www.uis.nornet',
@@ -167,7 +167,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 6,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Universitetet i Bergen',
    'site_short_name'   : 'UiB',
    'site_url'          : 'http://www.uib.nornet',
@@ -192,7 +192,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 7,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Universitetet i Agder',
    'site_short_name'   : 'UiA',
    'site_url'          : 'http://www.uia.nornet',

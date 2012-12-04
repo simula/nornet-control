@@ -184,10 +184,9 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
    global plc_authentication
 
    if siteNameToFind == None:   # Get full list
-      filter = { 'is_public': True }
+      filter = { }
    else:              # Only perform lookup for given name
-      filter = { 'is_public': True,
-                 'name':      siteNameToFind }
+      filter = { 'name': siteNameToFind }
 
    try:
       norNetSiteList = dict([])
@@ -201,7 +200,7 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
          siteTagsList = plc_server.GetSiteTags(plc_authentication,
                                                { 'site_id' : siteID },
                                                [ 'site_id', 'tagname', 'value' ])
-         if int(getTagValue(siteTagsList, 'nornet_is_managed_site', '-1')) < 1:
+         if ((int(getTagValue(siteTagsList, 'nornet_is_managed_site', '-1')) < 1) and (siteNameToFind == None)):
             continue
          siteName             = site['name']
          siteAbbrev           = site['abbreviated_name']
@@ -211,9 +210,9 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
          if siteDefProviderIndex < 1:
             siteDefProviderIndex = 0
             # error('Site ' + siteName + ' has no NorNet Default Provider Index')
-         if not re.match(r"^[a-zA-Z][a-zA-Z0-9]*$", siteAbbrev):
+         if ((not re.match(r"^[a-zA-Z][a-zA-Z0-9]*$", siteAbbrev)) and (siteNameToFind == None)):
             error('Bad site abbreviation ' + siteAbbrev)
-         if ((siteIndex < 0) or (siteIndex > 255)):
+         if (((siteIndex < 0) or (siteIndex > 255)) and (siteNameToFind == None)):
             error('Bad site index ' + str(siteIndex))
 
          norNetSite = {
