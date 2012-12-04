@@ -453,10 +453,13 @@ def fetchUsersOfNorNetSite(fullUserList, site, role):
 
       selectedUsers = []
       for userID in userIDs:
-         if role == None:
-            selectedUsers.append(fullUserList[userID])
-         elif role in fullUserList[userID]['user_roles']:
-            selectedUsers.append(fullUserList[userID])
+         try:
+            if role == None:
+               selectedUsers.append(fullUserList[userID])
+            elif role in fullUserList[userID]['user_roles']:
+               selectedUsers.append(fullUserList[userID])
+         except Exception as e:
+            continue
 
       if len(selectedUsers) == 0:
          return None

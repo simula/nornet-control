@@ -65,7 +65,9 @@ if localSite == None:
 
 fullUserList = fetchNorNetUserList()
 
+
 makeNodeConfiguration(fullSiteList, node, interface, distribution, '')
+
 makeHostnameConfiguration(fullSiteList, localSite, 'hostname', getHostnameFromFQDN(fqdn))
 makeHostsConfiguration(fullSiteList, localSite, NorNet_NodeIndex_Tunnelbox, 'hosts', getHostnameFromFQDN(fqdn))
 makeNTPConfiguration(fullSiteList, localSite, 'ntp')
