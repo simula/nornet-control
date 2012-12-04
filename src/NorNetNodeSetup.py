@@ -1080,7 +1080,7 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, configNamePrefi
 
 
 # ###### Generate hostname configuration ####################################
-def makeHostnameConfiguration(fullSiteList, fullUserList, localSite, configNamePrefix, name):
+def makeHostnameConfiguration(fullSiteList, localSite, configNamePrefix, name):
    if configNamePrefix == None:
       configNamePrefix = 'hostname-' + localSite['site_short_name']
    configurationName = configNamePrefix + '-config'
@@ -1090,7 +1090,7 @@ def makeHostnameConfiguration(fullSiteList, fullUserList, localSite, configNameP
 
 
 # ###### Generate hosts configuration #######################################
-def makeHostsConfiguration(fullSiteList, fullUserList, localSite, localNode, configNamePrefix, name):
+def makeHostsConfiguration(fullSiteList, localSite, localNode, configNamePrefix, name):
    if configNamePrefix == None:
       configNamePrefix = 'hosts-' + localSite['site_domain']
    configurationName = configNamePrefix + '-config'
@@ -1228,7 +1228,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                                 (localProviderIndex != localSite['site_default_provider_index']) or
                                 (remoteProviderIndex != remoteSite['site_default_provider_index']))):
                               # Skip non-"Central Site"-tunnels via non-default provider, if site is disabled!
-                              print 'SKIP=' + localSite['site_long_name'] + str(localProviderIndex)+ " - " + remoteSite['site_long_name'] + str(remoteProviderIndex) + "\n"
+                              #print 'SKIP=' + localSite['site_long_name'] + str(localProviderIndex)+ " - " + remoteSite['site_long_name'] + str(remoteProviderIndex) + "\n"
                               continue
 
                            remoteProvider = remoteProviderList[remoteProviderIndex]
