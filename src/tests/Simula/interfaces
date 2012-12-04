@@ -1,0 +1,36 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet static
+	address 10.1.1.254
+	netmask 255.255.255.0
+	gateway 10.1.1.1
+
+auto eth1
+iface eth1 inet manual
+
+# Uninett
+auto eth2
+iface eth2 inet static
+	address 128.39.36.143
+	netmask 255.255.254.0
+	gateway 128.39.36.1
+	dns-nameservers 8.8.8.8 8.8.4.4
+
+# Hafslund
+auto eth3
+iface eth3 inet static
+	address 77.88.71.151
+	netmask 255.255.255.192
+	# gateway 77.88.71.133
+
+auto eth4
+iface eth4 inet manual
+
+auto eth5
+iface eth5 inet manual
