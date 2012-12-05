@@ -32,7 +32,7 @@
 
 NAME="nornet-server"
 DESC="NorNet Virtual Systems"
-NORNET_USER="dreibh"
+NORNET_USER="nornetpp"
 NORNET_DIRECTORY="/etc/nornet"
 LOGFILE="/var/log/nornet-server.log"
 # NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
