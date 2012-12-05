@@ -165,6 +165,8 @@ show_status ()
 # ###### Main program #######################################################
 case "$ACTION" in
   start)
+     # First, ensure that VirtualBox kernel modules are loaded!
+     /etc/init.d/virtualbox start >>$LOGFILE 2>&1
      start_virtual_systems >>$LOGFILE 2>&1
      ;;
   stop)
