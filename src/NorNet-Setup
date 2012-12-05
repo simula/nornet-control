@@ -47,6 +47,7 @@ norNetSetup = [
    'site_latitude'     : 59.895933,
    'site_longitude'    : 10.627635,
    'site_pcu'          : [ IPv4Address('128.39.36.131'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ 'Uninett',  'eth1', IPv4Address('128.39.36.143'), IPv6Address('::') ],
       [ 'Hafslund', 'eth2', IPv4Address('77.88.71.151'),  IPv6Address('::') ]
@@ -79,6 +80,7 @@ norNetSetup = [
    'site_latitude'     : 59.944034,
    'site_longitude'    : 10.719013,
    'site_pcu'          : [ IPv4Address('129.240.66.61'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ 'Uninett', 'eth1', IPv4Address('129.240.66.60'), IPv6Address('::') ]
    ],
@@ -104,6 +106,7 @@ norNetSetup = [
    'site_latitude'     : 60.789615,
    'site_longitude'    : 10.68166,
    'site_pcu'          : [ IPv4Address('128.39.49.154'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ 'Uninett', 'eth1', IPv4Address('128.39.49.154'),  IPv6Address('::') ]
    ],
@@ -129,6 +132,7 @@ norNetSetup = [
    'site_latitude'     : 69.681897,
    'site_longitude'    : 18.980541,
    'site_pcu'          : [ IPv4Address('129.242.157.229'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ 'Uninett', 'eth1', IPv4Address('129.242.157.228'), IPv6Address('::') ]
    ],
@@ -154,6 +158,7 @@ norNetSetup = [
    'site_latitude'     : 58.938063,
    'site_longitude'    : 5.691172,
    'site_pcu'          : [ IPv4Address('152.94.1.7'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ 'Uninett', 'eth1', IPv4Address('152.94.1.7'), IPv6Address('::') ]
    ],
@@ -179,6 +184,7 @@ norNetSetup = [
    'site_latitude'     : 60.384904,
    'site_longitude'    : 5.328636,
    'site_pcu'          : [ IPv4Address('158.37.6.195'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ 'Uninett', 'eth1', IPv4Address('158.37.6.195'), IPv6Address('::') ]
    ],
@@ -204,6 +210,7 @@ norNetSetup = [
    'site_latitude'     : 58.163833,
    'site_longitude'    : 8.002936,
    'site_pcu'          : [ IPv4Address('158.36.50.178'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ 'Uninett', 'eth1', IPv4Address('158.36.50.178'), IPv6Address('::') ]
    ],
@@ -229,6 +236,7 @@ norNetSetup = [
    'site_latitude'     : 63.419034,
    'site_longitude'    : 10.4022,
    'site_pcu'          : [ IPv4Address('132.252.156.7'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ 'Uninett', 'eth1', IPv4Address('132.252.156.75'), IPv6Address('fd55:5555::75') ],
       [ 'Telenor', 'eth1', IPv4Address('169.254.100.75'), IPv6Address('::') ]
@@ -253,6 +261,7 @@ norNetSetup = [
    'site_latitude'     : 67.289645,
    'site_longitude'    : 14.560402,
    'site_pcu'          : [ IPv4Address('132.252.156.10'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ 'Uninett', 'eth1', IPv4Address('132.252.156.78'), IPv6Address('fd55:5555::78') ],
       [ 'Telenor', 'eth1', IPv4Address('169.254.100.78'), IPv6Address('::') ]
@@ -277,6 +286,7 @@ norNetSetup = [
    'site_latitude'     : 78.222972,
    'site_longitude'    : 15.648537,
    'site_pcu'          : [ IPv4Address('132.252.156.11'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ 'Uninett', 'eth1', IPv4Address('132.252.156.79'), IPv6Address('fd55:5555::79') ],
       [ 'Telenor', 'eth1', IPv4Address('169.254.100.79'), IPv6Address('::') ]
@@ -301,10 +311,11 @@ norNetSetup = [
    'site_latitude'     : 51.476144,
    'site_longitude'    : 7.011656,
    'site_pcu'          : [ IPv4Address('132.252.156.12'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Deutsches Forschungsnetz', 'eth0', IPv4Address('172.31.255.100'),  IPv6Address('::') ],
-      [ 'Uninett',                  'eth1', IPv4Address('132.252.156.100'), IPv6Address('fd55:5555::100') ],
-      [ 'Telenor',                  'eth2', IPv4Address('169.254.100.100'), IPv6Address('::') ]
+      [ 'Deutsches Forschungsnetz', 'eth1', IPv4Address('172.31.255.100'),  IPv6Address('::') ],
+      [ 'Uninett',                  'eth2', IPv4Address('132.252.156.100'), IPv6Address('fd55:5555::100') ],
+      [ 'Telenor',                  'eth3', IPv4Address('169.254.100.100'), IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, 'altenessen'  ],
@@ -345,7 +356,7 @@ def makeSite(site, norNetInformation, dnsServers, ntpServers):
                             site['site_city'], site['site_province'], site['site_country'], site['site_country_code'],
                             site['site_latitude'], site['site_longitude'],
                             site['site_providers'],
-                            site['site_providers'][0][0], site['site_providers'][0][1],
+                            site['site_providers'][0][0], site['site_nornet_if'],
                             dnsServers, ntpServers)
    newPCU = makeNorNetPCU(newSite, 'pcu', site['site_domain'],
                           site['site_pcu'][0], site['site_pcu'][1], site['site_pcu'][2],
