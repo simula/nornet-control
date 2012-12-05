@@ -1,0 +1,164 @@
+#!/bin/sh
+# --------------- NorNet -- The Multi-Homing Testbed Project ----------------
+#
+# Copyright (C) 2012 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
+
+### BEGIN INIT INFO
+# Provides:          nornet-vsystems
+# Required-Start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: NorNet Node
+# Description:       This service provides a NorNet Node.
+### END INIT INFO
+
+
+NAME="nornet-vsystems"
+DESC="NorNet Virtual Systems"
+NORNET_DIRECTORY="/etc/nornet"
+# NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
+# LOGFILE="/var/log/nornet-vsystems.log"
+LOGFILE="/tmp/nornet-vsystems.log"
+PATH=$NORNET_DIRECTORY:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+ACTION="$1"
+shift
+
+
+# Check whether NorNet directory is existing
+if [ ! -e "$NORNET_DIRECTORY" ] ; then
+   exit 0
+fi
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.2-14) to ensure that this file is present
+# and status_of_proc is working.
+. /lib/lsb/init-functions
+
+
+set -e
+
+cd "$NORNET_DIRECTORY"
+
+# Load configuration from API config file
+NorNet_LocalNode_Hostname=""
+NorNet_LocalNode_NorNetInterface=""
+if [ ! -e ./vsystems ] ; then
+   echo >&2 "ERROR: $NORNET_DIRECTORY/vsystems does not exist!"
+   exit 0
+fi
+
+# Log what is going on ...
+echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE 2>&1
+
+
+# ###### Start virtual systems ##############################################
+start_virtual_systems ()
+{
+   VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
+   for vsystem in $VSYSTEMS ; do
+      echo "Processing $vsystem ..."
+      NAME="BAD-NAME"
+      STARTDELAY=0
+      ( . ./$vsystem && \
+        echo "Starting $NAME" && \
+        vboxmanage startvm "$NAME" && \
+        sleep "$STARTDELAY" \
+      ) || true
+   done
+}
+#  --type headless
+
+# ###### Wait for shutdown ##################################################
+wait_for_shutdown ()
+# $1 = Name
+# $2 = Timeout
+{
+   i=0
+   while [ $i -lt $2 ] ; do
+      echo -n "."
+      sleep 1
+      i=$(($i+1))
+
+      echo -n "<ACPI>"
+      vboxmanage controlvm "$1" acpipowerbutton || true
+      status=`vboxmanage showvminfo "$1" --machinereadable | grep VMState=`
+      if [ "$status" = 'VMState="aborted"' -o "$status" = 'VMState="poweroff"' ] ; then
+         echo " OK!"
+         break
+      fi
+   done
+}
+
+
+# ###### Stop virtual systems ###############################################
+stop_virtual_systems ()
+{
+   VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
+   for vsystem in $VSYSTEMS ; do
+      echo "Processing $vsystem ..."
+      NAME="BAD-NAME"
+      STOPDELAY=0
+      ( . ./$vsystem && \
+        echo "Stopping $NAME (ACPI power button)" && \
+        vboxmanage controlvm "$NAME" acpipowerbutton && \
+        wait_for_shutdown "$NAME" "$STOPDELAY" && \
+        echo "Stopping $NAME (power off!)" && \
+        vboxmanage controlvm "$NAME" poweroff
+      ) || true
+   done
+}
+
+
+# ###### Main program #######################################################
+case "$ACTION" in
+  start)
+     start_virtual_systems
+     ;;
+  stop)
+     stop_virtual_systems
+     ;;
+  restart)
+     stop_virtual_systems
+     start_virtual_systems
+     ;;
+  force-reload)
+     ;;
+  configure)
+     rm -f nagios-config
+     # All configuration files are gone. The tests below will trigger update.
+     check_and_configure -update-all >>$LOGFILE
+     ;;
+  check-and-configure)
+     # Compare with existing configuration, update only if necessary.
+     check_and_configure >>$LOGFILE
+     ;;
+  status)
+     ;;
+  *)
+     N=/etc/init.d/$NAME
+     echo "Usage: $N {start|stop|restart|force-reload|configure|check-and-configure|status}" >&2
+     exit 1
+     ;;
+esac
+
+exit 0
