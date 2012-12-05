@@ -25,8 +25,8 @@
 # Required-Stop:     $local_fs $remote_fs $network $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: NorNet Node
-# Description:       This service provides a NorNet Node.
+# Short-Description: NorNet Virtual Systems
+# Description:       This service provides the NorNet Virtal Systems management.
 ### END INIT INFO
 
 
@@ -88,6 +88,17 @@ start_virtual_systems ()
 }
 #  --type headless
 
+
+# ###### Get machine state ##################################################
+get_machine_state ()
+# $1 = Name
+{
+   status="BAD_MACHINE"
+   s=`vboxmanage showvminfo "$1" --machinereadable | grep VMState=` && status=`echo $s | sed -e "s/VMState=//" -e "s/\"//g"` || true
+   echo "$status"
+}
+
+
 # ###### Wait for shutdown ##################################################
 wait_for_shutdown ()
 # $1 = Name
@@ -99,13 +110,14 @@ wait_for_shutdown ()
       sleep 1
       i=$(($i+1))
 
-      echo -n "<ACPI>"
-      vboxmanage controlvm "$1" acpipowerbutton || true
-      status=`vboxmanage showvminfo "$1" --machinereadable | grep VMState=`
-      if [ "$status" = 'VMState="aborted"' -o "$status" = 'VMState="poweroff"' ] ; then
+      status=`get_machine_state "$NAME"`
+      if [ "$status" = "aborted" -o "$status" = "poweroff" -o "$status" = "stuck" ] ; then
          echo " OK!"
          break
       fi
+      # Again send ACPI powerbutton.
+      # If the system had been booting, the event might have been missed.
+      vboxmanage controlvm "$1" acpipowerbutton || true
    done
 }
 
@@ -119,44 +131,56 @@ stop_virtual_systems ()
       NAME="BAD-NAME"
       STOPDELAY=0
       ( . ./$vsystem && \
-        echo "Stopping $NAME (ACPI power button)" && \
-        vboxmanage controlvm "$NAME" acpipowerbutton && \
-        wait_for_shutdown "$NAME" "$STOPDELAY" && \
-        echo "Stopping $NAME (power off!)" && \
-        vboxmanage controlvm "$NAME" poweroff
+        status=`get_machine_state "$NAME"` && \
+        if [ "$status" = "paused" ] ; then
+           vboxmanage controlvm "$NAME" resume || true
+           status=`get_machine_state "$NAME"`
+        fi
+        if [ "$status" = "running" ] ; then
+           echo "Stopping $NAME (ACPI power button) ..." && \
+           vboxmanage controlvm "$NAME" acpipowerbutton && \
+           wait_for_shutdown "$NAME" "$STOPDELAY" && \
+           echo "Stopping $NAME (power off) ..." && \
+           vboxmanage controlvm "$NAME" poweroff
+        fi
       ) || true
    done
 }
 
 
+# ###### Show status of virtual systems #####################################
+show_status ()
+{
+   VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
+   for vsystem in $VSYSTEMS ; do
+      NAME="BAD-NAME"
+      ( . ./$vsystem && \
+         status=`get_machine_state "$NAME"` && \
+         echo "$vsystem: $NAME -> $status"
+      ) || true
+   done
+}
+
 # ###### Main program #######################################################
 case "$ACTION" in
   start)
-     start_virtual_systems
+     start_virtual_systems >>$LOGFILE
      ;;
   stop)
-     stop_virtual_systems
+     stop_virtual_systems >>$LOGFILE
      ;;
   restart)
-     stop_virtual_systems
-     start_virtual_systems
+     stop_virtual_systems  >>$LOGFILE
+     start_virtual_systems >>$LOGFILE
      ;;
   force-reload)
      ;;
-  configure)
-     rm -f nagios-config
-     # All configuration files are gone. The tests below will trigger update.
-     check_and_configure -update-all >>$LOGFILE
-     ;;
-  check-and-configure)
-     # Compare with existing configuration, update only if necessary.
-     check_and_configure >>$LOGFILE
-     ;;
   status)
+     show_status
      ;;
   *)
      N=/etc/init.d/$NAME
-     echo "Usage: $N {start|stop|restart|force-reload|configure|check-and-configure|status}" >&2
+     echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
      exit 1
      ;;
 esac
