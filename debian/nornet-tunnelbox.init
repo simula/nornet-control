@@ -137,7 +137,11 @@ check_and_configure ()
    . ./tunnelbox-providers
    providersNew="$all_providers"
    cd ..
-   . ./tunnelbox-providers
+   if [ -e ./tunnelbox-providers ] ; then
+      . ./tunnelbox-providers
+   else
+      all_providers=""  # We have brand-new tunnelbox!
+   fi
    providersOld="$all_providers"
    providersRemoved=`get_removed_labels "$providersOld" "$providersNew"`
 
