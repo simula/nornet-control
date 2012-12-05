@@ -62,9 +62,7 @@ norNetSetup = [
       [ 106,  7, 'nordreaker'      ],
       [ 107,  8, 'vestreaker'      ],
       [ 108,  9, 'ullevaal'        ],
-      [ 109, 10, 'majorstuen'      ],
-      [ 110, 11, 'vigelandsparken' ],
-      [ 111, 12, 'holmenkollen'    ]
+      [ 109, 10, 'majorstuen'      ]
    ] },
 
  { 'site_index'        : 2,
