@@ -20,22 +20,23 @@
 #
 
 ### BEGIN INIT INFO
-# Provides:          nornet-vsystems
+# Provides:          nornet-server
 # Required-Start:    $local_fs $remote_fs $network $syslog
 # Required-Stop:     $local_fs $remote_fs $network $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: NorNet Virtual Systems
-# Description:       This service provides the NorNet Virtal Systems management.
+# Short-Description: NorNet Server
+# Description:       This service provides the NorNet Server management.
 ### END INIT INFO
 
 
-NAME="nornet-vsystems"
+NAME="nornet-server"
 DESC="NorNet Virtual Systems"
+NORNET_USER="dreibh"
 NORNET_DIRECTORY="/etc/nornet"
+LOGFILE="/var/log/nornet-server.log"
 # NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
-# LOGFILE="/var/log/nornet-vsystems.log"
-LOGFILE="/tmp/nornet-vsystems.log"
+# LOGFILE="/tmp/nornet-server.log"
 PATH=$NORNET_DIRECTORY:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 ACTION="$1"
 shift
@@ -81,12 +82,12 @@ start_virtual_systems ()
       STARTDELAY=0
       ( . ./$vsystem && \
         echo "Starting $NAME" && \
-        vboxmanage startvm "$NAME" && \
+        sudo -u $NORNET_USER vboxmanage startvm "$NAME" --type headless && \
+        echo "Waiting $STARTDELAY seconds ..." && \
         sleep "$STARTDELAY" \
       ) || true
    done
 }
-#  --type headless
 
 
 # ###### Get machine state ##################################################
@@ -94,7 +95,7 @@ get_machine_state ()
 # $1 = Name
 {
    status="BAD_MACHINE"
-   s=`vboxmanage showvminfo "$1" --machinereadable | grep VMState=` && status=`echo $s | sed -e "s/VMState=//" -e "s/\"//g"` || true
+   s=`sudo -u $NORNET_USER vboxmanage showvminfo "$1" --machinereadable | grep VMState=` && status=`echo $s | sed -e "s/VMState=//" -e "s/\"//g"` || true
    echo "$status"
 }
 
@@ -117,7 +118,7 @@ wait_for_shutdown ()
       fi
       # Again send ACPI powerbutton.
       # If the system had been booting, the event might have been missed.
-      vboxmanage controlvm "$1" acpipowerbutton || true
+      sudo -u $NORNET_USER vboxmanage controlvm "$1" acpipowerbutton || true
    done
 }
 
@@ -133,15 +134,15 @@ stop_virtual_systems ()
       ( . ./$vsystem && \
         status=`get_machine_state "$NAME"` && \
         if [ "$status" = "paused" ] ; then
-           vboxmanage controlvm "$NAME" resume || true
+           sudo -u $NORNET_USER vboxmanage controlvm "$NAME" resume || true
            status=`get_machine_state "$NAME"`
         fi
         if [ "$status" = "running" ] ; then
            echo "Stopping $NAME (ACPI power button) ..." && \
-           vboxmanage controlvm "$NAME" acpipowerbutton && \
+           sudo -u $NORNET_USER vboxmanage controlvm "$NAME" acpipowerbutton && \
            wait_for_shutdown "$NAME" "$STOPDELAY" && \
            echo "Stopping $NAME (power off) ..." && \
-           vboxmanage controlvm "$NAME" poweroff
+           sudo -u $NORNET_USER vboxmanage controlvm "$NAME" poweroff
         fi
       ) || true
    done
@@ -164,14 +165,14 @@ show_status ()
 # ###### Main program #######################################################
 case "$ACTION" in
   start)
-     start_virtual_systems >>$LOGFILE
+     start_virtual_systems >>$LOGFILE 2>&1
      ;;
   stop)
-     stop_virtual_systems >>$LOGFILE
+     stop_virtual_systems >>$LOGFILE 2>&1
      ;;
   restart)
-     stop_virtual_systems  >>$LOGFILE
-     start_virtual_systems >>$LOGFILE
+     stop_virtual_systems  >>$LOGFILE 2>&1
+     start_virtual_systems >>$LOGFILE 2>&1
      ;;
   force-reload)
      ;;
