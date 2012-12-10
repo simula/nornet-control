@@ -1,0 +1,23 @@
+;
+; BIND data file for local loopback interface
+;
+
+$TTL	604800
+
+@	IN	SOA	1.0.d.f.in6.arpa. root.simula.nornet. (
+			      3		; Serial
+			   360		; Refresh
+			    60		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+
+1.0.d.f.ip6.arpa.	IN	NS	tunnelbox.simula.nornet.
+
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.0.d.f.ip6.arpa.	IN PTR tunnelbox.simula.nornet.
+2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.0.d.f.ip6.arpa.	IN PTR node2.simula.nornet.
+3.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.0.d.f.ip6.arpa.	IN PTR node3.simula.nornet.
+4.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.0.d.f.ip6.arpa.	IN PTR node4.simula.nornet.
+5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.0.d.f.ip6.arpa.	IN PTR node5.simula.nornet.
+6.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.0.d.f.ip6.arpa.	IN PTR node6.simula.nornet.
+7.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.0.d.f.ip6.arpa.	IN PTR node7.simula.nornet.
+8.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.0.d.f.ip6.arpa.	IN PTR node8.simula.nornet.
