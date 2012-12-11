@@ -360,6 +360,7 @@ def fetchNorNetNode(nodeNameToFind = None, site = None):
             'node_name'             : node['hostname'],
             'node_nornet_interface' : nodeInterface,
             'node_model'            : node['model'],
+            'node_type'             : 'NorNet Managed Node',
             'node_state'            : node['boot_state'],
             'node_tags'             : nodeTagsList
          }

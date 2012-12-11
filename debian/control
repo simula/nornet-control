@@ -99,6 +99,7 @@ Architecture: any
 Depends: grub2,
          ifupdown,
          nmap,
+         bind9,
          nornet-api,
          nornet-management,
          nornet-node,

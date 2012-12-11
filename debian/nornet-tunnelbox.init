@@ -58,6 +58,14 @@ set -e
 
 cd "$NORNET_DIRECTORY"
 
+# Load configuration from API config file
+NorNet_LocalNode_Hostname=""
+. ./nornetapi-config
+if [ "$NorNet_LocalNode_Hostname" = "" ] ; then
+   echo >&2 "ERROR: NorNet_LocalNode_Hostname is not set!"
+   exit 1
+fi
+
 # Log what is going on ...
 echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE 2>&1
 
@@ -129,10 +137,10 @@ check_and_configure ()
    cd updated-tunnelbox-config
    if ! Make-Tunnelbox-Configuration ; then
       echo "NOTE: Unable to obtain full configuration, trying BOOTSTRAP instead ..."
-      Make-Tunnelbox-Configuration -bootstrap
+      Make-Tunnelbox-Configuration "$NorNet_LocalNode_Hostname" -bootstrap
       Tunnelbox-Setup start -bootstrap
       echo "NOTE: Retrying to obtain full configuration ..."
-      Make-Tunnelbox-Configuration
+      Make-Tunnelbox-Configuration "$NorNet_LocalNode_Hostname"
    fi
    . ./tunnelbox-providers
    providersNew="$all_providers"

@@ -111,6 +111,7 @@ def getHostnameFromFQDN(fqdn):
    else:
       return fqdn
 
+
 # ###### Get hostname from FQDN #############################################
 def getDomainFromFQDN(fqdn):
    match = re.search('^([a-zA-Z0-9\-]*)\.(.*)', fqdn)
@@ -125,3 +126,40 @@ def makeUnixPassword(password):
    # Generate salt: 2-character random string
    salt = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(2))
    return crypt.crypt(password, salt)
+
+
+# ###### Get reverse lookup zone for IP address #############################
+def getZoneForAddress(addressObject, prefix):
+   address = int(addressObject)
+   result  = ''
+
+   # ====== IPv4 ============================================================
+   if addressObject.version == 4:
+      if (prefix % 8) != 0:
+         error('Bad prefix /' + str(prefix) + ' for IPv4 address reverse lookup!')
+
+      address = address >> (32 - prefix)
+      i = 0
+      while i < prefix:
+         n = (address & 0xff)
+         result = result + str(n) + '.'
+         address = address >> 8
+         i = i + 8
+      result = result + 'in-addr.arpa.'
+
+   # ====== IPv6 ============================================================
+   else:
+      if (prefix % 4) != 0:
+         error('Bad prefix /' + str(prefix) + ' for IPv6 address reverse lookup!')
+
+      address = address >> (128 - prefix)
+      i = 0
+      while i < prefix:
+         n = (address & 0xf)
+         result = result + str.replace(hex(int(n)), '0x', '') + '.'
+         address = address >> 4
+         i = i + 4
+      result = result + 'in6.arpa.'
+
+   # print result
+   return result

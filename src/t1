@@ -68,3 +68,48 @@ def getDomainFromFQDN(fqdn):
 
 domain = 'xy-ms-123-XY.alpha.site'
 print getHostnameFromFQDN(domain), '\t', getDomainFromFQDN(domain), '\n'
+
+
+# ###### Get reverse lookup zone for IP address #############################
+def getZoneForAddress(addressObject, prefix):
+   address = int(addressObject)
+   result  = ''
+
+   # ====== IPv4 ============================================================
+   if addressObject.version == 4:
+      if (prefix % 8) != 0:
+         error('Bad prefix /' + str(prefix) + ' for IPv4 address reverse lookup!')
+
+      address = address >> (32 - prefix)
+      i = 0
+      while i < prefix:
+         n = (address & 0xff)
+         result = result + str(n) + '.'
+         address = address >> 8
+         i = i + 8
+      result = result + 'in-addr.arpa.'
+
+   # ====== IPv6 ============================================================
+   else:
+      if (prefix % 4) != 0:
+         error('Bad prefix /' + str(prefix) + ' for IPv4 address reverse lookup!')
+
+      address = address >> (128 - prefix)
+      i = 0
+      while i < prefix:
+         n = (address & 0xf)
+         result = result + str.replace(hex(int(n)), '0x', '') + '.'
+         address = address >> 4
+         i = i + 4
+      result = result + 'in6.arpa.'
+
+   print result
+   return result
+
+
+getZoneForAddress(IPv4Address('132.252.152.206'), 24)
+getZoneForAddress(IPv4Address('132.252.152.206'), 16)
+getZoneForAddress(IPv4Address('132.252.152.206'), 8)
+
+getZoneForAddress(IPv6Address('fd01:affe::1'), 64)
+getZoneForAddress(IPv6Address('fd01:affe::1'), 128)
