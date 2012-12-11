@@ -224,6 +224,7 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
             'site_domain'                 : siteDomain,
             'site_latitude'               : site['latitude'],
             'site_longitude'              : site['longitude'],
+            'site_altitude'               : 0,
             'site_url'                    : site['url'],
             'site_tags'                   : siteTagsList,
             'site_default_provider_index' : siteDefProviderIndex
@@ -322,14 +323,16 @@ def lookupNodeID(nodeName):
 
 
 # ###### Fetch list of NorNet nodes #########################################
-def fetchNorNetNode(nodeNameToFind):
+def fetchNorNetNode(nodeNameToFind = None, site = None):
    global plc_server
    global plc_authentication
 
-   if nodeNameToFind == None:   # Get full list
-      filter = { }
-   else:              # Only perform lookup for given name
+   filter = { }
+
+   if nodeNameToFind != None:   # Only perform lookup for given name
       filter = { 'hostname':  nodeNameToFind }
+   if site != None:
+      filter.update( { 'site_id' : site['site_id'] } )
 
    try:
       norNetNodeList = []
@@ -374,10 +377,16 @@ def fetchNorNetNode(nodeNameToFind):
       error('Unable to fetch NorNet node list: ' + str(e))
 
 
-# ###### Fetch list of NorNet sites #########################################
+# ###### Fetch list of NorNet nodes #########################################
 def fetchNorNetNodeList():
    log('Fetching NorNet node list ...')
    return fetchNorNetNode(None)
+
+
+# ###### Fetch list of NorNet nodes for given site ##########################
+def fetchNorNetNodeListForSite(site):
+   log('Fetching NorNet node list ...')
+   return fetchNorNetNode(None, site)
 
 
 # ###### Get NorNet Site for given domain ###################################

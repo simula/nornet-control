@@ -945,10 +945,10 @@ def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, config
 
 
 # ###### Write Automatic Configuration Information ##########################
-def _writeAutoConfigInformation(outputFile):
-   outputFile.write('# ################ AUTOMATICALLY-GENERATED FILE! ################\n')
-   outputFile.write('# #### Changes will be overwritten by NorNet config scripts! ####\n')
-   outputFile.write('# ################ AUTOMATICALLY-GENERATED FILE! ################\n\n')
+def _writeAutoConfigInformation(outputFile, comment='#'):
+   outputFile.write(comment + ' ################ AUTOMATICALLY-GENERATED FILE! ################\n')
+   outputFile.write(comment + ' #### Changes will be overwritten by NorNet config scripts! ####\n')
+   outputFile.write(comment + ' ################ AUTOMATICALLY-GENERATED FILE! ################\n\n')
 
 
 # ###### Generate NTP configuration #########################################
@@ -1347,3 +1347,89 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
 
 
    outputFile.close()
+
+
+def coordinateToDMS(coordinate, hemisphereTypes = 'NS'):
+   hemisphere = hemisphereTypes[0]
+   degrees = int(coordinate)
+   if degrees < 0:
+      degrees = abs(degrees)
+      hemisphere = hemisphereTypes[1]
+
+   m       = (coordinate % 1) * 60
+   minutes = int(m)
+   seconds = (m % 1) * 60
+
+   return(str(degrees) + ' ' + str(minutes) + ' ' + str(seconds) + ' ' + hemisphere)
+
+
+# ###### Obtain location string #############################################
+def _getLocString(latitude, longitude, altitude, size, precision):
+   return(coordinateToDMS(latitude) + ' ' +
+          coordinateToDMS(longitude,'EW') + ' ' +
+          str(altitude) + 'm ' +
+          str(size) + 'm ' +
+          str(precision) + 'm ' + str(precision) + 'm ')
+
+
+# ###### Obtain RR type for address #########################################
+def _rrTypeForAddress(address):
+   if address.version == 4:
+      return('A')
+   elif address.version == 6:
+      return('AAAA')
+   error('Bad address type!')
+
+
+# ###### Add provider's name to hostname ####################################
+def _addProviderToName(name, provider):
+   providerName = provider['provider_short_name']
+   return(str.replace(name, '.', '-' + providerName + '.', 1))
+
+
+# ###### Generate hosts configuration #######################################
+def makeBindConfiguration(fullSiteList, fullNodeList, localSite):
+   localSiteIndex    = localSite['site_index']
+   localProviderList = getNorNetProvidersForSite(localSite)
+   siteFQDN          = localSite['site_domain'] + '.'
+   ttl               = 24*3600
+
+   siteZoneFile = codecs.open(siteFQDN + 'db', 'w', 'utf-8')
+   _writeAutoConfigInformation(siteZoneFile, ';')
+
+   siteZoneFile.write('$TTL ' + str(ttl) + '\n\n')
+   siteZoneFile.write('@\tIN\tSOA\t' + 'ns.' + siteFQDN + ' root.' + siteFQDN+ '\n')
+
+
+   for node in fullNodeList:
+      print(node['node_name'] + '\n')
+
+      siteZoneFile.write('\n')
+      siteZoneFile.write(node['node_name'] + '.\tHINFO\t"' + node['node_model'] + '" "NorNet Node"\n')
+      siteZoneFile.write(node['node_name'] + '.\tLOC\t' +
+                         _getLocString(localSite['site_latitude'],
+                                       localSite['site_longitude'],
+                                       localSite['site_altitude'],
+                                       5, 25) + '\n')
+      for phase in [ 1, 2 ]:
+         for localProviderIndex in localProviderList:
+            localProvider = localProviderList[localProviderIndex]
+            for version in [ 4, 6 ]:
+               nodeAddress = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], -1, version)
+               if phase == 1:
+                  siteZoneFile.write(node['node_name'] + '.\tIN\t' + _rrTypeForAddress(nodeAddress) + '\t' + str(nodeAddress.ip) + '\n')
+               else:
+                  siteZoneFile.write(_addProviderToName(node['node_name'], localProvider) + '.\tIN\t' + _rrTypeForAddress(nodeAddress) + '\t' + str(nodeAddress.ip) + '\n')
+
+
+   #outputFile.write('127.0.0.1\tlocalhost\n')
+   #outputFile.write('127.0.0.1\t' + name + '\n')
+   #outputFile.write('127.0.0.1\t' + name + '.' + localSite['site_domain'] + '\n\n')
+
+   #outputFile.write('::1\tip6-localhost ip6-loopback\n')
+   #outputFile.write('fe00::0\tip6-localnet\n')
+   #outputFile.write('ff00::0\tip6-mcastprefix\n')
+   #outputFile.write('ff02::1\tip6-allnodes\n')
+   #outputFile.write('ff02::2\tip6-allrouters\n\n')
+
+   siteZoneFile.close()

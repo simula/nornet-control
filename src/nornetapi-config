@@ -13,8 +13,8 @@ NorNetPLC_Address='10.1.1.2'
 # Use a user with restricted access permissions. For most operations (e.g.
 # obtaining the node configurations), it is just sufficient to read the PLC
 # database. Only modifying the configuration needs a more "powerful" user!
-NorNetPLC_User='root@localhost.localdomain'
-NorNetPLC_Password='nntb-root'
+NorNetPLC_User='dummy@simula.nornet'
+NorNetPLC_Password='dummy-password'
 
 
 # ###### NorNet Node configuration ##########################################

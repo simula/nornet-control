@@ -71,11 +71,13 @@ makeTunnelboxBootstrap(localSiteIndex, localDefaultProviderIndex,
 # ====== Full Mode ==========================================================
 if not bootstrapOnly:
    fullSiteList = fetchNorNetSiteList()
-   fullUserList = fetchNorNetUserList()
    localSite    = None
    try:
       localSite = fullSiteList[localSiteIndex]
    except:
       error('Cannot find local site ' + str(localSiteIndex) + ' at PLC database!')
+   siteNodeList = fetchNorNetNodeListForSite(localSite)
+   fullUserList = fetchNorNetUserList()
 
+   makeBindConfiguration(fullSiteList, siteNodeList, localSite)
    makeTunnelBoxConfiguration(fullSiteList, localSite, 'tunnelbox')
