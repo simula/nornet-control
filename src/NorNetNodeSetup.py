@@ -1521,10 +1521,57 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                   'PTR', _addProviderToName(node['node_name'], localProvider['provider_short_name']))
 
          providerAddressIPv6 = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], -1, 6)
-         print providerAddressIPv6
          _writeRR(providerZoneFileIPv6,
                   getZoneForAddress(providerAddressIPv6, 128),
                   'PTR', _addProviderToName(node['node_name'], localProvider['provider_short_name']))
 
       providerZoneFileIPv4.close()
       providerZoneFileIPv6.close()
+
+
+   # ====== Write zone configuration ========================================
+   zoneConfFile = codecs.open('zones.conf', 'w', 'utf-8')
+   _writeAutoConfigInformation(zoneConfFile, ';')
+
+   def _writeZone(outputFile, zone, zoneFileName, masters):
+      outputFile.write('zone "' + zone + '" IN {\n')
+      if masters == None:
+         outputFile.write('\ttype master;\n')
+         outputFile.write('\tfile "/etc/bind/' + zoneFileName + '";\n')
+         outputFile.write('\tallow-update { none; };\n')
+      else:
+         outputFile.write('\ttype slave;\n')
+         outputFile.write('\tfile "/var/cache/bind/slaves/' + zoneFileName + '";\n')
+         outputFile.write('\tmasters { ')
+         for master in masters:
+            outputFile.write(str(master) + '; ')
+         outputFile.write('};\n')
+      outputFile.write('};\n\n')
+
+
+
+   for siteIndex in fullSiteList:
+      site = fullSiteList[siteIndex]
+
+      if siteIndex == localSiteIndex:
+         _writeZone(zoneConfFile, site['site_domain'], site['site_domain'] + '.db', None)
+      else:
+         _writeZone(zoneConfFile, site['site_domain'], site['site_domain'] + '.db', [ 'xxxxx' ])
+
+
+
+      #outputFile.write('zone "' + siteFQDN + '" IN {\n")
+      #outputFile.write('\ttype master;\n")
+      #outputFile.write('\tfile "/etc/bind/' + siteFQDN + 'db";\n")
+      #outputFile.write('\ttype master;\n")
+      #outputFile.write('\ttype master;\n")
+
+      #siteProviderList = getNorNetProvidersForSite(site)
+      #for siteProviderIndex in siteProviderList
+         #siteProvider = siteProviderList[siteProviderIndex]
+
+         #if siteProviderIndex == site['site_default_provider_index']:
+
+
+
+   zoneConfFile.close()
