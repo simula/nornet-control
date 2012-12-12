@@ -59,7 +59,7 @@ NorNet_MaxDNSServers = 4
 NorNet_CentralSiteIPv4NATRange = [ IPv4Address('0.0.0.0'), IPv4Address('0.0.0.0') ]
 
 # Public tunnelbox IP of Central Site for Default Provider. Needed for bootstrapping other tunnelboxes!
-NorNet_CentralSite_BootstrapTunnelbox     = IPv4Address('132.252.156.70')
+NorNet_CentralSite_BootstrapTunnelbox     = IPv4Address('128.39.36.143')
 NorNet_CentralSite_BootstrapProviderIndex = 1
 
 # TOS Settings for provider selection
@@ -79,9 +79,13 @@ NorNet_SiteIndex_Central = 1
 # NorNet Tunnelbox is always Node 1!
 NorNet_NodeIndex_Tunnelbox = 1
 
-# NorNet Monitor is Node 2 on the Central Site!
-NorNet_SiteIndex_Monitor  = 1
-NorNet_NodeIndex_Monitor  = 254
+# PLC is Node 2 on the Central Site!
+NorNet_SiteIndex_PLC = NorNet_SiteIndex_Central
+NorNet_NodeIndex_PLC = 2
+
+# NorNet Monitor is Node 3 on the Central Site!
+NorNet_SiteIndex_Monitor  = NorNet_SiteIndex_Central
+NorNet_NodeIndex_Monitor  = 3
 
 
 
