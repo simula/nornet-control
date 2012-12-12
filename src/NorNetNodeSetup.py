@@ -1383,7 +1383,19 @@ def _rrTypeForAddress(address):
 
 # ###### Add provider's name to hostname ####################################
 def _addProviderToName(hostName, providerName):
-   return(str.replace(hostName, '.', '-' + providerName + '.', 1))
+   return(str.replace(hostName, '.', '.' + providerName + '.', 1))
+
+
+# ###### Write SOA ##########################################################
+def _writeSOA(outputFile, nsHostName, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL):
+   outputFile.write('$TTL ' + str(defaultTTL) + '\n\n')
+   outputFile.write('@\tIN\tSOA\t' + nsHostName + '.' + siteFQDN + ' root.' + siteFQDN+ ' (\n')
+   outputFile.write('\t' + datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S") + '   ; Serial\n')
+   outputFile.write('\t{0:14d}   ; Refresh time: interval for secondary DNS to check for updates (default: 3600)\n'.format(refreshTime))
+   outputFile.write('\t{0:14d}   ; Retry time: time for retrying failed zone transfer (default: 600)\n'.format(retryTime))
+   outputFile.write('\t{0:14d}   ; Expire time: when to expire a zone in case of failed zone transfer (default: 84600)\n'.format(expireTime))
+   outputFile.write('\t{0:14d} ) ; Minimum TTL: minimum time-to-live (default: 3600)\n\n'.format(minTTL))
+   outputFile.write('@\tIN\tNS\t' + nsHostName + '.' + siteFQDN + '\n\n')
 
 
 # ###### Get NorNet node object for additional DNS entry ####################
@@ -1406,19 +1418,15 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    localSiteIndex    = localSite['site_index']
    localProviderList = getNorNetProvidersForSite(localSite)
    siteFQDN          = localSite['site_domain'] + '.'
-   ttl               = 24*3600
+   defaultTTL        = 24*3600
+   minTTL            =    3600
+   refreshTime       =    1800
+   retryTime         =      60
+   expireTime        =   84600
 
    siteZoneFile = codecs.open(siteFQDN + 'db', 'w', 'utf-8')
    _writeAutoConfigInformation(siteZoneFile, ';')
-
-   siteZoneFile.write('$TTL ' + str(ttl) + '\n\n')
-   siteZoneFile.write('@\tIN\tSOA\t' + siteFQDN + ' root.' + siteFQDN+ ' (\n')
-   siteZoneFile.write('\t' + datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S") + '   ; Serial\n')
-   siteZoneFile.write('\t          3600   ; Refresh\n')
-   siteZoneFile.write('\t           900   ; Retry\n')
-   siteZoneFile.write('\t        604800   ; Expire\n')
-   siteZoneFile.write('\t        604800 ) ; Negative Cache TTL\n\n')
-   siteZoneFile.write('@\tIN\tNS\t' + hostName + '.' + siteFQDN + '\n\n')
+   _writeSOA(siteZoneFile, hostName, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL)
 
    fullNodeList.append(makeNodeForDNS(hostName, localSite, NorNet_NodeIndex_Tunnelbox, 'Amiga 8000', 'NorNet Tunnelbox'))
 
@@ -1436,7 +1444,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                                        localSite['site_longitude'],
                                        localSite['site_altitude'],
                                        5, 25) + '\n')
-      for phase in [ 1, 2 ]:
+      for phase in [ 1, 2, 3 ]:
          for localProviderIndex in localProviderList:
             localProvider = localProviderList[localProviderIndex]
 
@@ -1444,12 +1452,17 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
             for version in [ 4, 6 ]:
                nodeAddress = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], -1, version)
                if phase == 1:
-                  siteZoneFile.write(node['node_name'] + '.\tIN\t' +
-                                     _rrTypeForAddress(nodeAddress) + '\t' +
-                                     str(nodeAddress.ip) + '\n')
-               else:
+                  if localProviderIndex == localSite['site_default_provider_index']:
+                     siteZoneFile.write(node['node_name'] + '.\tIN\t' +
+                                       _rrTypeForAddress(nodeAddress) + '\t' +
+                                       str(nodeAddress.ip) + '\n')
+               elif phase == 2:
                   siteZoneFile.write(_addProviderToName(node['node_name'],
                                                         localProvider['provider_short_name']) +
+                                     '.\tIN\t' + _rrTypeForAddress(nodeAddress) + '\t' +
+                                     str(nodeAddress.ip) + '\n')
+               else:
+                  siteZoneFile.write(_addProviderToName(node['node_name'], 'all') +
                                      '.\tIN\t' + _rrTypeForAddress(nodeAddress) + '\t' +
                                      str(nodeAddress.ip) + '\n')
 
@@ -1475,8 +1488,10 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
       providerNetworkIPv6 = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, 6)
       providerZoneIPv4 = getZoneForAddress(providerNetworkIPv4, providerNetworkIPv4.prefixlen)
       providerZoneIPv6 = getZoneForAddress(providerNetworkIPv6, providerNetworkIPv6.prefixlen)
-      providerZoneFileIPv4 = codecs.open(localProvider['provider_short_name'] + '-' + siteFQDN + 'ipv4', 'w', 'utf-8')
-      providerZoneFileIPv6 = codecs.open(localProvider['provider_short_name'] + '-' + siteFQDN + 'ipv6', 'w', 'utf-8')
+      providerZoneFileIPv4 = codecs.open(localProvider['provider_short_name'] + '.' + siteFQDN + 'ipv4.db', 'w', 'utf-8')
+      providerZoneFileIPv6 = codecs.open(localProvider['provider_short_name'] + '.' + siteFQDN + 'ipv6.db', 'w', 'utf-8')
+      _writeSOA(providerZoneFileIPv4, hostName, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL)
+      _writeSOA(providerZoneFileIPv6, hostName, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL)
 
       for node in fullNodeList:
          providerAddressIPv4 = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], -1, 4)
