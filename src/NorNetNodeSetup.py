@@ -1404,6 +1404,30 @@ def _writeRR(outputFile, hostNameFQDN, record, value):
                     record + '\t' + value + '\n')
 
 
+# ###### Write zone configuration ###########################################
+def _writeZone(outputFile, zone, zoneFileName, masterSite):
+   outputFile.write('zone "' + zone + '" IN {\n')
+   if masterSite == None:
+      outputFile.write('\ttype master;\n')
+      outputFile.write('\tfile "/etc/bind/' + zoneFileName + '";\n')
+      outputFile.write('\tallow-update { none; };\n')
+      outputFile.write('\tallow-transfer { ')
+      for version in [ 4, 6 ]:
+         outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '; ')
+      outputFile.write('};\n')
+   else:
+      outputFile.write('\ttype slave;\n')
+      outputFile.write('\tfile "/var/cache/bind/slaves/' + zoneFileName + '";\n')
+      outputFile.write('\tmasters { ')
+      for version in [ 4, 6 ]:
+         outputFile.write(str(makeNorNetIP(masterSite['site_default_provider_index'],
+                                           masterSite['site_index'],
+                                           NorNet_NodeIndex_Tunnelbox,
+                                           -1, version).ip) + '; ')
+      outputFile.write('};\n')
+   outputFile.write('};\n\n')
+
+
 # ###### Get NorNet node object for additional DNS entry ####################
 def makeNodeForDNS(nodeName, site, nodeIndex, model, type):
    norNetNode = {
@@ -1518,7 +1542,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                prefixLength = 128
             _writeRR(providerZoneFile,
                      getZoneForAddress(providerAddress, prefixLength),
-                     'PTR', _addProviderToName(node['node_name'], localProvider['provider_short_name']))
+                     'PTR', _addProviderToName(node['node_name'], localProvider['provider_short_name']) + '.')
 
          providerZoneFile.close()
 
@@ -1526,30 +1550,6 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    # ====== Write zone configuration ========================================
    zoneConfFile = codecs.open('zones.conf', 'w', 'utf-8')
    _writeAutoConfigInformation(zoneConfFile, ';')
-
-
-   def _writeZone(outputFile, zone, zoneFileName, masterSite):
-      outputFile.write('zone "' + zone + '" IN {\n')
-      if masterSite == None:
-         outputFile.write('\ttype master;\n')
-         outputFile.write('\tfile "/etc/bind/' + zoneFileName + '";\n')
-         outputFile.write('\tallow-update { none; };\n')
-         outputFile.write('\tallow-transfer { ')
-         for version in [ 4, 6 ]:
-            outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '; ')
-      else:
-         outputFile.write('\ttype slave;\n')
-         outputFile.write('\tfile "/var/cache/bind/slaves/' + zoneFileName + '";\n')
-         outputFile.write('\tmasters { ')
-         for version in [ 4, 6 ]:
-            outputFile.write(str(makeNorNetIP(site['site_default_provider_index'],
-                                              site['site_index'],
-                                              NorNet_NodeIndex_Tunnelbox,
-                                              -1, version).ip) + '; ')
-         outputFile.write('};\n')
-      outputFile.write('};\n\n')
-
-
    for siteIndex in fullSiteList:
       site       = fullSiteList[siteIndex]
       masterSite = site

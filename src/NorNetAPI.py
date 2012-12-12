@@ -74,8 +74,9 @@ def loadNorNetConfiguration():
    lines = tuple(inputFile)
    for line in lines:
       if re.match('^[ \t]*[#\n]', line):
-         just_a_comment_or_empty_line=1
+         continue
       elif re.match('^[a-zA-Z0-9_]*[ \t]*=', line):
+         # print line
          exec((line), globals())
       else:
          error('Bad configuration line: ' + line)
@@ -164,6 +165,14 @@ def getLocalNodeIndex():
 # ###### Get local node hostname ############################################
 def getLocalNodeNorNetInterface():
    return NorNet_LocalNode_NorNetInterface
+
+
+# ###### Get local node configuration string ################################
+def getLocalNodeConfigurationString(nodeIndex):
+   try:
+      return eval('NorNet_LocalSite_Node' + str(nodeIndex))
+   except:
+      return ""
 
 
 # ###### Find site ID #######################################################

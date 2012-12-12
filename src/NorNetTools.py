@@ -47,6 +47,14 @@ def error(logstring):
    sys.exit(1)
 
 
+# ###### Unquote a string ###################################################
+def unquote(string):
+   m = re.match(r'''^"(.*)"$''', string)
+   if m != None:
+      return m.group(1)
+   return string
+
+
 # ###### Get tag value or return a default ##################################
 def getTagValue(tagList, tagName, default):
    for tag in tagList:

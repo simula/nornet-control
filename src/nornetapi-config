@@ -27,7 +27,7 @@ NorNet_LocalNode_Hostname='localhost.localdomain'
 
 # This is the name of the NorNet interface (with the site's provider
 # networks) of the node:
-NorNet_LocalNode_NorNetInterface='p2p1'
+NorNet_LocalNode_NorNetInterface='eth0'
 
 
 # ###### NorNet Tunnelbox configuration #####################################
@@ -42,4 +42,22 @@ NorNet_LocalSite_SiteIndex=1
 NorNet_LocalSite_DefaultProviderIndex=1
 
 # This is the local tunnelbox's outer IPv4 address for the default provider:
-NorNet_LocalSite_TBDefaultProviderIPv4='132.252.156.70'
+NorNet_LocalSite_TBDefaultProviderIPv4='128.39.36.143'
+
+
+# ###### Additional DNS names ###############################################
+# Add additional, non-managed nodes here.
+# The syntax is NorNet_LocalSite_Node<XXX>='"Hostname" "Hardware" "Type"',
+# where <XXX> denotes the node index (i.e. 2 to 254).
+
+NorNet_LocalSite_Node254='"skjennungen"    "HP DL-320"  "Physical Server #1"'
+NorNet_LocalSite_Node253='"sognsvann"      "HP DL-320"  "Physical Server #2"'
+NorNet_LocalSite_Node252='"svartkulp"      "HP DL-320"  "Physical Server #3"'
+NorNet_LocalSite_Node251='"maridalsvannet" "HP DL-320"  "Physical Server #4"'
+NorNet_LocalSite_Node250='"tryvann"        "HP DL-320"  "Physical Server #5"'
+NorNet_LocalSite_Node249='"aaklungen"      "HP DL-320"  "Physical Server #6"'
+NorNet_LocalSite_Node248='"bjordammen"     "HP DL-320"  "Physical Server #7"'
+NorNet_LocalSite_Node247='"blanksjoe"      "HP DL-320"  "Physical Server #8"'
+
+NorNet_LocalSite_Node2='"vigelandsparken"  "Amiga 8000" "NorNet PLC"'
+NorNet_LocalSite_Node3='"holmenkollen"     "Amiga 8000" "NorNet Monitor"'

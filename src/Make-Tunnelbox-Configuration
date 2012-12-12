@@ -79,7 +79,21 @@ if not bootstrapOnly:
    except:
       error('Cannot find local site ' + str(localSiteIndex) + ' at PLC database!')
    siteNodeList = fetchNorNetNodeListForSite(localSite)
-   fullUserList = fetchNorNetUserList()
 
-   makeBindConfiguration(fullSiteList, siteNodeList, localSite, getHostnameFromFQDN(fqdn))
    makeTunnelBoxConfiguration(fullSiteList, localSite, 'tunnelbox')
+
+   # ====== Prepare additional nodes for DNS configuration ==================
+   additionalNodes = []
+   for i in range(2, 255):
+      nodeConfiguration = getLocalNodeConfigurationString(i)
+      if nodeConfiguration != '':
+         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeConfiguration)
+         if len(parameters) < 3:
+            error('Bad configuration "' + nodeConfiguration + '" for NorNet_LocalSite_Node' + str(i))
+
+         nodeName     = unquote(parameters[0])
+         hardwareInfo = unquote(parameters[1])
+         softwareInfo = unquote(parameters[2])
+         additionalNodes.append(makeNodeForDNS(nodeName, localSite, i, hardwareInfo, softwareInfo))
+
+   makeBindConfiguration(fullSiteList, siteNodeList, localSite, getHostnameFromFQDN(fqdn), additionalNodes)

@@ -148,7 +148,7 @@ check_and_configure ()
    if [ -e ./tunnelbox-providers ] ; then
       . ./tunnelbox-providers
    else
-      all_providers=""  # We have brand-new tunnelbox!
+      all_providers=""  # We have a brand-new tunnelbox!
    fi
    providersOld="$all_providers"
    providersRemoved=`get_removed_labels "$providersOld" "$providersNew"`
@@ -170,7 +170,25 @@ check_and_configure ()
       fi
    done
 
-   # Check for problems
+   # ====== Apply DNS update ================================================
+   rm -f zones.conf *.db
+   mv updated-tunnelbox-config/zones.conf updated-tunnelbox-config/*.db .
+   rm /etc/bind/zones.conf /etc/bind/*.db
+   cp zones.conf *.db /etc/bind/
+   if [ ! -e /var/cache/bind/slaves ] ; then
+      mkdir /var/cache/bind/slaves
+   fi
+   chown bind:bind /var/cache/bind/slaves
+   if [ -e /etc/bind/named.conf ] ; then
+      if [ `grep "include \"/etc/bind/zones.conf\"" /etc/bind/named.conf | wc --lines` -eq 0 ] ; then
+         echo "include \"/etc/bind/zones.conf\""  >>/etc/bind/named.conf
+      fi
+   else
+      echo "/etc/bind/named.conf does not exist! Something is going wrong ..."
+   fi
+   service bind9 reload
+
+   # ====== Check for problems ==============================================
    if ! rmdir updated-tunnelbox-config ; then
       echo >&2 "ERROR: Something went wrong! updated-tunnelbox-config still contains unhandled configuration files!"
       ls -al updated-tunnelbox-config >&2

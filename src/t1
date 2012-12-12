@@ -113,3 +113,33 @@ getZoneForAddress(IPv4Address('132.252.152.206'), 8)
 
 getZoneForAddress(IPv6Address('fd01:affe::1'), 64)
 getZoneForAddress(IPv6Address('fd01:affe::1'), 128)
+
+
+
+x='xy "server4" "HP DL-320" "Physical Server #4"'
+#x = '''part 1;"this is ; part 2;";'this is ; part 3';part 4;this "is ; part" 5'''
+
+print x
+print re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', x)
+print re.split(r'''[ ]+(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', x)
+
+#print re.findall(r'''(?:[^;'"]+|'(?:[^']|\\.)*'|"(?:[^']|\\.)*")+''', x)
+#print re.split('(?:^|;)("(?:[^"]+|"")*"|[^;]*)', x)
+
+      #if re.match('^[ \t]*[#\n]', line):
+         #continue
+      #elif re.match('^[a-zA-Z0-9_]*[ \t]*=', line):
+         #print line
+         #exec((line), globals())
+
+
+# ###### Unquote a string ###################################################
+def unquote(string):
+   m = re.match(r'''^"(.*)"$''', string)
+   if m != None:
+      return.group(1)
+
+
+
+unquote('bla')
+unquote('"bla"')

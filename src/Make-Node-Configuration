@@ -62,12 +62,9 @@ if node == None:
 localSite = getNorNetSiteOfNode(fullSiteList, node)
 if localSite == None:
    error('Unable to find site of node ' + fqdn + ' in database!')
-
 fullUserList = fetchNorNetUserList()
 
-
 makeNodeConfiguration(fullSiteList, node, interface, distribution, '')
-
 makeHostnameConfiguration(fullSiteList, localSite, 'hostname', getHostnameFromFQDN(fqdn))
 makeHostsConfiguration(fullSiteList, localSite, NorNet_NodeIndex_Tunnelbox, 'hosts', getHostnameFromFQDN(fqdn))
 makeNTPConfiguration(fullSiteList, localSite, 'ntp')
