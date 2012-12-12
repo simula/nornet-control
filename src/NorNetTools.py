@@ -167,7 +167,7 @@ def getZoneForAddress(addressObject, prefix):
          result = result + str.replace(hex(int(n)), '0x', '') + '.'
          address = address >> 4
          i = i + 4
-      result = result + 'in6.arpa.'
+      result = result + 'ip6.arpa.'
 
    # print result
    return result
