@@ -1505,73 +1505,69 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    # ====== Write reverse lookup configuration ==============================
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
-      providerNetworkIPv4 = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, 4)
-      providerNetworkIPv6 = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, 6)
-      providerZoneIPv4 = getZoneForAddress(providerNetworkIPv4, providerNetworkIPv4.prefixlen)
-      providerZoneIPv6 = getZoneForAddress(providerNetworkIPv6, providerNetworkIPv6.prefixlen)
-      providerZoneFileIPv4 = codecs.open(localProvider['provider_short_name'] + '.' + siteFQDN + 'ipv4.db', 'w', 'utf-8')
-      providerZoneFileIPv6 = codecs.open(localProvider['provider_short_name'] + '.' + siteFQDN + 'ipv6.db', 'w', 'utf-8')
-      _writeSOA(providerZoneFileIPv4, hostName, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL)
-      _writeSOA(providerZoneFileIPv6, hostName, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL)
+      for version in [ 4, 6 ]:
+         providerNetwork  = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, version)
+         providerZone     = getZoneForAddress(providerNetwork, providerNetwork.prefixlen)
+         providerZoneFile = codecs.open(localProvider['provider_short_name'] + '.' + siteFQDN + 'ipv' + str(version) + '.db', 'w', 'utf-8')
+         _writeSOA(providerZoneFile, hostName, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL)
 
-      for node in fullNodeList:
-         providerAddressIPv4 = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], -1, 4)
-         _writeRR(providerZoneFileIPv4,
-                  getZoneForAddress(providerAddressIPv4, 32),
-                  'PTR', _addProviderToName(node['node_name'], localProvider['provider_short_name']))
+         for node in fullNodeList:
+            providerAddress = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], -1, version)
+            prefixLength    = 32
+            if version == 6:
+               prefixLength = 128
+            _writeRR(providerZoneFile,
+                     getZoneForAddress(providerAddress, prefixLength),
+                     'PTR', _addProviderToName(node['node_name'], localProvider['provider_short_name']))
 
-         providerAddressIPv6 = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], -1, 6)
-         _writeRR(providerZoneFileIPv6,
-                  getZoneForAddress(providerAddressIPv6, 128),
-                  'PTR', _addProviderToName(node['node_name'], localProvider['provider_short_name']))
-
-      providerZoneFileIPv4.close()
-      providerZoneFileIPv6.close()
+         providerZoneFile.close()
 
 
    # ====== Write zone configuration ========================================
    zoneConfFile = codecs.open('zones.conf', 'w', 'utf-8')
    _writeAutoConfigInformation(zoneConfFile, ';')
 
-   def _writeZone(outputFile, zone, zoneFileName, masters):
+
+   def _writeZone(outputFile, zone, zoneFileName, masterSite):
       outputFile.write('zone "' + zone + '" IN {\n')
-      if masters == None:
+      if masterSite == None:
          outputFile.write('\ttype master;\n')
          outputFile.write('\tfile "/etc/bind/' + zoneFileName + '";\n')
          outputFile.write('\tallow-update { none; };\n')
+         outputFile.write('\tallow-transfer { ')
+         for version in [ 4, 6 ]:
+            outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '; ')
       else:
          outputFile.write('\ttype slave;\n')
          outputFile.write('\tfile "/var/cache/bind/slaves/' + zoneFileName + '";\n')
          outputFile.write('\tmasters { ')
-         for master in masters:
-            outputFile.write(str(master) + '; ')
+         for version in [ 4, 6 ]:
+            outputFile.write(str(makeNorNetIP(site['site_default_provider_index'],
+                                              site['site_index'],
+                                              NorNet_NodeIndex_Tunnelbox,
+                                              -1, version).ip) + '; ')
          outputFile.write('};\n')
       outputFile.write('};\n\n')
 
 
-
    for siteIndex in fullSiteList:
-      site = fullSiteList[siteIndex]
-
+      site       = fullSiteList[siteIndex]
+      masterSite = site
       if siteIndex == localSiteIndex:
-         _writeZone(zoneConfFile, site['site_domain'], site['site_domain'] + '.db', None)
-      else:
-         _writeZone(zoneConfFile, site['site_domain'], site['site_domain'] + '.db', [ 'xxxxx' ])
+         masterSite = None
 
+      zoneConfFile.write('\n; ====== ' + site['site_long_name'] + ' ======\n')
+      _writeZone(zoneConfFile, site['site_domain'], site['site_domain'] + '.db', masterSite)
 
-
-      #outputFile.write('zone "' + siteFQDN + '" IN {\n")
-      #outputFile.write('\ttype master;\n")
-      #outputFile.write('\tfile "/etc/bind/' + siteFQDN + 'db";\n")
-      #outputFile.write('\ttype master;\n")
-      #outputFile.write('\ttype master;\n")
-
-      #siteProviderList = getNorNetProvidersForSite(site)
-      #for siteProviderIndex in siteProviderList
-         #siteProvider = siteProviderList[siteProviderIndex]
-
-         #if siteProviderIndex == site['site_default_provider_index']:
-
-
+      siteProviderList = getNorNetProvidersForSite(site)
+      for siteProviderIndex in siteProviderList:
+         siteProvider = siteProviderList[siteProviderIndex]
+         for version in [ 4, 6 ]:
+            providerNetwork = makeNorNetIP(siteProviderIndex, siteIndex, 0, 0, version)
+            providerZone = getZoneForAddress(providerNetwork, providerNetwork.prefixlen)
+            _writeZone(zoneConfFile,
+                       providerZone,
+                       siteProvider['provider_short_name'] + '.' + site['site_domain'] + '.ipv' + str(version) + '.db',
+                       masterSite)
 
    zoneConfFile.close()
