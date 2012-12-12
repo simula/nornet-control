@@ -1387,15 +1387,15 @@ def _addProviderToName(hostName, providerName):
 
 
 # ###### Write SOA ##########################################################
-def _writeSOA(outputFile, nsHostName, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL):
+def _writeSOA(outputFile, nsHostNameFQDN, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL):
    outputFile.write('$TTL ' + str(defaultTTL) + '\n\n')
-   outputFile.write('@\tIN\tSOA\t' + nsHostName + '.' + siteFQDN + ' root.' + siteFQDN+ ' (\n')
+   outputFile.write('@\tIN\tSOA\t' + nsHostNameFQDN + ' root.' + siteFQDN+ ' (\n')
    outputFile.write('\t' + datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S") + '   ; Serial\n')
    outputFile.write('\t{0:14d}   ; Refresh time: interval for secondary DNS to check for updates (default: 3600)\n'.format(refreshTime))
    outputFile.write('\t{0:14d}   ; Retry time: time for retrying failed zone transfer (default: 600)\n'.format(retryTime))
    outputFile.write('\t{0:14d}   ; Expire time: when to expire a zone in case of failed zone transfer (default: 84600)\n'.format(expireTime))
    outputFile.write('\t{0:14d} ) ; Minimum TTL: minimum time-to-live (default: 3600)\n\n'.format(minTTL))
-   outputFile.write('@\tIN\tNS\t' + nsHostName + '.' + siteFQDN + '\n\n')
+   outputFile.write('@\tIN\tNS\t' + nsHostNameFQDN + '\n\n')
 
 
 # ###### Write RR ###########################################################
@@ -1454,17 +1454,21 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    retryTime         =      60
    expireTime        =   84600
 
+   # ====== Get hostname in default provider's network ======================
+   localDefaultProvider       = localProviderList[localSite['site_default_provider_index']]
+   hostNameForDefaultProvider = _addProviderToName(hostName + '.' + siteFQDN, str.lower(localDefaultProvider['provider_short_name']))
+
    siteZoneFile = codecs.open(siteFQDN + 'db', 'w', 'utf-8')
    _writeAutoConfigInformation(siteZoneFile, ';')
-   _writeSOA(siteZoneFile, hostName, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL)
+   _writeSOA(siteZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL)
 
    # ====== Some useful aliases =============================================
    if hostName != 'tunnelbox':
-      _writeRR(siteZoneFile, 'tunnelbox.' + siteFQDN, 'CNAME', hostName + '.' + siteFQDN)
+      _writeRR(siteZoneFile, 'tunnelbox.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
    if hostName != 'ntp':
-      _writeRR(siteZoneFile, 'ntp.' + siteFQDN, 'CNAME', hostName + '.' + siteFQDN)
+      _writeRR(siteZoneFile, 'ntp.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
    if hostName != 'ns':
-      _writeRR(siteZoneFile, 'ns.' + siteFQDN, 'CNAME', hostName + '.' + siteFQDN)
+      _writeRR(siteZoneFile, 'ns.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
 
    # ====== Prepare the list of hosts =======================================
    fullNodeList.append(makeNodeForDNS(hostName, localSite, NorNet_NodeIndex_Tunnelbox,
@@ -1479,12 +1483,6 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    # ====== Write forward lookup configuration ==============================
    for node in fullNodeList:
       siteZoneFile.write('\n; ====== ' + node['node_name'] + ' ======\n')
-      _writeRR(siteZoneFile, node['node_name'] + '.', 'HINFO', '"' + node['node_model'] + '" "' + node['node_type'] + '"')
-      _writeRR(siteZoneFile, node['node_name'] + '.', 'LOC',
-               _getLocString(localSite['site_latitude'],
-                             localSite['site_longitude'],
-                             localSite['site_altitude'],
-                             5, 25))
       for phase in [ 1, 2, 3 ]:
          for localProviderIndex in localProviderList:
             localProvider = localProviderList[localProviderIndex]
@@ -1495,15 +1493,28 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                # ====== Hostname for default provider's address =============
                if phase == 1:
                   if localProviderIndex == localSite['site_default_provider_index']:
-                     _writeRR(siteZoneFile, node['node_name'] + '.', 'CNAME',
-                              _addProviderToName(node['node_name'],
-                                                 localProvider['provider_short_name']) + '.')
+                     if version == 6:   # Just add entry once!
+                        _writeRR(siteZoneFile, node['node_name'] + '.', 'CNAME',
+                                 _addProviderToName(node['node_name'],
+                                                    str.lower(localProvider['provider_short_name'])) + '.')
                # ====== Hostname for current provider's address =============
                elif phase == 2:
                   _writeRR(siteZoneFile,
-                           _addProviderToName(node['node_name'], localProvider['provider_short_name']) + '.',
+                           _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
                            _rrTypeForAddress(nodeAddress),
                            str(nodeAddress.ip))
+                  # if localProviderIndex == localSite['site_default_provider_index']:
+                  if version == 6:   # Just add entries once!
+                     _writeRR(siteZoneFile,
+                              _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
+                              'HINFO', '"' + node['node_model'] + '" "' + node['node_type'] + '"')
+                     _writeRR(siteZoneFile,
+                              _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
+                              'LOC',
+                              _getLocString(localSite['site_latitude'],
+                                          localSite['site_longitude'],
+                                          localSite['site_altitude'],
+                                          5, 25))
                # ====== Hostname with *all* addresses =======================
                else:
                   _writeRR(siteZoneFile,
@@ -1516,12 +1527,44 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
          localProvider = localProviderList[localProviderIndex]
          if node['node_index'] == NorNet_NodeIndex_Tunnelbox:
             _writeRR(siteZoneFile,
-                     _addProviderToName(node['node_name'], localProvider['provider_short_name'] + '-ext') + '.',
+                     _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']) + '-ext') + '.',
                      'A', str(localProvider['provider_tunnelbox_ipv4']))
             if localProvider['provider_tunnelbox_ipv6'] != IPv6Address('::'):
                _writeRR(siteZoneFile,
-                        _addProviderToName(node['node_name'], localProvider['provider_short_name'] + '-ext') + '.',
+                        _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']) + '-ext') + '.',
                         'AAAA', str(localProvider['provider_tunnelbox_ipv6']))
+
+   if localSiteIndex == NorNet_SiteIndex_Central:
+      # ====== Tunnels ======================================================
+      for localProviderIndex in localProviderList:
+         localProvider = localProviderList[localProviderIndex]
+         siteZoneFile.write('\n; ====== ' + localProvider['provider_long_name'] + ' Tunnels ======\n')
+
+         for remoteSiteIndex in fullSiteList:
+            if remoteSiteIndex != localSiteIndex:
+               remoteSite = fullSiteList[remoteSiteIndex]
+               remoteProviderList = getNorNetProvidersForSite(remoteSite)
+               for remoteProviderIndex in remoteProviderList:
+                  remoteProvider = remoteProviderList[remoteProviderIndex]
+                  for version in [ 4, 6 ]:
+                     localTunnelIP  = makeNorNetTunnelIP(localSiteIndex, localProviderIndex,
+                                                         remoteSiteIndex, remoteProviderIndex,
+                                                         version)
+                     remoteTunnelIP = makeNorNetTunnelIP(remoteSiteIndex, remoteProviderIndex,
+                                                         localSiteIndex, localProviderIndex,
+                                                         version)
+                     _writeRR(siteZoneFile,
+                              'local.' +
+                              str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' +
+                              str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.',
+                              _rrTypeForAddress(localTunnelIP),
+                              str(localTunnelIP.ip))
+                     _writeRR(siteZoneFile,
+                              'remote.' +
+                              str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' +
+                              str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.',
+                              _rrTypeForAddress(remoteTunnelIP),
+                              str(remoteTunnelIP.ip))
 
    siteZoneFile.close()
 
@@ -1533,7 +1576,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
          providerNetwork  = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, version)
          providerZone     = getZoneForAddress(providerNetwork, providerNetwork.prefixlen)
          providerZoneFile = codecs.open(localProvider['provider_short_name'] + '.' + siteFQDN + 'ipv' + str(version) + '.db', 'w', 'utf-8')
-         _writeSOA(providerZoneFile, hostName, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL)
+         _writeSOA(providerZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL)
 
          for node in fullNodeList:
             providerAddress = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], -1, version)
@@ -1542,21 +1585,21 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                prefixLength = 128
             _writeRR(providerZoneFile,
                      getZoneForAddress(providerAddress, prefixLength),
-                     'PTR', _addProviderToName(node['node_name'], localProvider['provider_short_name']) + '.')
+                     'PTR', _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.')
 
          providerZoneFile.close()
 
 
    # ====== Write zone configuration ========================================
    zoneConfFile = codecs.open('zones.conf', 'w', 'utf-8')
-   _writeAutoConfigInformation(zoneConfFile, ';')
+   _writeAutoConfigInformation(zoneConfFile, '//')
    for siteIndex in fullSiteList:
       site       = fullSiteList[siteIndex]
       masterSite = site
       if siteIndex == localSiteIndex:
          masterSite = None
 
-      zoneConfFile.write('\n; ====== ' + site['site_long_name'] + ' ======\n')
+      zoneConfFile.write('// ====== ' + site['site_long_name'] + ' ======\n')
       _writeZone(zoneConfFile, site['site_domain'], site['site_domain'] + '.db', masterSite)
 
       siteProviderList = getNorNetProvidersForSite(site)
