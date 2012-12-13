@@ -1589,6 +1589,49 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
 
          providerZoneFile.close()
 
+   # ====== Write reverse lookup configuration for tunnels ==================
+   if localSiteIndex == NorNet_SiteIndex_Central:
+      for version in [ 4, 6 ]:
+         tunnelNetwork  = makeNorNetTunnel(0, 0, 0, 0, version)
+         tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
+         tunnelZoneFile = codecs.open('tunnels.ipv' + str(version) + '.db', 'w', 'utf-8')
+         prefixLength   = 32
+         if version == 6:
+            prefixLength = 128
+
+         for localProviderIndex in localProviderList:
+            localProvider = localProviderList[localProviderIndex]
+            tunnelZoneFile.write('\n; ====== ' + localProvider['provider_long_name'] + ' Tunnels ======\n')
+
+            for remoteSiteIndex in fullSiteList:
+               if remoteSiteIndex != localSiteIndex:
+                  remoteSite = fullSiteList[remoteSiteIndex]
+                  remoteProviderList = getNorNetProvidersForSite(remoteSite)
+                  for remoteProviderIndex in remoteProviderList:
+                     remoteProvider = remoteProviderList[remoteProviderIndex]
+
+                     localTunnelIP  = makeNorNetTunnelIP(localSiteIndex, localProviderIndex,
+                                                         remoteSiteIndex, remoteProviderIndex,
+                                                         version)
+                     remoteTunnelIP = makeNorNetTunnelIP(remoteSiteIndex, remoteProviderIndex,
+                                                         localSiteIndex, localProviderIndex,
+                                                         version)
+
+                     _writeRR(tunnelZoneFile,
+                              getZoneForAddress(localTunnelIP.ip, prefixLength),
+                              'PTR',
+                              'local.' +
+                              str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' +
+                              str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.')
+                     _writeRR(tunnelZoneFile,
+                              getZoneForAddress(remoteTunnelIP.ip, prefixLength),
+                              'PTR',
+                              'remote.' +
+                              str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' +
+                              str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.')
+
+         tunnelZoneFile.close()
+
 
    # ====== Write zone configuration ========================================
    zoneConfFile = codecs.open('zones.conf', 'w', 'utf-8')
@@ -1612,5 +1655,10 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                        providerZone,
                        siteProvider['provider_short_name'] + '.' + site['site_domain'] + '.ipv' + str(version) + '.db',
                        masterSite)
+
+      for version in [ 4, 6 ]:
+         tunnelNetwork  = makeNorNetTunnel(0, 0, 0, 0, version)
+         tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
+         _writeZone(zoneConfFile, tunnelZone, 'tunnels.ipv' + str(version) + '.db', masterSite)
 
    zoneConfFile.close()
