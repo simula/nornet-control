@@ -843,8 +843,8 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
                         debianFile.write('   dns-search      ' + site['site_domain'] + '\n')
                      else:   # NOTE: Work-around for buggy Ubuntu ifupdown!
                         debianFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ' || true\n')
-                        debianFile.write('   up   /sbin/ip -' + str(version) + ' route add default via ' + str(gateway) + ' dev ' + interfaceName + ' metric 10 || true\n')
-                        debianFile.write('   down /sbin/ip -' + str(version) + ' route del default via ' + str(gateway) + ' dev ' + interfaceName + ' metric 10 || true\n')
+                        debianFile.write('   up   /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric 10 || true\n')
+                        debianFile.write('   down /sbin/ip -' + str(version) + ' route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric 10 || true\n')
                         debianFile.write('   down /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ' || true\n')
 
          debianFile.write('\n')
