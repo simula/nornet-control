@@ -181,8 +181,8 @@ check_and_configure ()
    fi
    chown bind:bind /var/cache/bind/slaves
    if [ -e /etc/bind/named.conf ] ; then
-      if [ `grep "include \"/etc/bind/zones.conf\"" /etc/bind/named.conf | wc --lines` -eq 0 ] ; then
-         echo "include \"/etc/bind/zones.conf\""  >>/etc/bind/named.conf
+      if [ `grep "include \"/etc/bind/zones.conf\";" /etc/bind/named.conf | wc --lines` -eq 0 ] ; then
+         echo "include \"/etc/bind/zones.conf\";"  >>/etc/bind/named.conf
       fi
    else
       echo "/etc/bind/named.conf does not exist! Something is going wrong ..."
