@@ -805,49 +805,47 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
       debianFile.write('iface lo inet loopback\n\n')
 
       debianFile.write('auto ' + interfaceName + '\n')
+      debianFile.write('iface ' + interfaceName + ' inet static\n')
 
-      for version in [ 4, 6 ]:
-         if version == 4:
-            debianFile.write('iface ' + interfaceName + ' inet static\n')
-         else:
-            debianFile.write('iface ' + interfaceName + ' inet6 static\n')
+      siteIndex    = site['site_index']
+      providerList = getNorNetProvidersForSite(site)
+      for onlyDefault in [ True, False  ]:   # NOTE: non-default providers first!
+         for providerIndex in providerList:
+            if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+               provider = providerList[providerIndex]
 
-         siteIndex    = site['site_index']
-         providerList = getNorNetProvidersForSite(site)
-         for onlyDefault in [ True, False  ]:   # NOTE: non-default providers first!
-            for providerIndex in providerList:
-               if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
-                  ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
-                  provider = providerList[providerIndex]
+               debianFile.write('   # ====== ' + provider['provider_long_name'] + ' (' + \
+                                 str(provider['provider_index']) + ') ======\n')
 
-                  debianFile.write('   # ====== ' + provider['provider_long_name'] + ' (' + \
-                                   str(provider['provider_index']) + ') ======\n')
+               for version in [ 4, 6 ]:
 
                   address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  -1, version)
                   gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
 
                   # ====== Debian /etc/network/interfaces ============================
-                  if variant == 'Debian':
+                  if ((version == 4) and (providerIndex == site['site_default_provider_index'])):
+                     debianFile.write('   address ' + str(address.ip) + '\n')
+                     debianFile.write('   netmask ' + str(address.prefixlen) + '\n')
+                     debianFile.write('   gateway ' + str(gateway.ip) + '\n')
+                     debianFile.write('   metric  0\n')
+
+                     debianFile.write('   pre-up /sbin/sysctl net.ipv6.conf.' + interfaceName + '.autoconf=0         || true\n')
+                     debianFile.write('   pre-up /sbin/sysctl net.ipv6.conf.' + interfaceName + '.accept_ra=0        || true\n')
+                     debianFile.write('   pre-up /sbin/sysctl net.ipv6.conf.' + interfaceName + '.accept_redirects=0 || true\n')
+                     debianFile.write('   pre-up /sbin/sysctl net.ipv6.conf.' + interfaceName + '.use_tempaddr=0     || true\n')
+
+                     dnsAddress = gateway   # The tunnelbox is also the site's DNS server!
+                     debianFile.write('   dns-nameservers ' + str(dnsAddress.ip) + '\n')
+                     debianFile.write('   dns-search      ' + site['site_domain'] + '\n')
+                  else:   # NOTE: Work-around for buggy Ubuntu ifupdown!
+                     metric = 10
                      if providerIndex == site['site_default_provider_index']:
-                        debianFile.write('   address ' + str(address.ip) + '\n')
-                        debianFile.write('   netmask ' + str(address.prefixlen) + '\n')
-                        debianFile.write('   gateway ' + str(gateway.ip) + '\n')
-                        debianFile.write('   metric  0\n')
-                        if version == 6:
-                           debianFile.write('   autoconf  0\n')
-                           debianFile.write('   accept_ra 0\n')
-                           debianFile.write('   privext   0\n')
-
-                        dnsAddress = gateway   # The tunnelbox is also the site's DNS server!
-                        debianFile.write('   dns-nameservers ' + str(dnsAddress.ip) + '\n')
-                        debianFile.write('   dns-search      ' + site['site_domain'] + '\n')
-                     else:   # NOTE: Work-around for buggy Ubuntu ifupdown!
-                        debianFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ' || true\n')
-                        debianFile.write('   up   /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric 10 || true\n')
-                        debianFile.write('   down /sbin/ip -' + str(version) + ' route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric 10 || true\n')
-                        debianFile.write('   down /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ' || true\n')
-
-         debianFile.write('\n')
+                        metric = 0
+                     debianFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ' || true\n')
+                     debianFile.write('   up   /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true\n')
+                     debianFile.write('   down /sbin/ip -' + str(version) + ' route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true\n')
+                     debianFile.write('   down /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ' || true\n')
 
       debianFile.close()
 
