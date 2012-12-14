@@ -1592,7 +1592,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    # ====== Write reverse lookup configuration for tunnels ==================
    if localSiteIndex == NorNet_SiteIndex_Central:
       for version in [ 4, 6 ]:
-         tunnelNetwork  = makeNorNetTunnel(0, 0, 0, 0, version)
+         tunnelNetwork  = makeNorNetTunnelIP(0, 0, 0, 0, version)
          tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
          tunnelZoneFile = codecs.open('tunnels.ipv' + str(version) + '.db', 'w', 'utf-8')
          prefixLength   = 32
@@ -1657,7 +1657,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                        masterSite)
 
       for version in [ 4, 6 ]:
-         tunnelNetwork  = makeNorNetTunnel(0, 0, 0, 0, version)
+         tunnelNetwork  = makeNorNetTunnelIP(0, 0, 0, 0, version)
          tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
          _writeZone(zoneConfFile, tunnelZone, 'tunnels.ipv' + str(version) + '.db', masterSite)
 
