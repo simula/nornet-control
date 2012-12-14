@@ -1656,9 +1656,9 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                        siteProvider['provider_short_name'] + '.' + site['site_domain'] + '.ipv' + str(version) + '.db',
                        masterSite)
 
-      for version in [ 4, 6 ]:
-         tunnelNetwork  = makeNorNetTunnelIP(0, 0, 0, 0, version)
-         tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
-         _writeZone(zoneConfFile, tunnelZone, 'tunnels.ipv' + str(version) + '.db', masterSite)
+   for version in [ 4, 6 ]:
+      tunnelNetwork  = makeNorNetTunnelIP(0, 0, 0, 0, version)
+      tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
+      _writeZone(zoneConfFile, tunnelZone, 'tunnels.ipv' + str(version) + '.db', masterSite)
 
    zoneConfFile.close()
