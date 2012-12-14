@@ -46,6 +46,7 @@ Depends: apt-show-versions,
          joe,
          lsb-base (>= 3.2-14),
          netperfmeter,
+         nmap,
          openssh-server,
          rsplib-tools,
          smartmontools,
@@ -96,10 +97,9 @@ Description: NorNet Node Control
 
 Package: nornet-tunnelbox
 Architecture: any
-Depends: grub2,
+Depends: bind9,
+         grub2,
          ifupdown,
-         nmap,
-         bind9,
          nornet-api,
          nornet-management,
          nornet-node,
