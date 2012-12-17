@@ -56,6 +56,7 @@ def makeNorNetTagTypes():
    makeTagType('site/nornet', 'NorNet Site Province',                     'nornet_site_province')
    makeTagType('site/nornet', 'NorNet Site Country',                      'nornet_site_country')
    makeTagType('site/nornet', 'NorNet Site Country Code',                 'nornet_site_country_code')
+   makeTagType('site/nornet', 'NorNet Site Altitude',                     'nornet_site_altitude')
    makeTagType('site/nornet', 'NorNet Site Default Provider Index',       'nornet_site_default_provider_index')
    makeTagType('site/nornet', 'NorNet Site Tunnelbox Internal Interface', 'nornet_site_tb_internal_interface')
    makeTagType('site/nornet', 'NorNet Site Central Site Tunnelbox NAT Range IPv4', 'nornet_site_tb_nat_range_ipv4')
@@ -105,7 +106,7 @@ def _addOrUpdateSiteTag(siteID, tagName, tagValue):
 # ###### Create NorNet site #################################################
 def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl, siteNorNetDomain,
                    siteNorNetIndex, siteCity, siteProvince, cityCountry, siteCountryCode,
-                   siteLatitude, siteLogitude,
+                   siteLatitude, siteLogitude, siteAltitude,
                    providerList, defaultProvider, tbInternalInterface,
                    dnsServers, ntpServers):
    siteName = unicode(siteName)   # Check whether name is in UTF-8!
@@ -150,6 +151,8 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
          error('Unable to add "nornet_site_country" tag to site ' + siteName)
       if _addOrUpdateSiteTag(siteID, 'nornet_site_country_code', siteCountryCode) <= 0:
          error('Unable to add "nornet_site_country_code" tag to site ' + siteName)
+      if _addOrUpdateSiteTag(siteID, 'nornet_site_altitude', str(siteAltitude)) <= 0:
+         error('Unable to add "nornet_site_altitude" tag to site ' + siteName)
 
       # ====== Set providers ================================================
       gotDefaultProvider = False

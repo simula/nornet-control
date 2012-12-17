@@ -233,7 +233,7 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
             'site_domain'                 : siteDomain,
             'site_latitude'               : site['latitude'],
             'site_longitude'              : site['longitude'],
-            'site_altitude'               : 0,
+            'site_altitude'               : float(getTagValue(siteTagsList, 'nornet_site_altitude', '0.0')),
             'site_url'                    : site['url'],
             'site_tags'                   : siteTagsList,
             'site_default_provider_index' : siteDefProviderIndex

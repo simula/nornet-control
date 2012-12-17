@@ -45,6 +45,8 @@ NorNet_ProviderList = {
    103 : [ 'ICE',                              'ice'      ],
 
    222 : [ 'Deutsches Forschungsnetz',         'dfn'      ],
+   223 : [ 'Deutsche Telekom',                 'dtag'     ],
+   224 : [ 'Versatel',                         'versatel' ]
 }
 
 # Prefixes for the internal IPv4 and IPv6 networks
