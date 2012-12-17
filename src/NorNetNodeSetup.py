@@ -836,7 +836,7 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
                   if providerIndex == site['site_default_provider_index']:
                      metric = 0
 
-                  # ====== Debian /etc/network/interfaces ============================
+                  # ====== Addressing =======================================
                   if ((version == 4) or (providerIndex == site['site_default_provider_index'])):
                      debianFile.write('   address   ' + str(address.ip) + '\n')
                      if version == 4:
@@ -846,11 +846,6 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
                      debianFile.write('   gateway   ' + str(gateway.ip) + '\n')
                      debianFile.write('   metric    ' + str(metric) + '\n')
 
-                  elif ((version == 6) and (providerIndex == site['site_default_provider_index'])):
-                     debianFile.write('   autoconf  0\n')
-                     debianFile.write('   accept_ra 0\n')
-                     debianFile.write('   privext   0\n')
-
                   elif ((version == 6) and (providerIndex != site['site_default_provider_index'])):   # NOTE: Work-around for buggy Ubuntu ifupdown!
                      debianFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' &&')
                      debianFile.write(' /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
@@ -858,7 +853,15 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
                      debianFile.write(' /sbin/ip -' + str(version) + ' route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
 
 
+                  # ====== Further parameters ===============================
                   if providerIndex == site['site_default_provider_index']:
+                     # ====== IPv6 options ==================================
+                     if version == 6:
+                        debianFile.write('   # autoconf  0\n')
+                        debianFile.write('   # accept_ra 0\n')
+                        debianFile.write('   # privext   0\n')
+
+                     # ====== DNS ===========================================
                      dnsAddress = gateway   # The tunnelbox is also the site's DNS server!
                      debianFile.write('   dns-nameservers ' + str(dnsAddress.ip) + '\n')
                      debianFile.write('   dns-search      ' + site['site_domain'] + '\n')
