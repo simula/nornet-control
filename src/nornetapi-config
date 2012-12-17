@@ -20,7 +20,7 @@ NorNetPLC_Password='dummy-password'
 # ###### NorNet Node configuration ##########################################
 # Node Index; needed,if if the node is not a PLC-managed node:
 # This is also the case for tunnelboxes (in this case: always 1)!
-NorNet_LocalNode_Index="1"
+NorNet_LocalNode_Index="8"
 
 # This is the full hostname of the node:
 NorNet_LocalNode_Hostname='fornebu.simula.nornet'
