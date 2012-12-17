@@ -1422,6 +1422,17 @@ def _writeRR(outputFile, hostNameFQDN, record, value):
                     record + '\t' + value + '\n')
 
 
+# ###### Write LOC RR #######################################################
+def _writeLOC(siteZoneFile, name, localSite):
+   _writeRR(siteZoneFile,
+            name,
+            'LOC',
+            _getLocString(localSite['site_latitude'],
+                          localSite['site_longitude'],
+                          localSite['site_altitude'],
+                          5, 25))
+
+
 # ###### Write zone configuration ###########################################
 def _writeZone(outputFile, zone, zoneFileName, masterSite):
    outputFile.write('zone "' + zone + '" IN {\n')
@@ -1544,13 +1555,9 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                      _writeRR(siteZoneFile,
                               _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
                               'HINFO', '"' + node['node_model'] + '" "' + node['node_type'] + '"')
-                     _writeRR(siteZoneFile,
-                              _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
-                              'LOC',
-                              _getLocString(localSite['site_latitude'],
-                                          localSite['site_longitude'],
-                                          localSite['site_altitude'],
-                                          5, 25))
+                     _writeLOC(siteZoneFile,
+                               _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
+                               localSite)
                # ====== Hostname with *all* addresses =======================
                else:
                   _writeRR(siteZoneFile,
@@ -1589,18 +1596,28 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                      remoteTunnelIP = makeNorNetTunnelIP(remoteSiteIndex, remoteProviderIndex,
                                                          localSiteIndex, localProviderIndex,
                                                          version)
-                     _writeRR(siteZoneFile,
-                              'local.' +
-                              str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' +
-                              str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.',
-                              _rrTypeForAddress(localTunnelIP),
-                              str(localTunnelIP.ip))
-                     _writeRR(siteZoneFile,
-                              'remote.' +
-                              str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' +
-                              str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.',
-                              _rrTypeForAddress(remoteTunnelIP),
-                              str(remoteTunnelIP.ip))
+                     localName  = 'local.' + \
+                                  str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' + \
+                                  str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.'
+                     remoteName = 'remote.' + \
+                                  str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' + \
+                                  str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.'
+
+                     _writeRR(siteZoneFile, localName,
+                              _rrTypeForAddress(localTunnelIP), str(localTunnelIP.ip))
+                     _writeRR(siteZoneFile, localName,
+                              'HINFO', '"Tunnel Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '" ' +
+                              '"Remote Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '"')
+                     _writeLOC(siteZoneFile, localName, localSite)
+
+                     _writeRR(siteZoneFile, remoteName,
+                              _rrTypeForAddress(remoteTunnelIP), str(remoteTunnelIP.ip))
+                     _writeRR(siteZoneFile, localName,
+                              'HINFO', '"Tunnel Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '" ' +
+                              '"Remote Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '"')
+                     _writeLOC(siteZoneFile, remoteName, remoteSite)
+
+                     siteZoneFile.write('\n')
 
    siteZoneFile.close()
 
