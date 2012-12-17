@@ -846,20 +846,22 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
                      debianFile.write('   gateway   ' + str(gateway.ip) + '\n')
                      debianFile.write('   metric    ' + str(metric) + '\n')
 
-                  if ((version == 6) and (providerIndex == site['site_default_provider_index'])):
+                  elif ((version == 6) and (providerIndex == site['site_default_provider_index'])):
                      debianFile.write('   autoconf  0\n')
                      debianFile.write('   accept_ra 0\n')
                      debianFile.write('   privext   0\n')
 
-                     dnsAddress = gateway   # The tunnelbox is also the site's DNS server!
-                     debianFile.write('   dns-nameservers ' + str(dnsAddress.ip) + '\n')
-                     debianFile.write('   dns-search      ' + site['site_domain'] + '\n')
-
-                  if ((version == 6) and (providerIndex != site['site_default_provider_index'])):   # NOTE: Work-around for buggy Ubuntu ifupdown!
+                  elif ((version == 6) and (providerIndex != site['site_default_provider_index'])):   # NOTE: Work-around for buggy Ubuntu ifupdown!
                      debianFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' &&')
                      debianFile.write(' /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
                      debianFile.write('   down /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' &&')
                      debianFile.write(' /sbin/ip -' + str(version) + ' route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
+
+
+                  if providerIndex == site['site_default_provider_index']:
+                     dnsAddress = gateway   # The tunnelbox is also the site's DNS server!
+                     debianFile.write('   dns-nameservers ' + str(dnsAddress.ip) + '\n')
+                     debianFile.write('   dns-search      ' + site['site_domain'] + '\n')
 
       debianFile.close()
 
