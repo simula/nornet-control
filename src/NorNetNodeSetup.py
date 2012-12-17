@@ -1402,7 +1402,7 @@ def _addProviderToName(hostName, providerName):
 
 
 # ###### Write SOA ##########################################################
-def _writeSOA(outputFile, nsHostNameFQDN, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL):
+def _writeSOA(outputFile, nsHostNameFQDN, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaves):
    outputFile.write('$TTL ' + str(defaultTTL) + '\n\n')
    outputFile.write('@\tIN\tSOA\t' + nsHostNameFQDN + ' root.' + siteFQDN+ ' (\n')
    outputFile.write('\t' + datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S") + '   ; Serial\n')
@@ -1410,7 +1410,10 @@ def _writeSOA(outputFile, nsHostNameFQDN, siteFQDN, refreshTime, retryTime, expi
    outputFile.write('\t{0:14d}   ; Retry time: time for retrying failed zone transfer (default: 600)\n'.format(retryTime))
    outputFile.write('\t{0:14d}   ; Expire time: when to expire a zone in case of failed zone transfer (default: 84600)\n'.format(expireTime))
    outputFile.write('\t{0:14d} ) ; Minimum TTL: minimum time-to-live (default: 3600)\n\n'.format(minTTL))
-   outputFile.write('@\tIN\tNS\t' + nsHostNameFQDN + '\n\n')
+   outputFile.write('@\tIN\tNS\t' + nsHostNameFQDN + '\n')
+   for slave in slaves:
+      outputFile.write('@\tIN\tNS\t' + str(slave) + '\n')
+   outputFile.write('\n')
 
 
 # ###### Write RR ###########################################################
@@ -1458,6 +1461,23 @@ def makeNodeForDNS(nodeName, site, nodeIndex, model, type):
    return norNetNode
 
 
+# ###### Get list of slave servers ##########################################
+def _getSlavesForSite(fullSiteList, localSite):
+   slaves = [ ]
+   for remoteSiteIndex in fullSiteList:
+      remoteSite = fullSiteList[remoteSiteIndex]
+      if ( ((localSite['site_index'] == NorNet_SiteIndex_Central) and
+            (remoteSite['site_index'] != localSite['site_index'])) or
+           ((localSite['site_index'] != NorNet_SiteIndex_Central) and
+            (remoteSite['site_index'] == NorNet_SiteIndex_Central)) ):
+         for version in [ 4, 6 ]:
+            address = makeNorNetIP(remoteSite['site_default_provider_index'],
+                                 remoteSite['site_index'],
+                                 NorNet_NodeIndex_Tunnelbox, -1, version)
+            slaves.append(address.ip)
+   return slaves
+
+
 # ###### Generate hosts configuration #######################################
 def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, additionalNodes = []):
    localSiteIndex    = localSite['site_index']
@@ -1475,7 +1495,8 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
 
    siteZoneFile = codecs.open(siteFQDN + 'db', 'w', 'utf-8')
    _writeAutoConfigInformation(siteZoneFile, ';')
-   _writeSOA(siteZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL)
+   slaveServers = _getSlavesForSite(fullSiteList, localSite)
+   _writeSOA(siteZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
 
    # ====== Some useful aliases =============================================
    if hostName != 'tunnelbox':
@@ -1591,7 +1612,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
          providerNetwork  = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, version)
          providerZone     = getZoneForAddress(providerNetwork, providerNetwork.prefixlen)
          providerZoneFile = codecs.open(localProvider['provider_short_name'] + '.' + siteFQDN + 'ipv' + str(version) + '.db', 'w', 'utf-8')
-         _writeSOA(providerZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL)
+         _writeSOA(providerZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
 
          for node in fullNodeList:
             providerAddress = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], -1, version)
