@@ -1,0 +1,75 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# NorNet Node Setup
+# Copyright (C) 2012 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+import sys;
+import base64;
+
+# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
+from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+
+# NorNet
+from NorNetTools         import *;
+from NorNetAPI           import *;
+from NorNetProviderSetup import *;
+
+
+# ###### Download ISO image #################################################
+def getBootISO(node, isoDirectory):
+   nodeID   = node['node_id']
+   nodeName = node['node_name']
+   isoName  = os.path.normpath(os.path.join(isoDirectory, nodeName + '.iso'))
+   if not os.path.exists(isoName):
+      log('Downloading ' + isoName + ' ...')
+      try:
+         isoBase64 = getPLCServer().GetBootMedium(getPLCAuthentication(), nodeID, 'node-iso' , '', [])
+         iso       = base64.b64decode(isoBase64)
+         outputFile = open(isoName, 'w')
+         outputFile.write(iso)
+         outputFile.close()
+      except Exception as e:
+         error('Unable to generate ' + isoName + ': ' + str(e))
+
+   else:
+      log('Not downloading ' + isoName + ', it already exists!')
+
+
+# ###### Main program #######################################################
+action = ''
+if len(sys.argv) != 3:
+   error('Usage: ' + sys.argv[0] + ' iso_directory node_name|ALL')
+isoDirectory = sys.argv[1]
+nodeName     = sys.argv[2]
+
+log('***** Welcome to NorNet! *****')
+loginToPLC()
+
+
+if nodeName == 'ALL':
+   allNorNetNodes = fetchNorNetNodeList()
+   for node in allNorNetNodes:
+      getBootISO(node, isoDirectory)
+else:
+   node = fetchNorNetNode(nodeName)
+   if node != None:
+      getBootISO(node, isoDirectory)
+   else:
+      error('Unknown node ' + nodeName + '!')
