@@ -1443,6 +1443,7 @@ def _writeZone(outputFile, zone, zoneFileName, masterSite):
       outputFile.write('\tallow-transfer { ')
       for version in [ 4, 6 ]:
          outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '; ')
+         outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '; ')
       outputFile.write('};\n')
    else:
       outputFile.write('\ttype slave;\n')
