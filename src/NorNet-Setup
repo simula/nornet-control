@@ -220,7 +220,7 @@ norNetSetup = [
       [ 'Uninett', 'eth1', IPv4Address('158.36.50.178'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'julenissen'  ],
+      [ 100, 1, 'julenisse'   ],
       [ 101, 2, 'fjoesnisse'  ],
       [ 102, 3, 'gaardsnisse' ],
       [ 103, 4, 'hagenisse'   ],

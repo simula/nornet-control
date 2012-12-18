@@ -1412,7 +1412,7 @@ def _writeSOA(outputFile, nsHostNameFQDN, siteFQDN, refreshTime, retryTime, expi
    outputFile.write('\t{0:14d} ) ; Minimum TTL: minimum time-to-live (default: 3600)\n\n'.format(minTTL))
    outputFile.write('@\tIN\tNS\t' + nsHostNameFQDN + '\n')
    for slave in slaves:
-      outputFile.write('@\tIN\tNS\t' + str(slave) + '\n')
+      outputFile.write('@\tIN\tNS\t' + slave + '\n')
    outputFile.write('\n')
 
 
@@ -1481,11 +1481,11 @@ def _getSlavesForSite(fullSiteList, localSite):
             (remoteSite['site_index'] != localSite['site_index'])) or
            ((localSite['site_index'] != NorNet_SiteIndex_Central) and
             (remoteSite['site_index'] == NorNet_SiteIndex_Central)) ):
-         for version in [ 4, 6 ]:
-            address = makeNorNetIP(remoteSite['site_default_provider_index'],
-                                 remoteSite['site_index'],
-                                 NorNet_NodeIndex_Tunnelbox, -1, version)
-            slaves.append(address.ip)
+         #for version in [ 4, 6 ]:
+            #address = makeNorNetIP(remoteSite['site_default_provider_index'],
+                                   #remoteSite['site_index'],
+                                   #NorNet_NodeIndex_Tunnelbox, -1, version)
+         slaves.append('ns.' + remoteSite['site_domain'] + '.')
    return slaves
 
 
