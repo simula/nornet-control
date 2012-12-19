@@ -47,3 +47,9 @@ VBoxManage storageattach "$VM_NAME" --storagectl "SATA Controller" --port 0 --de
                                     --medium "$ISO_NAME"
 VBoxManage storageattach "$VM_NAME" --storagectl "SATA Controller" --port 1 --device 0 --type hdd \
                                     --medium "~/VirtualBox VMs/$VM_NAME/DH0.vdi"
+
+(
+   echo "NAME=\"$VM_NAME"\"
+   echo "STARTDELAY=60"
+   echo "STOPDELAY=60"
+) >"70-$VM_NAME"

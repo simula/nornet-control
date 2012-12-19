@@ -60,8 +60,6 @@ def makeNorNetTagTypes():
    makeTagType('site/nornet', 'NorNet Site Default Provider Index',       'nornet_site_default_provider_index')
    makeTagType('site/nornet', 'NorNet Site Tunnelbox Internal Interface', 'nornet_site_tb_internal_interface')
    makeTagType('site/nornet', 'NorNet Site Central Site Tunnelbox NAT Range IPv4', 'nornet_site_tb_nat_range_ipv4')
-   for i in range(0, NorNet_MaxDNSServers - 1):
-      makeTagType('site/nornet', 'NorNet Site DNS Server ' + str(1 + i),  'nornet_site_dns' + str(1 + i))
    for i in range(0, NorNet_MaxNTPServers - 1):
       makeTagType('site/nornet', 'NorNet Site NTP Server ' + str(1 + i),  'nornet_site_ntp' + str(1 + i))
 
@@ -190,13 +188,6 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
       if gotDefaultProvider == False:
          error('Site ' + siteName + ' is not connected to default provider ' + defaultProvider)
 
-      # ====== Set DNS servers ==============================================
-      for i in range(0, NorNet_MaxDNSServers - 1):
-         if i >= len(dnsServers):
-            break
-         if _addOrUpdateSiteTag(siteID, 'nornet_site_dns' + str(1 + i), str(IPNetwork(dnsServers[i]).ip)) <= 0:
-            error('Unable to add "nornet_site_dns' + str(1 + i) + '" tag to site ' + siteName)
-
       # ====== Set NTP servers ==============================================
       for i in range(0, NorNet_MaxNTPServers - 1):
          if i >= len(ntpServers):
@@ -308,6 +299,7 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                   ifHostName     = nodeName.split('.')[0] + '-' + str.lower(providerName) + '.' + str.lower(siteDomain)
                ifIPv4            = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 0, 4)
                ifGateway         = makeNorNetIP(providerIndex, siteIndex, 1, 0, 4)
+               ifDNS             = ifGateway   # The tunnelbox is also the DNS server
                ifProviderNetwork = makeNorNetIP(providerIndex, 0, 0, 0, 4)
                ifAlias           = providerIndex
 
@@ -323,12 +315,7 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                interface['gateway']       = str(ifGateway.ip)
                if providerIndex == siteDefProviderIndex:
                   interface['is_primary'] = True
-                  j = 0
-                  for i in range(0, NorNet_MaxDNSServers - 1):
-                     dns = IPAddress(getTagValue(site['site_tags'], 'nornet_site_dns' + str(1 + i), '0.0.0.0'))
-                     if ((dns != IPv4Address('0.0.0.0')) and (dns.version == 4)):
-                        interface['dns' + str(1 + j)] = str(dns)
-                        j = j + 1
+                  interface['dns1']       = str(ifDNS.ip)
                else:
                   interface['is_primary'] = False
                # print interface
