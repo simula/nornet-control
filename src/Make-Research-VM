@@ -41,12 +41,12 @@ VBoxManage modifyvm "$VM_NAME" --cpus "$CPUS" \
                                --rtcuseutc on --firmware bios --chipset ich9 --acpi on --ioapic on \
                                --hwvirtex on --pae on --boot1 dvd --boot2 disk --boot3 none --boot4 none
 VBoxManage modifyvm "$VM_NAME" --nic1 bridged --nictype1 82545EM --bridgeadapter1 eth0  --cableconnected1 on --macaddress1 auto
-VBoxManage createhd --filename "~/VirtualBox VMs/$VM_NAME/DH0.vdi" --size "$DISK_SIZE" --format vdi --variant Fixed
 VBoxManage storagectl "$VM_NAME" --name "SATA Controller" --add sata --controller IntelAHCI --sataportcount 4
 VBoxManage storageattach "$VM_NAME" --storagectl "SATA Controller" --port 0 --device 0 --type dvddrive \
                                     --medium "$ISO_NAME"
+VBoxManage createhd --filename "$HOME/VirtualBox VMs/$VM_NAME/DH0.vdi" --size "$DISK_SIZE" --format vdi --variant Fixed
 VBoxManage storageattach "$VM_NAME" --storagectl "SATA Controller" --port 1 --device 0 --type hdd \
-                                    --medium "~/VirtualBox VMs/$VM_NAME/DH0.vdi"
+                                    --medium "$HOME/VirtualBox VMs/$VM_NAME/DH0.vdi"
 
 (
    echo "NAME=\"$VM_NAME"\"
