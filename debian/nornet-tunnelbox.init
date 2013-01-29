@@ -141,34 +141,37 @@ check_and_configure ()
       Tunnelbox-Setup start -bootstrap
       echo "NOTE: Retrying to obtain full configuration ..."
       Make-Tunnelbox-Configuration "$NorNet_LocalNode_Hostname"
-   fi
-   . ./tunnelbox-providers
-   providersNew="$all_providers"
-   cd ..
-   if [ -e ./tunnelbox-providers ] ; then
-      . ./tunnelbox-providers
+      echo "NOTE: Performing COLDSTART now!"
+      Tunnelbox-Setup coldstart
    else
-      all_providers=""  # We have a brand-new tunnelbox!
-   fi
-   providersOld="$all_providers"
-   providersRemoved=`get_removed_labels "$providersOld" "$providersNew"`
-
-   # ====== Apply changes ===================================================
-   for removedProvider in $providersRemoved ; do
-      Tunnelbox-Setup stop -providers "$removedProvider" -event "check_and_configure/removed provider" || true
-      rm -f tunnelbox-${removedProvider}-config
-   done
-   mv updated-tunnelbox-config/tunnelbox-bootstrap updated-tunnelbox-config/tunnelbox-providers updated-tunnelbox-config/tunnelbox-config .
-   for provider in $providersNew ; do
-      if needs_update updated-tunnelbox-config/tunnelbox-${provider}-config tunnelbox-${provider}-config $1 ; then
-         mv updated-tunnelbox-config/tunnelbox-${provider}-config .
-         echo "Provider ${provider} needs an update -> applying new setup ..."
-         Tunnelbox-Setup start -providers "$provider" -event "check_and_configure/updated provider" || true
+      . ./tunnelbox-providers
+      providersNew="$all_providers"
+      cd ..
+      if [ -e ./tunnelbox-providers ] ; then
+         . ./tunnelbox-providers
       else
-         echo "Provider ${provider} does not need an update."
-         rm -f updated-tunnelbox-config/tunnelbox-${provider}-config
+         all_providers=""  # We have a brand-new tunnelbox!
       fi
-   done
+      providersOld="$all_providers"
+      providersRemoved=`get_removed_labels "$providersOld" "$providersNew"`
+
+      # ====== Apply changes ================================================
+      for removedProvider in $providersRemoved ; do
+         Tunnelbox-Setup stop -providers "$removedProvider" -event "check_and_configure/removed provider" || true
+         rm -f tunnelbox-${removedProvider}-config
+      done
+      mv updated-tunnelbox-config/tunnelbox-bootstrap updated-tunnelbox-config/tunnelbox-providers updated-tunnelbox-config/tunnelbox-config .
+      for provider in $providersNew ; do
+         if needs_update updated-tunnelbox-config/tunnelbox-${provider}-config tunnelbox-${provider}-config $1 ; then
+            mv updated-tunnelbox-config/tunnelbox-${provider}-config .
+            echo "Provider ${provider} needs an update -> applying new setup ..."
+            Tunnelbox-Setup start -providers "$provider" -event "check_and_configure/updated provider" || true
+         else
+            echo "Provider ${provider} does not need an update."
+            rm -f updated-tunnelbox-config/tunnelbox-${provider}-config
+         fi
+      done
+   fi
 
    # ====== Apply DNS update ================================================
    rm -f zones.conf *.db
