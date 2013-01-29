@@ -23,6 +23,7 @@
 import re;
 import sys;
 import codecs;
+import getpass;
 
 # XML-RPC
 if sys.version_info < (3,0,0):
@@ -94,7 +95,7 @@ def loadNorNetConfiguration():
 
 
 # ###### Log into PLC #######################################################
-def loginToPLC():
+def loginToPLC(overrideUser = None):
    global plc_server
    global plc_authentication
 
@@ -102,7 +103,13 @@ def loginToPLC():
    loadNorNetConfiguration()
 
    # ====== Log into PLC ====================================================
-   log('Logging into PLC ' + NorNetPLC_User + '/' + NorNetPLC_Address + ' ...')
+   if overrideUser != None:
+      user     = overrideUser
+      password = getpass.getpass('Password for user ' + user + ': ')
+   else:
+      user     = NorNetPLC_User
+      password = NorNetPLC_Password
+   log('Logging into PLC ' + user + '/' + NorNetPLC_Address + ' ...')
    try:
       apiURL     = 'https://' + NorNetPLC_Address + '/PLCAPI/'
       if sys.version_info < (3,0,0):
@@ -112,8 +119,8 @@ def loginToPLC():
 
       plc_authentication = {}
       plc_authentication['AuthMethod'] = 'password'
-      plc_authentication['Username']   = NorNetPLC_User
-      plc_authentication['AuthString'] = NorNetPLC_Password
+      plc_authentication['Username']   = user
+      plc_authentication['AuthString'] = password
 
       if plc_server.AuthCheck(plc_authentication) != 1:
          error('Authorization at PLC failed!')

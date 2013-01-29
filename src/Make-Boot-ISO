@@ -53,21 +53,33 @@ def getBootISO(node, isoDirectory):
 
 
 # ###### Main program #######################################################
-action = ''
-if len(sys.argv) != 3:
-   error('Usage: ' + sys.argv[0] + ' iso_directory node_name|ALL')
-isoDirectory = sys.argv[1]
-nodeName     = sys.argv[2]
+userName     = None
+isoDirectory = '.'
+nodeList     = []
+
+if len(sys.argv) < 2:
+   error('Usage: ' + sys.argv[0] + ' [--user=user] [--directory=ISO directory] node_name|ALL ...')
+for i in range(1, len(sys.argv)):
+   match = re.search('^--([a-z]*)=(.*)', sys.argv[i])
+   if match != None:
+      if match.group(1) == 'user':
+         userName = match.group(2)
+      elif match.group(1) == 'directory':
+         isoDirectory = match.group(2)
+      else:
+        error('Invalid option parameter: ' + sys.argv[i])
+   else:
+      nodeName = sys.argv[i]
+      if nodeName == 'ALL':
+         nodeList = fetchNorNetNodeList()
+      else:
+         nodeList.append(nodeName)
+
 
 log('***** Welcome to NorNet! *****')
-loginToPLC()
+loginToPLC(userName)
 
-
-if nodeName == 'ALL':
-   allNorNetNodes = fetchNorNetNodeList()
-   for node in allNorNetNodes:
-      getBootISO(node, isoDirectory)
-else:
+for nodeName in nodeList:
    node = fetchNorNetNode(nodeName)
    if node != None:
       getBootISO(node, isoDirectory)
