@@ -56,6 +56,7 @@ def getBootISO(node, isoDirectory):
 userName     = None
 isoDirectory = '.'
 nodeList     = []
+useAllNodes  = False
 
 if len(sys.argv) < 2:
    error('Usage: ' + sys.argv[0] + ' [--user=user] [--directory=ISO directory] node_name|ALL ...')
@@ -71,7 +72,7 @@ for i in range(1, len(sys.argv)):
    else:
       nodeName = sys.argv[i]
       if nodeName == 'ALL':
-         nodeList = fetchNorNetNodeList()
+         useAllNodes = True
       else:
          nodeList.append(nodeName)
 
@@ -79,9 +80,14 @@ for i in range(1, len(sys.argv)):
 log('***** Welcome to NorNet! *****')
 loginToPLC(userName)
 
-for nodeName in nodeList:
-   node = fetchNorNetNode(nodeName)
-   if node != None:
+if useAllNodes == True:
+   allNodes = fetchNorNetNodeList()
+   for node in allNodes:
       getBootISO(node, isoDirectory)
-   else:
-      error('Unknown node ' + nodeName + '!')
+else:
+   for nodeName in nodeList:
+      node = fetchNorNetNode(nodeName)
+      if node != None:
+         getBootISO(node, isoDirectory)
+      else:
+         error('Unknown node ' + nodeName + '!')

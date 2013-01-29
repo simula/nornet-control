@@ -397,7 +397,7 @@ def fetchNorNetNode(nodeNameToFind = None, site = None):
 # ###### Fetch list of NorNet nodes #########################################
 def fetchNorNetNodeList():
    log('Fetching NorNet node list ...')
-   return fetchNorNetNode(None)
+   return fetchNorNetNode(None, None)
 
 
 # ###### Fetch list of NorNet nodes for given site ##########################
