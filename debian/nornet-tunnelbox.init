@@ -135,7 +135,7 @@ check_and_configure ()
    rm -rf updated-tunnelbox-config
    mkdir updated-tunnelbox-config
    cd updated-tunnelbox-config
-   if ! Make-Tunnelbox-Configuration ; then
+   if ! Make-Tunnelbox-Configuration "$NorNet_LocalNode_Hostname" ; then
       echo "NOTE: Unable to obtain full configuration, trying BOOTSTRAP instead ..."
       Make-Tunnelbox-Configuration "$NorNet_LocalNode_Hostname" -bootstrap
       Tunnelbox-Setup start -bootstrap
