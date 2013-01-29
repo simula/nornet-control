@@ -153,6 +153,8 @@ Architecture: all
 Conflicts: nornet-node
 Depends: grub2,
          libicu48,
+         linux-image-generic,
+         linux-source,
          nornet-management,
          virtualbox,
          xauth,
