@@ -141,8 +141,12 @@ check_and_configure ()
       Tunnelbox-Setup start -bootstrap
       echo "NOTE: Retrying to obtain full configuration ..."
       Make-Tunnelbox-Configuration "$NorNet_LocalNode_Hostname"
-      echo "NOTE: Performing COLDSTART now!"
-      Tunnelbox-Setup coldstart
+      echo "Performing COLDSTART now!"
+      cd ..
+      rm -f tunnelbox-*-config
+      mv updated-tunnelbox-config/tunnelbox-bootstrap updated-tunnelbox-config/tunnelbox-providers updated-tunnelbox-config/tunnelbox-config updated-tunnelbox-config/tunnelbox-*-config .
+      Tunnelbox-Setup coldstart -providers "@ALL"
+      echo "COLDSTART completed. The network should work now!"
    else
       . ./tunnelbox-providers
       providersNew="$all_providers"
