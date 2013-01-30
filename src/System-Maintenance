@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+# Fixes
+sudo dpkg --configure -a
+sudo apt-get update
+sudo apt-get install -f
+
+# Remove obsolete kernel packages
+ktype=$(uname -r | sed 's/.*-\(generic\|i386\|server\|common\|rt\|xen\|ec2\)/\1/')
+sudo apt-get remove -y --purge 'linux-(headers|image)-.*' linux-headers-$(uname -r)+ linux-headers-$(uname -r | sed s/-$ktype//)+ linux-headers-$ktype+ linux-image-$(uname -r)+ linux-image-$ktype+ linux-$ktype+
+
+# System update
+sudo apt-get dist-upgrade -y
+
+# Search caches
+sudo apt-file update
+updatedb
