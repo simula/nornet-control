@@ -9,8 +9,10 @@ elif [ "$1" = "monitor" ] ; then
    PACKAGES="nornet-api nornet-routing nornet-management nornet-node nornet-monitor"
 elif [ "$1" = "display" ] ; then
    PACKAGES="nornet-api nornet-routing nornet-management nornet-node nornet-display"
+elif [ "$1" = "server" ] ; then
+   PACKAGES="nornet-management nornet-server"
 else
-   echo >&2 "Usage: $0 [tunnelbox|node|monitor|display]"
+   echo >&2 "Usage: $0 [tunnelbox|node|monitor|display|server]"
    exit 1
 fi
 
