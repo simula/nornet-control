@@ -18,19 +18,19 @@
 .\"
 .\" ###### Setup ############################################################
 .Dd January 30, 2013
-.Dt NorNet-Watchdog 1
-.Os NorNet-Watchdog
+.Dt Watchdog 1
+.Os Watchdog
 .\" ###### Name #############################################################
 .Sh NAME
-.Nm NorNet-Watchdog
+.Nm Watchdog
 .Nd NorNet Watchdog
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
-.Nm NorNet-Watchdog
+.Nm Watchdog
 configuration_file
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
-.Nm NorNet-Watchdog
+.Nm Watchdog
 runs a given check program to check for correct operation (e.g. network
 connectivity). If the check fails, a failure counter is increased. If it
 reaches a configured threshold, a configured action is taken.
@@ -46,9 +46,11 @@ failure counter is reset (by deleting the failure counter file).
 .It WATCHDOG_MAXFAILURES="number"
 Sets the threshold for the number of failures after which an action is taken.
 .It WATCHDOG_FAILURE_ACTION='some-action'
-Sets the action to be taken when the failure counter reaches the threshold.
-Before the action is executed, the failure counter is reset (by deleting the
-failure counter file).
+Sets the action to be taken (e.g. reset a service) when the failure counter
+reaches the threshold. The failure action is performed only once!
+.It WATCHDOG_FAILURE_FINAL='some-action'
+If the check fails again after the failure action has been performed, the
+given final action (e.g. reset the whole machine) is taken.
 .El
 .Pp
 .\" ###### Arguments ########################################################
@@ -62,5 +64,5 @@ the configured action is performed.
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
-.It NorNet-Watchdog /etc/nornet/watchdog-config
+.It Watchdog /etc/nornet/watchdog-config
 .El
