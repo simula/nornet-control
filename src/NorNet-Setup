@@ -139,12 +139,12 @@ norNetSetup = [
       [ 'Uninett', 'eth1', IPv4Address('129.242.157.228'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'aunegaarden' ],
-      [ 101, 2, 'egon'        ],
-      [ 102, 3, 'arctandria'  ],
-      [ 103, 4, 'lutefisk'    ],
-      [ 104, 5, 'skarven'     ],
-      [ 105, 6, 'steakers'    ]
+      [ 100, 1, 'amundsen'    ],
+      [ 101, 2, 'nansen'      ],
+      [ 102, 3, 'aunegaarden' ],
+      [ 103, 4, 'skarven'     ],
+      [ 104, 5, 'arctandria'  ],
+      [ 105, 6, 'lutefisk'    ]
    ] },
 
  { 'site_index'        : 5,
