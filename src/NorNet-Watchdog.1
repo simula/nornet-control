@@ -1,0 +1,66 @@
+.\" NorNet Watchdog
+.\" Copyright (C) 2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd January 30, 2013
+.Dt NorNet-Watchdog 1
+.Os NorNet-Watchdog
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm NorNet-Watchdog
+.Nd NorNet Watchdog
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm NorNet-Watchdog
+configuration_file
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm NorNet-Watchdog
+runs a given check program to check for correct operation (e.g. network
+connectivity). If the check fails, a failure counter is increased. If it
+reaches a configured threshold, a configured action is taken.
+.br
+All configuration is made in the given configuration file. It provides the
+following options:
+.Bl -tag -width indent
+.It WATCHDOG_FAILCOUNT_FILE="watchdog-failcount-file"
+Sets a file name for the failure counter file.
+.It WATCHDOG_COMMAND="some-command"
+Sets a command for the operation check. If the check is successful, the
+failure counter is reset (by deleting the failure counter file).
+.It WATCHDOG_MAXFAILURES="number"
+Sets the threshold for the number of failures after which an action is taken.
+.It WATCHDOG_FAILURE_ACTION='some-action'
+Sets the action to be taken when the failure counter reaches the threshold.
+Before the action is executed, the failure counter is reset (by deleting the
+failure counter file).
+.El
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following options are available:
+.Bl -tag -width indent
+.It check
+Applies the check. In case the maximum number of failures have been reached,
+the configured action is performed.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It NorNet-Watchdog /etc/nornet/watchdog-config
+.El

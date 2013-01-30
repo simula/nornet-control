@@ -1,0 +1,67 @@
+#!/bin/bash -e
+#
+# Watchdog Functions
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
+
+
+# ###### Main program #######################################################
+if [ $# -ne 1 ] ; then
+   echo >&2 "Usage: configuration_file"
+   exit 1
+fi
+WATCHDOG_CONFIG="$1"
+
+
+WATCHDOG_FAILCOUNT_FILE="watchdog-failcount"
+WATCHDOG_COMMAND="true"
+WATCHDOG_MAXFAILURES="3"
+WATCHDOG_FAILURE_ACTION='echo "Something is going wrong!"'
+WATCHDOG_FAILURE_FINAL='echo "Something is going *really* wrong!"'
+
+if [ ! -e $WATCHDOG_CONFIG ] ; then
+  exit 0
+fi
+. $WATCHDOG_CONFIG
+
+
+if eval "$WATCHDOG_COMMAND" >/dev/null ; then
+   failures=0
+   if [ -e "$WATCHDOG_FAILCOUNT_FILE" ] ; then
+      echo -en "\x1b[32m`date +%FT%H:%M:%S`: Check succeeded. Resetting failure counter.\x1b[0m\n"
+   fi
+   rm -f "$WATCHDOG_FAILCOUNT_FILE"
+else
+   failures=`cat "$WATCHDOG_FAILCOUNT_FILE" 2>/dev/null || echo "0"`
+   let failures=1+$failures || failures=1
+
+   if [ $failures -ge $WATCHDOG_MAXFAILURES ] ; then
+      echo -en "\x1b[34m`date +%FT%H:%M:%S`: Check failed $failures/$WATCHDOG_MAXFAILURES --> Performing action!\x1b[0m\n"
+      echo "-999" >"$WATCHDOG_FAILCOUNT_FILE"
+      eval $WATCHDOG_FAILURE_ACTION
+   elif [ $failures -lt 0 ] ; then
+      if [ $failures -eq -998 ] ; then
+         echo -en "\x1b[33m`date +%FT%H:%M:%S`: Check failed FINALLY --> Performing final action!\x1b[0m\n"
+         eval $WATCHDOG_FAILURE_FINAL
+      fi
+      echo "-999999" >"$WATCHDOG_FAILCOUNT_FILE"
+   else
+      echo -en "\x1b[34m`date +%FT%H:%M:%S`: Check failed $failures/$WATCHDOG_MAXFAILURES: $WATCHDOG_COMMAND\x1b[0m\n"
+      echo "$failures" >"$WATCHDOG_FAILCOUNT_FILE"
+   fi
+fi
