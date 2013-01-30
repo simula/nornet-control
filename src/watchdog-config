@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# ------ Set fallback IP settings here! -------
+CENTRAL_SITE_TB="10.1.1.1"
+FALLBACK_ADDRESS="172.16.1.111/24"
+FALLBACK_GATEWAY="172.16.1.1"
+# ---------------------------------------------
+
+# ***** Uncomment to activate! *****
+# WATCHDOG_COMMAND="ping -c5 -i0.2 -W3 -q $CENTRAL_SITE_TB"
+
+WATCHDOG_MAXFAILURES="30"
+WATCHDOG_FAILCOUNT_FILE="/var/run/nornet-watchdog.failcount"
+WATCHDOG_FAILURE_ACTION="echo 'Performing reboot!' ; /sbin/reboot"
+WATCHDOG_FAILURE_FINAL="echo 'Setting fallback address!' ; /sbin/ip addr add $FALLBACK_ADDRESS dev eth0 ; /sbin/ip route del default ; /sbin/ip route add default via $FALLBACK_GATEWAY ; /usr/bin/dpkg --configure -a ; /usr/bin/apt-get update ; /usr/bin/apt-get install -f ; /usr/bin/apt-get dist-upgrade -y"

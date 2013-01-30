@@ -29,7 +29,7 @@ WATCHDOG_CONFIG="$1"
 
 
 WATCHDOG_FAILCOUNT_FILE="watchdog-failcount"
-WATCHDOG_COMMAND="true"
+WATCHDOG_COMMAND=""   # false
 WATCHDOG_MAXFAILURES="3"
 WATCHDOG_FAILURE_ACTION='echo "Something is going wrong!"'
 WATCHDOG_FAILURE_FINAL='echo "Something is going *really* wrong!"'
@@ -38,6 +38,11 @@ if [ ! -e $WATCHDOG_CONFIG ] ; then
   exit 0
 fi
 . $WATCHDOG_CONFIG
+
+if [ "$WATCHDOG_COMMAND" = "" ] ; then
+   # Nothing to do!
+   exit 0
+fi
 
 
 if eval "$WATCHDOG_COMMAND" >/dev/null ; then
