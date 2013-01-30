@@ -1,1 +1,2 @@
-Watchdog          /usr/bin
+System-Maintenance   /usr/bin
+Watchdog             /usr/bin

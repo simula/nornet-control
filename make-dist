@@ -37,6 +37,7 @@ cp src/pbuilder/pbuilderrc $PACKAGE-$UPSTREAM_VERSION/pbuilder/
 cp src/Routing-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Tunnelbox-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Watchdog $PACKAGE-$UPSTREAM_VERSION
+cp src/System-Maintenance $PACKAGE-$UPSTREAM_VERSION
 cp src/check_* $PACKAGE-$UPSTREAM_VERSION
 cp src/Make-*-Configuration $PACKAGE-$UPSTREAM_VERSION
 cp src/Reset-Networking $PACKAGE-$UPSTREAM_VERSION
