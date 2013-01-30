@@ -2,4 +2,3 @@ Make-Tunnelbox-Configuration         /usr/bin
 Tunnelbox-Setup                      /usr/bin
 grub/07_nornet_tunnelbox_theme       /etc/grub.d
 grub/Splash-Tunnelbox1-1024x768.jpeg /boot
-watchdog-config                      /etc/nornet
