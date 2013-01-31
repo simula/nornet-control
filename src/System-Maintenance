@@ -1,21 +1,38 @@
 #!/bin/bash -e
 
-# Fixes
-sudo dpkg --configure -a
+# Update package repositories
+echo "Updating package repositories ..."
 sudo apt-get update -qq
-sudo apt-get install -f -y -q
+
+# Fixes
+echo "Applying package fixes, if necessary ..."
+sudo dpkg --configure -a  >/tmp/install.log 2>&1 &
+wait
+cat /tmp/install.log
+sudo nohup apt-get install -f -y -q  >/tmp/install.log 2>&1 &
+wait
+cat /tmp/install.log
 
 # Remove obsolete kernel packages
+echo "Removing obsolete kernels ..."
 ktype=$(uname -r | sed 's/.*-\(generic\|i386\|server\|common\|rt\|xen\|ec2\)/\1/')
-sudo apt-get remove -y -qq --purge 'linux-(headers|image)-.*' linux-headers-$(uname -r)+ linux-headers-$(uname -r | sed s/-$ktype//)+ linux-headers-$ktype+ linux-image-$(uname -r)+ linux-image-$ktype+ linux-$ktype+
+sudo nohup apt-get remove -y -qq --purge 'linux-(headers|image)-.*' linux-headers-$(uname -r)+ linux-headers-$(uname -r | sed s/-$ktype//)+ linux-headers-$ktype+ linux-image-$(uname -r)+ linux-image-$ktype+ linux-$ktype+ >/tmp/install.log 2>&1 &
+wait
+cat /tmp/install.log
 
 # System update
-sudo nohup apt-get dist-upgrade -y -q >/tmp/dist-upgrade.log 2>&1 &
+echo "Installing updates ..."
+sudo nohup apt-get dist-upgrade -y -q >/tmp/install.log 2>&1 &
 wait
-cat /tmp/dist-upgrade.log
-sudo apt-get autoremove -y -q
+cat /tmp/install.log
+
+echo "Cleaning up ..."
+sudo apt-get autoremove -y -q >/tmp/install.log 2>&1 &
+wait
+cat /tmp/install.log
+sudo apt-get clean
 
 # Cache updates
-sudo apt-get clean
+echo "Updating caches ..."
 sudo apt-file update >/dev/null
-updatedb
+sudo updatedb
