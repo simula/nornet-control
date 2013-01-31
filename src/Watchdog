@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 #
 # Watchdog Functions
 # Copyright (C) 2013 by Thomas Dreibholz
@@ -37,7 +37,7 @@ WATCHDOG_FAILURE_FINAL='echo "Something is going *really* wrong!"'
 if [ ! -e $WATCHDOG_CONFIG ] ; then
   exit 0
 fi
-. $WATCHDOG_CONFIG
+. $WATCHDOG_CONFIG || exit 0
 
 if [ "$WATCHDOG_COMMAND" = "" ] ; then
    # Nothing to do!
@@ -62,9 +62,9 @@ else
    elif [ $failures -lt 0 ] ; then
       if [ $failures -eq -998 ] ; then
          echo -en "\x1b[33m`date +%FT%H:%M:%S`: Check failed FINALLY --> Performing final action!\x1b[0m\n"
+         echo "-999999" >"$WATCHDOG_FAILCOUNT_FILE"
          eval $WATCHDOG_FAILURE_FINAL
       fi
-      echo "-999999" >"$WATCHDOG_FAILCOUNT_FILE"
    else
       echo -en "\x1b[34m`date +%FT%H:%M:%S`: Check failed $failures/$WATCHDOG_MAXFAILURES: $WATCHDOG_COMMAND\x1b[0m\n"
       echo "$failures" >"$WATCHDOG_FAILCOUNT_FILE"
