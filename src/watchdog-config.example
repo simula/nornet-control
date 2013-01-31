@@ -20,7 +20,7 @@ echo 'Setting fallback address!' ;
 /sbin/ip route add default via $FALLBACK_GATEWAY ;
 echo 'nameserver 8.8.8.8' >/etc/resolv.conf ;
 /bin/bash -c 'service nornet-server stop' ;
-/bin/bash -c '/usr/bin/dpkg --configure -a' ;
-/bin/bash -c '/usr/bin/apt-get update -qq' ;
-/bin/bash -c '/usr/bin/apt-get install -f -y -q' ;
-/bin/bash -c '/usr/bin/apt-get dist-upgrade -y -q'"
+/bin/bash -c 'env DEBIAN_FRONTEND=noninteractive /usr/bin/dpkg --configure -a' ;
+/bin/bash -c 'env DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get update -qq' ;
+/bin/bash -c 'env DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install -f -y -q' ;
+/bin/bash -c 'env DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get dist-upgrade -y -q'"
