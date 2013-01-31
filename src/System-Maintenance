@@ -2,16 +2,20 @@
 
 # Fixes
 sudo dpkg --configure -a
-sudo apt-get update
-sudo apt-get install -f
+sudo apt-get update -qq
+sudo apt-get install -f -y -q
 
 # Remove obsolete kernel packages
 ktype=$(uname -r | sed 's/.*-\(generic\|i386\|server\|common\|rt\|xen\|ec2\)/\1/')
-sudo apt-get remove -y --purge 'linux-(headers|image)-.*' linux-headers-$(uname -r)+ linux-headers-$(uname -r | sed s/-$ktype//)+ linux-headers-$ktype+ linux-image-$(uname -r)+ linux-image-$ktype+ linux-$ktype+
+sudo apt-get remove -y -qq --purge 'linux-(headers|image)-.*' linux-headers-$(uname -r)+ linux-headers-$(uname -r | sed s/-$ktype//)+ linux-headers-$ktype+ linux-image-$(uname -r)+ linux-image-$ktype+ linux-$ktype+
 
 # System update
-sudo apt-get dist-upgrade -y
+sudo nohup apt-get dist-upgrade -y -q >/tmp/dist-upgrade.log 2>&1 &
+wait
+cat /tmp/dist-upgrade.log
+sudo apt-get autoremove -y -q
 
-# Search caches
-sudo apt-file update
+# Cache updates
+sudo apt-get clean
+sudo apt-file update >/dev/null
 updatedb
