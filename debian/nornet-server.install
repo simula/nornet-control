@@ -1,4 +1,4 @@
 grub/05_nornet_server_theme       /etc/grub.d
 grub/Splash-Server1-1024x768.jpeg /boot
 grub/grub-defaults                /etc/nornet
-watchdog-config                   /etc/nornet
+watchdog-config.example           /usr/share/nornet
