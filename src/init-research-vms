@@ -1,0 +1,13 @@
+#!/bin/bash
+
+ISOs=`find . -name "*.iso"`
+for iso in $ISOs ; do
+   vm=`echo $iso | sed -e "s/.iso$//"`
+   sudo -u nornetpp ./Make-Research-VM $vm $iso 3072 200
+   sudo cp 70-$vm /etc/nornet/vsystems/
+done
+
+echo "Restarting nornet-server service ..."
+sudo nohup service nornet-server restart >/tmp/service.log 2>&1 &
+wait
+cat /tmp/service.log
