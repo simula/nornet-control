@@ -2,7 +2,7 @@
 
 ISOs=`find . -name "*.iso"`
 for iso in $ISOs ; do
-   vm=`echo $iso | sed -e "s/.iso$//"`
+   vm=`echo $iso | sed -e "s/^.\///" -e "s/.iso$//"`
    sudo -u nornetpp ./Make-Research-VM $vm $iso 3072 200
    sudo cp 70-$vm /etc/nornet/vsystems/
 done
