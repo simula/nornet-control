@@ -31,6 +31,7 @@ WATCHDOG_CONFIG="$1"
 WATCHDOG_FAILCOUNT_FILE="watchdog-failcount"
 WATCHDOG_COMMAND=""   # false
 WATCHDOG_MAXFAILURES="3"
+WATCHDOG_MAXFINALTRIALS="2"
 WATCHDOG_FAILURE_ACTION='echo "Something is going wrong!"'
 WATCHDOG_FAILURE_FINAL='echo "Something is going *really* wrong!"'
 
@@ -57,15 +58,19 @@ else
 
    if [ $failures -ge $WATCHDOG_MAXFAILURES ] ; then
       echo -en "\x1b[34m`date +%FT%H:%M:%S`: Check failed $failures/$WATCHDOG_MAXFAILURES --> Performing action!\x1b[0m\n"
-      echo "-999" >"$WATCHDOG_FAILCOUNT_FILE"
+      echo "-1000000" >"$WATCHDOG_FAILCOUNT_FILE"
       eval $WATCHDOG_FAILURE_ACTION
-   elif [ $failures -lt 0 ] ; then
-      if [ $failures -eq -998 ] ; then
+   elif [ $failures -lt 0 -a $failures -ge -1000000 ] ; then
+      let finalTrials=$failures+1000000
+      echo -en "\x1b[34m`date +%FT%H:%M:%S`: FINAL check failed $finalTrials/$WATCHDOG_MAXFINALTRIALS: $WATCHDOG_COMMAND\x1b[0m\n"
+      if [ $finalTrials -eq $WATCHDOG_MAXFINALTRIALS ] ; then
          echo -en "\x1b[33m`date +%FT%H:%M:%S`: Check failed FINALLY --> Performing final action!\x1b[0m\n"
-         echo "-999999" >"$WATCHDOG_FAILCOUNT_FILE"
+         echo "-1111111" >"$WATCHDOG_FAILCOUNT_FILE"
          eval $WATCHDOG_FAILURE_FINAL
+      else
+         echo "$failures" >"$WATCHDOG_FAILCOUNT_FILE"
       fi
-   else
+   elif [ $failures -gt 0 ] ; then
       echo -en "\x1b[34m`date +%FT%H:%M:%S`: Check failed $failures/$WATCHDOG_MAXFAILURES: $WATCHDOG_COMMAND\x1b[0m\n"
       echo "$failures" >"$WATCHDOG_FAILCOUNT_FILE"
    fi
