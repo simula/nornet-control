@@ -17,6 +17,7 @@ WATCHDOG_FAILURE_ACTION="echo 'Performing reboot!' ; /sbin/reboot"
 WATCHDOG_FAILURE_FINAL="
 echo 'Setting fallback address!' ;
 /sbin/ip addr add $FALLBACK_ADDRESS dev $FALLBACK_INTERFACE ;
+/sbin/ip link set up dev $FALLBACK_INTERFACE ;
 /sbin/ip route del default ;
 /sbin/ip route add default via $FALLBACK_GATEWAY ;
 echo 'nameserver 8.8.8.8' >/etc/resolv.conf ;
