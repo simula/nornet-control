@@ -1,14 +1,17 @@
 #!/bin/bash -e
 
-# Update package repositories
-echo -e "\x1b[34m`date +%FT%H:%M:%S`: Updating package repositories ...\x1b[0m"
-sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq
-
 # Fixes
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Applying package fixes, if necessary ...\x1b[0m"
 sudo DEBIAN_FRONTEND=noninteractive dpkg --configure -a  >/tmp/install.log 2>&1 &
 wait
 cat /tmp/install.log
+
+# Update package repositories
+echo -e "\x1b[34m`date +%FT%H:%M:%S`: Updating package repositories ...\x1b[0m"
+sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq
+
+# Fixes
+echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing missing dependencies, if necessary ...\x1b[0m"
 sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -f -y -q  >/tmp/install.log 2>&1 &
 wait
 cat /tmp/install.log
