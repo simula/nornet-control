@@ -790,7 +790,7 @@ def makeTunnelBoxConfiguration(fullSiteList, localSite, configNamePrefix):
 
 # ###### Generate node configuration ########################################
 def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, interfaceName,
-                                      variant, configNamePrefix):
+                                       variant, configNamePrefix):
    log('Making node configuration for ' + nodeName + ' ...')
 
    # ====== Write Debian /etc/network/interfaces ============================
