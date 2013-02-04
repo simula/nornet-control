@@ -1,0 +1,168 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# NorNet Setup
+# Copyright (C) 2012 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+import re;
+import os;
+import base64;
+
+# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
+from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+
+# NorNet
+from NorNetProviderSetup import *;
+from NorNetTools import *;
+
+
+
+# ###### Main program #######################################################
+if ((len(sys.argv) < 6) or (sys.argv[3] != 'site') or (sys.argv[5] != 'providers')):
+   error('Usage: ' + sys.argv[0] + ' hostname node_id site site_id providers default_provider [provider2] ...')
+
+hostName   = getHostnameFromFQDN(sys.argv[1])
+domainName = getDomainFromFQDN(sys.argv[1])
+nodeIndex  = int(sys.argv[2])
+if ((nodeIndex < 1) or (nodeIndex > 255)):
+   error('Bad node index!')
+siteIndex = int(sys.argv[4])
+if ((siteIndex < 1) or (siteIndex > 255)):
+   error('Bad site index!')
+
+defaultProvider = -1
+providerList    = []
+for i in range(6, len(sys.argv)):
+   providerName  = sys.argv[i]
+   providerIndex = -1
+   try:
+      providerIndex = int(providerName)
+   except:
+      for p in NorNet_ProviderList:
+         if NorNet_ProviderList[p][0] == providerName:
+            providerIndex = p
+            break
+   if ((providerIndex <= 0) or (providerIndex > 255)):
+      error("Bad provider " + providerName)
+   if i == 6:
+      defaultProvider = providerIndex
+   providerList.append(providerIndex)
+
+
+print('Node:       ' + hostName + ' at ' + domainName)
+print('Node Index: ' + str(nodeIndex))
+print('Site Index: ' + str(siteIndex))
+print('Providers:  ' + str(providerList))
+
+
+# ###### Write hosts file ###################################################
+def writeHosts(outputName, hostName, domainName):
+   outputFile = codecs.open(outputName, 'w', 'utf-8')
+   outputFile.write('127.0.0.1\tlocalhost\n')
+   outputFile.write('127.0.1.1\t' + hostName + '.' + domainName + ' ' + hostName + '\n\n')
+   outputFile.write('# The following lines are desirable for IPv6 capable hosts\n')
+   outputFile.write('::1\tip6-localhost ip6-loopback\n')
+   outputFile.write('fe00::0\tip6-localnet\n')
+   outputFile.write('ff00::0\tip6-mcastprefix\n')
+   outputFile.write('ff02::1\tip6-allnodes\n')
+   outputFile.write('ff02::2\tip6-allrouters\n')
+   outputFile.close()
+
+
+# ###### Write hostname file ################################################
+def writeHostname(outputName, hostName, domainName):
+   outputFile = codecs.open(outputName, 'w', 'utf-8')
+   outputFile.write(hostName + '.' + domainName + '\n')
+   outputFile.close()
+
+
+# ###### Write interfaces file ##############################################
+def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex, providerList, defaultProvider, interfaceName):
+   outputFile = codecs.open(outputName, 'w', 'utf-8')
+   outputFile.write('# ====== Node configuration ======\n')
+
+   outputFile.write('# ====== Loopback ======\n')
+   outputFile.write('auto lo\n')
+   outputFile.write('iface lo inet loopback\n')
+
+   for onlyDefault in [ False, True  ]:   # NOTE: non-default providers first!
+      for providerIndex in providerList:
+         if ( ((onlyDefault == True)  and (providerIndex == defaultProvider)) or \
+              ((onlyDefault == False) and (providerIndex != defaultProvider)) ):
+            try:
+               providerName = NorNet_ProviderList[providerIndex][0]
+            except:
+               providerName = '???'
+            outputFile.write('\n# ====== ' + providerName + ' (' + str(providerIndex) + ') ======\n')
+
+            for version in [ 4, 6 ]:
+
+               if ((providerIndex != defaultProvider) and (version == 4)):
+                  outputFile.write('auto ' + interfaceName + ':' + str(providerIndex) + '\n')
+                  outputFile.write('iface ' + interfaceName + ':' + str(providerIndex) + ' inet static\n')
+               elif providerIndex == defaultProvider:
+                  v = ''
+                  if version == 4:
+                     outputFile.write('auto ' + interfaceName + '\n')
+                  else:
+                     v = '6'
+                     outputFile.write('\n')
+                  outputFile.write('iface ' + interfaceName + ' inet' + v + ' static\n')
+
+               address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  -1, version)
+               gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+               metric = 10
+               if providerIndex == defaultProvider:
+                  metric = 0
+
+               # ====== Addressing =======================================
+               if ((version == 4) or (providerIndex == defaultProvider)):
+                  outputFile.write('   address   ' + str(address.ip) + '\n')
+                  if version == 4:
+                     outputFile.write('   netmask   ' + str(address.netmask) + '\n')
+                  else:
+                     outputFile.write('   netmask   ' + str(address.prefixlen) + '\n')
+                  outputFile.write('   gateway   ' + str(gateway.ip) + '\n')
+                  outputFile.write('   metric    ' + str(metric) + '\n')
+
+               elif ((version == 6) and (providerIndex != defaultProvider)):   # NOTE: Work-around for buggy Ubuntu ifupdown!
+                  outputFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' &&')
+                  outputFile.write(' /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
+                  outputFile.write('   down /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' &&')
+                  outputFile.write(' /sbin/ip -' + str(version) + ' route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
+
+
+               # ====== Further parameters ===============================
+               if providerIndex == defaultProvider:
+                  # ====== IPv6 options ==================================
+                  if version == 6:
+                     outputFile.write('   # autoconf  0\n')
+                     outputFile.write('   # accept_ra 0\n')
+                     outputFile.write('   # privext   0\n')
+
+                  # ====== DNS ===========================================
+                  dnsAddress = gateway   # The tunnelbox is also the site's DNS server!
+                  outputFile.write('   dns-nameservers ' + str(dnsAddress.ip) + '\n')
+                  outputFile.write('   dns-search      ' + domainName + '\n')
+
+   outputFile.close()
+
+
+writeHostname('hostname.new', hostName, domainName)
+writeHosts('hosts.new', hostName, domainName)
+writeInterfaces('interfaces.new', hostName, domainName, nodeIndex, siteIndex, providerList, defaultProvider, 'eth0')
