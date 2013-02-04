@@ -1,0 +1,83 @@
+#!/bin/bash
+#
+# Server Setup
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+if [ $# -lt 8 -o \
+     "$3" != "-site" -o \
+     "$5" != "-interface" -o \
+     "$7" != "-providers" ] ; then
+   echo >&2 "Usage: $0 FQDN node_index -site site_index -interface interface_name -providers default_provider [provider2] ..."
+   exit 1
+fi
+
+FQDN="$1"
+NodeIndex="$2"
+SiteIndex="$4"
+InterfaceName="$6"
+shift ; shift ; shift ; shift ; shift ; shift ; shift
+ProviderList="$@"
+
+./Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers $ProviderList || exit 1
+
+colordiff hostname.new /etc/hostname
+colordiff hosts.new /etc/hosts
+colordiff ntp.new /etc/ntp.conf
+colordiff interfaces.new /etc/network/interfaces
+
+
+echo -n "Apply changes (current configuration files will be backuped to <file>~)? [yes/no]? "
+read -er applyChanges
+if [ "$applyChanges" != "yes" -o "$applyChanges" != "y" ] ; then
+   echo "Skipped!"
+else
+   cp /etc/hostname /etc/hostname~
+   cp  hostname.new /etc/hostname
+
+   cp /etc/hosts /etc/hosts~
+   cp  hosts.new /etc/hosts
+   hostname `cat /etc/hostname`
+
+   cp /etc/ntp.conf /etc/ntp.conf~
+   cp ntp.new /etc/ntp.conf
+
+   cp /etc/network/interfaces /etc/network/interfaces~
+   cp  interfaces.new /etc/network/interfaces
+
+   service networking restart
+   service ntp restart
+fi
+
+
+echo -n "Configure keyboard? [yes/no]? "
+read -er applyChanges
+if [ "$applyChanges" != "yes" -o "$applyChanges" != "y" ] ; then
+   echo "Skipped!"
+else
+   dpkg-reconfigure keyboard-configuration
+fi
+
+
+echo -n "Run system maintenance script? [yes/no]? "
+read -er applyChanges
+if [ "$applyChanges" != "yes" -o "$applyChanges" != "y" ] ; then
+   echo "Skipped!"
+else
+   System-Maintenance
+fi

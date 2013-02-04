@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # NorNet Setup
-# Copyright (C) 2012 by Thomas Dreibholz
+# Copyright (C) 2013 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,8 +33,8 @@ from NorNetTools import *;
 
 
 # ###### Main program #######################################################
-if ((len(sys.argv) < 8) or (sys.argv[3] != 'site') or (sys.argv[5] != 'interface') or (sys.argv[7] != 'providers')):
-   error('Usage: ' + sys.argv[0] + ' hostname node_id site site_id interface interface_name providers default_provider [provider2] ...')
+if ((len(sys.argv) < 8) or (sys.argv[3] != '-site') or (sys.argv[5] != '-interface') or (sys.argv[7] != '-providers')):
+   error('Usage: ' + sys.argv[0] + ' FQDN node_index -site site_index -interface interface_name -providers default_provider [provider2] ...')
 
 hostName      = getHostnameFromFQDN(sys.argv[1])
 domainName    = getDomainFromFQDN(sys.argv[1])
@@ -65,7 +65,7 @@ for i in range(8, len(sys.argv)):
    providerList.append(providerIndex)
 
 
-print('Node:       ' + hostName + ' at ' + domainName)
+print('Node:       ' + hostName + ' . ' + domainName)
 print('Node Index: ' + str(nodeIndex))
 print('Site Index: ' + str(siteIndex))
 print('Interface:  ' + interfaceName)
@@ -165,6 +165,34 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex, prov
    outputFile.close()
 
 
+# ###### Write NTP configuration file ##############################################
+def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider):
+   outputFile = codecs.open(outputName, 'w', 'utf-8')
+
+   outputFile.write('# ====== Drift File ======\n')
+   outputFile.write('driftfile /var/lib/ntp/ntp.drift\n\n')
+
+   outputFile.write('# ====== Statistics ======\n')
+   outputFile.write('statsdir /var/log/ntpstats/\n')
+   outputFile.write('filegen loopstats file loopstats type day enable\n')
+   outputFile.write('filegen peerstats file peerstats type day enable\n')
+   outputFile.write('filegen clockstats file clockstats type day enable\n\n')
+
+   outputFile.write('# ====== Generic Access Restrictions ======\n')
+   outputFile.write('restrict default ignore\n')
+   outputFile.write('restrict 127.0.0.1\n')
+   outputFile.write('restrict ::1\n\n')
+
+   outputFile.write('# ====== NTP server ======\n')
+   for version in [ 4, 6 ]:
+      ntpServer = makeNorNetIP(defaultProvider, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+      outputFile.write('server    ' + str(ntpServer.ip) + '\n')
+      outputFile.write('restrict  ' + str(ntpServer.ip) + '\n')
+
+   outputFile.close()
+
+
 writeHostname('hostname.new', hostName, domainName)
 writeHosts('hosts.new', hostName, domainName)
 writeInterfaces('interfaces.new', hostName, domainName, nodeIndex, siteIndex, providerList, defaultProvider, 'eth0')
+writeNTPConfiguration('ntp.new', nodeIndex, siteIndex, defaultProvider)
