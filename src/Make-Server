@@ -33,21 +33,22 @@ from NorNetTools import *;
 
 
 # ###### Main program #######################################################
-if ((len(sys.argv) < 6) or (sys.argv[3] != 'site') or (sys.argv[5] != 'providers')):
-   error('Usage: ' + sys.argv[0] + ' hostname node_id site site_id providers default_provider [provider2] ...')
+if ((len(sys.argv) < 8) or (sys.argv[3] != 'site') or (sys.argv[5] != 'interface') or (sys.argv[7] != 'providers')):
+   error('Usage: ' + sys.argv[0] + ' hostname node_id site site_id interface interface_name providers default_provider [provider2] ...')
 
-hostName   = getHostnameFromFQDN(sys.argv[1])
-domainName = getDomainFromFQDN(sys.argv[1])
+hostName      = getHostnameFromFQDN(sys.argv[1])
+domainName    = getDomainFromFQDN(sys.argv[1])
 nodeIndex  = int(sys.argv[2])
 if ((nodeIndex < 1) or (nodeIndex > 255)):
    error('Bad node index!')
 siteIndex = int(sys.argv[4])
 if ((siteIndex < 1) or (siteIndex > 255)):
    error('Bad site index!')
+interfaceName = sys.argv[6]
 
 defaultProvider = -1
 providerList    = []
-for i in range(6, len(sys.argv)):
+for i in range(8, len(sys.argv)):
    providerName  = sys.argv[i]
    providerIndex = -1
    try:
@@ -59,7 +60,7 @@ for i in range(6, len(sys.argv)):
             break
    if ((providerIndex <= 0) or (providerIndex > 255)):
       error("Bad provider " + providerName)
-   if i == 6:
+   if i == 8:
       defaultProvider = providerIndex
    providerList.append(providerIndex)
 
@@ -67,6 +68,7 @@ for i in range(6, len(sys.argv)):
 print('Node:       ' + hostName + ' at ' + domainName)
 print('Node Index: ' + str(nodeIndex))
 print('Site Index: ' + str(siteIndex))
+print('Interface:  ' + interfaceName)
 print('Providers:  ' + str(providerList))
 
 
