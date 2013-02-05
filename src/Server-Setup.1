@@ -1,0 +1,67 @@
+.\" Make Server Configuration
+.\" Copyright (C) 2012-2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd February 5, 2013
+.Dt Make-Server-Configuration 1
+.Os Make-Server-Configuration
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Make-Server-Configuration
+.Nd NorNet Server Configuration Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Make-Server-Configuration
+FQDN
+node_index
+\-site site_index
+\-interface interface_name
+\-providers default_provider [provider2] ...
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Make-Server-Configuration
+generates server configuration files, based on hostname, site index, node
+index and NorNet interface name. The following configuration files will be
+created in the current directory:
+.Bl -tag -width indent
+.It hostname.new (hostname configuration, for /etc/hostname),
+.It hosts.new (hosts configuration, for /etc/hosts),
+.It ntp.new (NTP configuration, for /etc/ntp.conf),
+.It interfaces.new (interfaces configuration, for /etc/network/interfaces).
+.El
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following parameters need to be provided:
+.Bl -tag -width indent
+.It node_index
+Provides the node index (1-255).
+.It \-site site_index
+Provides the site index (1-255).
+.It \-interface interface_name
+Provides the NorNet interface name (e.g. eth0).
+.It \-providers default_provider [provider2] ...
+Provides the providers the server is conntected to. They will be configured
+on the NorNet interface. Providers can be given by their name or provider
+index.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Make-Server-Configuration isbjoen.unis.nornet 254 \-site 8 \-interface eth0 \-providers Uninett Hafslund
+.El
