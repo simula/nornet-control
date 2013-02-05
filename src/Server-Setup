@@ -34,7 +34,7 @@ InterfaceName="$6"
 shift ; shift ; shift ; shift ; shift ; shift ; shift
 ProviderList="$@"
 
-./Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers $ProviderList || exit 1
+Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers $ProviderList || exit 1
 
 colordiff hostname.new /etc/hostname
 colordiff hosts.new /etc/hosts
