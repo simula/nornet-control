@@ -18,15 +18,15 @@
 .\"
 .\" ###### Setup ############################################################
 .Dd February 5, 2013
-.Dt Make-Server-Configuration 1
-.Os Make-Server-Configuration
+.Dt Server-Setup 1
+.Os Server-Setup
 .\" ###### Name #############################################################
 .Sh NAME
-.Nm Make-Server-Configuration
+.Nm Server-Setup
 .Nd NorNet Server Configuration Script
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
-.Nm Make-Server-Configuration
+.Nm Server-Setup
 FQDN
 node_index
 \-site site_index
@@ -34,16 +34,10 @@ node_index
 \-providers default_provider [provider2] ...
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
-.Nm Make-Server-Configuration
-generates server configuration files, based on hostname, site index, node
-index and NorNet interface name. The following configuration files will be
-created in the current directory:
-.Bl -tag -width indent
-.It hostname.new (hostname configuration, for /etc/hostname),
-.It hosts.new (hosts configuration, for /etc/hosts),
-.It ntp.new (NTP configuration, for /etc/ntp.conf),
-.It interfaces.new (interfaces configuration, for /etc/network/interfaces).
-.El
+.Nm Server-Setup
+generates and sets the server configuration for a NorNet physical machine,
+based on hostname, site index, node index and NorNet interface name. It is
+intended to be used on a freshly-installed server system.
 .Pp
 .\" ###### Arguments ########################################################
 .Sh ARGUMENTS
@@ -63,5 +57,5 @@ index.
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
-.It Make-Server-Configuration isbjoen.unis.nornet 254 \-site 8 \-interface eth0 \-providers Uninett Hafslund
+.It Server-Setup isbjoen.unis.nornet 254 \-site 8 \-interface eth0 \-providers Uninett Hafslund
 .El
