@@ -59,6 +59,9 @@ else
 
    cp /etc/network/interfaces /etc/network/interfaces~
    cp  interfaces.new /etc/network/interfaces
+   if [ -e /etc/udev/rules.d/70-persistent-net.rules ] ; then
+      rm /etc/udev/rules.d/70-persistent-net.rules
+   fi
 
    service networking restart
    service ntp restart
