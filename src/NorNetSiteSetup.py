@@ -79,7 +79,7 @@ def makeNorNetTagTypes():
 
 # ###### Remove NorNet site #################################################
 def removeNorNetSite(siteName):
-   site = fetchNorNetSite(siteName)
+   site = fetchNorNetSite(siteName, False)
    if site != None:
       if int(getTagValue(site['site_tags'], 'nornet_is_managed_site', '-1')) < 1:
          error('removeNorNetSite() will only remove NorNet sites!')

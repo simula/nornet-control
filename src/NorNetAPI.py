@@ -202,7 +202,7 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
    if siteNameToFind == None:   # Get full list
       filter = { }
    else:              # Only perform lookup for given name
-      filter = { 'name': siteNameToFind }
+      filter = { 'name' : siteNameToFind }
 
    try:
       norNetSiteList = dict([])
