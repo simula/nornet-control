@@ -257,6 +257,33 @@ norNetSetup = [
 
  { 'site_index'        : 9,
    'site_enabled'      : False,
+   'site_long_name'    : u'Universitetet i Trondheim',
+   'site_short_name'   : 'NTNU',
+   'site_url'          : 'http://www.ntnu.nornet',
+   'site_domain'       : 'ntnu.nornet',
+   'site_city'         : 'Trondheim',
+   'site_province'     : 'Sør-Trøndelag',
+   'site_country'      : 'Norge',
+   'site_country_code' : 'NO',
+   'site_latitude'     : 63.419034,
+   'site_longitude'    : 10.4022,
+   'site_altitude'     : 20,
+   'site_pcu'          : [ IPv4Address('132.252.156.7'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ 'Uninett', 'eth1', IPv4Address('132.252.156.75'), IPv6Address('::') ],
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'bybro'       ],
+      [ 101, 2, 'bakklandet'  ],
+      [ 102, 3, 'byaasen'     ],
+      [ 103, 4, 'lerkendal'   ],
+      [ 104, 5, 'bymarka'     ],
+      [ 105, 6, 'heimdal'     ]
+   ] },
+
+ { 'site_index'        : 10,
+   'site_enabled'      : False,
    'site_long_name'    : u'Universitetet i Nordland',
    'site_short_name'   : 'UiN',
    'site_url'          : 'http://www.uin.nornet',
@@ -279,32 +306,6 @@ norNetSetup = [
       [ 101, 2, 'helium'    ],
       [ 102, 3, 'litium'    ],
       [ 103, 4, 'beryllium' ]
-   ] },
-
- { 'site_index'        : 10,
-   'site_enabled'      : False,
-   'site_long_name'    : u'Universitetet i Trondheim',
-   'site_short_name'   : 'NTNU',
-   'site_url'          : 'http://www.ntnu.nornet',
-   'site_domain'       : 'ntnu.nornet',
-   'site_city'         : 'Trondheim',
-   'site_province'     : 'Sør-Trøndelag',
-   'site_country'      : 'Norge',
-   'site_country_code' : 'NO',
-   'site_latitude'     : 63.419034,
-   'site_longitude'    : 10.4022,
-   'site_altitude'     : 20,
-   'site_pcu'          : [ IPv4Address('132.252.156.7'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ 'Uninett', 'eth1', IPv4Address('132.252.156.75'), IPv6Address('fd55:5555::75') ],
-      [ 'Telenor', 'eth1', IPv4Address('169.254.100.75'), IPv6Address('::') ]
-   ],
-   'site_nodes' : [
-      [ 100, 1, 'bjoern'   ],
-      [ 101, 2, 'hund'     ],
-      [ 102, 3, 'katt'     ],
-      [ 103, 4, 'mus'      ]
    ] },
 
  { 'site_index'        : 42,
