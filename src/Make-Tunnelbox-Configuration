@@ -87,7 +87,7 @@ if not bootstrapOnly:
    for i in range(2, 255):
       nodeConfiguration = getLocalNodeConfigurationString(i)
       if nodeConfiguration != u'':
-         print i,nodeConfiguration
+         # print i,nodeConfiguration
          parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeConfiguration)
          if len(parameters) < 3:
             error('Bad configuration "' + nodeConfiguration + '" for NorNet_LocalSite_Node' + str(i))
