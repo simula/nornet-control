@@ -41,3 +41,9 @@ if [ -e /usr/bin/apt-file ] ; then
    sudo /usr/bin/apt-file update >/dev/null
 fi
 sudo updatedb
+
+if [ -e /usr/bin/apt-show-versions ] ; then
+   echo "====== Installed NorNet Software ============================================="
+   /usr/bin/apt-show-versions | grep "^nornet-"   
+   echo "=============================================================================="
+fi
