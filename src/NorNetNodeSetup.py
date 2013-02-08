@@ -1560,6 +1560,9 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                            _writeRR(siteZoneFile, 'monitor.' + siteFQDN, 'CNAME',
                                     _addProviderToName(node['node_name'],
                                                       str.lower(localProvider['provider_short_name'])) + '.')                                                    
+                           _writeRR(siteZoneFile, siteFQDN, 'MX',
+                                    '10 ' + _addProviderToName(node['node_name'],
+                                                               str.lower(localProvider['provider_short_name'])) + '.')                                                    
                         if ((localSite['site_index'] == NorNet_SiteIndex_FileSrv) and
                             (node['node_index'] == NorNet_NodeIndex_FileSrv)):
                            if (node['node_name'] != 'nfs'):
