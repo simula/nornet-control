@@ -31,7 +31,7 @@
 
 
 NAME="nornet-monitor"
-DESC="NorNet Node"
+DESC="NorNet Monitor"
 NORNET_DIRECTORY="/etc/nornet"
 # NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
 LOGFILE="/var/log/nornet-monitor.log"
