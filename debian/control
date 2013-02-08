@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: http://www.nntb.no/
 Build-Depends: debhelper (>= 9),
+               libfile-fcntllock-perl,
                python (>= 2.7),
                python-ipaddr,
                python-support
