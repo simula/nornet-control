@@ -1461,10 +1461,12 @@ def _writeZone(outputFile, zone, zoneFileName, masterSite):
 
 # ###### Get NorNet node object for additional DNS entry ####################
 def makeNodeForDNS(nodeName, site, nodeIndex, model, type):
+   dnsName = makeDNSNameFromUnicode(nodeName)
    norNetNode = {
       'node_site_id'          : site['site_index'],
       'node_index'            : nodeIndex,
-      'node_name'             : nodeName + '.' + site['site_domain'],
+      'node_name'             : dnsName['ascii'] + '.' + site['site_domain'],
+      'node_utf8'             : dnsName['utf8']  + '.' + site['site_domain'],
       'node_nornet_interface' : None,
       'node_model'            : model,
       'node_type'             : type,
@@ -1593,6 +1595,27 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                            _addProviderToName(node['node_name'], 'all') + '.',
                            _rrTypeForAddress(nodeAddress),
                            str(nodeAddress.ip))
+
+      # ====== Punycode CNAMEs for IDN names ================================
+      if unicode(node['node_name']) != node['node_utf8']:
+         for localProviderIndex in localProviderList:
+            localProvider = localProviderList[localProviderIndex]
+            _writeRR(siteZoneFile,
+                     _addProviderToName(node['node_utf8'].encode('idna'), str.lower(localProvider['provider_short_name'])) + '.',
+                     'CNAME',
+                     _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.')
+            if localProviderIndex == localSite['site_default_provider_index']:
+               _writeRR(siteZoneFile,
+                        node['node_utf8'].encode('idna'),
+                        'CNAME',
+                        _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.')
+
+         print node
+         print node['node_name'], node['node_utf8']
+         _writeRR(siteZoneFile,
+                  _addProviderToName(node['node_utf8'].encode('idna'), 'all') + '.',
+                  'CNAME',
+                  _addProviderToName(node['node_name'], 'all') + '.')
 
       # ====== Add external addresses of tunnelbox ==========================
       for localProviderIndex in localProviderList:

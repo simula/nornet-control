@@ -70,6 +70,7 @@ def makeNorNetTagTypes():
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv6', 'nornet_site_tbp' + str(i) + '_address_ipv6')
 
    makeTagType('node/nornet',      'NorNet Managed Node',             'nornet_is_managed_node')
+   makeTagType('node/nornet',      'NorNet Node UTF-8',               'nornet_node_utf8')
    makeTagType('node/nornet',      'NorNet Node Index',               'nornet_node_index')
    makeTagType('node/nornet',      'NorNet Node Interface',           'nornet_node_interface')
 
@@ -355,7 +356,8 @@ def _addOrUpdateNodeTag(nodeID, tagName, tagValue):
 def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
                    pcuID, pcuPort, norNetInterface,
                    model, bootState):
-   nodeHostName = nodeNiceName   # Domain to be added below!
+   dnsName      = makeDNSNameFromUnicode(nodeNiceName)
+   nodeHostName = dnsName['ascii']   # Domain to be added below!
 
    # ====== Get site information ============================================
    siteNorNetIndex = int(getTagValue(site['site_tags'], 'nornet_site_index', '-1'))
@@ -367,8 +369,9 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
 
    # ====== Create node =====================================================
    try:
-      nodeHostName = nodeHostName + '.' + str.lower(siteNorNetDomain);
-      log('Adding node ' + nodeHostName + ' to site ' + site['site_long_name'] + ' ...')
+      nodeHostName     = nodeHostName + '.' + str.lower(siteNorNetDomain);
+      nodeHostNameUTF8 = dnsName['utf8'] + '.' + str.lower(siteNorNetDomain);
+      log('Adding node ' + nodeHostName + ' (' + nodeHostNameUTF8 + ') to site ' + site['site_long_name'] + ' ...')
 
       node = {}
       node['hostname']   = nodeHostName
@@ -384,6 +387,8 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       if nodeID <= 0:
          error('Unable to add/update node ' + nodeHostName)
 
+      if _addOrUpdateNodeTag(nodeID, 'nornet_node_utf8', nodeHostNameUTF8) <= 0:
+         error('Unable to add "nornet_node_utf8" tag to node ' + nodeHostName)
       if _addOrUpdateNodeTag(nodeID, 'nornet_is_managed_node', '1') <= 0:
          error('Unable to add "nornet_is_managed_node" tag to node ' + nodeHostName)
       if _addOrUpdateNodeTag(nodeID, 'nornet_node_index', str(nodeNorNetIndex)) <= 0:

@@ -64,12 +64,11 @@ NorNet_FileServ_RWSystems              = None
 def loadNorNetConfiguration():
    log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')
    try:
-      inputFile = open(NorNetPLC_ConfigFile, 'r')
-
+      inputFile = codecs.open(NorNetPLC_ConfigFile, 'r', 'utf-8')
    except:
       try:
          log('###### Cannot open ' + NorNetPLC_ConfigFile + ', trying fallback file ' + NorNetPLC_FallbackConfigFile + ' ... ######')
-         inputFile = open(NorNetPLC_FallbackConfigFile, 'r')
+         inputFile = codecs.open(NorNetPLC_FallbackConfigFile, 'r', 'utf-8')
 
       except Exception as e:
          error('Configuration file ' + NorNetPLC_FallbackConfigFile + ' cannot be read: ' + str(e))
@@ -79,8 +78,9 @@ def loadNorNetConfiguration():
       if re.match('^[ \t]*[#\n]', line):
          continue
       elif re.match('^[a-zA-Z0-9_]*[ \t]*=', line):
-         # print line
-         exec((line), globals())
+         unicodeCommand = line.replace('=\'','=u\'')   # Interpret string as Unicode!
+         # print unicodeCommand
+         exec(unicodeCommand, globals())
       else:
          error('Bad configuration line: ' + line)
 
@@ -179,9 +179,9 @@ def getLocalNodeNorNetInterface():
 # ###### Get local node configuration string ################################
 def getLocalNodeConfigurationString(nodeIndex):
    try:
-      return eval('NorNet_LocalSite_Node' + str(nodeIndex))
+      return unicode(eval('NorNet_LocalSite_Node' + str(nodeIndex)))
    except:
-      return ""
+      return u''
 
 
 # ###### Get local node configuration string ################################
@@ -189,7 +189,7 @@ def getFileServRWSystemsConfigurationString():
    try:
       return eval('NorNet_FileServ_RWSystems')
    except:
-      return ""
+      return ''
 
 
 # ###### Find site ID #######################################################
@@ -384,6 +384,7 @@ def fetchNorNetNode(nodeNameToFind = None, site = None):
             'node_site_id'          : nodeSiteID,
             'node_index'            : nodeIndex,
             'node_name'             : node['hostname'],
+            'node_utf8'             : getTagValue(nodeTagsList, 'nornet_node_utf8', unicode(node['hostname'])),
             'node_nornet_interface' : nodeInterface,
             'node_model'            : node['model'],
             'node_type'             : 'NorNet Managed Node',
