@@ -146,7 +146,7 @@ check_and_configure ()
       cp snmpd-config /etc/snmp/snmpd.conf
       service snmpd restart
    fi
-   if needs_update auto.master /etc/auto.master $1 -o needs_update auto.nfs /etc/auto.nfs $1 ; then
+   if needs_update auto.nfs /etc/auto.nfs $1 ; then
       echo "AutoFS configuration has been updated => restarting AutoFS service ..."
       rm -f /etc/auto.*
       cp auto.* /etc
