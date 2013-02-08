@@ -1077,9 +1077,10 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, configNamePrefi
 
    outputFile.write('# ====== Active Monitoring ======\n')
    outputFile.write('trapcommunity           public\n')
+   # !!! FIXME: The provider index may be wrong! It must be default index of Central Site!
    outputFile.write('trapsink                ' + str(makeNorNetIP(localSite['site_default_provider_index'],
-                                                     NorNet_SiteIndex_Monitor,
-                                                     NorNet_NodeIndex_Monitor, -1, 4).ip) + '\n')
+                                                                  NorNet_SiteIndex_Monitor,
+                                                                  NorNet_NodeIndex_Monitor, -1, 4).ip) + '\n')
    outputFile.write('iquerySecName           internalUser\n')
    outputFile.write('rouser                  internalUser\n')
    outputFile.write('# defaultMonitors         yes\n')
@@ -1755,4 +1756,30 @@ def makeNFSDConfiguration(rwSystemList, configNamePrefix):
       outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,ro)\t')
    outputFile.write('\n')
 
+   outputFile.close()
+
+
+# ###### Generate NFS daemon configuration ##################################
+def makeAutoFSConfiguration(fullSiteList, addHeader):
+   # Create AutoFS configuration only, if we are not on the file server itself!
+   weAreOnFileServer = ((getLocalSiteIndex() == NorNet_SiteIndex_FileSrv) and
+                        (getLocalNodeIndex() == NorNet_NodeIndex_FileSrv))
+
+   outputFile = codecs.open('auto.master', 'w', 'utf-8')
+   if addHeader == True:
+      _writeAutoConfigInformation(outputFile)
+   if weAreOnFileServer == False:
+      outputFile.write('/nfs\t/etc/auto.nfs\n')
+   outputFile.close()
+
+   outputFile = codecs.open('auto.nfs', 'w', 'utf-8')
+   if addHeader == True:
+      _writeAutoConfigInformation(outputFile)         
+   if weAreOnFileServer == False:
+      fileServerSite = fullSiteList[NorNet_SiteIndex_FileSrv]
+      fileServer = makeNorNetIP(fileServerSite['site_default_provider_index'],
+                              NorNet_SiteIndex_FileSrv,
+                              NorNet_NodeIndex_FileSrv, -1, 4)
+      outputFile.write('pub\t-fstype=nfs,proto=tcp,soft,intr,rw\t' + str(fileServer.ip) + ':/filesrv/pub\n')
+      outputFile.write('adm\t-fstype=nfs,proto=tcp,soft,intr,ro\t' + str(fileServer.ip) + ':/filesrv/adm\n')
    outputFile.close()

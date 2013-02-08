@@ -38,6 +38,7 @@ Description: NorNet Routing Control
 Package: nornet-management
 Architecture: any
 Depends: apt-show-versions,
+         autofs,
          colordiff,
          cron,
          cron-apt,

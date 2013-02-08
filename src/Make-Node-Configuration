@@ -69,3 +69,5 @@ makeHostnameConfiguration(fullSiteList, localSite, 'hostname', getHostnameFromFQ
 makeHostsConfiguration(fullSiteList, localSite, NorNet_NodeIndex_Tunnelbox, 'hosts', getHostnameFromFQDN(fqdn))
 makeNTPConfiguration(fullSiteList, localSite, 'ntp')
 makeSNMPConfiguration(fullSiteList, fullUserList, localSite, 'snmpd', 'node', 'Node')
+makeAutoFSConfiguration(fullSiteList, True)
+   

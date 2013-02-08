@@ -141,7 +141,7 @@ case "$ACTION" in
   force-reload)
      ;;
   configure)
-#      rm -f nagios-config
+     rm -f tftpd-hpa-config nfsd-config
      # All configuration files are gone. The tests below will trigger update.
      check_and_configure -update-all >>$LOGFILE
      ;;
