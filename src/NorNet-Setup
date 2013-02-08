@@ -54,16 +54,16 @@ norNetSetup = [
       [ 'Hafslund', 'eth2', IPv4Address('77.88.71.151'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100,  1, 'akerbrygge'      ],
-      [ 101,  2, 'bygdoey'         ],
-      [ 102,  3, 'tullinloekka'    ],
-      [ 103,  4, 'frogner'         ],
-      [ 104,  5, 'nordberg'        ],
-      [ 105,  6, 'solvang'         ],
-      [ 106,  7, 'nordreaker'      ],
-      [ 107,  8, 'vestreaker'      ],
-      [ 108,  9, 'ullevaal'        ],
-      [ 109, 10, 'majorstuen'      ]
+      [ 100,  1, u'akerbrygge'  ],
+      [ 101,  2, u'bygdøy'      ],
+      [ 102,  3, u'tullinløkka' ],
+      [ 103,  4, u'frogner'     ],
+      [ 104,  5, u'nordberg'    ],
+      [ 105,  6, u'solvang'     ],
+      [ 106,  7, u'nordreaker'  ],
+      [ 107,  8, u'vestreaker'  ],
+      [ 108,  9, u'ullevål'     ],
+      [ 109, 10, u'majorstuen'  ]
    ] },
 
  { 'site_index'        : 2,
@@ -85,12 +85,12 @@ norNetSetup = [
       [ 'Uninett', 'eth1', IPv4Address('129.240.66.60'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'bjoervika' ],
-      [ 101, 2, 'ekeberg'   ],
-      [ 102, 3, 'furuset'   ],
-      [ 103, 4, 'grefsen'   ],
-      [ 104, 5, 'helsfyr'   ],
-      [ 105, 6, 'toeyen'    ]
+      [ 100, 1, u'bjørvika' ],
+      [ 101, 2, u'ekeberg'  ],
+      [ 102, 3, u'furuset'  ],
+      [ 103, 4, u'grefsen'  ],
+      [ 104, 5, u'helsfyr'  ],
+      [ 105, 6, u'tøyen'    ]
    ] },
 
  { 'site_index'        : 3,
@@ -112,12 +112,12 @@ norNetSetup = [
       [ 'Uninett', 'eth1', IPv4Address('128.39.49.154'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'kapp'      ],
-      [ 101, 2, 'eina'      ],
-      [ 102, 3, 'raufoss'   ],
-      [ 103, 4, 'reinsvoll' ],
-      [ 104, 5, 'skreia'    ],
-      [ 105, 6, 'lena'      ]
+      [ 100, 1, u'kapp'      ],
+      [ 101, 2, u'eina'      ],
+      [ 102, 3, u'raufoss'   ],
+      [ 103, 4, u'reinsvoll' ],
+      [ 104, 5, u'skreia'    ],
+      [ 105, 6, u'lena'      ]
    ] },
 
  { 'site_index'        : 4,
@@ -139,12 +139,12 @@ norNetSetup = [
       [ 'Uninett', 'eth1', IPv4Address('129.242.157.228'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'amundsen'    ],
-      [ 101, 2, 'nansen'      ],
-      [ 102, 3, 'aunegaarden' ],
-      [ 103, 4, 'skarven'     ],
-      [ 104, 5, 'arctandria'  ],
-      [ 105, 6, 'lutefisk'    ]
+      [ 100, 1, u'amundsen'    ],
+      [ 101, 2, u'nansen'      ],
+      [ 102, 3, u'aunegården'  ],
+      [ 103, 4, u'skarven'     ],
+      [ 104, 5, u'arctandria'  ],
+      [ 105, 6, u'kongsbakken' ]
    ] },
 
  { 'site_index'        : 5,
@@ -166,12 +166,12 @@ norNetSetup = [
       [ 'Uninett', 'eth1', IPv4Address('152.94.120.6'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'mosteroey'  ],
-      [ 101, 2, 'klosteroey' ],
-      [ 102, 3, 'askje'      ],
-      [ 103, 4, 'sokn'       ],
-      [ 104, 5, 'rennesoey'  ],
-      [ 105, 6, 'fjoeloey'   ]
+      [ 100, 1, u'mosterøy'  ],
+      [ 101, 2, u'klosterøy' ],
+      [ 102, 3, u'askje'     ],
+      [ 103, 4, u'sokn'      ],
+      [ 104, 5, u'rennesoey' ],
+      [ 105, 6, u'fjøløy'    ]
    ] },
 
  { 'site_index'        : 6,
@@ -193,12 +193,12 @@ norNetSetup = [
       [ 'Uninett', 'eth1', IPv4Address('158.37.6.195'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'floeibanen'        ],
-      [ 101, 2, 'fisketorget'       ],
-      [ 102, 3, 'ulriksbanen'       ],
-      [ 103, 4, 'lungegaardsvannet' ],
-      [ 104, 5, 'bergenhus'         ],
-      [ 105, 6, 'sverresborg'       ]
+      [ 100, 1, u'fløibanen'        ],
+      [ 101, 2, u'fisketorget'      ],
+      [ 102, 3, u'ulriksbanen'      ],
+      [ 103, 4, u'lungegårdsvannet' ],
+      [ 104, 5, u'bergenhus'        ],
+      [ 105, 6, u'sverresborg'      ]
    ] },
 
  { 'site_index'        : 7,
@@ -220,12 +220,12 @@ norNetSetup = [
       [ 'Uninett', 'eth1', IPv4Address('158.36.50.178'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'julenisse'   ],
-      [ 101, 2, 'fjoesnisse'  ],
-      [ 102, 3, 'gaardsnisse' ],
-      [ 103, 4, 'hagenisse'   ],
-      [ 104, 5, 'skipsnisse'  ],
-      [ 105, 6, 'kirkenisse'  ]
+      [ 100, 1, u'julenisse'    ],
+      [ 101, 2, u'fjøsnisse'    ],
+      [ 102, 3, u'gårdsnisse'   ],
+      [ 103, 4, u'hagenisse'    ],
+      [ 104, 5, u'skipsnisse'   ],
+      [ 105, 6, u'heinzelnisse' ]
    ] },
 
  { 'site_index'        : 8,
@@ -247,12 +247,12 @@ norNetSetup = [
       [ 'Uninett', 'eth1', IPv4Address('132.252.156.79'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'snoeflak'      ],
-      [ 101, 2, 'isbre'         ],
-      [ 102, 3, 'nordlys'       ],
-      [ 103, 4, 'midnattssol'   ],
-      [ 104, 5, 'adventfjorden' ],
-      [ 105, 6, 'isfjorden'     ]
+      [ 100, 1, u'snøflak'       ],
+      [ 101, 2, u'isbre'         ],
+      [ 102, 3, u'nordlys'       ],
+      [ 103, 4, u'midnattssol'   ],
+      [ 104, 5, u'adventfjorden' ],
+      [ 105, 6, u'isfjorden'     ]
    ] },
 
  { 'site_index'        : 9,
@@ -274,12 +274,12 @@ norNetSetup = [
       [ 'Uninett', 'eth1', IPv4Address('132.252.156.75'), IPv6Address('::') ],
    ],
    'site_nodes' : [
-      [ 100, 1, 'bybro'       ],
-      [ 101, 2, 'bakklandet'  ],
-      [ 102, 3, 'byaasen'     ],
-      [ 103, 4, 'lerkendal'   ],
-      [ 104, 5, 'bymarka'     ],
-      [ 105, 6, 'heimdal'     ]
+      [ 100, 1, u'bybro'      ],
+      [ 101, 2, u'bakklandet' ],
+      [ 102, 3, u'byåsen'     ],
+      [ 103, 4, u'lerkendal'  ],
+      [ 104, 5, u'bymarka'    ],
+      [ 105, 6, u'heimdal'    ]
    ] },
 
  { 'site_index'        : 10,
@@ -302,10 +302,12 @@ norNetSetup = [
       [ 'Telenor', 'eth2', IPv4Address('169.254.100.78'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'hydrogen'  ],
-      [ 101, 2, 'helium'    ],
-      [ 102, 3, 'litium'    ],
-      [ 103, 4, 'beryllium' ]
+      [ 100, 1, u'rekesmørbrød' ],
+      [ 101, 2, u'pinnekjøtt'   ],
+      [ 102, 3, u'lutefisk'     ],
+      [ 103, 4, u'laks'         ],
+      [ 104, 5, u'torsk'        ],
+      [ 105, 6, u'tørrfisk'     ]
    ] },
 
  { 'site_index'        : 42,
@@ -328,14 +330,14 @@ norNetSetup = [
       [ 'Versatel',                 'eth2', IPv4Address('169.254.100.100'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'altenessen'  ],
-      [ 101, 2, 'baldeneysee' ],
-      [ 102, 3, 'borbeck'     ],
-      [ 103, 4, 'kettwig'     ],
-      [ 104, 5, 'kray'        ],
-      [ 105, 6, 'kupferdreh'  ],
-      [ 106, 7, 'steele'      ],
-      [ 107, 8, 'zollverein'  ]
+      [ 100, 1, u'altenessen'  ],
+      [ 101, 2, u'baldeneysee' ],
+      [ 102, 3, u'borbeck'     ],
+      [ 103, 4, u'kettwig'     ],
+      [ 104, 5, u'kray'        ],
+      [ 105, 6, u'kupferdreh'  ],
+      [ 106, 7, u'steele'      ],
+      [ 107, 8, u'zollverein'  ]
    ] }
 
 ]
