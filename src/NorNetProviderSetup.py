@@ -53,6 +53,10 @@ NorNet_ProviderList = {
 NorNet_IPv4Prefix = IPv4Network('10.0.0.0/8')       # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
 NorNet_IPv6Prefix = IPv6Network('fd00:0000::/32')   # /32 prefix for internal IPv6 space (e.g. 'fd00:0000::/32')
 
+# The domain name of the central site
+# (it will e.g. be used with the alias 'nfs' to look up the file server!)
+NorNet_CentralSite_DomainName = 'simula.nornet'
+
 # Source NAT range for IPv4 (to be set up at Central Site)
 # NorNet_CentralSiteIPv4NATRange = [ IPv4Address('132.252.156.240'), IPv4Address('132.252.156.249') ]
 NorNet_CentralSiteIPv4NATRange = [ IPv4Address('0.0.0.0'), IPv4Address('0.0.0.0') ]

@@ -74,4 +74,4 @@ makeSNMPConfiguration(fullSiteList, fullUserList, localSite, 'snmpd', 'node', 'N
 # (otherwise: just add empty AutoFS configuration)
 weAreOnFileServer = ((localSite['site_index'] == NorNet_SiteIndex_FileSrv) and
                      (node['node_index'] == NorNet_NodeIndex_FileSrv))
-makeAutoFSConfiguration(fullSiteList, weAreOnFileServer, True)
+makeAutoFSConfiguration(weAreOnFileServer, True)

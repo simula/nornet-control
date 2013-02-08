@@ -1545,7 +1545,31 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                      if version == 6:   # Just add entry once!
                         _writeRR(siteZoneFile, node['node_name'] + '.', 'CNAME',
                                  _addProviderToName(node['node_name'],
-                                                    str.lower(localProvider['provider_short_name'])) + '.')
+                                                    str.lower(localProvider['provider_short_name'])) + '.')                                                    
+                        # ====== Special aliases () ============================
+                        # For PLC, Monitor, File Server
+                        if ((localSite['site_index'] == NorNet_SiteIndex_PLC) and
+                            (node['node_index'] == NorNet_NodeIndex_PLC) and
+                            (node['node_name'] != 'plc')):
+                           _writeRR(siteZoneFile, 'plc.' + siteFQDN, 'CNAME',
+                                    _addProviderToName(node['node_name'],
+                                                      str.lower(localProvider['provider_short_name'])) + '.')                                                    
+                        if ((localSite['site_index'] == NorNet_SiteIndex_Monitor) and
+                            (node['node_index'] == NorNet_NodeIndex_Monitor) and
+                            (node['node_name'] != 'monitor')):
+                           _writeRR(siteZoneFile, 'monitor.' + siteFQDN, 'CNAME',
+                                    _addProviderToName(node['node_name'],
+                                                      str.lower(localProvider['provider_short_name'])) + '.')                                                    
+                        if ((localSite['site_index'] == NorNet_SiteIndex_FileSrv) and
+                            (node['node_index'] == NorNet_NodeIndex_FileSrv)):
+                           if (node['node_name'] != 'nfs'):
+                              _writeRR(siteZoneFile, 'nfs.' + siteFQDN, 'CNAME',
+                                       _addProviderToName(node['node_name'],
+                                                         str.lower(localProvider['provider_short_name'])) + '.')                                                    
+                           if (node['node_name'] != 'tftp'):
+                              _writeRR(siteZoneFile, 'tftp.' + siteFQDN, 'CNAME',
+                                       _addProviderToName(node['node_name'],
+                                                         str.lower(localProvider['provider_short_name'])) + '.')                                                    
                # ====== Hostname for current provider's address =============
                elif phase == 2:
                   _writeRR(siteZoneFile,
@@ -1760,7 +1784,7 @@ def makeNFSDConfiguration(rwSystemList, configNamePrefix):
 
 
 # ###### Generate NFS daemon configuration ##################################
-def makeAutoFSConfiguration(fullSiteList, weAreOnFileServer, addHeader):
+def makeAutoFSConfiguration(weAreOnFileServer, addHeader):
    outputFile = codecs.open('auto.master', 'w', 'utf-8')
    if addHeader == True:
       _writeAutoConfigInformation(outputFile)
@@ -1772,10 +1796,7 @@ def makeAutoFSConfiguration(fullSiteList, weAreOnFileServer, addHeader):
    if addHeader == True:
       _writeAutoConfigInformation(outputFile)         
    if weAreOnFileServer == False:
-      fileServerSite = fullSiteList[NorNet_SiteIndex_FileSrv]
-      fileServer = makeNorNetIP(fileServerSite['site_default_provider_index'],
-                              NorNet_SiteIndex_FileSrv,
-                              NorNet_NodeIndex_FileSrv, -1, 4)
-      outputFile.write('pub\t-fstype=nfs,proto=tcp,soft,intr,rw\t' + str(fileServer.ip) + ':/filesrv/pub\n')
-      outputFile.write('adm\t-fstype=nfs,proto=tcp,soft,intr,ro\t' + str(fileServer.ip) + ':/filesrv/adm\n')
+      fileServer = 'nfs.' + NorNet_CentralSite_DomainName
+      outputFile.write('pub\t-fstype=nfs,proto=tcp,soft,intr,rw\t' + fileServer + ':/filesrv/pub\n')
+      outputFile.write('adm\t-fstype=nfs,proto=tcp,soft,intr,ro\t' + fileServer + ':/filesrv/adm\n')
    outputFile.close()

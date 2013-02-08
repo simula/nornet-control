@@ -28,6 +28,7 @@ from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
 from NorNetProviderSetup import *;
+from NorNetNodeSetup import *;
 from NorNetTools import *;
 
 
@@ -196,3 +197,9 @@ writeHostname('hostname.new', hostName, domainName)
 writeHosts('hosts.new', hostName, domainName)
 writeInterfaces('interfaces.new', hostName, domainName, nodeIndex, siteIndex, providerList, defaultProvider, 'eth0')
 writeNTPConfiguration('ntp.new', nodeIndex, siteIndex, defaultProvider)
+
+# Create AutoFS configuration only if we are not on the file server itself!
+# (otherwise: just add empty AutoFS configuration)
+weAreOnFileServer = ((siteIndex == NorNet_SiteIndex_FileSrv) and
+                     (nodeIndex == NorNet_NodeIndex_FileSrv))
+makeAutoFSConfiguration(weAreOnFileServer, True)

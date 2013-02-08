@@ -36,11 +36,12 @@ ProviderList="$@"
 
 Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers $ProviderList || exit 1
 
-colordiff hostname.new /etc/hostname
-colordiff hosts.new /etc/hosts
-colordiff ntp.new /etc/ntp.conf
-colordiff interfaces.new /etc/network/interfaces
-
+colordiff /etc/hostname hostname.new 
+colordiff /etc/hosts hosts.new
+colordiff /etc/ntp.conf ntp.new 
+colordiff /etc/network/interfaces interfaces.new 
+colordiff /etc/auto.master auto.master  
+colordiff /etc/auto.new auto.new
 
 echo -n "Apply changes (current configuration files will be backuped to <file>~)? [yes/no]? "
 read -er applyChanges
@@ -62,9 +63,15 @@ else
    if [ -e /etc/udev/rules.d/70-persistent-net.rules ] ; then
       rm /etc/udev/rules.d/70-persistent-net.rules
    fi
+   
+   cp /etc/auto.master /etc/auto.master~
+   cp /etc/auto.nfs /etc/auto.nfs~
+   cp auto.master /etc/auto.master
+   cp auto.nfs /etc/auto.nfs
 
    /etc/init.d/networking restart
    /etc/init.d/ntp restart
+   /etc/init.d/autofs restart
 fi
 
 
