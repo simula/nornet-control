@@ -1,3 +1,4 @@
 nornet-filesrv: non-standard-toplevel-dir
-nornet-filesrv: package-contains-empty-directory filesrv/nfs/
+nornet-filesrv: package-contains-empty-directory filesrv/pub/
+nornet-filesrv: package-contains-empty-directory filesrv/adm/
 nornet-filesrv: package-contains-empty-directory filesrv/tftp/
