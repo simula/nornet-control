@@ -98,7 +98,8 @@ Description: NorNet Node Control
 
 Package: nornet-tunnelbox
 Architecture: any
-Depends: bind9,
+Depends: arpwatch,
+         bind9,
          grub2,
          ifupdown,
          nornet-api,

@@ -1,0 +1,3 @@
+Make-FileSrv-Configuration                /usr/bin
+grub/10_nornet_filesrv_theme              /etc/grub.d
+grub/Splash-FileSrv1-1024x768.jpeg        /boot
