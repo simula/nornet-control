@@ -28,7 +28,20 @@ from NorNetNodeSetup import *;
 
 
 loginToPLC()
-fullSiteList = fetchNorNetSiteList(False)
+
+#fullSiteList = fetchNorNetSiteList(False)
 # NOTE: Site list also includes disabled sites!
-fullNodeList = fetchNorNetNodeList()
-#makeNagiosConfiguration(fullSiteList, fullNodeList, 'nagios')
+#fullNodeList = fetchNorNetNodeList()
+
+
+rwSystemList = []
+rwSystems = getFileServRWSystemsConfigurationString()
+if rwSystems != '':
+   parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', rwSystems)
+   for i in range(0, len(parameters)):
+      print i,unquote(parameters[i])
+      rwSystemList.append(unquote(parameters[i]))
+
+
+makeTFTPDConfiguration('tftpd-hpa')
+makeNFSDConfiguration(rwSystemList, 'nfsd')

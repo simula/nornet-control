@@ -62,3 +62,7 @@ NorNet_LocalSite_Node247='"blanksjoe"      "HP DL-320"  "Physical Server #8"'
 NorNet_LocalSite_Node2='"vigelandsparken"  "Amiga 8000" "NorNet PLC"'
 NorNet_LocalSite_Node3='"holmenkollen"     "Amiga 8000" "NorNet Monitor"'
 NorNet_LocalSite_Node4='"kirkeveien"       "Amiga 8000" "NorNet Display"'
+
+
+# ###### File server read-write-permitted systems##############################
+NorNet_FileServ_RWSystems='"kirkeveien.simula.nornet" "nordmarka.simula.nornet"'

@@ -1716,3 +1716,45 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
       _writeZone(zoneConfFile, tunnelZone, 'tunnels.ipv' + str(version) + '.db', masterSite)
 
    zoneConfFile.close()
+
+
+# ###### Generate TFTP daemon configuration #################################
+def makeTFTPDConfiguration(configNamePrefix):
+   if configNamePrefix == None:
+      configNamePrefix = 'tftpd-' + localSite['site_short_name']
+   configurationName = configNamePrefix + '-config'
+   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+   _writeAutoConfigInformation(outputFile)
+
+   outputFile.write('TFTP_USERNAME="tftp"\n')
+   outputFile.write('TFTP_DIRECTORY="/filesrv/tftp"\n')
+   outputFile.write('TFTP_ADDRESS="[::]:69" \n')   
+   outputFile.write('TFTP_OPTIONS="--secure"\n')
+
+   outputFile.close()
+
+
+# ###### Generate NFS daemon configuration ##################################
+def makeNFSDConfiguration(rwSystemList, configNamePrefix):
+   if configNamePrefix == None:
+      configNamePrefix = 'tftpd-' + localSite['site_short_name']
+   configurationName = configNamePrefix + '-config'
+   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+   _writeAutoConfigInformation(outputFile)
+
+   print getFileServRWSystemsConfigurationString()
+
+   outputFile.write('/filesrv/pub\t')
+   for version in [ 4, 6 ]:
+      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,rw)\t')
+      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,rw)\t')
+   outputFile.write('\n')
+   outputFile.write('/filesrv/adm\t')
+   for i in range(0, len(rwSystemList)):
+      outputFile.write(rwSystemList[i] + '(subtree_check,sync,rw)\t')
+   for version in [ 4, 6 ]:
+      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,ro)\t')
+      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,ro)\t')
+   outputFile.write('\n')
+
+   outputFile.close()

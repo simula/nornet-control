@@ -56,6 +56,8 @@ NorNet_LocalNode_Hostname              = None
 NorNet_LocalNode_Index                 = None
 NorNet_LocalNode_NorNetInterface       = None
 
+NorNet_FileServ_RWSystems              = None
+
 
 
 # ###### Read configuration file ############################################
@@ -178,6 +180,14 @@ def getLocalNodeNorNetInterface():
 def getLocalNodeConfigurationString(nodeIndex):
    try:
       return eval('NorNet_LocalSite_Node' + str(nodeIndex))
+   except:
+      return ""
+
+
+# ###### Get local node configuration string ################################
+def getFileServRWSystemsConfigurationString():
+   try:
+      return eval('NorNet_FileServ_RWSystems')
    except:
       return ""
 
