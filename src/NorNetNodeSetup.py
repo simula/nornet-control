@@ -1742,8 +1742,6 @@ def makeNFSDConfiguration(rwSystemList, configNamePrefix):
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
    _writeAutoConfigInformation(outputFile)
 
-   print getFileServRWSystemsConfigurationString()
-
    outputFile.write('/filesrv/pub\t')
    for version in [ 4, 6 ]:
       outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,rw)\t')

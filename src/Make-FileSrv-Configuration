@@ -36,11 +36,14 @@ loginToPLC()
 
 rwSystemList = []
 rwSystems = getFileServRWSystemsConfigurationString()
-if rwSystems != '':
+if rwSystems != None:
    parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', rwSystems)
    for i in range(0, len(parameters)):
-      print i,unquote(parameters[i])
-      rwSystemList.append(unquote(parameters[i]))
+      name = unquote(parameters[i])
+      # print i, name
+      # print resolveHostname(name, AF_INET)
+      # print resolveHostname(name, AF_INET6)
+      rwSystemList.append(name)
 
 
 makeTFTPDConfiguration('tftpd-hpa')
