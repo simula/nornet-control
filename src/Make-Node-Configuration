@@ -69,5 +69,9 @@ makeHostnameConfiguration(fullSiteList, localSite, 'hostname', getHostnameFromFQ
 makeHostsConfiguration(fullSiteList, localSite, NorNet_NodeIndex_Tunnelbox, 'hosts', getHostnameFromFQDN(fqdn))
 makeNTPConfiguration(fullSiteList, localSite, 'ntp')
 makeSNMPConfiguration(fullSiteList, fullUserList, localSite, 'snmpd', 'node', 'Node')
-makeAutoFSConfiguration(fullSiteList, True)
-   
+
+# Create AutoFS configuration only if we are not on the file server itself!
+# (otherwise: just add empty AutoFS configuration)
+weAreOnFileServer = ((localSite['site_index'] == NorNet_SiteIndex_FileSrv) and
+                     (node['node_index'] == NorNet_NodeIndex_FileSrv))
+makeAutoFSConfiguration(fullSiteList, weAreOnFileServer, True)

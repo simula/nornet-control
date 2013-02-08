@@ -1760,11 +1760,7 @@ def makeNFSDConfiguration(rwSystemList, configNamePrefix):
 
 
 # ###### Generate NFS daemon configuration ##################################
-def makeAutoFSConfiguration(fullSiteList, addHeader):
-   # Create AutoFS configuration only, if we are not on the file server itself!
-   weAreOnFileServer = ((getLocalSiteIndex() == NorNet_SiteIndex_FileSrv) and
-                        (getLocalNodeIndex() == NorNet_NodeIndex_FileSrv))
-
+def makeAutoFSConfiguration(fullSiteList, weAreOnFileServer, addHeader):
    outputFile = codecs.open('auto.master', 'w', 'utf-8')
    if addHeader == True:
       _writeAutoConfigInformation(outputFile)
