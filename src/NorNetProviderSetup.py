@@ -86,6 +86,10 @@ NorNet_NodeIndex_PLC = 2
 NorNet_SiteIndex_Monitor  = NorNet_SiteIndex_Central
 NorNet_NodeIndex_Monitor  = 3
 
+# NorNet Monitor is Node 4 on the Central Site!
+NorNet_SiteIndex_FileSrv  = NorNet_SiteIndex_Central
+NorNet_NodeIndex_FileSrv  = 4
+
 
 
 # ###### Get NorNet provider information ####################################
