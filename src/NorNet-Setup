@@ -160,10 +160,10 @@ norNetSetup = [
    'site_latitude'     : 58.938063,
    'site_longitude'    : 5.691172,
    'site_altitude'     : 25,
-   'site_pcu'          : [ IPv4Address('152.94.1.7'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('152.94.120.7'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Uninett', 'eth1', IPv4Address('152.94.1.7'), IPv6Address('::') ]
+      [ 'Uninett', 'eth1', IPv4Address('152.94.120.6'), IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, 'mosteroey'  ],
