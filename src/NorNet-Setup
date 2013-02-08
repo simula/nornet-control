@@ -299,7 +299,7 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ 'Uninett', 'eth1', IPv4Address('132.252.156.78'), IPv6Address('fd55:5555::78') ],
-      [ 'Telenor', 'eth1', IPv4Address('169.254.100.78'), IPv6Address('::') ]
+      [ 'Telenor', 'eth2', IPv4Address('169.254.100.78'), IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, 'hydrogen'  ],

@@ -116,6 +116,20 @@ Description: NorNet Tunnelbox Control
  .
  See http://www.nntb.no for details on NorNet!
 
+Package: nornet-filesrv
+Architecture: all
+Depends: nfs-kernel-server,
+         nornet-node,
+         python (>= 2.7),
+         tftpd-hpa,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet File Server
+ This package contains the scripts to configure a file server
+ on a NorNet central site.
+ .
+ See http://www.nntb.no for details on NorNet!
+
 Package: nornet-monitor
 Architecture: all
 Conflicts: tntnet
@@ -123,7 +137,6 @@ Depends: apache2,
          libapache2-mod-php5,
          nagios3,
          nagios3-doc,
-         nornet-management-tools,
          nornet-node,
          postfix,
          python (>= 2.7),
