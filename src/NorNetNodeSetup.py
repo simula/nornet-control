@@ -1610,7 +1610,6 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                         'CNAME',
                         _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.')
 
-         print node
          print node['node_name'], node['node_utf8']
          _writeRR(siteZoneFile,
                   _addProviderToName(node['node_utf8'].encode('idna'), 'all') + '.',
