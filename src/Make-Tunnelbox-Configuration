@@ -98,3 +98,49 @@ if not bootstrapOnly:
          additionalNodes.append(makeNodeForDNS(nodeName, localSite, i, hardwareInfo, softwareInfo))
 
    makeBindConfiguration(fullSiteList, siteNodeList, localSite, getHostnameFromFQDN(fqdn), additionalNodes)
+
+   # ====== DHCP daemon configuration =======================================
+   dynamicStart         = 0
+   dynamicEnd           = 0
+   dynamicConfiguration = getLocalSiteDHCPServerDynamicConfigurationString()
+   if ((dynamicConfiguration != None) and (dynamicConfiguration != u'')):
+      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', dynamicConfiguration)
+      if len(parameters) < 2:
+         error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange')         
+      try:
+         dynamicStart = int(unquote(parameters[0]))
+         dynamicEnd   = int(unquote(parameters[1]))
+      except:
+         error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range values')                  
+      if ((dynamicStart <= 1) or (dynamicStart > 255) or
+          (dynamicEnd <= 1) or (dynamicEnd > 255)):
+         error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range indexes')                  
+
+   staticList = []
+   for i in range(2, 255):
+      staticConfiguration = getLocalSiteDHCPServerStaticConfigurationString(i)
+      if staticConfiguration != u'':
+         print i,staticConfiguration
+         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', staticConfiguration)
+         if len(parameters) < 1:
+            error('Bad configuration "' + staticConfiguration + '" for NorNet_LocalSite_DHCPServer_Static' + str(i))
+            
+         mac = unquote(parameters[0])
+         try:
+            fileName = unquote(parameters[1])
+         except:
+            fileName = '';
+         try:
+            serverName = unquote(parameters[2])
+         except:
+            serverName = '';
+            
+         staticEntry = {
+            'node_index'      : i,
+            'node_mac'        : mac,
+            'node_filename'   : fileName,
+            'node_servername' : serverName
+         }
+         staticList.append(staticEntry)
+   
+   makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)

@@ -1825,3 +1825,45 @@ def makeAutoFSConfiguration(weAreOnFileServer, addHeader):
       outputFile.write('pub\t-fstype=nfs,proto=tcp,soft,intr,rw\t' + fileServer + ':/filesrv/pub\n')
       outputFile.write('adm\t-fstype=nfs,proto=tcp,soft,intr,ro\t' + fileServer + ':/filesrv/adm\n')
    outputFile.close()
+
+
+# ###### Generate DHCP daemon configuration #################################
+def makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList):
+   domain        = localSite['site_domain']
+   providerIndex = localSite['site_default_provider_index']   
+   siteIndex     = localSite['site_index']
+   siteNetwork   = makeNorNetIP(providerIndex, siteIndex, 0, 0, 4)
+   siteTunnelbox = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, 4)
+
+   outputFile = codecs.open('dhcpd-config', 'w', 'utf-8')
+   _writeAutoConfigInformation(outputFile)
+
+   outputFile.write('ddns-update-style          none;\n')
+   outputFile.write('option domain-name         "' + domain + '";\n')
+   outputFile.write('option domain-name-servers ' + str(siteTunnelbox.ip) + ';\n')
+   outputFile.write('default-lease-time         3600;\n')
+   outputFile.write('max-lease-time             86400;\n\n')
+   outputFile.write('authoritative;\n\n')
+   
+   outputFile.write('subnet ' + str(siteNetwork.ip) + ' netmask ' + str(siteNetwork.netmask) + ' { \n')
+   if ((dynamicStart > 1) and (dynamicEnd <= 255) and (dynamicEnd >= dynamicStart)):
+      outputFile.write('\trange ' + 
+                     str(makeNorNetIP(providerIndex, siteIndex, dynamicStart, -1, 4).ip) + ' ' +
+                     str(makeNorNetIP(providerIndex, siteIndex, dynamicEnd, -1, 4).ip) + ' ' +                    
+                     ';\n')
+   outputFile.write('\toption routers ' + str(siteTunnelbox.ip) + ';\n')
+   outputFile.write('}\n')
+   
+   for staticEntry in staticList:
+      outputFile.write('\nhost node' + str(staticEntry['node_index']) + ' {\n')
+      outputFile.write('\thardware ethernet ' + staticEntry['node_mac'] + ';\n')
+      outputFile.write('\tfixed-address     ' + str(makeNorNetIP(providerIndex, siteIndex, staticEntry['node_index'], -1, 4).ip) + ';\n')
+      if len(staticEntry['node_filename']) > 0:
+         outputFile.write('\tfilename          "' + staticEntry['node_filename'] + '";\n')
+         if staticEntry['node_servername'] != '':
+            outputFile.write('\tserver-name       "' + staticEntry['node_servername'] + '";\n')
+         else:
+            outputFile.write('\tserver-name       "tftp.' + NorNet_CentralSite_DomainName + '";\n')
+      outputFile.write('}\n')
+
+   outputFile.close()

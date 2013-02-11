@@ -57,7 +57,7 @@ NorNet_LocalNode_Index                 = None
 NorNet_LocalNode_NorNetInterface       = None
 
 NorNet_FileServ_RWSystems              = None
-
+NorNet_LocalSite_DHCPServer_Dynamic    = None
 
 
 # ###### Read configuration file ############################################
@@ -190,6 +190,22 @@ def getFileServRWSystemsConfigurationString():
       return eval('NorNet_FileServ_RWSystems')
    except:
       return ''
+
+
+# ###### Get DHCPD node configuration string ################################
+def getLocalSiteDHCPServerDynamicConfigurationString():
+   try:
+      return eval('NorNet_LocalSite_DHCPServer_Dynamic')
+   except:
+      return u''
+
+
+# ###### Get DHCPD node configuration string ################################
+def getLocalSiteDHCPServerStaticConfigurationString(nodeIndex):
+   try:
+      return unicode(eval('NorNet_LocalSite_DHCPServer_Static' + str(nodeIndex)))
+   except:
+      return u''
 
 
 # ###### Find site ID #######################################################

@@ -196,6 +196,15 @@ check_and_configure ()
    fi
    service bind9 reload
 
+   # ====== Apply DHCP server update ========================================
+   rm -f dhcpd-config
+   mv  updated-tunnelbox-config/dhcpd-config .
+   if needs_update dhcpd-config /etc/dhcp/dhcpd.conf $1 ; then
+      echo "DHCP server configuration has been updated => restarting DHCP service ..."
+      cp dhcpd-config /etc/dhcp/dhcpd.conf
+      service isc-dhcp-server restart
+   fi
+
    # ====== Check for problems ==============================================
    if ! rmdir updated-tunnelbox-config ; then
       echo >&2 "ERROR: Something went wrong! updated-tunnelbox-config still contains unhandled configuration files!"
