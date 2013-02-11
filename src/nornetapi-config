@@ -45,10 +45,10 @@ NorNet_LocalSite_DefaultProviderIndex=1
 NorNet_LocalSite_TBDefaultProviderIPv4='128.39.36.143'
 
 # DHCP Configuration
-# NorNet_LocalSite_DHCPServer_Dynamic='"20" "39"'
-# NorNet_LocalSite_DHCPServer_Static242='"f0:de:f1:11:22:33"'
-# NorNet_LocalSite_DHCPServer_Static243='"f0:de:f1:aa:bb:cc" "pxe-boot.img"'
-# NorNet_LocalSite_DHCPServer_Static244='"f0:de:f1:aa:bb:ee" "pxe-boot.img" "pxe-server.simula.nornet"'
+NorNet_LocalSite_DHCPServer_Dynamic='"20" "39"'
+NorNet_LocalSite_DHCPServer_Static242='"f0:de:f1:11:22:33"'
+NorNet_LocalSite_DHCPServer_Static243='"f0:de:f1:aa:bb:cc" "pxe-boot.img"'
+NorNet_LocalSite_DHCPServer_Static244='"f0:de:f1:aa:bb:ee" "pxe-boot.img" "pxe-server.simula.nornet"'
 
 
 # ###### Additional DNS names ###############################################
