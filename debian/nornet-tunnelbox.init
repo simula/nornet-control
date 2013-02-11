@@ -198,7 +198,7 @@ check_and_configure ()
 
    # ====== Apply DHCP server update ========================================
    rm -f dhcpd-config
-   mv  updated-tunnelbox-config/dhcpd-config .
+   mv updated-tunnelbox-config/dhcpd-config .
    if needs_update dhcpd-config /etc/dhcp/dhcpd.conf $1 ; then
       echo "DHCP server configuration has been updated => restarting DHCP service ..."
       cp dhcpd-config /etc/dhcp/dhcpd.conf
