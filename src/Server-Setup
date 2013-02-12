@@ -37,6 +37,7 @@ if [ $# -lt 8 -o \
    exit 1
 fi
 
+AllParameters="$@"
 FQDN="$1"
 NodeIndex="$2"
 SiteIndex="$4"
@@ -114,4 +115,4 @@ else
    System-Maintenance
 fi
 
-echo "$@" >$LAST_PARAMETERS_FILE
+echo "$AllParameters" >$LAST_PARAMETERS_FILE
