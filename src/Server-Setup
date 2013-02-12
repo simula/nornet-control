@@ -98,6 +98,7 @@ else
    /etc/init.d/ntp restart
    /etc/init.d/autofs restart
 fi
+rm -f hostname.new hosts.new ntp.new interfaces.new auto.master auto.nfs
 
 
 echo -en "\x1b[33mConfigure keyboard? [yes/no]\x1b[0m? "
