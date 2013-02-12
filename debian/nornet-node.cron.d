@@ -1,1 +1,1 @@
-6 * * * *  root    test -x /etc/init.d/nornet-node && /etc/init.d/nornet-node check-and-configure
+6 * * * *  root    test -x /etc/init.d/nornet-node && service nornet-node check-and-configure
