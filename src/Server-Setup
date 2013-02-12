@@ -19,11 +19,21 @@
 # Contact: dreibh@simula.no
 
 
+LAST_PARAMETERS_FILE="/etc/nornet/Server-Setup.args"
 if [ $# -lt 8 -o \
      "$3" != "-site" -o \
      "$5" != "-interface" -o \
      "$7" != "-providers" ] ; then
    echo >&2 "Usage: $0 FQDN node_index -site site_index -interface interface_name -providers default_provider [provider2] ..."
+   if [ -e "$LAST_PARAMETERS_FILE" ] ; then
+      LAST_PARAMETERS_ARGS=`cat $LAST_PARAMETERS_FILE`
+      echo -en "\x1b[33mRun $0 $LAST_PARAMETERS_ARGS? [yes/no]?\x1b[0m "
+      read -er applyChanges
+      if [ "$applyChanges" == "yes" -o "$applyChanges" == "y" ] ; then
+         bash -c "$0 $LAST_PARAMETERS_ARGS"
+         exit $?
+      fi
+   fi
    exit 1
 fi
 
@@ -36,14 +46,22 @@ ProviderList="$@"
 
 Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers $ProviderList || exit 1
 
-colordiff /etc/hostname hostname.new 
+echo "------ BEGIN OF DIFFS ------"
+echo "------ /etc/hostname:"
+colordiff /etc/hostname hostname.new
+echo "------ /etc/hosts:"
 colordiff /etc/hosts hosts.new
-colordiff /etc/ntp.conf ntp.new 
-colordiff /etc/network/interfaces interfaces.new 
+echo "------ /etc/ntp.conf:"
+colordiff /etc/ntp.conf ntp.new
+echo "------ /etc/network/interfaces:"
+colordiff /etc/network/interfaces interfaces.new
+echo "------ /etc/auto.master:"
 colordiff /etc/auto.master auto.master  
-colordiff /etc/auto.new auto.new
+echo "------ /etc/auto.nfs:"
+colordiff /etc/auto.nfs auto.nfs
+echo "------ END OF DIFFS ------"
 
-echo -n "Apply changes (current configuration files will be backuped to <file>~)? [yes/no]? "
+echo -en "\x1b[33mApply changes (current configuration files will be backuped to <file>~)?\x1b[0m [yes/no]? "
 read -er applyChanges
 if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
    echo "Skipped!"
@@ -75,7 +93,7 @@ else
 fi
 
 
-echo -n "Configure keyboard? [yes/no]? "
+echo -en "\x1b[33mConfigure keyboard? [yes/no]\x1b[0m? "
 read -er applyChanges
 if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
    echo "Skipped!"
@@ -84,10 +102,12 @@ else
 fi
 
 
-echo -n "Run system maintenance script? [yes/no]? "
+echo -en "\x1b[33mRun system maintenance script? [yes/no]\x1b[0m? "
 read -er applyChanges
 if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
    echo "Skipped!"
 else
    System-Maintenance
 fi
+
+echo "$@" >$LAST_PARAMETERS_FILE
