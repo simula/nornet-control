@@ -34,8 +34,8 @@ from NorNetTools import *;
 
 
 # ###### Main program #######################################################
-if ((len(sys.argv) < 8) or (sys.argv[3] != '-site') or (sys.argv[5] != '-interface') or (sys.argv[7] != '-providers')):
-   error('Usage: ' + sys.argv[0] + ' FQDN node_index -site site_index -interface interface_name -providers default_provider [provider2] ...')
+if ((len(sys.argv) < 10) or (sys.argv[3] != '-site') or (sys.argv[5] != '-interface') or (sys.argv[7] != '-all-interfaces') or (sys.argv[9] != '-providers')):
+   error('Usage: ' + sys.argv[0] + ' FQDN node_index -site site_index -interface interface_name -all-interfaces "if1 if2 ..." -providers default_provider [provider2] ...')
 
 hostName      = getHostnameFromFQDN(sys.argv[1])
 domainName    = getDomainFromFQDN(sys.argv[1])
@@ -46,10 +46,11 @@ siteIndex = int(sys.argv[4])
 if ((siteIndex < 1) or (siteIndex > 255)):
    error('Bad site index!')
 interfaceName = sys.argv[6]
+allInterfaces = sys.argv[8].split(' ')
 
 defaultProvider = -1
 providerList    = []
-for i in range(8, len(sys.argv)):
+for i in range(10, len(sys.argv)):
    providerName  = sys.argv[i]
    providerIndex = -1
    try:
@@ -61,16 +62,17 @@ for i in range(8, len(sys.argv)):
             break
    if ((providerIndex <= 0) or (providerIndex > 255)):
       error("Bad provider " + providerName)
-   if i == 8:
+   if i == 10:
       defaultProvider = providerIndex
    providerList.append(providerIndex)
 
 
-print('Node:       ' + hostName + ' . ' + domainName)
-print('Node Index: ' + str(nodeIndex))
-print('Site Index: ' + str(siteIndex))
-print('Interface:  ' + interfaceName)
-print('Providers:  ' + str(providerList))
+print('Node:           ' + hostName + ' . ' + domainName)
+print('Node Index:     ' + str(nodeIndex))
+print('Site Index:     ' + str(siteIndex))
+print('Interface:      ' + interfaceName)
+print('All Interfaces: ' + str(allInterfaces))
+print('Providers:      ' + str(providerList))
 
 
 # ###### Write hosts file ###################################################
@@ -95,7 +97,7 @@ def writeHostname(outputName, hostName, domainName):
 
 
 # ###### Write interfaces file ##############################################
-def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex, providerList, defaultProvider, interfaceName):
+def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex, providerList, defaultProvider, interfaceName, allInterfaces):
    outputFile = codecs.open(outputName, 'w', 'utf-8')
    outputFile.write('# ====== Node configuration ======\n')
 
@@ -163,6 +165,14 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex, prov
                   outputFile.write('   dns-nameservers ' + str(dnsAddress.ip) + '\n')
                   outputFile.write('   dns-search      ' + domainName + '\n')
 
+   # ====== Empty entries (up, but unconfigured -- to use in virtual machines) ======   
+   for interface in allInterfaces:
+      if ((interface != 'lo') and (interface != interfaceName)):
+         outputFile.write('\nauto ' + interface + '\n')
+         outputFile.write('iface ' + interface + ' inet static\n')
+         outputFile.write('\taddress 0.0.0.0\n')
+         outputFile.write('\tnetmask 0.0.0.0\n')
+
    outputFile.close()
 
 
@@ -195,7 +205,8 @@ def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider):
 
 writeHostname('hostname.new', hostName, domainName)
 writeHosts('hosts.new', hostName, domainName)
-writeInterfaces('interfaces.new', hostName, domainName, nodeIndex, siteIndex, providerList, defaultProvider, 'eth0')
+writeInterfaces('interfaces.new', hostName, domainName, nodeIndex, siteIndex,
+                providerList, defaultProvider, interfaceName, allInterfaces)
 writeNTPConfiguration('ntp.new', nodeIndex, siteIndex, defaultProvider)
 
 # Create AutoFS configuration only if we are not on the file server itself!

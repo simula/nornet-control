@@ -31,6 +31,7 @@ FQDN
 node_index
 \-site site_index
 \-interface interface_name
+\-all-interfaces "interface_name1 interface_name2 ..."
 \-providers default_provider [provider2] ...
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
@@ -55,6 +56,12 @@ Provides the node index (1-255).
 Provides the site index (1-255).
 .It \-interface interface_name
 Provides the NorNet interface name (e.g. eth0).
+.It \-all-interfaces "interface_name1 interface_name2 ..."
+Provides the names of all permanent interfaces on the system. For each entry,
+except for the NorNet interface and the loopback interface, an empty
+configuration is generated (IP: 0.0.0.0). This sets the interface up, without
+IP configuration. Then, it can be accessed from within virtual machines
+running on the system.
 .It \-providers default_provider [provider2] ...
 Provides the providers the server is conntected to. They will be configured
 on the NorNet interface. Providers can be given by their name or provider

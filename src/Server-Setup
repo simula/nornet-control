@@ -45,7 +45,9 @@ InterfaceName="$6"
 shift ; shift ; shift ; shift ; shift ; shift ; shift
 ProviderList="$@"
 
-Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers $ProviderList || exit 1
+AllEthernetInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | grep "^eth" | sed -e "s/:$//" | xargs`
+
+Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -all-interfaces "$AllEthernetInterfaces" -providers $ProviderList || exit 1
 
 echo "------ BEGIN OF DIFFS ------"
 echo "------ /etc/hostname:"
