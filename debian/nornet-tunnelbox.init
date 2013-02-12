@@ -202,6 +202,7 @@ check_and_configure ()
    if needs_update dhcpd-config /etc/dhcp/dhcpd.conf $1 ; then
       echo "DHCP server configuration has been updated => restarting DHCP service ..."
       cp dhcpd-config /etc/dhcp/dhcpd.conf
+      echo "INTERFACES=\"$NorNet_LocalNode_NorNetInterface\"" >/etc/default/isc-dhcp-server
       service isc-dhcp-server restart
    fi
 
