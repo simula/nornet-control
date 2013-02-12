@@ -1840,7 +1840,9 @@ def makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList):
    outputFile.write('option domain-name         "' + domain + '";\n')
    outputFile.write('option domain-name-servers ' + str(siteTunnelbox.ip) + ';\n')
    outputFile.write('default-lease-time         3600;\n')
-   outputFile.write('max-lease-time             86400;\n\n')
+   outputFile.write('max-lease-time             86400;\n')
+   outputFile.write('allow                      booting;\n')
+   outputFile.write('allow                      bootp;\n\n')
    outputFile.write('authoritative;\n\n')
    
    outputFile.write('subnet ' + str(siteNetwork.ip) + ' netmask ' + str(siteNetwork.netmask) + ' { \n')
@@ -1859,9 +1861,11 @@ def makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList):
       if len(staticEntry['node_filename']) > 0:
          outputFile.write('\tfilename          "' + staticEntry['node_filename'] + '";\n')
          if staticEntry['node_servername'] != '':
-            outputFile.write('\tserver-name       "' + staticEntry['node_servername'] + '";\n')
+            # outputFile.write('\tserver-name       "' + staticEntry['node_servername'] + '";\n')
+            outputFile.write('\tnext-server       ' + staticEntry['node_servername'] + ';\n')
          else:
-            outputFile.write('\tserver-name       "tftp.' + NorNet_CentralSite_DomainName + '";\n')
+            # outputFile.write('\tserver-name       "tftp.' + NorNet_CentralSite_DomainName + '";\n')
+            outputFile.write('\tnext-server       tftp.' + NorNet_CentralSite_DomainName + ';\n')
       outputFile.write('}\n')
 
    outputFile.close()
