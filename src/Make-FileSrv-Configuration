@@ -100,7 +100,7 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
             for version in [ 4, 6 ]:
                # ====== Add entry for node ==================================
                nodeAddress = makeNorNetIP(providerIndex, siteIndex, nodeIndex, -1, version)
-               outputFile.write(str(nodeAddress.ip) + '(subtree_check,sync,ro)\t')
+               outputFile.write(str(nodeAddress.ip) + '(subtree_check,sync,rw)\t')
 
                # ====== Query DNS for the node's name =======================
                if ((version == 4) and
