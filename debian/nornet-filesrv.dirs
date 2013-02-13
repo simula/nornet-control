@@ -2,3 +2,4 @@ filesrv
 filesrv/tftp
 filesrv/pub
 filesrv/adm
+filesrv/sys

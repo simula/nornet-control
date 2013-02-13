@@ -25,6 +25,7 @@ import re;
 import hashlib;
 import datetime;
 import codecs;
+import socket;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
@@ -1783,13 +1784,14 @@ def makeTFTPDConfiguration(configNamePrefix):
 
 
 # ###### Generate NFS daemon configuration ##################################
-def makeNFSDConfiguration(rwSystemList, configNamePrefix):
+def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
    if configNamePrefix == None:
       configNamePrefix = 'tftpd-' + localSite['site_short_name']
    configurationName = configNamePrefix + '-config'
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
    _writeAutoConfigInformation(outputFile)
 
+   # ====== Global shares ===================================================
    outputFile.write('/filesrv/pub\t')
    for version in [ 4, 6 ]:
       outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,rw)\t')
@@ -1803,11 +1805,51 @@ def makeNFSDConfiguration(rwSystemList, configNamePrefix):
       outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,ro)\t')
    outputFile.write('\n')
 
+   # ====== Per-node private share ==========================================
+   for siteIndex in fullSiteList:
+      site              = fullSiteList[siteIndex]
+      siteDirectory     = '/filesrv/sys/' + site['site_domain']
+      siteLookupProblem = False
+      for nodeIndex in range(1,255):
+         nodeDirectory = siteDirectory + '/' + str(nodeIndex)
+         try:
+            if nodeIndex == 1:
+               try:
+                  os.mkdir(siteDirectory, 0755);
+               except:
+                  dummy=1
+            os.mkdir(nodeDirectory, 0755);
+         except:
+            dummy=1
+
+         outputFile.write(nodeDirectory + '\t')        
+         siteProviderList = getNorNetProvidersForSite(site)
+         for providerIndex in siteProviderList:
+            provider = siteProviderList[providerIndex]
+            for version in [ 4, 6 ]:
+               nodeAddress = makeNorNetIP(providerIndex, siteIndex, nodeIndex, -1, version)
+               outputFile.write(str(nodeAddress.ip) + '(subtree_check,sync,ro)\t')
+               
+               #if ((siteLookupProblem == False) and
+                   #(version == 4) and
+                   #(providerIndex == site['site_default_provider_index'])):
+                  #try:
+                     #print "TRY: ",str(nodeAddress.ip)
+                     #systemName = socket.gethostbyaddr(str(nodeAddress.ip))
+                     #print str(nodeAddress.ip),systemName
+                  #except:
+                     #print 'LOOKUP-PR'
+                     #siteLookupProblem = True
+
+         for i in range(0, len(rwSystemList)):
+            outputFile.write(rwSystemList[i] + '(subtree_check,sync,rw)\t')
+         outputFile.write('\n')
+
    outputFile.close()
 
 
 # ###### Generate NFS daemon configuration ##################################
-def makeAutoFSConfiguration(weAreOnFileServer, addHeader):
+def makeAutoFSConfiguration(weAreOnFileServer, domainName, nodeIndex, addHeader):
    outputFile = codecs.open('auto.master', 'w', 'utf-8')
    if addHeader == True:
       _writeAutoConfigInformation(outputFile)
@@ -1820,8 +1862,9 @@ def makeAutoFSConfiguration(weAreOnFileServer, addHeader):
       _writeAutoConfigInformation(outputFile)         
    if weAreOnFileServer == False:
       fileServer = 'nfs.' + NorNet_CentralSite_DomainName
-      outputFile.write('pub\t-fstype=nfs,proto=tcp,soft,intr,rw\t' + fileServer + ':/filesrv/pub\n')
       outputFile.write('adm\t-fstype=nfs,proto=tcp,soft,intr,ro\t' + fileServer + ':/filesrv/adm\n')
+      outputFile.write('pub\t-fstype=nfs,proto=tcp,soft,intr,rw\t' + fileServer + ':/filesrv/pub\n')
+      outputFile.write('sys\t-fstype=nfs,proto=tcp,soft,intr,rw\t' + fileServer + ':/filesrv/sys/' + domainName + '/' + str(nodeIndex) + '\n')
    outputFile.close()
 
 

@@ -47,4 +47,4 @@ if rwSystems != None:
 
 
 makeTFTPDConfiguration('tftpd-hpa')
-makeNFSDConfiguration(rwSystemList, 'nfsd')
+makeNFSDConfiguration(fullSiteList, rwSystemList, 'nfsd')
