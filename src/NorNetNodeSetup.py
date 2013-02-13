@@ -1810,7 +1810,7 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
       site              = fullSiteList[siteIndex]
       siteDirectory     = '/filesrv/sys/' + site['site_domain']
       siteLookupProblem = False
-      for nodeIndex in range(1,255):
+      for nodeIndex in range(1, 254):
          nodeDirectory = siteDirectory + '/' + str(nodeIndex)
          try:
             if nodeIndex == 1:
