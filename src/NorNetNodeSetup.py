@@ -961,7 +961,7 @@ def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, config
 
 
 # ###### Write Automatic Configuration Information ##########################
-def _writeAutoConfigInformation(outputFile, comment='#'):
+def writeAutoConfigInformation(outputFile, comment='#'):
    outputFile.write(comment + ' ################ AUTOMATICALLY-GENERATED FILE! ################\n')
    outputFile.write(comment + ' #### Changes will be overwritten by NorNet config scripts! ####\n')
    outputFile.write(comment + ' ################ AUTOMATICALLY-GENERATED FILE! ################\n\n')
@@ -973,7 +973,7 @@ def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
       configNamePrefix = 'ntp-' + localSite['site_short_name']
    configurationName = configNamePrefix + '-config'
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
-   _writeAutoConfigInformation(outputFile)
+   writeAutoConfigInformation(outputFile)
 
    ntpServerList = []
    if localSite != None:
@@ -1043,7 +1043,7 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, configNamePrefi
       configNamePrefix = 'snmpd-' + localSite['site_short_name']
    configurationName = configNamePrefix + '-config'
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
-   _writeAutoConfigInformation(outputFile)
+   writeAutoConfigInformation(outputFile)
 
 
    outputFile.write('# ====== Agent ======\n')
@@ -1113,7 +1113,7 @@ def makeHostsConfiguration(fullSiteList, localSite, localNode, configNamePrefix,
    configurationName = configNamePrefix + '-config'
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
 
-   _writeAutoConfigInformation(outputFile)
+   writeAutoConfigInformation(outputFile)
 
    outputFile.write('127.0.0.1\tlocalhost\n')
    outputFile.write('127.0.0.1\t' + name + '\n')
@@ -1134,7 +1134,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
       configNamePrefix = 'nagios-' + localSite['site_short_name']
    configurationName = configNamePrefix + '-config'
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
-   _writeAutoConfigInformation(outputFile)
+   writeAutoConfigInformation(outputFile)
 
    if fullSiteList != None:
       try:
@@ -1510,7 +1510,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    hostNameForDefaultProvider = _addProviderToName(hostName + '.' + siteFQDN, str.lower(localDefaultProvider['provider_short_name']))
 
    siteZoneFile = codecs.open(siteFQDN + 'db', 'w', 'utf-8')
-   _writeAutoConfigInformation(siteZoneFile, ';')
+   writeAutoConfigInformation(siteZoneFile, ';')
    slaveServers = _getSlavesForSite(fullSiteList, localSite)
    _writeSOA(siteZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
 
@@ -1738,7 +1738,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
 
    # ====== Write zone configuration ========================================
    zoneConfFile = codecs.open('zones.conf', 'w', 'utf-8')
-   _writeAutoConfigInformation(zoneConfFile, '//')
+   writeAutoConfigInformation(zoneConfFile, '//')
    for siteIndex in fullSiteList:
       site       = fullSiteList[siteIndex]
       masterSite = site
@@ -1767,99 +1767,18 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    zoneConfFile.close()
 
 
-# ###### Generate TFTP daemon configuration #################################
-def makeTFTPDConfiguration(configNamePrefix):
-   if configNamePrefix == None:
-      configNamePrefix = 'tftpd-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-config'
-   outputFile = codecs.open(configurationName, 'w', 'utf-8')
-   _writeAutoConfigInformation(outputFile)
-
-   outputFile.write('TFTP_USERNAME="tftp"\n')
-   outputFile.write('TFTP_DIRECTORY="/filesrv/tftp"\n')
-   outputFile.write('TFTP_ADDRESS="[::]:69" \n')   
-   outputFile.write('TFTP_OPTIONS="--secure"\n')
-
-   outputFile.close()
-
-
-# ###### Generate NFS daemon configuration ##################################
-def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
-   if configNamePrefix == None:
-      configNamePrefix = 'tftpd-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-config'
-   outputFile = codecs.open(configurationName, 'w', 'utf-8')
-   _writeAutoConfigInformation(outputFile)
-
-   # ====== Global shares ===================================================
-   outputFile.write('/filesrv/pub\t')
-   for version in [ 4, 6 ]:
-      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,rw)\t')
-      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,rw)\t')
-   outputFile.write('\n')
-   outputFile.write('/filesrv/adm\t')
-   for i in range(0, len(rwSystemList)):
-      outputFile.write(rwSystemList[i] + '(subtree_check,sync,rw)\t')
-   for version in [ 4, 6 ]:
-      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,ro)\t')
-      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,ro)\t')
-   outputFile.write('\n')
-
-   # ====== Per-node private share ==========================================
-   for siteIndex in fullSiteList:
-      site              = fullSiteList[siteIndex]
-      siteDirectory     = '/filesrv/sys/' + site['site_domain']
-      siteLookupProblem = False
-      for nodeIndex in range(1, 254):
-         nodeDirectory = siteDirectory + '/' + str(nodeIndex)
-         try:
-            if nodeIndex == 1:
-               try:
-                  os.mkdir(siteDirectory, 0755);
-               except:
-                  dummy=1
-            os.mkdir(nodeDirectory, 0755);
-         except:
-            dummy=1
-
-         outputFile.write(nodeDirectory + '\t')        
-         siteProviderList = getNorNetProvidersForSite(site)
-         for providerIndex in siteProviderList:
-            provider = siteProviderList[providerIndex]
-            for version in [ 4, 6 ]:
-               nodeAddress = makeNorNetIP(providerIndex, siteIndex, nodeIndex, -1, version)
-               outputFile.write(str(nodeAddress.ip) + '(subtree_check,sync,ro)\t')
-               
-               #if ((siteLookupProblem == False) and
-                   #(version == 4) and
-                   #(providerIndex == site['site_default_provider_index'])):
-                  #try:
-                     #print "TRY: ",str(nodeAddress.ip)
-                     #systemName = socket.gethostbyaddr(str(nodeAddress.ip))
-                     #print str(nodeAddress.ip),systemName
-                  #except:
-                     #print 'LOOKUP-PR'
-                     #siteLookupProblem = True
-
-         for i in range(0, len(rwSystemList)):
-            outputFile.write(rwSystemList[i] + '(subtree_check,sync,rw)\t')
-         outputFile.write('\n')
-
-   outputFile.close()
-
-
 # ###### Generate NFS daemon configuration ##################################
 def makeAutoFSConfiguration(weAreOnFileServer, domainName, nodeIndex, addHeader):
    outputFile = codecs.open('auto.master', 'w', 'utf-8')
    if addHeader == True:
-      _writeAutoConfigInformation(outputFile)
+      writeAutoConfigInformation(outputFile)
    if weAreOnFileServer == False:
       outputFile.write('/nfs\t/etc/auto.nfs\n')
    outputFile.close()
 
    outputFile = codecs.open('auto.nfs', 'w', 'utf-8')
    if addHeader == True:
-      _writeAutoConfigInformation(outputFile)         
+      writeAutoConfigInformation(outputFile)         
    if weAreOnFileServer == False:
       fileServer = 'nfs.' + NorNet_CentralSite_DomainName
       outputFile.write('adm\t-fstype=nfs,proto=tcp,soft,intr,ro\t' + fileServer + ':/filesrv/adm\n')
@@ -1877,7 +1796,7 @@ def makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList):
    siteTunnelbox = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, 4)
 
    outputFile = codecs.open('dhcpd-config', 'w', 'utf-8')
-   _writeAutoConfigInformation(outputFile)
+   writeAutoConfigInformation(outputFile)
 
    outputFile.write('ddns-update-style          none;\n')
    outputFile.write('option domain-name         "' + domain + '";\n')
