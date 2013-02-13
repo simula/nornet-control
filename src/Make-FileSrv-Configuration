@@ -55,6 +55,7 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
 
    # ====== Global shares ===================================================
    log('Writing global configuration ...')
+   outputFile.write('# Global shares\n')
    outputFile.write('/filesrv/pub\t')
    for version in [ 4, 6 ]:
       outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,rw)\t')
@@ -70,10 +71,11 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
    outputFile.write('/filesrv/sys\t')
    for i in range(0, len(rwSystemList)):
       outputFile.write(rwSystemList[i] + '(subtree_check,sync,rw)\t')
-   outputFile.write('\n')
+   outputFile.write('\n\n')
 
    # ====== Per-node private share ==========================================
    log('Writing per-node configuration ...')
+   outputFile.write('# Per-node shares\n')
    adnsResolver = adns.init()
    for siteIndex in fullSiteList:
       siteQueryList     = [ None ]
@@ -107,8 +109,6 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
                   query = adnsResolver.submit_reverse(str(nodeAddress.ip), adns.rr.PTR)
                   siteQueryList.append(query)
 
-         for i in range(0, len(rwSystemList)):
-            outputFile.write(rwSystemList[i] + '(subtree_check,sync,rw)\t')
          outputFile.write('\n')
 
       # ====== Create symlinks with host name ===============================
