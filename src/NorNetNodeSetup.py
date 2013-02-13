@@ -1783,7 +1783,8 @@ def makeAutoFSConfiguration(weAreOnFileServer, domainName, nodeIndex, addHeader)
       fileServer = 'nfs.' + NorNet_CentralSite_DomainName
       outputFile.write('adm\t-fstype=nfs,proto=tcp,soft,intr,ro\t' + fileServer + ':/filesrv/adm\n')
       outputFile.write('pub\t-fstype=nfs,proto=tcp,soft,intr,rw\t' + fileServer + ':/filesrv/pub\n')
-      outputFile.write('sys\t-fstype=nfs,proto=tcp,soft,intr,rw\t' + fileServer + ':/filesrv/sys/' + domainName + '/' + str(nodeIndex) + '\n')
+      outputFile.write('sys\t-fstype=nfs,proto=tcp,soft,intr,rw\t' + fileServer + ':/filesrv/sys\n')
+      outputFile.write('node\t-fstype=nfs,proto=tcp,soft,intr,rw\t' + fileServer + ':/filesrv/sys/' + domainName + '/' + str(nodeIndex) + '\n')
    outputFile.close()
 
 

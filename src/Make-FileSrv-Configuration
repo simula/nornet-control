@@ -67,6 +67,10 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
       outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,ro)\t')
       outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,ro)\t')
    outputFile.write('\n')
+   outputFile.write('/filesrv/sys\t')
+   for i in range(0, len(rwSystemList)):
+      outputFile.write(rwSystemList[i] + '(subtree_check,sync,rw)\t')
+   outputFile.write('\n')
 
    # ====== Per-node private share ==========================================
    log('Writing per-node configuration ...')

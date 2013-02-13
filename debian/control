@@ -127,8 +127,8 @@ Architecture: all
 Depends: nfs-kernel-server,
          nornet-node,
          python (>= 2.7),
-         tftpd-hpa,
          python-adns,
+         tftpd-hpa,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet File Server
