@@ -213,4 +213,4 @@ writeNTPConfiguration('ntp.new', nodeIndex, siteIndex, defaultProvider)
 # (otherwise: just add empty AutoFS configuration)
 weAreOnFileServer = ((siteIndex == NorNet_SiteIndex_FileSrv) and
                      (nodeIndex == NorNet_NodeIndex_FileSrv))
-makeAutoFSConfiguration(weAreOnFileServer, True)
+makeAutoFSConfiguration(weAreOnFileServer, domainName, nodeIndex, True)
