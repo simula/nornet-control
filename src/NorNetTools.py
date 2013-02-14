@@ -28,6 +28,7 @@ from socket import getaddrinfo, AF_INET, AF_INET6;
 import os;
 import re;
 import sys;
+import errno;
 import codecs;
 import datetime;
 import crypt;
@@ -205,3 +206,40 @@ def makeDNSNameFromUnicode(name):
       'punycode' : punycodeName
    }
    return dnsName
+
+
+# ###### Make directory, if it is not yet existing ##########################
+def makeDir(path):
+   try:
+      os.mkdir(path, 0755)
+   except OSError as e:
+      if e.errno == errno.EEXIST and os.path.isdir(path):
+         pass
+      else:
+         raise
+
+
+# ###### Change current directory, return previous one ######################
+def changeDir(path):
+   oldDirectory = os.getcwd()
+   os.chdir(path)
+   return oldDirectory
+
+
+# ###### Create, or update existing, symlink ################################
+def makeSymlink(linkName, newLinkTarget):
+   existingLinkTarget = None            
+   try:
+      existingLinkTarget = os.readlink(linkName)
+   except:
+      existingLinkTarget = None
+
+   if existingLinkTarget != newLinkTarget:
+      try:
+         os.unlink(linkName)
+      except Exception as e:
+         pass
+      try:
+         os.symlink(newLinkTarget, linkName)
+      except Exception as e:
+         pass
