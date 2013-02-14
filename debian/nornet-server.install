@@ -3,4 +3,5 @@ Server-Setup                      /usr/bin
 grub/05_nornet_server_theme       /etc/grub.d
 grub/Splash-Server1-1024x768.jpeg /boot
 grub/grub-defaults                /etc/nornet
+vsystems/EXAMPLE-99-VirtualServer /etc/nornet/vsystems
 watchdog-config.example           /usr/share/nornet

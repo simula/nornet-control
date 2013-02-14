@@ -35,6 +35,8 @@ cp src/grub/grub-defaults $PACKAGE-$UPSTREAM_VERSION/grub/
 cp src/grub/*.jpeg $PACKAGE-$UPSTREAM_VERSION/grub/
 mkdir $PACKAGE-$UPSTREAM_VERSION/pbuilder
 cp src/pbuilder/pbuilderrc $PACKAGE-$UPSTREAM_VERSION/pbuilder/
+mkdir $PACKAGE-$UPSTREAM_VERSION/vsystems
+cp src/vsystems/EXAMPLE-* $PACKAGE-$UPSTREAM_VERSION/vsystems/
 cp src/Routing-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Tunnelbox-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Watchdog $PACKAGE-$UPSTREAM_VERSION

@@ -80,8 +80,14 @@ start_virtual_systems ()
       echo "Processing $vsystem ..."
       NAME="BAD-NAME"
       STARTDELAY=0
+      NUMCPUS=1
+      GETHOSTTIMEDISABLED=1
+      OPTIONS="--audio none --usb off --hpet on --pae on --hwvirtex on --nestedpaging on --largepages on --hwvirtexexcl on --vtxvpid on"
       ( . ./$vsystem && \
         echo "Starting $NAME" && \
+        if [ "$NUMCPUS" != "" ] ; then sudo -u $NORNET_USER vboxmanage modifyvm "$NAME" --cpus "$NUMCPUS" || true ; fi && \
+        if [ "$OPTIONS" != "" ] ; then sudo -u $NORNET_USER vboxmanage modifyvm "$NAME" $OPTIONS || true ; fi && \
+        if [ "$GETHOSTTIMEDISABLED" != "" ] ; then sudo -u $NORNET_USER vboxmanage setextradata "$NAME" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" $GETHOSTTIMEDISABLED || true ; fi && \
         sudo -u $NORNET_USER vboxmanage startvm "$NAME" --type headless && \
         echo "Waiting $STARTDELAY seconds ..." && \
         sleep "$STARTDELAY" \
