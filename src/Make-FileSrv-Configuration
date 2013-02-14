@@ -75,23 +75,33 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
 
    # ====== Per-node private share ==========================================
    makeDir('/filesrv/sys')
+   originalDirectory = changeDir('/filesrv/sys')
+   obsoleteSites     = os.listdir('.')
+
    log('Writing per-node configuration ...')
    outputFile.write('# Per-node shares\n')
    adnsResolver = adns.init()
    for siteIndex in fullSiteList:
       # ====== Prepare site directory =======================================
-      siteQueryList     = [ None ]
-      site              = fullSiteList[siteIndex]
-      siteDirectory     = '/filesrv/sys/' + str(site['site_index'])      
+      siteQueryList = [ None ]
+      site          = fullSiteList[siteIndex]
+      siteDirectory = str(site['site_index'])
+      siteLink      = site['site_domain']
       makeDir(siteDirectory)
-      oldDirectory = changeDir('/filesrv/sys')
-      makeSymlink(site['site_domain'], str(site['site_index']))
-      changeDir(oldDirectory)
+      makeSymlink(siteLink, siteDirectory)
+      oldDirectory  = changeDir(siteDirectory)
+      obsoleteNodes = os.listdir('.')
+      try:
+         obsoleteSites.remove(siteDirectory)
+         obsoleteSites.remove(siteLink)
+      except:
+         pass
 
       # ====== Prepare node directories =====================================
       for nodeIndex in range(1, 255):
-         nodeDirectory = siteDirectory + '/' + str(nodeIndex)
+         nodeDirectory = str(nodeIndex)
          makeDir(nodeDirectory)
+         obsoleteNodes.remove(nodeDirectory)
 
          outputFile.write(nodeDirectory + '\t')        
          siteProviderList = getNorNetProvidersForSite(site)
@@ -118,20 +128,45 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
          resolvedNames = resolvedNames + len(adnsResolver.completed())
          # print resolvedNames
 
-      # All names are resolved now (successfully or unsuccessfully)!    
-      oldDirectory = os.getcwd()
-      os.chdir(siteDirectory)
+      # All names are resolved now (successfully or unsuccessfully)!
+      successfulNameResolutions = 0
       for i in range(1,len(siteQueryList)):
          answer = siteQueryList[i].check()
          if answer[0] == 0:
             # print i,hostName,answer[3][0]
+            successfulNameResolutions = successfulNameResolutions + 1
+            nodeName      = str(i)
+            nodeLink      = getHostnameFromFQDN(str(answer[3][0]))
             linkName      = getHostnameFromFQDN(str(answer[3][0]))
-            newLinkTarget = str(i)
-            makeSymlink(linkName, newLinkTarget)
+            makeSymlink(nodeLink, nodeName)
+            obsoleteNodes.remove(nodeLink)
 
-      os.chdir(oldDirectory)
-      
+      # ====== Remove obsolete node links ======================================
+      # Only perform cleanup if some name resolutions have been successful.
+      # Otherwise, just a DNS problem could remove valid links!
+      if successfulNameResolutions > 0:
+         for obsoleteNode in obsoleteNodes:
+            try:
+               if os.path.islink(obsoleteNode):
+                  os.unlink(obsoleteNode)
+            except:
+               pass
+
+      changeDir(oldDirectory)
+
    outputFile.close()
+
+   # ====== Remove obsolete site links ======================================
+   for obsoleteSite in obsoleteSites:         
+      try:
+         if os.path.islink(obsoleteSite):
+            os.unlink(obsoleteSite)
+         elif os.path.isdir(obsoleteSite):
+            os.rmdir(obsoleteSite)
+      except:
+         pass
+
+   changeDir(originalDirectory)
 
 
 
