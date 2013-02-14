@@ -75,6 +75,7 @@ echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE 2
 # ###### Start virtual systems ##############################################
 start_virtual_systems ()
 {
+   echo "`env LANG=C date +%FT%H:%M:%S`: Stopping virtual systems ..."
    VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
    for vsystem in $VSYSTEMS ; do
       echo "`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ..."
@@ -93,6 +94,7 @@ start_virtual_systems ()
         sleep "$STARTDELAY" \
       ) || true
    done
+   echo "`env LANG=C date +%FT%H:%M:%S`: Done!"
 }
 
 
@@ -133,6 +135,7 @@ wait_for_shutdown ()
 stop_virtual_systems ()
 {
    VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
+   echo "`env LANG=C date +%FT%H:%M:%S`: Starting virtual systems ..."
    for vsystem in $VSYSTEMS ; do
       echo "`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ..."
       NAME="BAD-NAME"
@@ -166,6 +169,7 @@ show_status ()
          echo "$vsystem: $NAME -> $status"
       ) || true
    done
+   echo "`env LANG=C date +%FT%H:%M:%S`: Done!"
 }
 
 # ###### Main program #######################################################
