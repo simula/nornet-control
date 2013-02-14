@@ -107,7 +107,7 @@ get_new_filesrv_configuration ()
    rm -rf updated-filesrv-config
    mkdir updated-filesrv-config
    cd updated-filesrv-config
-   chown $NORNET_USER:$NORNET_USER updated-filesrv-config
+   chown $NORNET_USER:$NORNET_USER .
    chown $NORNET_USER:$NORNET_USER /filesrv
    sudo -u $NORNET_USER Make-FileSrv-Configuration
    cd ..
