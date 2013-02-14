@@ -1,5 +1,4 @@
 #!/bin/bash -e
-# -*- coding: utf-8 -*-
 #
 # Make Research VM
 # Copyright (C) 2012 by Thomas Dreibholz
