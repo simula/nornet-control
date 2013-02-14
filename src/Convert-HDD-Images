@@ -43,7 +43,8 @@ for controller in 0 1 2 3 ; do
          echo "Controller $controller, port $port: $uuid in $oldImage"
          if [ "$oldImage" != "" ] ; then
             if [ "$oldImage" != "$newImage" ] ; then
-               newImage="$CONFIG_DIR/$MACHINE_NAME-DH$port-$controller.$IMAGE_VARIANT.$IMAGE_FORMAT"
+               variant=`echo $IMAGE_VARIANT | tr '[:upper:]' '[:lower:]'`
+               newImage="$CONFIG_DIR/$MACHINE_NAME-DH$port-$controller.$variant.$IMAGE_FORMAT"
                if [ ! -e "$newImage" ] ; then
                   tempNewImage="$newImage.temp"
                   if [ -e "$tempNewImage" ] ; then
@@ -55,8 +56,26 @@ for controller in 0 1 2 3 ; do
                   vboxmanage clonehd "$oldImage" "$tempNewImage" --format "$IMAGE_FORMAT" --variant "$IMAGE_VARIANT"
                   mv "$tempNewImage" "$newImage"
                   vboxmanage -q storageattach "$MACHINE_NAME" --storagectl "SATA Controller" --port $port --device $controller --type hdd --medium "$newImage"
-                  vboxmanage -q closemedium disk "$oldImage" --delete || true
-                  
+
+                  # ====== Remove old image, if not used any more ===========
+                  HDD_STATUS_FILE=`mktemp`
+                  vboxmanage list hdds >$HDD_STATUS_FILE
+
+                  diskInfo=`cat $HDD_STATUS_FILE | grep -A6 "^UUID:        $uuid" || echo ""`
+                  if [ "$diskInfo" != "" ] ; then
+                     usage=`echo "$diskInfo" | grep "^Usage:" || echo ""`
+                     if [ "$usage" = "" ] ; then 
+                        echo "Removing old image $oldImage!"
+                        vboxmanage -q closemedium disk "$uuid" --delete || true
+                     else
+                        echo "WARNING: Disk $uuid used.Leaving storage registration as is!"
+                        echo "$usage"
+                     fi
+                  else
+                     echo >&2 "ERROR: Something is going wrong! No HDD status found for UUID $uuid! May be vboxmanage has changed output format?"
+                  fi
+
+                  rm -f $HDD_STATUS_FILE
                else
                   echo "Disk $newImage already exists -> skipping conversion!"
                fi
@@ -67,3 +86,5 @@ for controller in 0 1 2 3 ; do
       fi
    done
 done
+
+rm -f $MACHINE_STATUS_FILE
