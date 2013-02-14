@@ -102,7 +102,7 @@ needs_update ()
 # ###### Get new configuration into temporary directory #####################
 get_new_node_configuration ()
 {
-   echo "Getting new configuration ..."
+   echo "`env LANG=C date +%FT%H:%M:%S`: Getting new configuration ..."
    rm -rf updated-node-config
    mkdir updated-node-config
    cd updated-node-config
@@ -119,35 +119,35 @@ check_and_configure ()
    get_new_node_configuration
    if needs_update interfaces /etc/network/interfaces $1 ; then
       if [ ! -e /etc/init.d/nornet-tunnelbox ] ; then
-         echo "Interface configuration has been updated => restarting networking service ..."
+         echo "`env LANG=C date +%FT%H:%M:%S`: Interface configuration has been updated => restarting networking service ..."
          cp interfaces /etc/network/interfaces
          service networking restart
       else
-         echo "##### WARNING: nornet-node is supposed to install new /etc/network/interfaces on tunnelbox?! ######"
+         echo "`env LANG=C date +%FT%H:%M:%S`: ##### WARNING: nornet-node is supposed to install new /etc/network/interfaces on tunnelbox?! ######"
          echo "/etc/network/interfaces will be kept as is!"
       fi
    fi
    if needs_update hostname-config /etc/hostname $1 ; then
-      echo "Hostname has been updated => setting new hostname ..."
+      echo "`env LANG=C date +%FT%H:%M:%S`: Hostname has been updated => setting new hostname ..."
       cp hostname-config /etc/hostname
       hostname `cat /etc/hostname`
    fi
    if needs_update hosts-config /etc/hosts $1 ; then
-      echo "Hosts file has been updated => installing it ..."
+      echo "`env LANG=C date +%FT%H:%M:%S`: Hosts file has been updated => installing it ..."
       cp hosts-config /etc/hosts
    fi
    if needs_update ntp-config /etc/ntp.conf $1 ; then
-      echo "NTP configuration has been updated => restarting NTP service ..."
+      echo "`env LANG=C date +%FT%H:%M:%S`: NTP configuration has been updated => restarting NTP service ..."
       cp ntp-config /etc/ntp.conf
       service ntp restart
    fi
    if needs_update snmpd-config /etc/snmp/snmpd.conf $1 ; then
-      echo "SNMP configuration has been updated => restarting SNMP service ..."
+      echo "`env LANG=C date +%FT%H:%M:%S`: SNMP configuration has been updated => restarting SNMP service ..."
       cp snmpd-config /etc/snmp/snmpd.conf
       service snmpd restart
    fi
    if needs_update auto.nfs /etc/auto.nfs $1 ; then
-      echo "AutoFS configuration has been updated => restarting AutoFS service ..."
+      echo "`env LANG=C date +%FT%H:%M:%S`: AutoFS configuration has been updated => restarting AutoFS service ..."
       rm -f /etc/auto.*
       cp auto.* /etc
       service autofs restart

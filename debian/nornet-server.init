@@ -77,19 +77,19 @@ start_virtual_systems ()
 {
    VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
    for vsystem in $VSYSTEMS ; do
-      echo "Processing $vsystem ..."
+      echo "`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ..."
       NAME="BAD-NAME"
       STARTDELAY=0
       NUMCPUS=1
       GETHOSTTIMEDISABLED=1
       OPTIONS="--audio none --usb off --hpet on --pae on --hwvirtex on --nestedpaging on --largepages on --hwvirtexexcl on --vtxvpid on"
       ( . ./$vsystem && \
-        echo "Starting $NAME" && \
+        echo "`env LANG=C date +%FT%H:%M:%S`: Starting $NAME" && \
         if [ "$NUMCPUS" != "" ] ; then sudo -u $NORNET_USER vboxmanage modifyvm "$NAME" --cpus "$NUMCPUS" || true ; fi && \
         if [ "$OPTIONS" != "" ] ; then sudo -u $NORNET_USER vboxmanage modifyvm "$NAME" $OPTIONS || true ; fi && \
         if [ "$GETHOSTTIMEDISABLED" != "" ] ; then sudo -u $NORNET_USER vboxmanage setextradata "$NAME" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" $GETHOSTTIMEDISABLED || true ; fi && \
         sudo -u $NORNET_USER vboxmanage startvm "$NAME" --type headless && \
-        echo "Waiting $STARTDELAY seconds ..." && \
+        echo "`env LANG=C date +%FT%H:%M:%S`: Waiting $STARTDELAY seconds ..." && \
         sleep "$STARTDELAY" \
       ) || true
    done
@@ -134,7 +134,7 @@ stop_virtual_systems ()
 {
    VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
    for vsystem in $VSYSTEMS ; do
-      echo "Processing $vsystem ..."
+      echo "`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ..."
       NAME="BAD-NAME"
       STOPDELAY=0
       ( . ./$vsystem && \
@@ -144,10 +144,10 @@ stop_virtual_systems ()
            status=`get_machine_state "$NAME"`
         fi
         if [ "$status" = "running" ] ; then
-           echo "Stopping $NAME (ACPI power button) ..." && \
+           echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $NAME (ACPI power button) ..." && \
            sudo -u $NORNET_USER vboxmanage controlvm "$NAME" acpipowerbutton && \
            wait_for_shutdown "$NAME" "$STOPDELAY" && \
-           echo "Stopping $NAME (power off) ..." && \
+           echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $NAME (power off) ..." && \
            sudo -u $NORNET_USER vboxmanage controlvm "$NAME" poweroff
         fi
       ) || true

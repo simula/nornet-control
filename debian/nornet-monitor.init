@@ -102,7 +102,7 @@ needs_update ()
 # ###### Get new configuration into temporary directory #####################
 get_new_monitor_configuration ()
 {
-   echo "Getting new configuration ..."
+   echo "`env LANG=C date +%FT%H:%M:%S`: Getting new configuration ..."
    rm -rf updated-monitor-config
    mkdir updated-monitor-config
    cd updated-monitor-config
@@ -118,7 +118,7 @@ check_and_configure ()
 {
    get_new_monitor_configuration
    if needs_update nagios-config /etc/nagios3/nornet.cfg $1 ; then
-      echo "Nagios configuration has been updated => restarting Nagios service ..."
+      echo "`env LANG=C date +%FT%H:%M:%S`: Nagios configuration has been updated => restarting Nagios service ..."
       cp nagios-config /etc/nagios3/nornet.cfg
       service nagios3 reload   # "reload" is sufficient here => faster!
    fi

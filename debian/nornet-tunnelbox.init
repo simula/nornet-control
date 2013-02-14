@@ -131,7 +131,7 @@ check_and_configure ()
    fi
 
    # ====== Get new configuration into temporary directory ==================
-   echo "Getting new configuration ..."
+   echo "`env LANG=C date +%FT%H:%M:%S`: Getting new configuration ..."
    rm -rf updated-tunnelbox-config
    mkdir updated-tunnelbox-config
    cd updated-tunnelbox-config
@@ -141,12 +141,12 @@ check_and_configure ()
       Tunnelbox-Setup start -bootstrap
       echo "NOTE: Retrying to obtain full configuration ..."
       Make-Tunnelbox-Configuration "$NorNet_LocalNode_Hostname"
-      echo "Performing COLDSTART now!"
+      echo "`env LANG=C date +%FT%H:%M:%S`: Performing COLDSTART now!"
       cd ..
       rm -f tunnelbox-*-config
       mv updated-tunnelbox-config/tunnelbox-bootstrap updated-tunnelbox-config/tunnelbox-providers updated-tunnelbox-config/tunnelbox-config updated-tunnelbox-config/tunnelbox-*-config .
       Tunnelbox-Setup coldstart -providers "@ALL"
-      echo "COLDSTART completed. The network should work now!"
+      echo "`env LANG=C date +%FT%H:%M:%S`: COLDSTART completed. The network should work now!"
    else
       . ./tunnelbox-providers
       providersNew="$all_providers"
@@ -168,10 +168,10 @@ check_and_configure ()
       for provider in $providersNew ; do
          if needs_update updated-tunnelbox-config/tunnelbox-${provider}-config tunnelbox-${provider}-config $1 ; then
             mv updated-tunnelbox-config/tunnelbox-${provider}-config .
-            echo "Provider ${provider} needs an update -> applying new setup ..."
+            echo "`env LANG=C date +%FT%H:%M:%S`: Provider ${provider} needs an update -> applying new setup ..."
             Tunnelbox-Setup start -providers "$provider" -event "check_and_configure/updated provider" || true
          else
-            echo "Provider ${provider} does not need an update."
+            echo "`env LANG=C date +%FT%H:%M:%S`: Provider ${provider} does not need an update."
             rm -f updated-tunnelbox-config/tunnelbox-${provider}-config
          fi
       done
@@ -200,7 +200,7 @@ check_and_configure ()
    rm -f dhcpd-config
    mv updated-tunnelbox-config/dhcpd-config .
    if needs_update dhcpd-config /etc/dhcp/dhcpd.conf $1 ; then
-      echo "DHCP server configuration has been updated => restarting DHCP service ..."
+      echo "`env LANG=C date +%FT%H:%M:%S`: DHCP server configuration has been updated => restarting DHCP service ..."
       cp dhcpd-config /etc/dhcp/dhcpd.conf
       echo "INTERFACES=\"$NorNet_LocalNode_NorNetInterface\"" >/etc/default/isc-dhcp-server
       service isc-dhcp-server restart

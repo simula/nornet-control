@@ -103,7 +103,7 @@ needs_update ()
 # ###### Get new configuration into temporary directory #####################
 get_new_filesrv_configuration ()
 {
-   echo "Getting new configuration ..."
+   echo "`env LANG=C date +%FT%H:%M:%S`: Getting new configuration ..."
    rm -rf updated-filesrv-config
    mkdir updated-filesrv-config
    cd updated-filesrv-config
@@ -121,12 +121,12 @@ check_and_configure ()
 {
    get_new_filesrv_configuration
    if needs_update tftpd-hpa-config /etc/default/tftpd-hpa $1 ; then
-      echo "TFTP configuration has been updated => restarting tftp-hpa service ..."
+      echo "`env LANG=C date +%FT%H:%M:%S`: TFTP configuration has been updated => restarting tftp-hpa service ..."
       cp tftpd-hpa-config /etc/default/tftpd-hpa
       service tftpd-hpa restart
    fi
    if needs_update nfsd-config /etc/exports $1 ; then
-      echo "NFS configuration has been updated!"
+      echo "`env LANG=C date +%FT%H:%M:%S`: NFS configuration has been updated!"
       cp nfsd-config /etc/exports
    fi
    # Always reload this service. It may update exports for
