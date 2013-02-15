@@ -58,19 +58,19 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
    outputFile.write('# Global shares\n')
    outputFile.write('/filesrv/pub\t')
    for version in [ 4, 6 ]:
-      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,rw)\t')
-      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,rw)\t')
+      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,no_wdelay,rw)\t')
+      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,no_wdelay,rw)\t')
    outputFile.write('\n')
    outputFile.write('/filesrv/adm\t')
    for i in range(0, len(rwSystemList)):
-      outputFile.write(rwSystemList[i] + '(subtree_check,sync,rw)\t')
+      outputFile.write(rwSystemList[i] + '(subtree_check,sync,no_wdelay,rw)\t')
    for version in [ 4, 6 ]:
-      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,ro)\t')
-      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,ro)\t')
+      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,no_wdelay,ro)\t')
+      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,no_wdelay,ro)\t')
    outputFile.write('\n')
    outputFile.write('/filesrv/sys\t')
    for i in range(0, len(rwSystemList)):
-      outputFile.write(rwSystemList[i] + '(subtree_check,sync,rw)\t')
+      outputFile.write(rwSystemList[i] + '(subtree_check,sync,no_wdelay,rw)\t')
    outputFile.write('\n\n')
 
    # ====== Per-node private share ==========================================
@@ -110,7 +110,7 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
             for version in [ 4, 6 ]:
                # ====== Add entry for node ==================================
                nodeAddress = makeNorNetIP(providerIndex, siteIndex, nodeIndex, -1, version)
-               outputFile.write(str(nodeAddress.ip) + '(subtree_check,sync,rw)\t')
+               outputFile.write(str(nodeAddress.ip) + '(subtree_check,sync,no_wdelay,rw)\t')
 
                # ====== Query DNS for the node's name =======================
                if ((version == 4) and
