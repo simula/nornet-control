@@ -19,19 +19,8 @@
 # Contact: dreibh@simula.no
 
 
-if [ $# -lt 2 ] ; then
-   echo >&2 "Usage: $0 target_directory max_versions [max_delay]"
-   exit 1
-fi
-TARGET_DIRECTORY="$1"
-MAX_VERSIONS=$2
-DELAY=0
-if [ $# -ge 3 ] ; then
-   let DELAY=$3*$RANDOM/32768 || true
-fi
 
-
-# ====== Backup a file ======================================================
+# ###### Backup a file ######################################################
 backup_file ()
 # $1 = Source
 # $2 = Destination
@@ -44,23 +33,42 @@ backup_file ()
 }
 
 
-echo -en "\x1b[32m`date +%FT%H:%M:%S`: Making system backup in $TARGET_DIRECTORY ...\x1b[0m\n"
 
-# ====== Wait ===============================================================
+# ###### Main program #######################################################
+if [ $# -lt 3 ] ; then
+   echo >&2 "Usage: $0 target_directory target_subdirectory max_versions [max_delay]"
+   exit 1
+fi
+TARGET_DIRECTORY="$1"
+TARGET_SUBDIRECTORY="$2"
+MAX_VERSIONS=$3
+DELAY=0
+if [ $# -ge 4 ] ; then
+   let DELAY=$4*$RANDOM/32768 || true
+fi
+
+
+# ====== Wait (random time to decouple workloads) ===========================
+echo -en "\x1b[32m`date +%FT%H:%M:%S`: Making system backup in $TARGET_DIRECTORY ...\x1b[0m\n"
 if [ $DELAY -gt 0 ] ; then
    echo "`date +%FT%H:%M:%S`: Waiting $DELAY s ..."
    sleep $DELAY
    echo "`date +%FT%H:%M:%S`: Now starting backup ..."
 fi
 
-# ====== Collect list of backups ============================================
-mkdir -p "$TARGET_DIRECTORY"
+# ====== Prepare target directory ===========================================
 if [ ! -e "$TARGET_DIRECTORY" ] ; then
    echo >&2 "ERROR: Target directory $TARGET_DIRECTORY is not available (NFS problem?)!"
    exit 1
 fi
 cd "$TARGET_DIRECTORY"
+if [ "$TARGET_SUBDIRECTORY" != "" ] ; then
+   mkdir -p "$TARGET_SUBDIRECTORY"
+   cd "$TARGET_SUBDIRECTORY"
+fi
 
+
+# ====== Collect list of backups ============================================
 # Clean up first:
 find -maxdepth 1 -name "*.temp" -type d | xargs --no-run-if-empty rm -rf
 backupList="`find . -name "backup-*" -type d | sort`"
