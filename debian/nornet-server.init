@@ -83,7 +83,7 @@ start_virtual_systems ()
       STARTDELAY=0
       NUMCPUS=1
       GETHOSTTIMEDISABLED=1
-      OPTIONS="--audio none --usb off --hpet on --pae on --hwvirtex on --nestedpaging on --largepages on --hwvirtexexcl on --vtxvpid on"
+      OPTIONS="--audio none --mouse ps2 --keyboard ps2 --usb off --hpet on --pae on --hwvirtex on --nestedpaging on --largepages on --hwvirtexexcl on --vtxvpid on"
       ( . ./$vsystem && \
         echo "`env LANG=C date +%FT%H:%M:%S`: Starting $NAME" && \
         if [ "$NUMCPUS" != "" ] ; then sudo -u $NORNET_USER vboxmanage modifyvm "$NAME" --cpus "$NUMCPUS" || true ; fi && \
