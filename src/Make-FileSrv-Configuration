@@ -46,31 +46,33 @@ def makeTFTPDConfiguration(configNamePrefix):
 
 
 # ###### Generate NFS daemon configuration ##################################
-def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
+def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid, configNamePrefix):
    if configNamePrefix == None:
       configNamePrefix = 'tftpd-' + localSite['site_short_name']
    configurationName = configNamePrefix + '-config'
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
+   
+   nfsOptions = 'subtree_check,sync,no_wdelay,all_squash,anonuid=' + str(uid) + ',anongid=' + str(gid)
 
    # ====== Global shares ===================================================
    log('Writing global configuration ...')
    outputFile.write('# Global shares\n')
    outputFile.write('/filesrv/pub\t')
    for version in [ 4, 6 ]:
-      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,no_wdelay,rw)\t')
-      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,no_wdelay,rw)\t')
+      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(' + nfsOptions + ',rw)\t')
+      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(' + nfsOptions + ',rw)\t')
    outputFile.write('\n')
    outputFile.write('/filesrv/adm\t')
    for i in range(0, len(rwSystemList)):
-      outputFile.write(rwSystemList[i] + '(subtree_check,sync,no_wdelay,rw)\t')
+      outputFile.write(rwSystemList[i] + '(' + nfsOptions + ',rw)\t')
    for version in [ 4, 6 ]:
-      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,no_wdelay,ro)\t')
-      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,no_wdelay,ro)\t')
+      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(' + nfsOptions + ',ro)\t')
+      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(' + nfsOptions + ',ro)\t')
    outputFile.write('\n')
    outputFile.write('/filesrv/sys\t')
    for i in range(0, len(rwSystemList)):
-      outputFile.write(rwSystemList[i] + '(subtree_check,sync,no_wdelay,rw)\t')
+      outputFile.write(rwSystemList[i] + '(' + nfsOptions + ',rw)\t')
    outputFile.write('\n\n')
 
    # ====== Per-node private share ==========================================
@@ -110,7 +112,7 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
             for version in [ 4, 6 ]:
                # ====== Add entry for node ==================================
                nodeAddress = makeNorNetIP(providerIndex, siteIndex, nodeIndex, -1, version)
-               outputFile.write(str(nodeAddress.ip) + '(subtree_check,sync,no_wdelay,rw)\t')
+               outputFile.write(str(nodeAddress.ip) + '(' + nfsOptions + ',rw)\t')
 
                # ====== Query DNS for the node's name =======================
                if ((version == 4) and
@@ -177,7 +179,6 @@ fullSiteList = fetchNorNetSiteList(False)
 # NOTE: Site list also includes disabled sites!
 #fullNodeList = fetchNorNetNodeList()
 
-
 rwSystemList = []
 rwSystems = getFileServRWSystemsConfigurationString()
 if rwSystems != None:
@@ -189,6 +190,9 @@ if rwSystems != None:
       # print resolveHostname(name, AF_INET6)
       rwSystemList.append(name)
 
+user = pwd.getpwnam(getLocalNodeNorNetUser())
+uid=user.pw_uid
+gid=user.pw_gid
 
 makeTFTPDConfiguration('tftpd-hpa')
-makeNFSDConfiguration(fullSiteList, rwSystemList, 'nfsd')
+makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid, 'nfsd')

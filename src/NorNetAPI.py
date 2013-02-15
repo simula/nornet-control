@@ -22,6 +22,7 @@
 
 import re;
 import sys;
+import pwd;
 import codecs;
 import getpass;
 
@@ -55,6 +56,7 @@ NorNet_LocalSite_TBDefaultProviderIPv4 = None
 NorNet_LocalNode_Hostname              = None
 NorNet_LocalNode_Index                 = None
 NorNet_LocalNode_NorNetInterface       = None
+NorNet_LocalNode_NorNetUser            = None
 
 NorNet_FileServ_RWSystems              = None
 NorNet_LocalSite_DHCPServer_Dynamic    = None
@@ -90,6 +92,10 @@ def loadNorNetConfiguration():
       error('NorNetPLC_User has not been set in configuration file!')
    if NorNetPLC_Password == None:
       error('NorNetPLC_Password has not been set in configuration file!')
+   try:
+      user = pwd.getpwnam(getLocalNodeNorNetUser())
+   except:
+      error('NorNet_LocalNode_NorNetUser has invalid user "' + str(getLocalNodeNorNetUser()) + '"!')
 
    sys.stdout = codecs.getwriter('utf8')(sys.stdout)
    sys.stderr = codecs.getwriter('utf8')(sys.stderr)
@@ -174,6 +180,14 @@ def getLocalNodeIndex():
 # ###### Get local node hostname ############################################
 def getLocalNodeNorNetInterface():
    return NorNet_LocalNode_NorNetInterface
+
+
+# ###### Get local node NorNet user #########################################
+def getLocalNodeNorNetUser():
+   if NorNet_LocalNode_NorNetUser == None:
+      return 'nornetpp'
+   else:
+      return NorNet_LocalNode_NorNetUser
 
 
 # ###### Get local node configuration string ################################

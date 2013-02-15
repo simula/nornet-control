@@ -29,6 +29,10 @@ NorNet_LocalNode_Hostname='fornebu.simula.nornet'
 # networks) of the node:
 NorNet_LocalNode_NorNetInterface='eth0'
 
+# ###### NorNet system user #################################################
+# The NorNet user on this system. By default, it is 'nornetpp'.
+# NorNet_LocalNode_NorNetUser='nornetpp'
+
 
 # ###### NorNet Tunnelbox configuration #####################################
 # NOTE:
