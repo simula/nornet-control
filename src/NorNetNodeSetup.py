@@ -1768,7 +1768,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
 
 
 # ###### Generate NFS daemon configuration ##################################
-def makeAutoFSConfiguration(weAreOnFileServer, domainName, nodeIndex, addHeader):
+def makeAutoFSConfiguration(weAreOnFileServer, siteIndex, nodeIndex, addHeader):
    outputFile = codecs.open('auto.master', 'w', 'utf-8')
    if addHeader == True:
       writeAutoConfigInformation(outputFile)
@@ -1781,10 +1781,10 @@ def makeAutoFSConfiguration(weAreOnFileServer, domainName, nodeIndex, addHeader)
       writeAutoConfigInformation(outputFile)         
    if weAreOnFileServer == False:
       fileServer = 'nfs.' + NorNet_CentralSite_DomainName
-      outputFile.write('adm\t-fstype=nfs,nfsvers=4,proto=tcp,rsize=65536,wsize=65536,soft,intr,noatime,nodiratime,no_wdelay,ro\t' + fileServer + ':/filesrv/adm\n')
-      outputFile.write('pub\t-fstype=nfs,nfsvers=4,proto=tcp,rsize=65536,wsize=65536,soft,intr,noatime,nodiratime,no_wdelay,rw\t' + fileServer + ':/filesrv/pub\n')
-      outputFile.write('sys\t-fstype=nfs,nfsvers=4,proto=tcp,rsize=65536,wsize=65536,soft,intr,noatime,nodiratime,no_wdelay,rw\t' + fileServer + ':/filesrv/sys\n')
-      outputFile.write('node\t-fstype=nfs,nfsvers=4,proto=tcp,rsize=65536,wsize=65536,soft,intr,noatime,nodiratime,no_wdelay,rw\t' + fileServer + ':/filesrv/sys/' + domainName + '/' + str(nodeIndex) + '\n')
+      outputFile.write('adm\t-fstype=nfs,nfsvers=4,proto=tcp,rsize=65536,wsize=65536,soft,intr,noatime,nodiratime,ro\t' + fileServer + ':/filesrv/adm\n')
+      outputFile.write('pub\t-fstype=nfs,nfsvers=4,proto=tcp,rsize=65536,wsize=65536,soft,intr,noatime,nodiratime,rw\t' + fileServer + ':/filesrv/pub\n')
+      outputFile.write('sys\t-fstype=nfs,nfsvers=4,proto=tcp,rsize=65536,wsize=65536,soft,intr,noatime,nodiratime,rw\t' + fileServer + ':/filesrv/sys\n')
+      outputFile.write('node\t-fstype=nfs,nfsvers=4,proto=tcp,rsize=65536,wsize=65536,soft,intr,noatime,nodiratime,rw\t' + fileServer + ':/filesrv/sys/' + str(siteIndex) + '/' + str(nodeIndex) + '\n')
    outputFile.close()
 
 

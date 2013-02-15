@@ -103,7 +103,7 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
          makeDir(nodeDirectory)
          obsoleteNodes.remove(nodeDirectory)
 
-         outputFile.write(nodeDirectory + '\t')        
+         outputFile.write('/filesrv/sys/' + siteDirectory + '/' + nodeDirectory + '\t')        
          siteProviderList = getNorNetProvidersForSite(site)
          for providerIndex in siteProviderList:
             provider = siteProviderList[providerIndex]
