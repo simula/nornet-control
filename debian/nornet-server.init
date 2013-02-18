@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # --------------- NorNet -- The Multi-Homing Testbed Project ----------------
 #
 # Copyright (C) 2012 by Thomas Dreibholz
@@ -78,15 +78,22 @@ echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE 2
 # ###### Start virtual systems ##############################################
 start_virtual_systems ()
 {
-   echo "`env LANG=C date +%FT%H:%M:%S`: Stopping virtual systems ..."
-   VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
+   cd vsystems
+   echo "`env LANG=C date +%FT%H:%M:%S`: Starting virtual systems ..."
+   VSYSTEMS=`find . -name "[0-9][0-9]*[a-zA-Z0-9]" -printf "%f\\n" | sort`
+   lastID=-1
    for vsystem in $VSYSTEMS ; do
       echo "`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ..."
+      let SYSNUM=10*${vsystem:0:2} || true   # 10*start priority (from first 2 characters of file name)
+      if [ $SYSNUM -le $lastID ] ; then
+         let SYSNUM=$lastID+1 || true
+      fi
+      lastID=$SYSNUM
       NAME="BAD-NAME"
       STARTDELAY=0
       NUMCPUS=1
       GETHOSTTIMEDISABLED=1
-      VNCPORT=0
+      VNCPORT=-1
       OPTIONS="--audio none --mouse ps2 --keyboard ps2 --usb off --hpet on --pae on --hwvirtex on --nestedpaging on --largepages on --hwvirtexexcl on --vtxvpid on"
       ( . ./$vsystem && \
         echo "`env LANG=C date +%FT%H:%M:%S`: Starting $NAME" && \
@@ -94,15 +101,22 @@ start_virtual_systems ()
         if [ "$OPTIONS" != "" ] ; then sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" $OPTIONS || true ; fi && \
         if [ "$GETHOSTTIMEDISABLED" != "" ] ; then sudo -u $NorNet_LocalNode_NorNetUser VBoxManage setextradata "$NAME" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" $GETHOSTTIMEDISABLED || true ; fi && \
         vncOptions=
-        if [ "$VNCPORT" -ne 0 ] ; then
+        if [ $VNCPORT -ne 0 ] ; then
+           if [ $VNCPORT -eq -1 ] ; then
+              let VNCPORT=5000+$SYSNUM || true
+           fi
            vncOptions="--vrde off --vnc --vncport $VNCPORT"
+           echo "$vsystem --> VNC on port $VNCPORT."
         fi
-        sudo -u $NorNet_LocalNode_NorNetUser /bin/sh -c "nohup </dev/null VBoxHeadless --startvm \"$NAME\" $vncOptions &" && \
+        # Note: The "permission denied" error is a false positive from libjpeg-turbo8. Bug #1014487 and #1031718 => filtering it out!"
+        sudo -u $NorNet_LocalNode_NorNetUser /bin/sh -c \
+           "nohup </dev/null VBoxHeadless --startvm \"$NAME\" $vncOptions 2>&1 | grep -v 'Error opening file for reading: Permission denied' &" || true && \
         echo "`env LANG=C date +%FT%H:%M:%S`: Waiting $STARTDELAY seconds ..." && \
         sleep "$STARTDELAY" \
       ) || true
    done
    echo "`env LANG=C date +%FT%H:%M:%S`: Done!"
+   cd ..
 }
 
 
@@ -144,7 +158,7 @@ wait_for_shutdown ()
 stop_virtual_systems ()
 {
    VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
-   echo "`env LANG=C date +%FT%H:%M:%S`: Starting virtual systems ..."
+   echo "`env LANG=C date +%FT%H:%M:%S`: Stopping virtual systems ..."
    for vsystem in $VSYSTEMS ; do
       echo "`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ..."
       NAME="BAD-NAME"
