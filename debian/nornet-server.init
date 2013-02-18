@@ -32,7 +32,6 @@
 
 NAME="nornet-server"
 DESC="NorNet Virtual Systems"
-NORNET_USER="nornetpp"
 NORNET_DIRECTORY="/etc/nornet"
 LOGFILE="/var/log/nornet-server.log"
 # NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
@@ -63,9 +62,13 @@ cd "$NORNET_DIRECTORY"
 # Load configuration from API config file
 NorNet_LocalNode_Hostname=""
 NorNet_LocalNode_NorNetInterface=""
+NorNet_LocalNode_NorNetUser=""
 if [ ! -e ./vsystems ] ; then
    echo >&2 "ERROR: $NORNET_DIRECTORY/vsystems does not exist!"
    exit 0
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
 fi
 
 # Log what is going on ...
@@ -87,14 +90,14 @@ start_virtual_systems ()
       OPTIONS="--audio none --mouse ps2 --keyboard ps2 --usb off --hpet on --pae on --hwvirtex on --nestedpaging on --largepages on --hwvirtexexcl on --vtxvpid on"
       ( . ./$vsystem && \
         echo "`env LANG=C date +%FT%H:%M:%S`: Starting $NAME" && \
-        if [ "$NUMCPUS" != "" ] ; then sudo -u $NORNET_USER VBoxManage modifyvm "$NAME" --cpus "$NUMCPUS" || true ; fi && \
-        if [ "$OPTIONS" != "" ] ; then sudo -u $NORNET_USER VBoxManage modifyvm "$NAME" $OPTIONS || true ; fi && \
-        if [ "$GETHOSTTIMEDISABLED" != "" ] ; then sudo -u $NORNET_USER VBoxManage setextradata "$NAME" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" $GETHOSTTIMEDISABLED || true ; fi && \
+        if [ "$NUMCPUS" != "" ] ; then sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" --cpus "$NUMCPUS" || true ; fi && \
+        if [ "$OPTIONS" != "" ] ; then sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" $OPTIONS || true ; fi && \
+        if [ "$GETHOSTTIMEDISABLED" != "" ] ; then sudo -u $NorNet_LocalNode_NorNetUser VBoxManage setextradata "$NAME" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" $GETHOSTTIMEDISABLED || true ; fi && \
         vncOptions=
         if [ "$VNCPORT" -ne 0 ] ; then
            vncOptions="--vrde off --vnc --vncport $VNCPORT"
         fi
-        sudo -u $NORNET_USER /bin/sh -c "nohup </dev/null VBoxHeadless --startvm \"$NAME\" $vncOptions &" && \
+        sudo -u $NorNet_LocalNode_NorNetUser /bin/sh -c "nohup </dev/null VBoxHeadless --startvm \"$NAME\" $vncOptions &" && \
         echo "`env LANG=C date +%FT%H:%M:%S`: Waiting $STARTDELAY seconds ..." && \
         sleep "$STARTDELAY" \
       ) || true
@@ -108,7 +111,7 @@ get_machine_state ()
 # $1 = Name
 {
    status="BAD_MACHINE"
-   s=`sudo -u $NORNET_USER VBoxManage showvminfo "$1" --machinereadable | grep VMState=` && status=`echo $s | sed -e "s/VMState=//" -e "s/\"//g"` || true
+   s=`sudo -u $NorNet_LocalNode_NorNetUser VBoxManage showvminfo "$1" --machinereadable | grep VMState=` && status=`echo $s | sed -e "s/VMState=//" -e "s/\"//g"` || true
    echo "$status"
 }
 
@@ -131,7 +134,7 @@ wait_for_shutdown ()
       fi
       # Again send ACPI powerbutton.
       # If the system had been booting, the event might have been missed.
-      sudo -u $NORNET_USER VBoxManage controlvm "$1" acpipowerbutton || true
+      sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$1" acpipowerbutton || true
    done
    echo ""
 }
@@ -149,15 +152,15 @@ stop_virtual_systems ()
       ( . ./$vsystem && \
         status=`get_machine_state "$NAME"` && \
         if [ "$status" = "paused" ] ; then
-           sudo -u $NORNET_USER VBoxManage controlvm "$NAME" resume || true
+           sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$NAME" resume || true
            status=`get_machine_state "$NAME"`
         fi
         if [ "$status" = "running" ] ; then
            echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $NAME (ACPI power button) ..." && \
-           sudo -u $NORNET_USER VBoxManage controlvm "$NAME" acpipowerbutton && \
+           sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$NAME" acpipowerbutton && \
            wait_for_shutdown "$NAME" "$STOPDELAY" && \
            echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $NAME (power off) ..." && \
-           sudo -u $NORNET_USER VBoxManage controlvm "$NAME" poweroff
+           sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$NAME" poweroff
         fi
       ) || true
    done

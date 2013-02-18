@@ -30,7 +30,7 @@ IMAGE_VARIANT="$3"
 
 
 MACHINE_STATUS_FILE=`mktemp`
-vboxmanage showvminfo "$MACHINE_NAME" --machinereadable >$MACHINE_STATUS_FILE
+VBoxManage showvminfo "$MACHINE_NAME" --machinereadable >$MACHINE_STATUS_FILE
 
 CONFIG_FILE=`cat $MACHINE_STATUS_FILE | grep "^CfgFile=" | sed -e "s/^CfgFile=\"//" -e "s/\"$//g"`
 CONFIG_DIR=`dirname "$CONFIG_FILE"`
@@ -53,26 +53,26 @@ for controller in 0 1 2 3 ; do
                   
                   # ====== Apply the conversion =============================
                   echo "   Cloning $oldImage to $newImage ..."
-                  vboxmanage clonehd "$oldImage" "$tempNewImage" --format "$IMAGE_FORMAT" --variant "$IMAGE_VARIANT"
+                  VBoxManage clonehd "$oldImage" "$tempNewImage" --format "$IMAGE_FORMAT" --variant "$IMAGE_VARIANT"
                   mv "$tempNewImage" "$newImage"
-                  vboxmanage -q storageattach "$MACHINE_NAME" --storagectl "SATA Controller" --port $port --device $controller --type hdd --medium "$newImage"
+                  VBoxManage -q storageattach "$MACHINE_NAME" --storagectl "SATA Controller" --port $port --device $controller --type hdd --medium "$newImage"
 
                   # ====== Remove old image, if not used any more ===========
                   HDD_STATUS_FILE=`mktemp`
-                  vboxmanage list hdds >$HDD_STATUS_FILE
+                  VBoxManage list hdds >$HDD_STATUS_FILE
 
                   diskInfo=`cat $HDD_STATUS_FILE | grep -A6 "^UUID:        $uuid" || echo ""`
                   if [ "$diskInfo" != "" ] ; then
                      usage=`echo "$diskInfo" | grep "^Usage:" || echo ""`
                      if [ "$usage" = "" ] ; then 
                         echo "Removing old image $oldImage!"
-                        vboxmanage -q closemedium disk "$uuid" --delete || true
+                        VBoxManage -q closemedium disk "$uuid" --delete || true
                      else
                         echo "WARNING: Disk $uuid used.Leaving storage registration as is!"
                         echo "$usage"
                      fi
                   else
-                     echo >&2 "ERROR: Something is going wrong! No HDD status found for UUID $uuid! May be vboxmanage has changed output format?"
+                     echo >&2 "ERROR: Something is going wrong! No HDD status found for UUID $uuid! May be VBoxManage has changed output format?"
                   fi
 
                   rm -f $HDD_STATUS_FILE

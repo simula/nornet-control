@@ -32,7 +32,6 @@
 
 NAME="nornet-filesrv"
 DESC="NorNet File Server"
-NORNET_USER="nornetpp"
 NORNET_DIRECTORY="/etc/nornet"
 # NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
 LOGFILE="/var/log/nornet-filesrv.log"
@@ -62,6 +61,7 @@ cd "$NORNET_DIRECTORY"
 # Load configuration from API config file
 NorNet_LocalNode_Hostname=""
 NorNet_LocalNode_NorNetInterface=""
+NorNet_LocalNode_NorNetUser=""
 if [ ! -e ./nornetapi-config ] ; then
    echo >&2 "ERROR: $NORNET_DIRECTORY/nornetapi-config does not exist!"
    exit 0
@@ -74,6 +74,9 @@ fi
 if [ "$NorNet_LocalNode_NorNetInterface" = "" ] ; then
    echo >&2 "ERROR: NorNet_LocalNode_NorNetInterface is not set!"
    exit 1
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
 fi
 
 # Log what is going on ...
@@ -107,9 +110,9 @@ get_new_filesrv_configuration ()
    rm -rf updated-filesrv-config
    mkdir updated-filesrv-config
    cd updated-filesrv-config
-   chown $NORNET_USER:$NORNET_USER .
-   chown $NORNET_USER:$NORNET_USER /filesrv
-   sudo -u $NORNET_USER Make-FileSrv-Configuration
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser .
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser /filesrv
+   sudo -u $NorNet_LocalNode_NorNetUser Make-FileSrv-Configuration
    cd ..
    mv updated-filesrv-config/* .
    rmdir updated-filesrv-config
