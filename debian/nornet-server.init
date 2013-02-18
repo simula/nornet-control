@@ -63,13 +63,21 @@ cd "$NORNET_DIRECTORY"
 NorNet_LocalNode_Hostname=""
 NorNet_LocalNode_NorNetInterface=""
 NorNet_LocalNode_NorNetUser=""
+NorNet_Server_DefaultVNCPassword=""
 if [ ! -e ./vsystems ] ; then
    echo >&2 "ERROR: $NORNET_DIRECTORY/vsystems does not exist!"
    exit 0
 fi
+if [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
 if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
    NorNet_LocalNode_NorNetUser="nornetpp"
 fi
+if [ "$NorNet_Server_DefaultVNCPassword" = "" ] ; then
+   NorNet_Server_DefaultVNCPassword="Access4Me"
+fi
+
 
 # Log what is going on ...
 echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE 2>&1
@@ -94,6 +102,7 @@ start_virtual_systems ()
       NUMCPUS=1
       GETHOSTTIMEDISABLED=1
       VNCPORT=-1
+      VNCPASSWORD="$NorNet_Server_DefaultVNCPassword"
       OPTIONS="--audio none --mouse ps2 --keyboard ps2 --usb off --hpet on --pae on --hwvirtex on --nestedpaging on --largepages on --hwvirtexexcl on --vtxvpid on"
       ( . ./$vsystem && \
         echo "`env LANG=C date +%FT%H:%M:%S`: Starting $NAME" && \
@@ -107,6 +116,9 @@ start_virtual_systems ()
            fi
            vncOptions="--vrde off --vnc --vncport $VNCPORT"
            echo "$vsystem --> VNC on port $VNCPORT."
+           if [ "$VNCPASSWORD" != "" ] ; then
+              vncOptions="$vncOptions --vncpass \"$VNCPASSWORD\""
+           fi
         fi
         # Note: The "permission denied" error is a false positive from libjpeg-turbo8. Bug #1014487 and #1031718 => filtering it out!"
         sudo -u $NorNet_LocalNode_NorNetUser /bin/sh -c \

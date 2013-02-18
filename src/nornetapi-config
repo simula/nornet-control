@@ -34,6 +34,12 @@ NorNet_LocalNode_NorNetInterface='eth0'
 # NorNet_LocalNode_NorNetUser='nornetpp'
 
 
+# ###### NorNet Server configuration ########################################
+# The default VNC password to access virtual systems on this host. It may be
+# superseeded by VNCPASSWORD settings in the virtual systems configurations.
+# NorNet_Server_DefaultVNCPassword=""
+
+
 # ###### NorNet Tunnelbox configuration #####################################
 # NOTE:
 # The following information is only necessary to bootstrap a tunnelbox on the
