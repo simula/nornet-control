@@ -83,13 +83,18 @@ start_virtual_systems ()
       STARTDELAY=0
       NUMCPUS=1
       GETHOSTTIMEDISABLED=1
+      VNCPORT=0
       OPTIONS="--audio none --mouse ps2 --keyboard ps2 --usb off --hpet on --pae on --hwvirtex on --nestedpaging on --largepages on --hwvirtexexcl on --vtxvpid on"
       ( . ./$vsystem && \
         echo "`env LANG=C date +%FT%H:%M:%S`: Starting $NAME" && \
-        if [ "$NUMCPUS" != "" ] ; then sudo -u $NORNET_USER vboxmanage modifyvm "$NAME" --cpus "$NUMCPUS" || true ; fi && \
-        if [ "$OPTIONS" != "" ] ; then sudo -u $NORNET_USER vboxmanage modifyvm "$NAME" $OPTIONS || true ; fi && \
-        if [ "$GETHOSTTIMEDISABLED" != "" ] ; then sudo -u $NORNET_USER vboxmanage setextradata "$NAME" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" $GETHOSTTIMEDISABLED || true ; fi && \
-        sudo -u $NORNET_USER vboxmanage startvm "$NAME" --type headless && \
+        if [ "$NUMCPUS" != "" ] ; then sudo -u $NORNET_USER VBoxManage modifyvm "$NAME" --cpus "$NUMCPUS" || true ; fi && \
+        if [ "$OPTIONS" != "" ] ; then sudo -u $NORNET_USER VBoxManage modifyvm "$NAME" $OPTIONS || true ; fi && \
+        if [ "$GETHOSTTIMEDISABLED" != "" ] ; then sudo -u $NORNET_USER VBoxManage setextradata "$NAME" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" $GETHOSTTIMEDISABLED || true ; fi && \
+        vncOptions=
+        if [ "$VNCPORT" -ne 0 ] ; then
+           vncOptions="--vrde off --vnc --vncport $VNCPORT"
+        fi
+        sudo -u $NORNET_USER /bin/sh -c "nohup </dev/null VBoxHeadless --startvm \"$NAME\" $vncOptions &" && \
         echo "`env LANG=C date +%FT%H:%M:%S`: Waiting $STARTDELAY seconds ..." && \
         sleep "$STARTDELAY" \
       ) || true
@@ -103,7 +108,7 @@ get_machine_state ()
 # $1 = Name
 {
    status="BAD_MACHINE"
-   s=`sudo -u $NORNET_USER vboxmanage showvminfo "$1" --machinereadable | grep VMState=` && status=`echo $s | sed -e "s/VMState=//" -e "s/\"//g"` || true
+   s=`sudo -u $NORNET_USER VBoxManage showvminfo "$1" --machinereadable | grep VMState=` && status=`echo $s | sed -e "s/VMState=//" -e "s/\"//g"` || true
    echo "$status"
 }
 
@@ -121,13 +126,14 @@ wait_for_shutdown ()
 
       status=`get_machine_state "$NAME"`
       if [ "$status" = "aborted" -o "$status" = "poweroff" -o "$status" = "stuck" ] ; then
-         echo " OK!"
+         echo -n " OK!"
          break
       fi
       # Again send ACPI powerbutton.
       # If the system had been booting, the event might have been missed.
-      sudo -u $NORNET_USER vboxmanage controlvm "$1" acpipowerbutton || true
+      sudo -u $NORNET_USER VBoxManage controlvm "$1" acpipowerbutton || true
    done
+   echo ""
 }
 
 
@@ -143,15 +149,15 @@ stop_virtual_systems ()
       ( . ./$vsystem && \
         status=`get_machine_state "$NAME"` && \
         if [ "$status" = "paused" ] ; then
-           sudo -u $NORNET_USER vboxmanage controlvm "$NAME" resume || true
+           sudo -u $NORNET_USER VBoxManage controlvm "$NAME" resume || true
            status=`get_machine_state "$NAME"`
         fi
         if [ "$status" = "running" ] ; then
            echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $NAME (ACPI power button) ..." && \
-           sudo -u $NORNET_USER vboxmanage controlvm "$NAME" acpipowerbutton && \
+           sudo -u $NORNET_USER VBoxManage controlvm "$NAME" acpipowerbutton && \
            wait_for_shutdown "$NAME" "$STOPDELAY" && \
            echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $NAME (power off) ..." && \
-           sudo -u $NORNET_USER vboxmanage controlvm "$NAME" poweroff
+           sudo -u $NORNET_USER VBoxManage controlvm "$NAME" poweroff
         fi
       ) || true
    done
