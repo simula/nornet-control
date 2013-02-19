@@ -1698,6 +1698,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
          tunnelNetwork  = makeNorNetTunnelIP(0, 0, 0, 0, version)
          tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
          tunnelZoneFile = codecs.open('tunnels.ipv' + str(version) + '.db', 'w', 'utf-8')
+         _writeSOA(tunnelZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
          prefixLength   = 32
          if version == 6:
             prefixLength = 128
