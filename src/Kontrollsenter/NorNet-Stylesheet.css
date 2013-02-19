@@ -125,7 +125,7 @@ hr {
 
 .map {
    position:   fixed;
-   width:      80%;
+   width:      75%;
    height:     auto;
    top:        36pt;
    right:      0;
@@ -137,7 +137,7 @@ hr {
 
 .sidebar {
    position: fixed;
-   width:    20%;
+   width:    25%;
    height:   auto;
    top:      36pt;
    right:    0;
@@ -149,26 +149,26 @@ hr {
 .critical {
   color:          red;
   vertical-align: middle;
-  font-size:      12pt;
+  font-size:      11pt;
 }
 
 .warning {
   color:          orange;
   vertical-align: middle;
-  font-size:      12pt;
+  font-size:      11pt;
 }
 
 .unknown {
   color:          #555555;
   vertical-align: middle;
-  font-size:      12pt;
+  font-size:      11pt;
   opacity:        0.6;
 }
 
 .okay {
   color:          green;
   vertical-align: middle;
-  font-size:      12pt;
+  font-size:      11pt;
 }
 
 .allsitesokay {
@@ -181,7 +181,7 @@ hr {
 
 .analog-clock {
    margin-bottom: 8pt;
-   width:         80%;
+   width:         65%;
 }
 
 .time {
