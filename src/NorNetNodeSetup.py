@@ -1807,7 +1807,7 @@ def makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList):
    outputFile = codecs.open('dhcpd-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
 
-   outputFile.write('ddns-update-style          none;\n')
+   outputFile.write('ddns-updates               off;\n')
    outputFile.write('option domain-name         "' + domain + '";\n')
    outputFile.write('option domain-name-servers ' + str(siteTunnelbox.ip) + ';\n')
    outputFile.write('default-lease-time         3600;\n')
