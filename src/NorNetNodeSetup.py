@@ -1760,10 +1760,17 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                        siteProvider['provider_short_name'] + '.' + site['site_domain'] + '.ipv' + str(version) + '.db',
                        masterSite)
 
+   zoneConfFile.write('\n// ====== Tunnel IP Reverse Lookup ======\n')
+   # The Central Site tunnelbox is master for the reverse lookup of the tunnel IPs.
+   if localSiteIndex == NorNet_SiteIndex_Central:
+      masterSite = None
+   else:
+      masterSite = fullSiteList[NorNet_SiteIndex_Central]
    for version in [ 4, 6 ]:
       tunnelNetwork  = makeNorNetTunnelIP(0, 0, 0, 0, version)
       tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
-      _writeZone(zoneConfFile, tunnelZone, 'tunnels.ipv' + str(version) + '.db', masterSite)
+      _writeZone(zoneConfFile, tunnelZone, 'tunnels.ipv' + str(version) + '.db',
+                 masterSite)
 
    zoneConfFile.close()
 
