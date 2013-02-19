@@ -121,6 +121,21 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid, configNamePrefix
                   query = adnsResolver.submit_reverse(str(nodeAddress.ip), adns.rr.PTR)
                   siteQueryList.append(query)
 
+            # ====== Add tunnel IP addresses for a tunnelbox ================
+            # The route to the Central Site goes over the tunnel, i.e. the
+            # routing will choose the tunnel IP as source address!
+            if nodeIndex == NorNet_NodeIndex_Tunnelbox:
+               for remoteSiteIndex in fullSiteList:
+                  if remoteSiteIndex != siteIndex:
+                     remoteSite = fullSiteList[remoteSiteIndex]
+                     remoteProviderList = getNorNetProvidersForSite(remoteSite)
+                     for remoteProviderIndex in remoteProviderList:
+                        remoteProvider = remoteProviderList[remoteProviderIndex]
+                        for version in [ 4, 6 ]:
+                           localInnerAddress =  makeNorNetTunnelIP(siteIndex, providerIndex,
+                                                                  remoteSiteIndex, remoteProviderIndex, version)
+                           outputFile.write(str(localInnerAddress.ip) + '(' + nfsOptions + ',rw)\t')
+
          outputFile.write('\n')
 
       # ====== Create symlinks with host name ===============================
