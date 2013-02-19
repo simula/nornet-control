@@ -154,12 +154,18 @@ def getPLCAuthentication():
 
 # ###### Get local Site Index ###############################################
 def getLocalSiteIndex():
-   return int(NorNet_LocalSite_SiteIndex)
+   try:
+      return int(NorNet_LocalSite_SiteIndex)
+   except:
+      return None
 
 
 # ###### Get local Default Provider Index ###################################
 def getLocalDefaultProviderIndex():
-   return int(NorNet_LocalSite_DefaultProviderIndex)
+   try:
+      return int(NorNet_LocalSite_DefaultProviderIndex)
+   except:
+      return None
 
 
 # ###### Get local tunnelbox's outer IPv4 address ###########################
@@ -174,7 +180,10 @@ def getLocalNodeHostname():
 
 # ###### Get local node index ###############################################
 def getLocalNodeIndex():
-   return int(NorNet_LocalNode_Index)
+   try:
+      return int(NorNet_LocalNode_Index)
+   except:
+      return None
 
 
 # ###### Get local node hostname ############################################
