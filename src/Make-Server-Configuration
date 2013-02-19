@@ -133,7 +133,7 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex, prov
                gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
                metric = 10
                if providerIndex == defaultProvider:
-                  metric = 0
+                  metric = 2
 
                # ====== Addressing =======================================
                if ((version == 4) or (providerIndex == defaultProvider)):

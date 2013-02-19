@@ -835,7 +835,7 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
                   gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
                   metric = 10
                   if providerIndex == site['site_default_provider_index']:
-                     metric = 0
+                     metric = 2
 
                   # ====== Addressing =======================================
                   if ((version == 4) or (providerIndex == site['site_default_provider_index'])):
