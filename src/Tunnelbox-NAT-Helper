@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# Create SSH tunnel to bootstrap tunnelbox from PLC
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+if [ ! -e /etc/nornet/nornetapi-config ] ; then
+   echo >&2 "ERROR: /etc/nornet/nornetapi-config does not exist!"
+   exit 1
+fi
+
+NorNet_LocalNode_NorNetInterface='eth0'
+NorNet_LocalNode_Index=0
+NorNet_LocalSite_SiteIndex=0
+NorNet_LocalSite_DefaultProviderIndex=0
+. /etc/nornet/nornetapi-config
+
+
+echo "===================================================================="
+echo "Setting up temporary NAT for network 10.$NorNet_LocalSite_DefaultProviderIndex.$NorNet_LocalSite_SiteIndex.0/24 on interface $NorNet_LocalNode_NorNetInterface"
+echo "===================================================================="
+
+echo "# ip addr add 10.$NorNet_LocalSite_DefaultProviderIndex.$NorNet_LocalSite_SiteIndex.1/24 dev $NorNet_LocalNode_NorNetInterface"
+ip addr add 10.$NorNet_LocalSite_DefaultProviderIndex.$NorNet_LocalSite_SiteIndex.1/24 dev $NorNet_LocalNode_NorNetInterface
+
+echo "# sysctl -q net.ipv4.ip_forward=1"
+sysctl -q net.ipv4.ip_forward=1
+
+echo "# iptables -t nat -A POSTROUTING -s 10.$NorNet_LocalSite_DefaultProviderIndex.$NorNet_LocalSite_SiteIndex.0/24 -j MASQUERADE"
+iptables -t nat -A POSTROUTING -s 10.$NorNet_LocalSite_DefaultProviderIndex.$NorNet_LocalSite_SiteIndex.0/24 -j MASQUERADE
+
+for destination in 8.8.8.8 heise.de ; do
+   echo "# ping -c5 -i0.2 -W3 $destination"
+   ping -c5 -i0.2 -W3 $destination
+done

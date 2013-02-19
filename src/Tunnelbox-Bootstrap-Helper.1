@@ -1,0 +1,56 @@
+.\" Tunnelbox Bootstrap Helper
+.\" Copyright (C) 2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd February 19, 2013
+.Dt Tunnelbox-Bootstrap-Helper 1
+.Os Tunnelbox-Bootstrap-Helper
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Tunnelbox-Bootstrap-Helper
+.Nd NorNet Tunnelbox Bootstrap Helper Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Tunnelbox-Bootstrap-Helper
+Central_Site_tunnelbox
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Tunnelbox-Bootstrap-Helper
+establishes an SSH forwarding tunnel from TCP port 443 via the Central Site
+tunnelbox to the PLC server on port 443. Then, a newly set up tunnelbox can
+be bootstrapped from the PLC (by using 127.0.0.1:443) without having the
+actual IP setup yet.
+.br
+Do not forget to set NorNetPLC_Address='127.0.0.1' in
+/etc/nornet/nornetapi-config for the bootstrap. Also, do not forget to change
+this setting back to the actual PLC address (10.1.1.2) when the bootstrap is
+finished!
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following options are available:
+.Bl -tag -width indent
+.It Central_Site_tunnelbox
+An external IP address of the Central Site tunnelbox, which can be used to
+establish an SSH connection to.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Tunnelbox-Bootstrap-Helper 1.2.3.4
+.El

@@ -44,6 +44,8 @@ cp src/System-Maintenance $PACKAGE-$UPSTREAM_VERSION
 cp src/System-Backup $PACKAGE-$UPSTREAM_VERSION
 cp src/check_* $PACKAGE-$UPSTREAM_VERSION
 cp src/Make-*-Configuration $PACKAGE-$UPSTREAM_VERSION
+cp src/Tunnelbox-NAT-Helper $PACKAGE-$UPSTREAM_VERSION
+cp src/Tunnelbox-Bootstrap-Helper $PACKAGE-$UPSTREAM_VERSION
 cp src/Server-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Convert-HDD-Images $PACKAGE-$UPSTREAM_VERSION
 cp src/Reset-Networking $PACKAGE-$UPSTREAM_VERSION

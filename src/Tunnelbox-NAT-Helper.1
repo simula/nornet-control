@@ -1,0 +1,50 @@
+.\" Tunnelbox NAT Helper
+.\" Copyright (C) 2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd February 19, 2013
+.Dt Tunnelbox-NAT-Helper 1
+.Os Tunnelbox-NAT-Helper
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Tunnelbox-NAT-Helper
+.Nd NorNet Tunnelbox NAT Helper Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Tunnelbox-NAT-Helper
+Central_Site_tunnelbox
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Tunnelbox-NAT-Helper
+configures the NorNet interface on the tunnelbox with IPv4/default provider,
+turns on IPv4 forwarding and activates NAT/PAT. This functionality can be used
+to bootstrap a new site without having working tunnels. That is, all devices
+in the default provider's IPv4 network should get Internet access via the
+tunnelbox.
+.Pp
+.\" .\" ###### Arguments ########################################################
+.\" .Sh ARGUMENTS
+.\" The following options are available:
+.\" .Bl -tag -width indent
+.\" .It ...
+.\" .El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It sudo Tunnelbox-NAT-Helper
+.El
