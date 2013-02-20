@@ -183,10 +183,10 @@ stop_virtual_systems ()
         fi
         if [ "$status" = "running" ] ; then
            echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $NAME (ACPI power button) ..." && \
-           sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$NAME" acpipowerbutton && \
+           sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$NAME" acpipowerbutton  || true && \
            wait_for_shutdown "$NAME" "$STOPDELAY" && \
            echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $NAME (power off) ..." && \
-           sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$NAME" poweroff
+           sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$NAME" poweroff || true
         fi
       ) || true
    done
