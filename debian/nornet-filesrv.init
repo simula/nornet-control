@@ -132,6 +132,9 @@ check_and_configure ()
       echo "`env LANG=C date +%FT%H:%M:%S`: NFS configuration has been updated!"
       cp nfsd-config /etc/exports
    fi
+   if [ ! -d /nfs ] ; then
+      ln -s /filesrv /nfs
+   fi
    # Always reload this service. It may update exports for
    # now-available DNS names!
    service nfs-kernel-server reload

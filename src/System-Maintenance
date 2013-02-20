@@ -18,6 +18,11 @@
 #
 # Contact: dreibh@simula.no
 
+# Stop AutoFS
+if [ -e /etc/init.d/autofs ] ; then
+   sudo service autofs stop
+fi
+
 # Fixes
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Applying package fixes, if necessary ...\x1b[0m"
 sudo DEBIAN_FRONTEND=noninteractive dpkg --configure -a  >/tmp/install.log 2>&1 &
@@ -59,6 +64,11 @@ if [ -e /usr/bin/apt-file ] ; then
    sudo /usr/bin/apt-file update >/dev/null
 fi
 sudo updatedb
+
+# Start AutoFS
+if [ -e /etc/init.d/autofs ] ; then
+   sudo service autofs start
+fi
 
 if [ -e /usr/bin/apt-show-versions ] ; then
    echo "====== Installed NorNet Software ============================================="
