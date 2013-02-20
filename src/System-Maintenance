@@ -54,7 +54,7 @@ wait
 cat /tmp/install.log
 
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Cleaning up ...\x1b[0m"
-sudo DEBIAN_FRONTEND=noninteractive apt-get autoremove -y -q >/tmp/install.log 2>&1 &
+sudo DEBIAN_FRONTEND=noninteractive nohup apt-get autoremove -y -q >/tmp/install.log 2>&1 &
 wait
 cat /tmp/install.log
 sudo DEBIAN_FRONTEND=noninteractive apt-get clean
