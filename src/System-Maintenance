@@ -20,7 +20,8 @@
 
 # Stop AutoFS
 if [ -e /etc/init.d/autofs ] ; then
-   sudo service autofs stop
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Stopping AutoFS service ...\x1b[0m"
+   sudo service autofs stop || true
 fi
 
 # Fixes
@@ -67,7 +68,8 @@ sudo updatedb
 
 # Start AutoFS
 if [ -e /etc/init.d/autofs ] ; then
-   sudo service autofs start
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Starting AutoFS service ...\x1b[0m"
+   sudo service autofs start || true
 fi
 
 if [ -e /usr/bin/apt-show-versions ] ; then
