@@ -281,23 +281,22 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 10,
-   'site_enabled'      : False,
-   'site_long_name'    : u'Universitetet i Nordland',
-   'site_short_name'   : 'UiN',
-   'site_url'          : 'http://www.uin.nornet',
-   'site_domain'       : 'uin.nornet',
-   'site_city'         : 'Bodø',
+   'site_enabled'      : True,
+   'site_long_name'    : u'Høgskolen i Narvik',
+   'site_short_name'   : 'HiN',
+   'site_url'          : 'http://www.hin.nornet',
+   'site_domain'       : 'hin.nornet',
+   'site_city'         : 'Narvik',
    'site_province'     : 'Nordland',
    'site_country'      : 'Norge',
    'site_country_code' : 'NO',
-   'site_latitude'     : 67.289645,
-   'site_longitude'    : 14.560402,
-   'site_altitude'     : 20,
+   'site_latitude'     : 68.436529,
+   'site_longitude'    : 17.435151,
+   'site_altitude'     : 22,
    'site_pcu'          : [ IPv4Address('132.252.156.10'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Uninett', 'eth1', IPv4Address('132.252.156.78'), IPv6Address('fd55:5555::78') ],
-      [ 'Telenor', 'eth2', IPv4Address('169.254.100.78'), IPv6Address('::') ]
+      [ 'Uninett', 'eth1', IPv4Address('132.252.156.78'), IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'rekesmørbrød' ],
