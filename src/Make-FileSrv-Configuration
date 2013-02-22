@@ -38,7 +38,7 @@ def makeTFTPDConfiguration(configNamePrefix):
    writeAutoConfigInformation(outputFile)
 
    outputFile.write('TFTP_USERNAME="tftp"\n')
-   outputFile.write('TFTP_DIRECTORY="/filesrv/tftp"\n')
+   outputFile.write('TFTP_DIRECTORY="/filesrv/adm/TFTP"\n')
    outputFile.write('TFTP_ADDRESS="[::]:69" \n')   
    outputFile.write('TFTP_OPTIONS="--secure"\n')
 
@@ -152,11 +152,14 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid, configNamePrefix
          if answer[0] == 0:
             # print i,hostName,answer[3][0]
             successfulNameResolutions = successfulNameResolutions + 1
-            nodeName      = str(i)
-            nodeLink      = getHostnameFromFQDN(str(answer[3][0]))
-            linkName      = getHostnameFromFQDN(str(answer[3][0]))
+            nodeName = str(i)
+            nodeLink = getHostnameFromFQDN(str(answer[3][0]))
+            linkName = getHostnameFromFQDN(str(answer[3][0]))
             makeSymlink(nodeLink, nodeName)
-            obsoleteNodes.remove(nodeLink)
+            try:
+               obsoleteNodes.remove(nodeLink)
+            except:
+               pass
 
       # ====== Remove obsolete node links ======================================
       # Only perform cleanup if some name resolutions have been successful.
