@@ -299,12 +299,12 @@ norNetSetup = [
       [ 'Uninett', 'eth1', IPv4Address('132.252.156.78'), IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'rekesmørbrød' ],
-      [ 101, 2, u'pinnekjøtt'   ],
-      [ 102, 3, u'lutefisk'     ],
-      [ 103, 4, u'laks'         ],
-      [ 104, 5, u'torsk'        ],
-      [ 105, 6, u'tørrfisk'     ]
+      [ 100, 1, u'storsteinsfjellet' ],
+      [ 101, 2, u'nihkevarri'        ],
+      [ 102, 3, u'beisfjordtøtta'    ],
+      [ 103, 4, u'rombakstøtta'      ],
+      [ 104, 5, u'bjørnfjell'        ],
+      [ 105, 6, u'fagernesfjellet'   ]
    ] },
 
  { 'site_index'        : 42,
@@ -336,6 +336,13 @@ norNetSetup = [
       [ 106, 7, u'steele'      ],
       [ 107, 8, u'zollverein'  ]
    ] }
+
+      #[ 100, 1, u'rekesmørbrød' ],
+      #[ 101, 2, u'pinnekjøtt'   ],
+      #[ 102, 3, u'lutefisk'     ],
+      #[ 103, 4, u'laks'         ],
+      #[ 104, 5, u'torsk'        ],
+      #[ 105, 6, u'tørrfisk'     ]
 
 ]
 
