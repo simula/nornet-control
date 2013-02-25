@@ -1,0 +1,79 @@
+#!/bin/bash -e
+#
+# Backup virtual system
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+# ###### Main program #######################################################
+if [ $# -ne 2 ] ; then
+   echo >&2 "Usage: $0 VM_name VM_export_file [temporary_export_file]"
+   exit 1
+fi
+
+NORNET_DIRECTORY="/etc/nornet"
+MACHINE_NAME="$1"
+EXPORT_FILE="$2"
+TEMP_FILE="$3"
+if [ "$TEMP_FILE" = "" ] ; then
+   TEMP_FILE="$EXPORT_FILE.temp.ova"
+fi
+
+# Check whether NorNet directory is existing
+if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
+   . $NORNET_DIRECTORY/nornetapi-config
+elif [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
+fi
+
+
+initialMachineState=`Check-VSystem "$MACHINE_NAME"`
+if [ "$initialMachineState" != "stopped" -o "$initialMachineState" != "aborted" ] ; then
+   echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME is in state \"$initialMachineState\" -> stopping ..."
+   /etc/init.d/nornet-server stop "$MACHINE_NAME"   
+fi
+
+echo "`env LANG=C date +%FT%H:%M:%S`: Exporting $MACHINE_NAME to $EXPORT_FILE ..."
+rm -f "$EXPORT_FILE" "$TEMP_FILE"
+result=1
+sudo -u $NorNet_LocalNode_NorNetUser \
+   VBoxManage export "$MACHINE_NAME" --output "$TEMP_FILE" --manifest --vsys 0 \
+      --product "The NorNet Project" --producturl "http://www.nntb.no" \
+      --vendor "Simula Research Laboratory" --vendorurl "http://www.simula.no" \
+      --version "1.0" && \
+result=0
+
+if [ "$initialMachineState" != "stopped" -o "$initialMachineState" != "aborted" ] ; then
+   echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME was in state \"$initialMachineState\" -> restarting ..."
+   /etc/init.d/nornet-server start "$MACHINE_NAME"   
+fi
+
+
+if [ $result -eq 0 ] ; then
+   result=1
+   mv "$TEMP_FILE" "$EXPORT_FILE.ova" && result=0
+fi
+
+if [ $result -eq 0 ] ; then
+   echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME successfully backed up!"
+else
+   echo "`env LANG=C date +%FT%H:%M:%S`: Backup of $MACHINE_NAME FAILED!"
+   exit 1
+fi

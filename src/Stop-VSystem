@@ -1,0 +1,113 @@
+#!/bin/bash -e
+#
+# Stop virtual system
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+# ###### Wait for shutdown ##################################################
+wait_for_shutdown ()
+# $1 = Name
+# $2 = Timeout
+{
+   echo -n "Timeout=$2s: 0s"
+   i=0
+   while [ $i -lt $2 ] ; do
+      echo -n "."
+      sleep 1
+      let i=$i+1
+      let r=($i % 10)
+      if [ $r -eq 0 ] ; then
+         echo -n "${i}s"
+      fi
+      status=`Check-VSystem "$MACHINE_NAME"`
+      if [ "$status" = "aborted" -o "$status" = "poweroff" -o "$status" = "stuck" ] ; then
+         echo -n " OK!"
+         break
+      fi
+      # Again send ACPI powerbutton.
+      # If the system had been booting, the event might have been missed.
+      sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$1" acpipowerbutton || true
+   done
+   echo ""
+}
+
+
+# ###### Stop virtual systems ###############################################
+stop_virtual_systems ()
+{
+   VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
+   echo "`env LANG=C date +%FT%H:%M:%S`: Stopping virtual systems ..."
+   for vsystem in $VSYSTEMS ; do
+      echo "`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ..."
+      NAME="BAD-NAME"
+      STOPDELAY=0
+      ( . ./$vsystem && \
+        status=`Check-VSystem "$MACHINE_NAME"` && \
+        if [ "$status" = "paused" ] ; then
+           sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$MACHINE_NAME" resume || true
+           status=`Check-VSystem "$MACHINE_NAME"`
+        fi
+        if [ "$status" = "running" ] ; then
+           echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (ACPI power button) ..." && \
+           sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$MACHINE_NAME" acpipowerbutton  || true && \
+           wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY" && \
+           echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (power off) ..." && \
+           sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$MACHINE_NAME" poweroff || true
+        fi
+      ) || true
+   done
+}
+
+
+
+# ###### Main program #######################################################
+if [ $# -ne 2 ] ; then
+   echo >&2 "Usage: $0 VM_name stop_delay"
+   exit 1
+fi
+
+NORNET_DIRECTORY="/etc/nornet"
+MACHINE_NAME="$1"
+STOPDELAY="$2"
+
+
+# ====== Get NorNet user name ===============================================
+if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
+   . $NORNET_DIRECTORY/nornetapi-config
+elif [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
+fi
+
+
+# ====== Obtain machine status ==============================================
+status=`Check-VSystem "$MACHINE_NAME"` && \
+if [ "$status" = "paused" ] ; then
+   echo "`env LANG=C date +%FT%H:%M:%S`: Resuming $MACHINE_NAME to perform shutdown ..." && \
+   sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$MACHINE_NAME" resume || true
+   status=`Check-VSystem "$MACHINE_NAME"`
+fi
+if [ "$status" = "running" ] ; then
+   echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (ACPI power button) ..." && \
+   sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$MACHINE_NAME" acpipowerbutton  || true && \
+   wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY" && \
+   echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (power off) ..." && \
+   sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$MACHINE_NAME" poweroff || true
+fi

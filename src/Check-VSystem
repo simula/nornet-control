@@ -1,0 +1,48 @@
+#!/bin/bash -e
+#
+# Check status of virtual system
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+# ###### Main program #######################################################
+if [ $# -ne 1 ] ; then
+   echo >&2 "Usage: $0 VM_name"
+   exit 1
+fi
+
+NORNET_DIRECTORY="/etc/nornet"
+MACHINE_NAME="$1"
+
+
+# ====== Get NorNet user name ===============================================
+if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
+   . $NORNET_DIRECTORY/nornetapi-config
+elif [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
+fi
+
+
+# ====== Obtain machine status ==============================================
+status="BAD_MACHINE"
+s=`sudo -u $NorNet_LocalNode_NorNetUser VBoxManage showvminfo "$MACHINE_NAME" --machinereadable | grep VMState=` && \
+status=`echo $s | sed -e "s/VMState=//" -e "s/\"//g"` || true
+
+echo "$status"

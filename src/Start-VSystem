@@ -1,0 +1,95 @@
+#!/bin/bash -e
+#
+# Start virtual system
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+# ###### Main program #######################################################
+if [ $# -ne 7 ] ; then
+   echo >&2 "Usage: $0 VM_name start_delay num_cpus gethosttime_disabled vnc_port vnc_password options"
+   exit 1
+fi
+
+NORNET_DIRECTORY="/etc/nornet"
+MACHINE_NAME="$1"
+STOPDELAY="$2"
+
+
+# ====== Get NorNet user name ===============================================
+if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
+   . $NORNET_DIRECTORY/nornetapi-config
+elif [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
+fi
+if [ "$NorNet_Server_DefaultVNCPassword" = "" ] ; then
+   NorNet_Server_DefaultVNCPassword="Access4Me"
+fi
+
+
+# ====== Obtain machine status ==============================================
+NAME="$1"
+STARTDELAY="$2"
+NUMCPUS=$3
+GETHOSTTIMEDISABLED=$4
+VNCPORT=$5
+VNCPASSWORD="$6"
+OPTIONS="$7"
+if [ "$VNCPASSWORD" = "" ] ; then
+   VNCPASSWORD="$NorNet_Server_DefaultVNCPassword"
+fi
+if [ "$OPTIONS" = "default" ] ; then
+   OPTIONS="--audio none --mouse ps2 --keyboard ps2 --usb off --hpet on --pae on --hwvirtex on --nestedpaging on --largepages on --hwvirtexexcl on --vtxvpid on"
+fi
+
+if [ `Check-VSystem "$NAME"` != "running" ] ; then
+   # ====== Set options =====================================================
+   echo "`env LANG=C date +%FT%H:%M:%S`: Starting $NAME"
+   if [ "$NUMCPUS" != "" ] ; then
+      sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" --cpus "$NUMCPUS" || true
+   fi
+   if [ "$OPTIONS" != "" ] ; then
+      sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" $OPTIONS || true
+   fi
+   if [ "$GETHOSTTIMEDISABLED" != "" ] ; then
+      sudo -u $NorNet_LocalNode_NorNetUser VBoxManage setextradata "$NAME" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" $GETHOSTTIMEDISABLED || true
+   fi
+
+   # ====== Set VNC options =================================================
+   vncOptions=
+   if [ $VNCPORT -ne 0 ] ; then
+      vncOptions="--vrde off --vnc --vncport $VNCPORT"
+      if [ "$VNCPASSWORD" != "" ] ; then
+         vncOptions="$vncOptions --vncpass \"$VNCPASSWORD\""
+      fi
+   fi
+
+   # ====== Start the virtual system ========================================
+   # Note: The "permission denied" error is a false positive from libjpeg-turbo8. Bug #1014487 and #1031718 => filtering it out!"
+   sudo -u $NorNet_LocalNode_NorNetUser /bin/sh -c \
+      "nohup </dev/null VBoxHeadless --startvm \"$NAME\" $vncOptions 2>&1 | grep -v 'Error opening file for reading: Permission denied' &" || true
+      
+   # ====== Give the system time to boot ====================================
+   echo "`env LANG=C date +%FT%H:%M:%S`: Waiting $STARTDELAY seconds ..."
+   sleep "$STARTDELAY"
+   
+else
+   echo "`env LANG=C date +%FT%H:%M:%S`: $NAME is already running -> okay."
+fi
