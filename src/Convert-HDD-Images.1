@@ -1,0 +1,54 @@
+.\" Make Server Configuration
+.\" Copyright (C) 2012-2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd February 5, 2013
+.Dt Convert-HDD-Images 1
+.Os Convert-HDD-Images
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Convert-HDD-Images
+.Nd NorNet Server Virtual Machine Harddisk Image Conversion
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Convert-HDD-Images
+VM_name
+image_format
+image_variant
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Convert-HDD-Images
+converts the harddisk images of a VirtualBox virtual machine into another
+format. This program can be particularly used to convert variable-size images
+to fixed-size images, in order to improve I/O performance.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+.Bl -tag -width indent
+.It VM_name
+The name of the virtual machine.
+.It image_format
+The new format of the harddisk images (e.g. vdi, vmdk).
+.It image_variant
+The new variant of the harddisk images (e.g. Standard, Fixed).
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Convert-HDD-Images NorNet-FileServer-kirkeveien.simula.nornet vdi Fixed
+.El

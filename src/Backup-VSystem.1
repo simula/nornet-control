@@ -1,0 +1,62 @@
+.\" Backup VSystem
+.\" Copyright (C) 2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd February 25, 2013
+.Dt Backup-VSystem 1
+.Os Backup-VSystem
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Backup-VSystem
+.Nd System Backup Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Backup-VSystem
+VM_name
+VM_export_file
+.Op temporary_directory
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Backup-VSystem
+backs up a given virtual system by exporting it to an OVA archive. If it is
+still running, the system is shut down before and restarted later.
+.br
+In order to efficiently make use of NFS, the export file is written to a
+temporary directory first and finally moved to the given location after
+restart of the virtual system. By default, the temporary directory is created
+in the given export file's directory; the move operation is therefore cheap
+for a movement within the same file system.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+.Bl -tag -width indent
+.It VM_name
+The name of the virtual system (as used by VirtualBox).
+.It VM_export_file
+The name of the OVA export file to be created. If the given file is existing,
+it will be overwritten!
+.Op temporary_directory
+The name of a directory that is used to create a temporary directory within to
+store the initial version of the export file to. If it is not provided, it will
+be the directory of the given export file.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Backup-VSystem NorNet-Monitor-holmenkollen.simula.nornet /nfs/node/NorNet-Monitor-holmenkollen.simula.nornet /home/nornetpp
+.El
