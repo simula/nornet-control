@@ -39,11 +39,11 @@ if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
    NorNet_LocalNode_NorNetUser="nornetpp"
 fi
 
-if [ "$TEMP_DIRECTORY" = "" ] ; then
-   TEMP_DIRECTORY=`sudo -u $NorNet_LocalNode_NorNetUser mktemp -d -t "vsystem-backup-tmp.XXXXXXXXXX"`
-else
-   TEMP_DIRECTORY=`sudo -u $NorNet_LocalNode_NorNetUser mktemp -d "--tmpdir=$3" -t "vsystem-backup-tmp.XXXXXXXXXX"`
+TEMP_DIRECTORY_BASE="$3"
+if [ "$TEMP_DIRECTORY_BASE" = "" ] ; then
+   TEMP_DIRECTORY_BASE=`dirname $EXPORT_FILE`
 fi
+TEMP_DIRECTORY=`sudo -u $NorNet_LocalNode_NorNetUser mktemp -d "--tmpdir=$TEMP_DIRECTORY_BASE" -t "vsystem-backup-tmp.XXXXXXXXXX"`
 TEMP_FILE="$TEMP_DIRECTORY/`basename $EXPORT_FILE`"
 
 
@@ -56,8 +56,9 @@ fi
 
 
 # ====== Export to temporary file ===========================================
-echo "`env LANG=C date +%FT%H:%M:%S`: Exporting $MACHINE_NAME to $EXPORT_FILE ..."
-echo "TEMP=$TEMP_FILE"
+echo "`env LANG=C date +%FT%H:%M:%S`: Exporting $MACHINE_NAME ..."
+echo "Temporary directory: $TEMP_DIRECTORY"
+echo "Temporary file:      $TEMP_FILE"
 rm -f "$EXPORT_FILE" "$TEMP_FILE"
 result=1
 sudo -u $NorNet_LocalNode_NorNetUser \
