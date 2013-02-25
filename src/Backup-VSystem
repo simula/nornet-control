@@ -20,18 +20,14 @@
 
 
 # ###### Main program #######################################################
-if [ $# -ne 2 ] ; then
-   echo >&2 "Usage: $0 VM_name VM_export_file [temporary_export_file]"
+if [ $# -lt 2 ] ; then
+   echo >&2 "Usage: $0 VM_name VM_export_file [temporary_directory]"
    exit 1
 fi
 
 NORNET_DIRECTORY="/etc/nornet"
 MACHINE_NAME="$1"
 EXPORT_FILE="$2"
-TEMP_FILE="$3"
-if [ "$TEMP_FILE" = "" ] ; then
-   TEMP_FILE="$EXPORT_FILE.temp.ova"
-fi
 
 # Check whether NorNet directory is existing
 if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
@@ -43,14 +39,25 @@ if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
    NorNet_LocalNode_NorNetUser="nornetpp"
 fi
 
+if [ "$TEMP_DIRECTORY" = "" ] ; then
+   TEMP_DIRECTORY=`sudo -u $NorNet_LocalNode_NorNetUser mktemp -d -t "vsystem-backup-tmp.XXXXXXXXXX"`
+else
+   TEMP_DIRECTORY=`sudo -u $NorNet_LocalNode_NorNetUser mktemp -d "--tmpdir=$3" -t "vsystem-backup-tmp.XXXXXXXXXX"`
+fi
+TEMP_FILE="$TEMP_DIRECTORY/`basename $EXPORT_FILE`"
 
+
+# ====== Shut down machine, if necessary ====================================
 initialMachineState=`Check-VSystem "$MACHINE_NAME"`
 if [ "$initialMachineState" != "stopped" -o "$initialMachineState" != "aborted" ] ; then
    echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME is in state \"$initialMachineState\" -> stopping ..."
    /etc/init.d/nornet-server stop "$MACHINE_NAME"   
 fi
 
+
+# ====== Export to temporary file ===========================================
 echo "`env LANG=C date +%FT%H:%M:%S`: Exporting $MACHINE_NAME to $EXPORT_FILE ..."
+echo "TEMP=$TEMP_FILE"
 rm -f "$EXPORT_FILE" "$TEMP_FILE"
 result=1
 sudo -u $NorNet_LocalNode_NorNetUser \
@@ -58,22 +65,31 @@ sudo -u $NorNet_LocalNode_NorNetUser \
       --product "The NorNet Project" --producturl "http://www.nntb.no" \
       --vendor "Simula Research Laboratory" --vendorurl "http://www.simula.no" \
       --version "1.0" && \
-result=0
+result=0 || true
 
+
+# ====== Restart machine, if it was running =================================
 if [ "$initialMachineState" != "stopped" -o "$initialMachineState" != "aborted" ] ; then
    echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME was in state \"$initialMachineState\" -> restarting ..."
    /etc/init.d/nornet-server start "$MACHINE_NAME"   
 fi
 
 
+# ====== On success, move export file to given name =========================
 if [ $result -eq 0 ] ; then
    result=1
-   mv "$TEMP_FILE" "$EXPORT_FILE.ova" && result=0
+   sudo -u $NorNet_LocalNode_NorNetUser nice mv "$TEMP_FILE" "$EXPORT_FILE.ova" && result=0 || true
 fi
 
 if [ $result -eq 0 ] ; then
    echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME successfully backed up!"
 else
    echo "`env LANG=C date +%FT%H:%M:%S`: Backup of $MACHINE_NAME FAILED!"
-   exit 1
 fi
+
+
+# ====== Clean up ===========================================================
+sudo -u $NorNet_LocalNode_NorNetUser rm -f "$TEMP_FILE" || true
+sudo -u $NorNet_LocalNode_NorNetUser rmdir "$TEMP_DIRECTORY" || true
+
+exit $result
