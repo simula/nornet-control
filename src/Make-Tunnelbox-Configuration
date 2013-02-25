@@ -122,8 +122,15 @@ def _writeZone(outputFile, zone, zoneFileName, masterSite):
 
 
 # ###### Get NorNet node object for additional DNS entry ####################
-def makeNodeForDNS(nodeName, site, nodeIndex, model, type):
+def makeNodeForDNS(nodeName, site, nodeIndex, model, type, options):
    dnsName = makeDNSNameFromUnicode(nodeName)
+   v4Only = False
+   v6Only = False
+   for option in options:
+      if option == 'v4only':
+         v4Only = True
+      elif option == 'v6only':
+         v6Only = True
    norNetNode = {
       'node_site_id'          : site['site_index'],
       'node_index'            : nodeIndex,
@@ -133,6 +140,8 @@ def makeNodeForDNS(nodeName, site, nodeIndex, model, type):
       'node_model'            : model,
       'node_type'             : type,
       'node_state'            : 'MANUAL',
+      'node_v4only'           : v4Only,
+      'node_v6only'           : v6Only,
       'node_tags'             : []
    }
    return norNetNode
@@ -185,7 +194,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
 
    # ====== Prepare the list of hosts =======================================
    fullNodeList.append(makeNodeForDNS(hostName, localSite, NorNet_NodeIndex_Tunnelbox,
-                       'Amiga 6000', 'NorNet Tunnelbox'))
+                       'Amiga 6000', 'NorNet Tunnelbox', []))
    fullNodeList = fullNodeList + additionalNodes
    # Sort by node index
    def _nodeSortingOrder(a, b):
@@ -202,6 +211,11 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
 
             # ====== Add internal addresses =================================
             for version in [ 4, 6 ]:
+               # ====== Skip unsupported address family =====================
+               if ((node['node_v6only']) and (version == 4)):
+                  continue
+               if ((node['node_v4only']) and (version == 6)):
+                  continue
                nodeAddress = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], -1, version)
                # ====== Hostname for default provider's address =============
                if phase == 1:
@@ -1164,7 +1178,11 @@ if not bootstrapOnly:
          nodeName     = unquote(parameters[0])
          hardwareInfo = unquote(parameters[1])
          softwareInfo = unquote(parameters[2])
-         additionalNodes.append(makeNodeForDNS(nodeName, localSite, i, hardwareInfo, softwareInfo))
+         try:
+            options = tuple(unquote(parameters[3]).split(','))
+         except:
+            options = []
+         additionalNodes.append(makeNodeForDNS(nodeName, localSite, i, hardwareInfo, softwareInfo, options))
 
    makeBindConfiguration(fullSiteList, siteNodeList, localSite, getHostnameFromFQDN(fqdn), additionalNodes)
 
