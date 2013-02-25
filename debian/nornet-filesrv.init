@@ -112,6 +112,11 @@ get_new_filesrv_configuration ()
    cd updated-filesrv-config
    chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser .
    chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser /filesrv
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser /filesrv/pub
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser /filesrv/sys
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser /filesrv/adm
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser /filesrv/adm/TFTP
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser /filesrv/adm/ISOs
    sudo -u $NorNet_LocalNode_NorNetUser Make-FileSrv-Configuration
    cd ..
    mv updated-filesrv-config/* .
