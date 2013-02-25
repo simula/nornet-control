@@ -272,3 +272,58 @@ def makeNorNetTunnelKey(outgoingSite, outgoingProvider, incomingSite, incomingPr
    tunnelID = (sLow << 24) | (pLow << 16) | \
               (sHigh << 8) | (pHigh)
    return(tunnelID)
+
+
+# ###### Get tunnel configuration ###########################################
+def getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
+   localSiteIndex      = localSite['site_index']
+   localProviderIndex  = localProvider['provider_index']
+   remoteProviderIndex = remoteProvider['provider_index']
+   remoteSiteIndex     = remoteSite['site_index']
+
+   # ====== Get tunnel configuration ========================================
+   tunnelOverIPv4 = False
+   if (version != 4):
+      localOuterAddress  = localProvider['provider_tunnelbox_ipv6']
+      remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv6']
+      if ((localOuterAddress == IPv6Address('::')) or (remoteOuterAddress == IPv6Address('::'))):
+         tunnelOverIPv4 = True
+      else:
+         tunnelInterface = 'seks' + str(remoteSiteIndex) + "-" + str(localProviderIndex) + '-' + str(remoteProviderIndex)
+   if ((version == 4) or (tunnelOverIPv4 == True)):
+      localOuterAddress  = localProvider['provider_tunnelbox_ipv4']
+      remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv4']
+      tunnelInterface    = 'gre' + str(remoteSiteIndex) + "-" + str(localProviderIndex) + '-' + str(remoteProviderIndex)
+   localInnerAddress     =  makeNorNetTunnelIP(localSiteIndex, localProviderIndex,
+                                               remoteSiteIndex, remoteProviderIndex, version)
+   remoteInnerAddress    =  makeNorNetTunnelIP(remoteSiteIndex, remoteProviderIndex,
+                                               localSiteIndex, localProviderIndex, version)
+   tunnelKey = makeNorNetTunnelKey(localSiteIndex, localProviderIndex,
+                                   remoteSiteIndex, remoteProviderIndex)
+
+   # ====== Create tunnel structure =========================================
+   norNetTunnel = {
+      'tunnel_interface'            : tunnelInterface,
+      'tunnel_local_outer_address'  : localOuterAddress,
+      'tunnel_remote_outer_address' : remoteOuterAddress,
+      'tunnel_local_inner_address'  : localInnerAddress,
+      'tunnel_remote_inner_address' : remoteInnerAddress,
+      'tunnel_key'                  : tunnelKey,
+      'tunnel_over_ipv4'            : tunnelOverIPv4
+   }
+
+   return norNetTunnel
+
+
+# ###### Get tunnel configuration for default tunnel to central site ########
+def getDefaultTunnel(fullSiteList, localSite, version):
+   localSiteProviders          = getNorNetProvidersForSite(localSite)
+   localDefaultProviderIndex   = localSite['site_default_provider_index']
+
+   centralSite                 = fullSiteList[NorNet_SiteIndex_Central]
+   centralSiteProviders        = getNorNetProvidersForSite(centralSite)
+   centralDefaultProviderIndex = centralSite['site_default_provider_index']
+
+   return getTunnel(localSite, localSiteProviders[localDefaultProviderIndex],
+                     centralSite, centralSiteProviders[centralDefaultProviderIndex],
+                     version)
