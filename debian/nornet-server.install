@@ -1,4 +1,5 @@
 Backup-VSystem                    /usr/bin
+Change-VSystem-CDImage            /usr/bin
 Check-VSystem                     /usr/bin
 Convert-HDD-Images                /usr/bin
 Make-Server-Configuration         /usr/bin

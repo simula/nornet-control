@@ -46,6 +46,7 @@ cp src/Start-VSystem $PACKAGE-$UPSTREAM_VERSION
 cp src/Stop-VSystem $PACKAGE-$UPSTREAM_VERSION
 cp src/Check-VSystem $PACKAGE-$UPSTREAM_VERSION
 cp src/Backup-VSystem $PACKAGE-$UPSTREAM_VERSION
+cp src/Change-VSystem-CDImage $PACKAGE-$UPSTREAM_VERSION
 cp src/check_* $PACKAGE-$UPSTREAM_VERSION
 cp src/Make-*-Configuration $PACKAGE-$UPSTREAM_VERSION
 cp src/Tunnelbox-NAT-Helper $PACKAGE-$UPSTREAM_VERSION

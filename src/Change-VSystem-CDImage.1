@@ -1,5 +1,5 @@
-.\" Stop VSystem
-.\" Copyright (C) 2013 by Thomas Dreibholz
+.\" Make Server Configuration
+.\" Copyright (C) 2012-2013 by Thomas Dreibholz
 .\"
 .\" This program is free software: you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -17,37 +17,41 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd February 25, 2013
-.Dt Stop-VSystem 1
-.Os Stop-VSystem
+.Dd February 5, 2013
+.Dt Change-VSystem-CDImage 1
+.Os Change-VSystem-CDImage
 .\" ###### Name #############################################################
 .Sh NAME
-.Nm Stop-VSystem
-.Nd Virtual System Stop Script
+.Nm Change-VSystem-CDImage
+.Nd Virtual System CD/DVD Image Change Script
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
-.Nm Stop-VSystem
+.Nm Change-VSystem-CDImage
 VM_name
-stop_delay
+ISO_name
+.Op \-restart-on-change
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
-.Nm Stop-VSystem
-stops the given virtual system by first sending an ACPI power button event.
-Within the given timeout, further ACPI power button events are issued every
-second. If the system is not in a shutdown state within this timeout, it is
-hard-stopped by powering it off.
+.Nm Change-VSystem-CDImage
+changes the image inserted into the first CD/DVD drive of a virtual system.
+.br
+Note, that Change-VSystem-CDImage only recognises CD/DVD drivers which are
+connected to the virtual SATA controller named "SATA Controller"!
 .Pp
 .\" ###### Arguments ########################################################
 .Sh ARGUMENTS
 .Bl -tag -width indent
 .It VM_name
-The name of the virtual system (as used by VirtualBox).
-.It stop_delay
-The time (in seconds) to wait for the system to gracefully shut down upon
-ACPI power button events. After that time, it is just powered off.
+The name of the virtual machine.
+.It ISO_name
+The name of the ISO image to be inserted. A setting of "emptydrive" ejects the
+CD/DVD image currently inserted.
+.It -restart-on-change
+On change, the machine is restarted by using the nornet-server service.
 .El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
-.It Stop-VSystem NorNet-PLC-vigelandsparken.simula.nornet 60
+.It Change-VSystem-CDImage nordreaker.simula.nornet \
+/home/nornetpp/ISOs/nordreaker.simula.nornet.iso \-restart-on-change
 .El
