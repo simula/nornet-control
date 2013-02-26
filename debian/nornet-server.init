@@ -163,6 +163,50 @@ show_status ()
    done
 }
 
+
+# ###### Check configuration for updates and apply if necessary #############
+check_and_configure ()
+{
+   VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
+   LOCAL_ISODIR="/home/$NorNet_LocalNode_NorNetUser/ISOs"
+   mkdir -p "$LOCAL_ISODIR"
+   for vsystem in $VSYSTEMS ; do
+      NAME="BAD-NAME"
+      AUTO_UPDATE_BOOTCD=""
+      ( . ./$vsystem
+        if [ "$AUTO_UPDATE_BOOTCD" != "" ] ; then
+           if [ -d "$AUTO_UPDATE_BOOTCD" ] ; then
+              if [ -e "$AUTO_UPDATE_BOOTCD/$NAME.iso" ] ; then
+                 updated=0
+                 if [ ! -e "$LOCAL_ISODIR/$NAME.iso" ] ; then
+                    echo "`env LANG=C date +%FT%H:%M:%S`: Copying $AUTO_UPDATE_BOOTCD/$NAME.iso to $LOCAL_ISODIR ..."
+                    cp "$AUTO_UPDATE_BOOTCD/$NAME.iso" "$LOCAL_ISODIR/$NAME.iso"
+                    updated=1
+                 elif [ "$AUTO_UPDATE_BOOTCD/$NAME.iso" -nt "$LOCAL_ISODIR/$NAME.iso" ] ; then
+                    echo "`env LANG=C date +%FT%H:%M:%S`: Copying updated $AUTO_UPDATE_BOOTCD/$NAME.iso to $LOCAL_ISODIR ..."
+                    cp "$AUTO_UPDATE_BOOTCD/$NAME.iso" "$LOCAL_ISODIR/$NAME.iso.tmp" && \
+                    mv "$LOCAL_ISODIR//$NAME.iso.tmp" "$LOCAL_ISODIR/$NAME.iso"
+                    updated=1
+                 else
+                    echo "no update."
+                 fi
+                 if [ $updated -ne 0 ] ; then
+                    echo "`env LANG=C date +%FT%H:%M:%S`: Inserting $LOCAL_ISODIR into $NAME ..."
+                    Change-VSystem-CDImage "$NAME" "$LOCAL_ISODIR//$NAME.iso"
+                    echo "`env LANG=C date +%FT%H:%M:%S`: Done!"
+                 fi
+              else
+                 echo "There is no image $AUTO_UPDATE_BOOTCD/$NAME.iso -> skipping."
+              fi
+           else
+              echo "`env LANG=C date +%FT%H:%M:%S`: ISO directory $AUTO_UPDATE_BOOTCD does not exist!"
+           fi
+        fi
+      ) || true
+   done
+}
+
+
 # ###### Main program #######################################################
 case "$ACTION" in
   start)
@@ -178,6 +222,10 @@ case "$ACTION" in
      start_virtual_systems "$MACHINE_NAME" >>$LOGFILE 2>&1
      ;;
   force-reload)
+     ;;
+  configure|check-and-configure)
+     # Compare with existing configuration, update only if necessary.
+     check_and_configure >>$LOGFILE 2>&1
      ;;
   status)
      show_status "$MACHINE_NAME"
