@@ -185,14 +185,14 @@ check_and_configure ()
                  elif [ "$AUTO_UPDATE_BOOTCD/$NAME.iso" -nt "$LOCAL_ISODIR/$NAME.iso" ] ; then
                     echo "`env LANG=C date +%FT%H:%M:%S`: Copying updated $AUTO_UPDATE_BOOTCD/$NAME.iso to $LOCAL_ISODIR ..."
                     cp "$AUTO_UPDATE_BOOTCD/$NAME.iso" "$LOCAL_ISODIR/$NAME.iso.tmp" && \
-                    mv "$LOCAL_ISODIR//$NAME.iso.tmp" "$LOCAL_ISODIR/$NAME.iso"
+                    mv "$LOCAL_ISODIR/$NAME.iso.tmp" "$LOCAL_ISODIR/$NAME.iso"
                     updated=1
                  else
                     echo "no update."
                  fi
                  if [ $updated -ne 0 ] ; then
                     echo "`env LANG=C date +%FT%H:%M:%S`: Inserting $LOCAL_ISODIR into $NAME ..."
-                    Change-VSystem-CDImage "$NAME" "$LOCAL_ISODIR//$NAME.iso"
+                    Change-VSystem-CDImage "$NAME" "$LOCAL_ISODIR/$NAME.iso"
                     echo "`env LANG=C date +%FT%H:%M:%S`: Done!"
                  fi
               else
