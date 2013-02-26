@@ -286,6 +286,7 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
             'site_index'                  : siteIndex,
             'site_short_name'             : siteAbbrev,
             'site_long_name'              : site['name'],
+            'site_utf8'                   : getTagValue(siteTagsList, 'nornet_site_utf8', unicode(site['name'])),
             'site_domain'                 : siteDomain,
             'site_latitude'               : site['latitude'],
             'site_longitude'              : site['longitude'],

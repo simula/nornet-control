@@ -175,15 +175,19 @@ def getZoneForAddress(addressObject, prefix):
 
 
 # ###### Convert name to unicode, ASCII and punycode representations ########
-def makeDNSNameFromUnicode(name):
+def makeNameFromUnicode(name, isDNSName = True):
    unicodeName  = unicode(name)
    punycodeName = unicodeName.encode("idna")
    asciiName    = ''
    for i in range(0, len(unicodeName)):
       if ( ((unicodeName[i] >= 'a') and
             (unicodeName[i] <= 'z')) or
+           ((isDNSName == False) and
+            (unicodeName[i] >= 'A') and
+            (unicodeName[i] <= 'Z')) or
            ((unicodeName[i] >= '0') and
             (unicodeName[i] <= '9')) or
+           ((isDNSName == False) and (unicodeName[i] == ' ')) or
            (unicodeName[i] == '-') or
            (unicodeName[i] == '.')):
          asciiName = asciiName + unicodeName[i]
@@ -198,7 +202,7 @@ def makeDNSNameFromUnicode(name):
       elif (unicodeName[i] == u'å'):
          asciiName = asciiName + 'aa'
       else:
-         error('Unhandled character ' + unicodeName[i] + ' in name ' + unicodeName)
+         error('Unhandled character "' + unicodeName[i] + '" in name ' + unicodeName)
          
    dnsName = {
       'utf8'     : unicodeName,

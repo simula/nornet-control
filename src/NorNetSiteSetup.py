@@ -52,6 +52,7 @@ def makeNorNetTagTypes():
    makeTagType('site/nornet', 'NorNet Managed Site',                      'nornet_is_managed_site')
    makeTagType('site/nornet', 'NorNet Site Index',                        'nornet_site_index')
    makeTagType('site/nornet', 'NorNet Site Domain Name',                  'nornet_site_domain')
+   makeTagType('site/nornet', 'NorNet Site UTF-8',                        'nornet_site_utf8')
    makeTagType('site/nornet', 'NorNet Site City',                         'nornet_site_city')
    makeTagType('site/nornet', 'NorNet Site Province',                     'nornet_site_province')
    makeTagType('site/nornet', 'NorNet Site Country',                      'nornet_site_country')
@@ -87,6 +88,8 @@ def removeNorNetSite(siteName):
       log('Removing NorNet site ' + siteName + ' ...')
       siteID = site['site_id']
       getPLCServer().DeleteSite(getPLCAuthentication(), siteID)
+   else:
+      log('Site not found: ' + siteName)
 
 
 # ###### Add or update site tag #############################################
@@ -108,7 +111,8 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
                    siteLatitude, siteLogitude, siteAltitude,
                    providerList, defaultProvider, tbInternalInterface,
                    dnsServers, ntpServers):
-   siteName = unicode(siteName)   # Check whether name is in UTF-8!
+   siteLabel= makeNameFromUnicode(siteName, False)
+   siteName = siteLabel['ascii']
    try:
       # ====== Add site =====================================================
       log('Adding site ' + siteName + ' ...')
@@ -140,6 +144,8 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
          error('Unable to add "nornet_is_managed_site" tag to site ' + siteName)
       if _addOrUpdateSiteTag(siteID, 'nornet_site_index', str(siteNorNetIndex)) <= 0:
          error('Unable to add "nornet_site_index" tag to site ' + siteName)
+      if _addOrUpdateSiteTag(siteID, 'nornet_site_utf8', siteLabel['utf8']) <= 0:
+         error('Unable to add "nornet_site_utf8" tag to site ' + siteName)
       if _addOrUpdateSiteTag(siteID, 'nornet_site_city', siteCity) <= 0:
          error('Unable to add "nornet_site_city" tag to site ' + siteName)
       if _addOrUpdateSiteTag(siteID, 'nornet_site_domain', siteNorNetDomain) <= 0:
@@ -356,7 +362,7 @@ def _addOrUpdateNodeTag(nodeID, tagName, tagValue):
 def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
                    pcuID, pcuPort, norNetInterface,
                    model, bootState):
-   dnsName      = makeDNSNameFromUnicode(nodeNiceName)
+   dnsName      = makeNameFromUnicode(nodeNiceName)
    nodeHostName = dnsName['ascii']   # Domain to be added below!
 
    # ====== Get site information ============================================

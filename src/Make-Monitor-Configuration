@@ -55,13 +55,13 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                city              = getTagValue(localSite['site_tags'], 'nornet_site_city',    '???')
                tunnelboxIP       = makeNorNetIP(localSite['site_default_provider_index'], localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, 4)
 
-               outputFile.write('# ====== ' + localSite['site_long_name'] + ' ======\n')
+               outputFile.write('# ====== ' + localSite['site_utf8'] + ' ======\n')
                if localSite['site_enabled'] == False:
                   outputFile.write('# NOTE: This site is disabled!\n')
                outputFile.write('define host {\n')
                outputFile.write('   use           generic-host\n')
-               outputFile.write('   host_name     ' + localSite['site_long_name'] + '\n')
-               outputFile.write('   alias         ' + localSite['site_long_name'] + ' (' + city)
+               outputFile.write('   host_name     ' + localSite['site_utf8'] + '\n')
+               outputFile.write('   alias         ' + localSite['site_utf8'] + ' (' + city)
                if province !=  None:
                   outputFile.write(', ' + province)
                outputFile.write('/' + country + ')\n')
@@ -96,7 +96,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                         outputFile.write('-T ' + str(tunnel['tunnel_local_inner_address'].ip) + ' ')
                outputFile.write('\n')
                if ((localSiteIndex != NorNet_SiteIndex_Central) and (centralSite != None)):
-                  outputFile.write('   parents       ' + centralSite['site_long_name'] + '\n')
+                  outputFile.write('   parents       ' + centralSite['site_utf8'] + '\n')
                outputFile.write('}\n\n')
 
 
@@ -114,7 +114,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                         outputFile.write('define service {\n')
                         outputFile.write('   use                 generic-service\n')
                         outputFile.write('   service_description Internal ' + localProvider['provider_long_name']  + ' ' + str(internalAddress.ip) + '\n')
-                        outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
+                        outputFile.write('   host_name           ' + localSite['site_utf8'] + '\n')
                         outputFile.write('   check_command       MyPingCheck!' + str(internalAddress.ip) + '\n')
                         outputFile.write('}\n')
 
@@ -122,7 +122,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                            outputFile.write('define service {\n')
                            outputFile.write('   use                 generic-service\n')
                            outputFile.write('   service_description External ' + localProvider['provider_long_name']  + ' ' + str(externalAddress) + '\n')
-                           outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
+                           outputFile.write('   host_name           ' + localSite['site_utf8'] + '\n')
                            outputFile.write('   check_command       MyPingCheck!' + str(externalAddress) + '\n')
                            outputFile.write('}\n')
 
@@ -144,7 +144,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                                 (localProviderIndex != localSite['site_default_provider_index']) or
                                 (remoteProviderIndex != remoteSite['site_default_provider_index']))):
                               # Skip non-"Central Site"-tunnels via non-default provider, if site is disabled!
-                              #print 'SKIP=' + localSite['site_long_name'] + str(localProviderIndex)+ " - " + remoteSite['site_long_name'] + str(remoteProviderIndex) + "\n"
+                              #print 'SKIP=' + localSite['site_utf8'] + str(localProviderIndex)+ " - " + remoteSite['site_utf8'] + str(remoteProviderIndex) + "\n"
                               continue
 
                            remoteProvider = remoteProviderList[remoteProviderIndex]
@@ -164,10 +164,10 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                                              str.upper(localSite['site_short_name']) + '-' + str.upper(remoteSite['site_short_name']) + ' ' + \
                                              localProvider['provider_long_name'] + '/' + remoteProvider['provider_long_name'] + ' via ' + \
                                              tunnel['tunnel_interface'] + ' remote ' + str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
-                              outputFile.write('   host_name           ' + localSite['site_long_name'] + '\n')
+                              outputFile.write('   host_name           ' + localSite['site_utf8'] + '\n')
                               outputFile.write('   check_command       MyTunnelCheck!' + \
-                                                '-L "' + localSite['site_long_name']  + '\" ' + \
-                                                '-R "' + remoteSite['site_long_name'] + '\" ' + \
+                                                '-L "' + localSite['site_utf8']  + '\" ' + \
+                                                '-R "' + remoteSite['site_utf8'] + '\" ' + \
                                                 '-H '  + str(tunnel['tunnel_remote_inner_address'].ip) + '\n')
                               outputFile.write('}\n')
 
@@ -207,7 +207,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                if len(siteNodes) > 0:
                   outputFile.write('define hostgroup {\n')
                   outputFile.write('   hostgroup_name nodes-' + str.lower(localSite['site_short_name']) + '\n')
-                  outputFile.write('   alias          Nodes of ' + localSite['site_long_name'] + '\n')
+                  outputFile.write('   alias          Nodes of ' + localSite['site_utf8'] + '\n')
                   outputFile.write('   members        ')
                   isFirst = True
                   for node in siteNodes:
@@ -235,7 +235,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                isFirst = False
             else:
                outputFile.write(', ')
-            outputFile.write(localSite['site_long_name'])
+            outputFile.write(localSite['site_utf8'])
          outputFile.write('\n')
          outputFile.write('}\n\n')
 
