@@ -73,7 +73,7 @@ for controller in 0 1 2 3 ; do
                if [ "$OPTION" = "-restart-on-change" ] ; then
                   if [ "$status" = "running" -o "$status" = "paused" ] ; then
                      echo "`env LANG=C date +%FT%H:%M:%S`: Shutting down $MACHINE_NAME ..."
-                     service nornet-server stop "$MACHINE_NAME"
+                     service nornet-server stop "$MACHINE_NAME" || true
                   fi
                fi
 
@@ -96,7 +96,7 @@ for controller in 0 1 2 3 ; do
                if [ "$OPTION" = "-restart-on-change" ] ; then
                   if [ "$status" = "running" -o "$status" = "paused" ] ; then
                      echo "`env LANG=C date +%FT%H:%M:%S`: Restarting $MACHINE_NAME ..."
-                     service nornet-server start "$MACHINE_NAME"
+                     service nornet-server start "$MACHINE_NAME" || true
                   fi
                fi
             else

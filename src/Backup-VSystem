@@ -51,7 +51,7 @@ TEMP_FILE="$TEMP_DIRECTORY/`basename $EXPORT_FILE`"
 initialMachineState=`Check-VSystem "$MACHINE_NAME"`
 if [ "$initialMachineState" != "stopped" -o "$initialMachineState" != "aborted" ] ; then
    echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME is in state \"$initialMachineState\" -> stopping ..."
-   service nornet-server stop "$MACHINE_NAME"   
+   service nornet-server stop "$MACHINE_NAME" || true
 fi
 
 
@@ -72,7 +72,7 @@ result=0 || true
 # ====== Restart machine, if it was running =================================
 if [ "$initialMachineState" != "stopped" -o "$initialMachineState" != "aborted" ] ; then
    echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME was in state \"$initialMachineState\" -> restarting ..."
-   service nornet-server start "$MACHINE_NAME"   
+   service nornet-server start "$MACHINE_NAME" || true
 fi
 
 
