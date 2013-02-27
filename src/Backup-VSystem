@@ -79,7 +79,7 @@ fi
 # ====== On success, move export file to given name =========================
 if [ $result -eq 0 ] ; then
    result=1
-   sudo -u $NorNet_LocalNode_NorNetUser nice mv "$TEMP_FILE" "$EXPORT_FILE.ova" && result=0 || true
+   sudo -u $NorNet_LocalNode_NorNetUser nice mv "$TEMP_FILE" "$EXPORT_FILE" && result=0 || true
 fi
 
 if [ $result -eq 0 ] ; then
