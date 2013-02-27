@@ -89,7 +89,7 @@ for vsystem in $VSYSTEMS ; do
                   # ====== Restart system ===================================
                   if [ "$status" = "running" -o "$status" = "paused" ] ; then
                      echo "`env LANG=C date +%FT%H:%M:%S`: Resarting $NAME ..."
-                     service nornet-server stop "$NAME" || true
+                     service nornet-server start "$NAME" || true
                   fi
                fi
             else
