@@ -1,3 +1,4 @@
+Auto-Update-BootCD                /usr/bin
 Backup-VSystem                    /usr/bin
 Change-VSystem-CDImage            /usr/bin
 Check-VSystem                     /usr/bin

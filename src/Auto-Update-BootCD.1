@@ -1,0 +1,61 @@
+.\" Make Server Configuration
+.\" Copyright (C) 2012-2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd February 5, 2013
+.Dt Auto-Update-BootCD 1
+.Os Auto-Update-BootCD
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Auto-Update-BootCD
+.Nd Automatic Virtual System Boot-CD Changer
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Auto-Update-BootCD
+.Op max_delay
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Auto-Update-BootCD
+checks the configuration of all virtual systems for settings of
+AUTO_UPDATE_BOOTCD. If AUTO_UPDATE_BOOTCD of a machine is set to a directory,
+the file $AUTO_UPDATE_BOOTCD/$NAME.iso is searched. If it is newer than
+the file $NAME.iso in the ISOs directory of the NorNet user, the latter one
+is replaced by the newer file. If $NAME.iso does not exist in the ISOs directory
+of the NorNet user, it is created by copying $AUTO_UPDATE_BOOTCD/$NAME.iso. On
+both conditions, the virtual system is shut down, the ISO image is inserted
+into the first virtual CD/DVD drive and the virtual system restarted.
+AUTO_UPDATE_BOOTCD can be set to "default", which then uses "/nfs/adm/ISOs".
+.br
+Note, that Auto-Update-BootCD only recognises CD/DVD drivers which are
+connected to the virtual SATA controller named "SATA Controller"!
+.br
+To improve NFS performance when reading the ISO files from an NFS share, it
+is possibe to wait a random time before performing the check and copy
+operations.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+.Bl -tag -width indent
+.It max_delay
+The maximum delay to wait before performing the backup (in seconds).
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Auto-Update-BootCD 3600
+.El
