@@ -23,10 +23,11 @@
 import sys;
 
 # NorNet
-from NorNetAPI       import *;
-from NorNetNodeSetup import *;
+from NorNetAPI           import *;
+from NorNetNodeSetup     import *;
 
 
+# ###### Convert coordinate to degree/minutes/seconds #######################
 def coordinateToDMS(coordinate, hemisphereTypes = 'NS'):
    hemisphere = hemisphereTypes[0]
    degrees = int(coordinate)
@@ -42,7 +43,7 @@ def coordinateToDMS(coordinate, hemisphereTypes = 'NS'):
 
 
 # ###### Obtain location string #############################################
-def _getLocString(latitude, longitude, altitude, size, precision):
+def getLocString(latitude, longitude, altitude, size, precision):
    return(coordinateToDMS(latitude) + ' ' +
           coordinateToDMS(longitude,'EW') + ' ' +
           str(altitude) + 'm ' +
@@ -51,7 +52,7 @@ def _getLocString(latitude, longitude, altitude, size, precision):
 
 
 # ###### Obtain RR type for address #########################################
-def _rrTypeForAddress(address):
+def rrTypeForAddress(address):
    if address.version == 4:
       return('A')
    elif address.version == 6:
@@ -60,12 +61,12 @@ def _rrTypeForAddress(address):
 
 
 # ###### Add provider's name to hostname ####################################
-def _addProviderToName(hostName, providerName):
+def addProviderToName(hostName, providerName):
    return(str.replace(hostName, '.', '.' + providerName + '.', 1))
 
 
 # ###### Write SOA ##########################################################
-def _writeSOA(outputFile, nsHostNameFQDN, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaves):
+def writeSOA(outputFile, nsHostNameFQDN, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaves):
    outputFile.write('$TTL ' + str(defaultTTL) + '\n\n')
    outputFile.write('@\tIN\tSOA\t' + nsHostNameFQDN + ' root.' + siteFQDN+ ' (\n')
    outputFile.write('\t' + datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S") + '   ; Serial\n')
@@ -80,24 +81,24 @@ def _writeSOA(outputFile, nsHostNameFQDN, siteFQDN, refreshTime, retryTime, expi
 
 
 # ###### Write RR ###########################################################
-def _writeRR(outputFile, hostNameFQDN, record, value):
+def writeRR(outputFile, hostNameFQDN, record, value):
    outputFile.write('{0:42s}'.format(hostNameFQDN) + '\tIN\t' +
                     record + '\t' + value + '\n')
 
 
 # ###### Write LOC RR #######################################################
-def _writeLOC(siteZoneFile, name, localSite):
-   _writeRR(siteZoneFile,
-            name,
-            'LOC',
-            _getLocString(localSite['site_latitude'],
-                          localSite['site_longitude'],
-                          localSite['site_altitude'],
-                          5, 25))
+def writeLOC(siteZoneFile, name, localSite):
+   writeRR(siteZoneFile,
+           name,
+           'LOC',
+           getLocString(localSite['site_latitude'],
+                        localSite['site_longitude'],
+                        localSite['site_altitude'],
+                        5, 25))
 
 
 # ###### Write zone configuration ###########################################
-def _writeZone(outputFile, zone, zoneFileName, masterSite):
+def writeZone(outputFile, zone, zoneFileName, masterSite):
    outputFile.write('zone "' + zone + '" IN {\n')
    if masterSite == None:
       outputFile.write('\ttype master;\n')
@@ -152,7 +153,7 @@ def makeNodeForDNS(nodeName, site, nodeIndex, model, type, options):
 
 
 # ###### Get list of slave servers ##########################################
-def _getSlavesForSite(fullSiteList, localSite):
+def getSlavesForSite(fullSiteList, localSite):
    slaves = [ ]
    for remoteSiteIndex in fullSiteList:
       remoteSite = fullSiteList[remoteSiteIndex]
@@ -169,7 +170,7 @@ def _getSlavesForSite(fullSiteList, localSite):
 
 
 # ###### Check whether to include node for given provider and IP version ####
-def _includeNodeIP(node, localSite, providerIndex, version):
+def includeNodeIP(node, localSite, providerIndex, version):
    if ((node['node_v6only'] > 0) and (version == 4)):
       return False
    elif ((node['node_v6only'] > 1) and (providerIndex != localSite['site_default_provider_index'])):
@@ -194,29 +195,29 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
 
    # ====== Get hostname in default provider's network ======================
    localDefaultProvider       = localProviderList[localSite['site_default_provider_index']]
-   hostNameForDefaultProvider = _addProviderToName(hostName + '.' + siteFQDN, str.lower(localDefaultProvider['provider_short_name']))
+   hostNameForDefaultProvider = addProviderToName(hostName + '.' + siteFQDN, str.lower(localDefaultProvider['provider_short_name']))
 
    siteZoneFile = codecs.open(siteFQDN + 'db', 'w', 'utf-8')
    writeAutoConfigInformation(siteZoneFile, ';')
-   slaveServers = _getSlavesForSite(fullSiteList, localSite)
-   _writeSOA(siteZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
+   slaveServers = getSlavesForSite(fullSiteList, localSite)
+   writeSOA(siteZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
 
    # ====== Some useful aliases =============================================
    if hostName != 'tunnelbox':
-      _writeRR(siteZoneFile, 'tunnelbox.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
+      writeRR(siteZoneFile, 'tunnelbox.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
    if hostName != 'ntp':
-      _writeRR(siteZoneFile, 'ntp.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
+      writeRR(siteZoneFile, 'ntp.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
    if hostName != 'ns':
-      _writeRR(siteZoneFile, 'ns.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
+      writeRR(siteZoneFile, 'ns.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
 
    # ====== Prepare the list of hosts =======================================
    fullNodeList.append(makeNodeForDNS(hostName, localSite, NorNet_NodeIndex_Tunnelbox,
                        'Amiga 6000', 'NorNet Tunnelbox', []))
    fullNodeList = fullNodeList + additionalNodes
    # Sort by node index
-   def _nodeSortingOrder(a, b):
+   def nodeSortingOrder(a, b):
       return cmp(a['node_index'], b['node_index'])
-   fullNodeList.sort(_nodeSortingOrder)
+   fullNodeList.sort(nodeSortingOrder)
 
 
    # ====== Write forward lookup configuration ==============================
@@ -234,88 +235,88 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                if phase == 1:
                   if localProviderIndex == localSite['site_default_provider_index']:
                      if version == 6:   # Just add entry once!
-                        _writeRR(siteZoneFile, node['node_name'] + '.', 'CNAME',
-                                 _addProviderToName(node['node_name'],
-                                                    str.lower(localProvider['provider_short_name'])) + '.')                                                    
+                        writeRR(siteZoneFile, node['node_name'] + '.', 'CNAME',
+                                addProviderToName(node['node_name'],
+                                                  str.lower(localProvider['provider_short_name'])) + '.')                                                    
                         # ====== Special aliases () ============================
                         # For PLC, Monitor, File Server
                         if ((localSite['site_index'] == NorNet_SiteIndex_PLC) and
                             (node['node_index'] == NorNet_NodeIndex_PLC) and
                             (node['node_name'] != 'plc')):
-                           _writeRR(siteZoneFile, 'plc.' + siteFQDN, 'CNAME',
-                                    _addProviderToName(node['node_name'],
-                                                      str.lower(localProvider['provider_short_name'])) + '.')                                                    
+                           writeRR(siteZoneFile, 'plc.' + siteFQDN, 'CNAME',
+                                   addProviderToName(node['node_name'],
+                                                     str.lower(localProvider['provider_short_name'])) + '.')                                                    
                         if ((localSite['site_index'] == NorNet_SiteIndex_Monitor) and
                             (node['node_index'] == NorNet_NodeIndex_Monitor) and
                             (node['node_name'] != 'monitor')):
-                           _writeRR(siteZoneFile, 'monitor.' + siteFQDN, 'CNAME',
-                                    _addProviderToName(node['node_name'],
-                                                      str.lower(localProvider['provider_short_name'])) + '.')                                                    
-                           _writeRR(siteZoneFile, siteFQDN, 'MX',
-                                    '10 ' + _addProviderToName(node['node_name'],
-                                                               str.lower(localProvider['provider_short_name'])) + '.')                                                    
+                           writeRR(siteZoneFile, 'monitor.' + siteFQDN, 'CNAME',
+                                   addProviderToName(node['node_name'],
+                                                     str.lower(localProvider['provider_short_name'])) + '.')                                                    
+                           writeRR(siteZoneFile, siteFQDN, 'MX',
+                                   '10 ' + addProviderToName(node['node_name'],
+                                                             str.lower(localProvider['provider_short_name'])) + '.')                                                    
                         if ((localSite['site_index'] == NorNet_SiteIndex_FileSrv) and
                             (node['node_index'] == NorNet_NodeIndex_FileSrv)):
                            if (node['node_name'] != 'nfs'):
-                              _writeRR(siteZoneFile, 'nfs.' + siteFQDN, 'CNAME',
-                                       _addProviderToName(node['node_name'],
-                                                         str.lower(localProvider['provider_short_name'])) + '.')                                                    
+                              writeRR(siteZoneFile, 'nfs.' + siteFQDN, 'CNAME',
+                                      addProviderToName(node['node_name'],
+                                                        str.lower(localProvider['provider_short_name'])) + '.')                                                    
                            if (node['node_name'] != 'tftp'):
-                              _writeRR(siteZoneFile, 'tftp.' + siteFQDN, 'CNAME',
-                                       _addProviderToName(node['node_name'],
+                               writeRR(siteZoneFile, 'tftp.' + siteFQDN, 'CNAME',
+                                       addProviderToName(node['node_name'],
                                                          str.lower(localProvider['provider_short_name'])) + '.')                                                    
                # ====== Hostname for current provider's address =============
                elif phase == 2:
-                  if _includeNodeIP(node, localSite, localProviderIndex, version):
-                     _writeRR(siteZoneFile,
-                              _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
-                              _rrTypeForAddress(nodeAddress),
-                              str(nodeAddress.ip))
+                  if includeNodeIP(node, localSite, localProviderIndex, version):
+                     writeRR(siteZoneFile,
+                             addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
+                             rrTypeForAddress(nodeAddress),
+                             str(nodeAddress.ip))
                   # if localProviderIndex == localSite['site_default_provider_index']:
                   if version == 6:   # Just add entry once!
-                     _writeRR(siteZoneFile,
-                              _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
-                              'HINFO', '"' + node['node_model'] + '/' + localProvider['provider_long_name'] + '" "' + node['node_type'] + '"')
-                     _writeLOC(siteZoneFile,
-                               _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
-                               localSite)
+                     writeRR(siteZoneFile,
+                             addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
+                             'HINFO', '"' + node['node_model'] + '/' + localProvider['provider_long_name'] + '" "' + node['node_type'] + '"')
+                     writeLOC(siteZoneFile,
+                              addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
+                              localSite)
                # ====== Hostname with *all* addresses =======================
                else:
-                  if _includeNodeIP(node, localSite, localProviderIndex, version):
-                     _writeRR(siteZoneFile,
-                              _addProviderToName(node['node_name'], 'all') + '.',
-                              _rrTypeForAddress(nodeAddress),
-                              str(nodeAddress.ip))
+                  if includeNodeIP(node, localSite, localProviderIndex, version):
+                     writeRR(siteZoneFile,
+                             addProviderToName(node['node_name'], 'all') + '.',
+                             rrTypeForAddress(nodeAddress),
+                             str(nodeAddress.ip))
 
       # ====== Punycode CNAMEs for IDN names ================================
       if unicode(node['node_name']) != node['node_utf8']:
          for localProviderIndex in localProviderList:
             localProvider = localProviderList[localProviderIndex]
-            _writeRR(siteZoneFile,
-                     _addProviderToName(node['node_utf8'].encode('idna'), str.lower(localProvider['provider_short_name'])) + '.',
-                     'CNAME',
-                     _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.')
+            writeRR(siteZoneFile,
+                    addProviderToName(node['node_utf8'].encode('idna'), str.lower(localProvider['provider_short_name'])) + '.',
+                    'CNAME',
+                    addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.')
             if localProviderIndex == localSite['site_default_provider_index']:
-               _writeRR(siteZoneFile,
-                        node['node_utf8'].encode('idna'),
-                        'CNAME',
-                        _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.')
-         _writeRR(siteZoneFile,
-                  _addProviderToName(node['node_utf8'].encode('idna'), 'all') + '.',
-                  'CNAME',
-                  _addProviderToName(node['node_name'], 'all') + '.')
+               writeRR(siteZoneFile,
+                       node['node_utf8'].encode('idna'),
+                       'CNAME',
+                       addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.')
+         writeRR(siteZoneFile,
+                 addProviderToName(node['node_utf8'].encode('idna'), 'all') + '.',
+                 'CNAME',
+                 addProviderToName(node['node_name'], 'all') + '.')
 
       # ====== Add external addresses of tunnelbox ==========================
       for localProviderIndex in localProviderList:
          localProvider = localProviderList[localProviderIndex]
          if node['node_index'] == NorNet_NodeIndex_Tunnelbox:
-            _writeRR(siteZoneFile,
-                     _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']) + '-ext') + '.',
-                     'A', str(localProvider['provider_tunnelbox_ipv4']))
+            writeRR(siteZoneFile,
+                    addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']) + '-ext') + '.',
+                    'A', str(localProvider['provider_tunnelbox_ipv4']))
             if localProvider['provider_tunnelbox_ipv6'] != IPv6Address('::'):
-               _writeRR(siteZoneFile,
-                        _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']) + '-ext') + '.',
-                        'AAAA', str(localProvider['provider_tunnelbox_ipv6']))
+               writeRR(siteZoneFile,
+                       addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']) + '-ext') + '.',
+                       'AAAA', str(localProvider['provider_tunnelbox_ipv6']))
 
    if localSiteIndex == NorNet_SiteIndex_Central:
       # ====== Tunnels ======================================================
@@ -343,19 +344,19 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                                   str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' + \
                                   str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.'
 
-                     _writeRR(siteZoneFile, localName,
-                              _rrTypeForAddress(localTunnelIP), str(localTunnelIP.ip))
-                     _writeRR(siteZoneFile, localName,
-                              'HINFO', '"Tunnel Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '" ' +
-                              '"Remote Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '"')
-                     _writeLOC(siteZoneFile, localName, localSite)
+                     writeRR(siteZoneFile, localName,
+                             rrTypeForAddress(localTunnelIP), str(localTunnelIP.ip))
+                     writeRR(siteZoneFile, localName,
+                             'HINFO', '"Tunnel Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '" ' +
+                             '"Remote Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '"')
+                     writeLOC(siteZoneFile, localName, localSite)
 
-                     _writeRR(siteZoneFile, remoteName,
-                              _rrTypeForAddress(remoteTunnelIP), str(remoteTunnelIP.ip))
-                     _writeRR(siteZoneFile, localName,
-                              'HINFO', '"Tunnel Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '" ' +
-                              '"Remote Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '"')
-                     _writeLOC(siteZoneFile, remoteName, remoteSite)
+                     writeRR(siteZoneFile, remoteName,
+                             rrTypeForAddress(remoteTunnelIP), str(remoteTunnelIP.ip))
+                     writeRR(siteZoneFile, localName,
+                             'HINFO', '"Tunnel Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '" ' +
+                             '"Remote Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '"')
+                     writeLOC(siteZoneFile, remoteName, remoteSite)
 
                      siteZoneFile.write('\n')
 
@@ -369,18 +370,18 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
          providerNetwork  = makeNorNetIP(localProviderIndex, localSiteIndex, 0, 0, version)
          providerZone     = getZoneForAddress(providerNetwork, providerNetwork.prefixlen)
          providerZoneFile = codecs.open(localProvider['provider_short_name'] + '.' + siteFQDN + 'ipv' + str(version) + '.db', 'w', 'utf-8')
-         _writeSOA(providerZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
+         writeSOA(providerZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
 
          for node in fullNodeList:
-            if not _includeNodeIP(node, localSite, localProviderIndex, version):
+            if not includeNodeIP(node, localSite, localProviderIndex, version):
                continue
             providerAddress = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], -1, version)
             prefixLength    = 32
             if version == 6:
                prefixLength = 128
-            _writeRR(providerZoneFile,
-                     getZoneForAddress(providerAddress, prefixLength),
-                     'PTR', _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.')
+            writeRR(providerZoneFile,
+                    getZoneForAddress(providerAddress, prefixLength),
+                    'PTR', addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.')
 
          providerZoneFile.close()
 
@@ -390,7 +391,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
          tunnelNetwork  = makeNorNetTunnelIP(0, 0, 0, 0, version)
          tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
          tunnelZoneFile = codecs.open('tunnels.ipv' + str(version) + '.db', 'w', 'utf-8')
-         _writeSOA(tunnelZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
+         writeSOA(tunnelZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
          prefixLength   = 32
          if version == 6:
             prefixLength = 128
@@ -413,18 +414,18 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                                                          localSiteIndex, localProviderIndex,
                                                          version)
 
-                     _writeRR(tunnelZoneFile,
-                              getZoneForAddress(localTunnelIP.ip, prefixLength),
-                              'PTR',
-                              'local.' +
-                              str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' +
-                              str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.')
-                     _writeRR(tunnelZoneFile,
-                              getZoneForAddress(remoteTunnelIP.ip, prefixLength),
-                              'PTR',
-                              'remote.' +
-                              str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' +
-                              str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.')
+                     writeRR(tunnelZoneFile,
+                             getZoneForAddress(localTunnelIP.ip, prefixLength),
+                             'PTR',
+                             'local.' +
+                             str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' +
+                             str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.')
+                     writeRR(tunnelZoneFile,
+                             getZoneForAddress(remoteTunnelIP.ip, prefixLength),
+                             'PTR',
+                             'remote.' +
+                             str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' +
+                             str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.')
 
          tunnelZoneFile.close()
 
@@ -439,7 +440,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
          masterSite = None
 
       zoneConfFile.write('// ====== ' + site['site_long_name'] + ' ======\n')
-      _writeZone(zoneConfFile, site['site_domain'], site['site_domain'] + '.db', masterSite)
+      writeZone(zoneConfFile, site['site_domain'], site['site_domain'] + '.db', masterSite)
 
       siteProviderList = getNorNetProvidersForSite(site)
       for siteProviderIndex in siteProviderList:
@@ -447,10 +448,10 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
          for version in [ 4, 6 ]:
             providerNetwork = makeNorNetIP(siteProviderIndex, siteIndex, 0, 0, version)
             providerZone = getZoneForAddress(providerNetwork, providerNetwork.prefixlen)
-            _writeZone(zoneConfFile,
-                       providerZone,
-                       siteProvider['provider_short_name'] + '.' + site['site_domain'] + '.ipv' + str(version) + '.db',
-                       masterSite)
+            writeZone(zoneConfFile,
+                      providerZone,
+                      siteProvider['provider_short_name'] + '.' + site['site_domain'] + '.ipv' + str(version) + '.db',
+                      masterSite)
 
    zoneConfFile.write('\n// ====== Tunnel IP Reverse Lookup ======\n')
    # The Central Site tunnelbox is master for the reverse lookup of the tunnel IPs.
@@ -461,8 +462,8 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    for version in [ 4, 6 ]:
       tunnelNetwork  = makeNorNetTunnelIP(0, 0, 0, 0, version)
       tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
-      _writeZone(zoneConfFile, tunnelZone, 'tunnels.ipv' + str(version) + '.db',
-                 masterSite)
+      writeZone(zoneConfFile, tunnelZone, 'tunnels.ipv' + str(version) + '.db',
+                masterSite)
 
    zoneConfFile.close()
 
@@ -514,17 +515,17 @@ def makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList):
 
 
 # ###### Get ID for routing table ###########################################
-def _getTableID(opIndex):
+def getTableID(opIndex):
    return 1000000 + opIndex
 
 
 # ###### Get preference for routing table ###################################
-def _getTablePref(opIndex, level):
+def getTablePref(opIndex, level):
    return 1000 + (1000 * level) + opIndex
 
 
 # ###### Make IPv6 link-local address for GRE tunnel ########################
-def _makeGRELinkLocal(a, b):
+def makeGRELinkLocal(a, b):
    result = IPv6Network('fe80::' + \
                         str.replace(hex((int(a) >> 16) & 0xffff), '0x', '') + ':' + \
                         str.replace(hex(int(a) & 0xffff),         '0x', '') + ':' + \
@@ -535,7 +536,7 @@ def _makeGRELinkLocal(a, b):
 
 
 # ###### Add routes to remote tunnel endpoints ##############################
-def _makeRemoteTunnelRoutesOnCentralRouter(fullSiteList, outputFile, nextHopInterface, nextHopAddress, remoteSite, version):
+def makeRemoteTunnelRoutesOnCentralRouter(fullSiteList, outputFile, nextHopInterface, nextHopAddress, remoteSite, version):
    outgoingProviderList = getNorNetProvidersForSite(remoteSite)
    for outgoingProviderIndex in outgoingProviderList:
       outgoingProvider = outgoingProviderList[outgoingProviderIndex]
@@ -562,7 +563,7 @@ def _makeRemoteTunnelRoutesOnCentralRouter(fullSiteList, outputFile, nextHopInte
 
 
 # ###### Generate tunnelbox configuration for given provider ################
-def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvider, pathNumber, configNamePrefix):
+def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvider, pathNumber, configNamePrefix):
    if configNamePrefix == None:
       configNamePrefix = 'tunnelbox-' + localSite['site_short_name']
    configurationName = configNamePrefix + '-' + localProvider['provider_short_name'] + '-config'
@@ -594,10 +595,10 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
       outputFile.write('   log "' + action + ' connectivity for provider ' + \
                        localProvider['provider_long_name'] + ' ..."\n')
 
-      routingTableID         = _getTableID(localProviderIndex)
-      routingTableDestPref   = _getTablePref(localProviderIndex, 0)
-      routingTableTOSPref    = _getTablePref(localProviderIndex, 1)
-      routingTableSourcePref = _getTablePref(localProviderIndex, 2)
+      routingTableID         = getTableID(localProviderIndex)
+      routingTableDestPref   = getTablePref(localProviderIndex, 0)
+      routingTableTOSPref    = getTablePref(localProviderIndex, 1)
+      routingTableSourcePref = getTablePref(localProviderIndex, 2)
 
       if (state == 'start'):
          if pathNumber + 1 < len(NorNet_TOSSettings):
@@ -685,8 +686,8 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                   if ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
                      options = '--add-to-existing-tunnel'
                   elif ((version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
-                     options = '--v6-linklocal ' + str(_makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
-                                                                         tunnel['tunnel_remote_outer_address']))
+                     options = '--v6-linklocal ' + str(makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
+                                                                        tunnel['tunnel_remote_outer_address']))
                   outputFile.write('   make-tunnel ' + \
                                    tunnel['tunnel_interface']                 + ' ' + \
                                    hex(tunnel['tunnel_key'])                  + ' ' + \
@@ -740,10 +741,10 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
                    (localSiteIndex == NorNet_SiteIndex_Central) and
                    (localProviderIndex == localSite['site_default_provider_index']) and
                    (remoteProviderIndex == remoteSite['site_default_provider_index'])):
-                  _makeRemoteTunnelRoutesOnCentralRouter(fullSiteList, outputFile,
-                                                         tunnel['tunnel_interface'],
-                                                         tunnel['tunnel_remote_inner_address'].ip,
-                                                         remoteSite, version),
+                  makeRemoteTunnelRoutesOnCentralRouter(fullSiteList, outputFile,
+                                                        tunnel['tunnel_interface'],
+                                                        tunnel['tunnel_remote_inner_address'].ip,
+                                                        remoteSite, version),
 
 
                outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
@@ -752,8 +753,8 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
       # ====== Default route to central site ================================
       if ((localSiteIndex != NorNet_SiteIndex_Central) and
           (localProviderIndex == localSite['site_default_provider_index'])):
-         routingTableID       = _getTableID(256)
-         routingTableDestPref = _getTablePref(256, 4)
+         routingTableID       = getTableID(256)
+         routingTableDestPref = getTablePref(256, 4)
          if (state == 'start'):
             outputFile.write('   log "Setting up DEFAULT route to central site"\n')
             outputFile.write('   make-table ' + str(routingTableID) + '   # DEFAULT to CENTRAL SITE\n')
@@ -805,7 +806,7 @@ def _makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProv
 
 
 # ###### Generate tunnelbox configuration for local network #################
-def _makeTunnelboxNetwork(outputFile, state, localInterface,
+def makeTunnelboxNetwork(outputFile, state, localInterface,
                           localProvider, localSiteIndex):
    localProviderIndex = localProvider['provider_index']
 
@@ -1014,7 +1015,7 @@ def makeTunnelboxConfiguration(fullSiteList, localSite, configNamePrefix):
    # outputFile.write('      sysctl -q net.ipv6.conf.all.forwarding=0   && \\\n')
    outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    for localProviderIndex in localProviderList:
-      _makeTunnelboxNetwork(outputFile, 'stop', localInterface,
+      makeTunnelboxNetwork(outputFile, 'stop', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex)
    if localSiteIndex == NorNet_SiteIndex_Central:
       outputFile.write('\n      log-action "Turning off IPv4 NAT ..."\n')
@@ -1042,7 +1043,7 @@ def makeTunnelboxConfiguration(fullSiteList, localSite, configNamePrefix):
          if ( ((onlyDefault == True)  and (localProviderIndex == localSite['site_default_provider_index'])) or \
               ((onlyDefault == False) and (localProviderIndex != localSite['site_default_provider_index'])) ):
             localProvider = localProviderList[localProviderIndex]
-            tbpName = _makeTunnelboxProvider(fullSiteList, localSite,
+            tbpName = makeTunnelboxProvider(fullSiteList, localSite,
                                              localProviderList, localProvider,
                                              pathNumber, configNamePrefix)
             pathNumber = pathNumber + 1
@@ -1100,7 +1101,7 @@ def makeTunnelboxConfiguration(fullSiteList, localSite, configNamePrefix):
    outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
 
    for localProviderIndex in localProviderList:
-      _makeTunnelboxNetwork(outputFile, 'start', localInterface,
+      makeTunnelboxNetwork(outputFile, 'start', localInterface,
                             localProviderList[localProviderIndex], localSiteIndex)
    if localSiteIndex == NorNet_SiteIndex_Central:
       fullTunnelNetIPv4 = makeNorNetTunnelIP(0, 0, 0, 0, 4)
