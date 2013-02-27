@@ -313,17 +313,3 @@ def getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
    }
 
    return norNetTunnel
-
-
-# ###### Get tunnel configuration for default tunnel to central site ########
-def getDefaultTunnel(fullSiteList, localSite, version):
-   localSiteProviders          = getNorNetProvidersForSite(localSite)
-   localDefaultProviderIndex   = localSite['site_default_provider_index']
-
-   centralSite                 = fullSiteList[NorNet_SiteIndex_Central]
-   centralSiteProviders        = getNorNetProvidersForSite(centralSite)
-   centralDefaultProviderIndex = centralSite['site_default_provider_index']
-
-   return getTunnel(localSite, localSiteProviders[localDefaultProviderIndex],
-                     centralSite, centralSiteProviders[centralDefaultProviderIndex],
-                     version)
