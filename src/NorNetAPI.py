@@ -429,8 +429,8 @@ def fetchNorNetNode(nodeNameToFind = None, site = None):
             'node_model'            : node['model'],
             'node_type'             : 'NorNet Managed Node',
             'node_state'            : node['boot_state'],
-            'node_v4only'           : False,
-            'node_v6only'           : False,
+            'node_v4only'           : 0,
+            'node_v6only'           : 0,
             'node_tags'             : nodeTagsList
          }
 

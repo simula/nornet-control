@@ -123,14 +123,18 @@ def _writeZone(outputFile, zone, zoneFileName, masterSite):
 
 # ###### Get NorNet node object for additional DNS entry ####################
 def makeNodeForDNS(nodeName, site, nodeIndex, model, type, options):
-   dnsName = makeDNSNameFromUnicode(nodeName)
-   v4Only = False
-   v6Only = False
+   dnsName = makeNameFromUnicode(nodeName)
+   v4Only = 0
+   v6Only = 0
    for option in options:
       if option == 'v4only':
-         v4Only = True
-      elif option == 'v6only':
-         v6Only = True
+         v4Only = 1
+      elif option == 'def-v4only':
+         v4Only = 2
+      if option == 'v6only':
+         v6Only = 1
+      elif option == 'def-v6only':
+         v6Only = 2
    norNetNode = {
       'node_site_id'          : site['site_index'],
       'node_index'            : nodeIndex,
@@ -162,6 +166,19 @@ def _getSlavesForSite(fullSiteList, localSite):
                                    #NorNet_NodeIndex_Tunnelbox, -1, version)
          slaves.append('ns.' + remoteSite['site_domain'] + '.')
    return slaves
+
+
+# ###### Check whether to include node for given provider and IP version ####
+def _includeNodeIP(node, localSite, providerIndex, version):
+   if ((node['node_v6only'] > 0) and (version == 4)):
+      return False
+   elif ((node['node_v6only'] > 1) and (providerIndex != localSite['site_default_provider_index'])):
+      return False
+   elif ((node['node_v4only'] > 0) and (version == 6)):
+      return False
+   elif ((node['node_v4only'] > 1) and (providerIndex != localSite['site_default_provider_index'])):
+      return False
+   return True
 
 
 # ###### Generate hosts configuration #######################################
@@ -212,10 +229,6 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
             # ====== Add internal addresses =================================
             for version in [ 4, 6 ]:
                # ====== Skip unsupported address family =====================
-               if ((node['node_v6only']) and (version == 4)):
-                  continue
-               if ((node['node_v4only']) and (version == 6)):
-                  continue
                nodeAddress = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], -1, version)
                # ====== Hostname for default provider's address =============
                if phase == 1:
@@ -253,24 +266,26 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                                                          str.lower(localProvider['provider_short_name'])) + '.')                                                    
                # ====== Hostname for current provider's address =============
                elif phase == 2:
-                  _writeRR(siteZoneFile,
-                           _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
-                           _rrTypeForAddress(nodeAddress),
-                           str(nodeAddress.ip))
-                  # if localProviderIndex == localSite['site_default_provider_index']:
-                  if version == 6:   # Just add entries once!
+                  if _includeNodeIP(node, localSite, localProviderIndex, version):
                      _writeRR(siteZoneFile,
                               _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
-                              'HINFO', '"' + node['node_model'] + '" "' + node['node_type'] + '"')
+                              _rrTypeForAddress(nodeAddress),
+                              str(nodeAddress.ip))
+                  # if localProviderIndex == localSite['site_default_provider_index']:
+                  if version == 6:   # Just add entry once!
+                     _writeRR(siteZoneFile,
+                              _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
+                              'HINFO', '"' + node['node_model'] + '/' + localProvider['provider_long_name'] + '" "' + node['node_type'] + '"')
                      _writeLOC(siteZoneFile,
                                _addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.',
                                localSite)
                # ====== Hostname with *all* addresses =======================
                else:
-                  _writeRR(siteZoneFile,
-                           _addProviderToName(node['node_name'], 'all') + '.',
-                           _rrTypeForAddress(nodeAddress),
-                           str(nodeAddress.ip))
+                  if _includeNodeIP(node, localSite, localProviderIndex, version):
+                     _writeRR(siteZoneFile,
+                              _addProviderToName(node['node_name'], 'all') + '.',
+                              _rrTypeForAddress(nodeAddress),
+                              str(nodeAddress.ip))
 
       # ====== Punycode CNAMEs for IDN names ================================
       if unicode(node['node_name']) != node['node_utf8']:
@@ -357,6 +372,8 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
          _writeSOA(providerZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
 
          for node in fullNodeList:
+            if not _includeNodeIP(node, localSite, localProviderIndex, version):
+               continue
             providerAddress = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], -1, version)
             prefixLength    = 32
             if version == 6:
