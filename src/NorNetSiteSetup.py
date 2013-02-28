@@ -303,7 +303,7 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                   # Interface of default provider must use the hostname!
                   ifHostName     = nodeName.split('.')[0] + '.' + str.lower(siteDomain)
                else:
-                  ifHostName     = nodeName.split('.')[0] + '-' + str.lower(providerName) + '.' + str.lower(siteDomain)
+                  ifHostName     = nodeName.split('.')[0] + '.' + str.lower(providerName) + '.' + str.lower(siteDomain)
                ifIPv4            = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 0, 4)
                ifGateway         = makeNorNetIP(providerIndex, siteIndex, 1, 0, 4)
                ifDNS             = ifGateway   # The tunnelbox is also the DNS server
