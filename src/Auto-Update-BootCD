@@ -49,7 +49,8 @@ fi
 # ====== Check all configured virtual systems ===============================
 VSYSTEMS=`find $NORNET_DIRECTORY/vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
 LOCAL_ISODIR="/home/$NorNet_LocalNode_NorNetUser/ISOs"
-mkdir -p "$LOCAL_ISODIR"
+sudo -u $NorNet_LocalNode_NorNetUser mkdir -p "$LOCAL_ISODIR"
+chown -R $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser "$LOCAL_ISODIR"
 for vsystem in $VSYSTEMS ; do
    NAME="BAD-NAME"
    AUTO_UPDATE_BOOTCD=""
@@ -63,12 +64,12 @@ for vsystem in $VSYSTEMS ; do
                updated=0
                if [ ! -e "$LOCAL_ISODIR/$NAME.iso" ] ; then
                   echo "`env LANG=C date +%FT%H:%M:%S`: Update for $NAME. Copying $AUTO_UPDATE_BOOTCD/$NAME.iso to $LOCAL_ISODIR ..."
-                  cp "$AUTO_UPDATE_BOOTCD/$NAME.iso" "$LOCAL_ISODIR/$NAME.iso"
+                  sudo -u $NorNet_LocalNode_NorNetUser cp "$AUTO_UPDATE_BOOTCD/$NAME.iso" "$LOCAL_ISODIR/$NAME.iso"
                   updated=1
                elif [ "$AUTO_UPDATE_BOOTCD/$NAME.iso" -nt "$LOCAL_ISODIR/$NAME.iso" ] ; then
                   echo "`env LANG=C date +%FT%H:%M:%S`: Update for $NAME. Copying updated $AUTO_UPDATE_BOOTCD/$NAME.iso to $LOCAL_ISODIR ..."
-                  cp "$AUTO_UPDATE_BOOTCD/$NAME.iso" "$LOCAL_ISODIR/$NAME.iso.tmp" && \
-                  mv "$LOCAL_ISODIR/$NAME.iso.tmp" "$LOCAL_ISODIR/$NAME.iso"
+                  sudo -u $NorNet_LocalNode_NorNetUser cp "$AUTO_UPDATE_BOOTCD/$NAME.iso" "$LOCAL_ISODIR/$NAME.iso.tmp" && \
+                  sudo -u $NorNet_LocalNode_NorNetUser mv "$LOCAL_ISODIR/$NAME.iso.tmp" "$LOCAL_ISODIR/$NAME.iso"
                   updated=1
                else
                   echo "`env LANG=C date +%FT%H:%M:%S`: No update for $NAME ($AUTO_UPDATE_BOOTCD/$NAME.iso) necessary."
