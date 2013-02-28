@@ -43,7 +43,8 @@ cat /tmp/install.log
 # Remove obsolete kernel packages
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Removing obsolete kernels ...\x1b[0m"
 ktype=$(uname -r | sed 's/.*-\(generic\|i386\|server\|common\|rt\|xen\|ec2\)/\1/')
-sudo DEBIAN_FRONTEND=noninteractive nohup apt-get remove -y -qq --purge 'linux-(headers|image)-.*' linux-headers-$(uname -r)+ linux-headers-$(uname -r | sed s/-$ktype//)+ linux-headers-$ktype+ linux-image-$(uname -r)+ linux-image-$ktype+ linux-image-extra-$(uname -r)+ linux-$ktype+ >/tmp/install.log 2>&1 &
+sudo DEBIAN_FRONTEND=noninteractive nohup apt-get remove -y -qq --purge 'linux-(headers|image)-.*' linux-headers-$(uname -r)+ linux-headers-$(uname -r | sed s/-$ktype//)+ linux-headers-$ktype+ linux-image-$(uname -r)+ linux-image-$ktype+ linux-$ktype+ >/tmp/install.log 2>&1 &
+# linux-image-extra-$(uname -r)+
 wait
 cat /tmp/install.log
 
