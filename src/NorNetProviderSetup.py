@@ -284,16 +284,21 @@ def getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
    # ====== Get tunnel configuration ========================================
    tunnelOverIPv4 = False
    if (version != 4):
-      localOuterAddress  = localProvider['provider_tunnelbox_ipv6']
-      remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv6']
-      if ((localOuterAddress == IPv6Address('::')) or (remoteOuterAddress == IPv6Address('::'))):
+      try:
+         localOuterAddress  = localProvider['provider_tunnelbox_ipv6']
+         remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv6']
+         if ((localOuterAddress == IPv6Address('::')) or (remoteOuterAddress == IPv6Address('::'))):
+            tunnelOverIPv4 = True
+         else:
+            tunnelInterface = 'seks' + str(remoteSiteIndex) + "-" + str(localProviderIndex) + '-' + str(remoteProviderIndex)
+      except:
          tunnelOverIPv4 = True
-      else:
-         tunnelInterface = 'seks' + str(remoteSiteIndex) + "-" + str(localProviderIndex) + '-' + str(remoteProviderIndex)
+
    if ((version == 4) or (tunnelOverIPv4 == True)):
       localOuterAddress  = localProvider['provider_tunnelbox_ipv4']
       remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv4']
       tunnelInterface    = 'gre' + str(remoteSiteIndex) + "-" + str(localProviderIndex) + '-' + str(remoteProviderIndex)
+
    localInnerAddress     =  makeNorNetTunnelIP(localSiteIndex, localProviderIndex,
                                                remoteSiteIndex, remoteProviderIndex, version)
    remoteInnerAddress    =  makeNorNetTunnelIP(remoteSiteIndex, remoteProviderIndex,
