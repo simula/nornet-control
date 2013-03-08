@@ -876,32 +876,42 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
 
    # ====== Non-Central Site tunnelbox ======================================
    if localSiteIndex != NorNet_SiteIndex_Central:
-      tunnel         = getTunnel(localSite, localProvider, remoteSite, remoteProvider, 4)
-      remoteNetwork  = makeNorNetIP(remoteProvider['provider_index'], remoteSite['site_index'], 0, 0, 4)
-      interfaceToPLC = tunnel['tunnel_interface']
+      #remoteNetwork  = makeNorNetIP(remoteProvider['provider_index'], remoteSite['site_index'], 0, 0, 4)
+      ##interfaceToPLC = tunnel['tunnel_interface']
 
       outputFile.write('\nif [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
       outputFile.write('   log-action "Tearing down tunnel to central site ..."\n')
-      outputFile.write('   remove-tunnel ' + \
-                       tunnel['tunnel_interface'] + ' ' + \
-                       hex(tunnel['tunnel_key'])  + '   && \\\n')
+      for version in [ 4, 6 ]:
+         tunnel = getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
+         outputFile.write('   remove-tunnel ' + \
+                        tunnel['tunnel_interface'] + ' ' + \
+                        hex(tunnel['tunnel_key'])  + '   && \\\n')
       outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
       outputFile.write('fi\n')
 
       outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
       outputFile.write('   log-action "Setting up tunnel to central site ..."\n')
-      outputFile.write('   make-tunnel ' + \
-                       tunnel['tunnel_interface']                    + ' ' + \
-                       hex(tunnel['tunnel_key'])                     + ' ' + \
-                       str(tunnel['tunnel_local_outer_address'])     + ' ' + \
-                       str(tunnel['tunnel_remote_outer_address'])    + ' ' + \
-                       str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
-                       str(tunnel['tunnel_remote_inner_address'].ip) + '  && \\\n')
-      outputFile.write('   make-route main ' + \
-                       str(remoteNetwork) + ' ' +
-                       tunnel['tunnel_interface'] + ' ' + \
-                       str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
-                       'metric 5   && \\\n')
+      for version in [ 4, 6 ]:
+         tunnel  = getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
+         options = ""
+         if ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
+            options = '--add-to-existing-tunnel'
+         elif ((version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
+            options = '--v6-linklocal ' + str(makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
+                                                               tunnel['tunnel_remote_outer_address']))
+         outputFile.write('   make-tunnel ' + \
+                        tunnel['tunnel_interface']                    + ' ' + \
+                        hex(tunnel['tunnel_key'])                     + ' ' + \
+                        str(tunnel['tunnel_local_outer_address'])     + ' ' + \
+                        str(tunnel['tunnel_remote_outer_address'])    + ' ' + \
+                        str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
+                        str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
+                        '"' + options + '" && \\\n')
+         outputFile.write('   make-route main ' + \
+                        str(remoteNetwork) + ' ' +
+                        tunnel['tunnel_interface'] + ' ' + \
+                        str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
+                        'metric 5   && \\\n')
       outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
       outputFile.write('fi\n')
 
