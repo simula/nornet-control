@@ -901,18 +901,18 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
             options = '--v6-linklocal ' + str(makeGRELinkLocal(IPv4Address(tunnel['tunnel_local_outer_address']),
                                                                IPv4Address(tunnel['tunnel_remote_outer_address'])))
          outputFile.write('   make-tunnel ' + \
-                        tunnel['tunnel_interface']                    + ' ' + \
-                        hex(tunnel['tunnel_key'])                     + ' ' + \
-                        str(tunnel['tunnel_local_outer_address'])     + ' ' + \
-                        str(tunnel['tunnel_remote_outer_address'])    + ' ' + \
-                        str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
-                        str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
-                        '"' + options + '" && \\\n')
+                          tunnel['tunnel_interface']                    + ' ' + \
+                          hex(tunnel['tunnel_key'])                     + ' ' + \
+                          str(tunnel['tunnel_local_outer_address'])     + ' ' + \
+                          str(tunnel['tunnel_remote_outer_address'])    + ' ' + \
+                          str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
+                          str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
+                          '"' + options + '" && \\\n')
          outputFile.write('   make-route main ' + \
-                        str(remoteNetwork) + ' ' +
-                        tunnel['tunnel_interface'] + ' ' + \
-                        str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
-                        'metric 5   && \\\n')
+                          str(remoteNetwork) + ' ' +
+                          tunnel['tunnel_interface'] + ' ' + \
+                          str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
+                          'metric 5   && \\\n')
       outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
       outputFile.write('fi\n')
 
