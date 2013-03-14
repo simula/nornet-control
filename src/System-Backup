@@ -101,8 +101,8 @@ backup_file /etc/exports     $newBackup
 
 # ------ Network ------------------------
 mkdir -p $newBackup/network
-backup_file /etc/network/interfaces                             $newBackup/network
-backup_file /lib/udev/rules.d/75-persistent-net-generator.rules $newBackup/network
+backup_file /etc/network/interfaces                   $newBackup/network
+backup_file /etc/udev/rules.d/70-persistent-net.rules $newBackup/network
 
 # ------ NorNet -------------------------
 mkdir -p $newBackup/nornet
