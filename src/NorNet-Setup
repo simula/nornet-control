@@ -358,7 +358,8 @@ def removeSite(site):
             site = fullSiteList[siteIndex]
             removeNorNetSite(site['site_long_name'])
    else:
-      removeNorNetSite(site['site_long_name'])
+      siteName = makeNameFromUnicode(site['site_long_name'], False)['ascii']
+      removeNorNetSite(siteName)
 
 
 # ###### Add site ###########################################################
