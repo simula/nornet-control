@@ -371,7 +371,7 @@ distribution = sys.argv[3]
 
 # ====== Get configuration ==================================================
 loginToPLC()
-fullSiteList = fetchNorNetSiteList()
+fullSiteList = fetchNorNetSiteList(False)
 
 node = fetchNorNetNode(fqdn)
 if node == None:
