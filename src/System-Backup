@@ -99,14 +99,19 @@ backup_file /etc/auto.master $newBackup
 backup_file /etc/auto.nfs    $newBackup
 backup_file /etc/exports     $newBackup
 
-# ------ NorNet -------------------------
+# ------ Network ------------------------
 mkdir -p $newBackup/network
-backup_file /etc/nornet/nornetapi-config  $newBackup/network
-backup_file /etc/nornet/Server-Setup.args $newBackup/network
+backup_file /etc/network/interfaces                             $newBackup/network
+backup_file /lib/udev/rules.d/75-persistent-net-generator.rules $newBackup/network
+
+# ------ NorNet -------------------------
+mkdir -p $newBackup/nornet
+backup_file /etc/nornet/nornetapi-config  $newBackup/nornet
+backup_file /etc/nornet/Server-Setup.args $newBackup/nornet
 
 mkdir -p $newBackup/nornet
 backup_file /etc/nornet/nornetapi-config $newBackup/nornet
-backup_file /etc/nornet/watchdog-config $newBackup/nornet
+backup_file /etc/nornet/watchdog-config  $newBackup/nornet
 
 if [ -d /etc/nornet/vsystems/ ] ; then
    vSystems=`find /etc/nornet/vsystems/ -name "[0-9][0-9]-*[0-9a-zA-Z]"`
@@ -140,6 +145,9 @@ done
 uname -a >$newBackup/sysinfo/uname.txt
 free >$newBackup/sysinfo/free.txt
 df >$newBackup/sysinfo/df.txt
+if [ -e /usr/sbin/smartctl ] ; then
+   smartctl -a /dev/sda >$newBackup/sysinfo/smart-sda.txt || true
+fi
 # -----------------------------------------------------------------
 
 
