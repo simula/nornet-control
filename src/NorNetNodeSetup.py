@@ -52,13 +52,15 @@ def makeAutoFSConfiguration(weAreOnFileServer, siteIndex, nodeIndex, addHeader):
       outputFile.write('/nfs\t/etc/auto.nfs\n')
    outputFile.close()
 
+   nfsOptions = 'nfsvers=4,proto=tcp,rsize=32768,wsize=32768,soft,async,intr,noatime,nodiratime'
+
    outputFile = codecs.open('auto.nfs', 'w', 'utf-8')
    if addHeader == True:
       writeAutoConfigInformation(outputFile)         
    if weAreOnFileServer == False:
       fileServer = 'nfs.' + NorNet_CentralSite_DomainName
-      outputFile.write('adm\t-fstype=nfs,nfsvers=4,proto=tcp,rsize=32768,wsize=32768,soft,intr,noatime,nodiratime,rw\t' + fileServer + ':/filesrv/adm\n')
-      outputFile.write('pub\t-fstype=nfs,nfsvers=4,proto=tcp,rsize=32768,wsize=32768,soft,intr,noatime,nodiratime,rw\t' + fileServer + ':/filesrv/pub\n')
-      outputFile.write('sys\t-fstype=nfs,nfsvers=4,proto=tcp,rsize=32768,wsize=32768,soft,intr,noatime,nodiratime,rw\t' + fileServer + ':/filesrv/sys\n')
-      outputFile.write('node\t-fstype=nfs,nfsvers=4,proto=tcp,rsize=32768,wsize=32768,soft,intr,noatime,nodiratime,rw\t' + fileServer + ':/filesrv/sys/' + str(siteIndex) + '/' + str(nodeIndex) + '\n')
+      outputFile.write('adm\t-fstype=nfs,' + nfsOptions + ',rw\t' + fileServer + ':/filesrv/adm\n')
+      outputFile.write('pub\t-fstype=nfs,' + nfsOptions + ',rw\t' + fileServer + ':/filesrv/pub\n')
+      outputFile.write('sys\t-fstype=nfs,' + nfsOptions + ',rw\t' + fileServer + ':/filesrv/sys\n')
+      outputFile.write('node\t-fstype=nfs,' + nfsOptions + ',rw\t' + fileServer + ':/filesrv/sys/' + str(siteIndex) + '/' + str(nodeIndex) + '\n')
    outputFile.close()

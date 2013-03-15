@@ -53,7 +53,7 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid, configNamePrefix
    outputFile = codecs.open(configurationName, 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
    
-   nfsOptions = 'subtree_check,sync,no_wdelay,all_squash,anonuid=' + str(uid) + ',anongid=' + str(gid)
+   nfsOptions = 'subtree_check,async,no_wdelay,all_squash,anonuid=' + str(uid) + ',anongid=' + str(gid)
 
    # ====== Global shares ===================================================
    log('Writing global configuration ...')
