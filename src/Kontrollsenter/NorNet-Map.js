@@ -1,6 +1,6 @@
 //
 // NorNet Map JavaScript Functions
-// Copyright (C) 2012 by Thomas Dreibholz
+// Copyright (C) 2012-2013 by Thomas Dreibholz
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -98,31 +98,21 @@ function makeMap(latitude, longitude, zoomLevel)
    window.mapmarkers = new OpenLayers.Layer.Markers("Sites");
    window.maplayers.push(window.mapmarkers);
 
-   // ====== Caching ========================================================
-//    window.mapcache_read  = new OpenLayers.Control.CacheRead();
-//    window.mapcache_read.activate();
-//    window.mapcache_write = new OpenLayers.Control.CacheWrite();
-//    window.mapcache_write.activate();
-
    // ====== Create the map =================================================
    window.map = new OpenLayers.Map({
       div:               "map_canvas",
       units:             "m",
-      projection:        new OpenLayers.Projection("EPSG:900913"),
+      projection:        new OpenLayers.Projection("EPSG:4326"),
       displayProjection: new OpenLayers.Projection("EPSG:4326"),
       layers:            window.maplayers,
       controls: [
-//          window.mapcache_read,
-//          window.mapcache_write,
-         new OpenLayers.Control.Navigation(),
          new OpenLayers.Control.PanZoomBar(),
-         new OpenLayers.Control.LayerSwitcher({'ascending':false}),
-         new OpenLayers.Control.Permalink(),
          new OpenLayers.Control.ScaleLine(),
-         new OpenLayers.Control.Permalink('permalink'),
+         new OpenLayers.Control.Navigation(),
          new OpenLayers.Control.MousePosition(),
          new OpenLayers.Control.OverviewMap(),
-         new OpenLayers.Control.KeyboardDefaults()
+         new OpenLayers.Control.KeyboardDefaults(),
+         new OpenLayers.Control.LayerSwitcher( { 'ascending': false } )
       ]
    });
    window.default_latitude  = latitude;
@@ -136,7 +126,8 @@ function makeMap(latitude, longitude, zoomLevel)
 function zoomToLocation(latitude, longitude, zoomLevel)
 {
    window.map.setCenter(new OpenLayers.LonLat(longitude, latitude).transform(
-                           new OpenLayers.Projection("EPSG:4326"), window.map.getProjectionObject()),
+                           new OpenLayers.Projection("EPSG:4326"),
+                           window.map.getProjectionObject()),
                         zoomLevel);
 }
 
@@ -193,7 +184,8 @@ function makePosition(positionVariable, latitude, longitude)
 {
    removePosition(positionVariable);
    position = new OpenLayers.LonLat(longitude, latitude).transform(
-                 new OpenLayers.Projection("EPSG:4326"), window.map.getProjectionObject());
+                 new OpenLayers.Projection("EPSG:4326"),
+                 window.map.getProjectionObject());
    setVariable(positionVariable, position);
 }
 
