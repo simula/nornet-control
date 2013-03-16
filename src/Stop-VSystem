@@ -116,7 +116,7 @@ if [ "$status" = "paused" ] ; then
    status=`Check-VSystem "$MACHINE_NAME"`
 fi
 
-if [ "$status" = "running" ] ; then
+if [ "$status" = "running" -o "$status" = "stopping" ] ; then
    echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (ACPI power button) ..." && \
    vmcontrol "$MACHINE_NAME" acpipowerbutton && \
    wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY" && \
