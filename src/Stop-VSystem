@@ -19,6 +19,15 @@
 # Contact: dreibh@simula.no
 
 
+# ###### Call VBoxManage with timeouts #######################################
+vmcontrol ()
+{
+   intTimeout=45
+   killTimeout=60
+   sudo -u $NorNet_LocalNode_NorNetUser timeout -s INT -k $killTimeout $intTimeout VBoxManage controlvm $@ || true
+}
+
+
 # ###### Wait for shutdown ##################################################
 wait_for_shutdown ()
 # $1 = Name
@@ -41,7 +50,7 @@ wait_for_shutdown ()
       fi
       # Again send ACPI powerbutton.
       # If the system had been booting, the event might have been missed.
-      sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$1" acpipowerbutton || true
+      vmcontrol "$1" acpipowerbutton
    done
    echo ""
 }
@@ -59,16 +68,16 @@ stop_virtual_systems ()
       ( . ./$vsystem && \
         status=`Check-VSystem "$MACHINE_NAME"` && \
         if [ "$status" = "paused" ] ; then
-           sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$MACHINE_NAME" resume || true
+           vmcontrol "$MACHINE_NAME" resume
            status=`Check-VSystem "$MACHINE_NAME"`
         fi
         if [ "$status" = "running" ] ; then
            echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (ACPI power button) ..." && \
-           sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$MACHINE_NAME" acpipowerbutton  || true && \
+           vmcontrol "$MACHINE_NAME" acpipowerbutton && \
            wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY" && \
            if [ "$status" = "running" ] ; then
               echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (power off) ..." && \
-              sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$MACHINE_NAME" poweroff || true
+              vmcontrol "$MACHINE_NAME" poweroff
            fi
         fi
       ) || true
@@ -103,13 +112,31 @@ fi
 status=`Check-VSystem "$MACHINE_NAME"` && \
 if [ "$status" = "paused" ] ; then
    echo "`env LANG=C date +%FT%H:%M:%S`: Resuming $MACHINE_NAME to perform shutdown ..." && \
-   sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$MACHINE_NAME" resume || true
+   vmcontrol "$MACHINE_NAME" resume
    status=`Check-VSystem "$MACHINE_NAME"`
 fi
+
 if [ "$status" = "running" ] ; then
    echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (ACPI power button) ..." && \
-   sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$MACHINE_NAME" acpipowerbutton  || true && \
+   vmcontrol "$MACHINE_NAME" acpipowerbutton && \
    wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY" && \
    echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (power off) ..." && \
-   sudo -u $NorNet_LocalNode_NorNetUser VBoxManage controlvm "$MACHINE_NAME" poweroff || true
+   vmcontrol "$MACHINE_NAME" poweroff && \
+   wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
+fi
+
+# ====== Work around for VirtualBox problem =================================
+# Check whether the VirtualBox machine hangs.
+# This seems to be a common and yet unfixed bug of VirtualBox ...
+if [ -e "/var/run/nornet-server-$MACHINE_NAME.pid" ] ; then
+   pid=`cat "/var/run/nornet-server-$MACHINE_NAME.pid"`
+   if [ "$pid" != "" ] ; then
+      if ps -p $pid >/dev/null 2>&1 ; then
+         echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME seems to be BROKEN! Scheiße!"
+         ps -p $pid
+         echo "Sending SIGKILL to $pid ..."
+         kill -KILL $pid
+      fi
+   fi
+   rm -f "/var/run/nornet-server-$MACHINE_NAME.pid"
 fi

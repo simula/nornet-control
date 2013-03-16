@@ -83,10 +83,11 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
 
    # ====== Start the virtual system ========================================
    touch "/var/log/nornet-server-$NAME.log"
-   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser "/var/log/nornet-server-$NAME.log"
+   touch "/var/run/nornet-server-$NAME.pid"
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser "/var/log/nornet-server-$NAME.log" "/var/run/nornet-server-$NAME.pid"
    # Note: The "permission denied" error is a false positive from libjpeg-turbo8. Bug #1014487 and #1031718 => filtering it out!"
    sudo -u $NorNet_LocalNode_NorNetUser /bin/sh -c \
-      "nohup </dev/null VBoxHeadless --startvm \"$NAME\" $vncOptions >"/var/log/nornet-server-$NAME.log" 2>&1 | grep -v 'Error opening file for reading: Permission denied' &" || true
+      "nohup </dev/null VBoxHeadless --startvm \"$NAME\" $vncOptions >\"/var/log/nornet-server-$NAME.log\" 2>&1 & echo \$! >\"/var/run/nornet-server-$NAME.pid\" 2>&1" || true
       
    # ====== Give the system time to boot ====================================
    echo "`env LANG=C date +%FT%H:%M:%S`: Waiting $STARTDELAY seconds ..."
