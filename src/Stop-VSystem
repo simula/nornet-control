@@ -133,9 +133,9 @@ if [ -e "/var/run/nornet-server-$MACHINE_NAME.pid" ] ; then
    if [ "$pid" != "" ] ; then
       if ps -p $pid >/dev/null 2>&1 ; then
          echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME seems to be BROKEN! Scheiße!"
-         ps -p $pid
+         ps -p $pid || true
          echo "Sending SIGKILL to $pid ..."
-         sudo -u $NorNet_LocalNode_NorNetUser kill -KILL $pid
+         sudo -u $NorNet_LocalNode_NorNetUser kill -KILL $pid || true
       fi
    fi
    rm -f "/var/run/nornet-server-$MACHINE_NAME.pid"
