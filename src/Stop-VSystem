@@ -54,7 +54,7 @@ wait_for_shutdown ()
          vmcontrol "$1" acpipowerbutton
       fi
    done || true
-   echo " TIMEOUT!"
+   echo ""
 }
 
 
