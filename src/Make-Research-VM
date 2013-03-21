@@ -52,5 +52,6 @@ VBoxManage storageattach "$VM_NAME" --storagectl "SATA Controller" --port 1 --de
    echo "NAME=\"$VM_NAME"\"
    echo "STARTDELAY=30"
    echo "STOPDELAY=30"
+   echo "OPTIONS=\"default\""
    echo "AUTO_UPDATE_BOOTCD=\"default\""
 ) >"70-$VM_NAME"

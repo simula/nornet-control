@@ -42,7 +42,7 @@ wait_for_shutdown ()
       let r=($i % 10)
       if [ $r -eq 0 ] ; then
          echo -n "${i}s"
-      fi
+      fi      
       status=`Check-VSystem "$MACHINE_NAME"`
       if [ "$status" = "aborted" -o "$status" = "poweroff" -o "$status" = "stuck" ] ; then
          echo -n " OK!"
@@ -50,9 +50,11 @@ wait_for_shutdown ()
       fi
       # Again send ACPI powerbutton.
       # If the system had been booting, the event might have been missed.
-      vmcontrol "$1" acpipowerbutton
-   done
-   echo ""
+      if [ "$status" = "running" ] ; then
+         vmcontrol "$1" acpipowerbutton
+      fi
+   done || true
+   echo " TIMEOUT!"
 }
 
 
@@ -73,15 +75,15 @@ stop_virtual_systems ()
         fi
         if [ "$status" = "running" ] ; then
            echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (ACPI power button) ..." && \
-           vmcontrol "$MACHINE_NAME" acpipowerbutton && \
-           wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY" && \
+           vmcontrol "$MACHINE_NAME" acpipowerbutton
+           wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
            if [ "$status" = "running" ] ; then
               echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (power off) ..." && \
               vmcontrol "$MACHINE_NAME" poweroff
            fi
         fi
       ) || true
-   done
+   done   
 }
 
 
@@ -116,12 +118,18 @@ if [ "$status" = "paused" ] ; then
    status=`Check-VSystem "$MACHINE_NAME"`
 fi
 
-if [ "$status" = "running" -o "$status" = "stopping" ] ; then
+if [ "$status" = "running" ] ; then
    echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (ACPI power button) ..." && \
    vmcontrol "$MACHINE_NAME" acpipowerbutton && \
-   wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY" && \
-   echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (power off) ..." && \
-   vmcontrol "$MACHINE_NAME" poweroff && \
+   wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
+   status=`Check-VSystem "$MACHINE_NAME"`
+fi
+
+if [ "$status" = "running" -o "$status" = "stopping" ] ; then
+   echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (power off) ..."
+   if [ "$status" = "running" ] ; then
+      vmcontrol "$MACHINE_NAME" poweroff
+   fi
    wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
 fi
 
