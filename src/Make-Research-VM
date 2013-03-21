@@ -35,7 +35,7 @@ VRAM="16"
 
 VBoxManage unregistervm "$VM_NAME" --delete || true
 
-VBoxManage createvm --register --name "$VM_NAME" --ostype Ubuntu_64
+VBoxManage createvm --register --name "$VM_NAME" --ostype Fedora_64
 VBoxManage modifyvm "$VM_NAME" --cpus "$CPUS" \
                                --memory "$MEMORY_SIZE" --vram "$VRAM" \
                                --rtcuseutc on --firmware bios --chipset piix3 --acpi on --ioapic on \
