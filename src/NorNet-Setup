@@ -323,8 +323,8 @@ norNetSetup = [
    'site_pcu'          : [ IPv4Address('132.252.156.12'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Deutsches Forschungsnetz', 'eth1', IPv4Address('132.252.152.105'), IPv6Address('2001:638:501:4ef2::105') ]
-      #[ 'Versatel',                 'eth2', IPv4Address('89.546.2424.231'), IPv6Address('::') ]
+      [ 'Deutsches Forschungsnetz', 'eth1', IPv4Address('132.252.152.105'), IPv6Address('2001:638:501:4ef2::105') ],
+      [ 'Versatel',                 'eth2', IPv4Address('89.246.242.228'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'altenessen'  ],

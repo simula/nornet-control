@@ -34,19 +34,23 @@ from NorNetTools import *;
 NorNet_ProviderList = {
 #   ID     Name                                Short Name (ASCII only!)
 # =====================================================================
-     0 : [ 'UNKNOWN',                          'unknown'  ],
+     0 : [ 'UNKNOWN',                          'unknown'   ],
 
-     1 : [ 'Uninett',                          'uninett'  ],
-     2 : [ 'Hafslund',                         'hafslund' ],
+   # ------ Norway ---------------------------------------------
+     1 : [ 'Uninett',                          'uninett'   ],
+     2 : [ 'Hafslund',                         'hafslund'  ],
+     3 : [ 'ICE',                              'ice'       ],
 
-   100 : [ 'Telenor',                          'telenor'  ],
-   101 : [ 'NetCom',                           'netcom'   ],
-   102 : [ 'Tele2',                            'tele2'    ],
-   103 : [ 'ICE',                              'ice'      ],
+     4 : [ 'Telenor',                          'telenor'   ],
+     5 : [ 'NetCom',                           'netcom'    ],
+     6 : [ 'Tele2',                            'tele2'     ],
+     7 : [ 'Network Norway',                   'netnorway' ],
 
-   222 : [ 'Deutsches Forschungsnetz',         'dfn'      ],
-   223 : [ 'Deutsche Telekom',                 'dtag'     ],
-   224 : [ 'Versatel',                         'versatel' ]
+   # ------ Germany --------------------------------------------
+    30 : [ 'Deutsches Forschungsnetz',         'dfn'       ],
+    31 : [ 'Versatel',                         'versatel'  ],
+    32 : [ 'Deutsche Telekom',                 'dtag'      ]
+
 }
 
 # Prefixes for the internal IPv4 and IPv6 networks
