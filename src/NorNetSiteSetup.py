@@ -69,6 +69,8 @@ def makeNorNetTagTypes():
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Interface',    'nornet_site_tbp' + str(i) + '_interface')
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv4', 'nornet_site_tbp' + str(i) + '_address_ipv4')
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv6', 'nornet_site_tbp' + str(i) + '_address_ipv6')
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv4', 'nornet_site_tbp' + str(i) + '_gateway_ipv4')
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv6', 'nornet_site_tbp' + str(i) + '_gateway_ipv6')
 
    makeTagType('node/nornet',      'NorNet Managed Node',             'nornet_is_managed_node')
    makeTagType('node/nornet',      'NorNet Node UTF-8',               'nornet_node_utf8')
@@ -177,18 +179,24 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
                   error('Unable to add "nornet_site_default_provider_index" tag to site ' + siteName)
                gotDefaultProvider = True
 
-            providerInterface = str(provider[1])
-            providerIPv4      = IPv4Address(provider[2])
-            providerIPv6      = IPv6Address(provider[3])
+            providerInterface   = str(provider[1])
+            providerAddressIPv4 = IPv4Network(provider[2])
+            providerGatewayIPv4 = IPv4Address(provider[3])
+            providerAddressIPv6 = IPv6Network(provider[4])
+            providerGatewayIPv6 = IPv6Address(provider[5])
 
             if _addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_index', str(providerIndex)) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_index" tag to site ' + siteName)
             if _addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_interface', providerInterface) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_interface" tag to site ' + siteName)
-            if _addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_address_ipv4', str(providerIPv4)) <= 0:
-               error('Unable to add "nornet_site_tbp' + str(i) + '_ipv4" tag to site ' + siteName)
-            if _addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_address_ipv6', str(providerIPv6)) <= 0:
-               error('Unable to add "nornet_site_tbp' + str(i) + '_ipv6" tag to site ' + siteName)
+            if _addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_address_ipv4', str(providerAddressIPv4)) <= 0:
+               error('Unable to add "nornet_site_tbp' + str(i) + '_address_ipv4" tag to site ' + siteName)
+            if _addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_address_ipv6', str(providerAddressIPv6)) <= 0:
+               error('Unable to add "nornet_site_tbp' + str(i) + '_address_ipv6" tag to site ' + siteName)
+            if _addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_gateway_ipv4', str(providerGatewayIPv4)) <= 0:
+               error('Unable to add "nornet_site_tbp' + str(i) + '_gateway_ipv4" tag to site ' + siteName)
+            if _addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_gateway_ipv6', str(providerGatewayIPv6)) <= 0:
+               error('Unable to add "nornet_site_tbp' + str(i) + '_gateway_ipv6" tag to site ' + siteName)
 
          i = i + 1
 

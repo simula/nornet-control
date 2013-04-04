@@ -266,10 +266,11 @@ norNetSetup = [
    'site_latitude'     : 63.419034,
    'site_longitude'    : 10.4022,
    'site_altitude'     : 20,
-   'site_pcu'          : [ IPv4Address('132.252.156.7'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('129.241.200.129'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Uninett', 'eth1', IPv4Address('132.252.156.75'), IPv6Address('::') ],
+      [ 'Uninett', 'eth1', IPv4Network('129.241.200.128/24'), IPv4Address('129.241.200.1'),
+                           IPv6Network('::/0'), IPv6Address('::') ],
    ],
    'site_nodes' : [
       [ 100, 1, u'bybro'      ],

@@ -327,18 +327,28 @@ def getNorNetProvidersForSite(norNetSite):
          if providerIndex <= 0:
             continue
          providerInfo        = getNorNetProviderInfo(providerIndex)
-         providerTbIPv4      = IPv4Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv4', '0.0.0.0'))
-         providerTbIPv6      = IPv6Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::'))
+         providerTbIPv4      = IPv4Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv4', '0.0.0.0/0'))
+         providerGwIPv4      = IPv4Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_gateway_ipv4', '0.0.0.0'))
+#???? ACTIVATE ME!
+         #if not providerGwIPv4 in providerTbIPv4:
+            #error('Bad IPv4 network/gateway settings of provider ' + providerInfo[0])
+         providerTbIPv6      = IPv6Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::/0'))         
+         providerGwIPv6      = IPv6Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_gateway_ipv6', '::'))
+#???? ACTIVATE ME!
+         #if not providerGwIPv6 in providerTbIPv6:
+            #error('Bad IPv6 network/gateway settings of provider ' + providerInfo[0])
          providerTbInterface = getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_interface', '')
          if not re.match(r"^[a-zA-Z0-9_-]*$", providerTbInterface):
             error('Bad interface name ' + providerTbInterface)
          norNetProvider = {
             'provider_index'               : providerIndex,
-            'provider_short_name'          : providerInfo[1],
             'provider_long_name'           : providerInfo[0],
+            'provider_short_name'          : providerInfo[1],
             'provider_tunnelbox_ipv4'      : providerTbIPv4,
             'provider_tunnelbox_ipv6'      : providerTbIPv6,
-            'provider_tunnelbox_interface' : providerTbInterface
+            'provider_tunnelbox_interface' : providerTbInterface,
+            'provider_gateway_ipv4'        : providerGwIPv4,
+            'provider_gateway_ipv6'        : providerGwIPv6
          }
 
          norNetProviderList[providerIndex] = norNetProvider

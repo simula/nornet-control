@@ -107,9 +107,9 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                      for version in [ 4, 6 ]:
                         internalAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
                         if version == 4:
-                           externalAddress = localProvider['provider_tunnelbox_ipv4']
+                           externalAddress = localProvider['provider_tunnelbox_ipv4'].ip
                         else:
-                           externalAddress = localProvider['provider_tunnelbox_ipv6']
+                           externalAddress = localProvider['provider_tunnelbox_ipv6'].ip
 
                         outputFile.write('define service {\n')
                         outputFile.write('   use                 generic-service\n')

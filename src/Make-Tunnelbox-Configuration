@@ -326,11 +326,11 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
          if node['node_index'] == NorNet_NodeIndex_Tunnelbox:
             writeRR(siteZoneFile,
                     addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']) + '-ext') + '.',
-                    'A', str(localProvider['provider_tunnelbox_ipv4']))
-            if localProvider['provider_tunnelbox_ipv6'] != IPv6Address('::'):
+                    'A', str(localProvider['provider_tunnelbox_ipv4'].ip))
+            if localProvider['provider_tunnelbox_ipv6'].ip != IPv6Address('::'):
                writeRR(siteZoneFile,
                        addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']) + '-ext') + '.',
-                       'AAAA', str(localProvider['provider_tunnelbox_ipv6']))
+                       'AAAA', str(localProvider['provider_tunnelbox_ipv6'].ip))
 
    if localSiteIndex == NorNet_SiteIndex_Central:
       # ====== Tunnels ======================================================
@@ -789,6 +789,39 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
             outputFile.write('   remove-table ' + str(routingTableID) + '\n')
 
 
+      # ====== Secondary ISP routing from seconary ISP's address ============
+      if localProviderIndex != localSite['site_default_provider_index']:
+         routingTableID       = getTableID(512)
+         routingTableDestPref = getTablePref(512, 4)
+         
+         if (state == 'start'):
+            outputFile.write('   log "Setting up DEFAULT routes for secondary ISP ' + localProvider['provider_long_name'] + '"\n')
+            outputFile.write('   make-table ' + str(routingTableID) + '   # DEFAULT for ' + localProvider['provider_long_name'] + '\n')
+            for version in [ 4, 6 ]:
+               if ((version == 4) or
+                  (localProvider['provider_tunnelbox_ipv' + str(version)].ip != IPv6Address('::'))):
+                  outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableDestPref) + \
+                                   ' from ' + str(localProvider['provider_tunnelbox_ipv' + str(version)]) + '\n')
+                  for outgoingProviderIndex in localProviderList:
+                     outgoingProvider = localProviderList[outgoingProviderIndex]
+                     if ((version == 4) or
+                        (outgoingProvider['provider_tunnelbox_ipv' + str(version)].ip != IPv6Address('::'))):
+                        if outgoingProviderIndex == localProviderIndex:
+                           metric = 2
+                        else:
+                           metric = 5
+                        outputFile.write('   make-route ' + \
+                                         str(routingTableID) + ' ' +
+                                         'default ' +
+                                         outgoingProvider['provider_tunnelbox_interface'] + ' ' + \
+                                         str(outgoingProvider['provider_gateway_ipv' + str(version)]) + ' ' + \
+                                         'metric ' + str(metric) + '\n')
+   
+         elif (state == 'stop'):
+            outputFile.write('   log "Tearing down DEFAULT routes for secondary ISP ' + localProvider['provider_long_name'] + '"\n')
+            outputFile.write('   remove-table ' + str(routingTableID) + '\n')
+
+
       # ====== Use main table to access tunnel endpoints ====================
       routingTableDestPref = 256
       for version in [ 4, 6 ]:
@@ -853,7 +886,7 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
       'provider_index'          : localProviderIndex,
       'provider_long_name'      : 'Local Provider',
       'provider_short_name'     : 'local',
-      'provider_tunnelbox_ipv4' : localAddress
+      'provider_tunnelbox_ipv4' : IPv4Network(localAddress)
    }
    remoteSite = {
       'site_index'              : NorNet_SiteIndex_Central,
@@ -864,7 +897,7 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
       'provider_index'          : NorNet_CentralSite_BootstrapProviderIndex,
       'provider_long_name'      : 'Local Provider',
       'provider_short_name'     : 'local',
-      'provider_tunnelbox_ipv4' : NorNet_CentralSite_BootstrapTunnelbox
+      'provider_tunnelbox_ipv4' : IPv4Network(NorNet_CentralSite_BootstrapTunnelbox)
    }
 
    if configNamePrefix == None:
@@ -997,10 +1030,10 @@ def makeTunnelboxConfiguration(fullSiteList, localSite, configNamePrefix):
                        '"' + str(localProvider['provider_tunnelbox_interface']).replace('-', '_').replace(':', '_sub_') + '"\n')
       outputFile.write('ipv4_for_provider_' + \
                        localProvider['provider_short_name'] + '="' + \
-                       str(localProvider['provider_tunnelbox_ipv4']) + '"\n')
+                       str(localProvider['provider_tunnelbox_ipv4'].ip) + '"\n')
       outputFile.write('ipv6_for_provider_' + \
                        localProvider['provider_short_name'] + '="' + \
-                       str(localProvider['provider_tunnelbox_ipv6']) + '"\n')
+                       str(localProvider['provider_tunnelbox_ipv6'].ip) + '"\n')
 
       outputFile.write('tunnel_interfaces_for_provider_' + \
                        localProvider['provider_short_name'] + '="')
@@ -1069,8 +1102,8 @@ def makeTunnelboxConfiguration(fullSiteList, localSite, configNamePrefix):
               ((onlyDefault == False) and (localProviderIndex != localSite['site_default_provider_index'])) ):
             localProvider = localProviderList[localProviderIndex]
             tbpName = makeTunnelboxProvider(fullSiteList, localSite,
-                                             localProviderList, localProvider,
-                                             pathNumber, configNamePrefix)
+                                            localProviderList, localProvider,
+                                            pathNumber, configNamePrefix)
             pathNumber = pathNumber + 1
 
    outputFile.write('check-providers "$all_providers" "$selectedProviders"\n')
