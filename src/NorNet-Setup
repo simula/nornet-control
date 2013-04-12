@@ -272,14 +272,14 @@ norNetSetup = [
    'site_province'     : 'Sør-Trøndelag',
    'site_country'      : 'Norge',
    'site_country_code' : 'NO',
-   'site_latitude'     : 63.419034,
-   'site_longitude'    : 10.4022,
-   'site_altitude'     : 20,
+   'site_latitude'     : 63.418003,
+   'site_longitude'    : 10.401625,
+   'site_altitude'     : 50,
    'site_pcu'          : [ IPv4Address('129.241.200.129'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Uninett', 'eth1', IPv4Network('129.241.200.128/24'), IPv4Address('129.241.200.1'),
-                           IPv6Network('::/0'),               IPv6Address('::') ]
+      [ 'Uninett', 'eth1', IPv4Network('129.241.200.128/24'),        IPv4Address('129.241.200.1'),
+                           IPv6Network('2001:700:300:2211::128/64'), IPv6Address('2001:700:300:2211::1') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'bybro'      ],
