@@ -58,7 +58,7 @@ NorNet_IPv4Prefix = IPv4Network('10.0.0.0/8')            # /8 prefix for interna
 NorNet_IPv6Prefix = IPv6Network('2001:700:4100::/48')    # /48 prefix for internal IPv6 space (e.g. '2001:700:4100::/48')
 
 # Prefixes for the internal tunnel IPv4 and IPv6 networks
-NorNet_IPv4TunnelPrefix = IPv4Network('10.0.0.0/8')                  # /16 prefix for internal IPv4 tunnel space (e.g. '192.168.0.0/16')
+NorNet_IPv4TunnelPrefix = IPv4Network('192.168.0.0/16')              # /16 prefix for internal IPv4 tunnel space (e.g. '192.168.0.0/16')
 NorNet_IPv6TunnelPrefix = IPv6Network('2001:700:4100:0:ffff::/72')   # /72 prefix for internal IPv6 tunnel space (e.g. '2001:700:4100:0:ffff::/72')
 
 # The domain name of the central site
