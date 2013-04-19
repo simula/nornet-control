@@ -55,7 +55,7 @@ NorNet_ProviderList = {
 
 # Prefixes for the internal IPv4 and IPv6 networks
 NorNet_IPv4Prefix = IPv4Network('10.0.0.0/8')       # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
-NorNet_IPv6Prefix = IPv6Network('fd00:0000::/32')   # /32 prefix for internal IPv6 space (e.g. 'fd00:0000::/32')
+NorNet_IPv6Prefix = IPv6Network('fd00:0:0::/48')    # /48 prefix for internal IPv6 space (e.g. '2001:700:4100::/48')
 
 # The domain name of the central site
 # (it will e.g. be used with the alias 'nfs' to look up the file server!)
@@ -113,7 +113,6 @@ def makeNorNetIP(provider, site, node, subnode, version):
    p = int(provider)
    s = int(site)
    n = int(node)
-   v = int(subnode)
    if ((p < 0) | (p > 255)):
       error('Bad provider ID')
    if ((s < 0) | (s > 255)):
@@ -123,42 +122,31 @@ def makeNorNetIP(provider, site, node, subnode, version):
 
    # ====== IPv4 handling ===================================================
    if version == 4:
-      if v > 0:   # Ignore negative values!
-         error('Bad subnode ID; must be 0 for IPv4')
       if s != 0:
          prefix = 24;    # NorNet + Provider + Site
       elif p != 0:
          prefix = 16;    # NorNet + Provider
       else:
          prefix = 8;     # NorNet
+
       a = IPv4Address('0.' + str(p) + '.' + str(s) + '.' + str(n))
       a = int(NorNet_IPv4Prefix) | int(a)
       return IPv4Network(str(IPv4Address(a)) + '/' + str(prefix))
 
    # ====== IPv6 handling ===================================================
    else:
-      nodeNet = n
-      nodeNum = 0
-      if v != 0:
-         prefix = 64     # NorNet + Provider + Site + NodeNetwork + VirtalNodeNet
-         if v < 0:       # Special case: NodeNetwork zero; get IP of node in this network.
-             v = 0
-             nodeNet = 0
-             nodeNum = n
-      elif n != 0:
-         prefix = 56     # NorNet + Provider + Site + NodeNetwork
-      elif s != 0:
-         prefix = 48;    # NorNet + Provider + Site
+      if s != 0:
+         prefix = 64;    # NorNet + Provider + Site
       elif p != 0:
-         prefix = 40;    # NorNet + Provider
+         prefix = 56;    # NorNet + Provider
       else:
-         prefix = 32;    # NorNet
-      a = IPv6Address('0:0:' + \
-                      str.replace(hex((p << 8) | s), '0x', '') + ':' + \
-                      str.replace(hex((nodeNet << 8) | v), '0x', '') + '::' + \
-                      str.replace(hex(nodeNum), '0x', ''))
-      a = int(NorNet_IPv6Prefix) | int(a)
-      return IPv6Network(str(IPv6Address(a)) + '/' + str(prefix))
+         prefix = 48;    # NorNet
+
+      a = IPv6Address('0:0:0:' + \
+                      str.replace(hex((p << 8) | s), '0x', '') + '::' + \
+                      str.replace(hex(n), '0x', ''))
+      a = IPv6Address(int(NorNet_IPv6Prefix) | int(a))
+      return IPv6Network(str(a) + '/' + str(prefix))
 
 
 # ###### Get NorNet information from address ################################
