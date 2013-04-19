@@ -109,7 +109,7 @@ def getNorNetProviderInfo(providerIndex):
 
 
 # ###### Get NorNet interface IPv4 address ##################################
-def makeNorNetIP(provider, site, node, subnode, version):
+def makeNorNetIP(provider, site, node, version):
    p = int(provider)
    s = int(site)
    n = int(node)

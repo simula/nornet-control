@@ -53,7 +53,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                country           = getTagValue(localSite['site_tags'], 'nornet_site_country', '???')
                province          = getTagValue(localSite['site_tags'], 'nornet_site_province', None)
                city              = getTagValue(localSite['site_tags'], 'nornet_site_city',    '???')
-               tunnelboxIP       = makeNorNetIP(localSite['site_default_provider_index'], localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, 4)
+               tunnelboxIP       = makeNorNetIP(localSite['site_default_provider_index'], localSiteIndex, NorNet_NodeIndex_Tunnelbox, 4)
 
                outputFile.write('# ====== ' + localSite['site_utf8'] + ' ======\n')
                if localSite['site_enabled'] == False:
@@ -82,7 +82,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                for localProviderIndex in localProviderList:
                   localProvider = localProviderList[localProviderIndex]
                   for version in [ 4, 6 ]:
-                     localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+                     localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
                      outputFile.write('-A ' + str(localAddress.ip) + ' ')
                for remoteSiteIndex in fullSiteList:
                   if remoteSiteIndex == localSiteIndex:
@@ -105,7 +105,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                   localProvider = localProviderList[localProviderIndex]
                   if localSite['site_enabled'] == True:
                      for version in [ 4, 6 ]:
-                        internalAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+                        internalAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
                         if version == 4:
                            externalAddress = localProvider['provider_tunnelbox_ipv4'].ip
                         else:
@@ -150,7 +150,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                            remoteProvider = remoteProviderList[remoteProviderIndex]
                            for version in [ 4, 6 ]:
                               tunnel        = getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
-                              remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, 0, version)
+                              remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, version)
 
                               outputFile.write('# ' + tunnel['tunnel_interface'] + ' ' + \
                                              str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
@@ -184,7 +184,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                         outputFile.write('define host {\n')
                         outputFile.write('   use                 generic-host\n')
                         outputFile.write('   host_name           ' + localNode['node_name'] + '\n')
-                        localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, localNode['node_index'], -1, 4)
+                        localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, localNode['node_index'], 4)
                         outputFile.write('   check_command       MyPingCheck!' + str(localAddress.ip) + '\n')
                         outputFile.write('}\n')
                         siteNodes.append(localNode['node_name'])
@@ -192,7 +192,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
                         for localProviderIndex in localProviderList:
                            localProvider = localProviderList[localProviderIndex]
                            for version in [ 4, 6 ]:
-                              localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, localNode['node_index'], -1, version)
+                              localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, localNode['node_index'], version)
 
                               outputFile.write('define service {\n')
                               outputFile.write('   use                 generic-service\n')

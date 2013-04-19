@@ -60,14 +60,14 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid, configNamePrefix
    outputFile.write('# Global shares\n')
    outputFile.write('/filesrv/pub\t')
    for version in [ 4, 6 ]:
-      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(' + nfsOptions + ',rw)\t')
+      outputFile.write(str(makeNorNetIP(0, 0, 0, version)) + '(' + nfsOptions + ',rw)\t')
       outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(' + nfsOptions + ',rw)\t')
    outputFile.write('\n')
    outputFile.write('/filesrv/adm\t')
    for i in range(0, len(rwSystemList)):
       outputFile.write(rwSystemList[i] + '(' + nfsOptions + ',rw)\t')
    for version in [ 4, 6 ]:
-      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(' + nfsOptions + ',ro)\t')
+      outputFile.write(str(makeNorNetIP(0, 0, 0, version)) + '(' + nfsOptions + ',ro)\t')
       outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(' + nfsOptions + ',ro)\t')
    outputFile.write('\n')
    outputFile.write('/filesrv/sys\t')
@@ -111,7 +111,7 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid, configNamePrefix
             provider = siteProviderList[providerIndex]
             for version in [ 4, 6 ]:
                # ====== Add entry for node ==================================
-               nodeAddress = makeNorNetIP(providerIndex, siteIndex, nodeIndex, -1, version)
+               nodeAddress = makeNorNetIP(providerIndex, siteIndex, nodeIndex, version)
                outputFile.write(str(nodeAddress.ip) + '(' + nfsOptions + ',rw)\t')
 
                # ====== Query DNS for the node's name =======================

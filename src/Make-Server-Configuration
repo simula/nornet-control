@@ -129,8 +129,8 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex, prov
                      outputFile.write('\n')
                   outputFile.write('iface ' + interfaceName + ' inet' + v + ' static\n')
 
-               address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  -1, version)
-               gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+               address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
+               gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
                metric = 10
                if providerIndex == defaultProvider:
                   metric = 2
@@ -196,7 +196,7 @@ def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider):
 
    outputFile.write('# ====== NTP server ======\n')
    for version in [ 4, 6 ]:
-      ntpServer = makeNorNetIP(defaultProvider, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+      ntpServer = makeNorNetIP(defaultProvider, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
       outputFile.write('server    ' + str(ntpServer.ip) + '\n')
       outputFile.write('restrict  ' + str(ntpServer.ip) + '\n')
 

@@ -86,7 +86,7 @@ def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
    outputFile.write('# ====== Generic Access Restrictions ======\n')
    outputFile.write('restrict default ignore\n')
    for version in [ 4, 6 ]:
-      fullNorNetNetwork = makeNorNetIP(0, 0, 0, 0, version)
+      fullNorNetNetwork = makeNorNetIP(0, 0, 0, version)
       outputFile.write('restrict ' + str(fullNorNetNetwork.ip) + ' mask ' + str(fullNorNetNetwork.netmask) + ' nomodify\n')
    outputFile.write('restrict 127.0.0.1\n')
    outputFile.write('restrict ::1\n')
@@ -101,7 +101,7 @@ def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
             provider = providerList[providerIndex]
             if providerIndex == centralSite['site_default_provider_index']:
                for version in [ 4, 6 ]:
-                  centralSiteTB = makeNorNetIP(providerIndex, NorNet_SiteIndex_Central, NorNet_NodeIndex_Tunnelbox, -1, version)
+                  centralSiteTB = makeNorNetIP(providerIndex, NorNet_SiteIndex_Central, NorNet_NodeIndex_Tunnelbox, version)
                   outputFile.write('server ' + str(centralSiteTB.ip) + '   # CENTRAL SITE\n')
                   outputFile.write('restrict ' + str(centralSiteTB.ip) + '\n')
          outputFile.write('\n')
@@ -112,7 +112,7 @@ def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
            (remoteSiteIndex != NorNet_SiteIndex_Central) ):
          for version in [ 4, 6 ]:
             remoteSite = fullSiteList[remoteSiteIndex]
-            peerTB = makeNorNetIP(remoteSite['site_default_provider_index'], remoteSiteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+            peerTB = makeNorNetIP(remoteSite['site_default_provider_index'], remoteSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
             outputFile.write('peer ' + str(peerTB.ip) + '   # ' + remoteSite['site_long_name'] + '\n')
             outputFile.write('restrict ' + str(peerTB.ip) + '\n')
    outputFile.write('\n')
@@ -164,16 +164,16 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, configNamePrefi
 
    outputFile.write('# ====== Access Control ======\n')
    outputFile.write('rocommunity public 127.0.0.1\n')
-   outputFile.write('rocommunity public ' + str(makeNorNetIP(0, 0, 0, 0, 4)) + '\n')
+   outputFile.write('rocommunity public ' + str(makeNorNetIP(0, 0, 0, 4)) + '\n')
    outputFile.write('rocommunity6 public ::1\n')
-   outputFile.write('rocommunity6 public ' + str(makeNorNetIP(0, 0, 0, 0, 6)) + '\n\n')
+   outputFile.write('rocommunity6 public ' + str(makeNorNetIP(0, 0, 0, 6)) + '\n\n')
 
    outputFile.write('# ====== Active Monitoring ======\n')
    outputFile.write('trapcommunity           public\n')
    # !!! FIXME: The provider index may be wrong! It must be default index of Central Site!
    outputFile.write('trapsink                ' + str(makeNorNetIP(localSite['site_default_provider_index'],
                                                                   NorNet_SiteIndex_Monitor,
-                                                                  NorNet_NodeIndex_Monitor, -1, 4).ip) + '\n')
+                                                                  NorNet_NodeIndex_Monitor, 4).ip) + '\n')
    outputFile.write('iquerySecName           internalUser\n')
    outputFile.write('rouser                  internalUser\n')
    outputFile.write('# defaultMonitors         yes\n')
@@ -230,8 +230,8 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
                         debianFile.write('\n')
                      debianFile.write('iface ' + interfaceName + ' inet' + v + ' static\n')
 
-                  address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  -1, version)
-                  gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+                  address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
+                  gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
                   metric = 10
                   if providerIndex == site['site_default_provider_index']:
                      metric = 2
@@ -305,8 +305,8 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
 
                # ====== Generate IP configuration ===========================
                for version in [ 4, 6 ]:
-                  address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  -1, version)
-                  gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+                  address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
+                  gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
 
                   if version == 4:
                      fedoraFile.write('IPADDR=' + str(address.ip) + '\n')
@@ -335,8 +335,8 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
                         fedoraFile.write('"\n')
 
                if providerIndex == site['site_default_provider_index']:
-                  dns1 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, 4)
-                  dns2 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, 6)
+                  dns1 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 4)
+                  dns2 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 6)
                   fedoraFile.write('DNS1=' + str(dns1.ip) + '\n')
                   fedoraFile.write('DNS2=' + str(dns2.ip) + '\n')
 

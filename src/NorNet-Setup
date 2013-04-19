@@ -459,8 +459,8 @@ loginToPLC()
 # ====== Some server settings ===============================================
 norNetInformation = getNorNetInformationForAddress(getPLCAddress())
 plcNodeIndex      = norNetInformation['node_index']
-dnsServers = [ makeNorNetIP(NorNet_SiteIndex_Central, NorNet_CentralSite_BootstrapProviderIndex, plcNodeIndex, -1, 4),
-               makeNorNetIP(NorNet_SiteIndex_Central, NorNet_CentralSite_BootstrapProviderIndex, plcNodeIndex, -1, 6) ]
+dnsServers = [ makeNorNetIP(NorNet_SiteIndex_Central, NorNet_CentralSite_BootstrapProviderIndex, plcNodeIndex, 4),
+               makeNorNetIP(NorNet_SiteIndex_Central, NorNet_CentralSite_BootstrapProviderIndex, plcNodeIndex, 6) ]
 ntpServerNames = [ 'ntp1.ptb.de', 'ntp2.ptb.de', 'ntp3.ptb.de',   # The PTB servers (very reliable sources)
                    'ntp1.uio.no', 'ntp2.uio.no' ]                 # UiO (nearby)
 
