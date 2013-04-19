@@ -54,8 +54,12 @@ NorNet_ProviderList = {
 }
 
 # Prefixes for the internal IPv4 and IPv6 networks
-NorNet_IPv4Prefix = IPv4Network('10.0.0.0/8')       # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
-NorNet_IPv6Prefix = IPv6Network('fd00:0:0::/48')    # /48 prefix for internal IPv6 space (e.g. '2001:700:4100::/48')
+NorNet_IPv4Prefix = IPv4Network('10.0.0.0/8')            # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
+NorNet_IPv6Prefix = IPv6Network('2001:700:4100::/48')    # /48 prefix for internal IPv6 space (e.g. '2001:700:4100::/48')
+
+# Prefixes for the internal tunnel IPv4 and IPv6 networks
+NorNet_IPv4TunnelPrefix = IPv4Network('10.0.0.0/8')                  # /16 prefix for internal IPv4 tunnel space (e.g. '192.168.0.0/16')
+NorNet_IPv6TunnelPrefix = IPv6Network('2001:700:4100:0:ffff::/72')   # /72 prefix for internal IPv6 tunnel space (e.g. '2001:700:4100:0:ffff::/72')
 
 # The domain name of the central site
 # (it will e.g. be used with the alias 'nfs' to look up the file server!)
@@ -204,9 +208,9 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
 
    if ((outgoingSite == 0) and (incomingSite == 0)):
       if version == 4:
-         return IPv4Network('192.168.0.0/16')
+         return NorNet_IPv4TunnelPrefix
       else:
-         return IPv6Network('fdff:ffff::/32')
+         return NorNet_IPv6TunnelPrefix
 
    if incomingSite < outgoingSite:
       side  = 1
@@ -224,19 +228,19 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
 
    source      = str.replace(hex((sHigh << 8) | pHigh), '0x', '')
    destination = str.replace(hex((sLow << 8)  | pLow), '0x', '')
-   address     = 'fdff:ffff:' + source + ':' + destination + '::'
+   address     = IPv6Address(int(NorNet_IPv6TunnelPrefix.ip) | int(IPv6Address('0:0:0:0:0:' + source + ':' + destination + ':0')))
    if version == 4:
       # The space is to small in IPv4 addresses. Use MD5 to create most likely
       # unique addresses.
       m = hashlib.md5()
-      m.update(address)
+      m.update(str(address))
       s = m.hexdigest()
       address = (int(s[0:4], 16) & 0xfffc) | side
-      address = int(IPv4Address('192.168.0.0')) | address
+      address = int(NorNet_IPv4TunnelPrefix) | address
       return IPv4Network(str(IPv4Address(address)) + '/30')
    else:
-      address = address + str(side)
-      return IPv6Network(address + '/64')
+      address = IPv6Address(int(address) | side)
+      return IPv6Network(str(address) + '/96')
 
 
 # ###### Get NorNet interface IPv4 address ##################################
