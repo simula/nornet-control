@@ -725,7 +725,7 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
                                    str(tunnel['tunnel_local_inner_address'].ip) + ' ' + \
                                    str(tunnel['tunnel_remote_inner_address'].ip) + ' "' + \
                                    localSite['site_long_name'] + \
-                                   str(localSite['site_index']) + ' <-> ' + \
+                                   ' (' + str(localSite['site_index']) + ') <-> ' + \
                                    remoteSite['site_long_name'] + \
                                    ' (' + str(remoteSite['site_index']) + ') via [' + \
                                    remoteProvider['provider_long_name'] + \
