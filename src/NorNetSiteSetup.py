@@ -287,7 +287,7 @@ def updateNorNetInterfaces(node, site, norNetInterface):
    nodeIndex            = int(node['node_index'])
    nodeName             = node['node_name']
    for providerIndex in providerList:
-      ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 0, 4)
+      ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4)
       newAddressList.append(IPv4Address(ifIPv4.ip))
 
 
@@ -312,10 +312,10 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                   ifHostName     = nodeName.split('.')[0] + '.' + str.lower(siteDomain)
                else:
                   ifHostName     = nodeName.split('.')[0] + '.' + str.lower(providerName) + '.' + str.lower(siteDomain)
-               ifIPv4            = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 0, 4)
-               ifGateway         = makeNorNetIP(providerIndex, siteIndex, 1, 0, 4)
+               ifIPv4            = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4)
+               ifGateway         = makeNorNetIP(providerIndex, siteIndex, 1, 4)
                ifDNS             = ifGateway   # The tunnelbox is also the DNS server
-               ifProviderNetwork = makeNorNetIP(providerIndex, 0, 0, 0, 4)
+               ifProviderNetwork = makeNorNetIP(providerIndex, 0, 0, 4)
                ifAlias           = providerIndex
 
                interface = {}
