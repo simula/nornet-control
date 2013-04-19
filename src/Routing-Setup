@@ -221,7 +221,7 @@ make-tunnel ()
    if [ "$innerV6option" = "" ] ; then
       ip addr add $innerLocalIP peer $innerRemoteIP dev $interface || success=0
    else
-      ip $innerV6option addr add $innerLocalIP/64 dev $interface   || success=0
+      ip $innerV6option addr add $innerLocalIP/96 dev $interface   || success=0
    fi
    ip link set dev $interface up
    # Turn off Reverse Path filtering, since it prevents routing packets
