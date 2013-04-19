@@ -406,40 +406,44 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
          tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
          tunnelZoneFile = codecs.open('tunnels.ipv' + str(version) + '.db', 'w', 'utf-8')
          writeSOA(tunnelZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
-         prefixLength   = 32
+         prefixLength = 32
          if version == 6:
             prefixLength = 128
 
-         for localProviderIndex in localProviderList:
-            localProvider = localProviderList[localProviderIndex]
-            tunnelZoneFile.write('\n; ====== ' + localProvider['provider_long_name'] + ' Tunnels ======\n')
+         for outgoingSiteIndex in fullSiteList:
+            outgoingSite = fullSiteList[outgoingSiteIndex]
+            outgoingProviderList = getNorNetProvidersForSite(outgoingSite)
 
-            for remoteSiteIndex in fullSiteList:
-               if remoteSiteIndex != localSiteIndex:
-                  remoteSite = fullSiteList[remoteSiteIndex]
-                  remoteProviderList = getNorNetProvidersForSite(remoteSite)
-                  for remoteProviderIndex in remoteProviderList:
-                     remoteProvider = remoteProviderList[remoteProviderIndex]
+            for outgoingProviderIndex in outgoingProviderList:
+               outgoingProvider = outgoingProviderList[outgoingProviderIndex]
+               tunnelZoneFile.write('\n; ====== ' + outgoingProvider['provider_long_name'] + ' Tunnels for ' + outgoingSite['site_long_name'] + ' ======\n')
 
-                     localTunnelIP  = makeNorNetTunnelIP(localSiteIndex, localProviderIndex,
-                                                         remoteSiteIndex, remoteProviderIndex,
-                                                         version)
-                     remoteTunnelIP = makeNorNetTunnelIP(remoteSiteIndex, remoteProviderIndex,
-                                                         localSiteIndex, localProviderIndex,
-                                                         version)
+               for incomingSiteIndex in fullSiteList:
+                  if incomingSiteIndex != outgoingSiteIndex:
+                     incomingSite = fullSiteList[incomingSiteIndex]
+                     incomingProviderList = getNorNetProvidersForSite(incomingSite)
+                     for incomingProviderIndex in incomingProviderList:
+                        incomingProvider = incomingProviderList[incomingProviderIndex]
 
-                     writeRR(tunnelZoneFile,
-                             getZoneForAddress(localTunnelIP.ip, prefixLength),
-                             'PTR',
-                             'local.' +
-                             str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' +
-                             str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.')
-                     writeRR(tunnelZoneFile,
-                             getZoneForAddress(remoteTunnelIP.ip, prefixLength),
-                             'PTR',
-                             'remote.' +
-                             str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' +
-                             str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.')
+                        outgoingTunnelIP  = makeNorNetTunnelIP(outgoingSiteIndex, outgoingProviderIndex,
+                                                              incomingSiteIndex, incomingProviderIndex,
+                                                              version)
+                        incomingTunnelIP = makeNorNetTunnelIP(incomingSiteIndex, incomingProviderIndex,
+                                                              outgoingSiteIndex, outgoingProviderIndex,
+                                                              version)
+
+                        writeRR(tunnelZoneFile,
+                              getZoneForAddress(outgoingTunnelIP.ip, prefixLength),
+                              'PTR',
+                              'outgoing.' +
+                              str.lower(incomingProvider['provider_short_name']) + '.' + str.lower(incomingSite['site_short_name']) + '.' +
+                              str.lower(outgoingProvider['provider_short_name'])  + '.' + str.lower(outgoingSite['site_domain']) + '.')
+                        writeRR(tunnelZoneFile,
+                              getZoneForAddress(incomingTunnelIP.ip, prefixLength),
+                              'PTR',
+                              'incoming.' +
+                              str.lower(incomingProvider['provider_short_name']) + '.' + str.lower(incomingSite['site_short_name']) + '.' +
+                              str.lower(outgoingProvider['provider_short_name'])  + '.' + str.lower(outgoingSite['site_domain']) + '.')
 
          tunnelZoneFile.close()
 
