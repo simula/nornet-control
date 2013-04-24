@@ -997,14 +997,27 @@ def makeTunnelboxConfiguration(fullSiteList, localSite, configNamePrefix):
    tbProvidersConfig = configurationName
    log('Making tunnelbox configuration for ' + localSite['site_long_name'] + ' ...')
 
+   fullNorNetIPv4    = makeNorNetIP(0, 0, 0, 4)
    localSiteIndex    = localSite['site_index']
    localProviderList = getNorNetProvidersForSite(localSite)
    localInterface    = getTagValue(localSite['site_tags'], 'nornet_site_tb_internal_interface', '')
    if not re.match(r"^[a-z][a-z0-9-\.]*$", localInterface):
       error('Bad local interface setting for site ' + localSite['site_long_name'])
-   sourceNatRange    = getTagValue(localSite['site_tags'], 'nornet_site_tb_nat_range_ipv4', '')
-   fullNorNetIPv4    = makeNorNetIP(0, 0, 0, 4)
 
+   sourceNatRangeString = getLocalSiteNATRangeString()
+   sourceNatRange       = None
+   if ((sourceNatRangeString != None) and (sourceNatRangeString != u'')):
+      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', sourceNatRangeString)
+      try:
+         if len(parameters) == 1:
+            a1 = IPv4Address(unquote(parameters[0]))
+            sourceNatRange = [ a1 ]
+         elif len(parameters) > 1:
+            a1 = IPv4Address(unquote(parameters[0]))
+            a2 = IPv4Address(unquote(parameters[1]))
+            sourceNatRange = [ a1, a2 ]
+      except Exception as e:
+         error('Bad configuration "' + sourceNatRangeString + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range values: ' + str(e))                  
 
    # ====== Interface to provider mappings ==================================
    outputFile = makeConfigFile('Tunnelbox ISP mapping', configurationName, True)
@@ -1081,7 +1094,13 @@ def makeTunnelboxConfiguration(fullSiteList, localSite, configNamePrefix):
                             localProviderList[localProviderIndex], localSiteIndex)
    if localSiteIndex == NorNet_SiteIndex_Central:
       outputFile.write('\n      log-action "Turning off IPv4 NAT ..."\n')
-      outputFile.write('      remove-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '"   && \\\n')
+      outputFile.write('      remove-nat ' + str(fullNorNetIPv4) + ' "')
+      if sourceNatRange != None:
+         if len(sourceNatRange) == 1:
+            outputFile.write(str(sourceNatRange[0]))
+         else:
+            outputFile.write(str(sourceNatRange[0]) + '-' + str(sourceNatRange[1]))
+      outputFile.write('"   && \\\n')
       outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    outputFile.write('   fi\n')
    outputFile.write('fi\n\n')
@@ -1168,8 +1187,13 @@ def makeTunnelboxConfiguration(fullSiteList, localSite, configNamePrefix):
    if localSiteIndex == NorNet_SiteIndex_Central:
       fullTunnelNetIPv4 = makeNorNetTunnelIP(0, 0, 0, 0, 4)
       outputFile.write('\n   log-action "Turning on IPv4 NAT ..."\n')
-      outputFile.write('   make-nat ' + str(fullNorNetIPv4) + ' "' + sourceNatRange + '" ' + \
-                       str(fullNorNetIPv4) + ' ' + str(fullTunnelNetIPv4) + '   && \\\n')
+      outputFile.write('   make-nat ' + str(fullNorNetIPv4) + ' "')
+      if sourceNatRange != None:
+         if len(sourceNatRange) == 1:
+            outputFile.write(str(sourceNatRange[0]))
+         else:
+            outputFile.write(str(sourceNatRange[0]) + '-' + str(sourceNatRange[1]))
+      outputFile.write('" ' + str(fullNorNetIPv4) + ' ' + str(fullTunnelNetIPv4) + '   && \\\n')
       outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
    outputFile.write('fi\n')
 

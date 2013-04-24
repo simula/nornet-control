@@ -65,21 +65,17 @@ NorNet_IPv6TunnelPrefix = IPv6Network('2001:700:4100:0:ffff::/72')   # /72 prefi
 # (it will e.g. be used with the alias 'nfs' to look up the file server!)
 NorNet_CentralSite_DomainName = 'simula.nornet'
 
-# Source NAT range for IPv4 (to be set up at Central Site)
-# NorNet_CentralSiteIPv4NATRange = [ IPv4Address('132.252.156.240'), IPv4Address('132.252.156.249') ]
-NorNet_CentralSiteIPv4NATRange = [ IPv4Address('0.0.0.0'), IPv4Address('0.0.0.0') ]
-
 # Public tunnelbox IP of Central Site for Default Provider. Needed for bootstrapping other tunnelboxes!
 NorNet_CentralSite_BootstrapTunnelbox     = IPv4Address('128.39.36.143')
 NorNet_CentralSite_BootstrapProviderIndex = 1
+
+# ===========================================================================
 
 # TOS Settings for provider selection
 NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
 
 # Maximum number of NTP servers (e.g. 6+6 = 6x IPv4 + 6x IPv6)
 NorNet_MaxNTPServers = 12
-
-# ===========================================================================
 
 # Maximum number of providers per site
 NorNet_MaxProviders = 8

@@ -60,6 +60,9 @@ NorNet_LocalSite_DHCPServer_Static242='"f0:de:f1:11:22:33"'
 NorNet_LocalSite_DHCPServer_Static243='"f0:de:f1:aa:bb:cc" "pxe-boot.img"'
 NorNet_LocalSite_DHCPServer_Static244='"f0:de:f1:aa:bb:ee" "pxe-boot.img" "pxe-server.simula.nornet"'
 
+# NAT Range for Central Site
+NorNet_LocalSite_NAT_Range='"172.31.255.1" "172.31.255.9"'
+
 
 # ###### Additional DNS names ###############################################
 # Add additional, non-managed nodes here.

@@ -60,7 +60,6 @@ def makeNorNetTagTypes():
    makeTagType('site/nornet', 'NorNet Site Altitude',                     'nornet_site_altitude')
    makeTagType('site/nornet', 'NorNet Site Default Provider Index',       'nornet_site_default_provider_index')
    makeTagType('site/nornet', 'NorNet Site Tunnelbox Internal Interface', 'nornet_site_tb_internal_interface')
-   makeTagType('site/nornet', 'NorNet Site Central Site Tunnelbox NAT Range IPv4', 'nornet_site_tb_nat_range_ipv4')
    for i in range(0, NorNet_MaxNTPServers - 1):
       makeTagType('site/nornet', 'NorNet Site NTP Server ' + str(1 + i),  'nornet_site_ntp' + str(1 + i))
 
@@ -212,17 +211,6 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
 
       if _addOrUpdateSiteTag(siteID, 'nornet_site_tb_internal_interface', tbInternalInterface) <= 0:
          error('Unable to add "nornet_site_tb_internal_interface" tag to site ' + siteName)
-
-      # ====== Set Source NAT range at Central Site =========================
-      if siteNorNetIndex == NorNet_SiteIndex_Central:
-         a = NorNet_CentralSiteIPv4NATRange[0]
-         b = NorNet_CentralSiteIPv4NATRange[1]
-         if ((a != IPv4Address('0.0.0.0')) and (b != IPv4Address('0.0.0.0'))):
-            if _addOrUpdateSiteTag(siteID, 'nornet_site_tb_nat_range_ipv4', str(a) + '-' + str(b)) <= 0:
-               error('Unable to add "nornet_site_tb_nat_range_ipv4" tag to site ' + siteName)
-         else:
-            if _addOrUpdateSiteTag(siteID, 'nornet_site_tb_nat_range_ipv4', '') <= 0:
-               error('Unable to add "nornet_site_tb_nat_range_ipv4" tag to site ' + siteName)
 
    except Exception as e:
       error('Adding site ' + siteName + ' has failed: ' + str(e))
