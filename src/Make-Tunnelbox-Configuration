@@ -22,9 +22,42 @@
 import sys;
 
 # NorNet
+from NorNetConfiguration import *;
 from NorNetAPI           import *;
 from NorNetNodeSetup     import *;
 
+
+
+# ###### Get local node configuration string ################################
+def getLocalNodeConfigurationString(nodeIndex):
+   try:
+      return unicode(NorNet_Configuration['NorNet_LocalSite_Node' + str(nodeIndex)])
+   except:
+      return u''
+
+
+# ###### Get DHCPD node configuration string ################################
+def getLocalSiteDHCPServerDynamicConfigurationString():
+   try:
+      return NorNet_Configuration['NorNet_LocalSite_DHCPServer_Dynamic']
+   except:
+      return u''
+
+
+# ###### Get DHCPD node configuration string ################################
+def getLocalSiteDHCPServerStaticConfigurationString(nodeIndex):
+   try:
+      return unicode(NorNet_Configuration['NorNet_LocalSite_DHCPServer_Static' + str(nodeIndex)])
+   except:
+      return u''
+
+
+# ###### Get NAT range ######################################################
+def getLocalSiteNATRangeString():
+   try:
+      return unicode(NorNet_Configuration['NorNet_LocalSite_NAT_Range'])
+   except:
+      return u''
 
 
 # ###### Get tunnel configuration for default tunnel to central site ########
@@ -898,10 +931,10 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
       'site_short_name'         : 'NN'
    }
    remoteProvider = {
-      'provider_index'          : NorNet_CentralSite_BootstrapProviderIndex,
+      'provider_index'          : getCentralSiteBootstrapProviderIndex(),
       'provider_long_name'      : 'Local Provider',
       'provider_short_name'     : 'local',
-      'provider_tunnelbox_ipv4' : IPv4Network(NorNet_CentralSite_BootstrapTunnelbox)
+      'provider_tunnelbox_ipv4' : getCentralSiteBootstrapTunnelbox()
    }
 
    if configNamePrefix == None:
@@ -1232,29 +1265,28 @@ if bootstrapOnly:
 else:
    loginToPLC()
 
-localSiteIndex             = getLocalSiteIndex()
-localDefaultProviderIndex  = getLocalDefaultProviderIndex()
-localTBDefaultProviderIPv4 = getLocalTunnelboxDefaultProviderIPv4()
-localNodeNorNetInterface   = getLocalNodeNorNetInterface()
-
 # ====== Some checks ========================================================
-if localSiteIndex == None:
+if getLocalSiteIndex() == None:
    error('NorNet_LocalSite_SiteIndex has not been set in configuration file!')
-if ((localSiteIndex < 1) or (localSiteIndex > 255)):
-    error('Bad NorNet_LocalSite_SiteIndex ' + str(localSiteIndex))
-if localDefaultProviderIndex == None:
+if ((getLocalSiteIndex() < 1) or (getLocalSiteIndex() > 255)):
+    error('Bad NorNet_LocalSite_SiteIndex ' + str(getLocalSiteIndex()))
+if getLocalSiteDefaultProviderIndex() == None:
    error('NorNet_LocalSite_DefaultProviderIndex has not been set in configuration file!')
-if ((localDefaultProviderIndex < 1) or (localDefaultProviderIndex > 255)):
-    error('Bad NorNet_LocalSite_DefaultProviderIndex ' + str(localDefaultProviderIndex))
-if localTBDefaultProviderIPv4 == None:
+if ((getLocalSiteDefaultProviderIndex() < 1) or (getLocalSiteDefaultProviderIndex() > 255)):
+    error('Bad NorNet_LocalSite_DefaultProviderIndex ' + str(getLocalSiteDefaultProviderIndex()))
+if getLocalSiteTunnelboxDefaultProviderIPv4() == None:
    error('NorNet_LocalSite_TBDefaultProviderIPv4 has not been set in configuration file!')
-if localNodeNorNetInterface == None:
+if getLocalNodeNorNetInterface() == None:
    error('NorNet_LocalNode_NorNetInterface has not been set in configuration file!')
+if getCentralSiteBootstrapTunnelbox() == None:
+   error('NorNet_CentralSite_BootstrapTunnelbox has not been set in configuration file!')
+if getCentralSiteBootstrapProviderIndex() == None:
+   error('NorNet_CentralSite_BootstrapProviderIndex has not been set in configuration file!')
 
 
 # ====== Bootstrap Mode =====================================================
-makeTunnelboxBootstrap(localSiteIndex, localDefaultProviderIndex,
-                       localNodeNorNetInterface, localTBDefaultProviderIPv4,
+makeTunnelboxBootstrap(getLocalSiteIndex(), getLocalSiteDefaultProviderIndex(),
+                       getLocalNodeNorNetInterface(), getLocalSiteTunnelboxDefaultProviderIPv4(),
                        'tunnelbox')
 
 # ====== Full Mode ==========================================================
@@ -1262,9 +1294,9 @@ if not bootstrapOnly:
    fullSiteList = fetchNorNetSiteList(False)
    localSite    = None
    try:
-      localSite = fullSiteList[localSiteIndex]
+      localSite = fullSiteList[getLocalSiteIndex()]
    except:
-      error('Cannot find local site ' + str(localSiteIndex) + ' at PLC database!')
+      error('Cannot find local site ' + str(getLocalSiteIndex()) + ' at PLC database!')
    siteNodeList = fetchNorNetNodeListForSite(localSite)
 
    makeTunnelboxConfiguration(fullSiteList, localSite, 'tunnelbox')

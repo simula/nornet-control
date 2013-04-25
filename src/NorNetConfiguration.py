@@ -60,6 +60,7 @@ NorNet_Configuration = {
    'NorNet_IPv6Prefix'                         : 'BAD',
    'NorNet_IPv4TunnelPrefix'                   : 'BAD',
    'NorNet_IPv6TunnelPrefix'                   : 'BAD',
+
    'NorNet_CentralSite_DomainName'             : None,
    'NorNet_CentralSite_BootstrapTunnelbox'     : None,
    'NorNet_CentralSite_BootstrapProviderIndex' : None,
@@ -171,7 +172,7 @@ def loadNorNetConfiguration():
             error('Bad configuration "' + NorNet_Configuration['NorNet_Provider' + str(providerIndex)] + '" for NorNet_Provider' + str(providerIndex))
 
          providerLongName  = unquote(provider[0])
-         providerShortName = unquote(provider[1])
+         providerShortName = makeNameFromUnicode(unquote(provider[1]))['ascii']
          providerURL       = unquote(provider[2])
          
          NorNet_ProviderList[providerIndex] = [ providerLongName, providerShortName, providerURL ]
@@ -270,18 +271,28 @@ def getCentralSiteDomainName():
    return NorNet_Configuration['NorNet_CentralSite_DomainName']
 
 
+# ###### Get central site's bootstrap tunnelbox address (IPv4) ##############
+def getCentralSiteBootstrapTunnelbox():
+   return NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox']
+
+
+# ###### Get central site's bootstrap provider index ########################
+def getCentralSiteBootstrapProviderIndex():
+   return NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex']
+
+
 # ###### Get local Site Index ###############################################
 def getLocalSiteIndex():
    return NorNet_Configuration['NorNet_LocalSite_SiteIndex']
 
 
 # ###### Get local Default Provider Index ###################################
-def getLocalDefaultProviderIndex():
+def getLocalSiteDefaultProviderIndex():
    return NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex']
 
 
 # ###### Get local tunnelbox's outer IPv4 address ###########################
-def getLocalTunnelboxDefaultProviderIPv4():
+def getLocalSiteTunnelboxDefaultProviderIPv4():
    return NorNet_Configuration['NorNet_LocalSite_TBDefaultProviderIPv4']
 
 
@@ -311,35 +322,3 @@ def getNorNetProviderInfo(providerIndex):
       return NorNet_ProviderList[providerIndex]
    except:
       return NorNet_ProviderList[0]
-
-
-# ###### Get local node configuration string ################################
-def getLocalNodeConfigurationString(nodeIndex):
-   try:
-      return unicode(NorNet_Configuration['NorNet_LocalSite_Node' + str(nodeIndex)])
-   except:
-      return u''
-
-
-# ###### Get DHCPD node configuration string ################################
-def getLocalSiteDHCPServerDynamicConfigurationString():
-   try:
-      return NorNet_Configuration['NorNet_LocalSite_DHCPServer_Dynamic']
-   except:
-      return u''
-
-
-# ###### Get DHCPD node configuration string ################################
-def getLocalSiteDHCPServerStaticConfigurationString(nodeIndex):
-   try:
-      return unicode(NorNet_Configuration['NorNet_LocalSite_DHCPServer_Static' + str(nodeIndex)])
-   except:
-      return u''
-
-
-# ###### Get NAT range ######################################################
-def getLocalSiteNATRangeString():
-   try:
-      return unicode(NorNet_Configuration['NorNet_LocalSite_NAT_Range'])
-   except:
-      return u''

@@ -54,13 +54,13 @@ NorNet_LocalSite_DefaultProviderIndex=1
 # This is the local tunnelbox's outer IPv4 address for the default provider:
 NorNet_LocalSite_TBDefaultProviderIPv4='128.39.36.143'
 
-# DHCP Configuration
-NorNet_LocalSite_DHCPServer_Dynamic='"20" "39"'
+# DHCP configuration
+NorNet_LocalSite_DHCPServer_Dynamic='"40" "49"'
 NorNet_LocalSite_DHCPServer_Static242='"f0:de:f1:11:22:33"'
 NorNet_LocalSite_DHCPServer_Static243='"f0:de:f1:aa:bb:cc" "pxe-boot.img"'
 NorNet_LocalSite_DHCPServer_Static244='"f0:de:f1:aa:bb:ee" "pxe-boot.img" "pxe-server.simula.nornet"'
 
-# NAT Range for Central Site
+# NAT range for Central Site
 NorNet_LocalSite_NAT_Range='"172.31.255.1" "172.31.255.9"'
 
 
