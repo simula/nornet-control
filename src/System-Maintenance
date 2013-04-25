@@ -18,29 +18,29 @@
 #
 # Contact: dreibh@simula.no
 
-# Stop AutoFS
+# ====== Stop AutoFS ========================================================
 if [ -e /etc/init.d/autofs ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Stopping AutoFS service ...\x1b[0m"
    sudo service autofs stop || true
 fi
 
-# Fixes
+# ====== dpkg package fixes =================================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Applying package fixes, if necessary ...\x1b[0m"
 sudo DEBIAN_FRONTEND=noninteractive dpkg --configure -a  >/tmp/install.log 2>&1 &
 wait
 cat /tmp/install.log
 
-# Update package repositories
+# ====== Update package repositories ========================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Updating package repositories ...\x1b[0m"
 sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq
 
-# Fixes
+# ====== apt-get package fixes ==============================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing missing dependencies, if necessary ...\x1b[0m"
 sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -f -y -q  >/tmp/install.log 2>&1 &
 wait
 cat /tmp/install.log
 
-# Remove obsolete kernel packages
+# ====== Remove obsolete kernel packages ====================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Removing obsolete kernels ...\x1b[0m"
 
 kernelType=$(uname -r | sed 's/.*-\(generic\|i386\|server\|common\|rt\|xen\|ec2\)/\1/')
@@ -69,18 +69,26 @@ cat /tmp/install.log
 # Possibly for newer versions, add:
 # linux-image-extra-$(uname -r)+
 
-# System update
+# ====== System update ======================================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing updates ...\x1b[0m"
 sudo DEBIAN_FRONTEND=noninteractive nohup apt-get dist-upgrade -y -q >/tmp/install.log 2>&1 &
 wait
 cat /tmp/install.log
 
+# ====== Auto-remove ========================================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Cleaning up ...\x1b[0m"
 sudo DEBIAN_FRONTEND=noninteractive nohup apt-get autoremove -y -q >/tmp/install.log 2>&1 &
 wait
 cat /tmp/install.log
 sudo DEBIAN_FRONTEND=noninteractive apt-get clean
 
+# ====== Fixing bootloader ==================================================
+echo -e "\x1b[34m`date +%FT%H:%M:%S`: Ensuring that Grub configuration is up-to-date ...\x1b[0m"
+sudo nohup grub-install /dev/sda >/tmp/install.log 2>&1
+sudo nohup update-grub >>/tmp/install.log 2>&1
+cat /tmp/install.log
+
+# ====== apt-file cache update ==============================================
 # Cache updates
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Updating caches ...\x1b[0m"
 if [ -e /usr/bin/apt-file ] ; then
@@ -88,12 +96,13 @@ if [ -e /usr/bin/apt-file ] ; then
 fi
 sudo updatedb
 
-# Start AutoFS
+# ====== Start AutoFS =======================================================
 if [ -e /etc/init.d/autofs ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Starting AutoFS service ...\x1b[0m"
    sudo service autofs start || true
 fi
 
+# ====== Show NorNet package versions =======================================
 if [ -e /usr/bin/apt-show-versions ] ; then
    echo "====== Installed NorNet Software ============================================="
    /usr/bin/apt-show-versions | grep "^nornet-"   

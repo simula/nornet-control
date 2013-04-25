@@ -26,6 +26,7 @@ cp NEWS README BUGS COPYING ChangeLog *.lsm $PACKAGE-$UPSTREAM_VERSION
 cp src/*.py $PACKAGE-$UPSTREAM_VERSION
 cp src/*.1 $PACKAGE-$UPSTREAM_VERSION
 cp src/*-config $PACKAGE-$UPSTREAM_VERSION
+cp src/*-constants $PACKAGE-$UPSTREAM_VERSION
 cp src/*-config.example $PACKAGE-$UPSTREAM_VERSION
 mkdir $PACKAGE-$UPSTREAM_VERSION/cron-apt
 cp src/cron-apt/5-install $PACKAGE-$UPSTREAM_VERSION/cron-apt/
