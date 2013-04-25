@@ -156,7 +156,7 @@ def loadNorNetConfiguration():
          parameterName = s[0]
          parameterValue = unquote(removeComment(s[1].rstrip('\n')))
          NorNet_Configuration[parameterName] = parameterValue
-         print '<' + parameterName + '> = <' + parameterValue + '>'
+         # print '<' + parameterName + '> = <' + parameterValue + '>'
       else:
          error('Bad configuration line: ' + line)
 
@@ -177,7 +177,6 @@ def loadNorNetConfiguration():
          
          NorNet_ProviderList[providerIndex] = [ providerLongName, providerShortName, providerURL ]
 
-   print NorNet_ProviderList
 
    # ====== Check some important contents ===================================
    if NorNet_Configuration['NorNetPLC_Address'] == None:
