@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# ###### NorNet constants ###################################################
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !!!! WARNING: These settings must be the same on all systems! !!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+NorNet_IPv4Prefix="10.0.0.0/8"           # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
+NorNet_IPv6Prefix="2001:700:4100::/48"   # /48 prefix for internal IPv6 space (e.g. '2001:700:4100::/48')
+
+# Prefixes for the internal tunnel IPv4 and IPv6 networks
+NorNet_IPv4TunnelPrefix="192.168.0.0/16"              # /16 prefix for internal IPv4 tunnel space (e.g. '192.168.0.0/16')
+NorNet_IPv6TunnelPrefix="2001:700:4100:0:ffff::/72"   # /72 prefix for internal IPv6 tunnel space (e.g. '2001:700:4100:0:ffff::/72')
+
+# The domain name of the central site
+# (it will e.g. be used with the alias 'nfs' to look up the file server!)
+NorNet_CentralSite_DomainName="simula.nornet"
+
+# Public tunnelbox IP of Central Site for Default Provider. Needed for bootstrapping other tunnelboxes!
+NorNet_CentralSite_BootstrapTunnelbox="128.39.36.143"
+NorNet_CentralSite_BootstrapProviderIndex=1
+
+# The provider list
+# ------ Norway -------------------------------------------
+NorNet_Provider1='"Uninett"                   "uninett"'
+NorNet_Provider2='"Hafslund"                  "hafslund"'
+NorNet_Provider3='"ICE"                       "ice"'
+NorNet_Provider4='"Telenor"                   "telenor"'
+NorNet_Provider5='"NetCom"                    "netcom"'
+NorNet_Provider6='"Tele2"                     "tele2"'
+NorNet_Provider7='"Network Norway"            "netnorway"'
+# ------ Germany ------------------------------------------
+NorNet_Provider30='"Deutsches Forschungsnetz" "dfn"'
+NorNet_Provider31='"Versatel"                 "versatel"'
+NorNet_Provider32='"Deutsche Telekom"         "dtag"'
