@@ -217,8 +217,8 @@ if rwSystems != None:
       rwSystemList.append(name)
 
 user = pwd.getpwnam(getLocalNodeNorNetUser())
-uid=user.pw_uid
-gid=user.pw_gid
+uid  = user.pw_uid
+gid  = user.pw_gid
 
 makeTFTPDConfiguration('tftpd-hpa')
 makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid, 'nfsd')

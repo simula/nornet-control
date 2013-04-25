@@ -69,6 +69,7 @@ NorNet_Configuration = {
 
    'NorNet_LocalNode_Index'                    : 0,
    'NorNet_LocalNode_NorNetUser'               : 'nornetpp',
+   'NorNet_LocalNode_NorNetInterface'          : None,
 
    'NorNet_Provider0'                          : '"UNKNOWN" "unknown" ""'
 }
@@ -236,29 +237,32 @@ def loadNorNetConfiguration():
           (NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] > 255)):
          error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapProviderIndex must be in [1,255]!')
 
-   try:
-      NorNet_Configuration['NorNet_LocalSite_SiteIndex'] = int(NorNet_Configuration['NorNet_LocalSite_SiteIndex'])
-   except Exception as e:
-      error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex "' + NorNet_Configuration['NorNet_LocalSite_SiteIndex'] + ' is invalid: ' + str(e))
-   if ((NorNet_Configuration['NorNet_LocalSite_SiteIndex'] < 1) or
-         (NorNet_Configuration['NorNet_LocalSite_SiteIndex'] > 255)):
-      error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex must be in [1,255]!')
+   if NorNet_Configuration['NorNet_LocalSite_SiteIndex'] != None:
+      try:
+         NorNet_Configuration['NorNet_LocalSite_SiteIndex'] = int(NorNet_Configuration['NorNet_LocalSite_SiteIndex'])
+      except Exception as e:
+         error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex "' + NorNet_Configuration['NorNet_LocalSite_SiteIndex'] + ' is invalid: ' + str(e))
+      if ((NorNet_Configuration['NorNet_LocalSite_SiteIndex'] < 1) or
+            (NorNet_Configuration['NorNet_LocalSite_SiteIndex'] > 255)):
+         error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex must be in [1,255]!')
+      
+   if NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] != None:
+      try:
+         NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] = int(NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'])
+      except Exception as e:
+         error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex "' + NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] + ' is invalid: ' + str(e))
+      if ((NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] < 1) or
+            (NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] > 255)):
+         error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex must be in [1,255]!')
 
-   try:
-      NorNet_Configuration['NorNet_LocalNode_Index'] = int(NorNet_Configuration['NorNet_LocalNode_Index'])
-   except Exception as e:
-      error('NorNet_IPv4Prefix NorNet_LocalNode_Index "' + NorNet_Configuration['NorNet_LocalNode_Index'] + ' is invalid: ' + str(e))
-   if ((NorNet_Configuration['NorNet_LocalNode_Index'] < 1) or
-         (NorNet_Configuration['NorNet_LocalNode_Index'] > 255)):
-      error('NorNet_IPv4Prefix NorNet_LocalNode_Index must be in [1,255]!')
-
-   try:
-      NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] = int(NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'])
-   except Exception as e:
-      error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex "' + NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] + ' is invalid: ' + str(e))
-   if ((NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] < 1) or
-         (NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] > 255)):
-      error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex must be in [1,255]!')
+   if NorNet_Configuration['NorNet_LocalNode_Index'] != None:
+      try:
+         NorNet_Configuration['NorNet_LocalNode_Index'] = int(NorNet_Configuration['NorNet_LocalNode_Index'])
+      except Exception as e:
+         error('NorNet_IPv4Prefix NorNet_LocalNode_Index "' + NorNet_Configuration['NorNet_LocalNode_Index'] + ' is invalid: ' + str(e))
+      if ((NorNet_Configuration['NorNet_LocalNode_Index'] < 1) or
+            (NorNet_Configuration['NorNet_LocalNode_Index'] > 255)):
+         error('NorNet_IPv4Prefix NorNet_LocalNode_Index must be in [1,255]!')
 
 
 # ###### Get central site's domain name #####################################

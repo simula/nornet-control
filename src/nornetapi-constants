@@ -36,7 +36,7 @@ NorNet_Provider30='"Deutsches Forschungsnetz"               "dfn"        "http:/
 NorNet_Provider31='"Versatel"                               "versatel"   "http://www.versatel.de/"'
 NorNet_Provider32='"Deutsche Telekom"                       "dtag"       "http://www.dtag.de/"'
 # ------ China ------------------------------------------------------------------------------------
-NorNet_Provider80='"China Education and Research Network"   "cernet"     "http://cernet.edu.cn/"'
+NorNet_Provider80='"China Education and Research Network"   "cernet"     "http://www.cernet.edu.cn/"'
 NorNet_Provider81='"China Unicom"                           "unicom"     "http://www.chinaunicom.com/"'
 # ------ Test -------------------------------------------------------------------------------------
 NorNet_Provider255='"Test Alpha"                            "test1"      "http://plc/"'
