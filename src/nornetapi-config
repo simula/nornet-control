@@ -40,6 +40,11 @@ NorNet_LocalNode_NorNetInterface='eth0'
 # NorNet_Server_DefaultVNCPassword=""
 
 
+# ###### NorNet File Server configuration ###################################
+# The systems with read/write permissions.
+# NorNet_FileServ_RWSystems='"kringsjaa.simula.nornet" "nordmarka.simula.nornet" "frognerseteren.simula.nornet" "voksenkollen.simula.nornet"'
+
+
 # ###### NorNet Tunnelbox configuration #####################################
 # NOTE:
 # The following information is only necessary to bootstrap a tunnelbox on the
@@ -54,34 +59,54 @@ NorNet_LocalSite_DefaultProviderIndex=1
 # This is the local tunnelbox's outer IPv4 address for the default provider:
 NorNet_LocalSite_TBDefaultProviderIPv4='128.39.36.143'
 
-# DHCP configuration
+# DHCP Configuration
 NorNet_LocalSite_DHCPServer_Dynamic='"40" "49"'
-NorNet_LocalSite_DHCPServer_Static242='"f0:de:f1:11:22:33"'
-NorNet_LocalSite_DHCPServer_Static243='"f0:de:f1:aa:bb:cc" "pxe-boot.img"'
-NorNet_LocalSite_DHCPServer_Static244='"f0:de:f1:aa:bb:ee" "pxe-boot.img" "pxe-server.simula.nornet"'
 
-# NAT range for Central Site
-NorNet_LocalSite_NAT_Range='"172.31.255.1" "172.31.255.9"'
+NorNet_LocalSite_DHCPServer_Static200='"f0:de:f1:11:22:33"'
+NorNet_LocalSite_DHCPServer_Static201='"f0:de:f1:aa:bb:cc" "pxe-boot.img"'
+NorNet_LocalSite_DHCPServer_Static202='"f0:de:f1:aa:bb:ee" "pxe-boot.img" "pxe-server.simula.nornet"'
 
 
 # ###### Additional DNS names ###############################################
 # Add additional, non-managed nodes here.
-# The syntax is NorNet_LocalSite_Node<XXX>='"Hostname" "Hardware" "Type"',
+# The syntax is:
+# 'NorNet_LocalSite_Node<XXX>='"Hostname" "Hardware" "Type" "Options"',
 # where <XXX> denotes the node index (i.e. 2 to 254).
 
-NorNet_LocalSite_Node254='"skjennungen"    "HP DL-320"  "Physical Server #1"'
-NorNet_LocalSite_Node253='"sognsvann"      "HP DL-320"  "Physical Server #2"'
-NorNet_LocalSite_Node252='"svartkulp"      "HP DL-320"  "Physical Server #3"'
-NorNet_LocalSite_Node251='"maridalsvannet" "HP DL-320"  "Physical Server #4"'
-NorNet_LocalSite_Node250='"tryvann"        "HP DL-320"  "Physical Server #5"'
-NorNet_LocalSite_Node249='"aaklungen"      "HP DL-320"  "Physical Server #6"'
-NorNet_LocalSite_Node248='"bjordammen"     "HP DL-320"  "Physical Server #7"'
-NorNet_LocalSite_Node247='"blanksjoe"      "HP DL-320"  "Physical Server #8"'
+NorNet_LocalSite_Node254='"skjennungen"        "HP DL-320"  "Physical Server #1"'
+NorNet_LocalSite_Node244='"ilo-skjennungen"    "HP DL-320"  "iLO on Physical Server #1" "def-v4only"'
 
-NorNet_LocalSite_Node2='"vigelandsparken"  "Amiga 8000" "NorNet PLC"'
-NorNet_LocalSite_Node3='"holmenkollen"     "Amiga 8000" "NorNet Monitor"'
-NorNet_LocalSite_Node4='"kirkeveien"       "Amiga 8000" "NorNet Display"'
+NorNet_LocalSite_Node253='"sognsvann"          "HP DL-320"  "Physical Server #2"'
+NorNet_LocalSite_Node243='"ilo-sognsvann"      "HP DL-320"  "iLO on Physical Server #2" "def-v4only"'
+
+NorNet_LocalSite_Node252='"svartkulp"          "HP DL-320"  "Physical Server #3"'
+NorNet_LocalSite_Node242='"ilo-svartkulp"      "HP DL-320"  "iLO on Physical Server #3" "def-v4only"'
+
+NorNet_LocalSite_Node251='"maridalsvannet"     "HP DL-320"  "Physical Server #4"'
+NorNet_LocalSite_Node241='"ilo-maridalsvannet" "HP DL-320"  "iLO on Physical Server #4" "def-v4only"'
+
+NorNet_LocalSite_Node250='"tryvann"            "HP DL-320"  "Physical Server #5"'
+NorNet_LocalSite_Node240='"ilo-tryvann"        "HP DL-320"  "iLO on Physical Server #5" "def-v4only"'
+
+NorNet_LocalSite_Node249='"åklungen"           "HP DL-320"  "Physical Server #6"'
+NorNet_LocalSite_Node239='"ilo-åklungen"       "HP DL-320"  "iLO on Physical Server #6" "def-v4only"'
+
+NorNet_LocalSite_Node248='"bjordammen"         "HP DL-320"  "Physical Server #7"'
+NorNet_LocalSite_Node238='"ilo-bjordammen"     "HP DL-320"  "iLO on Physical Server #7" "def-v4only"'
+
+NorNet_LocalSite_Node247='"blanksjø"           "HP DL-320"  "Physical Server #8"'
+NorNet_LocalSite_Node237='"ilo-blanksjø"       "HP DL-320"  "iLO on Physical Server #8" "def-v4only"'
+
+NorNet_LocalSite_Node230='"slottsparken"       "Netgear GSM7224" "Switch" "def-v4only"'
 
 
-# ###### File server read-write-permitted systems##############################
-NorNet_FileServ_RWSystems='"kirkeveien.simula.nornet" "nordmarka.simula.nornet"'
+NorNet_LocalSite_Node2='"vigelandsparken"      "Amiga 8000" "NorNet PLC"'
+NorNet_LocalSite_Node3='"holmenkollen"         "Amiga 8000" "NorNet Monitor"'
+NorNet_LocalSite_Node4='"kirkeveien"           "Amiga 8000" "NorNet File Server"'
+NorNet_LocalSite_Node10='"majorstuen"          "Amiga 8000" "NorNet Display"'
+NorNet_LocalSite_Node11='"ullevål"             "Amiga 8000" "NorNet Display"'
+
+NorNet_LocalSite_Node50='"kringsjå"            "Amiga 9000" "NorNet Development Node"'
+NorNet_LocalSite_Node51='"nordmarka"           "Amiga 9000" "NorNet Development Node"'
+NorNet_LocalSite_Node55='"frognerseteren"      "Amiga 9000" "NorNet Development Node"'
+NorNet_LocalSite_Node56='"voksenkollen"        "Amiga 9000" "NorNet Development Node"'
