@@ -53,7 +53,34 @@ def unquote(string):
    m = re.match(r'''^"(.*)"$''', string)
    if m != None:
       return m.group(1)
+   m = re.match(r'''^\'(.*)\'$''', string)
+   if m != None:
+      return m.group(1)
    return string
+
+
+# ###### Remove shell-style comment from input line #########################
+def removeComment(line):
+   quoteStack = []
+   inEscape   = False
+
+   for i, c in enumerate(line):
+      if ((len(quoteStack) == 0) and (c == '#')):
+         # '#' is comment => remove it.
+         return line[:i].strip()
+      elif inEscape:
+         # Backslash => continue.
+         inEscape = False
+      elif ((len(quoteStack) > 0) and (c == '\\')):
+         # In quote and next character is to be escaped.
+         inEscape = True
+      elif ((c == '"') or (c == '\'')):
+         if ((len(quoteStack) > 0) and (c == quoteStack[len(quoteStack) - 1])):
+            quoteStack.pop()
+         else:
+            quoteStack.append(c)
+
+   return line
 
 
 # ###### Get tag value or return a default ##################################
