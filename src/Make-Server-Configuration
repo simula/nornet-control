@@ -27,10 +27,11 @@ import base64;
 from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
+from NorNetTools         import *;
+from NorNetConfiguration import *;
+from NorNetAPI           import *;
 from NorNetProviderSetup import *;
-from NorNetNodeSetup import *;
-from NorNetTools import *;
-
+from NorNetNodeSetup     import *;
 
 
 # ###### Main program #######################################################

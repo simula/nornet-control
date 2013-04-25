@@ -1,17 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
-
-from NorNetProviderSetup import *;
 from NorNetTools         import *;
-
-import os;
-import re;
+from NorNetConfiguration import *;
 
 
-print makeDNSNameFromUnicode(u'test123456789.xzy')
-print makeDNSNameFromUnicode(u'test123456789.äöü.æøå.xzyß')
-print makeDNSNameFromUnicode(u'köln.äüö')
-print makeDNSNameFromUnicode(u'bygdøy.æå')
+print removeComment('"ilo-åklungen"       "HP DL-320"  "iLO on Physical Server #1"')
+print removeComment('\'"ilo-åklungen"       "HP DL-320"  "iLO on Physical Server #1"\'')
+
+print removeComment('"ilo-åklungen"       "HP DL-320"  "iLO on Physical Server #1" # bla')
+print removeComment('\'"ilo-åklungen"       "HP DL-320"  "iLO on Physical Server #1"\' # bla bla')
+
+print removeComment('"ilo-åklungen"       "HP DL-320"  "iLO on Physical Server #1" # bla """"')
+print removeComment('\'"ilo-åklungen"       "HP DL-320"  "iLO on Physical Server #1"\' # bla bla \'"\'')

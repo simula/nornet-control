@@ -25,8 +25,9 @@ import time;
 import adns;
 
 # NorNet
-from NorNetAPI       import *;
-from NorNetNodeSetup import *;
+from NorNetConfiguration import *;
+from NorNetAPI           import *;
+from NorNetNodeSetup     import *;
 
 
 # ###### Generate TFTP daemon configuration #################################
