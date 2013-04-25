@@ -54,7 +54,8 @@ NorNetPLC_FallbackConfigFile           = 'nornetapi-config'
 NorNet_Configuration = {
    'NorNetPLC_Address'  : None,
    'NorNetPLC_User'     : 'nornetpp',
-   'NorNetPLC_Password' : None   
+   'NorNetPLC_Password' : None,
+   'NorNet_Provider0'   : '"UNKNOWN" "unknown"'
 }
 
 # ===========================================================================
