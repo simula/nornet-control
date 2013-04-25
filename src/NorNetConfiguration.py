@@ -52,11 +52,21 @@ NorNetPLC_FallbackConfigFile    = 'nornetapi-config'
 # These are the configuration defaults: just the parameters that need
 # some setting in order to process the reading of the configuration from file.
 NorNet_Configuration = {
-   'NorNetPLC_Address'  : None,
-   'NorNetPLC_User'     : 'nornetpp',
-   'NorNetPLC_Password' : None,
-   'NorNet_Provider0'   : '"UNKNOWN" "unknown"'
+   'NorNetPLC_Address'                         : None,
+   'NorNetPLC_User'                            : 'nornetpp',
+   'NorNetPLC_Password'                        : None,
+   
+   'NorNet_IPv4Prefix'                         : 'BAD',
+   'NorNet_IPv6Prefix'                         : 'BAD',
+   'NorNet_IPv4TunnelPrefix'                   : 'BAD',
+   'NorNet_IPv6TunnelPrefix'                   : 'BAD',
+   'NorNet_CentralSite_DomainName'             : 'unknown-central-site.unknown-domain',
+   'NorNet_CentralSite_BootstrapTunnelbox'     : None,
+   'NorNet_CentralSite_BootstrapProviderIndex' : None,
+
+   'NorNet_Provider0'                          : '"UNKNOWN" "unknown"'
 }
+
 
 # ===========================================================================
 
@@ -97,6 +107,11 @@ NorNet_NodeIndex_FileSrv  = 4
 
 # ###### Read configuration file ############################################
 def loadNorNetConfiguration():
+   sys.stdout = codecs.getwriter('utf8')(sys.stdout)
+   sys.stderr = codecs.getwriter('utf8')(sys.stderr)
+   sys.stdin  = codecs.getreader('utf8')(sys.stdin)
+
+   # ====== Open constants file =============================================
    log('Reading constants from ' + NorNetPLC_ConfigFile + ' ...')   
    try:
       constantsFile = codecs.open(NorNetPLC_ConstantsFile, 'r', 'utf-8')
@@ -108,6 +123,7 @@ def loadNorNetConfiguration():
       except Exception as e:
          error('Constantsuration file ' + NorNetPLC_FallbackConstantsFile + ' cannot be read: ' + str(e))
    
+   # ====== Open configuration file =========================================
    log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')   
    try:
       configFile = codecs.open(NorNetPLC_ConfigFile, 'r', 'utf-8')
@@ -119,6 +135,7 @@ def loadNorNetConfiguration():
       except Exception as e:
          error('Configuration file ' + NorNetPLC_FallbackConfigFile + ' cannot be read: ' + str(e))
 
+   # ====== Build the configuration table ===================================
    lines = tuple(constantsFile) + tuple(configFile)
    for line in lines:
       if re.match('^[ \t]*[#\n]', line):
@@ -132,20 +149,62 @@ def loadNorNetConfiguration():
       else:
          error('Bad configuration line: ' + line)
 
+
+   # ====== Check some important contents ===================================
    if NorNet_Configuration['NorNetPLC_Address'] == None:
       error('NorNetPLC_Address has not been set in configuration file!')
    if NorNet_Configuration['NorNetPLC_User'] == None:
       error('NorNetPLC_User has not been set in configuration file!')
    if NorNet_Configuration['NorNetPLC_Password'] == None:
       error('NorNetPLC_Password has not been set in configuration file!')
+      
    try:
       user = pwd.getpwnam(getLocalNodeNorNetUser())
-   except:
-      error('NorNet_LocalNode_NorNetUser has invalid user "' + str(getLocalNodeNorNetUser()) + '"!')
+   except Exception as e:
+      error('NorNet_LocalNode_NorNetUser has invalid user "' + str(getLocalNodeNorNetUser()) + '": ' + str(e))
+      
+   try:
+      NorNet_Configuration['NorNet_IPv4Prefix'] = IPv4Network(NorNet_Configuration['NorNet_IPv4Prefix'])
+   except Exception as e:
+      error('NorNet_IPv4Prefix setting "' + NorNet_Configuration['NorNet_IPv4Prefix'] + ' is invalid: ' + str(e))
+   if NorNet_Configuration['NorNet_IPv4Prefix'].prefixlen > 8:
+      error('NorNet_IPv4Prefix must be at least a /8 network!')
 
-   sys.stdout = codecs.getwriter('utf8')(sys.stdout)
-   sys.stderr = codecs.getwriter('utf8')(sys.stderr)
-   sys.stdin  = codecs.getreader('utf8')(sys.stdin)
+   try:
+      NorNet_Configuration['NorNet_IPv6Prefix'] = IPv6Network(NorNet_Configuration['NorNet_IPv6Prefix'])
+   except Exception as e:
+      error('NorNet_IPv6Prefix setting "' + NorNet_Configuration['NorNet_IPv6Prefix'] + ' is invalid: ' + str(e))
+   if NorNet_Configuration['NorNet_IPv6Prefix'].prefixlen > 48:
+      error('NorNet_IPv6Prefix must be at least a /48 network!')
+
+   try:
+      NorNet_Configuration['NorNet_IPv4TunnelPrefix'] = IPv4Network(NorNet_Configuration['NorNet_IPv4TunnelPrefix'])
+   except Exception as e:
+      error('NorNet_IPv4TunnelPrefix setting "' + NorNet_Configuration['NorNet_IPv4TunnelPrefix'] + ' is invalid: ' + str(e))
+   if NorNet_Configuration['NorNet_IPv4TunnelPrefix'].prefixlen > 16:
+      error('NorNet_IPv4TunnelPrefix must be at least a /16 network!')
+
+   try:
+      NorNet_Configuration['NorNet_IPv6TunnelPrefix'] = IPv6Network(NorNet_Configuration['NorNet_IPv6TunnelPrefix'])
+   except Exception as e:
+      error('NorNet_IPv6TunnelPrefix setting "' + NorNet_Configuration['NorNet_IPv6TunnelPrefix'] + ' is invalid: ' + str(e))
+   if NorNet_Configuration['NorNet_IPv6TunnelPrefix'].prefixlen > 72:
+      error('NorNet_IPv6TunnelPrefix must be at least a /72 network!')
+
+   if NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'] != None:
+      try:
+         NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'] = IPv4Address(NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'])
+      except Exception as e:
+         error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapTunnelbox "' + NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'] + ' is invalid: ' + str(e))
+
+   if NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] != None:
+      try:
+         NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] = int(NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'])
+      except Exception as e:
+         error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapProviderIndex "' + NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] + ' is invalid: ' + str(e))
+      if ((NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] < 1) or
+          (NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] > 255)):
+         error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapProviderIndex must be in [1,255]!')
 
 
 # ###### Get local Site Index ###############################################

@@ -26,6 +26,7 @@ import hashlib;
 from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
+import NorNetConfiguration;
 from NorNetTools import *;
 
 
@@ -54,7 +55,7 @@ NorNet_ProviderList = {
 }
 
 # Prefixes for the internal IPv4 and IPv6 networks
-NorNet_IPv4Prefix = IPv4Network('10.0.0.0/8')            # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
+#NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix'] = IPv4Network('10.0.0.0/8')            # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
 NorNet_IPv6Prefix = IPv6Network('2001:700:4100::/48')    # /48 prefix for internal IPv6 space (e.g. '2001:700:4100::/48')
 
 # Prefixes for the internal tunnel IPv4 and IPv6 networks
@@ -130,7 +131,7 @@ def makeNorNetIP(provider, site, node, version):
          prefix = 8;     # NorNet
 
       a = IPv4Address('0.' + str(p) + '.' + str(s) + '.' + str(n))
-      a = int(NorNet_IPv4Prefix) | int(a)
+      a = int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix']) | int(a)
       return IPv4Network(str(IPv4Address(a)) + '/' + str(prefix))
 
    # ====== IPv6 handling ===================================================
@@ -163,7 +164,7 @@ def getNorNetInformationForAddress(address):
          'vnet_index':     (b & 0x000000ff)
       }
 
-   if NorNet_IPv4Prefix.Contains(address):
+   if NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix'].Contains(address):
       a = int(address)
       norNetInformation = {
          'address':        address,
@@ -185,7 +186,7 @@ def getMyNorNetInformation():
 
    localAddressList = getLocalAddresses(4)
    for address in localAddressList:
-      if NorNet_IPv4Prefix.Contains(address):
+      if NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix'].Contains(address):
          return getNorNetInformationForAddress(address)
 
    return None
