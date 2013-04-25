@@ -19,7 +19,6 @@
 #
 # Contact: dreibh@simula.no
 
-
 import sys;
 import re;
 import hashlib;
@@ -31,9 +30,11 @@ import socket;
 from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
+from NorNetConfiguration import *;
 from NorNetTools         import *;
 from NorNetAPI           import *;
 from NorNetProviderSetup import *;
+
 
 
 # ###### Write Automatic Configuration Information ##########################
@@ -58,7 +59,7 @@ def makeAutoFSConfiguration(weAreOnFileServer, siteIndex, nodeIndex, addHeader):
    if addHeader == True:
       writeAutoConfigInformation(outputFile)         
    if weAreOnFileServer == False:
-      fileServer = 'nfs.' + NorNet_CentralSite_DomainName
+      fileServer = 'nfs.' + getCentralSiteDomainName()
       outputFile.write('adm\t-fstype=nfs,' + nfsOptions + ',rw\t' + fileServer + ':/filesrv/adm\n')
       outputFile.write('pub\t-fstype=nfs,' + nfsOptions + ',rw\t' + fileServer + ':/filesrv/pub\n')
       outputFile.write('sys\t-fstype=nfs,' + nfsOptions + ',rw\t' + fileServer + ':/filesrv/sys\n')

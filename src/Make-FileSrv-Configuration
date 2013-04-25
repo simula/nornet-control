@@ -19,7 +19,6 @@
 #
 # Contact: dreibh@simula.no
 
-
 import sys;
 import time;
 import adns;
@@ -28,6 +27,15 @@ import adns;
 from NorNetConfiguration import *;
 from NorNetAPI           import *;
 from NorNetNodeSetup     import *;
+
+
+
+# ###### Get local node configuration string ################################
+def getFileServRWSystemsConfigurationString():
+   try:
+      return NorNet_Configuration['NorNet_FileServ_RWSystems']
+   except:
+      return ''
 
 
 # ###### Generate TFTP daemon configuration #################################
@@ -196,7 +204,6 @@ loginToPLC()
 
 fullSiteList = fetchNorNetSiteList(False)
 # NOTE: Site list also includes disabled sites!
-#fullNodeList = fetchNorNetNodeList()
 
 rwSystemList = []
 rwSystems = getFileServRWSystemsConfigurationString()

@@ -6,6 +6,7 @@
 # !!!! WARNING: These settings must be the same on all systems! !!!!
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+# Prefixes for the internal IPv4 and IPv6 networks
 NorNet_IPv4Prefix="10.0.0.0/8"           # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
 NorNet_IPv6Prefix="2001:700:4100::/48"   # /48 prefix for internal IPv6 space (e.g. '2001:700:4100::/48')
 
@@ -22,15 +23,23 @@ NorNet_CentralSite_BootstrapTunnelbox="128.39.36.143"
 NorNet_CentralSite_BootstrapProviderIndex=1
 
 # The provider list
-# ------ Norway -------------------------------------------
-NorNet_Provider1='"Uninett"                   "uninett"'
-NorNet_Provider2='"Hafslund"                  "hafslund"'
-NorNet_Provider3='"ICE"                       "ice"'
-NorNet_Provider4='"Telenor"                   "telenor"'
-NorNet_Provider5='"NetCom"                    "netcom"'
-NorNet_Provider6='"Tele2"                     "tele2"'
-NorNet_Provider7='"Network Norway"            "netnorway"'
-# ------ Germany ------------------------------------------
-NorNet_Provider30='"Deutsches Forschungsnetz" "dfn"'
-NorNet_Provider31='"Versatel"                 "versatel"'
-NorNet_Provider32='"Deutsche Telekom"         "dtag"'
+# ------ Norway -----------------------------------------------------------------------------------
+NorNet_Provider1='"Uninett"                                 "uninett"    "http://www.uninett.no/"'
+NorNet_Provider2='"Hafslund"                                "hafslund"   "http://www.hafslund.no/"'
+NorNet_Provider3='"ICE"                                     "ice"        "http://www.ice.no/"'
+NorNet_Provider4='"Telenor"                                 "telenor"    "http://www.telenor.no/"'
+NorNet_Provider5='"NetCom"                                  "netcom"     "http://www.netcom.no/"'
+NorNet_Provider6='"Tele2"                                   "tele2"      "http://www.tele2.no/"'
+NorNet_Provider7='"Network Norway"                          "netnorway"  "http://www.networknorway.no/"'
+# ------ Germany ----------------------------------------------------------------------------------
+NorNet_Provider30='"Deutsches Forschungsnetz"               "dfn"        "http://www.dfn.de/"'
+NorNet_Provider31='"Versatel"                               "versatel"   "http://www.versatel.de/"'
+NorNet_Provider32='"Deutsche Telekom"                       "dtag"       "http://www.dtag.de/"'
+# ------ China ------------------------------------------------------------------------------------
+NorNet_Provider80='"China Education and Research Network"   "cernet"     "http://cernet.edu.cn/"'
+NorNet_Provider81='"China Unicom"                           "unicom"     "http://www.chinaunicom.com/"'
+# ------ Test -------------------------------------------------------------------------------------
+NorNet_Provider255='"Test Alpha"                            "test1"      "http://plc/"'
+NorNet_Provider254='"Test Beta"                             "test2"      "http://plc/"'
+NorNet_Provider253='"Test Gamma"                            "test3"      "http://plc/"'
+NorNet_Provider252='"Test Delta"                            "test4"      "http://plc/"'

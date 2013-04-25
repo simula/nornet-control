@@ -53,20 +53,28 @@ NorNetPLC_FallbackConfigFile    = 'nornetapi-config'
 # some setting in order to process the reading of the configuration from file.
 NorNet_Configuration = {
    'NorNetPLC_Address'                         : None,
-   'NorNetPLC_User'                            : 'nornetpp',
+   'NorNetPLC_User'                            : None,
    'NorNetPLC_Password'                        : None,
    
    'NorNet_IPv4Prefix'                         : 'BAD',
    'NorNet_IPv6Prefix'                         : 'BAD',
    'NorNet_IPv4TunnelPrefix'                   : 'BAD',
    'NorNet_IPv6TunnelPrefix'                   : 'BAD',
-   'NorNet_CentralSite_DomainName'             : 'unknown-central-site.unknown-domain',
+   'NorNet_CentralSite_DomainName'             : None,
    'NorNet_CentralSite_BootstrapTunnelbox'     : None,
    'NorNet_CentralSite_BootstrapProviderIndex' : None,
 
-   'NorNet_Provider0'                          : '"UNKNOWN" "unknown"'
+   'NorNet_LocalSite_SiteIndex'                : 0,
+   'NorNet_LocalSite_DefaultProviderIndex'     : 0,
+
+   'NorNet_LocalNode_Index'                    : 0,
+   'NorNet_LocalNode_NorNetUser'               : 'nornetpp',
+
+   'NorNet_Provider0'                          : '"UNKNOWN" "unknown" ""'
 }
 
+# The provider list
+NorNet_ProviderList = { }
 
 # ===========================================================================
 
@@ -135,6 +143,7 @@ def loadNorNetConfiguration():
       except Exception as e:
          error('Configuration file ' + NorNetPLC_FallbackConfigFile + ' cannot be read: ' + str(e))
 
+
    # ====== Build the configuration table ===================================
    lines = tuple(constantsFile) + tuple(configFile)
    for line in lines:
@@ -150,6 +159,24 @@ def loadNorNetConfiguration():
          error('Bad configuration line: ' + line)
 
 
+   # ====== Build provider table ============================================
+   for providerIndex in range(0,256):
+      try:
+         provider = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', NorNet_Configuration['NorNet_Provider' + str(providerIndex)])
+      except:
+         provider = None
+      if provider != None:
+         if len(provider) < 3:
+            error('Bad configuration "' + NorNet_Configuration['NorNet_Provider' + str(providerIndex)] + '" for NorNet_Provider' + str(providerIndex))
+
+         providerLongName  = unquote(provider[0])
+         providerShortName = unquote(provider[1])
+         providerURL       = unquote(provider[2])
+         
+         NorNet_ProviderList[providerIndex] = [ providerLongName, providerShortName, providerURL ]
+
+   print NorNet_ProviderList
+
    # ====== Check some important contents ===================================
    if NorNet_Configuration['NorNetPLC_Address'] == None:
       error('NorNetPLC_Address has not been set in configuration file!')
@@ -157,7 +184,10 @@ def loadNorNetConfiguration():
       error('NorNetPLC_User has not been set in configuration file!')
    if NorNet_Configuration['NorNetPLC_Password'] == None:
       error('NorNetPLC_Password has not been set in configuration file!')
-      
+   
+   if NorNet_Configuration['NorNet_CentralSite_DomainName'] == None:
+      error('NorNet_CentralSite_DomainName has not been set!')
+
    try:
       user = pwd.getpwnam(getLocalNodeNorNetUser())
    except Exception as e:
@@ -206,21 +236,44 @@ def loadNorNetConfiguration():
           (NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] > 255)):
          error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapProviderIndex must be in [1,255]!')
 
+   try:
+      NorNet_Configuration['NorNet_LocalSite_SiteIndex'] = int(NorNet_Configuration['NorNet_LocalSite_SiteIndex'])
+   except Exception as e:
+      error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex "' + NorNet_Configuration['NorNet_LocalSite_SiteIndex'] + ' is invalid: ' + str(e))
+   if ((NorNet_Configuration['NorNet_LocalSite_SiteIndex'] < 1) or
+         (NorNet_Configuration['NorNet_LocalSite_SiteIndex'] > 255)):
+      error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex must be in [1,255]!')
+
+   try:
+      NorNet_Configuration['NorNet_LocalNode_Index'] = int(NorNet_Configuration['NorNet_LocalNode_Index'])
+   except Exception as e:
+      error('NorNet_IPv4Prefix NorNet_LocalNode_Index "' + NorNet_Configuration['NorNet_LocalNode_Index'] + ' is invalid: ' + str(e))
+   if ((NorNet_Configuration['NorNet_LocalNode_Index'] < 1) or
+         (NorNet_Configuration['NorNet_LocalNode_Index'] > 255)):
+      error('NorNet_IPv4Prefix NorNet_LocalNode_Index must be in [1,255]!')
+
+   try:
+      NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] = int(NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'])
+   except Exception as e:
+      error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex "' + NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] + ' is invalid: ' + str(e))
+   if ((NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] < 1) or
+         (NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] > 255)):
+      error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex must be in [1,255]!')
+
+
+# ###### Get central site's domain name #####################################
+def getCentralSiteDomainName():
+   return NorNet_Configuration['NorNet_CentralSite_DomainName']
+
 
 # ###### Get local Site Index ###############################################
 def getLocalSiteIndex():
-   try:
-      return int(NorNet_Configuration['NorNet_LocalSite_SiteIndex'])
-   except:
-      return None
+   return NorNet_Configuration['NorNet_LocalSite_SiteIndex']
 
 
 # ###### Get local Default Provider Index ###################################
 def getLocalDefaultProviderIndex():
-   try:
-      return int(NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'])
-   except:
-      return None
+   return NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex']
 
 
 # ###### Get local tunnelbox's outer IPv4 address ###########################
@@ -228,17 +281,14 @@ def getLocalTunnelboxDefaultProviderIPv4():
    return NorNet_Configuration['NorNet_LocalSite_TBDefaultProviderIPv4']
 
 
+# ###### Get local node index ###############################################
+def getLocalNodeIndex():
+   return NorNet_Configuration['NorNet_LocalNode_Index']
+
+
 # ###### Get local node hostname ############################################
 def getLocalNodeHostname():
    return NorNet_Configuration['NorNet_LocalNode_Hostname']
-
-
-# ###### Get local node index ###############################################
-def getLocalNodeIndex():
-   try:
-      return int(NorNet_Configuration['NorNet_LocalNode_Index'])
-   except:
-      return None
 
 
 # ###### Get local node hostname ############################################
@@ -248,10 +298,15 @@ def getLocalNodeNorNetInterface():
 
 # ###### Get local node NorNet user #########################################
 def getLocalNodeNorNetUser():
-   if NorNet_Configuration['NorNet_LocalNode_NorNetUser'] == None:
-      return 'nornetpp'
-   else:
-      return NorNet_Configuration['NorNet_LocalNode_NorNetUser']
+   return NorNet_Configuration['NorNet_LocalNode_NorNetUser']
+
+
+# ###### Get NorNet provider information ####################################
+def getNorNetProviderInfo(providerIndex):
+   try:
+      return NorNet_ProviderList[providerIndex]
+   except:
+      return NorNet_ProviderList[0]
 
 
 # ###### Get local node configuration string ################################
@@ -260,14 +315,6 @@ def getLocalNodeConfigurationString(nodeIndex):
       return unicode(NorNet_Configuration['NorNet_LocalSite_Node' + str(nodeIndex)])
    except:
       return u''
-
-
-# ###### Get local node configuration string ################################
-def getFileServRWSystemsConfigurationString():
-   try:
-      return NorNet_Configuration['NorNet_FileServ_RWSystems']
-   except:
-      return ''
 
 
 # ###### Get DHCPD node configuration string ################################

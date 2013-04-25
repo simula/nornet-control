@@ -19,7 +19,6 @@
 #
 # Contact: dreibh@simula.no
 
-
 import hashlib;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
@@ -29,84 +28,6 @@ from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 import NorNetConfiguration;
 from NorNetTools import *;
 
-
-# ====== Adapt if necessary =================================================
-
-NorNet_ProviderList = {
-#   ID     Name                                Short Name (ASCII only!)
-# =====================================================================
-     0 : [ 'UNKNOWN',                          'unknown'   ],
-
-   # ------ Norway ---------------------------------------------
-     1 : [ 'Uninett',                          'uninett'   ],
-     2 : [ 'Hafslund',                         'hafslund'  ],
-     3 : [ 'ICE',                              'ice'       ],
-
-     4 : [ 'Telenor',                          'telenor'   ],
-     5 : [ 'NetCom',                           'netcom'    ],
-     6 : [ 'Tele2',                            'tele2'     ],
-     7 : [ 'Network Norway',                   'netnorway' ],
-
-   # ------ Germany --------------------------------------------
-    30 : [ 'Deutsches Forschungsnetz',         'dfn'       ],
-    31 : [ 'Versatel',                         'versatel'  ],
-    32 : [ 'Deutsche Telekom',                 'dtag'      ]
-
-}
-
-# Prefixes for the internal IPv4 and IPv6 networks
-#NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix'] = IPv4Network('10.0.0.0/8')            # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
-NorNet_IPv6Prefix = IPv6Network('2001:700:4100::/48')    # /48 prefix for internal IPv6 space (e.g. '2001:700:4100::/48')
-
-# Prefixes for the internal tunnel IPv4 and IPv6 networks
-NorNet_IPv4TunnelPrefix = IPv4Network('192.168.0.0/16')              # /16 prefix for internal IPv4 tunnel space (e.g. '192.168.0.0/16')
-NorNet_IPv6TunnelPrefix = IPv6Network('2001:700:4100:0:ffff::/72')   # /72 prefix for internal IPv6 tunnel space (e.g. '2001:700:4100:0:ffff::/72')
-
-# The domain name of the central site
-# (it will e.g. be used with the alias 'nfs' to look up the file server!)
-NorNet_CentralSite_DomainName = 'simula.nornet'
-
-# Public tunnelbox IP of Central Site for Default Provider. Needed for bootstrapping other tunnelboxes!
-NorNet_CentralSite_BootstrapTunnelbox     = IPv4Address('128.39.36.143')
-NorNet_CentralSite_BootstrapProviderIndex = 1
-
-# ===========================================================================
-
-# TOS Settings for provider selection
-NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
-
-# Maximum number of NTP servers (e.g. 6+6 = 6x IPv4 + 6x IPv6)
-NorNet_MaxNTPServers = 12
-
-# Maximum number of providers per site
-NorNet_MaxProviders = 8
-
-# NorNet Internet connection to/from outside world goes via Site 1!
-NorNet_SiteIndex_Central = 1
-
-# NorNet Tunnelbox is always Node 1!
-NorNet_NodeIndex_Tunnelbox = 1
-
-# PLC is Node 2 on the Central Site!
-NorNet_SiteIndex_PLC = NorNet_SiteIndex_Central
-NorNet_NodeIndex_PLC = 2
-
-# NorNet Monitor is Node 3 on the Central Site!
-NorNet_SiteIndex_Monitor  = NorNet_SiteIndex_Central
-NorNet_NodeIndex_Monitor  = 3
-
-# NorNet Monitor is Node 4 on the Central Site!
-NorNet_SiteIndex_FileSrv  = NorNet_SiteIndex_Central
-NorNet_NodeIndex_FileSrv  = 4
-
-
-
-# ###### Get NorNet provider information ####################################
-def getNorNetProviderInfo(providerIndex):
-   try:
-      return NorNet_ProviderList[providerIndex]
-   except:
-      return NorNet_ProviderList[0]
 
 
 # ###### Get NorNet interface IPv4 address ##################################
@@ -146,14 +67,14 @@ def makeNorNetIP(provider, site, node, version):
       a = IPv6Address('0:0:0:' + \
                       str.replace(hex((p << 8) | s), '0x', '') + '::' + \
                       str.replace(hex(n), '0x', ''))
-      a = IPv6Address(int(NorNet_IPv6Prefix) | int(a))
+      a = IPv6Address(int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix']) | int(a))
       return IPv6Network(str(a) + '/' + str(prefix))
 
 
 # ###### Get NorNet information from address ################################
 def getNorNetInformationForAddress(address):
    norNetInformation = None
-   if NorNet_IPv6Prefix.Contains(address):
+   if NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix'].Contains(address):
       a = int(address)
       b = int((a >> 64) & 0xffffffff)
       norNetInformation = {
@@ -181,7 +102,7 @@ def getNorNetInformationForAddress(address):
 def getMyNorNetInformation():
    localAddressList = getLocalAddresses(6)
    for address in localAddressList:
-      if NorNet_IPv6Prefix.Contains(address):
+      if NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix'].Contains(address):
          return getNorNetInformationForAddress(address)
 
    localAddressList = getLocalAddresses(4)
@@ -205,9 +126,9 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
 
    if ((outgoingSite == 0) and (incomingSite == 0)):
       if version == 4:
-         return NorNet_IPv4TunnelPrefix
+         return NorNetConfiguration.NorNet_Configuration['NorNet_IPv4TunnelPrefix']
       else:
-         return NorNet_IPv6TunnelPrefix
+         return NorNetConfiguration.NorNet_Configuration['NorNet_IPv6TunnelPrefix']
 
    if incomingSite < outgoingSite:
       side  = 1
@@ -225,7 +146,7 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
 
    source      = str.replace(hex((sHigh << 8) | pHigh), '0x', '')
    destination = str.replace(hex((sLow << 8)  | pLow), '0x', '')
-   address     = IPv6Address(int(NorNet_IPv6TunnelPrefix.ip) | int(IPv6Address('0:0:0:0:0:' + source + ':' + destination + ':0')))
+   address     = IPv6Address(int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv6TunnelPrefix'].ip) | int(IPv6Address('0:0:0:0:0:' + source + ':' + destination + ':0')))
    if version == 4:
       # The space is to small in IPv4 addresses. Use MD5 to create most likely
       # unique addresses.
@@ -233,7 +154,7 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
       m.update(str(address))
       s = m.hexdigest()
       address = (int(s[0:4], 16) & 0xfffc) | side
-      address = int(NorNet_IPv4TunnelPrefix) | address
+      address = int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4TunnelPrefix']) | address
       return IPv4Network(str(IPv4Address(address)) + '/30')
    else:
       address = IPv6Address(int(address) | side)

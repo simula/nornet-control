@@ -19,13 +19,13 @@
 #
 # Contact: dreibh@simula.no
 
-
 import sys;
 
 # NorNet
 from NorNetConfiguration import *;
 from NorNetAPI           import *;
 from NorNetNodeSetup     import *;
+
 
 
 # ###### Generate Nagios configuration ######################################

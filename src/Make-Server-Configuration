@@ -34,6 +34,7 @@ from NorNetProviderSetup import *;
 from NorNetNodeSetup     import *;
 
 
+
 # ###### Main program #######################################################
 if ((len(sys.argv) < 10) or (sys.argv[3] != '-site') or (sys.argv[5] != '-interface') or (sys.argv[7] != '-all-interfaces') or (sys.argv[9] != '-providers')):
    error('Usage: ' + sys.argv[0] + ' FQDN node_index -site site_index -interface interface_name -all-interfaces "if1 if2 ..." -providers default_provider [provider2] ...')

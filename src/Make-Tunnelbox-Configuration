@@ -19,12 +19,12 @@
 #
 # Contact: dreibh@simula.no
 
-
 import sys;
 
 # NorNet
 from NorNetAPI           import *;
 from NorNetNodeSetup     import *;
+
 
 
 # ###### Get tunnel configuration for default tunnel to central site ########
