@@ -314,7 +314,7 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
                      fedoraFile.write('NETMASK=' + str(address.netmask) + '\n')
                      fedoraFile.write('GATEWAY=' + str(gateway.ip) + '\n')
                      if providerIndex == site['site_default_provider_index']:
-                        fedoraFile.write('METRIC=0\n')
+                        fedoraFile.write('METRIC=2\n')
                      else:
                         fedoraFile.write('METRIC=10\n')
                   else:
