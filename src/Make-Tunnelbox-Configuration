@@ -22,6 +22,7 @@
 import sys;
 
 # NorNet
+from NorNetTools         import *;
 from NorNetConfiguration import *;
 from NorNetAPI           import *;
 from NorNetNodeSetup     import *;
@@ -32,6 +33,14 @@ from NorNetNodeSetup     import *;
 def getLocalNodeConfigurationString(nodeIndex):
    try:
       return unicode(NorNet_Configuration['NorNet_LocalSite_Node' + str(nodeIndex)])
+   except:
+      return u''
+
+
+# ###### Get local node aliases string ######################################
+def getLocalNodeAliasesString(nodeIndex):
+   try:
+      return unicode(NorNet_Configuration['NorNet_LocalSite_Alias' + str(nodeIndex)])
    except:
       return u''
 
@@ -230,7 +239,7 @@ def includeNodeIP(node, localSite, providerIndex, version):
 
 
 # ###### Generate hosts configuration #######################################
-def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, additionalNodes = []):
+def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, additionalNodes, aliases):
    localSiteIndex    = localSite['site_index']
    localProviderList = getNorNetProvidersForSite(localSite)
    siteFQDN          = localSite['site_domain'] + '.'
@@ -239,6 +248,10 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    refreshTime       =     900
    retryTime         =      60
    expireTime        =   84600
+
+   # Already-used node names and aliases
+   usedNodes = { 'tunnelbox' : 1, 'ns' : 1, 'ntp' : 1,
+                 'plc' : 1, 'monitor' : 1, 'nfs' : 1, 'tftp' : 1 }   # Reserved names
 
    # ====== Get hostname in default provider's network ======================
    localDefaultProvider       = localProviderList[localSite['site_default_provider_index']]
@@ -252,15 +265,16 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    # ====== Some useful aliases =============================================
    if hostName != 'tunnelbox':
       writeRR(siteZoneFile, 'tunnelbox.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
-   if hostName != 'ntp':
-      writeRR(siteZoneFile, 'ntp.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
    if hostName != 'ns':
       writeRR(siteZoneFile, 'ns.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
+   if hostName != 'ntp':
+      writeRR(siteZoneFile, 'ntp.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
 
    # ====== Prepare the list of hosts =======================================
    fullNodeList.append(makeNodeForDNS(hostName, localSite, NorNet_NodeIndex_Tunnelbox,
                        'Amiga 6000', 'NorNet Tunnelbox', []))
    fullNodeList = fullNodeList + additionalNodes
+
    # Sort by node index
    def nodeSortingOrder(a, b):
       return cmp(a['node_index'], b['node_index'])
@@ -269,6 +283,17 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
 
    # ====== Write forward lookup configuration ==============================
    for node in fullNodeList:
+      # ====== Ensure that name is unique ===================================
+      alreadyExisting = False
+      try:
+         if usedNodes[node['node_name']] != 0:
+            alreadyExisting = True
+      except:
+         pass
+      if alreadyExisting == True:
+         error('Node name ' + node['node_name'] + ' is already in use (or a reserved name)!')
+      usedNodes[node['node_name']] = 1
+
       siteZoneFile.write('\n; ====== ' + node['node_name'] + ' ======\n')
       for phase in [ 1, 2, 3 ]:
          for localProviderIndex in localProviderList:
@@ -335,21 +360,41 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                              rrTypeForAddress(nodeAddress),
                              str(nodeAddress.ip))
 
-      # ====== Punycode CNAMEs for IDN names ================================
+      # ====== Add aliases =========================================
+      aliasList = []
+      try:
+         aliasList = aliases[node['node_index']]
+      except:
+         continue
+      for i in range(0, len(aliasList)):
+         aliasName = unquote(aliasList[i].strip()) + '.' + str.lower(localSite['site_domain'])
+         try:
+            if usedNodes[aliasName] != 0:
+               log('WARNING: Skipping already-used (or reserved) alias "' + aliasName + '" for node ' + node['node_name'])
+            aliasList[i] = unicode(node['node_name'])   # To be removed when sorting
+         except:
+            aliasList[i] = aliasName
+      # Add punycode for IDN name
       if unicode(node['node_name']) != node['node_utf8']:
+         aliasList.append(node['node_utf8'])
+      # Remove duplicates
+      aliasList = sorted(set(aliasList))
+
+      for aliasName in aliasList:
+         usedNodes[aliasName] = 1
          for localProviderIndex in localProviderList:
             localProvider = localProviderList[localProviderIndex]
             writeRR(siteZoneFile,
-                    addProviderToName(node['node_utf8'].encode('idna'), str.lower(localProvider['provider_short_name'])) + '.',
+                    addProviderToName(aliasName.encode('idna'), str.lower(localProvider['provider_short_name'])) + '.',
                     'CNAME',
                     addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.')
             if localProviderIndex == localSite['site_default_provider_index']:
                writeRR(siteZoneFile,
-                       node['node_utf8'].encode('idna'),
+                       aliasName.encode('idna'),
                        'CNAME',
                        addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name'])) + '.')
          writeRR(siteZoneFile,
-                 addProviderToName(node['node_utf8'].encode('idna'), 'all') + '.',
+                 addProviderToName(aliasName.encode('idna'), 'all') + '.',
                  'CNAME',
                  addProviderToName(node['node_name'], 'all') + '.')
 
@@ -1303,6 +1348,7 @@ if not bootstrapOnly:
 
    # ====== Prepare additional nodes for DNS configuration ==================
    additionalNodes = []
+   aliases = {}
    for i in range(2, 255):
       nodeConfiguration = getLocalNodeConfigurationString(i)
       if nodeConfiguration != u'':
@@ -1320,7 +1366,13 @@ if not bootstrapOnly:
             options = []
          additionalNodes.append(makeNodeForDNS(nodeName, localSite, i, hardwareInfo, softwareInfo, options))
 
-   makeBindConfiguration(fullSiteList, siteNodeList, localSite, getHostnameFromFQDN(fqdn), additionalNodes)
+      nodeAliases = getLocalNodeAliasesString(i)
+      if nodeAliases != u'':
+         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeAliases)
+         if len(parameters) > 0:
+            aliases[i] = parameters
+
+   makeBindConfiguration(fullSiteList, siteNodeList, localSite, getHostnameFromFQDN(fqdn), additionalNodes, aliases)
 
    # ====== DHCP daemon configuration =======================================
    dynamicStart         = 0

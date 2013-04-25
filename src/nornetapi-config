@@ -107,6 +107,8 @@ NorNet_LocalSite_Node10='"majorstuen"          "Amiga 8000" "NorNet Display"'
 NorNet_LocalSite_Node11='"ullevål"             "Amiga 8000" "NorNet Display"'
 
 NorNet_LocalSite_Node50='"kringsjå"            "Amiga 9000" "NorNet Development Node"'
+NorNet_LocalSite_Alias50='"test" "köln" "rekesmørbrød"'
+
 NorNet_LocalSite_Node51='"nordmarka"           "Amiga 9000" "NorNet Development Node"'
 NorNet_LocalSite_Node55='"frognerseteren"      "Amiga 9000" "NorNet Development Node"'
 NorNet_LocalSite_Node56='"voksenkollen"        "Amiga 9000" "NorNet Development Node"'
