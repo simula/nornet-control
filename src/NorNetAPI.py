@@ -41,56 +41,101 @@ from NorNetProviderSetup import *;
 
 
 
+# ====== Adapt if necessary =================================================
+
+NorNetPLC_ConstantsFile                = '/etc/nornet/nornetapi-constants'
+NorNetPLC_FallbackConstantsFile        = 'nornetapi-constants'
+
 NorNetPLC_ConfigFile                   = '/etc/nornet/nornetapi-config'
 NorNetPLC_FallbackConfigFile           = 'nornetapi-config'
 
+# These are the configuration defaults: just the parameters that need
+# some setting in order to process the reading of the configuration from file.
+NorNet_Configuration = {
+   'NorNetPLC_Address'  : None,
+   'NorNetPLC_User'     : 'nornetpp',
+   'NorNetPLC_Password' : None   
+}
 
-NorNetPLC_Address                      = None
-NorNetPLC_User                         = None
-NorNetPLC_Password                     = None
+# ===========================================================================
 
-NorNet_LocalSite_SiteIndex             = None
-NorNet_LocalSite_DefaultProviderIndex  = None
-NorNet_LocalSite_TBDefaultProviderIPv4 = None
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !!!! WARNING: Do not change unless you really know what you are doing! !!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-NorNet_LocalNode_Hostname              = None
-NorNet_LocalNode_Index                 = None
-NorNet_LocalNode_NorNetInterface       = None
-NorNet_LocalNode_NorNetUser            = None
+# TOS Settings for provider selection
+NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
 
-NorNet_FileServ_RWSystems              = None
-NorNet_LocalSite_DHCPServer_Dynamic    = None
+# Maximum number of external NTP servers
+NorNet_MaxNTPServers = 8
+
+# Maximum number of providers per site
+NorNet_MaxProviders = 8
+
+# NorNet Internet connection to/from outside world goes via Site 1!
+NorNet_SiteIndex_Central = 1
+
+# NorNet Tunnelbox is always Node 1!
+NorNet_NodeIndex_Tunnelbox = 1
+
+# PLC is Node 2 on the Central Site!
+NorNet_SiteIndex_PLC = NorNet_SiteIndex_Central
+NorNet_NodeIndex_PLC = 2
+
+# NorNet Monitor is Node 3 on the Central Site!
+NorNet_SiteIndex_Monitor  = NorNet_SiteIndex_Central
+NorNet_NodeIndex_Monitor  = 3
+
+# NorNet Monitor is Node 4 on the Central Site!
+NorNet_SiteIndex_FileSrv  = NorNet_SiteIndex_Central
+NorNet_NodeIndex_FileSrv  = 4
+
+# ===========================================================================
+
 
 
 # ###### Read configuration file ############################################
 def loadNorNetConfiguration():
-   log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')
+   log('Reading constants from ' + NorNetPLC_ConfigFile + ' ...')   
    try:
-      inputFile = codecs.open(NorNetPLC_ConfigFile, 'r', 'utf-8')
+      constantsFile = codecs.open(NorNetPLC_ConstantsFile, 'r', 'utf-8')
+   except:
+      try:
+         log('###### Cannot open ' + NorNetPLC_ConstantsFile + ', trying fallback file ' + NorNetPLC_FallbackConstantsFile + ' ... ######')
+         constantsFile = codecs.open(NorNetPLC_FallbackConstantsFile, 'r', 'utf-8')
+
+      except Exception as e:
+         error('Constantsuration file ' + NorNetPLC_FallbackConstantsFile + ' cannot be read: ' + str(e))
+   
+   log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')   
+   try:
+      configFile = codecs.open(NorNetPLC_ConfigFile, 'r', 'utf-8')
    except:
       try:
          log('###### Cannot open ' + NorNetPLC_ConfigFile + ', trying fallback file ' + NorNetPLC_FallbackConfigFile + ' ... ######')
-         inputFile = codecs.open(NorNetPLC_FallbackConfigFile, 'r', 'utf-8')
+         configFile = codecs.open(NorNetPLC_FallbackConfigFile, 'r', 'utf-8')
 
       except Exception as e:
          error('Configuration file ' + NorNetPLC_FallbackConfigFile + ' cannot be read: ' + str(e))
 
-   lines = tuple(inputFile)
+   lines = tuple(constantsFile) + tuple(configFile)
    for line in lines:
       if re.match('^[ \t]*[#\n]', line):
          continue
       elif re.match('^[a-zA-Z0-9_]*[ \t]*=', line):
-         unicodeCommand = line.replace('=\'','=u\'')   # Interpret string as Unicode!
-         # print unicodeCommand
-         exec(unicodeCommand, globals())
+         s = re.split('=',line,1)
+         parameterName = s[0]
+         parameterValue = unquote(removeComment(s[1].rstrip('\n')))
+         NorNet_Configuration[parameterName] = parameterValue
+         print '<' + parameterName + '> = <' + parameterValue + '>'
       else:
          error('Bad configuration line: ' + line)
 
-   if NorNetPLC_Address == None:
+   if NorNet_Configuration['NorNetPLC_Address'] == None:
       error('NorNetPLC_Address has not been set in configuration file!')
-   if NorNetPLC_User == None:
+   if NorNet_Configuration['NorNetPLC_User'] == None:
       error('NorNetPLC_User has not been set in configuration file!')
-   if NorNetPLC_Password == None:
+   if NorNet_Configuration['NorNetPLC_Password'] == None:
       error('NorNetPLC_Password has not been set in configuration file!')
    try:
       user = pwd.getpwnam(getLocalNodeNorNetUser())
@@ -100,7 +145,7 @@ def loadNorNetConfiguration():
    sys.stdout = codecs.getwriter('utf8')(sys.stdout)
    sys.stderr = codecs.getwriter('utf8')(sys.stderr)
    sys.stdin  = codecs.getreader('utf8')(sys.stdin)
-
+   
 
 # ###### Log into PLC #######################################################
 def loginToPLC(overrideUser = None):
@@ -111,15 +156,17 @@ def loginToPLC(overrideUser = None):
    loadNorNetConfiguration()
 
    # ====== Log into PLC ====================================================
+   plcAddress = getPLCAddress()
    if overrideUser != None:
       user     = overrideUser
       password = getpass.getpass('Password for user ' + user + ': ')
    else:
-      user     = NorNetPLC_User
-      password = NorNetPLC_Password
-   log('Logging into PLC ' + user + '/' + NorNetPLC_Address + ' ...')
+      user     = NorNet_Configuration['NorNetPLC_User']
+      password = NorNet_Configuration['NorNetPLC_Password']
+   
+   log('Logging into PLC ' + user + '/' + str(plcAddress) + ' ...')
    try:
-      apiURL     = 'https://' + NorNetPLC_Address + '/PLCAPI/'
+      apiURL = 'https://' + str(plcAddress) + '/PLCAPI/'
       if sys.version_info < (3,0,0):
          plc_server = xmlrpclib.ServerProxy(apiURL, allow_none=True)
       else:
@@ -139,7 +186,10 @@ def loginToPLC(overrideUser = None):
 
 # ###### Get PLC address ####################################################
 def getPLCAddress():
-   return IPv4Address(NorNetPLC_Address)
+   try:
+      return IPv4Address(NorNet_Configuration['NorNetPLC_Address'])
+   except Exception as e:
+      error('Invalid or missing setting of NorNetPLC_Address: ' + str(e))
 
 
 # ###### Get PLC server object ##############################################
@@ -155,7 +205,7 @@ def getPLCAuthentication():
 # ###### Get local Site Index ###############################################
 def getLocalSiteIndex():
    try:
-      return int(NorNet_LocalSite_SiteIndex)
+      return int(NorNet_Configuration['NorNet_LocalSite_SiteIndex'])
    except:
       return None
 
@@ -163,46 +213,46 @@ def getLocalSiteIndex():
 # ###### Get local Default Provider Index ###################################
 def getLocalDefaultProviderIndex():
    try:
-      return int(NorNet_LocalSite_DefaultProviderIndex)
+      return int(NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'])
    except:
       return None
 
 
 # ###### Get local tunnelbox's outer IPv4 address ###########################
 def getLocalTunnelboxDefaultProviderIPv4():
-   return NorNet_LocalSite_TBDefaultProviderIPv4
+   return NorNet_Configuration['NorNet_LocalSite_TBDefaultProviderIPv4']
 
 
 # ###### Get local node hostname ############################################
 def getLocalNodeHostname():
-   return NorNet_LocalNode_Hostname
+   return NorNet_Configuration['NorNet_LocalNode_Hostname']
 
 
 # ###### Get local node index ###############################################
 def getLocalNodeIndex():
    try:
-      return int(NorNet_LocalNode_Index)
+      return int(NorNet_Configuration['NorNet_LocalNode_Index'])
    except:
       return None
 
 
 # ###### Get local node hostname ############################################
 def getLocalNodeNorNetInterface():
-   return NorNet_LocalNode_NorNetInterface
+   return NorNet_Configuration['NorNet_LocalNode_NorNetInterface']
 
 
 # ###### Get local node NorNet user #########################################
 def getLocalNodeNorNetUser():
-   if NorNet_LocalNode_NorNetUser == None:
+   if NorNet_Configuration['NorNet_LocalNode_NorNetUser'] == None:
       return 'nornetpp'
    else:
-      return NorNet_LocalNode_NorNetUser
+      return NorNet_Configuration['NorNet_LocalNode_NorNetUser']
 
 
 # ###### Get local node configuration string ################################
 def getLocalNodeConfigurationString(nodeIndex):
    try:
-      return unicode(eval('NorNet_LocalSite_Node' + str(nodeIndex)))
+      return unicode(NorNet_Configuration['NorNet_LocalSite_Node' + str(nodeIndex)])
    except:
       return u''
 
@@ -210,7 +260,7 @@ def getLocalNodeConfigurationString(nodeIndex):
 # ###### Get local node configuration string ################################
 def getFileServRWSystemsConfigurationString():
    try:
-      return eval('NorNet_FileServ_RWSystems')
+      return NorNet_Configuration['NorNet_FileServ_RWSystems']
    except:
       return ''
 
@@ -218,7 +268,7 @@ def getFileServRWSystemsConfigurationString():
 # ###### Get DHCPD node configuration string ################################
 def getLocalSiteDHCPServerDynamicConfigurationString():
    try:
-      return eval('NorNet_LocalSite_DHCPServer_Dynamic')
+      return NorNet_Configuration['NorNet_LocalSite_DHCPServer_Dynamic']
    except:
       return u''
 
@@ -226,7 +276,7 @@ def getLocalSiteDHCPServerDynamicConfigurationString():
 # ###### Get DHCPD node configuration string ################################
 def getLocalSiteDHCPServerStaticConfigurationString(nodeIndex):
    try:
-      return unicode(eval('NorNet_LocalSite_DHCPServer_Static' + str(nodeIndex)))
+      return unicode(NorNet_Configuration['NorNet_LocalSite_DHCPServer_Static' + str(nodeIndex)])
    except:
       return u''
 
@@ -234,7 +284,7 @@ def getLocalSiteDHCPServerStaticConfigurationString(nodeIndex):
 # ###### Get NAT range ######################################################
 def getLocalSiteNATRangeString():
    try:
-      return unicode(eval('NorNet_LocalSite_NAT_Range'))
+      return unicode(NorNet_Configuration['NorNet_LocalSite_NAT_Range'])
    except:
       return u''
 
