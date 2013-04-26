@@ -429,12 +429,13 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                      remoteTunnelIP = makeNorNetTunnelIP(remoteSiteIndex, remoteProviderIndex,
                                                          localSiteIndex, localProviderIndex,
                                                          version)
-                     localName  = 'local.' + \
-                                  str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' + \
+# ??? FIXME! Remove comments!
+                     #'local.' + \
+                     localName  = str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' + \
                                   str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.'
-                     remoteName = 'remote.' + \
-                                  str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' + \
-                                  str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.'
+                     #remoteName = 'remote.' + \
+                                  #str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' + \
+                                  #str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.'
 
                      writeRR(siteZoneFile, localName,
                              rrTypeForAddress(localTunnelIP), str(localTunnelIP.ip))
@@ -443,12 +444,12 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                              '"Remote Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '"')
                      writeLOC(siteZoneFile, localName, localSite)
 
-                     writeRR(siteZoneFile, remoteName,
-                             rrTypeForAddress(remoteTunnelIP), str(remoteTunnelIP.ip))
-                     writeRR(siteZoneFile, localName,
-                             'HINFO', '"Tunnel Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '" ' +
-                             '"Remote Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '"')
-                     writeLOC(siteZoneFile, remoteName, remoteSite)
+                     #writeRR(siteZoneFile, remoteName,
+                     #        rrTypeForAddress(remoteTunnelIP), str(remoteTunnelIP.ip))
+                     #writeRR(siteZoneFile, localName,
+                     #        'HINFO', '"Tunnel Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '" ' +
+                     #        '"Remote Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '"')
+                     #writeLOC(siteZoneFile, remoteName, remoteSite)
 
                      siteZoneFile.write('\n')
 
@@ -509,19 +510,19 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                         incomingTunnelIP = makeNorNetTunnelIP(incomingSiteIndex, incomingProviderIndex,
                                                               outgoingSiteIndex, outgoingProviderIndex,
                                                               version)
-
+# ??? FIXME! Remove comments!
                         writeRR(tunnelZoneFile,
                               getZoneForAddress(outgoingTunnelIP.ip, prefixLength),
                               'PTR',
-                              'outgoing.' +
+                              #'outgoing.' +
                               str.lower(incomingProvider['provider_short_name']) + '.' + str.lower(incomingSite['site_short_name']) + '.' +
                               str.lower(outgoingProvider['provider_short_name'])  + '.' + str.lower(outgoingSite['site_domain']) + '.')
-                        writeRR(tunnelZoneFile,
-                              getZoneForAddress(incomingTunnelIP.ip, prefixLength),
-                              'PTR',
-                              'incoming.' +
-                              str.lower(incomingProvider['provider_short_name']) + '.' + str.lower(incomingSite['site_short_name']) + '.' +
-                              str.lower(outgoingProvider['provider_short_name'])  + '.' + str.lower(outgoingSite['site_domain']) + '.')
+                        #writeRR(tunnelZoneFile,
+                        #      getZoneForAddress(incomingTunnelIP.ip, prefixLength),
+                        #      'PTR',
+                        #      'incoming.' +
+                        #      str.lower(incomingProvider['provider_short_name']) + '.' + str.lower(incomingSite['site_short_name']) + '.' +
+                        #      str.lower(outgoingProvider['provider_short_name'])  + '.' + str.lower(outgoingSite['site_domain']) + '.')
 
          tunnelZoneFile.close()
 
