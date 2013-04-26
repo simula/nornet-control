@@ -65,8 +65,8 @@ NorNet_Configuration = {
    'NorNet_CentralSite_BootstrapTunnelbox'     : None,
    'NorNet_CentralSite_BootstrapProviderIndex' : None,
 
-   'NorNet_LocalSite_SiteIndex'                : 0,
-   'NorNet_LocalSite_DefaultProviderIndex'     : 0,
+   'NorNet_LocalSite_SiteIndex'                : None,
+   'NorNet_LocalSite_DefaultProviderIndex'     : None,
 
    'NorNet_LocalNode_Index'                    : 0,
    'NorNet_LocalNode_NorNetUser'               : 'nornetpp',
