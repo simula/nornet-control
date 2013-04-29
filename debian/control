@@ -73,6 +73,7 @@ Depends: apt-file,
          debhelper,
          devscripts,
          pbuilder,
+         kbuild,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Development Tools
