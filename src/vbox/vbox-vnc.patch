@@ -1,0 +1,36 @@
+Index: Config.kmk
+===================================================================
+--- Config.kmk	(revision 45730)
++++ Config.kmk	(working copy)
+@@ -581,7 +581,7 @@
+  VBOX_WITH_CROGL = 1
+ endif
+ # Enable the VNC server extension pack (GPL only).
+-#VBOX_WITH_EXTPACK_VNC = 1
++VBOX_WITH_EXTPACK_VNC = 1
+ # Enable S3 support (requires libcurl)
+ VBOX_WITH_S3 = 1
+ # Enable Host=>Guest Drag'n'Drop
+Index: debian/LocalConfig.kmk
+===================================================================
+--- debian/LocalConfig.kmk	(revision 45730)
++++ debian/LocalConfig.kmk	(working copy)
+@@ -29,3 +29,5 @@
+ VBOX_WITH_RUNPATH          := $(VBOX_PATH_APP_PRIVATE_ARCH)
+ VBOX_PATH_APP_PRIVATE      := /usr/share/virtualbox
+ VBOX_PATH_APP_DOCS          = $(VBOX_PATH_PACKAGE_DOCS)
++
++VBOX_WITH_EXTPACK_VNC := 1
+Index: debian/rules
+===================================================================
+--- debian/rules	(revision 45730)
++++ debian/rules	(working copy)
+@@ -28,7 +28,7 @@
+ #  NOQT=1           don't build the Qt GUI
+ #  EFI=1            include the EFI binary from prebuild
+ #  HEADLESS=1       build the headless version
+-#  VNC=1            build VNC code
++VNC=1            build VNC code
+ #  NOWEBSVC=1       don't build the webservice API, default for OSE
+ #  STAGEDISO=<path> don't build the VBoxAdditions, use the precompiled .iso
+ #  PKGDIR=<path>    where to store the final package(s)
