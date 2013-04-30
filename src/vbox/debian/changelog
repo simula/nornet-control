@@ -1,5 +1,11 @@
 virtualbox-ose (4.2.51-1ubuntu1) unstable; urgency=low
 
+  * New Debian package from SVN revision 45828.
+
+ -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Tue, 30 Apr 2013 15:41:48 +0200
+
+virtualbox-ose (4.2.51~svn-1) unstable; urgency=low
+
   * rebuild Debian package
 
  -- Oracle Corporation <info@virtualbox.org>  Thu, 13 Sep 2012 14:00:00 +0100

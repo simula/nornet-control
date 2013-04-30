@@ -23,7 +23,8 @@ fi
 
 
 # ====== Revert debian/changelog and debian/control =========================
-# svn revert debian/changelog debian/control debian/rules debian/LocalConfig.kmk
+svn revert debian/changelog debian/control debian/rules debian/LocalConfig.kmk
+rm -f LocalConfig.kmk
 
 
 # ====== Current SVN version ================================================
@@ -43,11 +44,33 @@ OUTPUT_VERSION=`echo $PACKAGE_VERSION   | sed -e "s/\(ubuntu\)[0-9]*$/\1/"`
 DEBIAN_VERSION=`echo $OUTPUT_VERSION    | sed -e "s/ubuntu$//1"`
 # The package's upstream version, e.g. 1.2.3
 UPSTREAM_VERSION=`echo $DEBIAN_VERSION  | sed -e "s/-[0-9]*$//"`
+# The package's plain upstream version, e.g. 1.2.3 (without e.g. ~svn<xxxx>)
+PLAIN_VERSION=`echo $UPSTREAM_VERSION   | sed -e "s/\([0-9\.]*\)[-+~].*$/\1/"`
+
+echo -e "\x1b[34m######################################################################\x1b[0m"
+echo -e "\x1b[34mCHANGELOG_HEADER:     $CHANGELOG_HEADER\x1b[0m"
+echo -e "\x1b[34mPACKAGE:              $PACKAGE\x1b[0m"
+echo -e "\x1b[34mPACKAGE_DISTRIBUTION: $PACKAGE_DISTRIBUTION\x1b[0m"
+echo -e "\x1b[34mPACKAGE_VERSION       $PACKAGE_VERSION\x1b[0m"
+echo -e "\x1b[34mOUTPUT_VERSION:       $OUTPUT_VERSION\x1b[0m"
+echo -e "\x1b[34mDEBIAN_VERSION:       $DEBIAN_VERSION\x1b[0m"
+echo -e "\x1b[34mUPSTREAM_VERSION:     $UPSTREAM_VERSION\x1b[0m"
+echo -e "\x1b[34mPLAIN_VERSION:        $PLAIN_VERSION\x1b[0m"
+echo -e "\x1b[34m######################################################################\x1b[0m"
+
+
+# ====== Write LocalConfig.kmk ==============================================
+SVN_VERSION_IDENTIFIER=
+# "svn`printf "%07d" "${SVN_VERSION}"`"
+(
+   echo ""
+#    echo "VBOX_BUILD_PUBLISHER = ${SVN_VERSION_IDENTIFIER}"
+) >LocalConfig.kmk
 
 
 # ====== Create debian/changelog ============================================
 (
-   echo "${PACKAGE}${PACKAGE_SUFFIX} (${PACKAGE_VERSION}) ${PACKAGE_DISTRIBUTION}; urgency=low"
+   echo "${PACKAGE}${PACKAGE_SUFFIX} (${PLAIN_VERSION}${SVN_VERSION_IDENTIFIER}-1ubuntu1) ${PACKAGE_DISTRIBUTION}; urgency=low"
    echo ""
    echo "  * New Debian package from SVN revision ${SVN_VERSION}."
    echo ""
@@ -65,11 +88,14 @@ for v in $VARIANTS ; do
    fi
 done
 (
-   sed <debian/control \
-      -e "s/^Package: ${PACKAGE}$/\0\nConflicts:${conflicts}\nReplaces:${conflicts}/g" \
+   # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   # !!!! Using custom file debian/control.nornet as input !!!!
+   # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   
+   sed <debian/control.nornet \
       -e "s/: ${PACKAGE}/: ${PACKAGE}${PACKAGE_SUFFIX}/g" \
       -e "s/^Maintainer:.*/Maintainer: $MAINTAINER/g" \
       -e "s/: Oracle VM /: Open Source /g"
+#       -e "s/^Package: ${PACKAGE}$/\0\nConflicts:${conflicts}\nReplaces:${conflicts}/g" \
 ) >debian/control.new
 
 
@@ -77,9 +103,9 @@ done
 (
    sed <debian/rules \
       -e "s/--disable-extpack/--disable-extpack --disable-kmods/g" \
-      -e "s/^#[ \t]*\(OSE=1[ \t]*\)/\1/g" \
-      -e "s/^#[ \t]*\(HEADLESS=1[ \t]*\)/\1/g" \
       -e "s/^#[ \t]*\(VNC=1[ \t]*\)/\1/g"
+#       -e "s/^#[ \t]*\(OSE=1[ \t]*\)/\1/g" \
+#       -e "s/^#[ \t]*\(HEADLESS=1[ \t]*\)/\1/g" \
 ) >debian/rules.new
 
 
@@ -88,11 +114,12 @@ done
    cat debian/LocalConfig.kmk
    echo ""
    echo "VBOX_WITH_EXTPACK_VNC := 1"
+#    echo "VBOX_BUILD_PUBLISHER = ${SVN_VERSION_IDENTIFIER}"
 ) >debian/LocalConfig.kmk.new
 
 
 # ====== Apply changes ======================================================
-# mv debian/changelog.new debian/changelog
-# mv debian/control.new debian/control
-# mv debian/rules.new debian/rules
-# mv debian/LocalConfig.kmk.new debian/LocalConfig.kmk
+mv debian/changelog.new debian/changelog
+mv debian/control.new debian/control
+mv debian/rules.new debian/rules
+mv debian/LocalConfig.kmk.new debian/LocalConfig.kmk

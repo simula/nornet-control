@@ -57,6 +57,8 @@ OUTPUT_VERSION=`echo $PACKAGE_VERSION   | sed -e "s/\(ubuntu\)[0-9]*$/\1/"`
 DEBIAN_VERSION=`echo $OUTPUT_VERSION    | sed -e "s/ubuntu$//1"`
 # The package's upstream version, e.g. 1.2.3
 UPSTREAM_VERSION=`echo $DEBIAN_VERSION  | sed -e "s/-[0-9]*$//"`
+# The package's plain upstream version, e.g. 1.2.3 (without e.g. ~svn<xxxx>)
+PLAIN_VERSION=`echo $UPSTREAM_VERSION   | sed -e "s/\([0-9\.]*\)[-+~].*$/\1/"`
 
 
 echo -e "\x1b[34m######################################################################\x1b[0m"
@@ -67,7 +69,8 @@ echo -e "\x1b[34mPACKAGE_VERSION       $PACKAGE_VERSION\x1b[0m"
 echo -e "\x1b[34mOUTPUT_VERSION:       $OUTPUT_VERSION\x1b[0m"
 echo -e "\x1b[34mDEBIAN_VERSION:       $DEBIAN_VERSION\x1b[0m"
 echo -e "\x1b[34mUPSTREAM_VERSION:     $UPSTREAM_VERSION\x1b[0m"
-echo -e "\x1b[34m######################################################################"
+echo -e "\x1b[34mPLAIN_VERSION:        $PLAIN_VERSION\x1b[0m"
+echo -e "\x1b[34m######################################################################\x1b[0m"
 
 if [ ! -e ./debian.conf ] ; then
    echo >&2 "ERROR: debian.conf does not exist -> no configuration for the new package!"
