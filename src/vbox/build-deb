@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 # $Id: build-deb 2721 2012-08-25 19:44:54Z dreibh $
 #
 # Debian Packaging Scripts
@@ -39,12 +39,32 @@ echo -e "\x1b[34mPACKAGE_DISTRIBUTION: $PACKAGE_DISTRIBUTION\x1b[0m"
 echo -e "\x1b[34mPACKAGE_VERSION       $PACKAGE_VERSION\x1b[0m"
 echo -e "\x1b[34m######################################################################\x1b[0m"
 
-ME=$USER
 
-sudo echo "" && \
-./clean-deb && \
-./make-deb ${PACKAGE_DISTRIBUTION} && \
-DSC_FILE=${PACKAGE}_${PACKAGE_VERSION}~${PACKAGE_DISTRIBUTION}1~ppa0.dsc && \
-sudo pbuilder build $DSC_FILE && \
-CHANGES_FILE=/var/cache/pbuilder/result/${PACKAGE}_${PACKAGE_VERSION}~${PACKAGE_DISTRIBUTION}1~ppa0_*.changes && \
+echo -e ""
+echo -e "\x1b[34m`date +%FT%H:%M:%S`: ====== Generating source package ======================================\x1b[0m"
+echo -e ""
+sudo echo ""
+./clean-deb
+./make-deb ${PACKAGE_DISTRIBUTION}
+
+
+echo -e ""
+echo -e "\x1b[34m`date +%FT%H:%M:%S`: ====== Building source package ========================================\x1b[0m"
+echo -e ""
+DSC_FILE=${PACKAGE}_${PACKAGE_VERSION}~${PACKAGE_DISTRIBUTION}1~ppa0.dsc
+if [ ! -e "$DSC_FILE" ] ; then
+    echo >&2 "ERROR: Unable to find description file $DSC_FILE!"
+    exit 1
+fi
+sudo pbuilder build $DSC_FILE
+
+
+echo -e ""
+echo -e "\x1b[34m`date +%FT%H:%M:%S`: ====== Running lintian ================================================\x1b[0m"
+echo -e ""
+CHANGES_FILE=/var/cache/pbuilder/result/${PACKAGE}_${PACKAGE_VERSION}~${PACKAGE_DISTRIBUTION}1~ppa0_*.changes
+if [ ! -e "$CHANGES_FILE" ] ; then
+    echo >&2 "ERROR: Unable to find changes file $CHANGES_FILE!"
+    exit 1
+fi
 lintian -iIEv --pedantic $CHANGES_FILE
