@@ -2,7 +2,7 @@
 # $Id: make-deb 2721 2012-08-25 19:44:54Z dreibh $
 #
 # Debian Packaging Scripts
-# Copyright (C) 2002-2012 by Thomas Dreibholz
+# Copyright (C) 2002-2013 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: dreibh@iem.uni-due.de
-
-. ./debian.conf
 
 
 # ---------------------------------------------------------------------------
@@ -49,8 +47,8 @@ CHANGELOG_HEADER="`head -n1 debian/changelog`"
 # The package name, e.g. MyApplication
 PACKAGE=`echo $CHANGELOG_HEADER | sed -e "s/(.*//" -e "s/ //g"`
 
-# The input distribution, e.g. precise, raring, ...
-INPUT_DISTRIBUTION=`echo $CHANGELOG_HEADER | sed -e "s/[^)]*)//" -e "s/;.*//g" -e "s/ //g"`
+# The package distribution, e.g. precise, raring, ...
+PACKAGE_DISTRIBUTION=`echo $CHANGELOG_HEADER | sed -e "s/[^)]*)//" -e "s/;.*//g" -e "s/ //g"`
 # The package's version, e.g. 1.2.3-1ubuntu1
 PACKAGE_VERSION=`echo $CHANGELOG_HEADER | sed -e "s/.*(//" -e "s/).*//" -e "s/ //g" -e "s/ //g"`
 # The package's output version, e.g. 1.2.3-1ubuntu
@@ -62,14 +60,20 @@ UPSTREAM_VERSION=`echo $DEBIAN_VERSION  | sed -e "s/-[0-9]*$//"`
 
 
 echo -e "\x1b[34m######################################################################\x1b[0m"
-echo -e "\x1b[34mCHANGELOG_HEADER:   $CHANGELOG_HEADER\x1b[0m"
-echo -e "\x1b[34mPACKAGE:            $PACKAGE\x1b[0m"
-echo -e "\x1b[34mINPUT_DISTRIBUTION: $INPUT_DISTRIBUTION\x1b[0m"
-echo -e "\x1b[34mPACKAGE_VERSION     $PACKAGE_VERSION\x1b[0m"
-echo -e "\x1b[34mOUTPUT_VERSION:     $OUTPUT_VERSION\x1b[0m"
-echo -e "\x1b[34mDEBIAN_VERSION:     $DEBIAN_VERSION\x1b[0m"
-echo -e "\x1b[34mUPSTREAM_VERSION:   $UPSTREAM_VERSION\x1b[0m"
+echo -e "\x1b[34mCHANGELOG_HEADER:     $CHANGELOG_HEADER\x1b[0m"
+echo -e "\x1b[34mPACKAGE:              $PACKAGE\x1b[0m"
+echo -e "\x1b[34mPACKAGE_DISTRIBUTION: $PACKAGE_DISTRIBUTION\x1b[0m"
+echo -e "\x1b[34mPACKAGE_VERSION       $PACKAGE_VERSION\x1b[0m"
+echo -e "\x1b[34mOUTPUT_VERSION:       $OUTPUT_VERSION\x1b[0m"
+echo -e "\x1b[34mDEBIAN_VERSION:       $DEBIAN_VERSION\x1b[0m"
+echo -e "\x1b[34mUPSTREAM_VERSION:     $UPSTREAM_VERSION\x1b[0m"
 echo -e "\x1b[34m######################################################################"
+
+if [ ! -e ./debian.conf ] ; then
+   echo >&2 "ERROR: debian.conf does not exist -> no configuration for the new package!"
+   exit 1
+fi
+. ./debian.conf
 
 
 echo -e ""
@@ -89,15 +93,11 @@ if [ ! -e "$UPSTREAM_PACKAGE" ] ; then
 fi
 if [ ! -e "$UPSTREAM_PACKAGE" ]; then
    rm -f $PACKAGE-*.gz $PACKAGE"_"*.gz $PACKAGE-*.bz2 $PACKAGE"_"*.bz2
-   echo Running "$MAKE_DIST" ...
+   echo -e "\x1b[34m------ Running MAKE_DIST ... ------\x1b[0m"
+   echo "\$ $MAKE_DIST"
    eval "$MAKE_DIST"
 
-   rm -rf VirtualBox-$UPSTREAM_VERSION $PACKAGE-$UPSTREAM_VERSION
-   tar xjf ../VirtualBox-$UPSTREAM_VERSION.tar.bz2
-   mv VirtualBox-$UPSTREAM_VERSION $PACKAGE-$UPSTREAM_VERSION   
-   tar czf $PACKAGE-$UPSTREAM_VERSION.tar.gz $PACKAGE-$UPSTREAM_VERSION
-
-ls
+   echo -e "\x1b[34m------ Looking for upstream package ... ------\x1b[0m"
    UPSTREAM_PACKAGE="`find . -maxdepth 1 -name $PACKAGE-*.gz -printf '%f'`"
    UPSTREAM_PACKAGE_TYPE="gz"
    if [ ! -e "$UPSTREAM_PACKAGE" ] ; then
@@ -108,10 +108,10 @@ ls
       echo -e "\x1b[34mERROR: No upstrem package found!\x1b[0m"
       exit 1
    fi
-   echo -e ""
-   echo -e "\x1b[34m==> Upstream package is $UPSTREAM_PACKAGE (type is $UPSTREAM_PACKAGE_TYPE)\x1b[0m"
-   echo -e ""
 fi
+echo -e ""
+echo -e "\x1b[34m==> Upstream package is $UPSTREAM_PACKAGE (type is $UPSTREAM_PACKAGE_TYPE)\x1b[0m"
+echo -e ""
 
 
 echo -e ""
@@ -148,7 +148,7 @@ for DISTRIBUTION in $DISTRIBUTIONS ; do
    if [ "$DISTRIBUTION" != "default" ] ; then
       if [ "$DISTRIBUTION" = "unstable" -o "$DISTRIBUTION" = "testing" -o "$DISTRIBUTION" = "stable" ] ; then
          # Debian: Also remove Launchpad Bug IDs.
-         sed -e "s/$INPUT_DISTRIBUTION;/$DISTRIBUTION;/1" \
+         sed -e "s/$PACKAGE_DISTRIBUTION;/$DISTRIBUTION;/1" \
              -e "s/ubuntu[0-9]//1" \
              -e "/(LP: #/D" \
              <debian/changelog | ../filter-empty-entries "$DEBIAN_LAST_ENTRY" >debian/changelog.new
@@ -156,7 +156,7 @@ for DISTRIBUTION in $DISTRIBUTIONS ; do
          # Ubuntu PPA
          # Naming example: 2.7.7-0ubuntu1~natty1~ppa0
          # Ubuntu: Also remove Debian Bug IDs.
-         sed -e "s/$INPUT_DISTRIBUTION;/$DISTRIBUTION;/1" \
+         sed -e "s/$PACKAGE_DISTRIBUTION;/$DISTRIBUTION;/1" \
              -e "s/$PACKAGE_VERSION/$PACKAGE_VERSION~${DISTRIBUTION}1~ppa0/1" \
              -e "/(Closes: #/D" \
              <debian/changelog | ../filter-empty-entries "$UBUNTU_LAST_ENTRY" >debian/changelog.new

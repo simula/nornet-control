@@ -1,0 +1,98 @@
+#!/bin/bash -e
+
+. ./debian.conf
+
+
+# ====== Get variant ========================================================
+VARIANTS="nornet-stable nornet-testing nornet-experimental"
+VARIANT="$1"
+PACKAGE_SUFFIX=""
+if [ "$VARIANT" != "" ] ; then
+   for v in $VARIANTS ; do
+      if [ "$v" = "$VARIANT" ] ; then
+         PACKAGE_SUFFIX="-${VARIANT}"
+         break
+      fi
+   done
+   if [ "$PACKAGE_SUFFIX" = "" ] ; then
+      echo >&2 "Usage: $0 variant"
+      echo "Possible variants are: $VARIANTS"
+      exit 1
+   fi
+fi
+
+
+# ====== Revert debian/changelog and debian/control =========================
+# svn revert debian/changelog debian/control debian/rules debian/LocalConfig.kmk
+
+
+# ====== Current SVN version ================================================
+SVN_VERSION="`svnversion . | tr -d [M]`"
+CHANGELOG_HEADER="`head -n1 debian/changelog`"
+
+# The package name, e.g. MyApplication
+PACKAGE=`echo $CHANGELOG_HEADER | sed -e "s/(.*//" -e "s/ //g"`
+
+# The package distribution, e.g. precise, raring, ...
+PACKAGE_DISTRIBUTION=`echo $CHANGELOG_HEADER | sed -e "s/[^)]*)//" -e "s/;.*//g" -e "s/ //g"`
+# The package's version, e.g. 1.2.3-1ubuntu1
+PACKAGE_VERSION=`echo $CHANGELOG_HEADER | sed -e "s/.*(//" -e "s/).*//" -e "s/ //g" -e "s/ //g"`
+# The package's output version, e.g. 1.2.3-1ubuntu
+OUTPUT_VERSION=`echo $PACKAGE_VERSION   | sed -e "s/\(ubuntu\)[0-9]*$/\1/"`
+# The package's Debian version, e.g. 1.2.3-1
+DEBIAN_VERSION=`echo $OUTPUT_VERSION    | sed -e "s/ubuntu$//1"`
+# The package's upstream version, e.g. 1.2.3
+UPSTREAM_VERSION=`echo $DEBIAN_VERSION  | sed -e "s/-[0-9]*$//"`
+
+
+# ====== Create debian/changelog ============================================
+(
+   echo "${PACKAGE}${PACKAGE_SUFFIX} (${PACKAGE_VERSION}) ${PACKAGE_DISTRIBUTION}; urgency=low"
+   echo ""
+   echo "  * New Debian package from SVN revision ${SVN_VERSION}."
+   echo ""
+   echo " -- $MAINTAINER  `env LANG=C date +"%a, %02d %b %Y %H:%M:%S %z"`"
+   echo ""
+   sed <debian/changelog -e "s/^${PACKAGE} /${PACKAGE}${PACKAGE_SUFFIX} /g"
+) >debian/changelog.new
+
+
+# ====== Change debian/control ==============================================
+conflicts=""
+for v in $VARIANTS ; do
+   if [ "$v" != "$VARIANT" ] ; then
+      conflicts="$conflicts $v"
+   fi
+done
+(
+   sed <debian/control \
+      -e "s/^Package: ${PACKAGE}$/\0\nConflicts:${conflicts}\nReplaces:${conflicts}/g" \
+      -e "s/: ${PACKAGE}/: ${PACKAGE}${PACKAGE_SUFFIX}/g" \
+      -e "s/^Maintainer:.*/Maintainer: $MAINTAINER/g" \
+      -e "s/: Oracle VM /: Open Source /g"
+) >debian/control.new
+
+
+# ====== Change debian/rules ================================================
+(
+   sed <debian/rules \
+      -e "s/--disable-extpack/--disable-extpack --disable-kmods/g" \
+      -e "s/^#[ \t]*\(OSE=1[ \t]*\)/\1/g" \
+      -e "s/^#[ \t]*\(HEADLESS=1[ \t]*\)/\1/g" \
+      -e "s/^#[ \t]*\(VNC=1[ \t]*\)/\1/g"
+) >debian/rules.new
+
+
+# ====== Change debian/LocalConfig.kmk ======================================
+(
+   cat debian/LocalConfig.kmk
+   echo ""
+   echo "VBOX_WITH_EXTPACK_VNC := 1"
+) >debian/LocalConfig.kmk.new
+
+
+# ====== Apply changes ======================================================
+# mv debian/changelog.new debian/changelog
+# mv debian/control.new debian/control
+# mv debian/rules.new debian/rules
+# mv debian/LocalConfig.kmk.new debian/LocalConfig.kmk
