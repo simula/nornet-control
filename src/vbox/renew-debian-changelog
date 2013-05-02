@@ -28,6 +28,7 @@ if [ -e ".svn" ] ; then
    # Revert Debian files
    svn revert debian/changelog debian/control debian/rules debian/LocalConfig.kmk
    # Get SVN version identifier
+   SVN_VERSION="`svnversion . | tr -d [M]`"
    SVN_VERSION_IDENTIFIER="svn`printf "%07d" "${SVN_VERSION}"`"
 else
    echo "*** Not an SVN repository ***"
@@ -50,13 +51,13 @@ else
    cp debian/rules.orig debian/rules
    cp debian/LocalConfig.kmk.orig debian/LocalConfig.kmk
    # No special SVN version
+   SVN_VERSION="0000000"
    SVN_VERSION_IDENTIFIER=""
 fi
 echo -e "\x1b[34mSVN_VERSION_IDENTIFIER: $SVN_VERSION_IDENTIFIER\x1b[0m"
 
 
 # ====== Current SVN version ================================================
-SVN_VERSION="`svnversion . | tr -d [M]`"
 CHANGELOG_HEADER="`head -n1 debian/changelog`"
 
 # The package name, e.g. MyApplication
