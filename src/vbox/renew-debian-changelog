@@ -23,8 +23,36 @@ fi
 
 
 # ====== Revert debian/changelog and debian/control =========================
-svn revert debian/changelog debian/control debian/rules debian/LocalConfig.kmk
 rm -f LocalConfig.kmk
+if [ -e ".svn" ] ; then
+   # Revert Debian files
+   svn revert debian/changelog debian/control debian/rules debian/LocalConfig.kmk
+   # Get SVN version identifier
+   SVN_VERSION_IDENTIFIER="svn`printf "%07d" "${SVN_VERSION}"`"
+else
+   echo "*** Not an SVN repository ***"
+   # When running the first time, backup the original Debian files
+   if [ ! -e debian/changelog.orig ] ; then
+      cp debian/changelog debian/changelog.orig
+   fi
+   if [ ! -e debian/control.orig ] ; then
+      cp debian/control debian/control.orig
+   fi
+   if [ ! -e debian/rules.orig ] ; then
+      cp debian/rules debian/rules.orig
+   fi
+   if [ ! -e debian/LocalConfig.kmk.orig ] ; then
+      cp debian/LocalConfig.kmk debian/LocalConfig.kmk.orig
+   fi
+   # Revert Debian files (from the backup versions)
+   cp debian/changelog.orig debian/changelog
+   cp debian/control.orig debian/control
+   cp debian/rules.orig debian/rules
+   cp debian/LocalConfig.kmk.orig debian/LocalConfig.kmk
+   # No special SVN version
+   SVN_VERSION_IDENTIFIER=""
+fi
+echo -e "\x1b[34mSVN_VERSION_IDENTIFIER: $SVN_VERSION_IDENTIFIER\x1b[0m"
 
 
 # ====== Current SVN version ================================================
@@ -46,10 +74,6 @@ DEBIAN_VERSION=`echo $OUTPUT_VERSION    | sed -e "s/ubuntu$//1"`
 UPSTREAM_VERSION=`echo $DEBIAN_VERSION  | sed -e "s/-[0-9]*$//"`
 # The package's plain upstream version, e.g. 1.2.3 (without e.g. ~svn<xxxx>)
 PLAIN_VERSION=`echo $UPSTREAM_VERSION   | sed -e "s/\([0-9\.]*\)[-+~].*$/\1/"`
-
-
-# SVN version identifier
-SVN_VERSION_IDENTIFIER="svn`printf "%07d" "${SVN_VERSION}"`"
 
 
 echo -e "\x1b[34m######################################################################\x1b[0m"
@@ -105,7 +129,7 @@ done
       -e "s/--disable-extpack/--disable-extpack --disable-kmods/g" \
       -e "s/^#[ \t]*\(VNC=1[ \t]*\)/\1/g" \
       -e "s/^#[ \t]*\(OSE=1[ \t]*\)/\1/g" \
-      -e "s/^\(verpkg[ \t]*\):=[ \t]*${PACKAGE}/\1:=${PACKAGE}${PACKAGE_SUFFIX}/g"
+      -e "s/^\(verpkg[ \t]*\):=[ \t]*${PACKAGE}/\1:= ${PACKAGE}${PACKAGE_SUFFIX}/g"
 ) >debian/rules.new
 
 

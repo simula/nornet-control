@@ -1,7 +1,7 @@
 Source: virtualbox-ose
 Section: misc
 Priority: optional
-Maintainer: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Maintainer: Oracle Corporation <info@virtualbox.org>
 Standards-Version: 3.2.1
 Build-Depends: bcc,
                debhelper (>= 5),
@@ -56,12 +56,6 @@ Build-Depends: bcc,
 XS-Python-Version: >= 2.4
 
 Package: virtualbox-ose
-Conflicts: nornet-experimental,
-           nornet-stable,
-           nornet-testing
-Replaces: nornet-experimental,
-          nornet-stable,
-          nornet-testing
 Architecture: amd64 i386
 Pre-Depends: debconf (>= 1.1) | debconf-2.0
 Depends: adduser,
@@ -78,7 +72,7 @@ Recommends: binutils,
             ${dkms},
             ${pulse},
             ${sdlttf}
-Description: Open Source VirtualBox
+Description: Oracle VM VirtualBox
  VirtualBox is a powerful PC virtualization solution allowing you to run a
  wide range of PC operating systems on your Linux system. This includes
  Windows, Linux, FreeBSD, DOS, OpenBSD and others. VirtualBox comes with a broad
@@ -89,7 +83,7 @@ XB-Python-Version: ${python:Versions}
 Package: virtualbox-ose-dbg
 Architecture: amd64 i386
 Depends: virtualbox-ose (= ${Source-Version})
-Description: Open Source VirtualBox debugging symbols
+Description: Oracle VM VirtualBox debugging symbols
  VirtualBox is a powerful PC virtualization solution allowing you to run a
  wide range of PC operating systems on your Linux system. This includes
  Windows, Linux, FreeBSD, DOS, OpenBSD and others. VirtualBox comes with a broad
