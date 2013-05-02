@@ -94,8 +94,8 @@ done
    sed <debian/control.nornet \
       -e "s/: ${PACKAGE}/: ${PACKAGE}${PACKAGE_SUFFIX}/g" \
       -e "s/^Maintainer:.*/Maintainer: $MAINTAINER/g" \
-      -e "s/: Oracle VM /: Open Source /g"
-#       -e "s/^Package: ${PACKAGE}$/\0\nConflicts: ${conflicts}\nReplaces: ${conflicts}/g" \
+      -e "s/: Oracle VM /: Open Source /g" \
+      -e "s/^Package: ${PACKAGE}$/\0\nConflicts: ${conflicts}\nReplaces: ${conflicts}/g"
 ) >debian/control.new
 
 
@@ -103,9 +103,9 @@ done
 (
    sed <debian/rules \
       -e "s/--disable-extpack/--disable-extpack --disable-kmods/g" \
-      -e "s/^#[ \t]*\(VNC=1[ \t]*\)/\1/g"
-#       -e "s/^#[ \t]*\(OSE=1[ \t]*\)/\1/g" \
-#       -e "s/^#[ \t]*\(HEADLESS=1[ \t]*\)/\1/g"
+      -e "s/^#[ \t]*\(VNC=1[ \t]*\)/\1/g" \
+      -e "s/^#[ \t]*\(OSE=1[ \t]*\)/\1/g" \
+      -e "s/^\(verpkg[ \t]*\):=[ \t]*${PACKAGE}/\1:=${PACKAGE}${PACKAGE_SUFFIX}/g"
 ) >debian/rules.new
 
 
@@ -120,12 +120,12 @@ done
 # ====== Write LocalConfig.kmk ==============================================
 (
    echo ""
-#    echo "VBOX_BUILD_PUBLISHER = ${SVN_VERSION_IDENTIFIER}"
+   echo "VBOX_BUILD_PUBLISHER = ${SVN_VERSION_IDENTIFIER}"
 ) >LocalConfig.kmk
 
 
 # ====== Apply changes ======================================================
-mv debian/changelog.new debian/changelog
-mv debian/control.new debian/control
-mv debian/rules.new debian/rules
+mv debian/changelog.new       debian/changelog
+mv debian/control.new         debian/control
+mv debian/rules.new           debian/rules
 mv debian/LocalConfig.kmk.new debian/LocalConfig.kmk
