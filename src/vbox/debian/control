@@ -56,6 +56,12 @@ Build-Depends: bcc,
 XS-Python-Version: >= 2.4
 
 Package: virtualbox-ose
+Conflicts: nornet-experimental,
+           nornet-stable,
+           nornet-testing
+Replaces: nornet-experimental,
+          nornet-stable,
+          nornet-testing
 Architecture: amd64 i386
 Pre-Depends: debconf (>= 1.1) | debconf-2.0
 Depends: adduser,

@@ -15,7 +15,7 @@
 export DH_COMPAT=4
 
 # possible overrides:
-#  OSE=1            force VBOX_OSE
+OSE=1            force VBOX_OSE
 #  NOPARALLEL=1     compile with -j1
 #  LINUX=<dir>      compile vboxdrv against Linux found in <dir>
 #  VERBOSE=1        verbose build
