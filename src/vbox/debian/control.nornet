@@ -2,7 +2,7 @@ Source: virtualbox-ose
 Section: misc
 Priority: optional
 Maintainer: Oracle Corporation <info@virtualbox.org>
-Standards-Version: 3.2.1
+Standards-Version: 3.9.4
 Build-Depends: bcc,
                debhelper (>= 5),
                default-jdk,
@@ -10,7 +10,7 @@ Build-Depends: bcc,
                g++-multilib,
                gcc,
                gcc-multilib,
-               ia32-libs,
+               ia32-libs-multiarch,
                iasl,
                kbuild,
                lib32gcc1,
@@ -28,7 +28,7 @@ Build-Depends: bcc,
                libqt4-dev,
                libqt4-opengl-dev,
                libsdl1.2-dev,
-               libstdc++5,
+               libstdc++6,
                libvncserver-dev,
                libvpx-dev,
                libxcursor-dev,

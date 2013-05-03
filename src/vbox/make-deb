@@ -220,7 +220,10 @@ for DISTRIBUTION in $DISTRIBUTIONS ; do
    # Use -i to ignore .svn files!
 
 
-   if [ "$SKIP_PACKAGE_SIGNING" != "" -a $SKIP_PACKAGE_SIGNING -eq 1 ] ; then
+   if [ "$SKIP_PACKAGE_SIGNING" = "" ] ; then
+      SKIP_PACKAGE_SIGNING=0 
+   fi
+   if [ $SKIP_PACKAGE_SIGNING -eq 1 ] ; then
       # Build source package without signature:
       debuild -us -uc -S "-k$MAINTAINER" -i || exit 1
    else
