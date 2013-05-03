@@ -156,7 +156,16 @@ done
 #       -e "s/^#[ \t]*\(VNC=1[ \t]*\)/\1/g" \
 #       -e "s/^#[ \t]*\(OSE=1[ \t]*\)/\1/g" \
    sed <debian/rules \
-      -e "s/^\(verpkg[ \t]*\):=[ \t]*${PACKAGE}/\1:= ${PACKAGE}${PACKAGE_SUFFIX}/g"
+      -e "s/^\(verpkg[ \t]*\):=[ \t]*${PACKAGE}/\1:= ${PACKAGE}${PACKAGE_SUFFIX}/g" \
+      -e "s/^\(psource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+      -e "s/^\(gsource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+      -e "s/^\(pdkms\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+      -e "s/^\(gdkms\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+      -e "s/^\(sname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+      -e "s/^\(sxname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+      -e "s/^\(gname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+      -e "s/^\(uname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+      -e "s/^\(uxname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g"
 ) >debian/rules.new
 
 
