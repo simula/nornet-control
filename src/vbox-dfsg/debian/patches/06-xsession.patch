@@ -1,0 +1,22 @@
+Description: Make Xsession.d script ignore errors.
+Author: Michael Meskes <meskes@debian.org>
+
+--- a/src/VBox/Additions/x11/Installer/98vboxadd-xclient
++++ b/src/VBox/Additions/x11/Installer/98vboxadd-xclient
+@@ -42,11 +42,11 @@ then
+     no_display=1
+ fi
+ 
+-/usr/bin/VBoxClient --clipboard
+-/usr/bin/VBoxClient --checkhostversion
++/usr/bin/VBoxClient --clipboard || true
++/usr/bin/VBoxClient --checkhostversion || true
+ test -z "$no_display" &&
+-    /usr/bin/VBoxClient --display
++    /usr/bin/VBoxClient --display || true
+ test -z "$no_display" &&
+-    /usr/bin/VBoxClient --seamless
++    /usr/bin/VBoxClient --seamless || true
+ test -z "$no_display" &&
+-    /usr/bin/VBoxClient --draganddrop
++    /usr/bin/VBoxClient --draganddrop || true
