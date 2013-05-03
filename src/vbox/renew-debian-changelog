@@ -4,8 +4,11 @@
 
 
 # ====== Get variant ========================================================
+
+VARIANT="$1"        # e.g. nornet-stable nornet-testing nornet-experimental
+BUILD_SUFFIX="$2"   # e.g. debug0001
+
 VARIANTS="nornet-stable nornet-testing nornet-experimental"
-VARIANT="$1"
 PACKAGE_SUFFIX=""
 if [ "$VARIANT" != "" ] ; then
    for v in $VARIANTS ; do
@@ -29,7 +32,7 @@ if [ -e ".svn" ] ; then
    svn revert debian/changelog debian/control debian/rules debian/LocalConfig.kmk
    # Get SVN version identifier
    SVN_VERSION="`svnversion . | tr -d [M]`"
-   SVN_VERSION_IDENTIFIER="svn`printf "%07d" "${SVN_VERSION}"`"
+   BUILD_VERSION_IDENTIFIER="svn`printf "%07d" "${SVN_VERSION}"`${BUILD_SUFFIX}"
 else
    echo "*** Not an SVN repository ***"
    # When running the first time, backup the original Debian files
@@ -52,9 +55,9 @@ else
    cp debian/LocalConfig.kmk.orig debian/LocalConfig.kmk
    # No special SVN version
    SVN_VERSION="0000000"
-   SVN_VERSION_IDENTIFIER=""
+   BUILD_VERSION_IDENTIFIER="${BUILD_SUFFIX}"
 fi
-echo -e "\x1b[34mSVN_VERSION_IDENTIFIER: $SVN_VERSION_IDENTIFIER\x1b[0m"
+echo -e "\x1b[34mBUILD_VERSION_IDENTIFIER: $BUILD_VERSION_IDENTIFIER\x1b[0m"
 
 
 # ====== Current SVN version ================================================
@@ -91,7 +94,7 @@ echo -e "\x1b[34m###############################################################
 
 # ====== Create debian/changelog ============================================
 (
-   echo "${PACKAGE}${PACKAGE_SUFFIX} (${PLAIN_VERSION}${SVN_VERSION_IDENTIFIER}-1ubuntu1) ${PACKAGE_DISTRIBUTION}; urgency=low"
+   echo "${PACKAGE}${PACKAGE_SUFFIX} (${PLAIN_VERSION}${BUILD_VERSION_IDENTIFIER}-1ubuntu1) ${PACKAGE_DISTRIBUTION}; urgency=medium"
    echo ""
    echo "  * New Debian package from SVN revision ${SVN_VERSION}."
    echo ""
@@ -139,13 +142,13 @@ done
    cat debian/LocalConfig.kmk
    echo ""
    echo "VBOX_WITH_EXTPACK_VNC := 1"
-#    echo "VBOX_BUILD_PUBLISHER = ${SVN_VERSION_IDENTIFIER}"
+#    echo "VBOX_BUILD_PUBLISHER = ${BUILD_VERSION_IDENTIFIER}"
 ) >debian/LocalConfig.kmk.new
 
 # ====== Write LocalConfig.kmk ==============================================
 (
    echo ""
-   echo "VBOX_BUILD_PUBLISHER = ${SVN_VERSION_IDENTIFIER}"
+   echo "VBOX_BUILD_PUBLISHER = ${BUILD_VERSION_IDENTIFIER}"
 ) >LocalConfig.kmk
 
 
