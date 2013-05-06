@@ -70,8 +70,6 @@ Pre-Depends: dpkg (>= 1.15.6~)
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          virtualbox (= ${binary:Version})
-Breaks: virtualbox (<< 4.1.6-dfsg-2~)
-Replaces: virtualbox (<< 4.1.6-dfsg-2~)
 Description: x86 virtualization solution - Qt based user interface
  VirtualBox is a free x86 virtualization solution allowing a wide range
  of x86 operating systems such as Windows, DOS, BSD or Linux to run on a
@@ -91,7 +89,6 @@ Recommends: virtualbox-dkms (= ${source:Version}) | virtualbox-source (= ${sourc
             ${shlibs:Recommends}
 Suggests: virtualbox-guest-additions-iso,
           vde2
-Conflicts: virtualbox-2.0, virtualbox-2.1, virtualbox-2.2, virtualbox-3.0
 Description: x86 virtualization solution - base binaries
  VirtualBox is a free x86 virtualization solution allowing a wide range
  of x86 operating systems such as Windows, DOS, BSD or Linux to run on a

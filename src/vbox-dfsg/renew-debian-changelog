@@ -132,6 +132,20 @@ for buildPackage in $BUILD_PACKAGES ; do
          cp -a "${buildPackageFile}" "${targetPackageFile}"
       fi
    done
+   
+   provides="${buildPackage}"
+   conflicts=""
+   for v in $VARIANTS ; do
+      if [ "$v" != "$VARIANT" ] ; then
+         if [ "$conflicts" = "" ] ; then
+            conflicts="${buildPackage}-${v}"
+         else
+            conflicts="${buildPackage}-${v}, ${conflicts}"
+         fi
+      fi
+   done
+   
+   echo "s/^\(Package: ${buildPackage}\)$/Package: ${buildPackage}${PACKAGE_SUFFIX}\nProvides: ${provides}\nConflicts: ${conflicts}\nReplaces: ${conflicts}/g" >>package-names.sed.tmp
    echo "s/${buildPackage}$/${buildPackage}${PACKAGE_SUFFIX}/g" >>package-names.sed.tmp
    echo "s/${buildPackage}[ \t]/${buildPackage}${PACKAGE_SUFFIX} /g" >>package-names.sed.tmp
 done
@@ -141,22 +155,11 @@ cd ..
 
 
 # ====== Change debian/control ==============================================
-conflicts=""
-for v in $VARIANTS ; do
-   if [ "$v" != "$VARIANT" ] ; then
-      if [ "$conflicts" = "" ] ; then
-         conflicts="$v"
-      else
-         conflicts="$conflicts,$v"
-      fi
-   fi
-done
 # VirtualBox has several control files ...
 CONTROL_FILES="control virtualbox-source${PACKAGE_SUFFIX}.files/control.modules.in virtualbox-guest-source${PACKAGE_SUFFIX}.files/control.modules.in"
 for controlFile in $CONTROL_FILES ; do
    (
-   #       -e "s/Source: ${PACKAGE}/Source: ${PACKAGE}${PACKAGE_SUFFIX}/g" \
-   #       -e "s/^Package: \([a-zA-Z0-9+-]*\)$/Package: \1${PACKAGE_SUFFIX}\nConflicts: ${conflicts}\nReplaces: ${conflicts}/g"
+#          -e "s/^Package: \([a-zA-Z0-9+-]*\)$/Package: \1$\nConflicts: ${conflicts}\nReplaces: ${conflicts}/g" \
       sed <debian/${controlFile} \
          -f debian/package-names.sed \
          -e "s/^Maintainer:.*/Maintainer: $MAINTAINER/g" \
