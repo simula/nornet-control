@@ -78,7 +78,7 @@ if [ $INTERACTIVE_KERNEL_REMOVAL -eq 0 ] ; then
    wait
    cat /tmp/install.log
 else
-   sudo apt-get remove -qq --purge \
+   sudo apt-get remove --purge \
       'linux-(headers|image)-.*' \
       linux-headers-$kernelBootVersion-$kernelType+ \
       linux-headers-$kernelBootVersion+ \
