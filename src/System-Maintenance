@@ -19,9 +19,15 @@
 # Contact: dreibh@simula.no
 
 INTERACTIVE_KERNEL_REMOVAL=0
+DONT_TOUCH_GRUB=0
+KEEP_INTERFACE_MAPPINGS=0
 while [ $# -gt 0 ] ; do
    if [ "$1" = "-interactive-kernel-removal" -o "$1" = "-k" ] ; then
       INTERACTIVE_KERNEL_REMOVAL=1
+   elif [ "$1" = "-dont-touch-grub" -o "$1" = "-g" ] ; then
+      KEEP_INTERFACE_MAPPINGS=1
+   elif [ "$1" = "-keep-interface-mappings" -o "$1" = "-m" ] ; then
+      KEEP_INTERFACE_MAPPINGS=1
    else
       echo 2>&1 "Usage: $0 [-interactive-kernel-removal|-k]"
       exit 1
@@ -108,11 +114,13 @@ cat /tmp/install.log
 sudo DEBIAN_FRONTEND=noninteractive apt-get clean
 
 # ====== Fix bootloader =====================================================
-echo -e "\x1b[34m`date +%FT%H:%M:%S`: Ensuring that Grub configuration is up-to-date ...\x1b[0m"
-sudo nohup grub-install /dev/sda >/tmp/install.log 2>&1
-sudo nohup update-grub >>/tmp/install.log 2>&1
-cat /tmp/install.log
-
+if [ $DONT_TOUCH_GRUB -eq 0 ] ; then
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Ensuring that Grub configuration is up-to-date ...\x1b[0m"
+   sudo nohup grub-install /dev/sda >/tmp/install.log 2>&1
+   sudo nohup update-grub >>/tmp/install.log 2>&1
+   cat /tmp/install.log
+fi
+   
 # ====== apt-file cache update ==============================================
 # Cache updates
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Updating caches ...\x1b[0m"
@@ -120,6 +128,16 @@ if [ -e /usr/bin/apt-file ] ; then
    sudo /usr/bin/apt-file update >/dev/null
 fi
 sudo updatedb
+
+# ====== Delete /etc/udev/rules.d/70-persistent-net.rules ===================
+if [ $KEEP_INTERFACE_MAPPINGS -eq 0 ] ; then
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Checking interface mapping ...\x1b[0m"
+   if ! ifconfig eth0 >/dev/null 2>&1 ; then
+      echo "eth0 does not exist => Deleting /etc/udev/rules.d/70-persistent-net.rules"
+      rm -f /etc/udev/rules.d/70-persistent-net.rules
+      echo "*** Interfaces should be remapping during next boot! ***"
+   fi
+fi
 
 # ====== Start AutoFS =======================================================
 if [ -e /etc/init.d/autofs ] ; then
