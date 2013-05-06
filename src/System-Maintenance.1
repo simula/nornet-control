@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd January 30, 2013
+.Dd May 5, 2013
 .Dt System-Maintenance 1
 .Os System-Maintenance
 .\" ###### Name #############################################################
@@ -27,7 +27,7 @@
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
 .Nm System-Maintenance
-configuration_file
+.Op Fl interactive-kernel-removal|-k
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
 .Nm System-Maintenance
@@ -38,16 +38,18 @@ These tasks are:
 .It Updating the package repositories.
 .It Removing obsolete kernels.
 .It Installing all available package updates.
+.It Auto-removing unused packages.
+.It Ensuring that Grub (the bootloader) is installed and up-to-date.
 .It Updating package and file search caches.
 .El
 .Pp
-.\" .\" ###### Arguments ########################################################
-.\" .Sh ARGUMENTS
-.\" The following options are available:
-.\" .Bl -tag -width indent
-.\" .It xxx
-.\" xxx
-.\" .El
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following options are available:
+.Bl -tag -width indent
+.It Fl interactive-kernel-removal|-k
+Remove obsolete kernels interactively.
+.El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
