@@ -57,6 +57,19 @@ sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -f -y -q  >/tmp/instal
 wait
 cat /tmp/install.log
 
+# ====== System update ======================================================
+echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing updates ...\x1b[0m"
+sudo DEBIAN_FRONTEND=noninteractive nohup apt-get dist-upgrade -y -q >/tmp/install.log 2>&1 &
+wait
+cat /tmp/install.log
+
+# ====== Auto-remove ========================================================
+echo -e "\x1b[34m`date +%FT%H:%M:%S`: Cleaning up ...\x1b[0m"
+sudo DEBIAN_FRONTEND=noninteractive nohup apt-get autoremove -y -q >/tmp/install.log 2>&1 &
+wait
+cat /tmp/install.log
+sudo DEBIAN_FRONTEND=noninteractive apt-get clean
+
 # ====== Remove obsolete kernel packages ====================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Removing obsolete kernels ...\x1b[0m"
 
@@ -99,19 +112,6 @@ fi
       
 # Possibly for newer versions, add:
 # linux-image-extra-$(uname -r)+
-
-# ====== System update ======================================================
-echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing updates ...\x1b[0m"
-sudo DEBIAN_FRONTEND=noninteractive nohup apt-get dist-upgrade -y -q >/tmp/install.log 2>&1 &
-wait
-cat /tmp/install.log
-
-# ====== Auto-remove ========================================================
-echo -e "\x1b[34m`date +%FT%H:%M:%S`: Cleaning up ...\x1b[0m"
-sudo DEBIAN_FRONTEND=noninteractive nohup apt-get autoremove -y -q >/tmp/install.log 2>&1 &
-wait
-cat /tmp/install.log
-sudo DEBIAN_FRONTEND=noninteractive apt-get clean
 
 # ====== Fix bootloader =====================================================
 if [ $DONT_TOUCH_GRUB -eq 0 ] ; then
