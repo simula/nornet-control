@@ -1,4 +1,22 @@
 #!/bin/bash -e
+#
+# Debian Packaging Scripts
+# Copyright (C) 2002-2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@iem.uni-due.de
 
 . ./debian.conf
 
@@ -39,26 +57,17 @@ else
 fi
 
 # When running the first time, backup the original Debian files
-if [ ! -e debian/changelog.orig ] ; then
-   cp debian/changelog debian/changelog.orig
-fi
-if [ ! -e debian/control.orig ] ; then
-   cp debian/control debian/control.orig
-fi
-if [ ! -e debian/rules.orig ] ; then
-   cp debian/rules debian/rules.orig
-fi
-# if [ ! -e debian/LocalConfig.kmk.orig ] ; then
-#    cp debian/LocalConfig.kmk debian/LocalConfig.kmk.orig
-# fi
-
-
+BACKUP_FILES="changelog rules control virtualbox-source.files/control.modules.in virtualbox-guest-source.files/control.modules.in virtualbox-source.files/rules virtualbox-guest-source.files/rules"
+# VirtualBox has several control files ...
+for backupFile in $BACKUP_FILES ; do
+   if [ ! -e debian/${backupFile}.orig ] ; then
+      cp debian/${backupFile} debian/${backupFile}.orig
+   fi
+done
 # Revert Debian files (from the backup versions)
-cp debian/changelog.orig debian/changelog
-cp debian/control.orig debian/control
-cp debian/rules.orig debian/rules
-# cp debian/LocalConfig.kmk.orig debian/LocalConfig.kmk
-
+for backupFile in $BACKUP_FILES ; do
+   cp debian/${backupFile}.orig debian/${backupFile}
+done
 
 echo -e "\x1b[34mBUILD_VERSION_IDENTIFIER: $BUILD_VERSION_IDENTIFIER\x1b[0m"
 
@@ -110,7 +119,7 @@ echo -e "\x1b[34m###############################################################
 # ====== Copy package files =================================================
 BUILD_PACKAGES=`grep "^Package: " debian/control.orig | sed -e "s/Package: //g"`
 cd debian
-echo "" >package-names.sed
+echo "" >package-names.sed.tmp
 for buildPackage in $BUILD_PACKAGES ; do
    buildPackageFiles=`find . -maxdepth 1 -name "${buildPackage}.*" -printf '%f\\n'`
    echo "P=${buildPackage}" 
@@ -123,9 +132,11 @@ for buildPackage in $BUILD_PACKAGES ; do
          cp -a "${buildPackageFile}" "${targetPackageFile}"
       fi
    done
-   echo "s/${buildPackage}$/${buildPackage}${PACKAGE_SUFFIX}/g" >>package-names.sed
-   echo "s/${buildPackage}[ \t]/${buildPackage}${PACKAGE_SUFFIX} /g" >>package-names.sed
+   echo "s/${buildPackage}$/${buildPackage}${PACKAGE_SUFFIX}/g" >>package-names.sed.tmp
+   echo "s/${buildPackage}[ \t]/${buildPackage}${PACKAGE_SUFFIX} /g" >>package-names.sed.tmp
 done
+sort <package-names.sed.tmp >package-names.sed
+rm -f package-names.sed.tmp
 cd ..
 
 
@@ -140,33 +151,43 @@ for v in $VARIANTS ; do
       fi
    fi
 done
-(
-#       -e "s/Source: ${PACKAGE}/Source: ${PACKAGE}${PACKAGE_SUFFIX}/g" \
-#       -e "s/^Package: \([a-zA-Z0-9+-]*\)$/Package: \1${PACKAGE_SUFFIX}\nConflicts: ${conflicts}\nReplaces: ${conflicts}/g"
-   sed <debian/control \
-      -f debian/package-names.sed \
-      -e "s/^Maintainer:.*/Maintainer: $MAINTAINER/g" \
-      -e "s/: Oracle VM /: Open Source /g"
-) >debian/control.new
+# VirtualBox has several control files ...
+CONTROL_FILES="control virtualbox-source${PACKAGE_SUFFIX}.files/control.modules.in virtualbox-guest-source${PACKAGE_SUFFIX}.files/control.modules.in"
+for controlFile in $CONTROL_FILES ; do
+   (
+   #       -e "s/Source: ${PACKAGE}/Source: ${PACKAGE}${PACKAGE_SUFFIX}/g" \
+   #       -e "s/^Package: \([a-zA-Z0-9+-]*\)$/Package: \1${PACKAGE_SUFFIX}\nConflicts: ${conflicts}\nReplaces: ${conflicts}/g"
+      sed <debian/${controlFile} \
+         -f debian/package-names.sed \
+         -e "s/^Maintainer:.*/Maintainer: $MAINTAINER/g" \
+         -e "s/: Oracle VM /: Open Source /g"
+   ) >debian/${controlFile}.new
+done
 
 
 # ====== Change debian/rules ================================================
-(
-#       -e "s/--disable-extpack/--disable-extpack --disable-kmods/g" \
-#       -e "s/^#[ \t]*\(VNC=1[ \t]*\)/\1/g" \
-#       -e "s/^#[ \t]*\(OSE=1[ \t]*\)/\1/g" \
-   sed <debian/rules \
-      -e "s/^\(verpkg[ \t]*\):=[ \t]*${PACKAGE}/\1:= ${PACKAGE}${PACKAGE_SUFFIX}/g" \
-      -e "s/^\(psource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
-      -e "s/^\(gsource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
-      -e "s/^\(pdkms\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
-      -e "s/^\(gdkms\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
-      -e "s/^\(sname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
-      -e "s/^\(sxname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
-      -e "s/^\(gname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
-      -e "s/^\(uname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
-      -e "s/^\(uxname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g"
-) >debian/rules.new
+RULES_FILES="rules virtualbox-source.files/rules virtualbox-guest-source.files/rules"
+for rulesFile in $RULES_FILES ; do
+   (
+   #       -e "s/--disable-extpack/--disable-extpack --disable-kmods/g" \
+   #       -e "s/^#[ \t]*\(VNC=1[ \t]*\)/\1/g" \
+   #       -e "s/^#[ \t]*\(OSE=1[ \t]*\)/\1/g" \
+      
+#          -e "s/^\(psource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+#          -e "s/^\(gsource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+#          -e "s/^\(pdkms\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+#          -e "s/^\(gdkms\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+      
+      sed <debian/rules \
+         -e "s/^\(verpkg[ \t]*\):=[ \t]*${PACKAGE}/\1:= ${PACKAGE}${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(sname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(sxname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(gname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(uname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(uxname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/dh_strip --dbg-package=\$(sname)-dbg/dh_strip --dbg-package=${PACKAGE}-dbg${PACKAGE_SUFFIX}/g"
+   ) >debian/${rulesFile}.new
+done
 
 
 # # ====== Change debian/LocalConfig.kmk ======================================
@@ -186,7 +207,6 @@ done
 
 
 # ====== Apply changes ======================================================
-mv debian/changelog.new       debian/changelog
-mv debian/control.new         debian/control
-mv debian/rules.new           debian/rules
-# mv debian/LocalConfig.kmk.new debian/LocalConfig.kmk
+for updatedFile in changelog $CONTROL_FILES $RULES_FILES ; do
+   mv "debian/${updatedFile}.new" "debian/${updatedFile}"
+done
