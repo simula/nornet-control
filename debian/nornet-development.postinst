@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+   configure)
+      if [ ! -e /var/cache/pbuilder/base.tgz ] ; then
+         pbuilder create
+      fi
+      ;;
+esac
+
+#DEBHELPER#
+
+exit 0
