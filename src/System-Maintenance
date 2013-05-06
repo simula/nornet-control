@@ -29,7 +29,7 @@ while [ $# -gt 0 ] ; do
    elif [ "$1" = "-keep-interface-mappings" -o "$1" = "-m" ] ; then
       KEEP_INTERFACE_MAPPINGS=1
    else
-      echo 2>&1 "Usage: $0 [-interactive-kernel-removal|-k]"
+      echo 2>&1 "Usage: $0 [-interactive-kernel-removal|-k] [dont-touch-grub|-g] [-keep-interface-mappings|-m]"
       exit 1
    fi
    shift
