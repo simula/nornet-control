@@ -45,6 +45,7 @@ Depends: apt-show-versions,
          ethtool,
          git,
          gpm,
+         idn,
          joe,
          lsb-base (>= 3.2-14),
          netperfmeter,
@@ -72,8 +73,8 @@ Architecture: any
 Depends: apt-file,
          debhelper,
          devscripts,
-         pbuilder,
          kbuild,
+         pbuilder,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Development Tools
