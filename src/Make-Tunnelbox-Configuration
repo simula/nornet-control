@@ -786,10 +786,10 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
                      options = '--v6-linklocal ' + str(makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
                                                                         tunnel['tunnel_remote_outer_address']))
                   outputFile.write('   make-tunnel ' + \
-                                   tunnel['tunnel_interface']                 + ' ' + \
-                                   hex(tunnel['tunnel_key'])                  + ' ' + \
-                                   str(tunnel['tunnel_local_outer_address'])  + ' ' + \
-                                   str(tunnel['tunnel_remote_outer_address']) + ' ' + \
+                                   tunnel['tunnel_interface']                    + ' ' + \
+                                   hex(tunnel['tunnel_key'])                     + ' ' + \
+                                   str(tunnel['tunnel_local_outer_address'].ip)  + ' ' + \
+                                   str(tunnel['tunnel_remote_outer_address'])    + ' ' + \
                                    str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
                                    str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
                                    '"' + options + '" && \\\n')
