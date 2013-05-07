@@ -19,15 +19,23 @@
 # Contact: dreibh@simula.no
 
 
-if [ $# -ne 4 ] ; then
-   echo >&2 "Usage: $0 VM_name ISO_name memory_MiB disk_GiB"
+if [ $# -lt 4 ] ; then
+   echo >&2 "Usage: $0 VM_name ISO_name memory_MiB disk_GiB [Fixed|Standard]"
    exit 1
 fi
 
 VM_NAME="$1"
 ISO_NAME="$2"
+if [ ! -e "$ISO_NAME" ] ; then
+   echo >&2 "ERROR: ISO file $ISO_NAME does not exist!"
+   exit 1
+fi
 let MEMORY_SIZE=1*$3
 let DISK_SIZE=1024*$4
+VARIANT="$5"
+if [ "$VARIANT" = "" ] ; then
+   VARIANT="Fixed"
+fi
 
 CPUS="2"
 VRAM="16"
@@ -44,7 +52,7 @@ VBoxManage modifyvm "$VM_NAME" --nic1 bridged --nictype1 82545EM --bridgeadapter
 VBoxManage storagectl "$VM_NAME" --name "SATA Controller" --add sata --controller IntelAHCI --sataportcount 4
 VBoxManage storageattach "$VM_NAME" --storagectl "SATA Controller" --port 0 --device 0 --type dvddrive \
                                     --medium "$ISO_NAME"
-VBoxManage createhd --filename "$HOME/VirtualBox VMs/$VM_NAME/DH0.vdi" --size "$DISK_SIZE" --format vdi --variant Fixed
+VBoxManage createhd --filename "$HOME/VirtualBox VMs/$VM_NAME/DH0.vdi" --size "$DISK_SIZE" --format vdi --variant "$VARIANT"
 VBoxManage storageattach "$VM_NAME" --storagectl "SATA Controller" --port 1 --device 0 --type hdd \
                                     --medium "$HOME/VirtualBox VMs/$VM_NAME/DH0.vdi"
 
