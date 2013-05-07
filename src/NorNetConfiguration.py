@@ -122,7 +122,7 @@ def loadNorNetConfiguration():
    sys.stdin  = codecs.getreader('utf8')(sys.stdin)
 
    # ====== Open constants file =============================================
-   log('Reading constants from ' + NorNetPLC_ConfigFile + ' ...')   
+   log('Reading constants from ' + NorNetPLC_ConstantsFile + ' ...')   
    try:
       constantsFile = codecs.open(NorNetPLC_ConstantsFile, 'r', 'utf-8')
    except:

@@ -200,7 +200,7 @@ def getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
    if (version != 4):
       try:
          localOuterAddress  = localProvider['provider_tunnelbox_ipv6'].ip
-         remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv6'].ip
+         remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv6']
          if ((localOuterAddress == IPv6Address('::')) or (remoteOuterAddress == IPv6Address('::'))):
             tunnelOverIPv4 = True
          else:
@@ -210,7 +210,7 @@ def getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
 
    if ((version == 4) or (tunnelOverIPv4 == True)):
       localOuterAddress  = localProvider['provider_tunnelbox_ipv4'].ip
-      remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv4'].ip
+      remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv4']
       tunnelInterface    = 'gre' + str(remoteSiteIndex) + "-" + str(localProviderIndex) + '-' + str(remoteProviderIndex)
 
    localInnerAddress     =  makeNorNetTunnelIP(localSiteIndex, localProviderIndex,
