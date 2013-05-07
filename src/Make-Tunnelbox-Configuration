@@ -789,7 +789,7 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
                                    tunnel['tunnel_interface']                    + ' ' + \
                                    hex(tunnel['tunnel_key'])                     + ' ' + \
                                    str(tunnel['tunnel_local_outer_address'].ip)  + ' ' + \
-                                   str(tunnel['tunnel_remote_outer_address'])    + ' ' + \
+                                   str(tunnel['tunnel_remote_outer_address'].ip) + ' ' + \
                                    str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
                                    str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
                                    '"' + options + '" && \\\n')
@@ -980,7 +980,7 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
       'provider_index'          : getCentralSiteBootstrapProviderIndex(),
       'provider_long_name'      : 'Local Provider',
       'provider_short_name'     : 'local',
-      'provider_tunnelbox_ipv4' : getCentralSiteBootstrapTunnelbox()
+      'provider_tunnelbox_ipv4' : IPv4Network(getCentralSiteBootstrapTunnelbox())
    }
 
    if configNamePrefix == None:
@@ -1020,7 +1020,7 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
                           tunnel['tunnel_interface']                    + ' ' + \
                           hex(tunnel['tunnel_key'])                     + ' ' + \
                           str(tunnel['tunnel_local_outer_address'].ip)  + ' ' + \
-                          str(tunnel['tunnel_remote_outer_address'])    + ' ' + \
+                          str(tunnel['tunnel_remote_outer_address'].ip) + ' ' + \
                           str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
                           str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
                           '"' + options + '" && \\\n')
