@@ -783,8 +783,8 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
                   if ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
                      options = '--add-to-existing-tunnel'
                   elif ((version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
-                     options = '--v6-linklocal ' + str(makeGRELinkLocal(IPv4Address(tunnel['tunnel_local_outer_address']),
-                                                                        IPv4Address(tunnel['tunnel_remote_outer_address'])))
+                     options = '--v6-linklocal ' + str(makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
+                                                                        tunnel['tunnel_remote_outer_address']))
                   outputFile.write('   make-tunnel ' + \
                                    tunnel['tunnel_interface']                 + ' ' + \
                                    hex(tunnel['tunnel_key'])                  + ' ' + \
@@ -1014,8 +1014,8 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
          if ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
             options = '--add-to-existing-tunnel'
          elif ((version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
-            options = '--v6-linklocal ' + str(makeGRELinkLocal(IPv4Address(tunnel['tunnel_local_outer_address']),
-                                                               IPv4Address(tunnel['tunnel_remote_outer_address'])))
+            options = '--v6-linklocal ' + str(makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
+                                                               tunnel['tunnel_remote_outer_address']))
          outputFile.write('   make-tunnel ' + \
                           tunnel['tunnel_interface']                    + ' ' + \
                           hex(tunnel['tunnel_key'])                     + ' ' + \

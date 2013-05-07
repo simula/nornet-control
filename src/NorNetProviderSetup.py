@@ -199,7 +199,7 @@ def getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
    tunnelOverIPv4 = False
    if (version != 4):
       try:
-         localOuterAddress  = localProvider['provider_tunnelbox_ipv6'].ip
+         localOuterAddress  = localProvider['provider_tunnelbox_ipv6']
          remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv6']
          if ((localOuterAddress == IPv6Address('::')) or (remoteOuterAddress == IPv6Address('::'))):
             tunnelOverIPv4 = True
@@ -209,7 +209,7 @@ def getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
          tunnelOverIPv4 = True
 
    if ((version == 4) or (tunnelOverIPv4 == True)):
-      localOuterAddress  = localProvider['provider_tunnelbox_ipv4'].ip
+      localOuterAddress  = localProvider['provider_tunnelbox_ipv4']
       remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv4']
       tunnelInterface    = 'gre' + str(remoteSiteIndex) + "-" + str(localProviderIndex) + '-' + str(remoteProviderIndex)
 
