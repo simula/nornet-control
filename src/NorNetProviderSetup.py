@@ -201,7 +201,7 @@ def getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
       try:
          localOuterAddress  = localProvider['provider_tunnelbox_ipv6']
          remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv6']
-         if ((localOuterAddress == IPv6Address('::')) or (remoteOuterAddress == IPv6Address('::'))):
+         if ((localOuterAddress.ip == IPv6Address('::')) or (remoteOuterAddress == IPv6Address('::'))):
             tunnelOverIPv4 = True
          else:
             tunnelInterface = 'seks' + str(remoteSiteIndex) + "-" + str(localProviderIndex) + '-' + str(remoteProviderIndex)
