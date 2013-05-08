@@ -10,6 +10,6 @@ if [ ! -e "$VBOX_DIRECTORY" ] ; then
    exit 1
 fi
 
-cp make-deb clean-deb build-deb debian.conf filter-empty-entries renew-debian-changelog "$VBOX_DIRECTORY"
+cp make-deb clean-deb build-deb debian.conf filter-empty-entries renew-debian-changelog make-ppa "$VBOX_DIRECTORY"
 rm -rf "$VBOX_DIRECTORY/debian"
 cp -r debian "$VBOX_DIRECTORY/debian"
