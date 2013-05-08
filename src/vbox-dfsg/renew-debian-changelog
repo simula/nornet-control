@@ -132,20 +132,22 @@ for buildPackage in $BUILD_PACKAGES ; do
          cp -a "${buildPackageFile}" "${targetPackageFile}"
       fi
    done
-   
-   provides="${buildPackage}"
+
    conflicts=""
+   if [ "${PACKAGE_SUFFIX}" != "" ] ; then
+      conflicts="${buildPackage}"   # The original name
+   fi
    for v in $VARIANTS ; do
       if [ "$v" != "$VARIANT" ] ; then
          if [ "$conflicts" = "" ] ; then
             conflicts="${buildPackage}-${v}"
          else
-            conflicts="${buildPackage}-${v}, ${conflicts}"
+            conflicts="${conflicts}, ${buildPackage}-${v}"
          fi
       fi
    done
    
-   echo "s/^\(Package: ${buildPackage}\)$/Package: ${buildPackage}${PACKAGE_SUFFIX}\nProvides: ${provides}\nConflicts: ${conflicts}\nReplaces: ${conflicts}/g" >>package-names.sed.tmp
+   echo "s/^\(Package: ${buildPackage}\)$/Package: ${buildPackage}${PACKAGE_SUFFIX}\nConflicts: ${conflicts}\nReplaces: ${conflicts}/g" >>package-names.sed.tmp
    echo "s/${buildPackage}$/${buildPackage}${PACKAGE_SUFFIX}/g" >>package-names.sed.tmp
    echo "s/${buildPackage}[ \t]/${buildPackage}${PACKAGE_SUFFIX} /g" >>package-names.sed.tmp
 done
@@ -194,14 +196,18 @@ done
 
 # ====== Change source install files ========================================
 if [ "${PACKAGE_SUFFIX}" != "" ] ; then
-   SOURCE_FILES="virtualbox-source${PACKAGE_SUFFIX}.links virtualbox-source${PACKAGE_SUFFIX}.install virtualbox-guest-source${PACKAGE_SUFFIX}.links virtualbox-guest-source${PACKAGE_SUFFIX}.install virtualbox-dkms${PACKAGE_SUFFIX}.dkms virtualbox-guest-dkms${PACKAGE_SUFFIX}.dkms"
+   SOURCE_FILES="virtualbox-source${PACKAGE_SUFFIX}.links virtualbox-source${PACKAGE_SUFFIX}.install virtualbox-guest-source${PACKAGE_SUFFIX}.links virtualbox-guest-source${PACKAGE_SUFFIX}.install virtualbox-dkms${PACKAGE_SUFFIX}.dkms virtualbox-dkms${PACKAGE_SUFFIX}.links.in virtualbox-dkms${PACKAGE_SUFFIX}.install.in virtualbox-guest-dkms${PACKAGE_SUFFIX}.dkms virtualbox-guest-dkms${PACKAGE_SUFFIX}.links.in virtualbox-guest-dkms${PACKAGE_SUFFIX}.install.in"
    for sourceFile in $SOURCE_FILES ; do
       (
          sed <debian/${sourceFile} \
             -e "s/\/modules\/virtualbox\//\/modules\/virtualbox${PACKAGE_SUFFIX}\//g" \
+            -e "s/\/modules\/virtualbox$/\/modules\/virtualbox${PACKAGE_SUFFIX}/g" \
             -e "s/\/modules\/virtualbox-guest\//\/modules\/virtualbox-guest${PACKAGE_SUFFIX}\//g" \
+            -e "s/\/modules\/virtualbox-guest$/\/modules\/virtualbox-guest${PACKAGE_SUFFIX}/g" \
             -e "s/^PACKAGE_NAME=\"virtualbox\"$/PACKAGE_NAME=\"virtualbox${PACKAGE_SUFFIX}\"/g" \
-            -e "s/^PACKAGE_NAME=\"virtualbox-guest\"$/PACKAGE_NAME=\"virtualbox-guest${PACKAGE_SUFFIX}\"/g"
+            -e "s/^PACKAGE_NAME=\"virtualbox-guest\"$/PACKAGE_NAME=\"virtualbox-guest${PACKAGE_SUFFIX}\"/g" \
+            -e "s/virtualbox-guest-CVERSION/virtualbox-guest${PACKAGE_SUFFIX}-CVERSION/g" \
+            -e "s/virtualbox-CVERSION/virtualbox${PACKAGE_SUFFIX}-CVERSION/g"
       ) >debian/${sourceFile}.new
 #       mv debian/${sourceFile}.new debian/${sourceFile}
    done
