@@ -169,20 +169,19 @@ done
 
 
 # ====== Change debian/rules ================================================
-RULES_FILES="rules virtualbox-source.files/rules virtualbox-guest-source.files/rules"
+RULES_FILES="rules virtualbox-source${PACKAGE_SUFFIX}.files/rules virtualbox-guest-source${PACKAGE_SUFFIX}.files/rules"
 for rulesFile in $RULES_FILES ; do
    (
    #       -e "s/--disable-extpack/--disable-extpack --disable-kmods/g" \
    #       -e "s/^#[ \t]*\(VNC=1[ \t]*\)/\1/g" \
    #       -e "s/^#[ \t]*\(OSE=1[ \t]*\)/\1/g" \
-      
-#          -e "s/^\(psource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
-#          -e "s/^\(gsource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
-#          -e "s/^\(pdkms\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
-#          -e "s/^\(gdkms\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
-      
+
       sed <debian/rules \
          -e "s/^\(verpkg[ \t]*\):=[ \t]*${PACKAGE}/\1:= ${PACKAGE}${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(psource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(gsource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(pdkms\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(gdkms\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
          -e "s/^\(sname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
          -e "s/^\(sxname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
          -e "s/^\(gname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
@@ -191,6 +190,22 @@ for rulesFile in $RULES_FILES ; do
          -e "s/dh_strip --dbg-package=\$(sname)-dbg/dh_strip --dbg-package=${PACKAGE}-dbg${PACKAGE_SUFFIX}/g"
    ) >debian/${rulesFile}.new
 done
+
+
+# ====== Change source install files ========================================
+if [ "${PACKAGE_SUFFIX}" != "" ] ; then
+   SOURCE_FILES="virtualbox-source${PACKAGE_SUFFIX}.links virtualbox-source${PACKAGE_SUFFIX}.install virtualbox-guest-source${PACKAGE_SUFFIX}.links virtualbox-guest-source${PACKAGE_SUFFIX}.install virtualbox-dkms${PACKAGE_SUFFIX}.dkms virtualbox-guest-dkms${PACKAGE_SUFFIX}.dkms"
+   for sourceFile in $SOURCE_FILES ; do
+      (
+         sed <debian/${sourceFile} \
+            -e "s/\/modules\/virtualbox\//\/modules\/virtualbox${PACKAGE_SUFFIX}\//g" \
+            -e "s/\/modules\/virtualbox-guest\//\/modules\/virtualbox-guest${PACKAGE_SUFFIX}\//g" \
+            -e "s/^PACKAGE_NAME=\"virtualbox\"$/PACKAGE_NAME=\"virtualbox${PACKAGE_SUFFIX}\"/g" \
+            -e "s/^PACKAGE_NAME=\"virtualbox-guest\"$/PACKAGE_NAME=\"virtualbox-guest${PACKAGE_SUFFIX}\"/g"
+      ) >debian/${sourceFile}.new
+#       mv debian/${sourceFile}.new debian/${sourceFile}
+   done
+fi
 
 
 # # ====== Change debian/LocalConfig.kmk ======================================
@@ -210,6 +225,6 @@ done
 
 
 # ====== Apply changes ======================================================
-for updatedFile in changelog $CONTROL_FILES $RULES_FILES ; do
+for updatedFile in changelog $CONTROL_FILES $RULES_FILES $SOURCE_FILES ; do
    mv "debian/${updatedFile}.new" "debian/${updatedFile}"
 done
