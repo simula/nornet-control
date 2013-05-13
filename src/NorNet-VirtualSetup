@@ -48,7 +48,7 @@ norNetSetup = [
    'site_latitude'     : 59.895933,
    'site_longitude'    : 10.627635,
    'site_altitude'     : 15,
-   'site_pcu'          : [ IPv4Address('172.16.1.202'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('172.16.1.201'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ 'Test Alpha', 'eth1', IPv4Network('172.16.1.2/24'), IPv4Address('172.16.1.1'),
@@ -85,6 +85,32 @@ norNetSetup = [
    'site_nodes' : [
       [ 100, 1, 'betanode1' ],
       [ 101, 2, 'betanode2' ]
+   ] },
+
+ { 'site_index'        : 3,
+   'site_enabled'      : False,
+   'site_long_name'    : u'Gamma Site',
+   'site_short_name'   : 'CS',
+   'site_url'          : 'http://www.gamma.test',
+   'site_domain'       : 'gamma.test',
+   'site_city'         : 'Stockholm',
+   'site_province'     : 'Stockholms län',
+   'site_country'      : 'Sverige',
+   'site_country_code' : 'SE',
+   'site_latitude'     : 59.329952,
+   'site_longitude'    : 18.072383,
+   'site_altitude'     : 5,
+   'site_pcu'          : [ IPv4Address('172.16.1.203'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ 'Test Alpha', 'eth1', IPv4Network('172.16.1.4/24'), IPv4Address('172.16.1.1'),
+                              IPv6Network('fd00:1::4/64'),  IPv6Address('fd00:1::1') ],
+      [ 'Test Beta',  'eth2', IPv4Network('172.16.2.4/24'), IPv4Address('172.16.2.1'),
+                              IPv6Network('fd00:2::4/64'),  IPv6Address('fd00:2::1') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, 'gammanode1' ],
+      [ 101, 2, 'gammanode2' ]
    ] }
 
 ]
