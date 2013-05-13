@@ -4,6 +4,17 @@ set -e
 
 case "$1" in
    configure)
+      (
+         cat /etc/nagios3/nagios3.cfg | \
+            grep -v "^cfg_file=.*/nornet[a-zA-Z0-9+-]*.cfg$" |
+            grep -v "^# [-]* NorNet [-]"
+            
+         echo "# ------ NorNet -------------------------------------------------------------"
+         echo "cfg_file=/etc/nagios3/nornet-commands.cfg"
+         echo "cfg_file=/etc/nagios3/nornet-services.cfg"
+         echo "cfg_file=/etc/nagios3/nornet-testbed.cfg"
+         echo "# ------ NorNet -------------------------------------------------------------"
+      ) >/etc/nagios3/nagios3.cfg.new      
       update-grub
       ;;
 esac

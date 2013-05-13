@@ -59,6 +59,9 @@ cp src/Reset-Networking $PACKAGE-$UPSTREAM_VERSION
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter
 cp src/Kontrollsenter/NorNet-*.css src/Kontrollsenter/NorNet-*.js src/Kontrollsenter/NorNet-*.php src/Kontrollsenter/NorNet-*.html src/Kontrollsenter/Forward-*.html $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter
 
+mkdir $PACKAGE-$UPSTREAM_VERSION/Monitor
+cp src/Monitor/*.cfg $PACKAGE-$UPSTREAM_VERSION/Monitor/ 
+
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Backgrounds
