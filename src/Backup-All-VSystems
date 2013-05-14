@@ -25,16 +25,31 @@ if [ $# -lt 1 ] ; then
    exit 1
 fi
 
+NORNET_DIRECTORY="/etc/nornet"
+
+# Check whether NorNet directory is existing
+if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
+   . $NORNET_DIRECTORY/nornetapi-config
+elif [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
+fi
+
 DIRECTORY="$1"
 if [ ! -d "$DIRECTORY" ] ; then
    echo >&2 "ERROR: Directory $DIRECTORY does not exist!"
    exit 1
 fi
 
-VMs=`VBoxManage list vms | sed -e "s/ {.*}$//g"`
-for vm in $VMs ; do   
+VMs=`sudo -u $NorNet_LocalNode_NorNetUser VBoxManage list vms | sed -e "s/ {.*}$//g" -e "s/^\"//g" -e "s/\"$//g"`
+for vm in $VMs ; do
+   echo -e "\n\x1b[34m`date +%FT%H:%M:%S`: ====== Backup for virtual system ${vm} ... ======\x1b[0m\n"
+ 
    if [ -e "$DIRECTORY/${vm}.ova" ] ; then
       mv "$DIRECTORY/${vm}.ova" "$DIRECTORY/${vm}.ova~"
    fi
    Backup-VSystem "${vm}" "$DIRECTORY/${vm}.ova" || true
+   
 done
