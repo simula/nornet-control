@@ -5,5 +5,6 @@ Start-VSystem.1
 Stop-VSystem.1
 Check-VSystem.1
 Backup-VSystem.1
+Backup-All-VSystems.1
 Change-VSystem-CDImage.1
 Auto-Update-BootCD.1

@@ -1,0 +1,47 @@
+.\" Backup All VSystems
+.\" Copyright (C) 2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd May 14, 2013
+.Dt Backup-All-VSystems 1
+.Os Backup-All-VSystems
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Backup-All-VSystems
+.Nd Virtual System Backup Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Backup-All-VSystems
+destination_directory
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Backup-All-VSystems
+backs up all virtual systems on the physical machine. The backed up virtual
+systems will be written to the given destination directory as OVA archives.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+.Bl -tag -width indent
+.It destination_directory
+The directory to write the OVA archives to.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Backup-All-VSystems /nfs/pub/VSystem-Backups
+.El
