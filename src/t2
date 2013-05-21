@@ -4,15 +4,20 @@ CONFIG_DIRECTORY="c"
 ACTIVE_DIRECTORY="a"
 
 
+. ./Routing-Setup
+
+
 # ###### Load interface configuration from configuration file ###############
 load-interface-configuration ()
 {
-   CONFIG="$1"
+   INTERFACE="$1"
 
    # ====== Load the settings ===============================================
+   INTERFACE_NAME=`echo $INTERFACE | sed -e "s/.interface$//g"`
    TYPE=""
    PRECEDENCE=""
    TOS=""
+   KEY=""
    LOCAL_PROVIDER_SHORT=""
    LOCAL_PROVIDER_LONG=""
    LOCAL_INNER_ADDRESS=""
@@ -24,63 +29,63 @@ load-interface-configuration ()
    REMOTE_INNER_ADDRESS=""
    REMOTE_OUTER_ADDRESS=""
    
-   if [ ! -e "$CONFIG_DIRECTORY/$config" ] ; then
-      echo 2>&1 "ERROR: Cannot find $CONFIG_DIRECTORY/$config!"
+   if [ ! -e "$CONFIG_DIRECTORY/$INTERFACE" ] ; then
+      echo 2>&1 "ERROR: Cannot find $CONFIG_DIRECTORY/$INTERFACE!"
       exit 1
    fi
-   . $CONFIG_DIRECTORY/$config
+   . $CONFIG_DIRECTORY/$INTERFACE
    
    # ====== Check the input =================================================
    if [[ ! "$TYPE" =~ ^gre$|^seks$ ]] ; then
-      echo 2>&1 "ERROR: Bad interface TYPE setting in $CONFIG: ${TYPE}!"
+      echo 2>&1 "ERROR: Bad interface TYPE setting in $INTERFACE: $TYPE!"
       exit 1
    fi
    if [[ ! "$PRECEDENCE" =~ ^[0-9]+$ ]] ; then
-      echo 2>&1 "ERROR: Bad interface PRECEDENCE setting in $CONFIG: ${PRECEDENCE}!"
+      echo 2>&1 "ERROR: Bad interface PRECEDENCE setting in $INTERFACE: $PRECEDENCE!"
       exit 1
    fi
    if [[ ! "$TOS" =~ ^0x[0-9a-f]+$ ]] ; then
-      echo 2>&1 "ERROR: Bad interface TOS setting in $CONFIG: ${TOS}!"
+      echo 2>&1 "ERROR: Bad interface TOS setting in $INTERFACE: $TOS!"
       exit 1
    fi
    if [[ ! "$LOCAL_INNER_ADDRESS" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$|^[0-9a-fA-F:]+$ ]] ; then
-      echo 2>&1 "ERROR: Bad interface LOCAL_INNER_ADDRESS setting in $CONFIG: ${LOCAL_INNER_ADDRESS}!"
+      echo 2>&1 "ERROR: Bad interface LOCAL_INNER_ADDRESS setting in $INTERFACE: $LOCAL_INNER_ADDRESS!"
       exit 1
    fi
    if [[ ! "$INNER_PREFIX" =~ ^[0-9]+$ ]] ; then
-      echo 2>&1 "ERROR: Bad interface INNER_PREFIX setting in $CONFIG: ${INNER_PREFIX}!"
+      echo 2>&1 "ERROR: Bad interface INNER_PREFIX setting in $INTERFACE: $INNER_PREFIX!"
       exit 1
    fi
    if [[ ! "$LOCAL_OUTER_ADDRESS" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$|^[0-9a-fA-F:]+$ ]] ; then
-      echo 2>&1 "ERROR: Bad interface LOCAL_OUTER_ADDRESS setting in $CONFIG: ${LOCAL_OUTER_ADDRESS}!"
+      echo 2>&1 "ERROR: Bad interface LOCAL_OUTER_ADDRESS setting in $INTERFACE: $LOCAL_OUTER_ADDRESS!"
       exit 1
    fi
    if [[ ! "$OUTER_PREFIX" =~ ^[0-9]+$ ]] ; then
-      echo 2>&1 "ERROR: Bad interface OUTER_PREFIX setting in $CONFIG: ${OUTER_PREFIX}!"
+      echo 2>&1 "ERROR: Bad interface OUTER_PREFIX setting in $INTERFACE: $OUTER_PREFIX!"
       exit 1
    fi
    if [[ ! "$REMOTE_INNER_ADDRESS" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$|^[0-9a-fA-F:]+$ ]] ; then
-      echo 2>&1 "ERROR: Bad interface REMOTE_INNER_ADDRESS setting in $CONFIG: ${REMOTE_INNER_ADDRESS}!"
+      echo 2>&1 "ERROR: Bad interface REMOTE_INNER_ADDRESS setting in $INTERFACE: $REMOTE_INNER_ADDRESS!"
       exit 1
    fi
    if [[ ! "$REMOTE_OUTER_ADDRESS" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$|^[0-9a-fA-F:]+$ ]] ; then
-      echo 2>&1 "ERROR: Bad interface REMOTE_OUTER_ADDRESS setting in $CONFIG: ${REMOTE_OUTER_ADDRESS}!"
+      echo 2>&1 "ERROR: Bad interface REMOTE_OUTER_ADDRESS setting in $INTERFACE: $REMOTE_OUTER_ADDRESS!"
       exit 1
    fi
    if [ "$LOCAL_PROVIDER_SHORT" = "" ] ; then
-      echo 2>&1 "ERROR: Missing LOCAL_PROVIDER_SHORT setting in $CONFIG!"
+      echo 2>&1 "ERROR: Missing LOCAL_PROVIDER_SHORT setting in $INTERFACE!"
       exit 1
    fi
    if [ "$LOCAL_PROVIDER_LONG" = "" ] ; then
-      echo 2>&1 "ERROR: Missing LOCAL_PROVIDER_LONG setting in $CONFIG!"
+      echo 2>&1 "ERROR: Missing LOCAL_PROVIDER_LONG setting in $INTERFACE!"
       exit 1
    fi
    if [ "$REMOTE_PROVIDER_SHORT" = "" ] ; then
-      echo 2>&1 "ERROR: Missing REMOTE_PROVIDER_SHORT setting in $CONFIG!"
+      echo 2>&1 "ERROR: Missing REMOTE_PROVIDER_SHORT setting in $INTERFACE!"
       exit 1
    fi
    if [ "$REMOTE_PROVIDER_LONG" = "" ] ; then
-      echo 2>&1 "ERROR: Missing REMOTE_PROVIDER_LONG setting in $CONFIG!"
+      echo 2>&1 "ERROR: Missing REMOTE_PROVIDER_LONG setting in $INTERFACE!"
       exit 1
    fi
 }
@@ -90,7 +95,16 @@ load-interface-configuration ()
 activateInterface ()
 {
    load-interface-configuration "$1"
-   cp "$CONFIG_DIRECTORY/$CONFIG" "$ACTIVE_DIRECTORY/$CONFIG"
+   
+   log-action "Configuring $INTERFACE_NAME"
+   
+   echo ""
+   echo "make-tunnel '$INTERFACE_NAME' '$KEY' '$LOCAL_OUTER_ADDRESS' '$REMOTE_OUTER_ADDRESS' '$LOCAL_INNER_ADDRESS' '$LOCAL_OUTER_ADDRESS'"
+   echo "make-route 'xxxxxxxxxxxPRED' '$REMOTE_SITE_NETWORK' '$INTERFACE_NAME'"
+
+   log-result 1
+   
+   cp "$CONFIG_DIRECTORY/$INTERFACE" "$ACTIVE_DIRECTORY/$INTERFACE"
 }
 
 
@@ -98,27 +112,123 @@ activateInterface ()
 deactivateInterface ()
 {
    load-interface-configuration "$1"
-   rm -f "$ACTIVE_DIRECTORY/$CONFIG"
+   rm -f "$ACTIVE_DIRECTORY/$INTERFACE"
+}
+
+
+# ###### Load provider configuration from configuration file ###############
+load-provider-configuration ()
+{
+   PROVIDER="$1"
+
+   # ====== Load the settings ===============================================
+   PROVIDER_INDEX=""
+   PROVIDER_TABLE=""
+   PROVIDER_PRECEDENCE=""
+   PROVIDER_TOS=""
+   PROVIDER_SHORT=""
+   PROVIDER_LONG=""
+
+   if [ ! -e "$CONFIG_DIRECTORY/$PROVIDER" ] ; then
+      echo 2>&1 "ERROR: Cannot find $CONFIG_DIRECTORY/$PROVIDER!"
+      exit 1
+   fi
+   . $CONFIG_DIRECTORY/$PROVIDER
+   
+   # ====== Check the input =================================================
+   if [[ ! "$PROVIDER_INDEX" =~ ^[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider PROVIDER_INDEX setting in $PROVIDER: $PROVIDER_INDEX!"
+      exit 1
+   fi
+   if [[ ! "$PROVIDER_TABLE" =~ ^[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider PROVIDER_TABLE setting in $PROVIDER: $PROVIDER_TABLE!"
+      exit 1
+   fi
+   if [[ ! "$PROVIDER_PRECEDENCE" =~ ^[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider PRECEDENCE setting in $PROVIDER: $PROVIDER_PRECEDENCE!"
+      exit 1
+   fi
+   if [[ ! "$PROVIDER_TOS" =~ ^0x[0-9a-f]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider TOS setting in $PROVIDER: $PROVIDER_TOS!"
+      exit 1
+   fi
+   if [ "$PROVIDER_SHORT" = "" ] ; then
+      echo 2>&1 "ERROR: Missing PROVIDER_SHORT setting in $PROVIDER!"
+      exit 1
+   fi
+   if [ "$PROVIDER_LONG" = "" ] ; then
+      echo 2>&1 "ERROR: Missing PROVIDER_LONG setting in $PROVIDER!"
+      exit 1
+   fi
+}
+
+
+# ###### Activate provider #################################################
+activateProvider ()
+{
+   load-provider-configuration "$1"
+   cp "$CONFIG_DIRECTORY/$PROVIDER" "$ACTIVE_DIRECTORY/$PROVIDER"
+}
+
+
+# ###### Deactivate provider ###############################################
+deactivateProvider ()
+{
+   load-provider-configuration "$1"
+   rm -f "$ACTIVE_DIRECTORY/$PROVIDER"
 }
 
 
 
 
-ALL_CONFIGS=`find "$CONFIG_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9]' -printf "%f\n\n" `
-for config in $ALL_CONFIGS ; do
-  echo "C=$config"
-  if [ ! -e "$ACTIVE_DIRECTORY/$config" ] ; then
+ALL_PROVIDER_CONFIGS=`find "$CONFIG_DIRECTORY" -name '*.provider' -printf "%f\n\n" `
+ALL_INTERFACE_CONFIGS=`find "$CONFIG_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface' -printf "%f\n\n" `
+
+log "Updating providers"
+for provider in $ALL_PROVIDER_CONFIGS ; do
+   echo "P=$provider"
+   
+  if [ ! -e "$ACTIVE_DIRECTORY/$provider" ] ; then
      echo "NEW."
 
-     activateInterface "$config"
-     
-     
+     activateProvider "$provider"
+
   else
      echo "Already active."
-     if ! diff "$CONFIG_DIRECTORY/$config" "$ACTIVE_DIRECTORY/$config" >/dev/null ; then
+     if ! diff "$CONFIG_DIRECTORY/$provider" "$ACTIVE_DIRECTORY/$provider" >/dev/null ; then
         echo "DIFF!"
-        deactivateInterface "$config"
-        activateInterface "$config"
+        deactivateProvider "$provider"
+        activateProvider "$provider"
      fi
   fi
+   
+done
+
+
+log "Updating interfaces"
+for interface in $ALL_INTERFACE_CONFIGS ; do
+  echo "C=$interface"
+  if [ ! -e "$ACTIVE_DIRECTORY/$interface" ] ; then
+     echo "NEW."
+
+     activateInterface "$interface"
+
+  else
+     echo "Already active."
+     if ! diff "$CONFIG_DIRECTORY/$interface" "$ACTIVE_DIRECTORY/$interface" >/dev/null ; then
+        echo "DIFF!"
+        deactivateInterface "$interface"
+        activateInterface "$interface"
+     fi
+  fi
+done
+
+
+log "Checking for removed providers"
+PROVIDER_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.provider' -printf "%f\n\n"`
+for provider in $PROVIDER_CONFIGS ; do
+   if [ ! -e "$CONFIG_DIRECTORY/$provider" ] ; then
+      echo "REMOVED=$provider"
+      deactivateProvider "$provider"
+   fi
 done
