@@ -604,8 +604,8 @@ def makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList):
             # outputFile.write('\tserver-name       "' + staticEntry['node_servername'] + '";\n')
             outputFile.write('\tnext-server       ' + staticEntry['node_servername'] + ';\n')
          else:
-            # outputFile.write('\tserver-name       "tftp.' + NorNet_CentralSite_DomainName + '";\n')
-            outputFile.write('\tnext-server       tftp.' + NorNet_CentralSite_DomainName + ';\n')
+            # outputFile.write('\tserver-name       "tftp.' + getCentralSiteDomainName() + '";\n')
+            outputFile.write('\tnext-server       tftp.' + getCentralSiteDomainName() + ';\n')
       outputFile.write('}\n')
 
    outputFile.close()
