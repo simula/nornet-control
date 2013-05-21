@@ -665,6 +665,18 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
    log('Making tunnelbox provider configuration for ' + \
        localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + ' ...')
 
+
+ #????????????????????????????????
+   tunnelboxFile = codecs.open('tunnelbox-config000', 'w', 'utf-8')
+   tunnelboxFile.write('TUNNELBOX_SITE_INDEX=' + str(localSite['site_index']) + '\n')
+   tunnelboxFile.write('NORNET_INTERFACE="' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '"\n')
+   tunnelboxFile.write('NORNET_NETWORK_IPv4="' + str(NorNet_Configuration['NorNet_IPv4Prefix']) + '"\n')
+   tunnelboxFile.write('NORNET_NETWORK_IPv6="' + str(NorNet_Configuration['NorNet_IPv6Prefix']) + '"\n')
+   tunnelboxFile.write('NORNET_TUNNEL_NETWORK_IPv4="' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + '"\n')
+   tunnelboxFile.write('NORNET_TUNNEL_NETWORK_IPv6="' + str(NorNet_Configuration['NorNet_IPv6TunnelPrefix']) + '"\n')
+   tunnelboxFile.close()
+
+
    localSiteIndex     = localSite['site_index']
    localProviderIndex = localProvider['provider_index']
    stateList          = [ 'stop', 'start', 'status' ]
@@ -710,6 +722,20 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
          providerFile.write('PROVIDER_TABLE_TOS_PREF='    + str(routingTableTOSPref)             + '\n')
          providerFile.write('PROVIDER_TABLE_DEST_PREF='   + str(routingTableDestPref)            + '\n')
          providerFile.write('PROVIDER_TABLE_SOURCE_PREF=' + str(routingTableSourcePref)          + '\n')
+         if localProviderIndex == localSite['site_default_provider_index']:
+            providerFile.write('PROVIDER_IS_DEFAULT_PROVIDER=1\n')
+         else:
+            providerFile.write('PROVIDER_IS_DEFAULT_PROVIDER=0\n')
+
+         providerList = getNorNetProvidersForSite(localSite)
+         for version in [ 4, 6 ]:
+            localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
+            providerFile.write('PROVIDER_LOCAL_NETWORK_IPv' + str(version) + '="' + str(localProviderNetwork) + '"\n')
+
+         providerFile.close()
+
+
+
 
          outputFile.write('   log-action "Creating rules and tables for provider ' + \
                           localProvider['provider_long_name'] + ' ..."\n')
@@ -744,10 +770,6 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
                              ' to ' + str(fullNorNetNetwork) + '   && \\\n')
 
 
-            providerFile.write('PROVIDER_NETWORK_IPv' + str(version) + '="' + str(localProviderNetwork) + '"\n')
-            providerFile.write('NORNET_NETWORK_IPv' + str(version) + '="'   + str(fullNorNetNetwork) + '"\n')
-
-         providerFile.close()
 
       elif (state == 'stop'):
          outputFile.write('   log-action "Removing rules and tables for provider ' + \
@@ -837,6 +859,7 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
                   interfaceFile.write('INTERFACE_TYPE="gre"\n')
                   interfaceFile.write('GRE_LINKLOCAL="' + str(makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
                                                                                tunnel['tunnel_remote_outer_address'])) + '"\n')
+                  interfaceFile.write('GRE_KEY="' + hex(tunnel['tunnel_key']) + '"\n')
                elif ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
                   interfaceFile.write('INTERFACE_TYPE="existing-gre"\n')
                else:
@@ -850,7 +873,16 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
 
                interfaceFile.write('TUNNEL_LOCAL_INNER_ADDRESS="'  + str(tunnel['tunnel_local_inner_address'].ip)  + '"\n')
                interfaceFile.write('TUNNEL_REMOTE_INNER_ADDRESS="' + str(tunnel['tunnel_remote_inner_address'].ip) + '"\n')
-               interfaceFile.write('TUNNEL_INNER_PREFIX='          + str(tunnel['tunnel_local_inner_address'].prefixlen) + '\n')
+               interfaceFile.write('TUNNEL_INNER_PREFIX='          + str(tunnel['tunnel_local_inner_address'].prefixlen) + '\n\n')
+               
+               interfaceFile.write('REMOTE_SITE_NETWORK="' + str(remoteNetwork) + '"\n')
+
+               metric = 10 + pathNumber
+               if remoteProviderIndex == localProviderIndex:
+                  metric = 5
+               interfaceFile.write('REMOTE_SITE_METRIC=' + str(metric) + '\n')
+               
+               interfaceFile.write('ROUTING_TABLE='                 + str(routingTableID)                  + '\n')
 
 
                # ====== Create routing table entries ========================
@@ -951,9 +983,9 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
          fullTunnelNet = makeNorNetTunnelIP(0, 0, 0, 0, version)
          if (state == 'start'):
             outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + \
-                             ' to ' + str(fullTunnelNet) + '\n')
+                             ' to ' + str(fullTunnelNet) + '   # ENDP\n')
             outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + \
-                             ' from ' + str(fullTunnelNet) + '\n')
+                             ' from ' + str(fullTunnelNet) + '   # ENDP\n')
          elif (state == 'stop'):
             outputFile.write('   remove-table-selector main ' + str(routingTableDestPref) + \
                              ' to ' + str(fullTunnelNet) + '\n')
