@@ -405,7 +405,7 @@ make-route ()
    local interface="$3"           # Output interface
    local nextHop="$4"             # Next hop
    shift ; shift ; shift ; shift
-   local miscOptions="$@"         # Misc options (e.g. "----add-to-exiting-tunnel")
+   local miscOptions="$@"         # Misc options
 
    # echo ip route add $destination via $nextHop dev $interface table $tableID $miscOptions
    ip route add $destination via $nextHop dev $interface table $tableID $miscOptions

@@ -1,81 +1,124 @@
 #!/bin/bash
 
-providersOld="uninett telekom netcom telenor"
-providersNew="uninett hafslund dfn"
+CONFIG_DIRECTORY="c"
+ACTIVE_DIRECTORY="a"
 
-# ###### Check whether a provider is in a list of available providers #######
-check-providers ()
+
+# ###### Load interface configuration from configuration file ###############
+load-interface-configuration ()
 {
-   local availableProviders="$1"
-   local selectedProviders=`echo $2 | sed -e "s/,/ /g"`
-   if [ "$selectedProviders" != "@ALL" ] ; then
-      for b in $selectedProviders ; do
-         found=0
-         for a in $availableProviders ; do
-            if [ "$a" == "$b" ] ; then
-               found=1
-            fi
-         done
-         if [ $found -eq 0 ] ; then
-            echo >&2 "ERROR: Provider \"$b\" is not in the list of available providers \"$availableProviders\"!"
-            exit 1
-         fi
-      done
+   CONFIG="$1"
+
+   # ====== Load the settings ===============================================
+   TYPE=""
+   PRECEDENCE=""
+   TOS=""
+   LOCAL_PROVIDER_SHORT=""
+   LOCAL_PROVIDER_LONG=""
+   LOCAL_INNER_ADDRESS=""
+   LOCAL_OUTER_ADDRESS=""
+   INNER_PREFIX=
+   OUTER_PREFIX=
+   REMOTE_PROVIDER_SHORT=""
+   REMOTE_PROVIDER_LONG=""
+   REMOTE_INNER_ADDRESS=""
+   REMOTE_OUTER_ADDRESS=""
+   
+   if [ ! -e "$CONFIG_DIRECTORY/$config" ] ; then
+      echo 2>&1 "ERROR: Cannot find $CONFIG_DIRECTORY/$config!"
+      exit 1
+   fi
+   . $CONFIG_DIRECTORY/$config
+   
+   # ====== Check the input =================================================
+   if [[ ! "$TYPE" =~ ^gre$|^seks$ ]] ; then
+      echo 2>&1 "ERROR: Bad interface TYPE setting in $CONFIG: ${TYPE}!"
+      exit 1
+   fi
+   if [[ ! "$PRECEDENCE" =~ ^[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad interface PRECEDENCE setting in $CONFIG: ${PRECEDENCE}!"
+      exit 1
+   fi
+   if [[ ! "$TOS" =~ ^0x[0-9a-f]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad interface TOS setting in $CONFIG: ${TOS}!"
+      exit 1
+   fi
+   if [[ ! "$LOCAL_INNER_ADDRESS" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$|^[0-9a-fA-F:]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad interface LOCAL_INNER_ADDRESS setting in $CONFIG: ${LOCAL_INNER_ADDRESS}!"
+      exit 1
+   fi
+   if [[ ! "$INNER_PREFIX" =~ ^[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad interface INNER_PREFIX setting in $CONFIG: ${INNER_PREFIX}!"
+      exit 1
+   fi
+   if [[ ! "$LOCAL_OUTER_ADDRESS" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$|^[0-9a-fA-F:]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad interface LOCAL_OUTER_ADDRESS setting in $CONFIG: ${LOCAL_OUTER_ADDRESS}!"
+      exit 1
+   fi
+   if [[ ! "$OUTER_PREFIX" =~ ^[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad interface OUTER_PREFIX setting in $CONFIG: ${OUTER_PREFIX}!"
+      exit 1
+   fi
+   if [[ ! "$REMOTE_INNER_ADDRESS" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$|^[0-9a-fA-F:]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad interface REMOTE_INNER_ADDRESS setting in $CONFIG: ${REMOTE_INNER_ADDRESS}!"
+      exit 1
+   fi
+   if [[ ! "$REMOTE_OUTER_ADDRESS" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$|^[0-9a-fA-F:]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad interface REMOTE_OUTER_ADDRESS setting in $CONFIG: ${REMOTE_OUTER_ADDRESS}!"
+      exit 1
+   fi
+   if [ "$LOCAL_PROVIDER_SHORT" = "" ] ; then
+      echo 2>&1 "ERROR: Missing LOCAL_PROVIDER_SHORT setting in $CONFIG!"
+      exit 1
+   fi
+   if [ "$LOCAL_PROVIDER_LONG" = "" ] ; then
+      echo 2>&1 "ERROR: Missing LOCAL_PROVIDER_LONG setting in $CONFIG!"
+      exit 1
+   fi
+   if [ "$REMOTE_PROVIDER_SHORT" = "" ] ; then
+      echo 2>&1 "ERROR: Missing REMOTE_PROVIDER_SHORT setting in $CONFIG!"
+      exit 1
+   fi
+   if [ "$REMOTE_PROVIDER_LONG" = "" ] ; then
+      echo 2>&1 "ERROR: Missing REMOTE_PROVIDER_LONG setting in $CONFIG!"
+      exit 1
    fi
 }
 
 
-# ###### Compare two lists of labels and return removed labels ##############
-get-removed-labels ()
+# ###### Activate interface #################################################
+activateInterface ()
 {
-   local oldLabels="$1"
-   local newLabels="$2"
-
-   local removedLabels=""
-   for o in $oldLabels ; do
-      found=0
-      for n in $newLabels ; do
-         if [ "$o" = "$n" ] ; then
-            found=1
-            break
-         fi
-      done
-      if [ $found -eq 0 ] ; then
-         if [ "$removedLabels" = "" ] ; then
-            removedLabels="$o"
-         else
-            removedLabels="$removedLabels $o"
-         fi
-      fi
-   done
-   echo "$removedLabels"
+   load-interface-configuration "$1"
+   cp "$CONFIG_DIRECTORY/$CONFIG" "$ACTIVE_DIRECTORY/$CONFIG"
 }
 
 
-check-providers "$providersNew" "hafslund,dfn"
+# ###### Deactivate interface ###############################################
+deactivateInterface ()
+{
+   load-interface-configuration "$1"
+   rm -f "$ACTIVE_DIRECTORY/$CONFIG"
+}
 
 
-get-removed-labels "$providersOld" "$providersNew"
 
 
-selectedProviders="@ALL"
-echo "SEL=$selectedProviders"
+ALL_CONFIGS=`find "$CONFIG_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9]' -printf "%f\n\n" `
+for config in $ALL_CONFIGS ; do
+  echo "C=$config"
+  if [ ! -e "$ACTIVE_DIRECTORY/$config" ] ; then
+     echo "NEW."
 
-check-providers "$providersNew" "$selectedProviders"
-
-for provider in $providersOld ; do
-   if [[ "$selectedProviders" =~ ^\*$|^$provider$$|^$provider$([ ])|([ ])$provider$([ ])|([ ])$provider$$ ]] ; then\
-      echo "Configuring provider $provider ..."
-   else
-      echo "Skipping provider $provider ..."
-   fi
+     activateInterface "$config"
+     
+     
+  else
+     echo "Already active."
+     if ! diff "$CONFIG_DIRECTORY/$config" "$ACTIVE_DIRECTORY/$config" >/dev/null ; then
+        echo "DIFF!"
+        deactivateInterface "$config"
+        activateInterface "$config"
+     fi
+  fi
 done
-
-#    for provider in providerList:
-#       outputFile.write('if [[ "$selectedProviders" =~ ^\\*$|^$provider$$|^$provider$,|,$provider$,|,$provider$$ ]] ; then\n')
-#       outputFile.write('   echo "Configuring ' + configFileList[i] + '"\n')
-#       outputFile.write('   . ./' + configFileList[i] + ' || tbc_success=0\n')
-#       outputFile.write('else\n')
-#       outputFile.write('   echo "Skipping ' + configFileList[i] + '"\n')
-#       outputFile.write('fi\n')
-#       i = i + 1
