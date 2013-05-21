@@ -369,7 +369,7 @@ add-or-remove-table-selector ()
          selectorOptions="$selectorOptions fwmark $2"
          shift
       else
-         echo >&2 "ERROR: Unknown selector "$1"!"
+         echo >&2 "ERROR: Invalid selector "$1" for add-or-remove-table-selector!"
          exit 1
       fi
       shift

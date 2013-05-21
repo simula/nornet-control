@@ -715,6 +715,7 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
 
          providerFile = codecs.open(localProvider['provider_short_name'] + '.provider', 'w', 'utf-8')
          providerFile.write('PROVIDER_INDEX='             + str(localProvider['provider_index']) + '\n')
+         providerFile.write('PROVIDER_INTERFACE="'        + localProvider['provider_tunnelbox_interface'] + '"\n')
          providerFile.write('PROVIDER_SHORT_NAME="'       + localProvider['provider_short_name'] + '"\n')
          providerFile.write('PROVIDER_LONG_NAME="'        + localProvider['provider_long_name']  + '"\n')
          providerFile.write('PROVIDER_TOS='               + str(routingTableTOS)                 + '\n')

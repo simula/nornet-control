@@ -177,6 +177,7 @@ load-provider-configuration ()
 
    # ====== Load the settings ===============================================
    PROVIDER_INDEX=
+   PROVIDER_INTERFACE=
    PROVIDER_SHORT_NAME=
    PROVIDER_LONG_NAME=
    PROVIDER_TOS=
@@ -198,6 +199,10 @@ load-provider-configuration ()
    # ====== Check the input =================================================
    if [[ ! "$PROVIDER_INDEX" =~ ^[0-9]+$ ]] ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_INDEX setting in $PROVIDER: $PROVIDER_INDEX!"
+      exit 1
+   fi
+   if [ "$PROVIDER_INTERFACE" = "" ] ; then
+      echo 2>&1 "ERROR: Missing PROVIDER_INTERFACE setting in $PROVIDER!"
       exit 1
    fi
    if [ "$PROVIDER_SHORT_NAME" = "" ] ; then
@@ -230,22 +235,17 @@ load-provider-configuration ()
       echo 2>&1 "ERROR: Bad provider PROVIDER_TABLE_SOURCE_PREF setting in $PROVIDER: $PROVIDER_TABLE_SOURCE_PREF!"
       exit 1
    fi
+   if [[ ! "$PROVIDER_IS_DEFAULT_PROVIDER" =~ ^[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider PROVIDER_IS_DEFAULT_PROVIDER setting in $PROVIDER: $PROVIDER_IS_DEFAULT_PROVIDER!"
+      exit 1
+   fi
 
-   if [[ ! "$PROVIDER_NETWORK_IPv4" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]+$ ]] ; then
-      echo 2>&1 "ERROR: Bad provider PROVIDER_NETWORK_IPv4 setting in $PROVIDER: $PROVIDER_NETWORK_IPv4!"
+   if [[ ! "$PROVIDER_LOCAL_NETWORK_IPv4" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider PROVIDER_LOCAL_NETWORK_IPv4 setting in $PROVIDER: $PROVIDER_LOCAL_NETWORK_IPv4!"
       exit 1
    fi
-   if [[ ! "$NORNET_NETWORK_IPv4" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]+$ ]] ; then
-      echo 2>&1 "ERROR: Bad provider NORNET_NETWORK_IPv4 setting in $NORNET: $NORNET_NETWORK_IPv4!"
-      exit 1
-   fi
-   
-   if [[ ! "$PROVIDER_NETWORK_IPv6" =~ ^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\s*/[0-9]+$ ]] ; then
-      echo 2>&1 "ERROR: Bad provider PROVIDER_NETWORK_IPv6 setting in $PROVIDER: $PROVIDER_NETWORK_IPv6!"
-      exit 1
-   fi
-   if [[ ! "$NORNET_NETWORK_IPv6" =~ ^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\s*/[0-9]+$ ]] ; then
-      echo 2>&1 "ERROR: Bad provider NORNET_NETWORK_IPv6 setting in $NORNET: $NORNET_NETWORK_IPv6!"
+   if [[ ! "$PROVIDER_LOCAL_NETWORK_IPv6" =~ ^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\s*/[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider PROVIDER_LOCAL_NETWORK_IPv6 setting in $PROVIDER: $PROVIDER_LOCAL_NETWORK_IPv6!"
       exit 1
    fi
 }
@@ -256,7 +256,7 @@ activateProvider ()
 {
    load-provider-configuration "$1"
 
-   log "Activating provider $PROVIDER_LONG_NAME."
+   log-action "Activating provider $PROVIDER_LONG_NAME."
 
    # 1. For directly connected NorNet networks, skip further rules and go to "main" table instead.
    # 2. If TOS is set, select outgoing provider accordingly
@@ -281,11 +281,12 @@ deactivateProvider ()
 {
    load-provider-configuration "$1"
 
-   log "Deactivating provider $PROVIDER_LONG_NAME."
-   
-   remove-table "$PROVIDER_TABLE"
-   remove-table-selector main "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" to "$PROVIDER_NETWORK_IPv4"
-   remove-table-selector main "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" to "$PROVIDER_NETWORK_IPv6"
+   log-action "Deactivating provider $PROVIDER_LONG_NAME."
+
+   remove-table "$PROVIDER_TABLE" && \
+   remove-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" to "$PROVIDER_LOCAL_NETWORK_IPv4" && \
+   remove-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" to "$PROVIDER_LOCAL_NETWORK_IPv6" && \
+   log-result $RESULT_GOOD || log-result $RESULT_BAD
 
    rm -f "$ACTIVE_DIRECTORY/$PROVIDER"
 }
@@ -340,57 +341,134 @@ load-bootstrap-configuration ()
 }
 
 
+# ###### Activate tunnelbox functionality ###################################
+activateTunnelbox ()
+{
+   log "Activating tunnelbox"
+   log-action "Deactivating reverse path filtering ..."
+   ALL_INTERFACES=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//"`
+   sysctl -q -w net.ipv4.conf.default.rp_filter=0 || true
+   sysctl -q -w net.ipv4.conf.all.rp_filter=0 || true
+   sysctl -q -w net.ipv4.conf.default.accept_redirects=0 || true
+   sysctl -q -w net.ipv4.conf.all.accept_redirects=0 || true
+   sysctl -q -w net.ipv6.conf.default.accept_redirects=0 || true
+   sysctl -q -w net.ipv6.conf.all.accept_redirects=0 || true
+   sysctl -q -w net.ipv4.conf.default.send_redirects=0 || true
+   sysctl -q -w net.ipv4.conf.all.secure_redirects=0 || true
+   sysctl -q -w net.ipv4.conf.default.secure_redirects=0 || true
+   sysctl -q -w net.ipv4.conf.all.send_redirects=0 || true
+   for interface in $ALL_INTERFACES ; do
+      sysctl -q -w net.ipv4.conf.$interface.rp_filter=0 || true
+      sysctl -q -w net.ipv4.conf.$interface.accept_redirects=0 || true
+      sysctl -q -w net.ipv4.conf.$interface.send_redirects=0 || true
+      sysctl -q -w net.ipv4.conf.$interface.secure_redirects=0 || true
+      sysctl -q -w net.ipv6.conf.$interface.accept_redirects=0 || true
+   done
+   log-result $RESULT_GOOD
+   log-action "Turning on ECN ..."
+   sysctl -q -w net.ipv4.tcp_ecn=1 && \
+   log-result $RESULT_GOOD || log-result $RESULT_BAD
+   log-action "Turning on Forwarding ..."
+   sysctl -q -w net.ipv4.ip_forward=1 && \
+   sysctl -q -w net.ipv6.conf.all.forwarding=1 && \
+   log-result $RESULT_GOOD || log-result $RESULT_BAD
+
+   for provider in $ALL_PROVIDER_CONFIGS ; do
+      load-provider-configuration "$provider" && \
+      log-action "Setting up local networks for $PROVIDER_LONG_NAME ..." && \
+      make-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv4" && \
+      make-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv6" && \
+      log-result $RESULT_GOOD || log-result $RESULT_BAD
+   done
+}
 
 
-load-bootstrap-configuration
+# ###### Deactivate tunnelbox functionality #################################
+deactivateTunnelbox ()
+{
+   for provider in $ALL_PROVIDER_CONFIGS ; do
+      load-provider-configuration "$provider" && \
+      if [ $PROVIDER_IS_DEFAULT_PROVIDER -ne 1 ] ; then
+         log-action "Tearing down local networks for $PROVIDER_LONG_NAME ..." && \
+         make-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv4" && \
+         make-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv6" && \
+         log-result $RESULT_GOOD || log-result $RESULT_BAD
+      fi
+   done
+}
+
+
+
 
 ALL_PROVIDER_CONFIGS=`find "$CONFIG_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
 ALL_INTERFACE_CONFIGS=`find "$CONFIG_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface*' -printf "%f\n\n" | sort`
 
-log "Updating providers"
-for provider in $ALL_PROVIDER_CONFIGS ; do
-   echo "P=$provider"
-   
-  if [ ! -e "$ACTIVE_DIRECTORY/$provider" ] ; then
-     echo "NEW."
-
-     activateProvider "$provider"
-
-  else
-     echo "Already active."
-     if ! diff "$CONFIG_DIRECTORY/$provider" "$ACTIVE_DIRECTORY/$provider" >/dev/null ; then
-        echo "DIFF!"
-        deactivateProvider "$provider"
-        activateProvider "$provider"
-     fi
-  fi   
-done
+selectedProviders=""   ## !!!!!!!!!!!?????????????
 
 
-log "Updating interfaces"
-for interface in $ALL_INTERFACE_CONFIGS ; do
-  echo "C=$interface"
-  if [ ! -e "$ACTIVE_DIRECTORY/$interface" ] ; then
-     echo "NEW."
-
-     activateInterface "$interface"
-
-  else
-     echo "Already active."
-     if ! diff "$CONFIG_DIRECTORY/$interface" "$ACTIVE_DIRECTORY/$interface" >/dev/null ; then
-        echo "DIFF!"
-        deactivateInterface "$interface"
-        activateInterface "$interface"
-     fi
-  fi
-done
+load-bootstrap-configuration
 
 
-log "Checking for removed providers"
-PROVIDER_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
-for provider in $PROVIDER_CONFIGS ; do
-   if [ ! -e "$CONFIG_DIRECTORY/$provider" ] ; then
-      echo "REMOVED=$provider"
-      deactivateProvider "$provider"
+if [ "$selectedProviders" == "" ] ; then
+   if [ "$state" = "stop" -o "$state" = "restart" ] ; then
+      deactivateTunnelbox  
    fi
-done
+   if [ "$state" = "start" -o "$state" = "restart" ] ; then
+      activateTunnelbox
+   fi
+fi
+
+
+
+if [ "$state" = "stop" -o "$state" = "restart" ] ; then
+   ALL_PROVIDER_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
+   ALL_INTERFACE_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface*' -printf "%f\n\n" | sort`
+   for interface in $ALL_INTERFACE_CONFIGS ; do
+      deactivateInterface "$interface" || true
+   done
+   for provider in $ALL_PROVIDER_CONFIGS ; do 
+      deactivateProvider "$provider" || true
+   done
+fi
+
+
+if [ "$state" = "start" -o "$state" = "restart" ] ; then
+   log "Activating providers"
+   for provider in $ALL_PROVIDER_CONFIGS ; do
+      if [ ! -e "$ACTIVE_DIRECTORY/$provider" ] ; then
+         activateProvider "$provider"
+      else
+         if ! diff "$CONFIG_DIRECTORY/$provider" "$ACTIVE_DIRECTORY/$provider" >/dev/null ; then
+            deactivateProvider "$provider"
+            activateProvider "$provider"
+         fi
+      fi   
+   done
+
+   log "Activating interfaces"
+   for interface in $ALL_INTERFACE_CONFIGS ; do
+      if [ ! -e "$ACTIVE_DIRECTORY/$interface" ] ; then
+         activateInterface "$interface"
+      else
+         if ! diff "$CONFIG_DIRECTORY/$interface" "$ACTIVE_DIRECTORY/$interface" >/dev/null ; then
+            deactivateInterface "$interface"
+            activateInterface "$interface"
+         fi
+      fi
+   done
+
+   log "Checking for removed providers"
+   PROVIDER_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
+   for provider in $PROVIDER_CONFIGS ; do
+      if [ ! -e "$CONFIG_DIRECTORY/$provider" ] ; then
+         deactivateProvider "$provider"
+      fi
+   done
+fi
+
+
+if [ "$state" = "stop" -o "$state" = "start" -o "$state" = "restart" ] ; then
+   log-action "Flushing route cache ..."
+   ip route flush cache && \
+   log-result $RESULT_GOOD || log-result $RESULT_BAD
+fi
