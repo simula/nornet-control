@@ -98,10 +98,10 @@ activateInterface ()
    
    log-action "Configuring $INTERFACE_NAME"
    
-   echo ""
-   echo "make-tunnel '$INTERFACE_NAME' '$KEY' '$LOCAL_OUTER_ADDRESS' '$REMOTE_OUTER_ADDRESS' '$LOCAL_INNER_ADDRESS' '$LOCAL_OUTER_ADDRESS'"
-   echo "make-route 'xxxxxxxxxxxPRED' '$REMOTE_SITE_NETWORK' '$INTERFACE_NAME'"
-
+#    echo ""
+#    echo "make-tunnel '$INTERFACE_NAME' '$KEY' '$LOCAL_OUTER_ADDRESS' '$REMOTE_OUTER_ADDRESS' '$LOCAL_INNER_ADDRESS' '$LOCAL_OUTER_ADDRESS'"
+#    echo "make-route 'xxxxxxxxxxxPRED' '$REMOTE_SITE_NETWORK' '$INTERFACE_NAME'"
+# 
    log-result 1
    
    cp "$CONFIG_DIRECTORY/$INTERFACE" "$ACTIVE_DIRECTORY/$INTERFACE"
@@ -122,12 +122,18 @@ load-provider-configuration ()
    PROVIDER="$1"
 
    # ====== Load the settings ===============================================
-   PROVIDER_INDEX=""
-   PROVIDER_TABLE=""
-   PROVIDER_PRECEDENCE=""
-   PROVIDER_TOS=""
-   PROVIDER_SHORT=""
-   PROVIDER_LONG=""
+   PROVIDER_INDEX=
+   PROVIDER_SHORT_NAME=
+   PROVIDER_LONG_NAME=
+   PROVIDER_TOS=
+   PROVIDER_TABLE=
+   PROVIDER_TABLE_TOS_PREF=
+   PROVIDER_TABLE_DEST_PREF=
+   PROVIDER_TABLE_SOURCE_PREF=
+   PROVIDER_NETWORK_IPv4=
+   NORNET_NETWORK_IPv4=
+   PROVIDER_NETWORK_IPv6=
+   NORNET_NETWORK_IPv6=
 
    if [ ! -e "$CONFIG_DIRECTORY/$PROVIDER" ] ; then
       echo 2>&1 "ERROR: Cannot find $CONFIG_DIRECTORY/$PROVIDER!"
@@ -140,24 +146,52 @@ load-provider-configuration ()
       echo 2>&1 "ERROR: Bad provider PROVIDER_INDEX setting in $PROVIDER: $PROVIDER_INDEX!"
       exit 1
    fi
+   if [ "$PROVIDER_SHORT_NAME" = "" ] ; then
+      echo 2>&1 "ERROR: Missing PROVIDER_SHORT_NAME setting in $PROVIDER!"
+      exit 1
+   fi
+   if [ "$PROVIDER_LONG_NAME" = "" ] ; then
+      echo 2>&1 "ERROR: Missing PROVIDER_LONG_NAME setting in $PROVIDER!"
+      exit 1
+   fi   
+   
    if [[ ! "$PROVIDER_TABLE" =~ ^[0-9]+$ ]] ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_TABLE setting in $PROVIDER: $PROVIDER_TABLE!"
       exit 1
    fi
-   if [[ ! "$PROVIDER_PRECEDENCE" =~ ^[0-9]+$ ]] ; then
-      echo 2>&1 "ERROR: Bad provider PRECEDENCE setting in $PROVIDER: $PROVIDER_PRECEDENCE!"
-      exit 1
-   fi
-   if [[ ! "$PROVIDER_TOS" =~ ^0x[0-9a-f]+$ ]] ; then
+   if [[ ! "$PROVIDER_TOS" =~ ^[0-9]+$ ]] ; then
       echo 2>&1 "ERROR: Bad provider TOS setting in $PROVIDER: $PROVIDER_TOS!"
       exit 1
    fi
-   if [ "$PROVIDER_SHORT" = "" ] ; then
-      echo 2>&1 "ERROR: Missing PROVIDER_SHORT setting in $PROVIDER!"
+   
+   if [[ ! "$PROVIDER_TABLE_TOS_PREF" =~ ^[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider PROVIDER_TABLE_TOS_PREF setting in $PROVIDER: $PROVIDER_TABLE_TOS_PREF!"
       exit 1
    fi
-   if [ "$PROVIDER_LONG" = "" ] ; then
-      echo 2>&1 "ERROR: Missing PROVIDER_LONG setting in $PROVIDER!"
+   if [[ ! "$PROVIDER_TABLE_DEST_PREF" =~ ^[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider PROVIDER_TABLE_DEST_PREF setting in $PROVIDER: $PROVIDER_TABLE_DEST_PREF!"
+      exit 1
+   fi
+   if [[ ! "$PROVIDER_TABLE_SOURCE_PREF" =~ ^[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider PROVIDER_TABLE_SOURCE_PREF setting in $PROVIDER: $PROVIDER_TABLE_SOURCE_PREF!"
+      exit 1
+   fi
+
+   if [[ ! "$PROVIDER_NETWORK_IPv4" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider PROVIDER_NETWORK_IPv4 setting in $PROVIDER: $PROVIDER_NETWORK_IPv4!"
+      exit 1
+   fi
+   if [[ ! "$NORNET_NETWORK_IPv4" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider NORNET_NETWORK_IPv4 setting in $NORNET: $NORNET_NETWORK_IPv4!"
+      exit 1
+   fi
+   
+   if [[ ! "$PROVIDER_NETWORK_IPv6" =~ ^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\s*/[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider PROVIDER_NETWORK_IPv6 setting in $PROVIDER: $PROVIDER_NETWORK_IPv6!"
+      exit 1
+   fi
+   if [[ ! "$NORNET_NETWORK_IPv6" =~ ^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\s*/[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider NORNET_NETWORK_IPv6 setting in $NORNET: $NORNET_NETWORK_IPv6!"
       exit 1
    fi
 }
@@ -167,6 +201,24 @@ load-provider-configuration ()
 activateProvider ()
 {
    load-provider-configuration "$1"
+
+   log "Activating provider $PROVIDER_LONG_NAME."
+
+   # For directly connected NorNet networks, skip further rules and go
+   # to "main" table instead!
+   add-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$PROVIDER_NETWORK_IPv4"
+   add-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$PROVIDER_NETWORK_IPv6"
+   
+   # If TOS is set, select outgoing provider accordingly
+   if [ $PROVIDER_TOS -ne 0 ] ; then
+      add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" from "$NORNET_NETWORK_IPv4" tos "$PROVIDER_TOS" to "$NORNET_NETWORK_IPv4"
+      add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" from "$NORNET_NETWORK_IPv6" tos "$PROVIDER_TOS" to "$NORNET_NETWORK_IPv6"
+   fi
+   
+   # Otherwise, use source address to determine the outgoing provider.
+   add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_SOURCE_PREF" from "$PROVIDER_NETWORK_IPv4" to "$NORNET_NETWORK_IPv4"
+   add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_SOURCE_PREF" from "$PROVIDER_NETWORK_IPv6" to "$NORNET_NETWORK_IPv6"
+
    cp "$CONFIG_DIRECTORY/$PROVIDER" "$ACTIVE_DIRECTORY/$PROVIDER"
 }
 
@@ -175,9 +227,15 @@ activateProvider ()
 deactivateProvider ()
 {
    load-provider-configuration "$1"
+
+   log "Deactivating provider $PROVIDER_LONG_NAME."
+   
+   remove-table "$PROVIDER_TABLE"
+   remove-table-selector main "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" to "$PROVIDER_NETWORK_IPv4"
+   remove-table-selector main "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" to "$PROVIDER_NETWORK_IPv6"
+
    rm -f "$ACTIVE_DIRECTORY/$PROVIDER"
 }
-
 
 
 
