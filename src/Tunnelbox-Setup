@@ -197,9 +197,7 @@ load-provider-configuration ()
    PROVIDER_TABLE_DEST_PREF=
    PROVIDER_TABLE_SOURCE_PREF=
    PROVIDER_NETWORK_IPv4=
-   NORNET_NETWORK_IPv4=
    PROVIDER_NETWORK_IPv6=
-   NORNET_NETWORK_IPv6=
 
    if [ ! -e "$CONFIG_DIRECTORY/$PROVIDER" ] ; then
       echo 2>&1 "ERROR: Cannot find $CONFIG_DIRECTORY/$PROVIDER!"
@@ -483,7 +481,7 @@ get-providers-from-interfaces () {
          if [ "$selectedProviders" = "" ] ; then
             selectedProviders="$provider"
          else
-            selectedProviders="$selectedProviders $provider"
+            selectedProviders="$selectedProviders,$provider"
          fi
       #else
       #   echo >&2 "NOTE: Interface \"$interface\" does not belong to a NorNet provider -> skipping!"
@@ -586,9 +584,11 @@ fi
 if [ "$state" = "stop" -o "$state" = "restart" ] ; then
    ACTIVE_PROVIDER_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
    ACTIVE_INTERFACE_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface*' -printf "%f\n\n" | sort`
-   for interface in `echo "$ALL_INTERFACE_CONFIGS $ACTIVE_PROVIDER_CONFIGS" | sort -u` ; do
+   log "Deactivating interfaces"
+   for interface in `echo "$ALL_INTERFACE_CONFIGS $ACTIVE_INTERFACE_CONFIGS" | sort -u` ; do
       deactivateInterface "$interface" "$selectedProviders" || true
    done
+   log "Deactivating providers"
    for provider in `echo "$ALL_PROVIDER_CONFIGS $ACTIVE_PROVIDER_CONFIGS" | sort -u` ; do 
       deactivateProvider "$provider" "$selectedProviders" || true
    done
@@ -600,7 +600,7 @@ if [ "$state" = "start" -o "$state" = "restart" ] ; then
    log "Activating providers"
    for provider in $ALL_PROVIDER_CONFIGS ; do
       if [ ! -e "$ACTIVE_DIRECTORY/$provider" ] ; then
-         activateProvider "$provider"
+         activateProvider "$provider" "$selectedProviders"
       else
          if ! diff "$CONFIG_DIRECTORY/$provider" "$ACTIVE_DIRECTORY/$provider" >/dev/null ; then
             deactivateProvider "$provider" "$selectedProviders"
