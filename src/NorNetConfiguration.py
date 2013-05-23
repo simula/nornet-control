@@ -62,6 +62,7 @@ NorNet_Configuration = {
    'NorNet_IPv6TunnelPrefix'                   : 'BAD',
 
    'NorNet_CentralSite_DomainName'             : None,
+# ???????????????????????????? FIXME: REMOVED Bootstrap!!!
    'NorNet_CentralSite_BootstrapTunnelbox'     : None,
    'NorNet_CentralSite_BootstrapProviderIndex' : None,
 
