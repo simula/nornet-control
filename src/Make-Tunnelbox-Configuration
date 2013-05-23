@@ -83,6 +83,12 @@ def getDefaultTunnel(fullSiteList, localSite, version):
                      version)
 
 
+
+# ###########################################################################
+# #### DNS Configuration                                                 ####
+# ###########################################################################
+
+
 # ###### Convert coordinate to degree/minutes/seconds #######################
 def coordinateToDMS(coordinate, hemisphereTypes = 'NS'):
    hemisphere = hemisphereTypes[0]
@@ -118,7 +124,7 @@ def rrTypeForAddress(address):
 
 # ###### Add provider's name to hostname ####################################
 def addProviderToName(hostName, providerName):
-   return(str.replace(hostName, '.', '.' + providerName + '.', 1))
+   return(unicode.replace(unicode(hostName), '.', '.' + providerName + '.', 1))
 
 
 # ###### Write SOA ##########################################################
@@ -217,11 +223,8 @@ def getSlavesForSite(fullSiteList, localSite):
             (remoteSite['site_index'] != localSite['site_index'])) or
            ((localSite['site_index'] != NorNet_SiteIndex_Central) and
             (remoteSite['site_index'] == NorNet_SiteIndex_Central)) ):
-         #for version in [ 4, 6 ]:
-            #address = makeNorNetIP(remoteSite['site_default_provider_index'],
-                                   #remoteSite['site_index'],
-                                   #NorNet_NodeIndex_Tunnelbox, -1, version)
          slaves.append('ns.' + remoteSite['site_domain'] + '.')
+
    return slaves
 
 
@@ -429,28 +432,15 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                      remoteTunnelIP = makeNorNetTunnelIP(remoteSiteIndex, remoteProviderIndex,
                                                          localSiteIndex, localProviderIndex,
                                                          version)
-# ??? FIXME! Remove comments!
-                     #'local.' + \
+		     
                      localName  = str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' + \
                                   str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.'
-                     #remoteName = 'remote.' + \
-                                  #str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' + \
-                                  #str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.'
-
                      writeRR(siteZoneFile, localName,
                              rrTypeForAddress(localTunnelIP), str(localTunnelIP.ip))
                      writeRR(siteZoneFile, localName,
                              'HINFO', '"Tunnel Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '" ' +
                              '"Remote Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '"')
                      writeLOC(siteZoneFile, localName, localSite)
-
-                     #writeRR(siteZoneFile, remoteName,
-                     #        rrTypeForAddress(remoteTunnelIP), str(remoteTunnelIP.ip))
-                     #writeRR(siteZoneFile, localName,
-                     #        'HINFO', '"Tunnel Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '" ' +
-                     #        '"Remote Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '"')
-                     #writeLOC(siteZoneFile, remoteName, remoteSite)
-
                      siteZoneFile.write('\n')
 
    siteZoneFile.close()
@@ -510,19 +500,11 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                         incomingTunnelIP = makeNorNetTunnelIP(incomingSiteIndex, incomingProviderIndex,
                                                               outgoingSiteIndex, outgoingProviderIndex,
                                                               version)
-# ??? FIXME! Remove comments!
                         writeRR(tunnelZoneFile,
-                              getZoneForAddress(outgoingTunnelIP.ip, prefixLength),
-                              'PTR',
-                              #'outgoing.' +
-                              str.lower(incomingProvider['provider_short_name']) + '.' + str.lower(incomingSite['site_short_name']) + '.' +
-                              str.lower(outgoingProvider['provider_short_name'])  + '.' + str.lower(outgoingSite['site_domain']) + '.')
-                        #writeRR(tunnelZoneFile,
-                        #      getZoneForAddress(incomingTunnelIP.ip, prefixLength),
-                        #      'PTR',
-                        #      'incoming.' +
-                        #      str.lower(incomingProvider['provider_short_name']) + '.' + str.lower(incomingSite['site_short_name']) + '.' +
-                        #      str.lower(outgoingProvider['provider_short_name'])  + '.' + str.lower(outgoingSite['site_domain']) + '.')
+                                getZoneForAddress(outgoingTunnelIP.ip, prefixLength),
+                                'PTR',
+                                str.lower(incomingProvider['provider_short_name']) + '.' + str.lower(incomingSite['site_short_name']) + '.' +
+                                str.lower(outgoingProvider['provider_short_name'])  + '.' + str.lower(outgoingSite['site_domain']) + '.')
 
          tunnelZoneFile.close()
 
@@ -563,6 +545,12 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                 masterSite)
 
    zoneConfFile.close()
+
+
+
+# ###########################################################################
+# #### DHCP Configuration                                                ####
+# ###########################################################################
 
 
 # ###### Generate DHCP daemon configuration #################################
@@ -609,6 +597,12 @@ def makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList):
       outputFile.write('}\n')
 
    outputFile.close()
+
+
+
+# ###########################################################################
+# #### Tunnel and Routing Configuration                                  ####
+# ###########################################################################
 
 
 # ###### Get ID for routing table ###########################################
@@ -658,658 +652,175 @@ def makeRemoteTunnelRoutesOnCentralRouter(fullSiteList, outputFile, nextHopInter
                                       str(nextHopAddress) + '   && \\\n')
 
 
+# ###### Generate tunnelbox configuration ###################################
+def makeTunnelboxConfiguration(fullSiteList, localSite):
+   localSiteIndex    = localSite['site_index']
+   localProviderList = getNorNetProvidersForSite(localSite)
 
-# ###### Generate tunnelbox configuration for given provider ################
-def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvider, pathNumber, configNamePrefix):
-   if configNamePrefix == None:
-      configNamePrefix = 'tunnelbox-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-' + localProvider['provider_short_name'] + '-config'
-   outputFile = makeConfigFile('Tunnelbox-Provider', configurationName, True)
-   log('Making tunnelbox provider configuration for ' + \
-       localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + ' ...')
+   log('Making tunnelbox configuration for ' + localSite['site_long_name'] + ' ...')
 
-   localSiteIndex     = localSite['site_index']
-   localProviderIndex = localProvider['provider_index']
-   stateList          = [ 'stop', 'start', 'status' ]
-   for state in stateList:
-      if ((state == 'start') or (state == 'stop')):
-         outputFile.write('if [ "$state" = "' + state + '" -o "$state" = "restart" ] ; then\n')
-         if state == 'start':
-            outputFile.write('   if [ "$state" = "restart" ] ; then\n')
-            outputFile.write('      log-summary\n')
-            outputFile.write('   fi\n')
-      else:
-         outputFile.write('if [ "$state" = "' + state + '" ] ; then\n')
 
-      # ====== Create provider-specific routing table =======================
-      action = ''
-      if (state == 'start'):
-         action = 'Setting up'
-      elif (state == 'stop'):
-         action = 'Tearing down'
-      elif (state == 'status'):
-         action = 'Checking'
-      outputFile.write('   log "' + action + ' connectivity for provider ' + \
-                       localProvider['provider_long_name'] + ' ..."\n')
+   # ====== Generate tunnelbox configuration file ===========================
+   tunnelboxFile = codecs.open('tunnelbox-config', 'w', 'utf-8')
+   
+   tunnelboxFile.write('TUNNELBOX_SITE_INDEX=' + str(localSite['site_index']) + '\n')
+   if localSiteIndex == NorNet_SiteIndex_Central:
+      sourceNatRangeString = getLocalSiteNATRangeString()
+      sourceNatRange       = None
+      if ((sourceNatRangeString != None) and (sourceNatRangeString != u'')):
+         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', sourceNatRangeString)
+         try:
+            if len(parameters) == 1:
+               a1 = IPv4Address(unquote(parameters[0]))
+               sourceNatRange = [ a1 ]
+            elif len(parameters) > 1:
+               a1 = IPv4Address(unquote(parameters[0]))
+               a2 = IPv4Address(unquote(parameters[1]))
+               sourceNatRange = [ a1, a2 ]
+         except Exception as e:
+            error('Bad configuration "' + sourceNatRangeString + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range values: ' + str(e))                  
+      
+      tunnelboxFile.write('TUNNELBOX_NAT_RANGE=\"')
+      if sourceNatRange != None:
+         if len(sourceNatRange) == 1:
+            outputFile.write(str(sourceNatRange[0]))
+         else:
+            outputFile.write(str(sourceNatRange[0]) + '-' + str(sourceNatRange[1]))
+      tunnelboxFile.write('\"\n')
 
+   tunnelboxFile.write('NORNET_INTERFACE="' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '"\n')
+   tunnelboxFile.write('NORNET_NETWORK_IPv4="' + str(NorNet_Configuration['NorNet_IPv4Prefix']) + '"\n')
+   tunnelboxFile.write('NORNET_NETWORK_IPv6="' + str(NorNet_Configuration['NorNet_IPv6Prefix']) + '"\n')
+   tunnelboxFile.write('NORNET_TUNNEL_NETWORK_IPv4="' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + '"\n')
+   tunnelboxFile.write('NORNET_TUNNEL_NETWORK_IPv6="' + str(NorNet_Configuration['NorNet_IPv6TunnelPrefix']) + '"\n')
+
+
+   # ====== Generate per-provider configurations ============================
+   pathNumber = 0
+   providerSet = set([])
+   for localProviderIndex in localProviderList:
+      localProvider = localProviderList[localProviderIndex]
+
+      # ====== Settings for IP rules ========================================
       routingTableID         = getTableID(localProviderIndex)
       routingTableDestPref   = getTablePref(localProviderIndex, 0)
       routingTableTOSPref    = getTablePref(localProviderIndex, 1)
       routingTableSourcePref = getTablePref(localProviderIndex, 2)
 
-      if (state == 'start'):
-         if pathNumber + 1 < len(NorNet_TOSSettings):
-            routingTableTOS = NorNet_TOSSettings[pathNumber + 1]
-         else:
-            routingTableTOS = 0x00
-
-         outputFile.write('   log-action "Creating rules and tables for provider ' + \
-                          localProvider['provider_long_name'] + ' ..."\n')
-         outputFile.write('   make-table ' + str(routingTableID) + '   # ' + \
-                          localProvider['provider_long_name'] + ' table   && \\\n')
-
-         # ====== Destination rules =========================================
-         # For directly connected NorNet networks, skip further rules and go
-         # to "main" table instead!
-         providerList = getNorNetProvidersForSite(localSite)
-         for version in [ 4, 6 ]:
-            fullNorNetNetwork    = makeNorNetIP(0, 0, 0, version)
-            localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
-            outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + \
-                             ' to ' + str(localProviderNetwork) + '   && \\\n')
-
-            # ====== TOS rule ===============================================
-            # If TOS is set, select outgoing provider accordingly
-            if routingTableTOS != 0x00:
-               outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableTOSPref) + \
-                                ' from ' + str(fullNorNetNetwork) + \
-                                ' tos ' + hex(routingTableTOS) + \
-                                ' to ' + str(fullNorNetNetwork) + '   && \\\n')
-
-         # ====== Source rules ==============================================
-         # Otherwise, use source address to determine the outgoing provider.
-         for version in [ 4, 6 ]:
-            fullNorNetNetwork    = makeNorNetIP(0, 0, 0, version)
-            localProviderNetwork = makeNorNetIP(localProviderIndex, 0, 0, version)
-            outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableSourcePref) + \
-                             ' from ' + str(localProviderNetwork) + \
-                             ' to ' + str(fullNorNetNetwork) + '   && \\\n')
-
-      elif (state == 'stop'):
-         outputFile.write('   log-action "Removing rules and tables for provider ' + \
-                          localProvider['provider_long_name'] + ' ..."\n')
-         outputFile.write('   remove-table ' + str(routingTableID) + '   && \\\n')
-         for version in [ 4, 6 ]:
-            localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
-            outputFile.write('   remove-table-selector main ' + str(routingTableDestPref) + \
-                             ' to ' + str(localProviderNetwork) + '   && \\\n')
-
-      if ((state == 'start') or (state == 'stop')):
-         outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
+      if pathNumber + 1 < len(NorNet_TOSSettings):
+         routingTableTOS = NorNet_TOSSettings[pathNumber + 1]
+      else:
+         routingTableTOS = 0x00
 
 
-      # ====== Create provider-specific tunnels and routes ==================
+      # ====== Generate provider configuration file =========================
+      providerFile = codecs.open(localProvider['provider_short_name'] + '.provider', 'w', 'utf-8')
+      providerFile.write('PROVIDER_INDEX='             + str(localProvider['provider_index']) + '\n')
+      providerFile.write('PROVIDER_INTERFACE="'        + localProvider['provider_tunnelbox_interface'] + '"\n')
+      providerFile.write('PROVIDER_SHORT_NAME="'       + localProvider['provider_short_name'] + '"\n')
+      providerFile.write('PROVIDER_LONG_NAME="'        + localProvider['provider_long_name']  + '"\n')
+      providerFile.write('PROVIDER_TOS='               + str(routingTableTOS)                 + '\n')
+      providerFile.write('PROVIDER_TABLE='             + str(routingTableID)                  + '\n')
+      providerFile.write('PROVIDER_TABLE_DEST_PREF='   + str(routingTableDestPref)            + '\n')
+      providerFile.write('PROVIDER_TABLE_TOS_PREF='    + str(routingTableTOSPref)             + '\n')
+      providerFile.write('PROVIDER_TABLE_SOURCE_PREF=' + str(routingTableSourcePref)          + '\n')
+      if localProviderIndex == localSite['site_default_provider_index']:
+         providerFile.write('PROVIDER_IS_DEFAULT_PROVIDER=1\n')
+      else:
+         providerFile.write('PROVIDER_IS_DEFAULT_PROVIDER=0\n')
+
+      providerList = getNorNetProvidersForSite(localSite)
+      for version in [ 4, 6 ]:
+         localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
+         providerFile.write('PROVIDER_LOCAL_NETWORK_IPv' + str(version) + '="' + str(localProviderNetwork) + '"\n')
+
+      providerFile.close()
+
+      tunnelboxFile.write('PROVIDER_FOR_INTERFACE_' + localProvider['provider_tunnelbox_interface'] + \
+                          '="' + localProvider['provider_short_name'] + '"\n')
+      providerSet.add(localProvider['provider_short_name'])
+
+
+      # ====== Generate interface configuration files =======================
       for remoteSiteIndex in fullSiteList:
          if remoteSiteIndex == localSiteIndex:
             continue
          remoteSite         = fullSiteList[remoteSiteIndex]
          remoteProviderList = getNorNetProvidersForSite(remoteSite)
-         outputFile.write('   # ------ ' + localSite['site_long_name'] + \
-                          ' (' + str(localSite['site_index']) + ') <-> ' + \
-                          remoteSite['site_long_name'] + \
-                          ' (' + str(remoteSite['site_index']) + ') ------\n')
 
          for remoteProviderIndex in remoteProviderList:
             remoteProvider = remoteProviderList[remoteProviderIndex]
-            outputFile.write('   # ~~~~~~ ' + remoteProvider['provider_long_name'] + \
-                             ' (' + str(remoteProvider['provider_index']) + ') ~~~~~~\n')
-            if ((state == 'start') or (state == 'stop') or (state == 'status')):
-               outputFile.write('   log "' + action + ' tunnels with ' + \
-                                remoteSite['site_long_name'] + ' via [' + \
-                                localProvider['provider_long_name'] + ' <--> ' + \
-                                remoteProvider['provider_long_name'] + ']:"\n')
 
             for version in [ 4, 6 ]:
                tunnel        = getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
                remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, version)
 
-               outputFile.write('   log-action "Tunnel ' + tunnel['tunnel_interface'] + ': ' + \
-                                str(tunnel['tunnel_local_inner_address'].ip)  + ' <--> ' + \
-                                str(tunnel['tunnel_remote_inner_address'].ip) + '"\n')
+               interfaceFile = codecs.open(tunnel['tunnel_interface'] + '.interface' + str(version), 'w', 'utf-8')
+               
+               interfaceFile.write('INTERFACE_DESCRIPTION="' + \
+                  localProvider['provider_long_name'] + ' (' + str(localProvider['provider_index']) + ') -> ' + \
+                  remoteSite['site_long_name'] + ' (' + str(remoteSite['site_index']) + ') / ' + \
+                  remoteProvider['provider_long_name'] + ' (' + str(remoteProvider['provider_index']) + ')"\n')
 
-               # ====== Create tunnels ======================================
-               if (state == 'start'):
-                  options = ''
-                  if ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
-                     options = '--add-to-existing-tunnel'
-                  elif ((version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
-                     options = '--v6-linklocal ' + str(makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
-                                                                        tunnel['tunnel_remote_outer_address']))
-                  outputFile.write('   make-tunnel ' + \
-                                   tunnel['tunnel_interface']                    + ' ' + \
-                                   hex(tunnel['tunnel_key'])                     + ' ' + \
-                                   str(tunnel['tunnel_local_outer_address'].ip)  + ' ' + \
-                                   str(tunnel['tunnel_remote_outer_address'].ip) + ' ' + \
-                                   str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
-                                   str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
-                                   '"' + options + '" && \\\n')
-               elif (state == 'stop'):
-                  if not ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
-                     outputFile.write('   remove-tunnel ' + \
-                                      tunnel['tunnel_interface'] + ' ' + \
-                                      hex(tunnel['tunnel_key'])  + '   && \\\n')
-               elif (state == 'status'):
-                  outputFile.write('   show-tunnel ' + \
-                                   tunnel['tunnel_interface'] + ' ' + \
-                                   str(tunnel['tunnel_local_inner_address'].ip) + ' ' + \
-                                   str(tunnel['tunnel_remote_inner_address'].ip) + ' "' + \
-                                   localSite['site_long_name'] + \
-                                   ' (' + str(localSite['site_index']) + ') <-> ' + \
-                                   remoteSite['site_long_name'] + \
-                                   ' (' + str(remoteSite['site_index']) + ') via [' + \
-                                   remoteProvider['provider_long_name'] + \
-                                   ' (' + str(remoteProvider['provider_index']) + ') <--> ' + \
-                                   localProvider['provider_long_name'] + \
-                                   ' (' + str(localProvider['provider_index']) + ')]"   && \\\n')
+               if ((version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
+                  interfaceFile.write('INTERFACE_TYPE="gre"\n')
+                  interfaceFile.write('GRE_LINKLOCAL="' + str(makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
+                                                                               tunnel['tunnel_remote_outer_address'])) + '"\n')
+                  interfaceFile.write('GRE_KEY="' + hex(tunnel['tunnel_key']) + '"\n')
+               elif ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
+                  interfaceFile.write('INTERFACE_TYPE="existing-gre"\n')
+               else:
+                  interfaceFile.write('INTERFACE_TYPE="seks"\n')
 
+               interfaceFile.write('INTERFACE_PROVIDER="' + localProvider['provider_short_name'] + '"\n\n')
 
-               # ====== Create routing table entries ========================
-               if (state == 'start'):
-                  # ====== Entry into provider-specific routing table =======
-                  outputFile.write('   make-route ' + \
-                                   str(routingTableID) + ' ' +
-                                   str(remoteNetwork) + ' ' +
-                                   tunnel['tunnel_interface'] + ' ' + \
-                                   str(tunnel['tunnel_remote_inner_address'].ip) + '   && \\\n')
+               interfaceFile.write('TUNNEL_LOCAL_OUTER_ADDRESS="'  + str(tunnel['tunnel_local_outer_address'].ip)  + '"\n')
+               interfaceFile.write('TUNNEL_REMOTE_OUTER_ADDRESS="' + str(tunnel['tunnel_remote_outer_address'].ip) + '"\n')
+               interfaceFile.write('TUNNEL_OUTER_PREFIX='          + str(tunnel['tunnel_local_outer_address'].prefixlen) + '\n\n')
 
-                  # ====== Entry into global routing table ==================
-                  metric = 10 + pathNumber
-                  if remoteProviderIndex == localProviderIndex:
-                     metric = 5
-                  outputFile.write('   make-route ' + \
-                                   'main ' +
-                                   str(remoteNetwork) + ' ' +
-                                   tunnel['tunnel_interface'] + ' ' + \
-                                   str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
-                                   'metric ' + str(metric) + '   && \\\n')
+               interfaceFile.write('TUNNEL_LOCAL_INNER_ADDRESS="'  + str(tunnel['tunnel_local_inner_address'].ip)  + '"\n')
+               interfaceFile.write('TUNNEL_REMOTE_INNER_ADDRESS="' + str(tunnel['tunnel_remote_inner_address'].ip) + '"\n')
+               interfaceFile.write('TUNNEL_INNER_PREFIX='          + str(tunnel['tunnel_local_inner_address'].prefixlen) + '\n\n')
+               
+               interfaceFile.write('REMOTE_SITE_NETWORK="' + str(remoteNetwork) + '"\n')
 
-               # ====== Create routes for remote tunnel addresses ===========
-               if ((state == 'start') and
-                   (localSiteIndex == NorNet_SiteIndex_Central) and
-                   (localProviderIndex == localSite['site_default_provider_index']) and
-                   (remoteProviderIndex == remoteSite['site_default_provider_index'])):
-                  makeRemoteTunnelRoutesOnCentralRouter(fullSiteList, outputFile,
-                                                        tunnel['tunnel_interface'],
-                                                        tunnel['tunnel_remote_inner_address'].ip,
-                                                        remoteSite, version),
+               metric = 10 + pathNumber
+               if remoteProviderIndex == localProviderIndex:
+                  metric = 5
+               interfaceFile.write('REMOTE_SITE_METRIC=' + str(metric)         + '\n')
+               interfaceFile.write('ROUTING_TABLE='      + str(routingTableID) + '\n')
 
-
-               outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-
-
-      # ====== Default route to central site ================================
-      if ((localSiteIndex != NorNet_SiteIndex_Central) and
-          (localProviderIndex == localSite['site_default_provider_index'])):
-         routingTableID       = getTableID(256)
-         routingTableDestPref = getTablePref(256, 4)
-         if (state == 'start'):
-            outputFile.write('   log "Setting up DEFAULT route to central site"\n')
-            outputFile.write('   make-table ' + str(routingTableID) + '   # DEFAULT to CENTRAL SITE\n')
-            for version in [ 4, 6 ]:
-               defaultTunnel     = getDefaultTunnel(fullSiteList, localSite, version)
-               fullNorNetNetwork = makeNorNetIP(0, 0, 0, version)
-
-               outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableDestPref) + \
-                                ' from ' + str(fullNorNetNetwork) + '\n')
-               outputFile.write('   make-route ' + \
-                                str(routingTableID) + ' ' +
-                                'default ' +
-                                defaultTunnel['tunnel_interface'] + ' ' + \
-                                str(defaultTunnel['tunnel_remote_inner_address'].ip) + '\n')
-
-         elif (state == 'stop'):
-            outputFile.write('   log "Tearing down DEFAULT route to central site"\n')
-            outputFile.write('   remove-table ' + str(routingTableID) + '\n')
-
-
-      # ====== Secondary ISP routing from seconary ISP's address ============
-      if localProviderIndex != localSite['site_default_provider_index']:
-         routingTableID       = getTableID(512)
-         routingTableDestPref = getTablePref(512, 4)
-         
-         if (state == 'start'):
-            outputFile.write('   log "Setting up DEFAULT routes for secondary ISP ' + localProvider['provider_long_name'] + '"\n')
-            outputFile.write('   make-table ' + str(routingTableID) + '   # DEFAULT for ' + localProvider['provider_long_name'] + '\n')
-            for version in [ 4, 6 ]:
-               if ((version == 4) or
-                  (localProvider['provider_tunnelbox_ipv' + str(version)].ip != IPv6Address('::'))):
-                  outputFile.write('   add-table-selector ' + str(routingTableID) + ' ' + str(routingTableDestPref) + \
-                                   ' from ' + str(localProvider['provider_tunnelbox_ipv' + str(version)]) + '\n')
-                  for outgoingProviderIndex in localProviderList:
-                     outgoingProvider = localProviderList[outgoingProviderIndex]
-                     if ((version == 4) or
-                        (outgoingProvider['provider_tunnelbox_ipv' + str(version)].ip != IPv6Address('::'))):
-                        if outgoingProviderIndex == localProviderIndex:
-                           metric = 2
-                        else:
-                           metric = 5
-                        outputFile.write('   make-route ' + \
-                                         str(routingTableID) + ' ' +
-                                         'default ' +
-                                         outgoingProvider['provider_tunnelbox_interface'] + ' ' + \
-                                         str(outgoingProvider['provider_gateway_ipv' + str(version)]) + ' ' + \
-                                         'metric ' + str(metric) + '\n')
-   
-         elif (state == 'stop'):
-            outputFile.write('   log "Tearing down DEFAULT routes for secondary ISP ' + localProvider['provider_long_name'] + '"\n')
-            outputFile.write('   remove-table ' + str(routingTableID) + '\n')
-
-
-      # ====== Use main table to access tunnel endpoints ====================
-      routingTableDestPref = 256
-      for version in [ 4, 6 ]:
-         fullTunnelNet = makeNorNetTunnelIP(0, 0, 0, 0, version)
-         if (state == 'start'):
-            outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + \
-                             ' to ' + str(fullTunnelNet) + '\n')
-            outputFile.write('   add-table-selector main ' + str(routingTableDestPref) + \
-                             ' from ' + str(fullTunnelNet) + '\n')
-         elif (state == 'stop'):
-            outputFile.write('   remove-table-selector main ' + str(routingTableDestPref) + \
-                             ' to ' + str(fullTunnelNet) + '\n')
-            outputFile.write('   remove-table-selector main ' + str(routingTableDestPref) + \
-                             ' from ' + str(fullTunnelNet) + '\n')
-
-
-      outputFile.write('   log-action "' + action + ' connectivity for provider ' + \
-                       localProvider['provider_long_name'] + ' finished"\n')
-
-      outputFile.write('fi\n\n')
       pathNumber = pathNumber + 1
 
 
-   outputFile.write('log-summary-and-return-result\n')
-   pathNumber = pathNumber + 1
-
-   outputFile.close()
-   return configurationName
-
-
-# ###### Generate tunnelbox configuration for local network #################
-def makeTunnelboxNetwork(outputFile, state, localInterface,
-                          localProvider, localSiteIndex):
-   localProviderIndex = localProvider['provider_index']
-
-   action = ''
-   if (state == 'start'):
-      action = 'Setting up'
-   elif (state == 'stop'):
-      action = 'Tearing down'
-   outputFile.write('\n      log-action "' + action + ' local networks for ' + \
-                    localProvider['provider_long_name'] + ' ..."\n')
-
-   for version in [ 4, 6 ]:
-      localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
-      if state == 'start':
-         outputFile.write('      make-address ' + localInterface + ' ' + str(localAddress) + '   && \\\n')
-      elif state == 'stop':
-         outputFile.write('      remove-address ' + localInterface + ' ' + str(localAddress) + '   && \\\n')
-
-   outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-
-
-# ###### Generate tunnelbox bootstrap configuration for local network #######
-def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, localAddress, configNamePrefix):
-   localSite = {
-      'site_index'              : localSiteIndex,
-      'site_long_name'          : 'My Site',
-      'site_short_name'         : 'MS'
-   }
-   localProvider = {
-      'provider_index'          : localProviderIndex,
-      'provider_long_name'      : 'Local Provider',
-      'provider_short_name'     : 'local',
-      'provider_tunnelbox_ipv4' : IPv4Network(localAddress)
-   }
-   remoteSite = {
-      'site_index'              : NorNet_SiteIndex_Central,
-      'site_long_name'          : 'Central Site',
-      'site_short_name'         : 'NN'
-   }
-   remoteProvider = {
-      'provider_index'          : getCentralSiteBootstrapProviderIndex(),
-      'provider_long_name'      : 'Local Provider',
-      'provider_short_name'     : 'local',
-      'provider_tunnelbox_ipv4' : IPv4Network(getCentralSiteBootstrapTunnelbox())
-   }
-
-   if configNamePrefix == None:
-      configNamePrefix = 'tunnelbox-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-bootstrap'
-   outputFile = makeConfigFile('Tunnelbox', configurationName, True)
-   log('Making tunnelbox bootstrap for site ' + str(localSiteIndex) + ' ...')
-
-
-   # ====== Non-Central Site tunnelbox ======================================
-   if localSiteIndex != NorNet_SiteIndex_Central:
-      outputFile.write('\nif [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
-      outputFile.write('   log-action "Tearing down tunnel to central site ..."\n')
-      for version in [ 4, 6 ]:
-         tunnel = getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
-         if version == 4:
-            v4InterfaceToPLC = tunnel['tunnel_interface']
-         if ((version == 4) or (tunnel['tunnel_over_ipv4'] == False)):
-            outputFile.write('   remove-tunnel ' + \
-                           tunnel['tunnel_interface'] + ' ' + \
-                           hex(tunnel['tunnel_key'])  + ' && \\\n')
-      outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-      outputFile.write('fi\n')
-
-      outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
-      outputFile.write('   log-action "Setting up tunnel to central site ..."\n')
-      for version in [ 4, 6 ]:
-         tunnel        = getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
-         remoteNetwork = makeNorNetIP(remoteProvider['provider_index'], remoteSite['site_index'], 0, version)
-         options       = ''
-         if ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
-            options = '--add-to-existing-tunnel'
-         elif ((version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
-            options = '--v6-linklocal ' + str(makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
-                                                               tunnel['tunnel_remote_outer_address']))
-         outputFile.write('   make-tunnel ' + \
-                          tunnel['tunnel_interface']                    + ' ' + \
-                          hex(tunnel['tunnel_key'])                     + ' ' + \
-                          str(tunnel['tunnel_local_outer_address'].ip)  + ' ' + \
-                          str(tunnel['tunnel_remote_outer_address'].ip) + ' ' + \
-                          str(tunnel['tunnel_local_inner_address'].ip)  + ' ' + \
-                          str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
-                          '"' + options + '" && \\\n')
-         outputFile.write('   make-route main ' + \
-                          str(remoteNetwork) + ' ' +
-                          tunnel['tunnel_interface'] + ' ' + \
-                          str(tunnel['tunnel_remote_inner_address'].ip) + ' ' + \
-                          'metric 5   && \\\n')
-      outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-      outputFile.write('fi\n')
-
-   # ====== Central-Site tunnelbox ==========================================
-   else:
-      v4InterfaceToPLC = localInterface
-      outputFile.write('\nif [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
-      for version in [ 4, 6 ]:
-         localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
-         outputFile.write('   remove-address ' + localInterface + ' ' + str(localAddress) + '   && \\\n')
-      outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-      outputFile.write('fi\n')
-      outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
-      for version in [ 4, 6 ]:
-         localAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
-         outputFile.write('   make-address ' + localInterface + ' ' + str(localAddress) + '   && \\\n')
-      outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-      outputFile.write('fi\n')
-
-
-   outputFile.write('\nif [ "$state" = "stop" -o "$state" = "start" -o "$state" = "restart" ] ; then\n')
-   outputFile.write('   log-action "Flushing route cache ..."\n')
-   outputFile.write('   ip route flush cache && \\\n')
-   outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-   outputFile.write('fi\n')
-
-
-   outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" -o  "$state" = "status" ] ; then\n')
-   outputFile.write('   log-action "Trying to contact PLC at ' + str(getPLCAddress()) + ' ..."\n')
-   outputFile.write('   show-tunnel ' + v4InterfaceToPLC + ' ' + \
-                    '0.0.0.0 ' + str(getPLCAddress()) + ' ""   && \\\n')
-   outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-   outputFile.write('fi\n\n')
-
-   outputFile.write('\nif [ $_BadResults -gt 0 ] ; then\n')
-   outputFile.write('   return 1\n')
-   outputFile.write('fi\n')
-
-
-# ###### Generate tunnelbox configuration ###################################
-def makeTunnelboxConfiguration(fullSiteList, localSite, configNamePrefix):
-   if configNamePrefix == None:
-      configNamePrefix = 'tunnelbox-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-providers'
-   tbProvidersConfig = configurationName
-   log('Making tunnelbox configuration for ' + localSite['site_long_name'] + ' ...')
-
-   fullNorNetIPv4    = makeNorNetIP(0, 0, 0, 4)
-   localSiteIndex    = localSite['site_index']
-   localProviderList = getNorNetProvidersForSite(localSite)
-   localInterface    = getTagValue(localSite['site_tags'], 'nornet_site_tb_internal_interface', '')
-   if not re.match(r"^[a-z][a-z0-9-\.]*$", localInterface):
-      error('Bad local interface setting for site ' + localSite['site_long_name'])
-
-   sourceNatRangeString = getLocalSiteNATRangeString()
-   sourceNatRange       = None
-   if ((sourceNatRangeString != None) and (sourceNatRangeString != u'')):
-      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', sourceNatRangeString)
-      try:
-         if len(parameters) == 1:
-            a1 = IPv4Address(unquote(parameters[0]))
-            sourceNatRange = [ a1 ]
-         elif len(parameters) > 1:
-            a1 = IPv4Address(unquote(parameters[0]))
-            a2 = IPv4Address(unquote(parameters[1]))
-            sourceNatRange = [ a1, a2 ]
-      except Exception as e:
-         error('Bad configuration "' + sourceNatRangeString + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range values: ' + str(e))                  
-
-   # ====== Interface to provider mappings ==================================
-   outputFile = makeConfigFile('Tunnelbox ISP mapping', configurationName, True)
-   outputFile.write('all_providers=\"')
+   # ====== All providers at the site =======================================
+   tunnelboxFile.write('TUNNELBOX_AVAILABLE_PROVIDERS="')
    firstProvider = True
-   for onlyDefault in [ True, False ]:
-      for localProviderIndex in localProviderList:
-         if ( ((onlyDefault == True)  and (localProviderIndex == localSite['site_default_provider_index'])) or \
-              ((onlyDefault == False) and (localProviderIndex != localSite['site_default_provider_index'])) ):
-            localProvider = localProviderList[localProviderIndex]
-            if firstProvider == True:
-               firstProvider = False
-            else:
-               outputFile.write(' ')
-            outputFile.write(localProvider['provider_short_name'])
-   outputFile.write('\"\n')
-
-   for localProviderIndex in localProviderList:
-      localProvider = localProviderList[localProviderIndex]
-      outputFile.write('provider_for_if_' + \
-                       str(localProvider['provider_tunnelbox_interface']).replace('-', '_') + '=' + \
-                       '"' + localProvider['provider_short_name'] + '"\n')
-   for localProviderIndex in localProviderList:
-      localProvider = localProviderList[localProviderIndex]
-      outputFile.write('if_for_provider_' + \
-                       localProvider['provider_short_name'] + '=' + \
-                       '"' + str(localProvider['provider_tunnelbox_interface']).replace('-', '_').replace(':', '_sub_') + '"\n')
-      outputFile.write('ipv4_for_provider_' + \
-                       localProvider['provider_short_name'] + '="' + \
-                       str(localProvider['provider_tunnelbox_ipv4'].ip) + '"\n')
-      outputFile.write('ipv6_for_provider_' + \
-                       localProvider['provider_short_name'] + '="' + \
-                       str(localProvider['provider_tunnelbox_ipv6'].ip) + '"\n')
-
-      outputFile.write('tunnel_interfaces_for_provider_' + \
-                       localProvider['provider_short_name'] + '="')
-      firstInterface = True
-      for remoteSiteIndex in fullSiteList:
-         if remoteSiteIndex == localSiteIndex:
-            continue
-         remoteSite         = fullSiteList[remoteSiteIndex]
-         remoteProviderList = getNorNetProvidersForSite(remoteSite)
-         for remoteProviderIndex in remoteProviderList:
-            remoteProvider = remoteProviderList[remoteProviderIndex]
-            for version in [ 4, 6 ]:
-               tunnel = getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
-               if tunnel['tunnel_over_ipv4'] != True:
-                  if firstInterface == True:
-                     firstInterface = False
-                  else:
-                     outputFile.write(' ')
-                  outputFile.write(tunnel['tunnel_interface'])
-
-      outputFile.write('"\n')
-
-   outputFile.close()
-
-
-   # ====== Remove local setup ==============================================
-   configurationName = configNamePrefix + '-config'
-   outputFile = makeConfigFile('Tunnelbox', configurationName, True)
-
-   outputFile.write('. ./' + tbProvidersConfig + '\n\n')
-
-   outputFile.write('if [ "$selectedProviders" == "" ] ; then\n')
-   outputFile.write('   if [ "$state" = "stop" -o "$state" = "restart" ] ; then\n')
-   outputFile.write('      log "Tearing down local networks ..."\n')
-   # outputFile.write('      log-action "Turning off IP forwarding ..."\n')
-   # outputFile.write('      sysctl -q net.ipv4.ip_forward=0   && \\\n')
-   # outputFile.write('      sysctl -q net.ipv6.conf.all.forwarding=0   && \\\n')
-   outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-   for localProviderIndex in localProviderList:
-      makeTunnelboxNetwork(outputFile, 'stop', localInterface,
-                            localProviderList[localProviderIndex], localSiteIndex)
-   if localSiteIndex == NorNet_SiteIndex_Central:
-      outputFile.write('\n      log-action "Turning off IPv4 NAT ..."\n')
-      outputFile.write('      remove-nat ' + str(fullNorNetIPv4) + ' "')
-      if sourceNatRange != None:
-         if len(sourceNatRange) == 1:
-            outputFile.write(str(sourceNatRange[0]))
-         else:
-            outputFile.write(str(sourceNatRange[0]) + '-' + str(sourceNatRange[1]))
-      outputFile.write('"   && \\\n')
-      outputFile.write('      log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-   outputFile.write('   fi\n')
-   outputFile.write('fi\n\n')
-
-   # ====== Configure tunnels and routing ===================================
-   outputFile.write('if [ "$selectedInterfaces" != "" ] ; then\n')
-   outputFile.write('   if [ "$selectedProviders" = "" ] ; then\n')
-   outputFile.write('      selectedProviders=`get-providers-from-interfaces "$selectedInterfaces"`\n')
-   outputFile.write('      echo "Selected providers $selectedProviders from interfaces $selectedInterfaces"\n')
-   outputFile.write('   else\n')
-   outputFile.write('      echo >&2 "ERROR: Either specify providers or interfaces, but *not* both!"\n')
-   outputFile.write('      exit 1\n')
-   outputFile.write('   fi\n')
-   outputFile.write('fi\n\n\n')
-
-
-   # ====== Generate per-provider configurations ============================
-   pathNumber = 0
-   for onlyDefault in [ True, False ]:
-      for localProviderIndex in localProviderList:
-         if ( ((onlyDefault == True)  and (localProviderIndex == localSite['site_default_provider_index'])) or \
-              ((onlyDefault == False) and (localProviderIndex != localSite['site_default_provider_index'])) ):
-            localProvider = localProviderList[localProviderIndex]
-            tbpName = makeTunnelboxProvider(fullSiteList, localSite,
-                                            localProviderList, localProvider,
-                                            pathNumber, configNamePrefix)
-            pathNumber = pathNumber + 1
-
-   outputFile.write('check-providers "$all_providers" "$selectedProviders"\n')
-   outputFile.write('tbc_success=1\n')
-   outputFile.write('for provider in $all_providers ; do\n')
-   outputFile.write('   if [[ "$selectedProviders" =~ ^@ALL$|^$provider$$|^$provider$([ ])|([ ])$provider$([ ])|([ ])$provider$$ ]] ; then\n')
-   outputFile.write('      echo "Configuring provider $provider from tunnelbox-${provider}-config ..."\n')
-   outputFile.write('      if [ -e tunnelbox-${provider}-config ] ; then\n')
-   outputFile.write('         . ./tunnelbox-${provider}-config || tbc_success=0\n')
-   outputFile.write('      else\n')
-   outputFile.write('         echo >&2 "ERROR: tunnelbox-${provider}-config does not exist!"\n')
-   outputFile.write('         tbc_success=0\n')
-   outputFile.write('      fi\n')
-   outputFile.write('   else\n')
-   outputFile.write('      echo "Skipping provider $provider ..."\n')
-   outputFile.write('   fi\n')
-   outputFile.write('done\n')
-   outputFile.write('\n')
-
-
-   # ====== Make local setup ================================================
-   outputFile.write('\nif [ "$state" = "start" -o "$state" = "restart" ] ; then\n')
-   outputFile.write('   log "Setting up local networks ..."\n')
-
-   outputFile.write('   log-action "Deactivating reverse path filtering ..."\n')
-   outputFile.write('   INTERFACES=`ip link show | awk \'/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }\' | sed -e "s/:$//"`\n')
-   outputFile.write('   sysctl -q -w net.ipv4.conf.default.rp_filter=0 || true\n')
-   outputFile.write('   sysctl -q -w net.ipv4.conf.all.rp_filter=0 || true\n')
-   outputFile.write('   sysctl -q -w net.ipv4.conf.default.accept_redirects=0 || true\n')
-   outputFile.write('   sysctl -q -w net.ipv4.conf.all.accept_redirects=0 || true\n')
-   outputFile.write('   sysctl -q -w net.ipv6.conf.default.accept_redirects=0 || true\n')
-   outputFile.write('   sysctl -q -w net.ipv6.conf.all.accept_redirects=0 || true\n')
-   outputFile.write('   sysctl -q -w net.ipv4.conf.default.send_redirects=0 || true\n')
-   outputFile.write('   sysctl -q -w net.ipv4.conf.all.secure_redirects=0 || true\n')
-   outputFile.write('   sysctl -q -w net.ipv4.conf.default.secure_redirects=0 || true\n')
-   outputFile.write('   sysctl -q -w net.ipv4.conf.all.send_redirects=0 || true\n')
-   outputFile.write('   for interface in $INTERFACES ; do\n')
-   outputFile.write('      sysctl -q -w net.ipv4.conf.$interface.rp_filter=0 || true\n')
-   outputFile.write('      sysctl -q -w net.ipv4.conf.$interface.accept_redirects=0 || true\n')
-   outputFile.write('      sysctl -q -w net.ipv4.conf.$interface.send_redirects=0 || true\n')
-   outputFile.write('      sysctl -q -w net.ipv4.conf.$interface.secure_redirects=0 || true\n')
-   outputFile.write('      sysctl -q -w net.ipv6.conf.$interface.accept_redirects=0 || true\n')
-   outputFile.write('   done\n')
-   outputFile.write('   log-result $RESULT_GOOD\n')
-
-   outputFile.write('   log-action "Turning on ECN ..."\n')
-   outputFile.write('   sysctl -q -w net.ipv4.tcp_ecn=1 && \\\n')
-   outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-
-   outputFile.write('   log-action "Turning on Forwarding ..."\n')
-   outputFile.write('   sysctl -q -w net.ipv4.ip_forward=1 && \\\n')
-   outputFile.write('   sysctl -q -w net.ipv6.conf.all.forwarding=1 && \\\n')
-   outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-
-   for localProviderIndex in localProviderList:
-      makeTunnelboxNetwork(outputFile, 'start', localInterface,
-                            localProviderList[localProviderIndex], localSiteIndex)
-   if localSiteIndex == NorNet_SiteIndex_Central:
-      fullTunnelNetIPv4 = makeNorNetTunnelIP(0, 0, 0, 0, 4)
-      outputFile.write('\n   log-action "Turning on IPv4 NAT ..."\n')
-      outputFile.write('   make-nat ' + str(fullNorNetIPv4) + ' "')
-      if sourceNatRange != None:
-         if len(sourceNatRange) == 1:
-            outputFile.write(str(sourceNatRange[0]))
-         else:
-            outputFile.write(str(sourceNatRange[0]) + '-' + str(sourceNatRange[1]))
-      outputFile.write('" ' + str(fullNorNetIPv4) + ' ' + str(fullTunnelNetIPv4) + '   && \\\n')
-      outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-   outputFile.write('fi\n')
-
-
-   outputFile.write('\nif [ "$state" = "stop" -o "$state" = "start" -o "$state" = "restart" ] ; then\n')
-   outputFile.write('   log-action "Flushing route cache ..."\n')
-   outputFile.write('   ip route flush cache && \\\n')
-   outputFile.write('   log-result $RESULT_GOOD || log-result $RESULT_BAD\n')
-   outputFile.write('fi\n\n')
-
-   outputFile.write('if [ $tbc_success -eq 0 ] ; then\n')
-   outputFile.write('  return 1\n')
-   outputFile.write('fi\n')
-
-   outputFile.close()
-   return configurationName
+   for providerName in providerSet:    
+      if firstProvider == True:
+         tunnelboxFile.write(providerName)
+         firstProvider = False
+      else:
+         tunnelboxFile.write(',' + providerName)
+   tunnelboxFile.write('"\n')
+   tunnelboxFile.close()
 
 
 
-# ###### Main program #######################################################
-# ====== Handle arguments ===================================================
-bootstrapOnly = False
-if len(sys.argv) < 2:
-   error('Usage: ' + sys.argv[0] + ' FQDN [-bootstrap]')
-fqdn = sys.argv[1]
-if len(sys.argv) > 2:
-   if sys.argv[2] == '-bootstrap':
-      bootstrapOnly = True
-   else:
-      error('Usage: ' + sys.argv[0] + ' FQDN [-bootstrap]')
+# ###########################################################################
+# #### Main program                                                      ####
+# ###########################################################################
 
 
 # ====== Get configuration ==================================================
-if bootstrapOnly:
-   loadNorNetConfiguration()
-else:
-   loginToPLC()
+loginToPLC()
+fullSiteList = fetchNorNetSiteList(False)
+localSite    = None
+try:
+   localSite = fullSiteList[getLocalSiteIndex()]
+except:
+   error('Cannot find local site ' + str(getLocalSiteIndex()) + ' at PLC database!')
+siteNodeList = fetchNorNetNodeListForSite(localSite)
 
 # ====== Some checks ========================================================
 if getLocalSiteIndex() == None:
@@ -1324,99 +835,83 @@ if getLocalSiteTunnelboxDefaultProviderIPv4() == None:
    error('NorNet_LocalSite_TBDefaultProviderIPv4 has not been set in configuration file!')
 if getLocalNodeNorNetInterface() == None:
    error('NorNet_LocalNode_NorNetInterface has not been set in configuration file!')
-if getCentralSiteBootstrapTunnelbox() == None:
-   error('NorNet_CentralSite_BootstrapTunnelbox has not been set in configuration file!')
-if getCentralSiteBootstrapProviderIndex() == None:
-   error('NorNet_CentralSite_BootstrapProviderIndex has not been set in configuration file!')
 
 
-# ====== Bootstrap Mode =====================================================
-makeTunnelboxBootstrap(getLocalSiteIndex(), getLocalSiteDefaultProviderIndex(),
-                       getLocalNodeNorNetInterface(), getLocalSiteTunnelboxDefaultProviderIPv4(),
-                       'tunnelbox')
+# ====== Tunnelbox configuration ============================================
+makeTunnelboxConfiguration(fullSiteList, localSite)
 
-# ====== Full Mode ==========================================================
-if not bootstrapOnly:
-   fullSiteList = fetchNorNetSiteList(False)
-   localSite    = None
-   try:
-      localSite = fullSiteList[getLocalSiteIndex()]
-   except:
-      error('Cannot find local site ' + str(getLocalSiteIndex()) + ' at PLC database!')
-   siteNodeList = fetchNorNetNodeListForSite(localSite)
 
-   makeTunnelboxConfiguration(fullSiteList, localSite, 'tunnelbox')
+# ====== Prepare additional nodes for DNS configuration =====================
+additionalNodes = []
+aliases = {}
+for i in range(2, 255):
+   nodeConfiguration = getLocalNodeConfigurationString(i)
+   if nodeConfiguration != u'':
+      # print i,nodeConfiguration
+      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeConfiguration)
+      if len(parameters) < 3:
+         error('Bad configuration "' + nodeConfiguration + '" for NorNet_LocalSite_Node' + str(i))
 
-   # ====== Prepare additional nodes for DNS configuration ==================
-   additionalNodes = []
-   aliases = {}
-   for i in range(2, 255):
-      nodeConfiguration = getLocalNodeConfigurationString(i)
-      if nodeConfiguration != u'':
-         # print i,nodeConfiguration
-         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeConfiguration)
-         if len(parameters) < 3:
-            error('Bad configuration "' + nodeConfiguration + '" for NorNet_LocalSite_Node' + str(i))
-
-         nodeName     = unquote(parameters[0])
-         hardwareInfo = unquote(parameters[1])
-         softwareInfo = unquote(parameters[2])
-         try:
-            options = tuple(unquote(parameters[3]).split(','))
-         except:
-            options = []
-         additionalNodes.append(makeNodeForDNS(nodeName, localSite, i, hardwareInfo, softwareInfo, options))
-
-      nodeAliases = getLocalNodeAliasesString(i)
-      if nodeAliases != u'':
-         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeAliases)
-         if len(parameters) > 0:
-            aliases[i] = parameters
-
-   makeBindConfiguration(fullSiteList, siteNodeList, localSite, getHostnameFromFQDN(fqdn), additionalNodes, aliases)
-
-   # ====== DHCP daemon configuration =======================================
-   dynamicStart         = 0
-   dynamicEnd           = 0
-   dynamicConfiguration = getLocalSiteDHCPServerDynamicConfigurationString()
-   if ((dynamicConfiguration != None) and (dynamicConfiguration != u'')):
-      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', dynamicConfiguration)
-      if len(parameters) < 2:
-         error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange')         
+      nodeName     = unquote(parameters[0])
+      hardwareInfo = unquote(parameters[1])
+      softwareInfo = unquote(parameters[2])
       try:
-         dynamicStart = int(unquote(parameters[0]))
-         dynamicEnd   = int(unquote(parameters[1]))
+         options = tuple(unquote(parameters[3]).split(','))
       except:
-         error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range values')                  
-      if ((dynamicStart <= 1) or (dynamicStart > 255) or
-          (dynamicEnd <= 1) or (dynamicEnd > 255)):
-         error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range indexes')                  
+         options = []
+      additionalNodes.append(makeNodeForDNS(nodeName, localSite, i, hardwareInfo, softwareInfo, options))
 
-   staticList = []
-   for i in range(2, 255):
-      staticConfiguration = getLocalSiteDHCPServerStaticConfigurationString(i)
-      if staticConfiguration != u'':
-         # print i,staticConfiguration
-         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', staticConfiguration)
-         if len(parameters) < 1:
-            error('Bad configuration "' + staticConfiguration + '" for NorNet_LocalSite_DHCPServer_Static' + str(i))
-            
-         mac = unquote(parameters[0])
-         try:
-            fileName = unquote(parameters[1])
-         except:
-            fileName = '';
-         try:
-            serverName = unquote(parameters[2])
-         except:
-            serverName = '';
-            
-         staticEntry = {
-            'node_index'      : i,
-            'node_mac'        : mac,
-            'node_filename'   : fileName,
-            'node_servername' : serverName
-         }
-         staticList.append(staticEntry)
-   
-   makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
+   nodeAliases = getLocalNodeAliasesString(i)
+   if nodeAliases != u'':
+      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeAliases)
+      if len(parameters) > 0:
+         aliases[i] = parameters
+
+makeBindConfiguration(fullSiteList, siteNodeList, localSite, getHostnameFromFQDN(getLocalNodeHostname()), additionalNodes, aliases)
+
+
+# ====== DHCP daemon configuration ==========================================
+dynamicStart         = 0
+dynamicEnd           = 0
+dynamicConfiguration = getLocalSiteDHCPServerDynamicConfigurationString()
+if ((dynamicConfiguration != None) and (dynamicConfiguration != u'')):
+   parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', dynamicConfiguration)
+   if len(parameters) < 2:
+      error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange')         
+   try:
+      dynamicStart = int(unquote(parameters[0]))
+      dynamicEnd   = int(unquote(parameters[1]))
+   except:
+      error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range values')                  
+   if ((dynamicStart <= 1) or (dynamicStart > 255) or
+       (dynamicEnd <= 1) or (dynamicEnd > 255)):
+      error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range indexes')                  
+
+staticList = []
+for i in range(2, 255):
+   staticConfiguration = getLocalSiteDHCPServerStaticConfigurationString(i)
+   if staticConfiguration != u'':
+      # print i, staticConfiguration
+      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', staticConfiguration)
+      if len(parameters) < 1:
+         error('Bad configuration "' + staticConfiguration + '" for NorNet_LocalSite_DHCPServer_Static' + str(i))
+         
+      mac = unquote(parameters[0])
+      try:
+         fileName = unquote(parameters[1])
+      except:
+         fileName = '';
+      try:
+         serverName = unquote(parameters[2])
+      except:
+         serverName = '';
+         
+      staticEntry = {
+         'node_index'      : i,
+         'node_mac'        : mac,
+         'node_filename'   : fileName,
+         'node_servername' : serverName
+      }
+      staticList.append(staticEntry)
+
+makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)

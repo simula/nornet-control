@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd August 3, 2012
+.Dd May 23, 2013
 .Dt Make-Tunnelbox-Configuration 1
 .Os Make-Tunnelbox-Configuration
 .\" ###### Name #############################################################
@@ -27,27 +27,19 @@
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
 .Nm Make-Tunnelbox-Configuration
-.Op Fl bootstrap
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
 .Nm Make-Tunnelbox-Configuration
-generates the configurations scripts for Tunnelbox-Setup. It provides two
-modes: in the "bootstrap" mode, it uses the known local Site Index and Default
-Provider Index (both read from nornetapi-config) to write a configuration to
-just setup the tunnel via the default provider to the central site. In "full"
-mode, it contacts the Central Site PLC and generates the configuration scripts
-for all tunnels.
+generates the configurations scripts for Tunnelbox-Setup. It contacts the
+Central Site PLC to obtain the configuration.
 .Pp
-.\" ###### Arguments ########################################################
-.Sh ARGUMENTS
-The following options are available:
-.Bl -tag -width indent
-.It Fl bootstrap
-Activates bootstrap mode. Otherwise, full mode is used.
-.El
+.\" .\" ###### Arguments ########################################################
+.\" .Sh ARGUMENTS
+.\" The following options are available:
+.\" .Bl -tag -width indent
+.\" .El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
-.It Make-Tunnelbox-Configuration -bootstrap
 .It Make-Tunnelbox-Configuration
 .El

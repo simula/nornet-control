@@ -90,33 +90,6 @@ needs_update ()
 }
 
 
-# ###### Compare two lists of labels and return removed labels ##############
-get_removed_labels ()
-{
-   oldLabels="$1"
-   newLabels="$2"
-
-   removedLabels=""
-   for o in $oldLabels ; do
-      found=0
-      for n in $newLabels ; do
-         if [ "$o" = "$n" ] ; then
-            found=1
-            break
-         fi
-      done
-      if [ $found -eq 0 ] ; then
-         if [ "$removedLabels" = "" ] ; then
-            removedLabels="$o"
-         else
-            removedLabels="$removedLabels $o"
-         fi
-      fi
-   done
-   echo "$removedLabels"
-}
-
-
 # ###### Check configuration for updates and apply if necessary #############
 check_and_configure ()
 {
@@ -135,82 +108,48 @@ check_and_configure ()
    rm -rf updated-tunnelbox-config
    mkdir updated-tunnelbox-config
    cd updated-tunnelbox-config
-   if ! Make-Tunnelbox-Configuration "$NorNet_LocalNode_Hostname" ; then
-      echo "NOTE: Unable to obtain full configuration, trying BOOTSTRAP instead ..."
-      Make-Tunnelbox-Configuration "$NorNet_LocalNode_Hostname" -bootstrap
-      Tunnelbox-Setup start -bootstrap
-      echo "NOTE: Retrying to obtain full configuration ..."
-      Make-Tunnelbox-Configuration "$NorNet_LocalNode_Hostname"
-      echo "`env LANG=C date +%FT%H:%M:%S`: Performing COLDSTART now!"
-      cd ..
-      rm -f tunnelbox-*-config
-      mv updated-tunnelbox-config/tunnelbox-bootstrap updated-tunnelbox-config/tunnelbox-providers updated-tunnelbox-config/tunnelbox-config updated-tunnelbox-config/tunnelbox-*-config .
-      Tunnelbox-Setup coldstart -providers "@ALL"
-      echo "`env LANG=C date +%FT%H:%M:%S`: COLDSTART completed. The network should work now!"
-   else
-      . ./tunnelbox-providers
-      providersNew="$all_providers"
-      cd ..
-      if [ -e ./tunnelbox-providers ] ; then
-         . ./tunnelbox-providers
-      else
-         all_providers=""  # We have a brand-new tunnelbox!
-      fi
-      providersOld="$all_providers"
-      providersRemoved=`get_removed_labels "$providersOld" "$providersNew"`
+   if Make-Tunnelbox-Configuration "$NorNet_LocalNode_Hostname" ; then
+      # ====== Set up tunnels and routing ===================================
+      rm -f *.interface? *.provider
+      mv updated-tunnelbox-config/*.interface? .
+      mv updated-tunnelbox-config/*.provider .
+      Tunnelbox-Setup start -providers "@ALL"
 
-      # ====== Apply changes ================================================
-      for removedProvider in $providersRemoved ; do
-         Tunnelbox-Setup stop -providers "$removedProvider" -event "check_and_configure/removed provider" || true
-         rm -f tunnelbox-${removedProvider}-config
-      done
-      mv updated-tunnelbox-config/tunnelbox-bootstrap updated-tunnelbox-config/tunnelbox-providers updated-tunnelbox-config/tunnelbox-config .
-      for provider in $providersNew ; do
-         if needs_update updated-tunnelbox-config/tunnelbox-${provider}-config tunnelbox-${provider}-config $1 ; then
-            mv updated-tunnelbox-config/tunnelbox-${provider}-config .
-            echo "`env LANG=C date +%FT%H:%M:%S`: Provider ${provider} needs an update -> applying new setup ..."
-            Tunnelbox-Setup start -providers "$provider" -event "check_and_configure/updated provider" || true
-         else
-            echo "`env LANG=C date +%FT%H:%M:%S`: Provider ${provider} does not need an update."
-            rm -f updated-tunnelbox-config/tunnelbox-${provider}-config
+      # ====== Apply DNS update =============================================
+      rm -f zones.conf *.db
+      mv updated-tunnelbox-config/zones.conf updated-tunnelbox-config/*.db .
+      find /etc/bind -name zones.conf | xargs --no-run-if-empty rm -f
+      find /etc/bind -name "*.db" | xargs --no-run-if-empty rm -f
+      cp zones.conf *.db /etc/bind/
+      if [ ! -e /var/cache/bind/slaves ] ; then
+         mkdir /var/cache/bind/slaves
+      fi
+      chown bind:bind /var/cache/bind/slaves
+      if [ -e /etc/bind/named.conf ] ; then
+         if [ `grep "include \"/etc/bind/zones.conf\";" /etc/bind/named.conf | wc --lines` -eq 0 ] ; then
+            echo "include \"/etc/bind/zones.conf\";"  >>/etc/bind/named.conf
          fi
-      done
-   fi
-
-   # ====== Apply DNS update ================================================
-   rm -f zones.conf *.db
-   mv updated-tunnelbox-config/zones.conf updated-tunnelbox-config/*.db .
-   find /etc/bind -name zones.conf | xargs --no-run-if-empty rm -f
-   find /etc/bind -name "*.db" | xargs --no-run-if-empty rm -f
-   cp zones.conf *.db /etc/bind/
-   if [ ! -e /var/cache/bind/slaves ] ; then
-      mkdir /var/cache/bind/slaves
-   fi
-   chown bind:bind /var/cache/bind/slaves
-   if [ -e /etc/bind/named.conf ] ; then
-      if [ `grep "include \"/etc/bind/zones.conf\";" /etc/bind/named.conf | wc --lines` -eq 0 ] ; then
-         echo "include \"/etc/bind/zones.conf\";"  >>/etc/bind/named.conf
+      else
+         echo "/etc/bind/named.conf does not exist! Something is going wrong ..."
       fi
-   else
-      echo "/etc/bind/named.conf does not exist! Something is going wrong ..."
-   fi
-   service bind9 reload
+      service bind9 reload
 
-   # ====== Apply DHCP server update ========================================
-   rm -f dhcpd-config
-   mv updated-tunnelbox-config/dhcpd-config .
-   if needs_update dhcpd-config /etc/dhcp/dhcpd.conf $1 ; then
-      echo "`env LANG=C date +%FT%H:%M:%S`: DHCP server configuration has been updated => restarting DHCP service ..."
-      cp dhcpd-config /etc/dhcp/dhcpd.conf
-      echo "INTERFACES=\"$NorNet_LocalNode_NorNetInterface\"" >/etc/default/isc-dhcp-server
-      service isc-dhcp-server restart
-   fi
+      # ====== Apply DHCP server update =====================================
+      rm -f dhcpd-config
+      mv updated-tunnelbox-config/dhcpd-config .
+      if needs_update dhcpd-config /etc/dhcp/dhcpd.conf $1 ; then
+         echo "`env LANG=C date +%FT%H:%M:%S`: DHCP server configuration has been updated => restarting DHCP service ..."
+         cp dhcpd-config /etc/dhcp/dhcpd.conf
+         echo "INTERFACES=\"$NorNet_LocalNode_NorNetInterface\"" >/etc/default/isc-dhcp-server
+         service isc-dhcp-server restart
+      fi
 
-   # ====== Check for problems ==============================================
-   if ! rmdir updated-tunnelbox-config ; then
-      echo >&2 "ERROR: Something went wrong! updated-tunnelbox-config still contains unhandled configuration files!"
-      ls -al updated-tunnelbox-config >&2
-      exit 1
+      # ====== Check for problems ===========================================
+      if ! rmdir updated-tunnelbox-config ; then
+         echo >&2 "ERROR: Something went wrong! updated-tunnelbox-config still contains unhandled configuration files!"
+         ls -al updated-tunnelbox-config >&2
+         exit 1
+      fi
    fi
 }
 
@@ -224,10 +163,10 @@ case "$ACTION" in
    echo "$NAME."
    ;;
   force-reload)
-   Tunnelbox-Setup coldstart $@ >>$LOGFILE 2>&1
+   Tunnelbox-Setup coldstart -providers "@ALL" $@ >>$LOGFILE 2>&1
    ;;
   status)
-   Tunnelbox-Setup status -providers "@ALL"
+   Tunnelbox-Setup status -providers "@ALL" $@
    ;;
   configure)
      rm -f tunnelbox*-config tunnelbox-bootstrap

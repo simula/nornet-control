@@ -36,9 +36,9 @@ else
 fi
 
 
-TUNNELBOX_BOOSTRAP_FILE=./tunnelbox-config000
-CONFIG_DIRECTORY="c"
-ACTIVE_DIRECTORY="a"
+TUNNELBOX_BOOSTRAP_FILE="./tunnelbox-config"
+CONFIG_DIRECTORY="."
+ACTIVE_DIRECTORY="/var/run/nornet-tunnelbox"
 
 
 
@@ -139,7 +139,7 @@ activateInterface ()
 {
    load-interface-configuration "$1"
    
-   if [[ "$2" =~ ^$|^$INTERFACE_PROVIDER$$|^$INTERFACE_PROVIDER$([ ])|([ ])$INTERFACE_PROVIDER$([ ])|([ ])$INTERFACE_PROVIDER$$ ]] ; then
+   if [[ "$2" =~ ^@ALL$|^${INTERFACE_PROVIDER}$|^${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER}$ ]] ; then
       log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
       
       options=""
@@ -164,7 +164,7 @@ activateInterface ()
 deactivateInterface ()
 {
    load-interface-configuration "$1"
-   if [[ "$2" =~ ^$|^$INTERFACE_PROVIDER$$|^$INTERFACE_PROVIDER$([ ])|([ ])$INTERFACE_PROVIDER$([ ])|([ ])$INTERFACE_PROVIDER$$ ]] ; then
+   if [[ "$2" =~ ^@ALL$|^${INTERFACE_PROVIDER}$|^${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER}$ ]] ; then
       log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
       remove-tunnel "$INTERFACE_NAME" "$GRE_KEY" && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
@@ -267,7 +267,7 @@ activateProvider ()
 {
    load-provider-configuration "$1"
 
-   if [[ "$2" =~ ^$|^$PROVIDER_SHORT_NAME$$|^$PROVIDER_SHORT_NAME$([ ])|([ ])$PROVIDER_SHORT_NAME$([ ])|([ ])$PROVIDER_SHORT_NAME$$ ]] ; then
+   if [[ "$2" =~ ^@ALL$|^${PROVIDER_SHORT_NAME}$|^${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME}$ ]] ; then
       log-action "Activating provider $PROVIDER_LONG_NAME."
 
       # 1. For directly connected NorNet networks, skip further rules and go to "main" table instead.
@@ -298,7 +298,7 @@ deactivateProvider ()
 {
    load-provider-configuration "$1"
 
-   if [[ "$2" =~ ^$|^$PROVIDER_SHORT_NAME$$|^$PROVIDER_SHORT_NAME$([ ])|([ ])$PROVIDER_SHORT_NAME$([ ])|([ ])$PROVIDER_SHORT_NAME$$ ]] ; then
+   if [[ "$2" =~ ^@ALL$|^${PROVIDER_SHORT_NAME}$|^${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME}$ ]] ; then
       log-action "Deactivating provider $PROVIDER_LONG_NAME."
 
       remove-table "$PROVIDER_TABLE" && \
@@ -413,7 +413,6 @@ activateTunnelbox ()
       log-result $RESULT_GOOD || log-result $RESULT_BAD
    done
    
-   echo "S=$TUNNELBOX_SITE_INDEX"
    if [ $TUNNELBOX_SITE_INDEX -eq 1 ] ; then
       log-action "Turning on IPv4 NAT ..."
       for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 ; do
@@ -427,15 +426,71 @@ activateTunnelbox ()
 # ###### Deactivate tunnelbox functionality #################################
 deactivateTunnelbox ()
 {
+   if [ $TUNNELBOX_SITE_INDEX -eq 1 ] ; then
+      log-action "Turning off IPv4 NAT ..."
+      for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 ; do
+         remove-nat $nornetNetwork "$TUNNELBOX_NAT_RANGE" || true
+      done
+      log-result $RESULT_GOOD
+   fi
    for provider in $ALL_PROVIDER_CONFIGS ; do
       load-provider-configuration "$provider" && \
       if [ $PROVIDER_IS_DEFAULT_PROVIDER -ne 1 ] ; then
-         log-action "Tearing down local networks for $PROVIDER_LONG_NAME ..." && \
-         make-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv4" && \
-         make-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv6" && \
-         log-result $RESULT_GOOD || log-result $RESULT_BAD
+         log-action "Tearing down local networks for $PROVIDER_LONG_NAME ..."
+         remove-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv4" || true
+         remove-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv6" || true
+         log-result $RESULT_GOOD
       fi
    done
+}
+
+
+# ###### Check whether a provider is in a list of available providers #######
+check-providers ()
+{
+   local availableProviders="$1"
+   local selectedProviders="$2"
+   local oldIFS=$IFS
+   IFS=","
+   if [ "$selectedProviders" != "@ALL" ] ; then
+      for b in $selectedProviders ; do
+         found=0
+         for a in $availableProviders ; do
+            if [ "$a" == "$b" ] ; then
+               found=1
+            fi
+         done
+         if [ $found -eq 0 ] ; then
+            echo >&2 "ERROR: Provider \"$b\" is not in the list of available providers \"$availableProviders\"!"
+            exit 1
+         fi
+      done
+   fi
+   IFS=$oldIFS
+}
+
+
+# ###### Check whether a provider is in a list of available providers #######
+# IMPORTANT: No spaces, etc. are allowed within lists!
+get-providers-from-interfaces () {
+   local interfaces=`echo $1 | sed -e "s/-/_/g" -e "s/ //g" -e "s/\t//g" -e "s/:/_sub_/g"`
+   local selectedProviders=""
+   local oldIFS=$IFS
+   IFS=","
+   for interface in $interfaces ; do
+      eval "provider=\$PROVIDER_FOR_INTERFACE_$interface"
+      if [ "$provider" != "" ] ; then
+         if [ "$selectedProviders" = "" ] ; then
+            selectedProviders="$provider"
+         else
+            selectedProviders="$selectedProviders $provider"
+         fi
+      #else
+      #   echo >&2 "NOTE: Interface \"$interface\" does not belong to a NorNet provider -> skipping!"
+      fi
+   done
+   IFS=$oldIFS
+   echo $selectedProviders
 }
 
 
@@ -445,14 +500,13 @@ deactivateTunnelbox ()
 # ###########################################################################
 
 
-# ====== Initialize =========================================================
+# ====== Handle arguments ===================================================
 if [ ! -d "$CONFIG_DIRECTORY" ] ; then
    echo >&2 "ERROR: Configuration directory $CONFIG_DIRECTORY does not exist!"
    exit 1
 fi
 if [ ! -d "$ACTIVE_DIRECTORY" ] ; then
-   echo >&2 "ERROR: Active settings directory $ACTIVE_DIRECTORY does not exist!"
-   exit 1
+   mkdir "$ACTIVE_DIRECTORY"
 fi
 
 success=1
@@ -480,11 +534,22 @@ while [ "$1" != "" ] ; do
    shift
 done
 
-log "Entering Tunnelbox setup$eventInfo"
 
+log "Entering Tunnelbox setup$eventInfo"
 ALL_PROVIDER_CONFIGS=`find "$CONFIG_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
 ALL_INTERFACE_CONFIGS=`find "$CONFIG_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface*' -printf "%f\n\n" | sort`
 load-bootstrap-configuration
+
+if [ "$selectedInterfaces" != "" ] ; then
+   if [ "$selectedProviders" = "" ] ; then
+      selectedProviders=`get-providers-from-interfaces "$selectedInterfaces"`
+      echo "Selected providers $selectedProviders from interfaces $selectedInterfaces"
+   else
+      echo >&2 "ERROR: Either specify providers or interfaces, but *not* both!"
+      exit 1
+   fi
+fi
+check-providers "$TUNNELBOX_AVAILABLE_PROVIDERS" "$selectedProviders"
 
 
 # ====== Cold start =========================================================
