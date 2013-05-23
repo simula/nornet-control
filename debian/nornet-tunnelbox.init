@@ -108,11 +108,12 @@ check_and_configure ()
    rm -rf updated-tunnelbox-config
    mkdir updated-tunnelbox-config
    cd updated-tunnelbox-config
-   if Make-Tunnelbox-Configuration "$NorNet_LocalNode_Hostname" ; then
+   if Make-Tunnelbox-Configuration ; then
+      cd ..
+      
       # ====== Set up tunnels and routing ===================================
-      rm -f *.interface? *.provider
-      mv updated-tunnelbox-config/*.interface? .
-      mv updated-tunnelbox-config/*.provider .
+      rm -f tunnelbox-config *.interface? *.provider
+      mv updated-tunnelbox-config/tunnelbox-config updated-tunnelbox-config/*.provider updated-tunnelbox-config/*.interface? .
       Tunnelbox-Setup start -providers "@ALL"
 
       # ====== Apply DNS update =============================================
