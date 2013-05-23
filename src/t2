@@ -262,17 +262,19 @@ activateProvider ()
    # 2. If TOS is set, select outgoing provider accordingly
    # 3. Otherwise, use source address to determine the outgoing provider.
    
-   add-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$PROVIDER_NETWORK_IPv4" && \
-   add-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$PROVIDER_NETWORK_IPv6" && \
+   for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
+      add-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$providerNetwork"
+   done && \
    if [ $PROVIDER_TOS -ne 0 ] ; then
-      add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" from "$NORNET_NETWORK_IPv4" tos "$PROVIDER_TOS" to "$NORNET_NETWORK_IPv4" && \
-      add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" from "$NORNET_NETWORK_IPv6" tos "$PROVIDER_TOS" to "$NORNET_NETWORK_IPv6"
+      for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv6 ; do
+         add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" from "$nornetNetwork" tos "$PROVIDER_TOS"
+      done
    fi && \
-   add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_SOURCE_PREF" from "$PROVIDER_NETWORK_IPv4" to "$NORNET_NETWORK_IPv4" && \
-   add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_SOURCE_PREF" from "$PROVIDER_NETWORK_IPv6" to "$NORNET_NETWORK_IPv6" && \
+   for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
+      add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_SOURCE_PREF" from "$providerNetwork"
+   done && \
+   cp "$CONFIG_DIRECTORY/$PROVIDER" "$ACTIVE_DIRECTORY/$PROVIDER" && \
    log-result $RESULT_GOOD || log-result $RESULT_BAD
-
-   cp "$CONFIG_DIRECTORY/$PROVIDER" "$ACTIVE_DIRECTORY/$PROVIDER"
 }
 
 
@@ -284,8 +286,15 @@ deactivateProvider ()
    log-action "Deactivating provider $PROVIDER_LONG_NAME."
 
    remove-table "$PROVIDER_TABLE" && \
-   remove-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" to "$PROVIDER_LOCAL_NETWORK_IPv4" && \
-   remove-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" to "$PROVIDER_LOCAL_NETWORK_IPv6" && \
+   for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
+      remove-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_SOURCE_PREF" from "$providerNetwork" || true
+   done && \
+   for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv6 ; do
+      remove-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" from "$nornetNetwork" tos "$PROVIDER_TOS" || true
+   done && \
+   for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
+      remove-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$providerNetwork" || true
+   done && \
    log-result $RESULT_GOOD || log-result $RESULT_BAD
 
    rm -f "$ACTIVE_DIRECTORY/$PROVIDER"
@@ -476,12 +485,12 @@ fi
 
 # ====== stop: deactivate interfaces and providers ==========================
 if [ "$state" = "stop" -o "$state" = "restart" ] ; then
-   ALL_PROVIDER_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
-   ALL_INTERFACE_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface*' -printf "%f\n\n" | sort`
-   for interface in $ALL_INTERFACE_CONFIGS ; do
+   ACTIVE_PROVIDER_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
+   ACTIVE_INTERFACE_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface*' -printf "%f\n\n" | sort`
+   for interface in `echo "$ALL_INTERFACE_CONFIGS $ACTIVE_PROVIDER_CONFIGS" | sort -u` ; do
       deactivateInterface "$interface" || true
    done
-   for provider in $ALL_PROVIDER_CONFIGS ; do 
+   for provider in `echo "$ALL_PROVIDER_CONFIGS $ACTIVE_PROVIDER_CONFIGS" | sort -u` ; do 
       deactivateProvider "$provider" || true
    done
 fi

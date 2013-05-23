@@ -720,8 +720,8 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
          providerFile.write('PROVIDER_LONG_NAME="'        + localProvider['provider_long_name']  + '"\n')
          providerFile.write('PROVIDER_TOS='               + str(routingTableTOS)                 + '\n')
          providerFile.write('PROVIDER_TABLE='             + str(routingTableID)                  + '\n')
-         providerFile.write('PROVIDER_TABLE_TOS_PREF='    + str(routingTableTOSPref)             + '\n')
          providerFile.write('PROVIDER_TABLE_DEST_PREF='   + str(routingTableDestPref)            + '\n')
+         providerFile.write('PROVIDER_TABLE_TOS_PREF='    + str(routingTableTOSPref)             + '\n')
          providerFile.write('PROVIDER_TABLE_SOURCE_PREF=' + str(routingTableSourcePref)          + '\n')
          if localProviderIndex == localSite['site_default_provider_index']:
             providerFile.write('PROVIDER_IS_DEFAULT_PROVIDER=1\n')
