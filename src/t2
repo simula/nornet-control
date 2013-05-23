@@ -347,20 +347,20 @@ activateTunnelbox ()
    log "Activating tunnelbox"
    log-action "Deactivating reverse path filtering ..."
    ALL_INTERFACES=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//"`
-   sysctl -q -w net.ipv4.conf.default.rp_filter=0 || true
-   sysctl -q -w net.ipv4.conf.all.rp_filter=0 || true
+   sysctl -q -w net.ipv4.conf.default.rp_filter=0        || true
+   sysctl -q -w net.ipv4.conf.all.rp_filter=0            || true
    sysctl -q -w net.ipv4.conf.default.accept_redirects=0 || true
-   sysctl -q -w net.ipv4.conf.all.accept_redirects=0 || true
+   sysctl -q -w net.ipv4.conf.all.accept_redirects=0     || true
    sysctl -q -w net.ipv6.conf.default.accept_redirects=0 || true
-   sysctl -q -w net.ipv6.conf.all.accept_redirects=0 || true
-   sysctl -q -w net.ipv4.conf.default.send_redirects=0 || true
-   sysctl -q -w net.ipv4.conf.all.secure_redirects=0 || true
+   sysctl -q -w net.ipv6.conf.all.accept_redirects=0     || true
+   sysctl -q -w net.ipv4.conf.default.send_redirects=0   || true
+   sysctl -q -w net.ipv4.conf.all.secure_redirects=0     || true
    sysctl -q -w net.ipv4.conf.default.secure_redirects=0 || true
-   sysctl -q -w net.ipv4.conf.all.send_redirects=0 || true
+   sysctl -q -w net.ipv4.conf.all.send_redirects=0       || true
    for interface in $ALL_INTERFACES ; do
-      sysctl -q -w net.ipv4.conf.$interface.rp_filter=0 || true
+      sysctl -q -w net.ipv4.conf.$interface.rp_filter=0        || true
       sysctl -q -w net.ipv4.conf.$interface.accept_redirects=0 || true
-      sysctl -q -w net.ipv4.conf.$interface.send_redirects=0 || true
+      sysctl -q -w net.ipv4.conf.$interface.send_redirects=0   || true
       sysctl -q -w net.ipv4.conf.$interface.secure_redirects=0 || true
       sysctl -q -w net.ipv6.conf.$interface.accept_redirects=0 || true
    done
@@ -399,16 +399,71 @@ deactivateTunnelbox ()
 
 
 
+# ###########################################################################
+# #### Main Program                                                      ####
+# ###########################################################################
+
+
+# ====== Initialize =========================================================
+if [ ! -d "$CONFIG_DIRECTORY" ] ; then
+   echo >&2 "ERROR: Configuration directory $CONFIG_DIRECTORY does not exist!"
+   exit 1
+fi
+if [ ! -d "$ACTIVE_DIRECTORY" ] ; then
+   echo >&2 "ERROR: Active settings directory $ACTIVE_DIRECTORY does not exist!"
+   exit 1
+fi
+
+success=1
+bootstrap=0
+selectedProviders=""
+selectedInterfaces=""
+eventInfo=""
+shift
+while [ "$1" != "" ] ; do
+   if [ "$1" = "-bootstrap" -o "$1" = "--bootstrap" ] ; then
+      bootstrap=1
+   elif [ "$1" = "-providers" -o "$1" = "--providers" ] ; then
+      selectedProviders="$2"
+      shift
+   elif [ "$1" = "-interfaces" -o "$1" = "--interfaces" ] ; then
+      selectedInterfaces="$2"
+      shift
+   elif [ "$1" = "-event" -o "$1" = "--event" ] ; then
+      eventInfo=" ($2)"
+      shift
+   else
+      echo >&2 "ERROR: Bad argument $1"
+      exit 1
+   fi
+   shift
+done
 
 ALL_PROVIDER_CONFIGS=`find "$CONFIG_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
 ALL_INTERFACE_CONFIGS=`find "$CONFIG_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface*' -printf "%f\n\n" | sort`
-
-selectedProviders=""   ## !!!!!!!!!!!?????????????
-
-
 load-bootstrap-configuration
 
 
+# ====== Cold start =========================================================
+if [ "$state" = "reset" -o "$state" = "coldstart" ] ; then
+   for version in 4 6 ; do
+      ip -${version} rule flush
+      ip -${version} rule del lookup local || true
+      ip -${version} rule add from all lookup local   pref 0
+      ip -${version} rule add from all lookup main    pref 32766
+      ip -${version} rule add from all lookup default pref 32767
+   done
+   ip route flush cache
+   iptables -t nat -F POSTROUTING
+   if [ "$state" = "coldstart" ] ; then
+      state="restart"
+   else
+      state="stop"
+   fi
+fi
+
+
+# ====== Start/stop tunnelbox ===============================================
 if [ "$selectedProviders" == "" ] ; then
    if [ "$state" = "stop" -o "$state" = "restart" ] ; then
       deactivateTunnelbox  
@@ -419,7 +474,7 @@ if [ "$selectedProviders" == "" ] ; then
 fi
 
 
-
+# ====== stop: deactivate interfaces and providers ==========================
 if [ "$state" = "stop" -o "$state" = "restart" ] ; then
    ALL_PROVIDER_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
    ALL_INTERFACE_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface*' -printf "%f\n\n" | sort`
@@ -432,6 +487,7 @@ if [ "$state" = "stop" -o "$state" = "restart" ] ; then
 fi
 
 
+# ====== start: activate providers and interfaces ===========================
 if [ "$state" = "start" -o "$state" = "restart" ] ; then
    log "Activating providers"
    for provider in $ALL_PROVIDER_CONFIGS ; do
@@ -467,8 +523,10 @@ if [ "$state" = "start" -o "$state" = "restart" ] ; then
 fi
 
 
+# ====== Flush route caches =================================================
 if [ "$state" = "stop" -o "$state" = "start" -o "$state" = "restart" ] ; then
    log-action "Flushing route cache ..."
-   ip route flush cache && \
+   ip -4 route flush cache && \
+   ip -6 route flush cache && \
    log-result $RESULT_GOOD || log-result $RESULT_BAD
 fi
