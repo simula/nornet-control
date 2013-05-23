@@ -540,7 +540,13 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    if localSiteIndex == NorNet_SiteIndex_Central:
       masterSite = None
    else:
-      masterSite = fullSiteList[NorNet_SiteIndex_Central]
+      try:  # ???????
+         masterSite = fullSiteList[NorNet_SiteIndex_Central]
+      except:
+         # The central site has not been found.
+         # This may occur during bootstrap of a non-central site!
+         masterSite = None
+
    for version in [ 4, 6 ]:
       tunnelNetwork  = makeNorNetTunnelIP(0, 0, 0, 0, version)
       tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
@@ -658,6 +664,7 @@ def makeRemoteTunnelRoutesOnCentralRouter(fullSiteList, outputFile, nextHopInter
 
 # ###### Generate tunnelbox configuration for given provider ################
 def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvider, pathNumber, configNamePrefix):
+   print configNamePrefix
    if configNamePrefix == None:
       configNamePrefix = 'tunnelbox-' + localSite['site_short_name']
    configurationName = configNamePrefix + '-' + localProvider['provider_short_name'] + '-config'
@@ -667,14 +674,14 @@ def makeTunnelboxProvider(fullSiteList, localSite, localProviderList, localProvi
 
 
  #????????????????????????????????
-   tunnelboxFile = codecs.open('tunnelbox-config000', 'w', 'utf-8')
-   tunnelboxFile.write('TUNNELBOX_SITE_INDEX=' + str(localSite['site_index']) + '\n')
-   tunnelboxFile.write('NORNET_INTERFACE="' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '"\n')
-   tunnelboxFile.write('NORNET_NETWORK_IPv4="' + str(NorNet_Configuration['NorNet_IPv4Prefix']) + '"\n')
-   tunnelboxFile.write('NORNET_NETWORK_IPv6="' + str(NorNet_Configuration['NorNet_IPv6Prefix']) + '"\n')
-   tunnelboxFile.write('NORNET_TUNNEL_NETWORK_IPv4="' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + '"\n')
-   tunnelboxFile.write('NORNET_TUNNEL_NETWORK_IPv6="' + str(NorNet_Configuration['NorNet_IPv6TunnelPrefix']) + '"\n')
-   tunnelboxFile.close()
+   #tunnelboxFile = codecs.open('tunnelbox-config000', 'w', 'utf-8')
+   #tunnelboxFile.write('TUNNELBOX_SITE_INDEX=' + str(localSite['site_index']) + '\n')
+   #tunnelboxFile.write('NORNET_INTERFACE="' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '"\n')
+   #tunnelboxFile.write('NORNET_NETWORK_IPv4="' + str(NorNet_Configuration['NorNet_IPv4Prefix']) + '"\n')
+   #tunnelboxFile.write('NORNET_NETWORK_IPv6="' + str(NorNet_Configuration['NorNet_IPv6Prefix']) + '"\n')
+   #tunnelboxFile.write('NORNET_TUNNEL_NETWORK_IPv4="' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + '"\n')
+   #tunnelboxFile.write('NORNET_TUNNEL_NETWORK_IPv6="' + str(NorNet_Configuration['NorNet_IPv6TunnelPrefix']) + '"\n')
+   #tunnelboxFile.close()
 
 
    localSiteIndex     = localSite['site_index']
@@ -1035,13 +1042,13 @@ def makeTunnelboxNetwork(outputFile, state, localInterface,
 def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, localAddress, configNamePrefix):
    localSite = {
       'site_index'              : localSiteIndex,
-      'site_long_name'          : 'My Site',
-      'site_short_name'         : 'MS'
+      'site_long_name'          : 'Local Site',
+      'site_short_name'         : 'LS'
    }
    localProvider = {
       'provider_index'          : localProviderIndex,
       'provider_long_name'      : 'Local Provider',
-      'provider_short_name'     : 'local',
+      'provider_short_name'     : 'localprovider',
       'provider_tunnelbox_ipv4' : IPv4Network(localAddress)
    }
    remoteSite = {
@@ -1051,8 +1058,8 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
    }
    remoteProvider = {
       'provider_index'          : getCentralSiteBootstrapProviderIndex(),
-      'provider_long_name'      : 'Local Provider',
-      'provider_short_name'     : 'local',
+      'provider_long_name'      : 'Central Site Provider',
+      'provider_short_name'     : 'centralprovider',
       'provider_tunnelbox_ipv4' : IPv4Network(getCentralSiteBootstrapTunnelbox())
    }
 
@@ -1061,6 +1068,17 @@ def makeTunnelboxBootstrap(localSiteIndex, localProviderIndex, localInterface, l
    configurationName = configNamePrefix + '-bootstrap'
    outputFile = makeConfigFile('Tunnelbox', configurationName, True)
    log('Making tunnelbox bootstrap for site ' + str(localSiteIndex) + ' ...')
+
+
+   tunnelboxFile = codecs.open('tunnelbox-config000', 'w', 'utf-8')
+   tunnelboxFile.write('TUNNELBOX_SITE_INDEX=' + str(localSite['site_index']) + '\n')
+   #tunnelboxFile.write('TUNNELBOX_BOOTSTRAP_PROVIDER="' + 
+   tunnelboxFile.write('NORNET_INTERFACE="' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '"\n')
+   tunnelboxFile.write('NORNET_NETWORK_IPv4="' + str(NorNet_Configuration['NorNet_IPv4Prefix']) + '"\n')
+   tunnelboxFile.write('NORNET_NETWORK_IPv6="' + str(NorNet_Configuration['NorNet_IPv6Prefix']) + '"\n')
+   tunnelboxFile.write('NORNET_TUNNEL_NETWORK_IPv4="' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + '"\n')
+   tunnelboxFile.write('NORNET_TUNNEL_NETWORK_IPv6="' + str(NorNet_Configuration['NorNet_IPv6TunnelPrefix']) + '"\n')
+   tunnelboxFile.close()
 
 
    # ====== Non-Central Site tunnelbox ======================================
@@ -1407,10 +1425,42 @@ if getCentralSiteBootstrapProviderIndex() == None:
    error('NorNet_CentralSite_BootstrapProviderIndex has not been set in configuration file!')
 
 
-# ====== Bootstrap Mode =====================================================
-makeTunnelboxBootstrap(getLocalSiteIndex(), getLocalSiteDefaultProviderIndex(),
-                       getLocalNodeNorNetInterface(), getLocalSiteTunnelboxDefaultProviderIPv4(),
-                       'tunnelbox')
+### ====== Bootstrap Mode =====================================================
+###makeTunnelboxBootstrap(getLocalSiteIndex(), getLocalSiteDefaultProviderIndex(),
+                       ###getLocalNodeNorNetInterface(), getLocalSiteTunnelboxDefaultProviderIPv4(),
+                       ###'tunnelbox')
+
+##if bootstrapOnly:
+   ##localSite = {
+      ##'site_index'              : getLocalSiteIndex(),
+      ##'site_long_name'          : 'Local Site',
+      ##'site_short_name'         : 'LS',
+      ##'site_default_provider_index' : getLocalSiteDefaultProviderIndex(),
+      ##'site_tags'               : [
+          ##{ 'tagname' : 'nornet_site_tb_internal_interface', 'value' : getLocalNodeNorNetInterface() },
+          ##{ 'tagname' : 'nornet_site_tb_internal_interface', 'value' : str(getLocalSiteDefaultProviderIndex()) },
+          ##{ 'tagname' : 'nornet_site_tbp0_address_ipv4', 'value' : getLocalSiteTunnelboxDefaultProviderIPv4() },
+          ##{ 'tagname' : 'nornet_site_tbp0_gateway_ipv4', 'value' : getLocalSiteTunnelboxDefaultProviderIPv4() }
+      ##]
+   ##}
+   ##remoteSite = {
+      ##'site_index'              : NorNet_SiteIndex_Central,
+      ##'site_long_name'          : 'Central Site',
+      ##'site_short_name'         : 'NN'
+   ##}
+   ##remoteProvider = {
+      ##'provider_index'          : getCentralSiteBootstrapProviderIndex(),
+      ##'provider_long_name'      : 'Central Site Provider',
+      ##'provider_short_name'     : 'centralprovider',
+      ##'provider_tunnelbox_ipv4' : IPv4Network(getCentralSiteBootstrapTunnelbox())
+   ##}
+   ##fullSiteList = [ localSite, remoteSite ]
+   ##print fullSiteList
+   ##makeTunnelboxConfiguration(fullSiteList, localSite, 'tunnelbox')
+   
+
+
+
 
 # ====== Full Mode ==========================================================
 if not bootstrapOnly:
@@ -1422,78 +1472,115 @@ if not bootstrapOnly:
       error('Cannot find local site ' + str(getLocalSiteIndex()) + ' at PLC database!')
    siteNodeList = fetchNorNetNodeListForSite(localSite)
 
-   makeTunnelboxConfiguration(fullSiteList, localSite, 'tunnelbox')
-
-   # ====== Prepare additional nodes for DNS configuration ==================
-   additionalNodes = []
-   aliases = {}
-   for i in range(2, 255):
-      nodeConfiguration = getLocalNodeConfigurationString(i)
-      if nodeConfiguration != u'':
-         # print i,nodeConfiguration
-         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeConfiguration)
-         if len(parameters) < 3:
-            error('Bad configuration "' + nodeConfiguration + '" for NorNet_LocalSite_Node' + str(i))
-
-         nodeName     = unquote(parameters[0])
-         hardwareInfo = unquote(parameters[1])
-         softwareInfo = unquote(parameters[2])
-         try:
-            options = tuple(unquote(parameters[3]).split(','))
-         except:
-            options = []
-         additionalNodes.append(makeNodeForDNS(nodeName, localSite, i, hardwareInfo, softwareInfo, options))
-
-      nodeAliases = getLocalNodeAliasesString(i)
-      if nodeAliases != u'':
-         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeAliases)
-         if len(parameters) > 0:
-            aliases[i] = parameters
-
-   makeBindConfiguration(fullSiteList, siteNodeList, localSite, getHostnameFromFQDN(fqdn), additionalNodes, aliases)
-
-   # ====== DHCP daemon configuration =======================================
-   dynamicStart         = 0
-   dynamicEnd           = 0
-   dynamicConfiguration = getLocalSiteDHCPServerDynamicConfigurationString()
-   if ((dynamicConfiguration != None) and (dynamicConfiguration != u'')):
-      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', dynamicConfiguration)
-      if len(parameters) < 2:
-         error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange')         
-      try:
-         dynamicStart = int(unquote(parameters[0]))
-         dynamicEnd   = int(unquote(parameters[1]))
-      except:
-         error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range values')                  
-      if ((dynamicStart <= 1) or (dynamicStart > 255) or
-          (dynamicEnd <= 1) or (dynamicEnd > 255)):
-         error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range indexes')                  
-
-   staticList = []
-   for i in range(2, 255):
-      staticConfiguration = getLocalSiteDHCPServerStaticConfigurationString(i)
-      if staticConfiguration != u'':
-         # print i,staticConfiguration
-         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', staticConfiguration)
-         if len(parameters) < 1:
-            error('Bad configuration "' + staticConfiguration + '" for NorNet_LocalSite_DHCPServer_Static' + str(i))
-            
-         mac = unquote(parameters[0])
-         try:
-            fileName = unquote(parameters[1])
-         except:
-            fileName = '';
-         try:
-            serverName = unquote(parameters[2])
-         except:
-            serverName = '';
-            
-         staticEntry = {
-            'node_index'      : i,
-            'node_mac'        : mac,
-            'node_filename'   : fileName,
-            'node_servername' : serverName
-         }
-         staticList.append(staticEntry)
+# ====== Bootstrap Mode =====================================================
+else:
+   localSite = {
+      'site_index'                  : getLocalSiteIndex(),
+      'site_long_name'              : 'Local Site',
+      'site_short_name'             : 'LS',
+      'site_latitude'               : 0.0,
+      'site_longitude'              : 0.0,
+      'site_altitude'               : 0.0,
+      'site_domain'                 : getDomainFromFQDN(fqdn),
+      'site_default_provider_index' : getLocalSiteDefaultProviderIndex(),
+      'site_tags'                   : [
+          { 'tagname' : 'nornet_site_tb_internal_interface', 'value' : getLocalNodeNorNetInterface(), },
+          { 'tagname' : 'nornet_site_tbp0_index',            'value' : str(getLocalSiteDefaultProviderIndex()) },
+          { 'tagname' : 'nornet_site_tbp0_interface',        'value' : 'invalid9999' },
+          { 'tagname' : 'nornet_site_tbp0_address_ipv4',     'value' : getLocalSiteTunnelboxDefaultProviderIPv4() },
+          { 'tagname' : 'nornet_site_tbp0_gateway_ipv4',     'value' : getLocalSiteTunnelboxDefaultProviderIPv4() }
+      ]
+   }
+   #remoteSite = {
+      #'site_index'              : NorNet_SiteIndex_Central,
+      #'site_long_name'          : 'Central Site',
+      #'site_short_name'         : 'NN'
+   #}
+   #remoteProvider = {
+      #'provider_index'          : getCentralSiteBootstrapProviderIndex(),
+      #'provider_long_name'      : 'Central Site Provider',
+      #'provider_short_name'     : 'centralprovider',
+      #'provider_tunnelbox_ipv4' : IPv4Network(getCentralSiteBootstrapTunnelbox())
+   #}
+   fullSiteList = { getLocalSiteIndex() : localSite }
+   siteNodeList = []
    
-   makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
+   print getNorNetProvidersForSite(localSite)
+
+
+# ====== Tunnelbox configuration ============================================
+makeTunnelboxConfiguration(fullSiteList, localSite, 'tunnelbox')
+
+# ====== Prepare additional nodes for DNS configuration =====================
+additionalNodes = []
+aliases = {}
+for i in range(2, 255):
+   nodeConfiguration = getLocalNodeConfigurationString(i)
+   if nodeConfiguration != u'':
+      # print i,nodeConfiguration
+      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeConfiguration)
+      if len(parameters) < 3:
+         error('Bad configuration "' + nodeConfiguration + '" for NorNet_LocalSite_Node' + str(i))
+
+      nodeName     = unquote(parameters[0])
+      hardwareInfo = unquote(parameters[1])
+      softwareInfo = unquote(parameters[2])
+      try:
+         options = tuple(unquote(parameters[3]).split(','))
+      except:
+         options = []
+      additionalNodes.append(makeNodeForDNS(nodeName, localSite, i, hardwareInfo, softwareInfo, options))
+
+   nodeAliases = getLocalNodeAliasesString(i)
+   if nodeAliases != u'':
+      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeAliases)
+      if len(parameters) > 0:
+         aliases[i] = parameters
+
+makeBindConfiguration(fullSiteList, siteNodeList, localSite, getHostnameFromFQDN(fqdn), additionalNodes, aliases)
+
+# ====== DHCP daemon configuration ==========================================
+dynamicStart         = 0
+dynamicEnd           = 0
+dynamicConfiguration = getLocalSiteDHCPServerDynamicConfigurationString()
+if ((dynamicConfiguration != None) and (dynamicConfiguration != u'')):
+   parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', dynamicConfiguration)
+   if len(parameters) < 2:
+      error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange')         
+   try:
+      dynamicStart = int(unquote(parameters[0]))
+      dynamicEnd   = int(unquote(parameters[1]))
+   except:
+      error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range values')                  
+   if ((dynamicStart <= 1) or (dynamicStart > 255) or
+       (dynamicEnd <= 1) or (dynamicEnd > 255)):
+      error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range indexes')                  
+
+staticList = []
+for i in range(2, 255):
+   staticConfiguration = getLocalSiteDHCPServerStaticConfigurationString(i)
+   if staticConfiguration != u'':
+      # print i,staticConfiguration
+      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', staticConfiguration)
+      if len(parameters) < 1:
+         error('Bad configuration "' + staticConfiguration + '" for NorNet_LocalSite_DHCPServer_Static' + str(i))
+         
+      mac = unquote(parameters[0])
+      try:
+         fileName = unquote(parameters[1])
+      except:
+         fileName = '';
+      try:
+         serverName = unquote(parameters[2])
+      except:
+         serverName = '';
+         
+      staticEntry = {
+         'node_index'      : i,
+         'node_mac'        : mac,
+         'node_filename'   : fileName,
+         'node_servername' : serverName
+      }
+      staticList.append(staticEntry)
+
+makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
