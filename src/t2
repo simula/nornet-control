@@ -139,20 +139,24 @@ activateInterface ()
 {
    load-interface-configuration "$1"
    
-   log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
-   
-   options=""
-   if [ "$INTERFACE_TYPE" = "existing-gre" ] ; then
-      options="--add-to-existing-tunnel"
-   elif [ "$INTERFACE_TYPE" = "gre" -a "$GRE_LINKLOCAL" != "" ] ; then
-      options="--v6-linklocal '$GRE_LINKLOCAL'"
+   if [[ "$2" =~ ^$|^$INTERFACE_PROVIDER$$|^$INTERFACE_PROVIDER$([ ])|([ ])$INTERFACE_PROVIDER$([ ])|([ ])$INTERFACE_PROVIDER$$ ]] ; then
+      log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
+      
+      options=""
+      if [ "$INTERFACE_TYPE" = "existing-gre" ] ; then
+         options="--add-to-existing-tunnel"
+      elif [ "$INTERFACE_TYPE" = "gre" -a "$GRE_LINKLOCAL" != "" ] ; then
+         options="--v6-linklocal '$GRE_LINKLOCAL'"
+      fi
+      
+      make-tunnel "$INTERFACE_NAME" "$GRE_KEY" "$TUNNEL_LOCAL_OUTER_ADDRESS" "$TUNNEL_REMOTE_OUTER_ADDRESS" "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" $options && \
+      make-route "$ROUTING_TABLE" "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" && \
+      make-route main             "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC" && \
+      cp "$CONFIG_DIRECTORY/$INTERFACE" "$ACTIVE_DIRECTORY/$INTERFACE" && \
+      log-result $RESULT_GOOD || log-result $RESULT_BAD
+   else
+      log-action "Skipping activation of interface $INTERFACE_NAME (provider: $INTERFACE_PROVIDER; selected: $2).\n"
    fi
-   
-   make-tunnel "$INTERFACE_NAME" "$GRE_KEY" "$TUNNEL_LOCAL_OUTER_ADDRESS" "$TUNNEL_REMOTE_OUTER_ADDRESS" "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" $options && \
-   make-route "$ROUTING_TABLE" "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" && \
-   make-route main "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC" && \
-   cp "$CONFIG_DIRECTORY/$INTERFACE" "$ACTIVE_DIRECTORY/$INTERFACE" && \
-   log-result $RESULT_GOOD || log-result $RESULT_BAD
 }
 
 
@@ -160,7 +164,14 @@ activateInterface ()
 deactivateInterface ()
 {
    load-interface-configuration "$1"
-   rm -f "$ACTIVE_DIRECTORY/$INTERFACE"
+   if [[ "$2" =~ ^$|^$INTERFACE_PROVIDER$$|^$INTERFACE_PROVIDER$([ ])|([ ])$INTERFACE_PROVIDER$([ ])|([ ])$INTERFACE_PROVIDER$$ ]] ; then
+      log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
+      remove-tunnel "$INTERFACE_NAME" "$GRE_KEY" && \
+      log-result $RESULT_GOOD || log-result $RESULT_BAD
+      rm -f "$ACTIVE_DIRECTORY/$INTERFACE"
+   else
+      log-action "Skipping deactivation of interface $INTERFACE_NAME (provider: $INTERFACE_PROVIDER; selected: $2).\n"
+   fi
 }
 
 
@@ -256,25 +267,29 @@ activateProvider ()
 {
    load-provider-configuration "$1"
 
-   log-action "Activating provider $PROVIDER_LONG_NAME."
+   if [[ "$2" =~ ^$|^$PROVIDER_SHORT_NAME$$|^$PROVIDER_SHORT_NAME$([ ])|([ ])$PROVIDER_SHORT_NAME$([ ])|([ ])$PROVIDER_SHORT_NAME$$ ]] ; then
+      log-action "Activating provider $PROVIDER_LONG_NAME."
 
-   # 1. For directly connected NorNet networks, skip further rules and go to "main" table instead.
-   # 2. If TOS is set, select outgoing provider accordingly
-   # 3. Otherwise, use source address to determine the outgoing provider.
-   
-   for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
-      add-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$providerNetwork"
-   done && \
-   if [ $PROVIDER_TOS -ne 0 ] ; then
-      for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv6 ; do
-         add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" from "$nornetNetwork" tos "$PROVIDER_TOS"
-      done
-   fi && \
-   for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
-      add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_SOURCE_PREF" from "$providerNetwork"
-   done && \
-   cp "$CONFIG_DIRECTORY/$PROVIDER" "$ACTIVE_DIRECTORY/$PROVIDER" && \
-   log-result $RESULT_GOOD || log-result $RESULT_BAD
+      # 1. For directly connected NorNet networks, skip further rules and go to "main" table instead.
+      # 2. If TOS is set, select outgoing provider accordingly
+      # 3. Otherwise, use source address to determine the outgoing provider.
+      
+      for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
+         add-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$providerNetwork"
+      done && \
+      if [ $PROVIDER_TOS -ne 0 ] ; then
+         for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv6 ; do
+            add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" from "$nornetNetwork" tos "$PROVIDER_TOS"
+         done
+      fi && \
+      for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
+         add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_SOURCE_PREF" from "$providerNetwork"
+      done && \
+      cp "$CONFIG_DIRECTORY/$PROVIDER" "$ACTIVE_DIRECTORY/$PROVIDER" && \
+      log-result $RESULT_GOOD || log-result $RESULT_BAD
+   else
+      log-action "Not activating provider $PROVIDER_SHORT_NAME (selected: $2).\n"
+   fi
 }
 
 
@@ -283,21 +298,25 @@ deactivateProvider ()
 {
    load-provider-configuration "$1"
 
-   log-action "Deactivating provider $PROVIDER_LONG_NAME."
+   if [[ "$2" =~ ^$|^$PROVIDER_SHORT_NAME$$|^$PROVIDER_SHORT_NAME$([ ])|([ ])$PROVIDER_SHORT_NAME$([ ])|([ ])$PROVIDER_SHORT_NAME$$ ]] ; then
+      log-action "Deactivating provider $PROVIDER_LONG_NAME."
 
-   remove-table "$PROVIDER_TABLE" && \
-   for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
-      remove-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_SOURCE_PREF" from "$providerNetwork" || true
-   done && \
-   for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv6 ; do
-      remove-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" from "$nornetNetwork" tos "$PROVIDER_TOS" || true
-   done && \
-   for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
-      remove-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$providerNetwork" || true
-   done && \
-   log-result $RESULT_GOOD || log-result $RESULT_BAD
+      remove-table "$PROVIDER_TABLE" && \
+      for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
+         remove-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_SOURCE_PREF" from "$providerNetwork" || true
+      done && \
+      for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv6 ; do
+         remove-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" from "$nornetNetwork" tos "$PROVIDER_TOS" || true
+      done && \
+      for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
+         remove-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$providerNetwork" || true
+      done && \
+      log-result $RESULT_GOOD || log-result $RESULT_BAD
 
-   rm -f "$ACTIVE_DIRECTORY/$PROVIDER"
+      rm -f "$ACTIVE_DIRECTORY/$PROVIDER"
+   else
+      log-action "Not deactivating provider $PROVIDER_SHORT_NAME (selected: $2).\n"
+   fi
 }
 
 
@@ -448,6 +467,8 @@ while [ "$1" != "" ] ; do
    shift
 done
 
+log "Entering Tunnelbox setup$eventInfo"
+
 ALL_PROVIDER_CONFIGS=`find "$CONFIG_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
 ALL_INTERFACE_CONFIGS=`find "$CONFIG_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface*' -printf "%f\n\n" | sort`
 load-bootstrap-configuration
@@ -488,10 +509,10 @@ if [ "$state" = "stop" -o "$state" = "restart" ] ; then
    ACTIVE_PROVIDER_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
    ACTIVE_INTERFACE_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface*' -printf "%f\n\n" | sort`
    for interface in `echo "$ALL_INTERFACE_CONFIGS $ACTIVE_PROVIDER_CONFIGS" | sort -u` ; do
-      deactivateInterface "$interface" || true
+      deactivateInterface "$interface" "$selectedProviders" || true
    done
    for provider in `echo "$ALL_PROVIDER_CONFIGS $ACTIVE_PROVIDER_CONFIGS" | sort -u` ; do 
-      deactivateProvider "$provider" || true
+      deactivateProvider "$provider" "$selectedProviders" || true
    done
 fi
 
@@ -504,8 +525,8 @@ if [ "$state" = "start" -o "$state" = "restart" ] ; then
          activateProvider "$provider"
       else
          if ! diff "$CONFIG_DIRECTORY/$provider" "$ACTIVE_DIRECTORY/$provider" >/dev/null ; then
-            deactivateProvider "$provider"
-            activateProvider "$provider"
+            deactivateProvider "$provider" "$selectedProviders"
+            activateProvider   "$provider" "$selectedProviders"
          fi
       fi   
    done
@@ -513,11 +534,11 @@ if [ "$state" = "start" -o "$state" = "restart" ] ; then
    log "Activating interfaces"
    for interface in $ALL_INTERFACE_CONFIGS ; do
       if [ ! -e "$ACTIVE_DIRECTORY/$interface" ] ; then
-         activateInterface "$interface"
+         activateInterface "$interface" "$selectedProviders"
       else
          if ! diff "$CONFIG_DIRECTORY/$interface" "$ACTIVE_DIRECTORY/$interface" >/dev/null ; then
-            deactivateInterface "$interface"
-            activateInterface "$interface"
+            deactivateInterface "$interface" "$selectedProviders"
+            activateInterface   "$interface" "$selectedProviders"
          fi
       fi
    done
@@ -526,7 +547,7 @@ if [ "$state" = "start" -o "$state" = "restart" ] ; then
    PROVIDER_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
    for provider in $PROVIDER_CONFIGS ; do
       if [ ! -e "$CONFIG_DIRECTORY/$provider" ] ; then
-         deactivateProvider "$provider"
+         deactivateProvider "$provider" "$selectedProviders"
       fi
    done
 fi
@@ -539,3 +560,5 @@ if [ "$state" = "stop" -o "$state" = "start" -o "$state" = "restart" ] ; then
    ip -6 route flush cache && \
    log-result $RESULT_GOOD || log-result $RESULT_BAD
 fi
+
+log "Finished Tunnelbox setup$eventInfo"
