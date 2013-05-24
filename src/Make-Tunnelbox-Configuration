@@ -503,7 +503,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                         writeRR(tunnelZoneFile,
                                 getZoneForAddress(outgoingTunnelIP.ip, prefixLength),
                                 'PTR',
-                                str.lower(incomingProvider['provider_short_name']) + '.' + str.lower(incomingSite['site_domain']) + '.' +
+                                str.lower(incomingProvider['provider_short_name']) + '.' + getHostnameFromFQDN(str.lower(incomingSite['site_domain'])) + '.' +
                                 str.lower(outgoingProvider['provider_short_name']) + '.' + str.lower(outgoingSite['site_domain']) + '.')
 
          tunnelZoneFile.close()
