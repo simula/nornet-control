@@ -33,7 +33,7 @@ echo ""
 echo "NOTE: Set NorNetPLC_Address='127.0.0.1' in /etc/nornet/nornetapi-config!"
 echo ""
 
-sudo ssh "nornetpp@$CENTRAL_SITE_TUNNELBOX" -L 443:10.1.1.2:443
+sudo ssh "nornetpp@$CENTRAL_SITE_TUNNELBOX" -L 443:plc:443
 
 echo ""
 echo "NOTE: Do not forget to reset NorNetPLC_Address in /etc/nornet/nornetapi-config!"
