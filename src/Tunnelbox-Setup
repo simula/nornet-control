@@ -287,6 +287,14 @@ load-provider-configuration ()
       echo 2>&1 "ERROR: Bad provider PROVIDER_LOCAL_NETWORK_IPv6 setting in $PROVIDER: $PROVIDER_LOCAL_NETWORK_IPv6!"
       exit 1
    fi
+   if [[ ! "$PROVIDER_LOCAL_TUNNELBOX_IPv4" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider PROVIDER_LOCAL_TUNNELBOX_IPv4 setting in $PROVIDER: $PROVIDER_LOCAL_TUNNELBOX_IPv4!"
+      exit 1
+   fi
+   if [[ ! "$PROVIDER_LOCAL_TUNNELBOX_IPv6" =~ ^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\s*/[0-9]+$ ]] ; then
+      echo 2>&1 "ERROR: Bad provider PROVIDER_LOCAL_TUNNELBOX_IPv6 setting in $PROVIDER: $PROVIDER_LOCAL_TUNNELBOX_IPv6!"
+      exit 1
+   fi
 }
 
 
@@ -436,8 +444,8 @@ activateTunnelbox ()
    for provider in $ALL_PROVIDER_CONFIGS ; do
       load-provider-configuration "$provider" -config-dir-first && \
       log-action "Setting up local networks for $PROVIDER_LONG_NAME ..." && \
-      make-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv4" && \
-      make-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv6" && \
+      make-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_TUNNELBOX_IPv4" && \
+      make-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_TUNNELBOX_IPv6" && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
    done
    
@@ -465,8 +473,8 @@ deactivateTunnelbox ()
       load-provider-configuration "$provider" && \
       if [ $PROVIDER_IS_DEFAULT_PROVIDER -ne 1 ] ; then
          log-action "Tearing down local networks for $PROVIDER_LONG_NAME ..."
-         remove-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv4" || true
-         remove-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv6" || true
+         remove-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_TUNNELBOX_IPv4" || true
+         remove-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_TUNNELBOX_IPv6" || true
          log-result $RESULT_GOOD
       fi
    done

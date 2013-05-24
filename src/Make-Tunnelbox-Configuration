@@ -733,6 +733,9 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
       for version in [ 4, 6 ]:
          localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
          providerFile.write('PROVIDER_LOCAL_NETWORK_IPv' + str(version) + '="' + str(localProviderNetwork) + '"\n')
+         tunnelboxAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
+         providerFile.write('PROVIDER_LOCAL_TUNNELBOX_IPv' + str(version) + '="' + str(tunnelboxAddress) + '"\n')
+         
 
       providerFile.close()
 
