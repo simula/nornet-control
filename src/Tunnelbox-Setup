@@ -617,11 +617,11 @@ if [ "$state" = "stop" -o "$state" = "restart" ] ; then
    ACTIVE_PROVIDER_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
    ACTIVE_INTERFACE_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface*' -printf "%f\n\n" | sort`
    log "Deactivating interfaces"
-   for interface in `echo "$ALL_INTERFACE_CONFIGS $ACTIVE_INTERFACE_CONFIGS" | sort -u` ; do
+   for interface in `echo "$ALL_INTERFACE_CONFIGS $ACTIVE_INTERFACE_CONFIGS" | xargs -n1 | sort -u` ; do
       deactivateInterface "$interface" "$selectedProviders" || true
    done
    log "Deactivating providers"
-   for provider in `echo "$ALL_PROVIDER_CONFIGS $ACTIVE_PROVIDER_CONFIGS" | sort -u` ; do 
+   for provider in `echo "$ALL_PROVIDER_CONFIGS $ACTIVE_PROVIDER_CONFIGS" | xargs -n1 | sort -u` ; do 
       deactivateProvider "$provider" "$selectedProviders" || true
    done
 fi
@@ -667,7 +667,7 @@ fi
 if [ "$state" = "status" ] ; then
    ACTIVE_INTERFACE_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface*' -printf "%f\n\n" | sort`
    log "Checking interfaces"
-   for interface in `echo "$ALL_INTERFACE_CONFIGS $ACTIVE_INTERFACE_CONFIGS" | sort -u` ; do
+   for interface in `echo "$ALL_INTERFACE_CONFIGS $ACTIVE_INTERFACE_CONFIGS" | xargs -n1 | sort -u` ; do
       checkInterface "$interface" "$selectedProviders" || true
    done
 fi
