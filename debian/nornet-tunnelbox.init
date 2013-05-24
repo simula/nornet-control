@@ -188,7 +188,6 @@ case "$ACTION" in
    Tunnelbox-Setup status -providers "@ALL" $@
    ;;
   configure)
-     rm -f tunnelbox*-config tunnelbox-bootstrap tunnelbox-providers
      # All configuration files are gone. The tests below will trigger update.
      check_and_configure -update-all >>$LOGFILE 2>&1
      Tunnelbox-Setup start -providers "@ALL" -event "MANUAL CONFIGURE" >>$LOGFILE 2>&1
