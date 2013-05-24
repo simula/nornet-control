@@ -479,7 +479,7 @@ deactivateTunnelbox ()
       log-result $RESULT_GOOD
    fi
    for provider in $ALL_PROVIDER_CONFIGS ; do
-      load-provider-configuration "$provider" && \
+      load-provider-configuration "$provider" -active-dir-first && \
       if [ $PROVIDER_IS_DEFAULT_PROVIDER -ne 1 ] ; then
          log-action "Tearing down local networks for $PROVIDER_LONG_NAME ..."
          remove-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_TUNNELBOX_IPv4" || true
