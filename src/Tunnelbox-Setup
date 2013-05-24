@@ -669,6 +669,14 @@ if [ "$state" = "start" -o "$state" = "restart" ] ; then
       fi
    done
 
+   log "Checking for removed interfaces"
+   INTERFACE_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.interface*' -printf "%f\n\n" | sort`
+   for interface in $INTERFACE_CONFIGS ; do
+      if [ ! -e "$CONFIG_DIRECTORY/$interface" ] ; then
+         deactivateInterface "$interface" "$selectedInterfaces"
+      fi
+   done
+   
    log "Checking for removed providers"
    PROVIDER_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
    for provider in $PROVIDER_CONFIGS ; do
