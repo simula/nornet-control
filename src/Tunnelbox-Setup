@@ -92,7 +92,8 @@ load-interface-configuration ()
    TUNNEL_REMOTE_INNER_ADDRESS=
    TUNNEL_INNER_PREFIX=
    REMOTE_SITE_NETWORK=
-   REMOTE_SITE_METRIC=   
+   REMOTE_SITE_METRIC=
+   TUNNEL_IS_DEFAULT_ROUTE=0
    load-configuration "$INTERFACE" "$OPTION"
    
    # ====== Check the input =================================================
@@ -151,6 +152,10 @@ load-interface-configuration ()
       echo 2>&1 "ERROR: Bad interface ROUTING_TABLE setting in $INTERFACE: $ROUTING_TABLE!"
       exit 1
    fi
+   if [[ ! "$TUNNEL_IS_DEFAULT_ROUTE" =~ ^[0-1]$ ]] ; then
+      echo 2>&1 "ERROR: Bad interface TUNNEL_IS_DEFAULT_ROUTE setting in $INTERFACE: $TUNNEL_IS_DEFAULT_ROUTE!"
+      exit 1
+   fi
 }
 
 
@@ -174,6 +179,9 @@ activateInterface ()
          "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" $options && \
       make-route "$ROUTING_TABLE" "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" && \
       make-route main             "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC" && \
+      if [ $TUNNEL_IS_DEFAULT_ROUTE -eq 1 ] ; then
+         make-route "$ROUTING_TABLE" default "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS"
+      fi && \
       cp "$CONFIG_DIRECTORY/$INTERFACE" "$ACTIVE_DIRECTORY/$INTERFACE" && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
    else

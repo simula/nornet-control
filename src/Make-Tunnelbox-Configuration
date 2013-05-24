@@ -758,13 +758,13 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
                tunnel        = getTunnel(localSite, localProvider, remoteSite, remoteProvider, version)
                remoteNetwork = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, 0, version)
 
-               interfaceFile = codecs.open(tunnel['tunnel_interface'] + '.interface' + str(version), 'w', 'utf-8')
-               
+               interfaceFile = codecs.open(tunnel['tunnel_interface'] + '.interface' + str(version), 'w', 'utf-8')               
                interfaceFile.write('INTERFACE_DESCRIPTION="' + \
                   localProvider['provider_long_name'] + ' (' + str(localProvider['provider_index']) + ') -> ' + \
                   remoteSite['site_long_name'] + ' (' + str(remoteSite['site_index']) + ') / ' + \
                   remoteProvider['provider_long_name'] + ' (' + str(remoteProvider['provider_index']) + ')"\n')
 
+               # ====== Tunnel ==============================================
                if ((version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
                   interfaceFile.write('INTERFACE_TYPE="gre"\n')
                   interfaceFile.write('GRE_LINKLOCAL="' + str(makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
@@ -785,13 +785,20 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
                interfaceFile.write('TUNNEL_REMOTE_INNER_ADDRESS="' + str(tunnel['tunnel_remote_inner_address'].ip) + '"\n')
                interfaceFile.write('TUNNEL_INNER_PREFIX='          + str(tunnel['tunnel_local_inner_address'].prefixlen) + '\n\n')
                
+               # ====== Routing =============================================
                interfaceFile.write('REMOTE_SITE_NETWORK="' + str(remoteNetwork) + '"\n')
-
                metric = 10 + pathNumber
                if remoteProviderIndex == localProviderIndex:
                   metric = 5
                interfaceFile.write('REMOTE_SITE_METRIC=' + str(metric)         + '\n')
                interfaceFile.write('ROUTING_TABLE='      + str(routingTableID) + '\n')
+               
+               # ====== Default route =======================================
+               # The local provider's default route to the
+               # Central Site's default provider interface
+               if ((localSiteIndex != NorNet_SiteIndex_Central) and
+                   (remoteProviderIndex == remoteSite['site_default_provider_index'])):
+                  interfaceFile.write('TUNNEL_IS_DEFAULT_ROUTE=1\n')
 
       pathNumber = pathNumber + 1
 
