@@ -434,7 +434,7 @@ activateTunnelbox ()
    log-result $RESULT_GOOD || log-result $RESULT_BAD
 
    for provider in $ALL_PROVIDER_CONFIGS ; do
-      load-provider-configuration "$provider" && \
+      load-provider-configuration "$provider" -config-dir-first && \
       log-action "Setting up local networks for $PROVIDER_LONG_NAME ..." && \
       make-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv4" && \
       make-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_NETWORK_IPv6" && \
@@ -600,11 +600,13 @@ fi
 
 
 # ====== Start/stop tunnelbox ===============================================
-if [ "$selectedProviders" == "" ] ; then
+if [ "$selectedProviders" == "@ALL" ] ; then
    if [ "$state" = "stop" -o "$state" = "restart" ] ; then
+      log "Deactivating tunnelbox"
       deactivateTunnelbox  
    fi
    if [ "$state" = "start" -o "$state" = "restart" ] ; then
+      log "Activating tunnelbox"
       activateTunnelbox
    fi
 fi
