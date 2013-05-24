@@ -47,10 +47,36 @@ ACTIVE_DIRECTORY="/var/run/nornet-tunnelbox"
 # ###########################################################################
 
 
+load-configuration ()
+{
+   local configFile="$1"
+   local option="$2"
+   if [ "$option" = "-config-dir-first" ] ; then
+      local directories="$CONFIG_DIRECTORY $ACTIVE_DIRECTORY"
+   elif [ "$option" = "-active-dir-first" ] ; then
+      local directories="$ACTIVE_DIRECTORY $CONFIG_DIRECTORY"
+   else
+      echo >&2 "ERROR: load-configuration called with invalid option \"$option\"!"
+      exit 1
+   fi
+   
+   for directory in $directories ; do
+      if [ -e "$directory/$configFile" ] ; then
+         . $directory/$configFile
+         return 0
+      fi
+   done
+
+   echo 2>&1 "ERROR: Cannot find configuration $configFile (tried: $directories)!"
+   exit 1
+}
+
+
 # ###### Load interface configuration from configuration file ###############
 load-interface-configuration ()
 {
    INTERFACE="$1"
+   OPTION="$2"
 
    # ====== Load the settings ===============================================
    INTERFACE_NAME=`echo $INTERFACE | sed -e "s/.interface.*$//g"`
@@ -66,14 +92,8 @@ load-interface-configuration ()
    TUNNEL_REMOTE_INNER_ADDRESS=
    TUNNEL_INNER_PREFIX=
    REMOTE_SITE_NETWORK=
-   REMOTE_SITE_METRIC=
-   
-   if [ ! -e "$CONFIG_DIRECTORY/$INTERFACE" ] ; then
-      echo 2>&1 "ERROR: Cannot find $CONFIG_DIRECTORY/$INTERFACE!"
-      exit 1
-   fi
-   . $CONFIG_DIRECTORY/$INTERFACE
-   
+   REMOTE_SITE_METRIC=   
+   load-configuration "$INTERFACE" "$OPTION"
    
    # ====== Check the input =================================================
    if [ "$INTERFACE_DESCRIPTION" = "" ] ; then
@@ -137,7 +157,7 @@ load-interface-configuration ()
 # ###### Activate interface #################################################
 activateInterface ()
 {
-   load-interface-configuration "$1"
+   load-interface-configuration "$1" -config-dir-first
    
    if [[ "$2" =~ ^@ALL$|^${INTERFACE_PROVIDER}$|^${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER}$ ]] ; then
       log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
@@ -165,7 +185,7 @@ activateInterface ()
 # ###### Deactivate interface ###############################################
 deactivateInterface ()
 {
-   load-interface-configuration "$1"
+   load-interface-configuration "$1" -active-dir-first
    if [[ "$2" =~ ^@ALL$|^${INTERFACE_PROVIDER}$|^${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER}$ ]] ; then
       log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
       remove-tunnel "$INTERFACE_NAME" "$GRE_KEY" && \
@@ -180,7 +200,7 @@ deactivateInterface ()
 # ###### Check interface ####################################################
 checkInterface ()
 {
-   load-interface-configuration "$1"
+   load-interface-configuration "$1" -active-dir-first
    if [[ "$2" =~ ^@ALL$|^${INTERFACE_PROVIDER}$|^${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER}$ ]] ; then
       log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
       echo -en "\nType $INTERFACE_TYPE: $TUNNEL_LOCAL_INNER_ADDRESS -> $TUNNEL_REMOTE_INNER_ADDRESS [via $TUNNEL_LOCAL_OUTER_ADDRESS -> $TUNNEL_REMOTE_OUTER_ADDRESS]"
@@ -199,6 +219,7 @@ checkInterface ()
 load-provider-configuration ()
 {
    PROVIDER="$1"
+   OPTION="$2"
 
    # ====== Load the settings ===============================================
    PROVIDER_INDEX=
@@ -212,12 +233,7 @@ load-provider-configuration ()
    PROVIDER_TABLE_SOURCE_PREF=
    PROVIDER_NETWORK_IPv4=
    PROVIDER_NETWORK_IPv6=
-
-   if [ ! -e "$CONFIG_DIRECTORY/$PROVIDER" ] ; then
-      echo 2>&1 "ERROR: Cannot find $CONFIG_DIRECTORY/$PROVIDER!"
-      exit 1
-   fi
-   . $CONFIG_DIRECTORY/$PROVIDER
+   load-configuration "$PROVIDER" "$OPTION"
    
    # ====== Check the input =================================================
    if [[ ! "$PROVIDER_INDEX" =~ ^[0-9]+$ ]] ; then
@@ -277,7 +293,7 @@ load-provider-configuration ()
 # ###### Activate provider #################################################
 activateProvider ()
 {
-   load-provider-configuration "$1"
+   load-provider-configuration "$1" -config-dir-first
 
    if [[ "$2" =~ ^@ALL$|^${PROVIDER_SHORT_NAME}$|^${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME}$ ]] ; then
       log-action "Activating provider $PROVIDER_LONG_NAME."
@@ -308,7 +324,7 @@ activateProvider ()
 # ###### Deactivate provider ###############################################
 deactivateProvider ()
 {
-   load-provider-configuration "$1"
+   load-provider-configuration "$1" -active-dir-first
 
    if [[ "$2" =~ ^@ALL$|^${PROVIDER_SHORT_NAME}$|^${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME}$ ]] ; then
       log-action "Deactivating provider $PROVIDER_LONG_NAME."
