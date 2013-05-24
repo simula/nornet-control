@@ -177,6 +177,18 @@ deactivateInterface ()
 }
 
 
+# ###### Check interface ####################################################
+checkInterface ()
+{
+   load-interface-configuration "$1"
+   if [[ "$2" =~ ^@ALL$|^${INTERFACE_PROVIDER}$|^${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER}$ ]] ; then
+      log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
+      echo -en "\nType $INTERFACE_TYPE: $TUNNEL_LOCAL_INNER_ADDRESS -> $TUNNEL_REMOTE_INNER_ADDRESS [via $TUNNEL_LOCAL_OUTER_ADDRESS -> $TUNNEL_REMOTE_OUTER_ADDRESS]"
+      show-tunnel "$INTERFACE_NAME" "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" "$INTERFACE_DESCRIPTION" && \
+      log-result $RESULT_GOOD || log-result $RESULT_BAD
+   fi
+}
+
 
 # ###########################################################################
 # #### Provider Configuration                                            ####
@@ -629,6 +641,16 @@ if [ "$state" = "start" -o "$state" = "restart" ] ; then
       if [ ! -e "$CONFIG_DIRECTORY/$provider" ] ; then
          deactivateProvider "$provider" "$selectedProviders"
       fi
+   done
+fi
+
+
+# ====== status: show tunnel status =========================================
+if [ "$state" = "status" ] ; then
+   ACTIVE_INTERFACE_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*[0-9]-[0-9]*-*[0-9].interface*' -printf "%f\n\n" | sort`
+   log "Checking interfaces"
+   for interface in `echo "$ALL_INTERFACE_CONFIGS $ACTIVE_INTERFACE_CONFIGS" | sort -u` ; do
+      checkInterface "$interface" "$selectedProviders" || true
    done
 fi
 
