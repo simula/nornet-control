@@ -177,8 +177,7 @@ check_and_configure ()
 case "$ACTION" in
   start|stop|restart)
    echo -n "Starting $DESC: "
-   INTERFACES=`find /var/run/network -name "ifup.*" | sed -e "s/\/var\/run\/network\/ifup.//g" | xargs -n128 echo | sed -e "s/ /,/g"`
-   Tunnelbox-Setup "$ACTION" -interfaces "$INTERFACES" -event "init script action: $ACTION; interfaces=$INTERFACES" $@ >>$LOGFILE 2>&1 && \
+   Tunnelbox-Setup "$ACTION" -providers "@ALL" -event "init script action: $ACTION" $@ >>$LOGFILE 2>&1 && \
    echo "$NAME."
    ;;
   force-reload)
@@ -188,7 +187,6 @@ case "$ACTION" in
    Tunnelbox-Setup status -providers "@ALL" $@
    ;;
   configure)
-     rm -f tunnelbox*-config tunnelbox-bootstrap tunnelbox-providers
      # All configuration files are gone. The tests below will trigger update.
      check_and_configure -update-all >>$LOGFILE 2>&1
      Tunnelbox-Setup start -providers "@ALL" -event "MANUAL CONFIGURE" >>$LOGFILE 2>&1
