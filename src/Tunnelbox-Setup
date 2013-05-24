@@ -149,7 +149,9 @@ activateInterface ()
          options="--v6-linklocal '$GRE_LINKLOCAL'"
       fi
       
-      make-tunnel "$INTERFACE_NAME" "$GRE_KEY" "$TUNNEL_LOCAL_OUTER_ADDRESS" "$TUNNEL_REMOTE_OUTER_ADDRESS" "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" $options && \
+      make-tunnel "$INTERFACE_NAME" "$GRE_KEY" \
+         "$TUNNEL_LOCAL_OUTER_ADDRESS" "$TUNNEL_REMOTE_OUTER_ADDRESS" \
+         "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" $options && \
       make-route "$ROUTING_TABLE" "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" && \
       make-route main             "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC" && \
       cp "$CONFIG_DIRECTORY/$INTERFACE" "$ACTIVE_DIRECTORY/$INTERFACE" && \
@@ -272,7 +274,7 @@ activateProvider ()
       # 2. If TOS is set, select outgoing provider accordingly
       # 3. Otherwise, use source address to determine the outgoing provider.
       
-      for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
+      for providerNetwork in $PROVIDER_LOCAL_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_LOCAL_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
          add-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$providerNetwork"
       done && \
       if [ $PROVIDER_TOS -ne 0 ] ; then
@@ -280,7 +282,7 @@ activateProvider ()
             add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" from "$nornetNetwork" tos "$PROVIDER_TOS"
          done
       fi && \
-      for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
+      for providerNetwork in $PROVIDER_LOCAL_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_LOCAL_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
          add-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_SOURCE_PREF" from "$providerNetwork"
       done && \
       cp "$CONFIG_DIRECTORY/$PROVIDER" "$ACTIVE_DIRECTORY/$PROVIDER" && \
@@ -300,13 +302,13 @@ deactivateProvider ()
       log-action "Deactivating provider $PROVIDER_LONG_NAME."
 
       remove-table "$PROVIDER_TABLE" && \
-      for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
+      for providerNetwork in $PROVIDER_LOCAL_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_LOCAL_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
          remove-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_SOURCE_PREF" from "$providerNetwork" || true
       done && \
       for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv6 ; do
          remove-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" from "$nornetNetwork" tos "$PROVIDER_TOS" || true
       done && \
-      for providerNetwork in $PROVIDER_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
+      for providerNetwork in $PROVIDER_LOCAL_NETWORK_IPv4 $PROVIDER_TUNNEL_NETWORK_IPv4 $PROVIDER_LOCAL_NETWORK_IPv6 $PROVIDER_TUNNEL_NETWORK_IPv6 ; do
          remove-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$providerNetwork" || true
       done && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
