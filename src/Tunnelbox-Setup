@@ -470,6 +470,7 @@ activateTunnelbox ()
 # ###### Deactivate tunnelbox functionality #################################
 deactivateTunnelbox ()
 {
+   log "Deactivating tunnelbox"
    if [ $TUNNELBOX_SITE_INDEX -eq 1 ] ; then
       log-action "Turning off IPv4 NAT ..."
       for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 ; do
@@ -618,11 +619,9 @@ fi
 # ====== Start/stop tunnelbox ===============================================
 if [ "$selectedProviders" == "@ALL" ] ; then
    if [ "$state" = "stop" -o "$state" = "restart" ] ; then
-      log "Deactivating tunnelbox"
       deactivateTunnelbox  
    fi
    if [ "$state" = "start" -o "$state" = "restart" ] ; then
-      log "Activating tunnelbox"
       activateTunnelbox
    fi
 fi
@@ -673,7 +672,7 @@ if [ "$state" = "start" -o "$state" = "restart" ] ; then
    INTERFACE_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.interface*' -printf "%f\n\n" | sort`
    for interface in $INTERFACE_CONFIGS ; do
       if [ ! -e "$CONFIG_DIRECTORY/$interface" ] ; then
-         deactivateInterface "$interface" "$selectedInterfaces"
+         deactivateInterface "$interface" "$selectedProviders"
       fi
    done
    
