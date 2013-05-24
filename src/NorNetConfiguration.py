@@ -69,6 +69,7 @@ NorNet_Configuration = {
    'NorNet_LocalSite_DefaultProviderIndex'     : None,
 
    'NorNet_LocalNode_Index'                    : 0,
+   'NorNet_LocalNode_Hostname'                 : 'localhost.localdomain',
    'NorNet_LocalNode_NorNetUser'               : 'nornetpp',
    'NorNet_LocalNode_NorNetInterface'          : None,
 

@@ -369,7 +369,7 @@ add-or-remove-table-selector ()
          selectorOptions="$selectorOptions fwmark $2"
          shift
       else
-         echo >&2 "ERROR: Unknown selector "$1"!"
+         echo >&2 "ERROR: Invalid selector "$1" for add-or-remove-table-selector!"
          exit 1
       fi
       shift
@@ -405,7 +405,7 @@ make-route ()
    local interface="$3"           # Output interface
    local nextHop="$4"             # Next hop
    shift ; shift ; shift ; shift
-   local miscOptions="$@"         # Misc options (e.g. "----add-to-exiting-tunnel")
+   local miscOptions="$@"         # Misc options
 
    # echo ip route add $destination via $nextHop dev $interface table $tableID $miscOptions
    ip route add $destination via $nextHop dev $interface table $tableID $miscOptions
@@ -448,50 +448,4 @@ remove-nat ()
          dummy=1
       done
    fi
-}
-
-
-# ###### Check whether a provider is in a list of available providers #######
-check-providers ()
-{
-   local availableProviders="$1"
-   local selectedProviders=`echo $2 | sed -e "s/,/ /g"`
-   if [ "$selectedProviders" != "@ALL" ] ; then
-      for b in $selectedProviders ; do
-         found=0
-         for a in $availableProviders ; do
-            if [ "$a" == "$b" ] ; then
-               found=1
-            fi
-         done
-         if [ $found -eq 0 ] ; then
-            echo >&2 "ERROR: Provider \"$b\" is not in the list of available providers \"$availableProviders\"!"
-            exit 1
-         fi
-      done
-   fi
-}
-
-
-# ###### Check whether a provider is in a list of available providers #######
-# IMPORTANT: No spaces, etc. are allowed within lists!
-get-providers-from-interfaces () {
-   local interfaces=`echo $1 | sed -e "s/-/_/g" -e "s/ //g" -e "s/\t//g" -e "s/:/_sub_/g"`
-   local selectedProviders=""
-   local oldIFS=$IFS
-   IFS=","
-   for interface in $interfaces ; do
-      eval "provider=\$provider_for_if_$interface"
-      if [ "$provider" != "" ] ; then
-         if [ "$selectedProviders" = "" ] ; then
-            selectedProviders="$provider"
-         else
-            selectedProviders="$selectedProviders $provider"
-         fi
-      #else
-      #   echo >&2 "NOTE: Interface \"$interface\" does not belong to a NorNet provider -> skipping!"
-      fi
-   done
-   IFS=$oldIFS
-   echo $selectedProviders
 }

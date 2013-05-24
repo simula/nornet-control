@@ -1,0 +1,3 @@
+#!/bin/sh -e
+
+sudo vacuumdb --user postgres --analyze --full planetlab5
