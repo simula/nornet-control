@@ -12,7 +12,7 @@ NorNet_IPv6Prefix="2001:700:4100::/48"   # /48 prefix for internal IPv6 space (e
 
 # Prefixes for the internal tunnel IPv4 and IPv6 networks
 NorNet_IPv4TunnelPrefix="192.168.0.0/16"              # /16 prefix for internal IPv4 tunnel space (e.g. '192.168.0.0/16')
-NorNet_IPv6TunnelPrefix="2001:700:4100:0:ffff::/72"   # /72 prefix for internal IPv6 tunnel space (e.g. '2001:700:4100:0:ffff::/72')
+NorNet_IPv6TunnelPrefix="2001:700:4100:0:ffff::/80"   # /80 prefix for internal IPv6 tunnel space (e.g. '2001:700:4100:0:ffff::/80')
 
 # The domain name of the central site
 # (it will e.g. be used with the alias 'nfs' to look up the file server!)
