@@ -784,7 +784,7 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
 
                if needsLinkLocalAddress == True:
                   interfaceFile.write('TUNNEL_V6LINKLOCAL_ADDRESS="' + \
-                     str(makeGRELinkLocal(0x1000 * version,
+                     str(makeGRELinkLocal(version * 0x1111,
                                           localProviderIndex, localSiteIndex,
                                           remoteProviderIndex, remoteSiteIndex)) + '"\n\n')
 
