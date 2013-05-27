@@ -412,6 +412,21 @@ make-route ()
 }
 
 
+# ###### Route removal ######################################################
+remove-route ()
+{
+   local tableID="$1"             # Table ID
+   local destination="$2"         # Destination network
+   local interface="$3"           # Output interface
+   local nextHop="$4"             # Next hop
+   shift ; shift ; shift ; shift
+   local miscOptions="$@"         # Misc options
+
+   # echo ip route add $destination via $nextHop dev $interface table $tableID $miscOptions
+   ip route del $destination via $nextHop dev $interface table $tableID $miscOptions
+}
+
+
 # ###### Add Source NAT rule ################################################
 make-nat ()
 {
