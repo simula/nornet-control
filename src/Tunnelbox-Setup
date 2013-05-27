@@ -144,6 +144,12 @@ load-interface-configuration ()
          exit 1
       fi
    fi
+   if [[ ! "$REMOTE_SITE_TUNNELBOX" =~ ^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\s*$ ]] ; then
+      if [[ ! "$REMOTE_SITE_TUNNELBOX" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]] ; then
+         echo 2>&1 "ERROR: Bad interface REMOTE_SITE_TUNNELBOX setting in $INTERFACE: $REMOTE_SITE_TUNNELBOX!"
+         exit 1
+      fi
+   fi   
    if [[ ! "$REMOTE_SITE_METRIC" =~ ^[0-9]+$ ]] ; then
       echo 2>&1 "ERROR: Bad interface REMOTE_SITE_METRIC setting in $INTERFACE: $REMOTE_SITE_METRIC!"
       exit 1
@@ -224,7 +230,7 @@ checkInterface ()
    if [[ "$2" =~ ^@ALL$|^${INTERFACE_PROVIDER}$|^${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER}$ ]] ; then
       log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
       echo -en "\nType $INTERFACE_TYPE: $TUNNEL_LOCAL_INNER_ADDRESS -> $TUNNEL_REMOTE_INNER_ADDRESS [via $TUNNEL_LOCAL_OUTER_ADDRESS -> $TUNNEL_REMOTE_OUTER_ADDRESS]"
-      show-tunnel "$INTERFACE_NAME" "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" "$INTERFACE_DESCRIPTION" && \
+      show-tunnel "$INTERFACE_NAME" "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" "$INTERFACE_DESCRIPTION" "$REMOTE_SITE_TUNNELBOX" && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
    fi
 }

@@ -266,14 +266,23 @@ show-tunnel ()
    local innerLocalIP="$2"        # Inner Local IP
    local innerRemoteIP="$3"       # Inner Remote IP
    local description="$4"         # Description
+   local tunnelbox="$5"           # Remote tunnelbox IP (in provider's network)
 
    # echo -en "Pinging $innerRemoteIP (peer on interface $interface) ..."
 
    success=0
    if [[ "$innerRemoteIP" =~ : ]] ; then
-      ping6 -w3 -c1 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
+      ping6 -w3 -c1 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && \
+      if [ "$tunnelbox" != "" ] ; then
+         ping6 -w3 -c1 -i0.2 -q $tunnelbox -I $innerLocalIP >/dev/null 2>&1
+      fi && \
+      success=1
    else
-      ping -w3 -c1 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && success=1
+      ping -w3 -c1 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && \
+      if [ "$tunnelbox" != "" ] ; then
+         ping -w3 -c1 -i0.2 -q $tunnelbox -I $innerLocalIP >/dev/null 2>&1
+      fi && \
+      success=1
    fi
 
    if [ $success -eq 1 ] ; then
