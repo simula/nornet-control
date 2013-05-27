@@ -228,7 +228,7 @@ make-tunnel ()
       ADDRESSES=`ip -6 addr show dev $interface | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [l]/ { print $2 }'`
       ip -6 addr add dev $interface $v6linklocal
       for address in $ADDRESSES ; do
-         ip -6 addr del $address dev $interface   # Get rid of the automatically-generated address.
+         ip -6 addr del $address dev $interface   # Get rid of the automatically-generated address(es).
       done
    fi
    # Configure an address and turn the interface up

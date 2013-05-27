@@ -82,9 +82,9 @@ load-interface-configuration ()
    INTERFACE_NAME=`echo $INTERFACE | sed -e "s/.interface.*$//g"`
    INTERFACE_DESCRIPTION=
    INTERFACE_TYPE=
-   GRE_LINKLOCAL=
    GRE_KEY=
    INTERFACE_PROVIDER=
+   TUNNEL_V6LINKLOCAL_ADDRESS=
    TUNNEL_LOCAL_OUTER_ADDRESS=
    TUNNEL_REMOTE_OUTER_ADDRESS=
    TUNNEL_OUTER_PREFIX=
@@ -170,8 +170,8 @@ activateInterface ()
       options=""
       if [ "$INTERFACE_TYPE" = "existing-gre" ] ; then
          options="--add-to-existing-tunnel"
-      elif [ "$INTERFACE_TYPE" = "gre" -a "$GRE_LINKLOCAL" != "" ] ; then
-         options="--v6-linklocal '$GRE_LINKLOCAL'"
+      elif [ "$TUNNEL_V6LINKLOCAL_ADDRESS" != "" ] ; then
+         options="--v6-linklocal $TUNNEL_V6LINKLOCAL_ADDRESS"
       fi
       
       make-tunnel "$INTERFACE_NAME" "$GRE_KEY" \

@@ -766,17 +766,22 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
                   remoteProvider['provider_long_name'] + ' (' + str(remoteProvider['provider_index']) + ')"\n')
 
                # ====== Tunnel ==============================================
+               needsLinkLocalAddress = True
                if ((version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
                   interfaceFile.write('INTERFACE_TYPE="gre"\n')
-                  interfaceFile.write('GRE_LINKLOCAL="' + str(makeGRELinkLocal(localProviderIndex, localSiteIndex,
-                                                                               remoteProviderIndex, remoteSiteIndex)) + '"\n')
                   interfaceFile.write('GRE_KEY="' + hex(tunnel['tunnel_key']) + '"\n')
                elif ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
                   interfaceFile.write('INTERFACE_TYPE="existing-gre"\n')
+                  needsLinkLocalAddress = False
                else:
                   interfaceFile.write('INTERFACE_TYPE="seks"\n')
 
                interfaceFile.write('INTERFACE_PROVIDER="' + localProvider['provider_short_name'] + '"\n\n')
+
+               if needsLinkLocalAddress == True:
+                  interfaceFile.write('TUNNEL_V6LINKLOCAL_ADDRESS="' + \
+                     str(makeGRELinkLocal(localProviderIndex, localSiteIndex,
+                                          remoteProviderIndex, remoteSiteIndex)) + '"\n\n')
 
                interfaceFile.write('TUNNEL_LOCAL_OUTER_ADDRESS="'  + str(tunnel['tunnel_local_outer_address'].ip)  + '"\n')
                interfaceFile.write('TUNNEL_REMOTE_OUTER_ADDRESS="' + str(tunnel['tunnel_remote_outer_address'].ip) + '"\n')
