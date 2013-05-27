@@ -796,7 +796,8 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
                # ====== Default route =======================================
                # The local provider's default route to the
                # Central Site's default provider interface
-               if ((localSiteIndex != NorNet_SiteIndex_Central) and
+               if ((remoteSiteIndex == NorNet_SiteIndex_Central) and
+                   (localSiteIndex  != NorNet_SiteIndex_Central) and
                    (remoteProviderIndex == remoteSite['site_default_provider_index'])):
                   interfaceFile.write('TUNNEL_IS_DEFAULT_ROUTE=1\n')
 
