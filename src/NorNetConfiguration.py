@@ -23,7 +23,6 @@ import re;
 import sys;
 import pwd;
 import codecs;
-#import getpass;
 
 
 # XML-RPC
@@ -220,8 +219,8 @@ def loadNorNetConfiguration():
       NorNet_Configuration['NorNet_IPv6TunnelPrefix'] = IPv6Network(NorNet_Configuration['NorNet_IPv6TunnelPrefix'])
    except Exception as e:
       error('NorNet_IPv6TunnelPrefix setting "' + NorNet_Configuration['NorNet_IPv6TunnelPrefix'] + ' is invalid: ' + str(e))
-   if NorNet_Configuration['NorNet_IPv6TunnelPrefix'].prefixlen > 72:
-      error('NorNet_IPv6TunnelPrefix must be at least a /72 network!')
+   if NorNet_Configuration['NorNet_IPv6TunnelPrefix'].prefixlen > 80:
+      error('NorNet_IPv6TunnelPrefix must be at least a /80 network!')
 
    if NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'] != None:
       try:

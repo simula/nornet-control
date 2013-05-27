@@ -158,7 +158,7 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
       return IPv4Network(str(IPv4Address(address)) + '/30')
    else:
       address = IPv6Address(int(address) | side)
-      return IPv6Network(str(address) + '/96')
+      return IPv6Network(str(address) + '/112')
 
 
 # ###### Get NorNet interface IPv4 address ##################################

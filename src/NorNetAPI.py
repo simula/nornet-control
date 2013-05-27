@@ -194,16 +194,14 @@ def getNorNetProvidersForSite(norNetSite):
          providerInfo        = getNorNetProviderInfo(providerIndex)
          providerTbIPv4      = IPv4Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv4', '0.0.0.0/0'))
          providerGwIPv4      = IPv4Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_gateway_ipv4', '0.0.0.0'))
-# ???? FIXME!
-         #if not providerGwIPv4 in providerTbIPv4:
-            #error('Bad IPv4 network/gateway settings of provider ' + providerInfo[0] + \
-                  #': ' + str(providerGwIPv4) + ' not in ' + str(providerGwIPv4))
+         if not providerGwIPv4 in providerTbIPv4:
+            error('Bad IPv4 network/gateway settings of provider ' + providerInfo[0] + \
+                  ': ' + str(providerGwIPv4) + ' not in ' + str(providerGwIPv4))
          providerTbIPv6      = IPv6Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::/0'))         
          providerGwIPv6      = IPv6Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_gateway_ipv6', '::'))
-# ???? FIXME!
-         #if not providerGwIPv6 in providerTbIPv6:
-            #error('Bad IPv6 network/gateway settings of provider ' + providerInfo[0])
-                  #': ' + str(providerGwIPv6) + ' not in ' + str(providerGwIPv6))
+         if not providerGwIPv6 in providerTbIPv6:
+            error('Bad IPv6 network/gateway settings of provider ' + providerInfo[0] + \
+                  ': ' + str(providerGwIPv6) + ' not in ' + str(providerGwIPv6))
          providerTbInterface = getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_interface', '')
          if not re.match(r"^[a-zA-Z0-9_-]*$", providerTbInterface):
             error('Bad interface name ' + providerTbInterface)
