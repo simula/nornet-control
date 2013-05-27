@@ -616,12 +616,13 @@ def getTablePref(opIndex, level):
 
 
 # ###### Make IPv6 link-local address for GRE tunnel ########################
-def makeGRELinkLocal(a, b):
+def makeGRELinkLocal(localProviderIndex, localSiteIndex,
+                     remoteProviderIndex, remoteSiteIndex):
    result = IPv6Network('fe80::' + \
-                        str.replace(hex((int(a) >> 16) & 0xffff), '0x', '') + ':' + \
-                        str.replace(hex(int(a) & 0xffff),         '0x', '') + ':' + \
-                        str.replace(hex((int(b) >> 16) & 0xffff), '0x', '') + ':' + \
-                        str.replace(hex(int(b) & 0xffff),         '0x', '') + \
+                        str.replace(hex(localProviderIndex),  '0x', '') + ':' + \
+                        str.replace(hex(localSiteIndex),      '0x', '') + ':' + \
+                        str.replace(hex(remoteProviderIndex), '0x', '') + ':' + \
+                        str.replace(hex(remoteSiteIndex),     '0x', '') + \
                         '/64')
    return(result)
 
@@ -767,8 +768,8 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
                # ====== Tunnel ==============================================
                if ((version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
                   interfaceFile.write('INTERFACE_TYPE="gre"\n')
-                  interfaceFile.write('GRE_LINKLOCAL="' + str(makeGRELinkLocal(tunnel['tunnel_local_outer_address'],
-                                                                               tunnel['tunnel_remote_outer_address'])) + '"\n')
+                  interfaceFile.write('GRE_LINKLOCAL="' + str(makeGRELinkLocal(localProviderIndex, localSiteIndex,
+                                                                               remoteProviderIndex, remoteSiteIndex)) + '"\n')
                   interfaceFile.write('GRE_KEY="' + hex(tunnel['tunnel_key']) + '"\n')
                elif ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
                   interfaceFile.write('INTERFACE_TYPE="existing-gre"\n')
