@@ -136,31 +136,45 @@ check-local-address ()
 remove-tunnel ()
 {
    local interface="$1"           # Interface name (fire*, seks*, gre*)
-   local tunnelKey="$2"           # Tunnel key, must be unique between sites
+   local innerLocalIP="$2"        # Inner local IP
+   local innerRemoteIP="$3"       # Inner remote IP
+   local innerPrefixLength="$4"   # Inner prefix length
+   local miscOptions="$5"         # Further options
 
-   ip tunnel del $interface 2>/dev/null || true
+   local innerV6option=""
+   if [[ "$innerLocalIP" =~ : ]] ; then
+      innerV6option="-6"
+   fi
+
+   local removeFromExistingTunnel=0
+   local v6linklocal=""
+   if [[ "$miscOptions" =~ --remove-from-existing-tunnel ]] ; then
+      removeFromExistingTunnel=1
+   fi
+   
+   if [ "$innerV6option" = "" ] ; then
+      ip addr del $innerLocalIP peer $innerRemoteIP dev $interface || true
+   else
+      ip $innerV6option addr del $innerLocalIP/$innerPrefixLength dev $interface || true
+   fi
+
+   if [ $removeFromExistingTunnel -eq 0 ] ; then
+      ip tunnel del $interface 2>/dev/null || true
+   fi
 }
 
 
 # ###### Tunnel setup #######################################################
 make-tunnel ()
 {
-
-   #let xx=$xx+1
-   #if [ $xx -eq 4 ] ; then
-   #   echo "--- TEST ERROR ---"
-   #   xx=1
-   #   return 1
-   #fi
-
-
    local interface="$1"           # Interface name (fire*, seks*, gre*)
    local tunnelKey="$2"           # Tunnel key, must be unique between sites
-   local outerLocalIP="$3"        # Outer Local IP
-   local outerRemoteIP="$4"       # Outer Remote IP
-   local innerLocalIP="$5"        # Inner Local IP
-   local innerRemoteIP="$6"       # Inner Remote IP
-   local miscOptions="$7"         # Further options
+   local outerLocalIP="$3"        # Outer local IP
+   local outerRemoteIP="$4"       # Outer remote IP
+   local innerLocalIP="$5"        # Inner local IP
+   local innerRemoteIP="$6"       # Inner remote IP
+   local innerPrefixLength="$7"   # Inner prefix length
+   local miscOptions="$8"         # Further options
 
    local innerV6option=""
    local outerV6option=""
@@ -172,14 +186,14 @@ make-tunnel ()
    fi
 
    local mode=""
-   local greoption=""
+   local greOption=""
    if [[ "$interface" =~ ^seks ]] ; then
       mode="any"
    elif [[ "$interface" =~ ^fire ]] ; then
       mode="sit"
    elif [[ "$interface" =~ ^gre ]] ; then
       mode="gre"
-      greoption="key $tunnelKey"
+      greOption="key $tunnelKey"
    else
       echo >&2 "ERROR: Cannot determine tunnel mode from interface name $interface!"
       exit 1
@@ -202,10 +216,10 @@ make-tunnel ()
       success=0
    fi
    if [ $addToExistingTunnel -eq 0 ] ; then
-      remove-tunnel "$interface" "$tunnelKey" "$from" "$tos" "$fwmark"
-      ip $outerV6option tunnel add $interface mode $mode local $outerLocalIP remote $outerRemoteIP ttl 255 $greoption $tunnelOptions || success=0
+      ip tunnel del $interface 2>/dev/null || true
+      ip $outerV6option tunnel add $interface mode $mode local $outerLocalIP remote $outerRemoteIP ttl 255 $greOption $tunnelOptions || success=0
    fi
-   ip link set dev $interface up
+   ip link set dev $interface up multicast on || success=0
    # Set IPv6 link-local address manually
    # NOTE: snmpd assumes IPv6 addresses to be unique. GRE tunnels will have non-unique link-local addresses.
    #       Therefore, snmpd complains about (error on subcontainer 'ia_addr' insert (-1))
@@ -221,7 +235,7 @@ make-tunnel ()
    if [ "$innerV6option" = "" ] ; then
       ip addr add $innerLocalIP peer $innerRemoteIP dev $interface || success=0
    else
-      ip $innerV6option addr add $innerLocalIP/112 dev $interface   || success=0
+      ip $innerV6option addr add $innerLocalIP/$innerPrefixLength dev $interface   || success=0
    fi
    ip link set dev $interface up
    # Turn off Reverse Path filtering, since it prevents routing packets

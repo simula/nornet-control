@@ -176,7 +176,7 @@ activateInterface ()
       
       make-tunnel "$INTERFACE_NAME" "$GRE_KEY" \
          "$TUNNEL_LOCAL_OUTER_ADDRESS" "$TUNNEL_REMOTE_OUTER_ADDRESS" \
-         "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" $options && \
+         "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" "$TUNNEL_INNER_PREFIX" "$options" && \
       make-route "$ROUTING_TABLE" "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" && \
       make-route main             "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC" && \
       if [ $TUNNEL_IS_DEFAULT_ROUTE -eq 1 ] ; then
@@ -196,10 +196,19 @@ deactivateInterface ()
    load-interface-configuration "$1" -active-dir-first
    if [[ "$2" =~ ^@ALL$|^${INTERFACE_PROVIDER}$|^${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER}$ ]] ; then
       log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
-      remove-tunnel "$INTERFACE_NAME" "$GRE_KEY"  || true && \
+      
+      options=""
+      if [ "$INTERFACE_TYPE" = "existing-gre" ] ; then
+         options="--remove-from-existing-tunnel"
+      fi
+
       if [ $TUNNEL_IS_DEFAULT_ROUTE -eq 1 ] ; then
          remove-route "$ROUTING_TABLE" default "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" || true
       fi && \
+      remove-route "$ROUTING_TABLE" "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" || true && \
+      remove-route main             "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC" || true  && \
+      remove-tunnel "$INTERFACE_NAME" \
+                    "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" "$TUNNEL_INNER_PREFIX" "$options" || true && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
       rm -f "$ACTIVE_DIRECTORY/$INTERFACE"
    else
