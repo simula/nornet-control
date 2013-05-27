@@ -616,9 +616,13 @@ def getTablePref(opIndex, level):
 
 
 # ###### Make IPv6 link-local address for GRE tunnel ########################
-def makeGRELinkLocal(localProviderIndex, localSiteIndex,
+def makeGRELinkLocal(networkID,
+                     localProviderIndex, localSiteIndex,
                      remoteProviderIndex, remoteSiteIndex):
+   # Needs separate spaces for "gre" and "seks" interfaces!
+   # This feature is provided by networkID.
    result = IPv6Network('fe80::' + \
+                        str.replace(hex(networkID),           '0x', '') + ':' + \
                         str.replace(hex(localProviderIndex),  '0x', '') + ':' + \
                         str.replace(hex(localSiteIndex),      '0x', '') + ':' + \
                         str.replace(hex(remoteProviderIndex), '0x', '') + ':' + \
@@ -780,7 +784,8 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
 
                if needsLinkLocalAddress == True:
                   interfaceFile.write('TUNNEL_V6LINKLOCAL_ADDRESS="' + \
-                     str(makeGRELinkLocal(localProviderIndex, localSiteIndex,
+                     str(makeGRELinkLocal(0x1000 * version,
+                                          localProviderIndex, localSiteIndex,
                                           remoteProviderIndex, remoteSiteIndex)) + '"\n\n')
 
                interfaceFile.write('TUNNEL_LOCAL_OUTER_ADDRESS="'  + str(tunnel['tunnel_local_outer_address'].ip)  + '"\n')
