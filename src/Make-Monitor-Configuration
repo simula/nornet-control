@@ -29,11 +29,8 @@ from NorNetNodeSetup     import *;
 
 
 # ###### Generate Nagios configuration ######################################
-def makeNagiosConfiguration(fullSiteList, fullNodeList, configNamePrefix):
-   if configNamePrefix == None:
-      configNamePrefix = 'nagios-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-config'
-   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+def makeNagiosConfiguration(fullSiteList, fullNodeList):
+   outputFile = codecs.open('nagios-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
 
    if fullSiteList != None:
@@ -272,4 +269,4 @@ loginToPLC()
 fullSiteList = fetchNorNetSiteList(False)
 # NOTE: Site list also includes disabled sites!
 fullNodeList = fetchNorNetNodeList()
-makeNagiosConfiguration(fullSiteList, fullNodeList, 'nagios')
+makeNagiosConfiguration(fullSiteList, fullNodeList)

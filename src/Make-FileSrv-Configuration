@@ -39,11 +39,8 @@ def getFileServRWSystemsConfigurationString():
 
 
 # ###### Generate TFTP daemon configuration #################################
-def makeTFTPDConfiguration(configNamePrefix):
-   if configNamePrefix == None:
-      configNamePrefix = 'tftpd-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-config'
-   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+def makeTFTPDConfiguration():
+   outputFile = codecs.open('tftpd-hpa-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
 
    outputFile.write('TFTP_USERNAME="tftp"\n')
@@ -55,11 +52,8 @@ def makeTFTPDConfiguration(configNamePrefix):
 
 
 # ###### Generate NFS daemon configuration ##################################
-def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid, configNamePrefix):
-   if configNamePrefix == None:
-      configNamePrefix = 'tftpd-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-config'
-   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
+   outputFile = codecs.open('nfsd-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
    
    nfsOptions = 'subtree_check,async,no_wdelay,all_squash,anonuid=' + str(uid) + ',anongid=' + str(gid)
@@ -220,5 +214,5 @@ user = pwd.getpwnam(getLocalNodeNorNetUser())
 uid  = user.pw_uid
 gid  = user.pw_gid
 
-makeTFTPDConfiguration('tftpd-hpa')
-makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid, 'nfsd')
+makeTFTPDConfiguration()
+makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid)
