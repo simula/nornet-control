@@ -180,8 +180,7 @@ activateInterface ()
       make-route "$ROUTING_TABLE" "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" && \
       make-route main             "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC" && \
       if [ $TUNNEL_IS_DEFAULT_ROUTE -eq 1 ] ; then
-         make-route "$ROUTING_TABLE" default "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" \
-            2>&1 | grep -v "RTNETLINK answers: File exists???????????" || true
+         make-route "$ROUTING_TABLE" default "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS"
       fi && \
       cp "$CONFIG_DIRECTORY/$INTERFACE" "$ACTIVE_DIRECTORY/$INTERFACE" && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
