@@ -29,21 +29,15 @@ from NorNetNodeSetup     import *;
 
 
 # ###### Generate hostname configuration ####################################
-def makeHostnameConfiguration(fullSiteList, localSite, configNamePrefix, name):
-   if configNamePrefix == None:
-      configNamePrefix = 'hostname-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-config'
-   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+def makeHostnameConfiguration(localSite, name):
+   outputFile = codecs.open('hostname-config', 'w', 'utf-8')
    outputFile.write(name + '.' + localSite['site_domain'] + '\n')
    outputFile.close()
 
 
 # ###### Generate hosts configuration #######################################
-def makeHostsConfiguration(fullSiteList, localSite, localNode, configNamePrefix, name):
-   if configNamePrefix == None:
-      configNamePrefix = 'hosts-' + localSite['site_domain']
-   configurationName = configNamePrefix + '-config'
-   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+def makeHostsConfiguration(localSite, name):
+   outputFile = codecs.open('hosts-config', 'w', 'utf-8')
 
    writeAutoConfigInformation(outputFile)
 
@@ -61,11 +55,8 @@ def makeHostsConfiguration(fullSiteList, localSite, localNode, configNamePrefix,
 
 
 # ###### Generate NTP configuration #########################################
-def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
-   if configNamePrefix == None:
-      configNamePrefix = 'ntp-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-config'
-   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+def makeNTPConfiguration(fullSiteList, localSite, localNode):
+   outputFile = codecs.open('ntp-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
 
    ntpServerList = []
@@ -86,56 +77,64 @@ def makeNTPConfiguration(fullSiteList, localSite, configNamePrefix):
 
    outputFile.write('# ====== Generic Access Restrictions ======\n')
    outputFile.write('restrict default ignore\n')
-   for version in [ 4, 6 ]:
-      fullNorNetNetwork = makeNorNetIP(0, 0, 0, version)
-      outputFile.write('restrict ' + str(fullNorNetNetwork.ip) + ' mask ' + str(fullNorNetNetwork.netmask) + ' nomodify\n')
+   if localNode['node_index'] == NorNet_NodeIndex_Tunnelbox:
+      for version in [ 4, 6 ]:
+         fullNorNetNetwork = makeNorNetIP(0, 0, 0, version)
+         outputFile.write('restrict ' + str(fullNorNetNetwork.ip) + ' mask ' + str(fullNorNetNetwork.netmask) + ' nomodify\n')
    outputFile.write('restrict 127.0.0.1\n')
    outputFile.write('restrict ::1\n')
-   outputFile.write('\n')
-
-   if ((localSite == None) or (localSite['site_index'] != NorNet_SiteIndex_Central)):
-      if fullSiteList != None:
-         outputFile.write('# ====== NorNet Central Site NTP ======\n')
-         centralSite  = fullSiteList[NorNet_SiteIndex_Central]
-         providerList = getNorNetProvidersForSite(centralSite)
-         for providerIndex in providerList:
-            provider = providerList[providerIndex]
-            if providerIndex == centralSite['site_default_provider_index']:
-               for version in [ 4, 6 ]:
-                  centralSiteTB = makeNorNetIP(providerIndex, NorNet_SiteIndex_Central, NorNet_NodeIndex_Tunnelbox, version)
-                  outputFile.write('server ' + str(centralSiteTB.ip) + '   # CENTRAL SITE\n')
-                  outputFile.write('restrict ' + str(centralSiteTB.ip) + '\n')
-         outputFile.write('\n')
-
-   outputFile.write('# ====== NorNet Peers ======\n')
-   for remoteSiteIndex in fullSiteList:
-      if ( ((localSite == None) or (remoteSiteIndex != localSite['site_index'])) and
-           (remoteSiteIndex != NorNet_SiteIndex_Central) ):
-         for version in [ 4, 6 ]:
-            remoteSite = fullSiteList[remoteSiteIndex]
-            peerTB = makeNorNetIP(remoteSite['site_default_provider_index'], remoteSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
-            outputFile.write('peer ' + str(peerTB.ip) + '   # ' + remoteSite['site_long_name'] + '\n')
-            outputFile.write('restrict ' + str(peerTB.ip) + '\n')
-   outputFile.write('\n')
-
-   outputFile.write('# ====== External NTP Servers ======\n')
-   for ntpServer in ntpServerList:
-      outputFile.write('server ' + str(ntpServer) + '\n')
-      outputFile.write('restrict ' + str(ntpServer) + '\n')
 
    outputFile.write('\n# ====== Fudge Clock ======\n')
    outputFile.write('server 127.127.1.0\n')
-   outputFile.write('fudge 127.127.1.0 stratum 10\n')
+   outputFile.write('fudge 127.127.1.0 stratum 10\n\n')
+
+
+   # ====== Write tunnelbox NTP server configuration ========================
+   if localNode['node_index'] == NorNet_NodeIndex_Tunnelbox:
+      if ((localSite == None) or (localSite['site_index'] != NorNet_SiteIndex_Central)):
+         if fullSiteList != None:
+            outputFile.write('# ====== NorNet Central Site NTP ======\n')
+            centralSite  = fullSiteList[NorNet_SiteIndex_Central]
+            providerList = getNorNetProvidersForSite(centralSite)
+            for providerIndex in providerList:
+               provider = providerList[providerIndex]
+               if providerIndex == centralSite['site_default_provider_index']:
+                  for version in [ 6 ]:
+                     centralSiteTB = makeNorNetIP(providerIndex, NorNet_SiteIndex_Central, NorNet_NodeIndex_Tunnelbox, version)
+                     outputFile.write('server ' + str(centralSiteTB.ip) + '   # CENTRAL SITE\n')
+                     outputFile.write('restrict ' + str(centralSiteTB.ip) + '\n')
+            outputFile.write('\n')
+
+      outputFile.write('# ====== NorNet Peers ======\n')
+      for remoteSiteIndex in fullSiteList:
+         if ( ((localSite == None) or (remoteSiteIndex != localSite['site_index'])) and
+              (remoteSiteIndex != NorNet_SiteIndex_Central) ):
+            for version in [ 6 ]:
+               remoteSite = fullSiteList[remoteSiteIndex]
+               peerTB = makeNorNetIP(remoteSite['site_default_provider_index'], remoteSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
+               outputFile.write('peer ' + str(peerTB.ip) + '   # ' + remoteSite['site_long_name'] + '\n')
+               outputFile.write('restrict ' + str(peerTB.ip) + '\n')
+      outputFile.write('\n')
+
+      outputFile.write('# ====== External NTP Servers ======\n')
+      for ntpServer in ntpServerList:
+         outputFile.write('server ' + str(ntpServer) + '\n')
+         outputFile.write('restrict ' + str(ntpServer) + '\n')
+
+   # ====== Write non-tunnelbox NTP server configuration ===================#
+   else:
+      outputFile.write('# ====== Local NTP Server ======\n')
+      ntpServer = makeNorNetIP(localSite['site_default_provider_index'],
+                               localSite['site_index'], NorNet_NodeIndex_Tunnelbox, 6)
+      outputFile.write('server ' + str(ntpServer.ip) + '\n')
+      outputFile.write('restrict ' + str(ntpServer.ip) + '\n')
 
    outputFile.close()
 
 
 # ###### Generate SNMP configuration ########################################
-def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, configNamePrefix, name, description):
-   if configNamePrefix == None:
-      configNamePrefix = 'snmpd-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-config'
-   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, name, description):
+   outputFile = codecs.open('snmpd-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
 
 
@@ -374,9 +373,10 @@ distribution = sys.argv[3]
 loginToPLC()
 fullSiteList = fetchNorNetSiteList(False)
 
-node = fetchNorNetNode(fqdn)
-if node == None:
-   print('Unable to find node ' + fqdn + ' in database => just using INDEX from configuration file!')
+localNode = fetchNorNetNode(fqdn)
+if localNode == None:
+   print('Unable to find node ' + fqdn + ' in database => just using INDEX ' + \
+         str(getLocalNodeIndex()) + ' from configuration file!')
    if getLocalNodeIndex() == None:
       error('NorNet_LocalNode_Index has not been set in configuration file!')
    if getLocalNodeNorNetInterface() == None:
@@ -385,28 +385,28 @@ if node == None:
    localSite = getNorNetSiteOfDomain(fullSiteList, domain)
    if localSite == None:
       error('Unable to find site for domain ' + domain + ' in database!')
-   node = {
-     'node_id'               : -1,
-     'node_site_id'          : localSite['site_id'],
-     'node_index'            : getLocalNodeIndex(),
-     'node_name'             : getHostnameFromFQDN(fqdn),
-     'node_model'            : 'Amiga 6000',
-     'node_nornet_interface' : getLocalNodeNorNetInterface()
+   localNode = {
+      'node_id'               : -1,
+      'node_site_id'          : localSite['site_id'],
+      'node_index'            : getLocalNodeIndex(),
+      'node_name'             : getHostnameFromFQDN(fqdn),
+      'node_model'            : 'Amiga 6000',
+      'node_nornet_interface' : getLocalNodeNorNetInterface()
   }
 
-localSite = getNorNetSiteOfNode(fullSiteList, node)
+localSite = getNorNetSiteOfNode(fullSiteList, localNode)
 if localSite == None:
-   error('Unable to find site of node ' + fqdn + ' in database!')
+   error('Unable to find site of node ' + localNode['node_name'] + ' in database!')
 fullUserList = fetchNorNetUserList()
 
-makeNodeConfiguration(fullSiteList, node, interface, distribution, '')
-makeHostnameConfiguration(fullSiteList, localSite, 'hostname', getHostnameFromFQDN(fqdn))
-makeHostsConfiguration(fullSiteList, localSite, NorNet_NodeIndex_Tunnelbox, 'hosts', getHostnameFromFQDN(fqdn))
-makeNTPConfiguration(fullSiteList, localSite, 'ntp')
-makeSNMPConfiguration(fullSiteList, fullUserList, localSite, 'snmpd', 'node', 'Node')
+makeNodeConfiguration(fullSiteList, localNode, interface, distribution, '')
+makeHostnameConfiguration(localSite, localNode['node_name'])
+makeHostsConfiguration(localSite, localNode['node_name'])
+makeNTPConfiguration(fullSiteList, localSite, localNode)
+makeSNMPConfiguration(fullSiteList, fullUserList, localSite, localNode['node_name'], 'Node')
 
 # Create AutoFS configuration only if we are not on the file server itself!
 # (otherwise: just add empty AutoFS configuration)
-weAreOnFileServer = ((localSite['site_index'] == NorNet_SiteIndex_FileSrv) and
-                     (node['node_index'] == NorNet_NodeIndex_FileSrv))
-makeAutoFSConfiguration(weAreOnFileServer, localSite['site_index'], node['node_index'], True)
+weAreTheFileServer = ((localSite['site_index'] == NorNet_SiteIndex_FileSrv) and
+                      (localNode['node_index'] == NorNet_NodeIndex_FileSrv))
+makeAutoFSConfiguration(weAreTheFileServer, localSite['site_index'], localNode['node_index'], True)
