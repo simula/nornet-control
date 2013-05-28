@@ -622,9 +622,9 @@ def makeRADVDConfiguration(localSite):
    siteTunnelbox = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 4)
 
    outputFile = codecs.open('radvd-config', 'w', 'utf-8')
-   writeAutoConfigInformation(outputFile)
 
    if getLocalSiteRADVDConfigurationString() == 'on':
+      writeAutoConfigInformation(outputFile)
       outputFile.write('interface ' + getLocalNodeNorNetInterface() + ' {\n ')
       outputFile.write('\tAdvSendAdvert on;\n')
 
