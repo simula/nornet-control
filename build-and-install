@@ -26,5 +26,6 @@ sudo dpkg -P $PACKAGES || true
 
 for package in $PACKAGES ; do
    echo "Installing ${package} ..."
-   sudo dpkg -i /var/cache/pbuilder/result/${package}*.deb
+   sudo dpkg -i /var/cache/pbuilder/result/${package}*.deb || true
 done
+sudo apt-get install -f
