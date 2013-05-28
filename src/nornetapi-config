@@ -66,6 +66,9 @@ NorNet_LocalSite_DHCPServer_Static200='"f0:de:f1:11:22:33"'
 NorNet_LocalSite_DHCPServer_Static201='"f0:de:f1:aa:bb:cc" "pxe-boot.img"'
 NorNet_LocalSite_DHCPServer_Static202='"f0:de:f1:aa:bb:ee" "pxe-boot.img" "pxe-server.simula.nornet"'
 
+# RADVD Configuration
+NorNet_LocalSite_RADVDServer="on"
+
 
 # ###### Additional DNS names ###############################################
 # Add additional, non-managed nodes here.

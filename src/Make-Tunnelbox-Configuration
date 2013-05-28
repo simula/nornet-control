@@ -61,6 +61,14 @@ def getLocalSiteDHCPServerStaticConfigurationString(nodeIndex):
       return u''
 
 
+# ###### Get DHCPD node configuration string ################################
+def getLocalSiteRADVDConfigurationString():
+   try:
+      return unicode(NorNet_Configuration['NorNet_LocalSite_RADVDServer'])
+   except:
+      return u''
+
+
 # ###### Get NAT range ######################################################
 def getLocalSiteNATRangeString():
    try:
@@ -601,6 +609,47 @@ def makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList):
 
 
 # ###########################################################################
+# #### RADVD Configuration                                               ####
+# ###########################################################################
+
+
+# ###### Generate RADVD daemon configuration ################################
+def makeRADVDConfiguration(localSite):
+   domain        = localSite['site_domain']
+   providerIndex = localSite['site_default_provider_index']   
+   siteIndex     = localSite['site_index']
+   siteNetwork   = makeNorNetIP(providerIndex, siteIndex, 0, 4)
+   siteTunnelbox = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 4)
+
+   outputFile = codecs.open('radvd-config', 'w', 'utf-8')
+   writeAutoConfigInformation(outputFile)
+
+   if getLocalSiteRADVDConfigurationString() == 'on':
+      outputFile.write('interface ' + getLocalNodeNorNetInterface() + ' {\n ')
+      outputFile.write('\tAdvSendAdvert on;\n')
+
+      providerList = getNorNetProvidersForSite(localSite)
+      for onlyDefault in [ True, False ]:
+         for providerIndex in providerList:
+            if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
+                 ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
+               provider  = providerList[providerIndex]
+               tunnelbox = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 6)
+                
+               outputFile.write('\n\t# ' + provider['provider_long_name'] + '\n')
+               outputFile.write('\tprefix ' + str(tunnelbox) + ' {\n')
+               outputFile.write('\t\tAdvOnLink on;\n')
+               outputFile.write('\t\tAdvAutonomous on;\n')
+               outputFile.write('\t\tAdvRouterAddr on;\n')
+               outputFile.write('\t};\n')
+               
+      outputFile.write('};\n')
+
+   outputFile.close()
+
+
+
+# ###########################################################################
 # #### Tunnel and Routing Configuration                                  ####
 # ###########################################################################
 
@@ -939,3 +988,4 @@ for i in range(2, 255):
       staticList.append(staticEntry)
 
 makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
+makeRADVDConfiguration(localSite)

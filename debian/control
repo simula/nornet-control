@@ -8,7 +8,7 @@ Build-Depends: debhelper (>= 9),
                python (>= 2.7),
                python-ipaddr,
                python-support
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 
 Package: nornet-api
 Architecture: any
@@ -115,6 +115,7 @@ Depends: arpwatch,
          nornet-routing,
          ntp,
          python (>= 2.7),
+         radvd,
          snmpd,
          ${misc:Depends},
          ${shlibs:Depends}

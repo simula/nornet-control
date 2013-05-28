@@ -164,6 +164,15 @@ check_and_configure ()
          service isc-dhcp-server restart >/dev/null || true
       fi
 
+      # ====== Apply RADVD server update ====================================
+      rm -f radvd-config
+      mv updated-tunnelbox-config/radvd-config .
+      if needs_update radvd-config /etc/radvd.conf $1 ; then
+         echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: RADVD server configuration has been updated => restarting RADVD service ...\x1b[0m"
+         cp radvd-config /etc/radvd.conf
+         service radvd restart >/dev/null || true
+      fi
+      
       # ====== Check for problems ===========================================
       if ! rmdir updated-tunnelbox-config ; then
          echo >&2 "ERROR: Something went wrong! updated-tunnelbox-config still contains unhandled configuration files!"
