@@ -433,8 +433,8 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                                                          localSiteIndex, localProviderIndex,
                                                          version)
 		     
-                     localName  = str.lower(remoteProvider['provider_short_name']) + '.' + str.lower(remoteSite['site_short_name']) + '.' + \
-                                  str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain']) + '.'
+                     localName  = str.lower(remoteProvider['provider_short_name']) + '.' + getHostnameFromFQDN(str.lower(remoteSite['site_domain'])) + '.' + \
+                                  str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain'])  + '.'
                      writeRR(siteZoneFile, localName,
                              rrTypeForAddress(localTunnelIP), str(localTunnelIP.ip))
                      writeRR(siteZoneFile, localName,
