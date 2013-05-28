@@ -375,8 +375,8 @@ fullSiteList = fetchNorNetSiteList(False)
 
 localNode = fetchNorNetNode(fqdn)
 if localNode == None:
-   print('Unable to find node ' + fqdn + ' in database => just using INDEX ' + \
-         str(getLocalNodeIndex()) + ' from configuration file!')
+   print('Node ' + fqdn + ' is not in the database => just using INDEX ' + \
+         str(getLocalNodeIndex()) + ' from configuration file.')
    if getLocalNodeIndex() == None:
       error('NorNet_LocalNode_Index has not been set in configuration file!')
    if getLocalNodeNorNetInterface() == None:

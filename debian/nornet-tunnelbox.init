@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # --------------- NorNet -- The Multi-Homing Testbed Project ----------------
 #
 # Copyright (C) 2012 by Thomas Dreibholz
@@ -67,7 +67,7 @@ if [ "$NorNet_LocalNode_Hostname" = "" ] ; then
 fi
 
 # Log what is going on ...
-echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE 2>&1
+echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######\x1b[0m"  >>$LOGFILE 2>&1
 
 
 # ###### Check whether file needs an update #################################
@@ -98,9 +98,9 @@ check_and_configure ()
        -e "s/^[ \t]*[#]*[ \t]*net.ipv6.conf.all.forwarding[ \t]*=.*$/net.ipv6.conf.all.forwarding=1/" \
        -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.send_redirects[ \t]*=.*$/net.ipv4.conf.all.send_redirects=0/" \
        </etc/sysctl.conf >/etc/nornet/sysctl-config
-   if needs_update sysctl-config /etc/sysctl.conf $1 ; then
+   if needs_update /etc/nornet/sysctl-config /etc/sysctl.conf $1 ; then
       mv /etc/nornet/sysctl-config /etc/sysctl.conf
-      sysctl -p
+      sysctl -q -p
    fi
    if [ -e /etc/sysctl.d/10-network-security.conf ] ; then
       sed -e "s/^[ \t]*net.ipv4.conf.default.rp_filter[ \t]*=[1-9].*$/net.ipv4.conf.default.rp_filter=0   # Set by nornet-tunnelbox's init script/" \
@@ -108,7 +108,7 @@ check_and_configure ()
           </etc/sysctl.d/10-network-security.conf >/etc/nornet/sysctl-network-security-config
       if needs_update /etc/nornet/sysctl-network-security-config /etc/sysctl.d/10-network-security.conf $1 ; then
          mv /etc/nornet/sysctl-network-security-config /etc/sysctl.d/10-network-security.conf
-         sysctl -p
+         sysctl -q -p
       fi    
    fi
    if [ -e /etc/sysctl.d/10-ipv6-privacy.conf ] ; then
@@ -117,12 +117,12 @@ check_and_configure ()
           </etc/sysctl.d/10-ipv6-privacy.conf >/etc/nornet/sysctl-ipv6-privacy-config
       if needs_update /etc/nornet/sysctl-ipv6-privacy-config /etc/sysctl.d/10-ipv6-privacy.conf $1 ; then
          mv /etc/nornet/sysctl-ipv6-privacy-config /etc/sysctl.d/10-ipv6-privacy.conf
-         sysctl -p
+         sysctl -q -p
       fi    
    fi
 
    # ====== Get new configuration into temporary directory ==================
-   echo "`env LANG=C date +%FT%H:%M:%S`: Getting new configuration ..."
+   echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Getting new configuration ...\x1b[0m"
    rm -rf updated-tunnelbox-config
    mkdir updated-tunnelbox-config
    cd updated-tunnelbox-config
@@ -151,16 +151,17 @@ check_and_configure ()
       else
          echo "/etc/bind/named.conf does not exist! Something is going wrong ..."
       fi
-      service bind9 reload
+      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Reloading DNS server configuration ...\x1b[0m"
+      service bind9 reload >/dev/null || true
 
       # ====== Apply DHCP server update =====================================
       rm -f dhcpd-config
       mv updated-tunnelbox-config/dhcpd-config .
       if needs_update dhcpd-config /etc/dhcp/dhcpd.conf $1 ; then
-         echo "`env LANG=C date +%FT%H:%M:%S`: DHCP server configuration has been updated => restarting DHCP service ..."
+         echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: DHCP server configuration has been updated => restarting DHCP service ...\x1b[0m"
          cp dhcpd-config /etc/dhcp/dhcpd.conf
          echo "INTERFACES=\"$NorNet_LocalNode_NorNetInterface\"" >/etc/default/isc-dhcp-server
-         service isc-dhcp-server restart
+         service isc-dhcp-server restart >/dev/null || true
       fi
 
       # ====== Check for problems ===========================================
