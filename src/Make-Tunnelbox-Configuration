@@ -665,9 +665,7 @@ def makeRegistrarConfiguration(localSite):
               ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
             for version in [ 6, 4 ]:
                tunnelboxAddresses.append(makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version))
-   
-   print tunnelboxAddresses 
-   
+
    outputFile = codecs.open('registrar-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
    
