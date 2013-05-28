@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # --------------- NorNet -- The Multi-Homing Testbed Project ----------------
 #
 # Copyright (C) 2012 by Thomas Dreibholz
@@ -76,7 +76,7 @@ if [ "$NorNet_LocalNode_NorNetInterface" = "" ] ; then
 fi
 
 # Log what is going on ...
-echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE 2>&1
+echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######\x1b[0m"  >>$LOGFILE 2>&1
 
 
 # ###### Check whether file needs an update #################################
@@ -102,7 +102,7 @@ needs_update ()
 # ###### Get new configuration into temporary directory #####################
 get_new_node_configuration ()
 {
-   echo "`env LANG=C date +%FT%H:%M:%S`: Getting new configuration ..."
+   echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Getting new configuration ...\x1b[0m"
    rm -rf updated-node-config
    mkdir updated-node-config
    cd updated-node-config
@@ -119,35 +119,35 @@ check_and_configure ()
    get_new_node_configuration
    if needs_update interfaces /etc/network/interfaces $1 ; then
       if [ ! -e /etc/init.d/nornet-tunnelbox ] ; then
-         echo "`env LANG=C date +%FT%H:%M:%S`: Interface configuration has been updated => restarting networking service ..."
+         echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Interface configuration has been updated => restarting networking service ...\x1b[0m"
          cp interfaces /etc/network/interfaces
          service networking restart
       else
-         echo "`env LANG=C date +%FT%H:%M:%S`: ##### WARNING: nornet-node is supposed to install new /etc/network/interfaces on tunnelbox?! ######"
+         echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ##### WARNING: nornet-node is supposed to install new /etc/network/interfaces on tunnelbox?! ######\x1b[0m"
          echo "/etc/network/interfaces will be kept as is!"
       fi
    fi
    if needs_update hostname-config /etc/hostname $1 ; then
-      echo "`env LANG=C date +%FT%H:%M:%S`: Hostname has been updated => setting new hostname ..."
+      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Hostname has been updated => setting new hostname ...\x1b[0m"
       cp hostname-config /etc/hostname
       hostname `cat /etc/hostname`
    fi
    if needs_update hosts-config /etc/hosts $1 ; then
-      echo "`env LANG=C date +%FT%H:%M:%S`: Hosts file has been updated => installing it ..."
+      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Hosts file has been updated => installing it ...\x1b[0m"
       cp hosts-config /etc/hosts
    fi
    if needs_update ntp-config /etc/ntp.conf $1 ; then
-      echo "`env LANG=C date +%FT%H:%M:%S`: NTP configuration has been updated => restarting NTP service ..."
+      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: NTP configuration has been updated => restarting NTP service ...\x1b[0m"
       cp ntp-config /etc/ntp.conf
       service ntp restart
    fi
    if needs_update snmpd-config /etc/snmp/snmpd.conf $1 ; then
-      echo "`env LANG=C date +%FT%H:%M:%S`: SNMP configuration has been updated => restarting SNMP service ..."
+      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: SNMP configuration has been updated => restarting SNMP service ...\x1b[0m"
       cp snmpd-config /etc/snmp/snmpd.conf
       service snmpd restart
    fi
    if needs_update auto.nfs /etc/auto.nfs $1 ; then
-      echo "`env LANG=C date +%FT%H:%M:%S`: AutoFS configuration has been updated => restarting AutoFS service ..."
+      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: AutoFS configuration has been updated => restarting AutoFS service ...\x1b[0m"
       rm -f /etc/auto.*
       cp auto.* /etc
       service autofs restart
@@ -157,7 +157,7 @@ check_and_configure ()
    sed -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.accept_redirects[ \t]*=.*$/net.ipv4.conf.all.accept_redirects=0/" \
        -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.secure_redirects[ \t]*=.*$/net.ipv4.conf.all.secure_redirects=0/" \
        -e "s/^[ \t]*[#]*[ \t]*net.ipv6.conf.all.accept_redirects[ \t]*=.*$/net.ipv6.conf.all.accept_redirects=0/" \
-       </etc/sysctl.conf >/etc/nornet/sysctl-config && mv /etc/nornet/sysctl-config /etc/sysctl.conf && sudo sysctl -p
+       </etc/sysctl.conf >/etc/nornet/sysctl-config && mv /etc/nornet/sysctl-config /etc/sysctl.conf && sudo sysctl -q -p
 
 }
 

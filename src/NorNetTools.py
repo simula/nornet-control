@@ -38,7 +38,7 @@ import string;
 
 # ###### Print log message ##################################################
 def log(logstring):
-   print(datetime.datetime.now().isoformat() + ' ' + logstring);
+   print('\x1b[32m' + datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + ': ' + logstring + '\x1b[0m');
 
 
 # ###### Abort with error ###################################################
