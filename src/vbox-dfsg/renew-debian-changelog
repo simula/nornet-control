@@ -110,7 +110,7 @@ echo -e "\x1b[34m###############################################################
    echo ""
    echo "  * New Debian package from SVN revision ${SVN_VERSION}."
    echo ""
-   echo " -- $MAINTAINER  `env LANG=C date +"%a, %02d %b %Y %H:%M:%S %z"`"
+   echo " -- $MAINTAINER  `env LANG=en date +"%a, %02d %b %Y %H:%M:%S %z"`"
    echo ""
    sed <debian/changelog -e "s/^${PACKAGE} /${PACKAGE}${PACKAGE_SUFFIX} /g"
 ) >debian/changelog.new
