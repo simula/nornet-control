@@ -172,6 +172,17 @@ check_and_configure ()
          cp radvd-config /etc/radvd.conf
          service radvd restart >/dev/null || true
       fi
+
+      # ====== Apply registrar configuration update =========================
+      rm -f registrar-config
+      mv updated-tunnelbox-config/registrar-config .
+      if needs_update registrar-config /etc/default/rsplib-registrar $1 ; then
+         if [ -e /etc/init.d/rsplib-registrar ] ; then
+            echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: RSerPool Registrar configuration has been updated => restarting registrar service ...\x1b[0m"
+            cp registrar-config /etc/default/rsplib-registrar
+            service rsplib-registrar restart >/dev/null || true
+         fi
+      fi
       
       # ====== Check for problems ===========================================
       if ! rmdir updated-tunnelbox-config ; then

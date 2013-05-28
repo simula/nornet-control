@@ -650,6 +650,53 @@ def makeRADVDConfiguration(localSite):
 
 
 # ###########################################################################
+# #### RSerPool Configuration                                            ####
+# ###########################################################################
+
+
+# ###### Generate RSerPool Registrar configuration ##########################
+def makeRegistrarConfiguration(localSite):
+   siteIndex          = localSite['site_index']      
+   providerList       = getNorNetProvidersForSite(localSite)
+   tunnelboxAddresses = []
+   for onlyDefault in [ True, False ]:
+      for providerIndex in providerList:
+         if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
+              ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
+            for version in [ 6, 4 ]:
+               tunnelboxAddresses.append(makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version))
+   
+   print tunnelboxAddresses 
+   
+   outputFile = codecs.open('registrar-config', 'w', 'utf-8')
+   writeAutoConfigInformation(outputFile)
+   
+   asapAnnounce = '239.0.0.1:3863'
+   enrpAnnounce = '239.0.0.1:9901'
+   asap         = ''
+   enrp         = ''
+   firstAddress = True
+   for address in tunnelboxAddresses:
+      if firstAddress:
+         asap         = str(address.ip) + ':3863'
+         enrp         = str(address.ip) + ':9901'
+         firstAddress = False
+      else:
+         asap = asap + ',' + str(address.ip)
+         enrp = enrp + ',' + str(address.ip)
+
+   outputFile.write('DAEMON_ARGS="$DAEMON_ARGS' + \
+                    ' -asapannounce=' + asapAnnounce + \
+                    ' -enrpannounce=' + enrpAnnounce + \
+                    ' -asap=' + asap + \
+                    ' -enrp=' + enrp + \
+                    '"\n')
+   
+   outputFile.close()
+
+
+
+# ###########################################################################
 # #### Tunnel and Routing Configuration                                  ####
 # ###########################################################################
 
@@ -989,3 +1036,4 @@ for i in range(2, 255):
 
 makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
 makeRADVDConfiguration(localSite)
+makeRegistrarConfiguration(localSite)
