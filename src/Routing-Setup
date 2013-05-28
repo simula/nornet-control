@@ -219,7 +219,8 @@ make-tunnel ()
       ip tunnel del $interface 2>/dev/null || true
       ip $outerV6option tunnel add $interface mode $mode local $outerLocalIP remote $outerRemoteIP ttl 255 $greOption $tunnelOptions || success=0
    fi
-   ip link set dev $interface up multicast on || success=0
+   ip link set dev $interface up || success=0
+   # ??? multicast on
    # Set IPv6 link-local address manually
    # NOTE: snmpd assumes IPv6 addresses to be unique. GRE tunnels will have non-unique link-local addresses.
    #       Therefore, snmpd complains about (error on subcontainer 'ia_addr' insert (-1))
