@@ -175,7 +175,7 @@ def writeZone(outputFile, zone, zoneFileName, masterSite):
       outputFile.write('\ttype slave;\n')
       outputFile.write('\tfile "/var/cache/bind/slaves/' + zoneFileName + '";\n')
       outputFile.write('\tmasters { ')
-      for version in [ 4, 6 ]:
+      for version in [ 6 ]:
          outputFile.write(str(makeNorNetIP(masterSite['site_default_provider_index'],
                                            masterSite['site_index'],
                                            NorNet_NodeIndex_Tunnelbox,
