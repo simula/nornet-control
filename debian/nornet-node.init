@@ -121,7 +121,7 @@ check_and_configure ()
       if [ ! -e /etc/init.d/nornet-tunnelbox ] ; then
          echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Interface configuration has been updated => restarting networking service ...\x1b[0m"
          cp interfaces /etc/network/interfaces
-         service networking restart || true
+         service networking restart >/dev/null 2>&1 || true
       else
          echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ##### WARNING: nornet-node is supposed to install new /etc/network/interfaces on tunnelbox?! ######\x1b[0m"
          echo "/etc/network/interfaces will be kept as is!"
