@@ -678,19 +678,19 @@ def makeRegistrarConfiguration(localSite):
    firstAddress = True
    for address in tunnelboxAddresses:
       if firstAddress:
-         asap         = str(address.ip) + ':3863'
-         enrp         = str(address.ip) + ':9901'
+         asap         = '[' + str(address.ip) + ']:3863'
+         enrp         = '[' + str(address.ip) + ']:9901'
          firstAddress = False
       else:
-         asap = asap + ',' + str(address.ip)
-         enrp = enrp + ',' + str(address.ip)
+         asap = asap + ',[' + str(address.ip) + ']'
+         enrp = enrp + ',[' + str(address.ip) + ']'
 
    outputFile.write('DAEMON_ARGS="$DAEMON_ARGS' + \
                     ' -asapannounce=' + asapAnnounce + \
                     ' -enrpannounce=' + enrpAnnounce + \
                     ' -asap=' + asap + \
                     ' -enrp=' + enrp + \
-                    '"\n')
+                    ' -logcolor=off"\n')
    
    outputFile.close()
 
