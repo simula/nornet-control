@@ -152,7 +152,7 @@ check_and_configure ()
          echo "/etc/bind/named.conf does not exist! Something is going wrong ..."
       fi
       echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Reloading DNS server configuration ...\x1b[0m"
-      service bind9 reload >/dev/null
+      service bind9 reload >/dev/null || true
 
       # ====== Apply DHCP server update =====================================
       rm -f dhcpd-config
@@ -161,7 +161,7 @@ check_and_configure ()
          echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: DHCP server configuration has been updated => restarting DHCP service ...\x1b[0m"
          cp dhcpd-config /etc/dhcp/dhcpd.conf
          echo "INTERFACES=\"$NorNet_LocalNode_NorNetInterface\"" >/etc/default/isc-dhcp-server
-         service isc-dhcp-server restart >/dev/null
+         service isc-dhcp-server restart >/dev/null || true
       fi
 
       # ====== Check for problems ===========================================
