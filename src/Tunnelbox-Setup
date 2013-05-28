@@ -336,7 +336,7 @@ activateProvider ()
       # 2. If TOS is set, select outgoing provider accordingly
       # 3. Otherwise, use source address to determine the outgoing provider.
       
-      for providerNetwork in $PROVIDER_LOCAL_NETWORK_IPv4 $PROVIDER_LOCAL_NETWORK_IPv6 ; do
+      for providerNetwork in $PROVIDER_LOCAL_NETWORK_IPv4 $PROVIDER_LOCAL_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv6 ; do
          add-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$providerNetwork"
       done && \
       if [ $PROVIDER_TOS -ne 0 ] ; then
