@@ -111,6 +111,11 @@ NorNet_NodeIndex_Monitor  = 3
 NorNet_SiteIndex_FileSrv  = NorNet_SiteIndex_Central
 NorNet_NodeIndex_FileSrv  = 4
 
+# Routing Metrics
+NorNet_RoutingMetric_External           = 2
+NorNet_RoutingMetric_DefaultProvider    = 5
+NorNet_RoutingMetric_AdditionalProvider = 10   # for the first one; next is +1, etc.
+
 # ===========================================================================
 
 

@@ -96,6 +96,7 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
    outputFile.write('iface lo inet loopback\n')
 
    for onlyDefault in [ False, True  ]:   # NOTE: non-default providers first!
+      providerNumber = 0
       for providerIndex in providerList:
          if ( ((onlyDefault == True)  and (providerIndex == defaultProvider)) or \
               ((onlyDefault == False) and (providerIndex != defaultProvider)) ):
@@ -121,9 +122,9 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
 
                address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
                gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
-               metric = 10
+               metric = NorNet_RoutingMetric_AdditionalProvider + providerNumber
                if providerIndex == defaultProvider:
-                  metric = 2
+                  metric = NorNet_RoutingMetric_DefaultProvider
 
                # ====== Addressing =======================================
                if ((version == 4) or (providerIndex == defaultProvider)):
@@ -154,6 +155,8 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                   dnsAddress = gateway   # The tunnelbox is also the site's DNS server!
                   outputFile.write('   dns-nameservers ' + str(dnsAddress.ip) + '\n')
                   outputFile.write('   dns-search      ' + domainName + '\n')
+                  
+            providerNumber = providerNumber + 1
 
    # ====== Empty entries (up, but unconfigured -- to use in virtual machines) ======   
    for interface in allInterfaces:
