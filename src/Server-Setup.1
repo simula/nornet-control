@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd February 5, 2013
+.Dd May 29, 2013
 .Dt Server-Setup 1
 .Os Server-Setup
 .\" ###### Name #############################################################
@@ -38,6 +38,12 @@ node_index
 generates and sets the server configuration for a NorNet physical machine,
 based on hostname, site index, node index and NorNet interface name. It is
 intended to be used on a freshly-installed server system.
+.br
+For all Ethernet interfaces not being the NorNet interface, the exisiting
+configuration is copied (from /etc/network/interface). If no configuration
+is provided, an empty configuration is generated (IP: 0.0.0.0). This sets the
+corresponding interface up, without IP configuration. Then, it can be
+accessed from within virtual machines running on the system.
 .Pp
 .\" ###### Arguments ########################################################
 .Sh ARGUMENTS

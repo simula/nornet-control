@@ -19,6 +19,17 @@
 # Contact: dreibh@simula.no
 
 
+# ###### Get existing interface configuration (if available) ################
+parse-interface-configuration ()
+{
+   return 1
+}
+
+
+
+# ###### Main program #######################################################
+
+# ====== Get arguments from storage, if they are not provided ===============
 LAST_PARAMETERS_FILE="/etc/nornet/Server-Setup.args"
 if [ $# -lt 8 -o \
      "$3" != "-site" -o \
@@ -37,6 +48,7 @@ if [ $# -lt 8 -o \
    exit 1
 fi
 
+# ====== Initialise =========================================================
 AllParameters="$@"
 FQDN="$1"
 NodeIndex="$2"
@@ -45,11 +57,33 @@ InterfaceName="$6"
 shift ; shift ; shift ; shift ; shift ; shift ; shift
 ProviderList="$@"
 
+# ====== Create network configuration =======================================
+echo "???????"
+./Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers "$ProviderList" || exit 1
 AllEthernetInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | grep "^eth" | sed -e "s/:$//" | xargs`
+echo "A=$AllEthernetInterfaces"
+for interface in $AllEthernetInterfaces ; do
+   echo "I=$interface"
+   if [ "$interface" != "lo" -a "$interface" != "$InterfaceName" ] ; then
+      (
+         if ! parse-interface-configuration $interface /etc/network/interfaces ; then
+            echo -e "\nauto $interface"
+            echo -e "iface $interface inet static"
+            echo -e "   address 0.0.0.0"
+            echo -e "   netmask 0.0.0.0"
+         fi
+      ) >>interfaces.new
+   fi
+done
 
-Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -all-interfaces "$AllEthernetInterfaces" -providers "$ProviderList" || exit 1
+echo "STOP"
+exit 1
+
+# ====== Create other configurations ========================================
 ( cat /etc/modules | grep -v "^dummy" ; echo "dummy numdummies=10" ) >modules.new
 
+
+# ====== Compare new configurations to old ones =============================
 echo "------ BEGIN OF DIFFS ------"
 echo "------ /etc/hostname:"
 colordiff /etc/hostname hostname.new
@@ -71,6 +105,8 @@ else
 fi
 echo "------ END OF DIFFS ------"
 
+
+# ====== Ask for confirmation and apply changes =============================
 echo -en "\x1b[33mApply changes (current configuration files will be backuped to <file>~)?\x1b[0m [yes/no]? "
 read -er applyChanges
 if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
@@ -105,7 +141,11 @@ else
 fi
 rm -f hostname.new hosts.new ntp.new interfaces.new auto.master auto.nfs
 
+# Store parameters for later re-run.
+echo "$AllParameters" >$LAST_PARAMETERS_FILE
 
+
+# ====== Keyboard configuration =============================================
 echo -en "\x1b[33mConfigure keyboard? [yes/no]\x1b[0m? "
 read -er applyChanges
 if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
@@ -115,6 +155,7 @@ else
 fi
 
 
+# ====== System maintenance =================================================
 echo -en "\x1b[33mRun system maintenance script? [yes/no]\x1b[0m? "
 read -er applyChanges
 if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
@@ -122,5 +163,3 @@ if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
 else
    System-Maintenance
 fi
-
-echo "$AllParameters" >$LAST_PARAMETERS_FILE
