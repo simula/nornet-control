@@ -103,8 +103,7 @@ if [ "$ControlBoxMode" != "" -a "$ControlBoxMode" != "-controlbox" ] ; then
 fi
 
 # ====== Create network configuration =======================================
-echo "???????"
-./Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers "$ProviderList" $ControlBoxMode || exit 1
+Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers "$ProviderList" $ControlBoxMode || exit 1
 AllEthernetInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | grep "^eth" | sed -e "s/:$//" | xargs`
 for interface in $AllEthernetInterfaces ; do
    if [ "$interface" != "lo" -a "$interface" != "$InterfaceName" ] ; then
