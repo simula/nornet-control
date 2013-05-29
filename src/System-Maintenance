@@ -38,7 +38,7 @@ done
 # ====== Stop AutoFS ========================================================
 if [ -e /etc/init.d/autofs ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Stopping AutoFS service ...\x1b[0m"
-   sudo service autofs stop || true
+   sudo service autofs stop >/dev/null || true
 fi
 
 # ====== dpkg package fixes =================================================
@@ -142,7 +142,7 @@ fi
 # ====== Start AutoFS =======================================================
 if [ -e /etc/init.d/autofs ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Starting AutoFS service ...\x1b[0m"
-   sudo service autofs start || true
+   sudo service autofs start >/dev/null || true
 fi
 
 # ====== Show NorNet package versions =======================================
