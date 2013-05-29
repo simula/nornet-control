@@ -5,7 +5,9 @@ Change-VSystem-CDImage            /usr/bin
 Check-VSystem                     /usr/bin
 Convert-HDD-Images                /usr/bin
 Make-Server-Configuration         /usr/bin
+Make-VSystem-Template             /usr/bin
 Server-Setup                      /usr/bin
+Show-VSystems                     /usr/bin
 Start-VSystem                     /usr/bin
 Stop-VSystem                      /usr/bin
 grub/05_nornet_server_theme       /etc/grub.d

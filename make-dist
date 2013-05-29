@@ -46,6 +46,8 @@ cp src/System-Backup $PACKAGE-$UPSTREAM_VERSION
 cp src/Start-VSystem $PACKAGE-$UPSTREAM_VERSION
 cp src/Stop-VSystem $PACKAGE-$UPSTREAM_VERSION
 cp src/Check-VSystem $PACKAGE-$UPSTREAM_VERSION
+cp src/Show-VSystems $PACKAGE-$UPSTREAM_VERSION
+cp src/Make-VSystem-Template $PACKAGE-$UPSTREAM_VERSION
 cp src/Backup-VSystem $PACKAGE-$UPSTREAM_VERSION
 cp src/Backup-All-VSystems $PACKAGE-$UPSTREAM_VERSION
 cp src/Auto-Update-BootCD $PACKAGE-$UPSTREAM_VERSION
