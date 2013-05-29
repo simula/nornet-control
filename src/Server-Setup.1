@@ -31,7 +31,8 @@ FQDN
 node_index
 \-site site_index
 \-interface interface_name
-\-providers default_provider [provider2] ...
+\-providers default_provider[,provider2,...]
+.Op \-controlbox
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
 .Nm Server-Setup
@@ -55,10 +56,14 @@ Provides the node index (1-255).
 Provides the site index (1-255).
 .It \-interface interface_name
 Provides the NorNet interface name (e.g. eth0).
-.It \-providers default_provider [provider2] ...
+.It \-providers default_provider[,provider2,...]
 Provides the providers the server is conntected to. They will be configured
 on the NorNet interface. Providers can be given by their name or provider
 index.
+.It \-controlbox
+If set, the node is a Control Box. That is, the default routes are not via
+the NorNet network. In this case, static routes for just the NorNet address
+range are configured instead of using default routes.
 .El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES

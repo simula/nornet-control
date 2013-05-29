@@ -343,7 +343,7 @@ remove-table ()
    # ====== Remove all rules pointing to that table =========================
    ip rule show | (
      while read inputLine ; do
-         if [[ $inputLine =~ ([0-9]*):(.*)([ \t]*lookup ${tableID}[ \t]*)$ ]]; then
+         if [[ $inputLine =~ ([0-9]*):(.*)([ \t]*lookup ${tableID}[ \t]*)$ ]] ; then
             if [ ${#BASH_REMATCH[*]} -eq 4 ] ; then
                pref=${BASH_REMATCH[1]}
                rule=${BASH_REMATCH[2]}

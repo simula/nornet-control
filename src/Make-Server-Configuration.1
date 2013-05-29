@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd May 28, 2013
+.Dd May 29, 2013
 .Dt Make-Server-Configuration 1
 .Os Make-Server-Configuration
 .\" ###### Name #############################################################
@@ -32,6 +32,7 @@ node_index
 \-site site_index
 \-interface interface_name
 \-providers default_provider[,provider2,...]
+.Op \-controlbox
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
 .Nm Make-Server-Configuration
@@ -59,9 +60,13 @@ Provides the NorNet interface name (e.g. eth0).
 Provides the providers the server is conntected to. They will be configured
 on the NorNet interface. Providers can be given by their name (short or long)
 or provider index.
+.It \-controlbox
+If set, the node is a Control Box. That is, the default routes are not via
+the NorNet network. In this case, static routes for just the NorNet address
+range are configured instead of using default routes.
 .El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
-.It Make-Server-Configuration isbjoen.unis.nornet 254 \-site 8 \-interface eth0 \-all\-interfaces eth0,eth1 \-providers uninett,hafslund
+.It Make-Server-Configuration isbjoen.unis.nornet 254 \-site 8 \-interface eth0 \-providers uninett,hafslund
 .El

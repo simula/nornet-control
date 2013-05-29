@@ -170,8 +170,8 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
 
 
 # ###### Main program #######################################################
-if ((len(sys.argv) != 9) or (sys.argv[3] != '-site') or (sys.argv[5] != '-interface') or (sys.argv[7] != '-providers')):
-   error('Usage: ' + sys.argv[0] + ' FQDN node_index -site site_index -interface interface_name -providers default_provider[,provider2,...]')
+if ((len(sys.argv) < 9) or (sys.argv[3] != '-site') or (sys.argv[5] != '-interface') or (sys.argv[7] != '-providers')):
+   error('Usage: ' + sys.argv[0] + ' FQDN node_index -site site_index -interface interface_name -providers default_provider[,provider2,...] [-controlbox]')
 
 hostName   = getHostnameFromFQDN(sys.argv[1])
 domainName = getDomainFromFQDN(sys.argv[1])
@@ -182,6 +182,12 @@ siteIndex = int(sys.argv[4])
 if ((siteIndex < 1) or (siteIndex > 255)):
    error('Bad site index!')
 interfaceName = sys.argv[6]
+controlBoxMode = False
+if len(sys.argv) > 9:
+    if sys.argv[9] == '-controlbox':
+       controlBoxMode = True
+    else:
+       error('Bad control box mode! Do you mean -controlbox?')
 
 loadNorNetConfiguration()
 
@@ -204,17 +210,17 @@ for providerName in sys.argv[8].split(','):
    providerList.append(providerIndex)
 
 
-print('Node:           ' + hostName + ' . ' + domainName)
-print('Node Index:     ' + str(nodeIndex))
-print('Site Index:     ' + str(siteIndex))
-print('Interface:      ' + interfaceName)
-print('Providers:      ' + str(providerList))
+print('Node:       ' + hostName + ' . ' + domainName)
+print('Node Index: ' + str(nodeIndex))
+print('Site Index: ' + str(siteIndex))
+print('Interface:  ' + interfaceName)
+print('Providers:  ' + str(providerList))
 
 
 writeHostname('hostname.new', hostName, domainName)
 writeHosts('hosts.new', hostName, domainName)
 writeInterfaces('interfaces.new', hostName, domainName, nodeIndex, siteIndex,
-                providerList, defaultProvider, interfaceName)
+                providerList, defaultProvider, interfaceName, controlBoxMode)
 writeNTPConfiguration('ntp.new', nodeIndex, siteIndex, defaultProvider)
 
 # Create AutoFS configuration only if we are not on the file server itself!
