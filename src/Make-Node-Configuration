@@ -189,9 +189,18 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, name, descripti
 
 
 # ###### Generate node configuration ########################################
-def _makeNodeConfigurationForGivenNode(fullSiteList, localSite, localNode,
-                                       interfaceName, variant):
-   log('Making node configuration for ' + localNode['node_name'] + ' ...')
+def makeInterfaceConfiguration(fullSiteList, localNode, interfaceOverride, variant):
+   if int(localNode['node_index']) == NorNet_NodeIndex_Tunnelbox:
+      # No automatic configuration for tunnelbox!
+      return True
+   if interfaceOverride == None:
+      interfaceName = localNode['node_nornet_interface']
+   else:
+      interfaceName = interfaceOverride
+
+   localSite = getNorNetSiteOfNode(fullSiteList, localNode)
+   if localSite == None:
+      error('Node ' + localNode['node_name'] + ' does not belong to a NorNet site')
 
    # ====== Write Debian /etc/network/interfaces ============================
    if variant == 'Debian':
@@ -337,24 +346,6 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, localSite, localNode,
       error('Unknown distribution variant: ' + variant)
 
 
-# ###### Generate node configuration ########################################
-def makeNodeConfiguration(fullSiteList, localNode, interfaceOverride, variant):
-   if int(localNode['node_index']) == NorNet_NodeIndex_Tunnelbox:
-      return True
-
-   if interfaceOverride == None:
-      interfaceName = localNode['node_nornet_interface']
-   else:
-      interfaceName = interfaceOverride
-
-   localSite = getNorNetSiteOfNode(fullSiteList, localNode)
-   if localSite == None:
-      error('Node ' + localNode['node_name'] + ' does not belong to a NorNet site')
-
-   return(_makeNodeConfigurationForGivenNode(fullSiteList, localSite, localNode,
-                                             interfaceName, variant))
-
-
 
 # ###### Main program #######################################################
 # ====== Handle arguments ===================================================
@@ -395,7 +386,7 @@ if localSite == None:
    error('Unable to find site of node ' + localNode['node_name'] + ' in database!')
 fullUserList = fetchNorNetUserList()
 
-makeNodeConfiguration(fullSiteList, localNode, interfaceName, distribution)
+makeInterfaceConfiguration(fullSiteList, localNode, interfaceName, distribution)
 makeHostnameConfiguration(localSite, localNode['node_name'])
 makeHostsConfiguration(localSite, localNode['node_name'])
 makeNTPConfiguration(fullSiteList, localSite, localNode)

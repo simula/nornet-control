@@ -35,48 +35,11 @@ from NorNetNodeSetup     import *;
 
 
 
-# ###### Main program #######################################################
-if ((len(sys.argv) != 11) or (sys.argv[3] != '-site') or (sys.argv[5] != '-interface') or (sys.argv[7] != '-all-interfaces') or (sys.argv[9] != '-providers')):
-   error('Usage: ' + sys.argv[0] + ' FQDN node_index -site site_index -interface interface_name -all-interfaces if1[,if2,...] -providers default_provider[,provider2,...]')
-
-hostName   = getHostnameFromFQDN(sys.argv[1])
-domainName = getDomainFromFQDN(sys.argv[1])
-nodeIndex  = int(sys.argv[2])
-if ((nodeIndex < 1) or (nodeIndex > 255)):
-   error('Bad node index!')
-siteIndex = int(sys.argv[4])
-if ((siteIndex < 1) or (siteIndex > 255)):
-   error('Bad site index!')
-interfaceName = sys.argv[6]
-allInterfaces = sys.argv[8].split(',')
-
-loadNorNetConfiguration()
-
-defaultProvider = -1
-providerList    = []
-for providerName in sys.argv[10].split(','):
-   providerIndex = -1
-   try:
-      providerIndex = int(providerName)
-   except:
-      for p in NorNet_ProviderList:
-         if ((NorNet_ProviderList[p][0] == providerName) or
-             (NorNet_ProviderList[p][1] == providerName)):
-            providerIndex = p
-            break
-   if ((providerIndex <= 0) or (providerIndex > 255)):
-      error("Bad provider " + providerName)
-   if len(providerList) == 0:
-      defaultProvider = providerIndex
-   providerList.append(providerIndex)
-
-
-print('Node:           ' + hostName + ' . ' + domainName)
-print('Node Index:     ' + str(nodeIndex))
-print('Site Index:     ' + str(siteIndex))
-print('Interface:      ' + interfaceName)
-print('All Interfaces: ' + str(allInterfaces))
-print('Providers:      ' + str(providerList))
+# ###### Write hostname file ################################################
+def writeHostname(outputName, hostName, domainName):
+   outputFile = codecs.open(outputName, 'w', 'utf-8')
+   outputFile.write(hostName + '.' + domainName + '\n')
+   outputFile.close()
 
 
 # ###### Write hosts file ###################################################
@@ -93,15 +56,38 @@ def writeHosts(outputName, hostName, domainName):
    outputFile.close()
 
 
-# ###### Write hostname file ################################################
-def writeHostname(outputName, hostName, domainName):
+
+
+# ###### Write NTP configuration file ##############################################
+def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider):
    outputFile = codecs.open(outputName, 'w', 'utf-8')
-   outputFile.write(hostName + '.' + domainName + '\n')
+
+   outputFile.write('# ====== Drift File ======\n')
+   outputFile.write('driftfile /var/lib/ntp/ntp.drift\n\n')
+
+   outputFile.write('# ====== Statistics ======\n')
+   outputFile.write('statsdir /var/log/ntpstats/\n')
+   outputFile.write('filegen loopstats file loopstats type day enable\n')
+   outputFile.write('filegen peerstats file peerstats type day enable\n')
+   outputFile.write('filegen clockstats file clockstats type day enable\n\n')
+
+   outputFile.write('# ====== Generic Access Restrictions ======\n')
+   outputFile.write('restrict default ignore\n')
+   outputFile.write('restrict 127.0.0.1\n')
+   outputFile.write('restrict ::1\n\n')
+
+   outputFile.write('# ====== NTP server ======\n')
+   for version in [ 6 ]:
+      ntpServer = makeNorNetIP(defaultProvider, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
+      outputFile.write('server    ' + str(ntpServer.ip) + '\n')
+      outputFile.write('restrict  ' + str(ntpServer.ip) + '\n')
+
    outputFile.close()
 
 
 # ###### Write interfaces file ##############################################
-def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex, providerList, defaultProvider, interfaceName, allInterfaces):
+def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
+                    providerList, defaultProvider, interfaceName, allInterfaces):
    outputFile = codecs.open(outputName, 'w', 'utf-8')
    outputFile.write('# ====== Node configuration ======\n')
 
@@ -180,31 +166,49 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex, prov
    outputFile.close()
 
 
-# ###### Write NTP configuration file ##############################################
-def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider):
-   outputFile = codecs.open(outputName, 'w', 'utf-8')
 
-   outputFile.write('# ====== Drift File ======\n')
-   outputFile.write('driftfile /var/lib/ntp/ntp.drift\n\n')
+# ###### Main program #######################################################
+if ((len(sys.argv) != 11) or (sys.argv[3] != '-site') or (sys.argv[5] != '-interface') or (sys.argv[7] != '-all-interfaces') or (sys.argv[9] != '-providers')):
+   error('Usage: ' + sys.argv[0] + ' FQDN node_index -site site_index -interface interface_name -all-interfaces if1[,if2,...] -providers default_provider[,provider2,...]')
 
-   outputFile.write('# ====== Statistics ======\n')
-   outputFile.write('statsdir /var/log/ntpstats/\n')
-   outputFile.write('filegen loopstats file loopstats type day enable\n')
-   outputFile.write('filegen peerstats file peerstats type day enable\n')
-   outputFile.write('filegen clockstats file clockstats type day enable\n\n')
+hostName   = getHostnameFromFQDN(sys.argv[1])
+domainName = getDomainFromFQDN(sys.argv[1])
+nodeIndex  = int(sys.argv[2])
+if ((nodeIndex < 1) or (nodeIndex > 255)):
+   error('Bad node index!')
+siteIndex = int(sys.argv[4])
+if ((siteIndex < 1) or (siteIndex > 255)):
+   error('Bad site index!')
+interfaceName = sys.argv[6]
+allInterfaces = sys.argv[8].split(',')
 
-   outputFile.write('# ====== Generic Access Restrictions ======\n')
-   outputFile.write('restrict default ignore\n')
-   outputFile.write('restrict 127.0.0.1\n')
-   outputFile.write('restrict ::1\n\n')
+loadNorNetConfiguration()
 
-   outputFile.write('# ====== NTP server ======\n')
-   for version in [ 6 ]:
-      ntpServer = makeNorNetIP(defaultProvider, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
-      outputFile.write('server    ' + str(ntpServer.ip) + '\n')
-      outputFile.write('restrict  ' + str(ntpServer.ip) + '\n')
+defaultProvider = -1
+providerList    = []
+for providerName in sys.argv[10].split(','):
+   providerIndex = -1
+   try:
+      providerIndex = int(providerName)
+   except:
+      for p in NorNet_ProviderList:
+         if ((NorNet_ProviderList[p][0] == providerName) or
+             (NorNet_ProviderList[p][1] == providerName)):
+            providerIndex = p
+            break
+   if ((providerIndex <= 0) or (providerIndex > 255)):
+      error("Bad provider " + providerName)
+   if len(providerList) == 0:
+      defaultProvider = providerIndex
+   providerList.append(providerIndex)
 
-   outputFile.close()
+
+print('Node:           ' + hostName + ' . ' + domainName)
+print('Node Index:     ' + str(nodeIndex))
+print('Site Index:     ' + str(siteIndex))
+print('Interface:      ' + interfaceName)
+print('All Interfaces: ' + str(allInterfaces))
+print('Providers:      ' + str(providerList))
 
 
 writeHostname('hostname.new', hostName, domainName)
