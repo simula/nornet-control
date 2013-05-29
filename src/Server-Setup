@@ -119,7 +119,7 @@ for interface in $AllEthernetInterfaces ; do
    fi
 done
 
-if [ "$MAY_BE_CONTROLBOX" != "" ] ; then
+if [ $MAY_BE_CONTROLBOX -ne 0 ] ; then   
    if [ "$ControlBoxMode" != "-controlbox" ] ; then
       echo -e  "\n\x1b[31mWARNING: Node has non-NorNet interface with gateway or small metric!\x1b[0m"
       echo -en "\x1b[31mWARNING: Are you really sure that this node is NOT a Control Box? [yes/no]\x1b[0m? "
@@ -187,9 +187,9 @@ else
    cp auto.master /etc/auto.master
    cp auto.nfs /etc/auto.nfs
 
-   /etc/init.d/networking restart
-   /etc/init.d/ntp restart
-   /etc/init.d/autofs restart
+   service networking restart >/dev/null
+   service ntp restart >/dev/null
+   service autofs restart >/dev/null
 fi
 rm -f hostname.new hosts.new ntp.new interfaces.new auto.master auto.nfs
 
