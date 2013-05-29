@@ -72,8 +72,29 @@ done
 echo -e "\x1b[34mBUILD_VERSION_IDENTIFIER: $BUILD_VERSION_IDENTIFIER\x1b[0m"
 
 
-# ====== Current SVN version ================================================
+# ====== Update changelog header from Config.kmk version ====================
+eval `grep "^VBOX_VERSION_MAJOR[ \t]*=[ \t]*" Config.kmk | sed -e "s/ //g"`
+eval `grep "^VBOX_VERSION_MINOR[ \t]*=[ \t]*" Config.kmk | sed -e "s/ //g"`
+eval `grep "^VBOX_VERSION_BUILD[ \t]*=[ \t]*" Config.kmk | sed -e "s/ //g"`
+
+if [ "$VBOX_VERSION_MAJOR" = "" ] ; then
+   echo >&2 "ERROR: Unable to extract VBOX_VERSION_MAJOR from Config.kmk!"
+   exit 1
+fi
+if [ "$VBOX_VERSION_MINOR" = "" ] ; then
+   echo >&2 "ERROR: Unable to extract VBOX_VERSION_MINOR from Config.kmk!"
+   exit 1
+fi
+if [ "$VBOX_VERSION_BUILD" = "" ] ; then
+   echo >&2 "ERROR: Unable to extract VBOX_VERSION_BUILD from Config.kmk!"
+   exit 1
+fi
+PLAIN_VERSION=${VBOX_VERSION_MAJOR}.${VBOX_VERSION_MINOR}.${VBOX_VERSION_BUILD}
+
 CHANGELOG_HEADER="`head -n1 debian/changelog`"
+echo "Old CHANGELOG_HEADER=$CHANGELOG_HEADER"
+CHANGELOG_HEADER=`echo "$CHANGELOG_HEADER" | sed -e "s/^\([a-zA-Z0-9]*\) (\([0-9]*\.[0-9]*\.[0-9]*\)\(.*\))/\1 (${PLAIN_VERSION}\3)/g"`
+echo "New CHANGELOG_HEADER=$CHANGELOG_HEADER"
 
 # The package name, e.g. MyApplication
 PACKAGE=`echo $CHANGELOG_HEADER | sed -e "s/(.*//" -e "s/ //g"`
