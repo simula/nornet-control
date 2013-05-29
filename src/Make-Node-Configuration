@@ -189,27 +189,23 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, name, descripti
 
 
 # ###### Generate node configuration ########################################
-def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, interfaceName,
-                                       variant, configNamePrefix):
-   log('Making node configuration for ' + nodeName + ' ...')
+def _makeNodeConfigurationForGivenNode(fullSiteList, localSite, localNode,
+                                       interfaceName, variant):
+   log('Making node configuration for ' + localNode['node_name'] + ' ...')
 
    # ====== Write Debian /etc/network/interfaces ============================
    if variant == 'Debian':
-      if configNamePrefix == None:
-         configNamePrefix = 'node-' + nodeName + '-'
-      configurationName = configNamePrefix + 'interfaces'
-      debianFile = makeConfigFile('Node', configurationName, False)
+      debianFile = makeConfigFile('Node', 'interfaces', False)
 
       debianFile.write('# ====== Loopback ======\n')
       debianFile.write('auto lo\n')
       debianFile.write('iface lo inet loopback\n')
 
-      siteIndex    = site['site_index']
-      providerList = getNorNetProvidersForSite(site)
+      providerList = getNorNetProvidersForSite(localSite)
       for onlyDefault in [ False, True  ]:   # NOTE: non-default providers first!
          for providerIndex in providerList:
-            if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
-                 ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+            if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
+                 ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
                provider = providerList[providerIndex]
 
                debianFile.write('\n# ====== ' + provider['provider_long_name'] + ' (' + \
@@ -217,11 +213,11 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
 
                for version in [ 4, 6 ]:
 
-                  if ((providerIndex != site['site_default_provider_index']) and
+                  if ((providerIndex != localSite['site_default_provider_index']) and
                      (version == 4)):
                      debianFile.write('auto ' + interfaceName + ':' + str(providerIndex) + '\n')
                      debianFile.write('iface ' + interfaceName + ':' + str(providerIndex) + ' inet static\n')
-                  elif providerIndex == site['site_default_provider_index']:
+                  elif providerIndex == localSite['site_default_provider_index']:
                      v = ''
                      if version == 4:
                         debianFile.write('auto ' + interfaceName + '\n')
@@ -230,14 +226,14 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
                         debianFile.write('\n')
                      debianFile.write('iface ' + interfaceName + ' inet' + v + ' static\n')
 
-                  address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
-                  gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
+                  address = makeNorNetIP(providerIndex, localSite['site_index'], localNode['node_index'],    version)
+                  gateway = makeNorNetIP(providerIndex, localSite['site_index'], NorNet_NodeIndex_Tunnelbox, version)
                   metric = 10
-                  if providerIndex == site['site_default_provider_index']:
+                  if providerIndex == localSite['site_default_provider_index']:
                      metric = 2
 
                   # ====== Addressing =======================================
-                  if ((version == 4) or (providerIndex == site['site_default_provider_index'])):
+                  if ((version == 4) or (providerIndex == localSite['site_default_provider_index'])):
                      debianFile.write('   address   ' + str(address.ip) + '\n')
                      if version == 4:
                         debianFile.write('   netmask   ' + str(address.netmask) + '\n')
@@ -246,7 +242,7 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
                      debianFile.write('   gateway   ' + str(gateway.ip) + '\n')
                      debianFile.write('   metric    ' + str(metric) + '\n')
 
-                  elif ((version == 6) and (providerIndex != site['site_default_provider_index'])):   # NOTE: Work-around for buggy Ubuntu ifupdown!
+                  elif ((version == 6) and (providerIndex != localSite['site_default_provider_index'])):   # NOTE: Work-around for buggy Ubuntu ifupdown!
                      debianFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' &&')
                      debianFile.write(' /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
                      debianFile.write('   down /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' &&')
@@ -254,7 +250,7 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
 
 
                   # ====== Further parameters ===============================
-                  if providerIndex == site['site_default_provider_index']:
+                  if providerIndex == localSite['site_default_provider_index']:
                      # ====== IPv6 options ==================================
                      if version == 6:
                         debianFile.write('   # autoconf  0\n')
@@ -264,39 +260,34 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
                      # ====== DNS ===========================================
                      dnsAddress = gateway   # The tunnelbox is also the site's DNS server!
                      debianFile.write('   dns-nameservers ' + str(dnsAddress.ip) + '\n')
-                     debianFile.write('   dns-search      ' + site['site_domain'] + '\n')
+                     debianFile.write('   dns-search      ' + localSite['site_domain'] + '\n')
 
       debianFile.close()
 
 
    # ====== Fedora /etc/sysconfig/network-scripts/ifcfg-* ===================
    if variant == 'Fedora':
-      if(configNamePrefix == None):
-         configNamePrefix = 'node-' + nodeName + '-'
       for i in range(0, 256):
-         configurationName = configNamePrefix + 'ifcfg-' + interfaceName + ':' + str(i)
+         configurationName = 'ifcfg-' + interfaceName + ':' + str(i)
          try:
             os.unlink(configurationName)
          except OSError:
             continue
 
-      siteIndex       = site['site_index']
-      providerList    = getNorNetProvidersForSite(site)
+      siteIndex       = localSite['site_index']
+      providerList    = getNorNetProvidersForSite(localSite)
       ipv6Secondaries = []
       for onlyDefault in [ False, True  ]:   # NOTE: non-default providers first!
          for providerIndex in providerList:
-            if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
-               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+            if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
+               ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
                provider = providerList[providerIndex]
-               if providerIndex == site['site_default_provider_index']:
+               if providerIndex == localSite['site_default_provider_index']:
                   interface = interfaceName
                else:
                   interface = interfaceName + ':' + str(providerIndex)
 
-               if configNamePrefix == None:
-                  configNamePrefix = 'node-' + nodeName + '-'
-               configurationName = configNamePrefix + 'ifcfg-' + interface
-               fedoraFile = makeConfigFile('Node', configurationName, False)
+               fedoraFile = makeConfigFile('Node', 'ifcfg-' + interface, False)
                fedoraFile.write('# ====== ' + provider['provider_long_name'] + ' (' + \
                               str(provider['provider_index']) + ') ======\n')
                fedoraFile.write('DEVICE=' + interface + '\n')
@@ -305,19 +296,19 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
 
                # ====== Generate IP configuration ===========================
                for version in [ 4, 6 ]:
-                  address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
+                  address = makeNorNetIP(providerIndex, siteIndex, localNode['node_index'],    version)
                   gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
 
                   if version == 4:
                      fedoraFile.write('IPADDR=' + str(address.ip) + '\n')
                      fedoraFile.write('NETMASK=' + str(address.netmask) + '\n')
                      fedoraFile.write('GATEWAY=' + str(gateway.ip) + '\n')
-                     if providerIndex == site['site_default_provider_index']:
+                     if providerIndex == localSite['site_default_provider_index']:
                         fedoraFile.write('METRIC=2\n')
                      else:
                         fedoraFile.write('METRIC=10\n')
                   else:
-                     if providerIndex != site['site_default_provider_index']:
+                     if providerIndex != localSite['site_default_provider_index']:
                         ipv6Secondaries.append(address)
 
                      else:
@@ -334,7 +325,7 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
                            i = i + +1
                         fedoraFile.write('"\n')
 
-               if providerIndex == site['site_default_provider_index']:
+               if providerIndex == localSite['site_default_provider_index']:
                   dns1 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 4)
                   dns2 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 6)
                   fedoraFile.write('DNS1=' + str(dns1.ip) + '\n')
@@ -342,21 +333,21 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, site, nodeName, nodeIndex, 
 
 
 # ###### Generate node configuration ########################################
-def makeNodeConfiguration(fullSiteList, node, interfaceOverride, variant, configNamePrefix):
-   if int(node['node_index']) == NorNet_NodeIndex_Tunnelbox:
+def makeNodeConfiguration(fullSiteList, localNode, interfaceOverride, variant):
+   if int(localNode['node_index']) == NorNet_NodeIndex_Tunnelbox:
       return True
 
    if interfaceOverride == None:
-      interface = node['node_nornet_interface']
+      interface = localNode['node_nornet_interface']
    else:
       interface = interfaceOverride
 
-   site = getNorNetSiteOfNode(fullSiteList, node)
-   if site == None:
-      error('Node ' + nodeName + ' does not belong to a NorNet site')
+   localSite = getNorNetSiteOfNode(fullSiteList, localNode)
+   if localSite == None:
+      error('Node ' + localNode['node_name'] + ' does not belong to a NorNet site')
 
-   return(_makeNodeConfigurationForGivenNode(fullSiteList, site, node['node_name'], node['node_index'],
-                                             interface, variant, configNamePrefix))
+   return(_makeNodeConfigurationForGivenNode(fullSiteList, localSite, localNode,
+                                             interface, variant))
 
 
 
@@ -399,7 +390,7 @@ if localSite == None:
    error('Unable to find site of node ' + localNode['node_name'] + ' in database!')
 fullUserList = fetchNorNetUserList()
 
-makeNodeConfiguration(fullSiteList, localNode, interface, distribution, '')
+makeNodeConfiguration(fullSiteList, localNode, interface, distribution)
 makeHostnameConfiguration(localSite, localNode['node_name'])
 makeHostsConfiguration(localSite, localNode['node_name'])
 makeNTPConfiguration(fullSiteList, localSite, localNode)
