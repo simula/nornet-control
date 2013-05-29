@@ -266,7 +266,7 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, localSite, localNode,
 
 
    # ====== Fedora /etc/sysconfig/network-scripts/ifcfg-* ===================
-   if variant == 'Fedora':
+   elif variant == 'Fedora':
       for i in range(0, 256):
          configurationName = 'ifcfg-' + interfaceName + ':' + str(i)
          try:
@@ -332,22 +332,27 @@ def _makeNodeConfigurationForGivenNode(fullSiteList, localSite, localNode,
                   fedoraFile.write('DNS2=' + str(dns2.ip) + '\n')
 
 
+   # ====== Unknown variant =================================================
+   else:
+      error('Unknown distribution variant: ' + variant)
+
+
 # ###### Generate node configuration ########################################
 def makeNodeConfiguration(fullSiteList, localNode, interfaceOverride, variant):
    if int(localNode['node_index']) == NorNet_NodeIndex_Tunnelbox:
       return True
 
    if interfaceOverride == None:
-      interface = localNode['node_nornet_interface']
+      interfaceName = localNode['node_nornet_interface']
    else:
-      interface = interfaceOverride
+      interfaceName = interfaceOverride
 
    localSite = getNorNetSiteOfNode(fullSiteList, localNode)
    if localSite == None:
       error('Node ' + localNode['node_name'] + ' does not belong to a NorNet site')
 
    return(_makeNodeConfigurationForGivenNode(fullSiteList, localSite, localNode,
-                                             interface, variant))
+                                             interfaceName, variant))
 
 
 
@@ -355,9 +360,9 @@ def makeNodeConfiguration(fullSiteList, localNode, interfaceOverride, variant):
 # ====== Handle arguments ===================================================
 if len(sys.argv) < 4:
    error('Usage: ' + sys.argv[0] + ' FQDN Interface Debian|Fedora')
-fqdn         = sys.argv[1]
-interface    = sys.argv[2]
-distribution = sys.argv[3]
+fqdn          = sys.argv[1]
+interfaceName = sys.argv[2]
+distribution  = sys.argv[3]
 
 
 # ====== Get configuration ==================================================
@@ -390,7 +395,7 @@ if localSite == None:
    error('Unable to find site of node ' + localNode['node_name'] + ' in database!')
 fullUserList = fetchNorNetUserList()
 
-makeNodeConfiguration(fullSiteList, localNode, interface, distribution)
+makeNodeConfiguration(fullSiteList, localNode, interfaceName, distribution)
 makeHostnameConfiguration(localSite, localNode['node_name'])
 makeHostsConfiguration(localSite, localNode['node_name'])
 makeNTPConfiguration(fullSiteList, localSite, localNode)
