@@ -121,7 +121,7 @@ NorNet_RoutingMetric_AdditionalProvider = 10   # for the first one; next is +1, 
 
 
 # ###### Read configuration file ############################################
-def loadNorNetConfiguration():
+def loadNorNetConfiguration(includeAPIConfiguration = True):
    sys.stdout = codecs.getwriter('utf8')(sys.stdout)
    sys.stderr = codecs.getwriter('utf8')(sys.stderr)
    sys.stdin  = codecs.getreader('utf8')(sys.stdin)
@@ -139,20 +139,23 @@ def loadNorNetConfiguration():
          error('Constantsuration file ' + NorNetPLC_FallbackConstantsFile + ' cannot be read: ' + str(e))
    
    # ====== Open configuration file =========================================
-   log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')   
-   try:
-      configFile = codecs.open(NorNetPLC_ConfigFile, 'r', 'utf-8')
-   except:
+   if includeAPIConfiguration == True:
+      log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')   
       try:
-         log('###### Cannot open ' + NorNetPLC_ConfigFile + ', trying fallback file ' + NorNetPLC_FallbackConfigFile + ' ... ######')
-         configFile = codecs.open(NorNetPLC_FallbackConfigFile, 'r', 'utf-8')
+         configFile = codecs.open(NorNetPLC_ConfigFile, 'r', 'utf-8')
+      except:
+         try:
+            log('###### Cannot open ' + NorNetPLC_ConfigFile + ', trying fallback file ' + NorNetPLC_FallbackConfigFile + ' ... ######')
+            configFile = codecs.open(NorNetPLC_FallbackConfigFile, 'r', 'utf-8')
 
-      except Exception as e:
-         error('Configuration file ' + NorNetPLC_FallbackConfigFile + ' cannot be read: ' + str(e))
+         except Exception as e:
+            error('Configuration file ' + NorNetPLC_FallbackConfigFile + ' cannot be read: ' + str(e))
+      lines = tuple(constantsFile) + tuple(configFile)
+   else:
+       lines = tuple(constantsFile)
 
 
    # ====== Build the configuration table ===================================
-   lines = tuple(constantsFile) + tuple(configFile)
    for line in lines:
       if re.match('^[ \t]*[#\n]', line):
          continue
@@ -184,21 +187,6 @@ def loadNorNetConfiguration():
 
 
    # ====== Check some important contents ===================================
-   if NorNet_Configuration['NorNetPLC_Address'] == None:
-      error('NorNetPLC_Address has not been set in configuration file!')
-   if NorNet_Configuration['NorNetPLC_User'] == None:
-      error('NorNetPLC_User has not been set in configuration file!')
-   if NorNet_Configuration['NorNetPLC_Password'] == None:
-      error('NorNetPLC_Password has not been set in configuration file!')
-   
-   if NorNet_Configuration['NorNet_CentralSite_DomainName'] == None:
-      error('NorNet_CentralSite_DomainName has not been set!')
-
-   try:
-      user = pwd.getpwnam(getLocalNodeNorNetUser())
-   except Exception as e:
-      error('NorNet_LocalNode_NorNetUser has invalid user "' + str(getLocalNodeNorNetUser()) + '": ' + str(e))
-      
    try:
       NorNet_Configuration['NorNet_IPv4Prefix'] = IPv4Network(NorNet_Configuration['NorNet_IPv4Prefix'])
    except Exception as e:
@@ -227,47 +215,62 @@ def loadNorNetConfiguration():
    if NorNet_Configuration['NorNet_IPv6TunnelPrefix'].prefixlen > 80:
       error('NorNet_IPv6TunnelPrefix must be at least a /80 network!')
 
-   if NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'] != None:
-      try:
-         NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'] = IPv4Address(NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'])
-      except Exception as e:
-         error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapTunnelbox "' + NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'] + ' is invalid: ' + str(e))
+   if includeAPIConfiguration == True:
+      if NorNet_Configuration['NorNetPLC_Address'] == None:
+         error('NorNetPLC_Address has not been set in configuration file!')
+      if NorNet_Configuration['NorNetPLC_User'] == None:
+         error('NorNetPLC_User has not been set in configuration file!')
+      if NorNet_Configuration['NorNetPLC_Password'] == None:
+         error('NorNetPLC_Password has not been set in configuration file!')
+      if NorNet_Configuration['NorNet_CentralSite_DomainName'] == None:
+         error('NorNet_CentralSite_DomainName has not been set!')
 
-   if NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] != None:
       try:
-         NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] = int(NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'])
+         user = pwd.getpwnam(getLocalNodeNorNetUser())
       except Exception as e:
-         error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapProviderIndex "' + NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] + ' is invalid: ' + str(e))
-      if ((NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] < 1) or
-          (NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] > 255)):
-         error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapProviderIndex must be in [1,255]!')
-
-   if NorNet_Configuration['NorNet_LocalSite_SiteIndex'] != None:
-      try:
-         NorNet_Configuration['NorNet_LocalSite_SiteIndex'] = int(NorNet_Configuration['NorNet_LocalSite_SiteIndex'])
-      except Exception as e:
-         error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex "' + NorNet_Configuration['NorNet_LocalSite_SiteIndex'] + ' is invalid: ' + str(e))
-      if ((NorNet_Configuration['NorNet_LocalSite_SiteIndex'] < 1) or
-            (NorNet_Configuration['NorNet_LocalSite_SiteIndex'] > 255)):
-         error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex must be in [1,255]!')
+         error('NorNet_LocalNode_NorNetUser has invalid user "' + str(getLocalNodeNorNetUser()) + '": ' + str(e))
       
-   if NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] != None:
-      try:
-         NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] = int(NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'])
-      except Exception as e:
-         error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex "' + NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] + ' is invalid: ' + str(e))
-      if ((NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] < 1) or
-            (NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] > 255)):
-         error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex must be in [1,255]!')
+      if NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'] != None:
+         try:
+            NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'] = IPv4Address(NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'])
+         except Exception as e:
+            error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapTunnelbox "' + NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'] + ' is invalid: ' + str(e))
 
-   if NorNet_Configuration['NorNet_LocalNode_Index'] != None:
-      try:
-         NorNet_Configuration['NorNet_LocalNode_Index'] = int(NorNet_Configuration['NorNet_LocalNode_Index'])
-      except Exception as e:
-         error('NorNet_IPv4Prefix NorNet_LocalNode_Index "' + NorNet_Configuration['NorNet_LocalNode_Index'] + ' is invalid: ' + str(e))
-      if ((NorNet_Configuration['NorNet_LocalNode_Index'] < 1) or
-            (NorNet_Configuration['NorNet_LocalNode_Index'] > 255)):
-         error('NorNet_IPv4Prefix NorNet_LocalNode_Index must be in [1,255]!')
+      if NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] != None:
+         try:
+            NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] = int(NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'])
+         except Exception as e:
+            error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapProviderIndex "' + NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] + ' is invalid: ' + str(e))
+         if ((NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] < 1) or
+             (NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] > 255)):
+            error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapProviderIndex must be in [1,255]!')
+
+      if NorNet_Configuration['NorNet_LocalSite_SiteIndex'] != None:
+         try:
+            NorNet_Configuration['NorNet_LocalSite_SiteIndex'] = int(NorNet_Configuration['NorNet_LocalSite_SiteIndex'])
+         except Exception as e:
+            error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex "' + NorNet_Configuration['NorNet_LocalSite_SiteIndex'] + ' is invalid: ' + str(e))
+         if ((NorNet_Configuration['NorNet_LocalSite_SiteIndex'] < 1) or
+               (NorNet_Configuration['NorNet_LocalSite_SiteIndex'] > 255)):
+            error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex must be in [1,255]!')
+         
+      if NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] != None:
+         try:
+            NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] = int(NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'])
+         except Exception as e:
+            error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex "' + NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] + ' is invalid: ' + str(e))
+         if ((NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] < 1) or
+               (NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] > 255)):
+            error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex must be in [1,255]!')
+
+      if NorNet_Configuration['NorNet_LocalNode_Index'] != None:
+         try:
+            NorNet_Configuration['NorNet_LocalNode_Index'] = int(NorNet_Configuration['NorNet_LocalNode_Index'])
+         except Exception as e:
+            error('NorNet_IPv4Prefix NorNet_LocalNode_Index "' + NorNet_Configuration['NorNet_LocalNode_Index'] + ' is invalid: ' + str(e))
+         if ((NorNet_Configuration['NorNet_LocalNode_Index'] < 1) or
+               (NorNet_Configuration['NorNet_LocalNode_Index'] > 255)):
+            error('NorNet_IPv4Prefix NorNet_LocalNode_Index must be in [1,255]!')
 
 
 # ###### Get central site's domain name #####################################

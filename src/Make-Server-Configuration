@@ -189,7 +189,7 @@ if len(sys.argv) > 9:
     else:
        error('Bad control box mode! Do you mean -controlbox?')
 
-loadNorNetConfiguration()
+loadNorNetConfiguration(False)
 
 defaultProvider = -1
 providerList    = []
