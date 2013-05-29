@@ -36,8 +36,8 @@ from NorNetNodeSetup     import *;
 
 
 # ###### Main program #######################################################
-if ((len(sys.argv) < 10) or (sys.argv[3] != '-site') or (sys.argv[5] != '-interface') or (sys.argv[7] != '-all-interfaces') or (sys.argv[9] != '-providers')):
-   error('Usage: ' + sys.argv[0] + ' FQDN node_index -site site_index -interface interface_name -all-interfaces "if1 if2 ..." -providers default_provider [provider2] ...')
+if ((len(sys.argv) != 11) or (sys.argv[3] != '-site') or (sys.argv[5] != '-interface') or (sys.argv[7] != '-all-interfaces') or (sys.argv[9] != '-providers')):
+   error('Usage: ' + sys.argv[0] + ' FQDN node_index -site site_index -interface interface_name -all-interfaces if1[,if2,...] -providers default_provider[,provider2,...]')
 
 hostName   = getHostnameFromFQDN(sys.argv[1])
 domainName = getDomainFromFQDN(sys.argv[1])
@@ -48,25 +48,25 @@ siteIndex = int(sys.argv[4])
 if ((siteIndex < 1) or (siteIndex > 255)):
    error('Bad site index!')
 interfaceName = sys.argv[6]
-allInterfaces = sys.argv[8].split(' ')
+allInterfaces = sys.argv[8].split(',')
 
 loadNorNetConfiguration()
 
 defaultProvider = -1
 providerList    = []
-for i in range(10, len(sys.argv)):
-   providerName  = sys.argv[i]
+for providerName in sys.argv[10].split(','):
    providerIndex = -1
    try:
       providerIndex = int(providerName)
    except:
       for p in NorNet_ProviderList:
-         if NorNet_ProviderList[p][0] == providerName:
+         if ((NorNet_ProviderList[p][0] == providerName) or
+             (NorNet_ProviderList[p][1] == providerName)):
             providerIndex = p
             break
    if ((providerIndex <= 0) or (providerIndex > 255)):
       error("Bad provider " + providerName)
-   if i == 10:
+   if len(providerList) == 0:
       defaultProvider = providerIndex
    providerList.append(providerIndex)
 
@@ -199,7 +199,7 @@ def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider):
    outputFile.write('restrict ::1\n\n')
 
    outputFile.write('# ====== NTP server ======\n')
-   for version in [ 4, 6 ]:
+   for version in [ 6 ]:
       ntpServer = makeNorNetIP(defaultProvider, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
       outputFile.write('server    ' + str(ntpServer.ip) + '\n')
       outputFile.write('restrict  ' + str(ntpServer.ip) + '\n')

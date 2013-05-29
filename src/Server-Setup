@@ -47,7 +47,7 @@ ProviderList="$@"
 
 AllEthernetInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | grep "^eth" | sed -e "s/:$//" | xargs`
 
-Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -all-interfaces "$AllEthernetInterfaces" -providers $ProviderList || exit 1
+Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -all-interfaces "$AllEthernetInterfaces" -providers "$ProviderList" || exit 1
 ( cat /etc/modules | grep -v "^dummy" ; echo "dummy numdummies=10" ) >modules.new
 
 echo "------ BEGIN OF DIFFS ------"
