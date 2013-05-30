@@ -1,7 +1,7 @@
 #!/bin/bash
 # --------------- NorNet -- The Multi-Homing Testbed Project ----------------
 #
-# Copyright (C) 2012 by Thomas Dreibholz
+# Copyright (C) 2012-2013 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ fi
 
 
 # Log what is going on ...
-echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE 2>&1
+echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######\x1b[0m"  >>$LOGFILE 2>&1
 
 
 # ###### Start virtual systems ##############################################
@@ -89,11 +89,11 @@ echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE 2
 start_virtual_systems ()
 {
    cd vsystems
-   echo "`env LANG=C date +%FT%H:%M:%S`: Starting virtual systems ..."
+   echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Starting virtual systems ...\x1b[0m"
    VSYSTEMS=`find . -name "[0-9][0-9]*[a-zA-Z0-9]" -printf "%f\\n" | sort`
    lastID=-1
    for vsystem in $VSYSTEMS ; do
-      echo "`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ..."
+      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ...\x1b[0m"
       let SYSNUM=10*${vsystem:0:2} || true   # 10*start priority (from first 2 characters of file name)
       if [ $SYSNUM -le $lastID ] ; then
          let SYSNUM=$lastID+1 || true
@@ -102,6 +102,7 @@ start_virtual_systems ()
       NAME="BAD-NAME"
       STARTDELAY=0
       NUMCPUS=1
+      MEMORY=
       GETHOSTTIMEDISABLED=1
       VNCPORT=-1
       VNCPASSWORD="$NorNet_Server_DefaultVNCPassword"
@@ -115,13 +116,13 @@ start_virtual_systems ()
            if [ "$NAME" = "$1" ] ; then
               STARTDELAY=0   # Do not wait when restricted to one machine!
            fi
-           Start-VSystem "$NAME" "$STARTDELAY" "$NUMCPUS" "$GETHOSTTIMEDISABLED" "$VNCPORT" "$VNCPASSWORD" "$OPTIONS" || true
+           Start-VSystem "$NAME" "$STARTDELAY" "$NUMCPUS" "$MEMORY" "$GETHOSTTIMEDISABLED" "$VNCPORT" "$VNCPASSWORD" "$OPTIONS" || true
         else
            echo "Skipped".
         fi
       ) || true
    done
-   echo "`env LANG=C date +%FT%H:%M:%S`: Done!"
+   echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Done!\x1b[0m"
    cd ..
 }
 
@@ -130,10 +131,10 @@ start_virtual_systems ()
 # $1 = Machine name (or "" for ALL)
 stop_virtual_systems ()
 {
-   echo "`env LANG=C date +%FT%H:%M:%S`: Stopping virtual systems ..."
+   echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Stopping virtual systems ...\x1b[0m"
    VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
    for vsystem in $VSYSTEMS ; do
-      echo "`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ... $1"
+      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ... $1\x1b[0m"
       NAME="BAD-NAME"
       STOPDELAY=0
       ( . ./$vsystem && \
@@ -144,7 +145,7 @@ stop_virtual_systems ()
         fi
       ) || true
    done
-   echo "`env LANG=C date +%FT%H:%M:%S`: Done!"
+   echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Done!\x1b[0m"
 }
 
 
