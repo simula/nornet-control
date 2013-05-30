@@ -56,4 +56,4 @@ if not quietMode:
 time.sleep(sleepTime)
 
 if not quietMode:
-   print datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + ': Done!'
+   print datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + ': Woke up!'

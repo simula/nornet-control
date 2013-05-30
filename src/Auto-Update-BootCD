@@ -22,7 +22,7 @@
 NORNET_DIRECTORY="/etc/nornet"
 DELAY=0
 if [ $# -gt 0 ] ; then
-   let DELAY=$1*$RANDOM/32768 || true
+   DELAY=$1
 fi
 
 
@@ -40,9 +40,7 @@ fi
 # ====== Wait (random time to decouple workloads) ===========================
 echo "`env LANG=C date +%FT%H:%M:%S`: Starting check for Boot-CD updates."
 if [ $DELAY -gt 0 ] ; then
-   echo "`date +%FT%H:%M:%S`: Waiting $DELAY s ..."
-   sleep $DELAY
-   echo "`date +%FT%H:%M:%S`: Now starting backup ..."
+   Random-Sleep 0 $DELAY
 fi
 
 

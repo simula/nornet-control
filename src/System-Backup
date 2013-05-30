@@ -44,16 +44,14 @@ TARGET_SUBDIRECTORY="$2"
 MAX_VERSIONS=$3
 DELAY=0
 if [ $# -ge 4 ] ; then
-   let DELAY=$4*$RANDOM/32768 || true
+   DELAY=$4
 fi
 
 
 # ====== Wait (random time to decouple workloads) ===========================
 echo -en "\x1b[32m`date +%FT%H:%M:%S`: Making system backup in $TARGET_DIRECTORY ...\x1b[0m\n"
 if [ $DELAY -gt 0 ] ; then
-   echo "`date +%FT%H:%M:%S`: Waiting $DELAY s ..."
-   sleep $DELAY
-   echo "`date +%FT%H:%M:%S`: Now starting backup ..."
+   Random-Sleep 0 $DELAY
 fi
 
 # ====== Prepare target directory ===========================================
