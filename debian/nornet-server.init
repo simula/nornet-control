@@ -168,11 +168,10 @@ show_status ()
 case "$ACTION" in
   start)
      # First, ensure that VirtualBox kernel modules are loaded!
-     for variant in "-nornet-experimental" "-nornet-testing" "-nornet-stable" "" ; do
-        if [ -e "/etc/init.d/virtualbox${variant}" ] ; then
-           /etc/init.d/virtualbox${variant} start >>$LOGFILE 2>&1 || true
-        fi
+     for vboxModule in vboxdrv vboxnetadp vboxnetflt vboxpci ; do
+        modprobe $vboxModule || true
      done
+     # Now, start the virtual systems.
      start_virtual_systems "$MACHINE_NAME" >>$LOGFILE 2>&1
      ;;
   stop)
