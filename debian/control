@@ -61,6 +61,7 @@ Depends: apt-show-versions,
          traceroute,
          whois,
          ${misc:Depends},
+         ${python:Depends},
          ${shlibs:Depends}
 Description: NorNet Management Tools
  This metapackage contains basic software nor NorNet node management. The

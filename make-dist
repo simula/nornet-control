@@ -38,6 +38,7 @@ mkdir $PACKAGE-$UPSTREAM_VERSION/pbuilder
 cp src/pbuilder/pbuilderrc $PACKAGE-$UPSTREAM_VERSION/pbuilder/
 mkdir $PACKAGE-$UPSTREAM_VERSION/vsystems
 cp src/vsystems/EXAMPLE-* $PACKAGE-$UPSTREAM_VERSION/vsystems/
+cp src/Random-Sleep $PACKAGE-$UPSTREAM_VERSION
 cp src/Routing-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Tunnelbox-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Watchdog $PACKAGE-$UPSTREAM_VERSION
