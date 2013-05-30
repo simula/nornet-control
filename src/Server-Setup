@@ -132,7 +132,7 @@ fi
 
 
 # ====== Create other configurations ========================================
-( cat /etc/modules | grep -v "^dummy" ; echo "dummy numdummies=10" ) >modules.new
+( cat /etc/modules | grep -v "^dummy" ; echo "dummy numdummies=1" ) >modules.new
 
 
 # ====== Compare new configurations to old ones =============================
