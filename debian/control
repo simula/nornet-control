@@ -60,6 +60,7 @@ Depends: apt-show-versions,
          tftp,
          traceroute,
          whois,
+         python-software-properties,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}

@@ -14,7 +14,7 @@ Build-Depends: bzip2,
                gsoap,
                iasl,
                imagemagick,
-               kbuild,
+               kbuild (>= 1:0.1.9998svn2577),
                libasound2-dev,
                libcap-dev,
                libcurl4-openssl-dev,
@@ -57,8 +57,9 @@ Build-Depends: bzip2,
                x11proto-xf86dri-dev,
                xserver-xorg-dev,
                xsltproc,
-               yasm,
-               zlib1g-dev
+               yasm,               
+               zlib1g-dev,
+               zip
 X-Python-Version: >= 2.5
 Standards-Version: 3.9.3
 Homepage: http://www.virtualbox.org/
