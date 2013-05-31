@@ -182,7 +182,6 @@ cd ..
 CONTROL_FILES="control virtualbox-source${PACKAGE_SUFFIX}.files/control.modules.in virtualbox-guest-source${PACKAGE_SUFFIX}.files/control.modules.in"
 for controlFile in $CONTROL_FILES ; do
    (
-#          -e "s/^Package: \([a-zA-Z0-9+-]*\)$/Package: \1$\nConflicts: ${conflicts}\nReplaces: ${conflicts}/g" \
       sed <debian/${controlFile} \
          -f debian/package-names.sed \
          -e "s/^Maintainer:.*/Maintainer: $MAINTAINER/g" \
@@ -197,11 +196,8 @@ done
 RULES_FILES="rules virtualbox-source${PACKAGE_SUFFIX}.files/rules virtualbox-guest-source${PACKAGE_SUFFIX}.files/rules"
 for rulesFile in $RULES_FILES ; do
    (
-   #       -e "s/--disable-extpack/--disable-extpack --disable-kmods/g" \
-   #       -e "s/^#[ \t]*\(VNC=1[ \t]*\)/\1/g" \
-   #       -e "s/^#[ \t]*\(OSE=1[ \t]*\)/\1/g" \
-
       sed <debian/rules \
+         -e "s/\$(MAKE) \\\/\$(MAKE) all vnc-module \\\/g" \
          -e "s/^\(verpkg[ \t]*\):=[ \t]*${PACKAGE}/\1:= ${PACKAGE}${PACKAGE_SUFFIX}/g" \
          -e "s/^\(psource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
          -e "s/^\(gsource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
@@ -232,7 +228,6 @@ if [ "${PACKAGE_SUFFIX}" != "" ] ; then
             -e "s/virtualbox-guest-CVERSION/virtualbox-guest${PACKAGE_SUFFIX}-CVERSION/g" \
             -e "s/virtualbox-CVERSION/virtualbox${PACKAGE_SUFFIX}-CVERSION/g"
       ) >debian/${sourceFile}.new
-#       mv debian/${sourceFile}.new debian/${sourceFile}
    done
 fi
 
@@ -248,12 +243,21 @@ fi
 
 # ====== Write LocalConfig.kmk ==============================================
 (
-   echo ""
+   # echo "VBOX_WITH_EXTPACK_VNC := 1"
    echo "VBOX_BUILD_PUBLISHER = ${BUILD_VERSION_IDENTIFIER}"
 ) >LocalConfig.kmk
+
+
+# ====== Change Makefile.kmk ================================================
+KEY="# Build the fucking VNC module!"
+(
+   cat Makefile.kmk | grep -v "${KEY}"
+   echo -e "\n${KEY}\nvnc-module:\t\$(VBOX_PATH_PACKAGES)/VNC-\$(VBOX_VERSION_STRING)r\$(VBOX_SVN_REV).vbox-extpack\t${KEY}"
+) >Makefile.kmk.new
 
 
 # ====== Apply changes ======================================================
 for updatedFile in changelog $CONTROL_FILES $RULES_FILES $SOURCE_FILES ; do
    mv "debian/${updatedFile}.new" "debian/${updatedFile}"
 done
+mv Makefile.kmk.new Makefile.kmk
