@@ -7,3 +7,6 @@
   921  ls -al /usr/lib/virtualbox/ExtensionPacks/VNC/
   922  sudo chown -R root:root /usr/lib/virtualbox/ExtensionPacks/VNC/
   923  vboxmanage list extpacks
+
+Some more helpful information:
+https://www.redports.org/changeset?reponame=&old=7566%40virtualbox&new=7566%40virtualbox
