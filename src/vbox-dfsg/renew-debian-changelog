@@ -23,8 +23,8 @@
 
 # ====== Get variant ========================================================
 
-VARIANT="$1"        # e.g. nornet-stable nornet-testing nornet-experimental
-BUILD_SUFFIX="$2"   # e.g. debug0001
+VARIANT="$1"     # e.g. nornet-stable nornet-testing nornet-experimental
+PUBLISHER="$2"   # e.g. DEBUG0001 (*must* be uppercase!)
 
 VARIANTS="nornet-stable nornet-testing nornet-experimental"
 PACKAGE_SUFFIX=""
@@ -41,6 +41,7 @@ if [ "$VARIANT" != "" ] ; then
       exit 1
    fi
 fi
+PUBLISHER=`echo "$PUBLISHER" | tr  '[:lower:]' '[:upper:]'`
 
 
 # ====== Revert debian/changelog and debian/control =========================
@@ -48,12 +49,12 @@ rm -f LocalConfig.kmk
 if [ -e ".svn" ] ; then
    # Get SVN version identifier
    SVN_VERSION="`svnversion . | tr -d [M]`"
-   BUILD_VERSION_IDENTIFIER="svn`printf "%07d" "${SVN_VERSION}"`${BUILD_SUFFIX}"
+   BUILD_VERSION_IDENTIFIER="SVN`printf "%07d" "${SVN_VERSION}"`${PUBLISHER}"
 else
    echo "*** Not an SVN repository ***"
    # No special SVN version
    SVN_VERSION="0000000"
-   BUILD_VERSION_IDENTIFIER="${BUILD_SUFFIX}"
+   BUILD_VERSION_IDENTIFIER="${PUBLISHER}"
 fi
 
 # When running the first time, backup the original Debian files
@@ -127,7 +128,7 @@ echo -e "\x1b[34m###############################################################
 
 # ====== Create debian/changelog ============================================
 (
-   echo "${PACKAGE}${PACKAGE_SUFFIX} (${PLAIN_VERSION}${BUILD_VERSION_IDENTIFIER}-1ubuntu1) ${PACKAGE_DISTRIBUTION}; urgency=medium"
+   echo "${PACKAGE}${PACKAGE_SUFFIX} (${PLAIN_VERSION}~${BUILD_VERSION_IDENTIFIER}-1ubuntu1) ${PACKAGE_DISTRIBUTION}; urgency=medium"
    echo ""
    echo "  * New Debian package from SVN revision ${SVN_VERSION}."
    echo ""
@@ -243,7 +244,7 @@ fi
 # ====== Write LocalConfig.kmk ==============================================
 (
    # echo "VBOX_WITH_EXTPACK_VNC := 1"
-   echo "VBOX_BUILD_PUBLISHER = ${BUILD_VERSION_IDENTIFIER}"
+   echo "VBOX_BUILD_PUBLISHER = _${BUILD_VERSION_IDENTIFIER}"
 ) >LocalConfig.kmk
 
 

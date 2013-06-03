@@ -99,7 +99,7 @@ if [ ! -e "$dscFile" ] ; then
     echo >&2 "ERROR: Unable to find description file $dscFile!"
     exit 1
 fi
-sudo pbuilder build $dscFile
+sudo pbuilder --build --allow-untrusted $dscFile
 
 
 echo -e ""

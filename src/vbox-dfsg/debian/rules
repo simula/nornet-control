@@ -109,10 +109,15 @@ override_dh_auto_build:
 	    PATH_OUT=$(abspath out) \
 	    TOOL_YASM_AS=yasm \
 	    VBOX_USE_SYSTEM_XORG_HEADERS=1 \
-	    VBOX_BUILD_PUBLISHER=_$(DIST_NAME) \
 	    VBOX_WITH_REGISTRATION_REQUEST= \
 	    VBOX_WITH_UPDATE_REQUEST= \
 	    KBUILD_VERBOSE=2
+	    
+	    # Do *not* apply
+	    # VBOX_BUILD_PUBLISHER=_$(DIST_NAME)
+	    # here! It will set e.g. _Ubuntu, and lower-case letters are not
+	    # allowed in extpack version strings!
+
 
 	xsltproc --nonet --stringparam section.autolabel 1 \
 	    -o debian/README.Debian.html \
