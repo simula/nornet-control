@@ -1,0 +1,15 @@
+Description: Enable support for armv7l to fix FTBFS
+Author: Jamie Bennett <jb@canonical.com>
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/535093
+
+--- a/kBuild/env.sh
++++ b/kBuild/env.sh
+@@ -362,7 +362,7 @@ if test -z "$KBUILD_HOST_ARCH"; then
+         hppa64|parisc64)
+             KBUILD_HOST_ARCH='hppa64'
+             ;;
+-        arm|armv4l|armv5tel|armv5tejl)
++        arm|armv4l|armv5tel|armv5tejl|armv7l)
+             KBUILD_HOST_ARCH='arm'
+             ;;
+         alpha)

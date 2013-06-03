@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+# hardy jaunty karmic lucid maverick natty oneiric 
+
+./clean-deb
+svn update
+./renew-debian-changelog $@
+./make-deb precise quantal raring saucy
+
+dput ppa *.changes

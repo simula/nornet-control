@@ -1,0 +1,50 @@
+.TH KMK 1 "2009\-04\-09" "0.1.98svn2318" "simple makefiles for complex tasks"
+
+.SH NAME
+\fBkmk\fR \- framework for writing simple makefiles for complex tasks
+
+.SH SYNOPSIS
+\fBkmk\fR [\fIOPTIONS\fR]
+
+.SH DESCRIPTION
+kmk and its helper tools are an extension to GNU make to ease writing portable
+Makefile.
+.PP
+The goals of the kBuild framework:
+.PP
+ \- Similar behavior cross all supported platforms.
+.br
+ \- Flexibility, don't create unnecessary restrictions preventing ad-hoc
+solutions.
+.br
+ \- Makefile can very simple to write and maintain.
+.PP
+There are four concepts being tried out in the current kBuild incaration:
+.PP
+ \- One configuration file for a subtree automatically included.
+ \- Target configuration templates as the primary mechanism for makefile
+simplification.
+ \- Tools and SDKs for helping out the templates with flexibility.
+ \- Non-recursive makefile method by using sub-makefiles.
+.PP
+kBuild does not provide any facilities for checking compiler/library/header
+configurations, that's not in its scope. If this is important for your project,
+check out the autoconf tool in the GNU build system. It is possible to use
+kBuild together with autoconf if you like, but you might just as well use the
+full GNU package.
+.PP
+On Debian systems, the kBuild binaries can be found in \fI/usr/bin\fR and its
+data files in \fI/usr/share/kBuild\fR.
+
+.SH "SEE ALSO"
+\fImake\fR(1)
+
+.SH HOMEPAGE
+More information about kBuild project can be found at
+<\fIhttp://svn.netlabs.org/kbuild/\fR>.
+
+.SH AUTHOR
+kBuild was written by Knut St. Osmundsen <\fIbird-kBuild-spam@anduin.net\fR>.
+.PP
+This manual page was written by Daniel Baumann <\fIdaniel@debian.org\fR>, for
+the Debian project (but may be used by others).

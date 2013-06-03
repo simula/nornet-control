@@ -1,0 +1,15 @@
+Description: Fix FTBFS on hppa by disabling threads.
+Author: Felix Geyer <debfx-pkg@fobos.de>
+
+--- a/src/kmk/Makefile.kmk
++++ b/src/kmk/Makefile.kmk
+@@ -227,6 +227,9 @@ kmk_SOURCES = \
+ 	vpath.c \
+ 	remote-stub.c
+ 
++kmk_DEFS.hppa32 = CONFIG_WITHOUT_THREADS
++kmk_DEFS.hppa64 = CONFIG_WITHOUT_THREADS
++
+ kmk_DEFS.gnukfreebsd = CONFIG_WITHOUT_THREADS
+ kmk_DEFS.freebsd.x86 = CONFIG_WITHOUT_THREADS
+ 

@@ -1,0 +1,17 @@
+Description: Stop hardcoding the -O3 optimization flag as it causes kmk_sed to miscompile.
+Author: Felix Geyer <debfx-pkg@fobos.de>
+Bug-Debian: http://bugs.debian.org/697892
+
+--- a/Config.kmk
++++ b/Config.kmk
+@@ -299,8 +299,8 @@ ifndef TEMPLATE_BIN_TOOL
+  endif
+  TEMPLATE_BIN_LDFLAGS           = -g
+  TEMPLATE_BIN_LDFLAGS.profile   = -pg -p
+- TEMPLATE_BIN_CFLAGS.release    = -O3
+- TEMPLATE_BIN_CFLAGS.profile    = -O3 -pg -p
++ TEMPLATE_BIN_CFLAGS.release    = -O2
++ TEMPLATE_BIN_CFLAGS.profile    = -O2 -pg -p
+  ifeq ($(KBUILD_TARGET),freebsd)
+   TEMPLATE_BIN_INCS            += $(PATH_GNUMAKE_SRC)/glob /usr/local/include
+  endif
