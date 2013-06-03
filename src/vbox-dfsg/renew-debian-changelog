@@ -197,7 +197,6 @@ RULES_FILES="rules virtualbox-source${PACKAGE_SUFFIX}.files/rules virtualbox-gue
 for rulesFile in $RULES_FILES ; do
    (
       sed <debian/rules \
-         -e "s/\$(MAKE) \\\/\$(MAKE) all vnc-module \\\/g" \
          -e "s/^\(verpkg[ \t]*\):=[ \t]*${PACKAGE}/\1:= ${PACKAGE}${PACKAGE_SUFFIX}/g" \
          -e "s/^\(psource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
          -e "s/^\(gsource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
@@ -248,16 +247,7 @@ fi
 ) >LocalConfig.kmk
 
 
-# ====== Change Makefile.kmk ================================================
-KEY="# Build the fucking VNC module!"
-(
-   cat Makefile.kmk | grep -v "${KEY}"
-   echo -e "\n${KEY}\nvnc-module:\t\$(VBOX_PATH_PACKAGES)/VNC-\$(VBOX_VERSION_STRING)r\$(VBOX_SVN_REV).vbox-extpack\t${KEY}"
-) >Makefile.kmk.new
-
-
 # ====== Apply changes ======================================================
 for updatedFile in changelog $CONTROL_FILES $RULES_FILES $SOURCE_FILES ; do
    mv "debian/${updatedFile}.new" "debian/${updatedFile}"
 done
-mv Makefile.kmk.new Makefile.kmk
