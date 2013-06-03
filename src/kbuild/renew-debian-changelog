@@ -125,7 +125,7 @@ echo -e "\x1b[34m###############################################################
 
 # ====== Create debian/changelog ============================================
 (
-   echo "${PACKAGE}${PACKAGE_SUFFIX} (${PLAIN_VERSION}~${BUILD_VERSION_IDENTIFIER}-1ubuntu1) ${PACKAGE_DISTRIBUTION}; urgency=medium"
+   echo "${PACKAGE}${PACKAGE_SUFFIX} (${PLAIN_VERSION}${BUILD_VERSION_IDENTIFIER}-1ubuntu1) ${PACKAGE_DISTRIBUTION}; urgency=medium"
    echo ""
    echo "  * New Debian package from SVN revision ${SVN_VERSION}."
    echo ""
