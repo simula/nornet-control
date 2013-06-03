@@ -10,7 +10,8 @@ Build-Depends: debhelper (>= 9),
                autopoint,
                byacc,
                flex,
-               libacl1-dev
+               libacl1-dev,
+               texinfo
 Standards-Version: 3.9.4
 Homepage: http://svn.netlabs.org/kbuild
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-virtualbox/kbuild.git

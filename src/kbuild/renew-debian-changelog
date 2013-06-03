@@ -21,37 +21,20 @@
 . ./debian.conf
 
 
-# ====== Get variant ========================================================
-
-BUILD_PREFIX="$1"   # e.g. DEBUG0001 (*must* be uppercase!)
-
-VARIANTS="nornet-stable nornet-testing nornet-experimental"
-PACKAGE_SUFFIX=""
-if [ "$VARIANT" != "" ] ; then
-   for v in $VARIANTS ; do
-      if [ "$v" = "$VARIANT" ] ; then
-         PACKAGE_SUFFIX="-${VARIANT}"
-         break
-      fi
-   done
-   if [ "$PACKAGE_SUFFIX" = "" ] ; then
-      echo >&2 "Usage: $0 variant"
-      echo "Possible variants are: $VARIANTS"
-      exit 1
-   fi
-fi
+# ====== Get build suffix ===================================================
+BUILD_SUFFIX="$1"   # e.g. rc1.0, beta1, ...
 
 
 # ====== Revert debian/changelog and debian/control =========================
 if [ -e ".svn" ] ; then
    # Get SVN version identifier
    SVN_VERSION="`svnversion . | tr -d [M]`"
-   BUILD_VERSION_IDENTIFIER="svn${SVN_VERSION}${BUILD_PREFIX}"
+   BUILD_VERSION_IDENTIFIER="svn${SVN_VERSION}~${BUILD_SUFFIX}"
 else
    echo "*** Not an SVN repository ***"
    # No special SVN version
    SVN_VERSION="0"
-   BUILD_VERSION_IDENTIFIER="${BUILD_PREFIX}"
+   BUILD_VERSION_IDENTIFIER="~${BUILD_SUFFIX}"
 fi
 
 # When running the first time, backup the original Debian files

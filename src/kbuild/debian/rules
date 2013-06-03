@@ -6,7 +6,9 @@ YACC      := YACC=/usr/bin/byacc
 BOOTSTRAP := ASH=/bin/bash ECHO=/bin/echo MKDIR=/bin/mkdir CP=/bin/cp \
   RM=/bin/rm INSTALL=/usr/bin/install $(YACC)
 SVNROOT   := http://svn.netlabs.org/repos/kbuild/trunk
-REVISION  := $(shell echo $(UPSTREAM_VERSION) | sed -e's,.*svn,,' | sed -e's,+dfsg.*,,')
+
+# TD: Extract the plain SVN revision.
+REVISION  := $(shell echo $(UPSTREAM_VERSION) | sed -e 's/\(.*\)svn\([0-9]*\).*/\2/')
 
 export DEB_LDFLAGS_MAINT_APPEND := -Wl,--as-needed
 
