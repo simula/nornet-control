@@ -169,7 +169,7 @@ for buildPackage in $BUILD_PACKAGES ; do
       fi
    done
    
-   echo "s/^\(Package: ${buildPackage}\)$/Package: ${buildPackage}${PACKAGE_SUFFIX}\nConflicts: ${conflicts}\nReplaces: ${conflicts}/g" >>package-names.sed.tmp
+   echo "s/^\(Conflicts: ${buildPackage}.*\)$/\1, ${conflicts}\nReplaces: ${conflicts}/g" >>package-names.sed.tmp
    echo "s/${buildPackage}$/${buildPackage}${PACKAGE_SUFFIX}/g" >>package-names.sed.tmp
    echo "s/${buildPackage}[ \t]/${buildPackage}${PACKAGE_SUFFIX} /g" >>package-names.sed.tmp
 done
