@@ -1,5 +1,5 @@
 #!/bin/bash -e
-# $Id: build-deb 1640 2013-05-02 11:29:01Z dreibh $
+# $Id: build-deb 2770 2013-05-30 08:46:46Z dreibh $
 #
 # Debian Packaging Scripts
 # Copyright (C) 2002-2013 by Thomas Dreibholz
@@ -35,7 +35,7 @@ PACKAGE=`echo $CHANGELOG_HEADER | sed -e "s/(.*//" -e "s/ //g"`
 # The package distribution, e.g. precise, raring, ...
 PACKAGE_DISTRIBUTION=`echo $CHANGELOG_HEADER | sed -e "s/[^)]*)//" -e "s/;.*//g" -e "s/ //g"`
 # The package's version, e.g. 1.2.3-1ubuntu1
-PACKAGE_VERSION=`echo $CHANGELOG_HEADER | sed -e "s/.*(//" -e "s/).*//" -e "s/ //g" -e "s/ //g"`
+PACKAGE_VERSION=`echo $CHANGELOG_HEADER | sed -e "s/.*(//" -e "s/).*//" -e "s/ //g" -e "s/ //g" -e "s/^[0-9]://g"`
 # The package's output version, e.g. 1.2.3-1ubuntu
 OUTPUT_VERSION=`echo $PACKAGE_VERSION   | sed -e "s/\(ubuntu\)[0-9]*$/\1/"`
 # The package's Debian version, e.g. 1.2.3-1
@@ -99,7 +99,7 @@ if [ ! -e "$dscFile" ] ; then
     echo >&2 "ERROR: Unable to find description file $dscFile!"
     exit 1
 fi
-sudo pbuilder --build --allow-untrusted $dscFile
+sudo pbuilder build $dscFile
 
 
 echo -e ""
