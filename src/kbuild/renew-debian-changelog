@@ -46,11 +46,11 @@ fi
 if [ -e ".svn" ] ; then
    # Get SVN version identifier
    SVN_VERSION="`svnversion . | tr -d [M]`"
-   BUILD_VERSION_IDENTIFIER="svn`printf "%07d" "${SVN_VERSION}"`${BUILD_PREFIX}"
+   BUILD_VERSION_IDENTIFIER="svn${SVN_VERSION}${BUILD_PREFIX}"
 else
    echo "*** Not an SVN repository ***"
    # No special SVN version
-   SVN_VERSION="0000000"
+   SVN_VERSION="0"
    BUILD_VERSION_IDENTIFIER="${BUILD_PREFIX}"
 fi
 
@@ -73,8 +73,7 @@ echo -e "\x1b[34mBUILD_VERSION_IDENTIFIER: $BUILD_VERSION_IDENTIFIER\x1b[0m"
 # ====== Update changelog header from Config.kmk version ====================
 eval `grep "^KBUILD_VERSION_MAJOR[ \t]*=[ \t]*" Config.kmk | sed -e "s/ //g"`
 eval `grep "^KBUILD_VERSION_MINOR[ \t]*=[ \t]*" Config.kmk | sed -e "s/ //g"`
-eval `grep "^KBUILD_VERSION_PATCH[ \t]*=[ \t]*" Config.kmk | sed -e "s/ //g" -e "s/svn[0-9]*$/xxx/g"`
-# echo "P=$KBUILD_VERSION_PATCH"  "
+eval `grep "^KBUILD_VERSION_PATCH[ \t]*=[ \t]*" Config.kmk | sed -e "s/ //g"`
 
 if [ "$KBUILD_VERSION_MAJOR" = "" ] ; then
    echo >&2 "ERROR: Unable to extract KBUILD_VERSION_MAJOR from Config.kmk!"
