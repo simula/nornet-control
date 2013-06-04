@@ -187,7 +187,12 @@ for controlFile in $CONTROL_FILES ; do
          -f debian/package-names.sed \
          -e "s/^Maintainer:.*/Maintainer: $MAINTAINER/g" \
          -e "s/: Oracle VM /: Open Source /g" | \
-      sed -e "s/^Package: ${PACKAGE}${PACKAGE_SUFFIX}$/Package: ${PACKAGE}${PACKAGE_SUFFIX}\nProvides: ${PACKAGE}/g"
+      if [ "${PACKAGE_SUFFIX}" != "" ] ; then
+         sed -e "s/^Package: ${PACKAGE}${PACKAGE_SUFFIX}$/Package: ${PACKAGE}${PACKAGE_SUFFIX}\nProvides: ${PACKAGE}/g" \
+             -e "s/^Package: ${PACKAGE}-guest-utils${PACKAGE_SUFFIX}$/Package: ${PACKAGE}-guest-utils${PACKAGE_SUFFIX}\nProvides: ${PACKAGE}-guest-utils\nConflicts: ${PACKAGE}-guest-utils\nReplaces: ${PACKAGE}-guest-utils/g"
+      else
+         cat
+      fi
          
    ) >debian/${controlFile}.new
 done
