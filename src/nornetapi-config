@@ -33,6 +33,9 @@ NorNet_LocalNode_NorNetInterface='eth0'
 # The NorNet user on this system. By default, it is 'nornetpp'.
 # NorNet_LocalNode_NorNetUser='nornetpp'
 
+# Automatically update the NorNet user's SSH authorized_keys.
+# NorNet_LocalNode_SSHAuthorizedKeysUpdate=1
+
 
 # ###### NorNet Server configuration ########################################
 # The default VNC password to access virtual systems on this host. It may be
