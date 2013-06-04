@@ -29,5 +29,4 @@ out/bin/sdk/bindings/xpcom/python /usr/lib/virtualbox/sdk/bindings/xpcom
 out/bin/VBoxCreateUSBNode.sh /lib/udev
 out/bin/VBoxSysInfo.sh /usr/share/virtualbox
 
-out/bin/ExtensionPacks/VNC/ExtPack* /usr/lib/virtualbox/ExtensionPacks/VNC
-out/bin/ExtensionPacks/VNC/linux.*/* /usr/lib/virtualbox/ExtensionPacks/VNC
+out/bin/ExtensionPacks/VNC/* /usr/lib/virtualbox/ExtensionPacks/VNC
