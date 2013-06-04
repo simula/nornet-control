@@ -1,2 +1,2 @@
-grub/09_nornet_display_theme       /etc/grub.d
+grub/??_nornet_display_theme       /etc/grub.d
 grub/Splash-Display1-1024x768.jpeg /boot

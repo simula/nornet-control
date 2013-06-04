@@ -10,7 +10,7 @@ Server-Setup                      /usr/bin
 Show-VSystems                     /usr/bin
 Start-VSystem                     /usr/bin
 Stop-VSystem                      /usr/bin
-grub/05_nornet_server_theme       /etc/grub.d
+grub/??_nornet_server_theme       /etc/grub.d
 grub/Splash-Server1-1024x768.jpeg /boot
 grub/grub-defaults                /etc/nornet
 vsystems/EXAMPLE-99-VirtualServer /etc/nornet/vsystems
