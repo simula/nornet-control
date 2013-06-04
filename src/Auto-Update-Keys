@@ -24,6 +24,7 @@ NORNET_AUTHORIZED_KEYS="$NORNET_DIRECTORY/nornet-authorized_keys"
 
 
 # ====== Get NorNet user name ===============================================
+NorNet_LocalNode_SSHAuthorizedKeysUpdate=0
 if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
    . $NORNET_DIRECTORY/nornetapi-config
 elif [ -e ./nornetapi-config ] ; then
@@ -35,28 +36,30 @@ fi
 
 
 # ====== Update keys ========================================================
-AuthorizedKeysFile="/home/${NorNet_LocalNode_NorNetUser}/.ssh/authorized_keys"
-if [ -e "$NORNET_AUTHORIZED_KEYS" ] ; then
-   if [ -e "/home/${NorNet_LocalNode_NorNetUser}" ] ; then
-      if [ ! -e "$AuthorizedKeysFile" ] ; then
-         sudo -u $NorNet_LocalNode_NorNetUser touch "$AuthorizedKeysFile"
-      fi
-      sudo -u $NorNet_LocalNode_NorNetUser chmod 600 "$AuthorizedKeysFile"
+if [ $NorNet_LocalNode_SSHAuthorizedKeysUpdate -eq 1 ] ; then
+   AuthorizedKeysFile="/home/${NorNet_LocalNode_NorNetUser}/.ssh/authorized_keys"
+   if [ -e "$NORNET_AUTHORIZED_KEYS" ] ; then
+      if [ -e "/home/${NorNet_LocalNode_NorNetUser}" ] ; then   
+         if [ ! -e "$AuthorizedKeysFile" ] ; then
+            sudo -u $NorNet_LocalNode_NorNetUser touch "$AuthorizedKeysFile"
+         fi
+         sudo -u $NorNet_LocalNode_NorNetUser chmod 600 "$AuthorizedKeysFile"
 
-      (
-         awk '/^# BEGIN-OF-NORNET-KEYS.*$/{p=1}/^# END-OF-NORNET-KEYS.*$/{p=0}!p' "$AuthorizedKeysFile" | grep -v "^#" || true
+         (
+            awk '/^# BEGIN-OF-NORNET-KEYS.*$/{p=1}/^# END-OF-NORNET-KEYS.*$/{p=0}!p' "$AuthorizedKeysFile" | grep -v "^#" || true
 
-         echo "# BEGIN-OF-NORNET-KEYS --- Do not Change, these entries may be automatically overwritten! ---"
-         cat "$NORNET_AUTHORIZED_KEYS"
-         echo "# END-OF-NORNET-KEYS"
-      ) >"${AuthorizedKeysFile}~"
-      chmod 600 "${AuthorizedKeysFile}~"
-      chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser "${AuthorizedKeysFile}~"
-      
-      if ! diff -q "${AuthorizedKeysFile}~" "${AuthorizedKeysFile}" >/dev/null ; then
-         echo -e "\x1b[34m`env LANG=C date +%FT%H:%M:%S`: Updating SSH authorized_keys for user ${NorNet_LocalNode_NorNetUser}!\x1b[0m"
-         cat "$NORNET_AUTHORIZED_KEYS"
-         sudo -u $NorNet_LocalNode_NorNetUser mv "${AuthorizedKeysFile}~" "${AuthorizedKeysFile}"
+            echo "# BEGIN-OF-NORNET-KEYS --- Do not Change, these entries may be automatically overwritten! ---"
+            cat "$NORNET_AUTHORIZED_KEYS"
+            echo "# END-OF-NORNET-KEYS"
+         ) >"${AuthorizedKeysFile}~"
+         chmod 600 "${AuthorizedKeysFile}~"
+         chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser "${AuthorizedKeysFile}~"
+         
+         if ! diff -q "${AuthorizedKeysFile}~" "${AuthorizedKeysFile}" >/dev/null ; then
+            echo -e "\x1b[34m`env LANG=C date +%FT%H:%M:%S`: Updating SSH authorized_keys for user ${NorNet_LocalNode_NorNetUser}!\x1b[0m"
+            cat "$NORNET_AUTHORIZED_KEYS"
+            sudo -u $NorNet_LocalNode_NorNetUser mv "${AuthorizedKeysFile}~" "${AuthorizedKeysFile}"
+         fi
       fi
    fi
 fi
