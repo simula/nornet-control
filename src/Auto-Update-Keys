@@ -48,7 +48,7 @@ if [ $NorNet_LocalNode_SSHAuthorizedKeysUpdate -eq 1 ] ; then
          (
             awk '/^# BEGIN-OF-NORNET-KEYS.*$/{p=1}/^# END-OF-NORNET-KEYS.*$/{p=0}!p' "$AuthorizedKeysFile" | grep -v "^#" || true
 
-            echo "# BEGIN-OF-NORNET-KEYS --- Do not Change, these entries may be automatically overwritten! ---"
+            echo "# BEGIN-OF-NORNET-KEYS --- Do not change! These entries may be automatically overwritten! ---"
             cat "$NORNET_AUTHORIZED_KEYS"
             echo "# END-OF-NORNET-KEYS"
          ) >"${AuthorizedKeysFile}~"
