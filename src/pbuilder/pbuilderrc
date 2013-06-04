@@ -21,7 +21,7 @@ CCACHEDIR=
 
 # =================================================================
 
-mkdir /var/cache/pbuilder/hook.d || true
+mkdir -p /var/cache/pbuilder/hook.d
 
 HOOKDIR="/var/cache/pbuilder/hook.d"
 
