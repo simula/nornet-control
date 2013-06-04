@@ -1,1 +1,3 @@
-pbuilder/pbuilderrc /etc
+grub/50_nornet_development_theme       /etc/grub.d
+grub/Splash-Development1-1024x768.jpeg /boot
+pbuilder/pbuilderrc                    /etc
