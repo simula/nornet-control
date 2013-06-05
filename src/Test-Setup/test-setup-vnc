@@ -1,0 +1,12 @@
+#!/bin/bash
+
+MACHINE=10.1.1.248
+PORTS=" 5100 5101 5102   5200   5300 5350   5700 5701 5702"
+
+command="krdc"
+for port in `echo "$PORTS" | xargs -n1 | sort -u` ; do
+   command="$command vnc://$MACHINE:$port"
+done
+
+echo "$command"
+$command &

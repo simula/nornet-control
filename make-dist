@@ -27,6 +27,7 @@ cp src/*.py $PACKAGE-$UPSTREAM_VERSION
 cp src/*.1 $PACKAGE-$UPSTREAM_VERSION
 cp src/*-config $PACKAGE-$UPSTREAM_VERSION
 cp src/*-constants $PACKAGE-$UPSTREAM_VERSION
+cp src/*-authorized_keys $PACKAGE-$UPSTREAM_VERSION
 cp src/*-config.example $PACKAGE-$UPSTREAM_VERSION
 mkdir $PACKAGE-$UPSTREAM_VERSION/cron-apt
 cp src/cron-apt/5-install $PACKAGE-$UPSTREAM_VERSION/cron-apt/
@@ -52,6 +53,7 @@ cp src/Make-VSystem-Template $PACKAGE-$UPSTREAM_VERSION
 cp src/Backup-VSystem $PACKAGE-$UPSTREAM_VERSION
 cp src/Backup-All-VSystems $PACKAGE-$UPSTREAM_VERSION
 cp src/Auto-Update-BootCD $PACKAGE-$UPSTREAM_VERSION
+cp src/Auto-Update-Keys $PACKAGE-$UPSTREAM_VERSION
 cp src/Change-VSystem-CDImage $PACKAGE-$UPSTREAM_VERSION
 cp src/check_* $PACKAGE-$UPSTREAM_VERSION
 cp src/Make-*-Configuration $PACKAGE-$UPSTREAM_VERSION

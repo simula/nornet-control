@@ -57,8 +57,8 @@ norNetSetup = [
                                  IPv6Network('fd00:2::2/64'),  IPv6Address('fd00:2::1') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'alphanode1' ],
-      [ 101, 2, 'alphanode2' ]
+      [ 100, 1, 'rekesmørbrød' ],
+      [ 101, 2, 'pinnekjøtt'   ]
    ] },
 
  { 'site_index'        : 2,
@@ -70,7 +70,7 @@ norNetSetup = [
    'site_city'         : 'Forst',
    'site_province'     : 'Nordrhein-Westfalen',
    'site_country'      : 'Deutschland',
-   'site_country_code' : 'DE',
+   'site_country_code' : 'DD',
    'site_latitude'     : 50.971672,
    'site_longitude'    : 7.468232,
    'site_altitude'     : 220,
@@ -83,8 +83,8 @@ norNetSetup = [
                                  IPv6Network('fd00:2::3/64'),  IPv6Address('fd00:2::1') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'betanode1' ],
-      [ 101, 2, 'betanode2' ]
+      [ 100, 1, 'knäckebröd'   ],
+      [ 101, 2, 'smörgåstårta' ]
    ] },
 
  { 'site_index'        : 3,
@@ -110,8 +110,8 @@ norNetSetup = [
                                  #IPv6Network('fd00:2::4/64'),  IPv6Address('fd00:2::1') ]
    ],
    'site_nodes' : [
-      [ 100, 1, 'gammanode1' ],
-      [ 101, 2, 'gammanode2' ]
+      [ 100, 1, 'weißbier' ],
+      [ 101, 2, 'kölsch'   ]
    ] }
 
 ]

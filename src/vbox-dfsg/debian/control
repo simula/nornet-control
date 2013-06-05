@@ -23,6 +23,7 @@ Build-Depends: bzip2,
                libcurl4-openssl-dev,
                libdevmapper-dev,
                libdrm-dev,
+               libfile-fcntllock-perl,
                libgl1-mesa-dev,
                libglu1-mesa-dev,
                libidl-dev,
@@ -64,7 +65,7 @@ Build-Depends: bzip2,
                zlib1g-dev,
                zip
 X-Python-Version: >= 2.5
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Homepage: http://www.virtualbox.org/
 Vcs-Git: git://git.debian.org/git/pkg-virtualbox/virtualbox.git
 Vcs-Browser: http://git.debian.org/?p=pkg-virtualbox/virtualbox.git
