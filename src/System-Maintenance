@@ -38,7 +38,7 @@ done
 # ====== Stop AutoFS ========================================================
 if [ -e /etc/init.d/autofs ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Stopping AutoFS service ...\x1b[0m"
-   sudo service autofs stop >/dev/null || true
+   sudo service autofs stop >/dev/null 2>&1 || true
 fi
 
 # ====== dpkg package fixes =================================================
@@ -117,7 +117,11 @@ fi
 if [ $DONT_TOUCH_GRUB -eq 0 ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Ensuring that Grub configuration is up-to-date ...\x1b[0m"
    sudo nohup grub-install /dev/sda >/tmp/install.log 2>&1
-   sudo nohup update-grub >>/tmp/install.log 2>&1
+   if ! sudo nohup update-grub >>/tmp/install.log 2>&1 ; then
+      cat /tmp/install.log
+      echo >&2 "ERROR: Something went wrong with update-grub!"
+      exit 1
+   fi
    cat /tmp/install.log
 fi
    
@@ -142,7 +146,7 @@ fi
 # ====== Start AutoFS =======================================================
 if [ -e /etc/init.d/autofs ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Starting AutoFS service ...\x1b[0m"
-   sudo service autofs start >/dev/null || true
+   sudo service autofs start >/dev/null 2>&1 || true
 fi
 
 # ====== Show NorNet package versions =======================================
