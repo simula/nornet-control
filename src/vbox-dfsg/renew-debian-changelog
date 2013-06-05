@@ -58,7 +58,7 @@ else
 fi
 
 # When running the first time, backup the original Debian files
-BACKUP_FILES="changelog rules control virtualbox-source.files/control.modules.in virtualbox-guest-source.files/control.modules.in virtualbox-source.files/rules virtualbox-guest-source.files/rules"
+BACKUP_FILES="changelog rules control virtualbox-source.files/control.modules.in virtualbox-guest-source.files/control.modules.in virtualbox-source.files/rules virtualbox-guest-source.files/rules source.lintian-overrides"
 # VirtualBox has several control files ...
 for backupFile in $BACKUP_FILES ; do
    if [ ! -e debian/${backupFile}.orig ] ; then
@@ -169,7 +169,7 @@ for buildPackage in $BUILD_PACKAGES ; do
       fi
    done
    
-   echo "s/^\(Conflicts: ${buildPackage}.*\)$/\1, ${conflicts}\nReplaces: ${conflicts}/g" >>package-names.sed.tmp
+   echo "s/^\(Conflicts: ${buildPackage}.*\)$/Replaces: ${conflicts}\n\1, ${conflicts}/g" >>package-names.sed.tmp
    echo "s/${buildPackage}$/${buildPackage}${PACKAGE_SUFFIX}/g" >>package-names.sed.tmp
    echo "s/${buildPackage}[ \t]/${buildPackage}${PACKAGE_SUFFIX} /g" >>package-names.sed.tmp
 done
@@ -234,26 +234,25 @@ if [ "${PACKAGE_SUFFIX}" != "" ] ; then
             -e "s/virtualbox-CVERSION/virtualbox${PACKAGE_SUFFIX}-CVERSION/g"
       ) >debian/${sourceFile}.new
    done
+   
+   LINTIAN_FILES="source.lintian-overrides `find  debian/ -name "*${PACKAGE_SUFFIX}.lintian-overrides" -printf "%f\\n"`"
+   for lintianFile in $LINTIAN_FILES ; do
+      (
+         sed <debian/${lintianFile} \
+            -e "s/^\(virtualbox[a-zA-Z0-9+-]*\):/\1${PACKAGE_SUFFIX}:/g" \
+            -e "s/^\(virtualbox[a-zA-Z0-9+-]*\) source:/\1${PACKAGE_SUFFIX} source:/g"
+      ) >debian/${lintianFile}.new
+   done
 fi
 
 
-# # ====== Change debian/LocalConfig.kmk ======================================
-# (
-#    cat debian/LocalConfig.kmk
-#    echo ""
-# #    echo "VBOX_WITH_EXTPACK_VNC := 1"
-# #    echo "VBOX_BUILD_PUBLISHER = ${BUILD_VERSION_IDENTIFIER}"
-# ) >debian/LocalConfig.kmk.new
+# ====== Apply changes ======================================================
+for updatedFile in changelog $CONTROL_FILES $RULES_FILES $SOURCE_FILES $LINTIAN_FILES ; do
+   mv "debian/${updatedFile}.new" "debian/${updatedFile}"
+done
 
 
 # ====== Write LocalConfig.kmk ==============================================
 (
-   # echo "VBOX_WITH_EXTPACK_VNC := 1"
    echo "VBOX_BUILD_PUBLISHER = _${BUILD_VERSION_IDENTIFIER}"
 ) >LocalConfig.kmk
-
-
-# ====== Apply changes ======================================================
-for updatedFile in changelog $CONTROL_FILES $RULES_FILES $SOURCE_FILES ; do
-   mv "debian/${updatedFile}.new" "debian/${updatedFile}"
-done
