@@ -4,7 +4,7 @@
 . /usr/lib/grub/grub-mkconfig_lib
 
 # We want to work in /boot/grub/ only.
-test -d "${GRUB_PREFIX}"; cd "${GRUB_PREFIX}"
+test -d /boot/grub; cd /boot/grub
 
 # ====== NorNet theme =======================================================
 echo >&2 "Using NorNet Monitor theme!"
