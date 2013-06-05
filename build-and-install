@@ -14,8 +14,11 @@ elif [ "$1" = "filesrv" ] ; then
 elif [ "$1" = "server" ] ; then
    PACKAGES="nornet-api nornet-management nornet-server"
 else
-   echo >&2 "Usage: $0 [tunnelbox|node|monitor|display|filesrv|server]"
+   echo >&2 "Usage: $0 [tunnelbox|node|monitor|display|filesrv|server] [development]"
    exit 1
+fi
+if [ "$2" != "" ] ; then
+   PACKAGES="$PACKAGES nornet-development"
 fi
 
 sudo rm -f /var/cache/pbuilder/result/*
