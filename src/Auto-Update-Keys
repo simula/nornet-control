@@ -56,7 +56,7 @@ if [ $NorNet_LocalNode_SSHAuthorizedKeysUpdate -eq 1 ] ; then
          chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser "${AuthorizedKeysFile}~"
          
          if ! diff -q "${AuthorizedKeysFile}~" "${AuthorizedKeysFile}" >/dev/null ; then
-            echo -e "\x1b[34m`env LANG=C date +%FT%H:%M:%S`: Updating SSH authorized_keys for user ${NorNet_LocalNode_NorNetUser}!\x1b[0m"
+            echo "`env LANG=C date +%FT%H:%M:%S`: Updating SSH authorized_keys for user ${NorNet_LocalNode_NorNetUser}!"
             cat "$NORNET_AUTHORIZED_KEYS"
             sudo -u $NorNet_LocalNode_NorNetUser mv "${AuthorizedKeysFile}~" "${AuthorizedKeysFile}"
          fi
