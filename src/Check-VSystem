@@ -19,6 +19,15 @@
 # Contact: dreibh@simula.no
 
 
+# ###### Call VBoxManage with timeouts #######################################
+vminfo ()
+{
+   intTimeout=30
+   killTimeout=35
+   sudo -u $NorNet_LocalNode_NorNetUser timeout -s INT -k $killTimeout $intTimeout VBoxManage showvminfo $@ || true
+}
+
+
 # ###### Main program #######################################################
 if [ $# -ne 1 ] ; then
    echo >&2 "Usage: $0 VM_name"
@@ -42,7 +51,7 @@ fi
 
 # ====== Obtain machine status ==============================================
 status="BAD_MACHINE"
-s=`sudo -u $NorNet_LocalNode_NorNetUser VBoxManage showvminfo "$MACHINE_NAME" --machinereadable | grep VMState=` && \
+s=`vminfo "$MACHINE_NAME" --machinereadable | grep VMState=` && \
 status=`echo $s | sed -e "s/VMState=//" -e "s/\"//g"` || true
 
 echo "$status"

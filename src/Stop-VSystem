@@ -44,9 +44,12 @@ wait_for_shutdown ()
          echo -n "${i}s"
       fi      
       status=`Check-VSystem "$MACHINE_NAME"`
-      if [ "$status" = "aborted" -o "$status" = "poweroff" -o "$status" = "stuck" ] ; then
+      if [ "$status" = "aborted" -o "$status" = "poweroff" -o "$status" = "stuck" -o "$status" = "stuck" ] ; then
          echo -n " OK!"
          break
+      elif [ "$status" = "BAD_MACHINE" ] ; then
+         echo -n " HANGING?"
+         break      
       fi
       # Again send ACPI powerbutton.
       # If the system had been booting, the event might have been missed.
