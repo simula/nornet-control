@@ -78,7 +78,7 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
    vncOptions=
    if [ $VNCPORT -ne 0 ] ; then
       version=( `VBoxManage --version | tr '.' ' '` )
-      echo "`env LANG=C date +%FT%H:%M:%S`: VirtualBox version is ${version[0]}.${version[1]}"
+      # echo "`env LANG=C date +%FT%H:%M:%S`: VirtualBox version is ${version[0]}.${version[1]}"
       if [ ${version[0]} -eq 4 -a ${version[1]} -lt 2 ] ; then
          vncOptions="--vrde off --vnc --vncport $VNCPORT"
          if [ "$VNCPASSWORD" != "" ] ; then
