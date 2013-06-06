@@ -40,9 +40,11 @@ if [ $NorNet_LocalNode_SSHAuthorizedKeysUpdate -eq 1 ] ; then
    AuthorizedKeysFile="/home/${NorNet_LocalNode_NorNetUser}/.ssh/authorized_keys"
    if [ -e "$NORNET_AUTHORIZED_KEYS" ] ; then
       if [ -e "/home/${NorNet_LocalNode_NorNetUser}" ] ; then   
+         sudo -u $NorNet_LocalNode_NorNetUser mkdir -p "/home/${NorNet_LocalNode_NorNetUser}/.ssh"
          if [ ! -e "$AuthorizedKeysFile" ] ; then
             sudo -u $NorNet_LocalNode_NorNetUser touch "$AuthorizedKeysFile"
          fi
+         sudo -u $NorNet_LocalNode_NorNetUser chmod 700 "/home/${NorNet_LocalNode_NorNetUser}/.ssh"
          sudo -u $NorNet_LocalNode_NorNetUser chmod 600 "$AuthorizedKeysFile"
 
          (
