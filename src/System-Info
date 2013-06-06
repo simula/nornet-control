@@ -21,7 +21,7 @@
 
 # ###### Main program #######################################################
 echo ""
-echo "   System information as of `env LANG=en date`"
+echo "System information as of `env LANG=en date`"
 echo ""
 
 
@@ -67,42 +67,42 @@ fi
 # ====== Print system information ===========================================
 
 echo -en "\x1b[1;34m"
-echo "   ====================================================="
+echo "====================================================="
 echo -en "\x1b[1;31m"
-echo "      #     #                 #     #"
-echo "      ##    #   ####   #####  ##    #  ######   #####"
-echo "      # #   #  #    #  #    # # #   #  #          #"
-echo "      #  #  #  #    #  #    # #  #  #  #####      #"
-echo "      #   # #  #    #  #####  #   # #  #          #"
-echo "      #    ##  #    #  #   #  #    ##  #          #"
-echo "      #     #   ####   #    # #     #  ######     #"
+echo "   #     #                 #     #"
+echo "   ##    #   ####   #####  ##    #  ######   #####"
+echo "   # #   #  #    #  #    # # #   #  #          #"
+echo "   #  #  #  #    #  #    # #  #  #  #####      #"
+echo "   #   # #  #    #  #####  #   # #  #          #"
+echo "   #    ##  #    #  #   #  #    ##  #          #"
+echo "   #     #   ####   #    # #     #  ######     #"
 echo -en "\x1b[1;34m"
-echo "   ====================================================="
+echo "====================================================="
 echo -e "\x1b[0m"
 
 echo -en "\x1b[33m"
-echo "   Host:             ${hostnameResult}"
-echo "   Uptime:           ${uptime}"
-echo "   CPU:              $cores × ${cpu}; ${processes} processes; ${users} users"
-echo "   System:           ${DISTRIB_ID} ${DISTRIB_RELEASE} (${DISTRIB_CODENAME}) with ${kernel}"
-echo "   Load:             ${systemLoad}"
-echo "   Used Memory:      ${memoryUsed} MiB of ${memoryTotal} MiB (${memoryFree} MiB free)"
-echo "   Used Swap:        ${swapUsed} MiB of ${swapTotal} MiB (${swapFree} MiB free)"
-echo "   Used Diskspace:   ${diskRoot} on /, ${diskHome} on /home"
-echo "   Network:"
+echo "Host:             ${hostnameResult}"
+echo "Uptime:           ${uptime}"
+echo "CPU:              $cores × ${cpu}; ${processes} processes; ${users} users"
+echo "System:           ${DISTRIB_ID} ${DISTRIB_RELEASE} (${DISTRIB_CODENAME}) with ${kernel}"
+echo "Load:             ${systemLoad}"
+echo "Used Memory:      ${memoryUsed} MiB of ${memoryTotal} MiB (${memoryFree} MiB free)"
+echo "Used Swap:        ${swapUsed} MiB of ${swapTotal} MiB (${swapFree} MiB free)"
+echo "Used Diskspace:   ${diskRoot} on /, ${diskHome} on /home"
+echo "Network:"
 
 echo -en "\x1b[34m"
 allInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//"`
 for interface in $allInterfaces ; do
    if [[ $interface =~ ^eth ]] ; then
-      echo -n "      `printf "%-8s" "${interface}:"` "
+      echo -n "   `printf "%-8s" "${interface}:"` "
       addressListIPv4=`ip -4 addr show dev $interface | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+)\/([0-9]+) / { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
       addressListIPv6=`ip -6 addr show dev $interface | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
       for address in $addressListIPv4 ; do
          echo -n "$address "
       done
       for address in $addressListIPv6 ; do
-         echo -en "\n               $address "
+         echo -en "\n            $address "
       done
       echo ""      
    fi
