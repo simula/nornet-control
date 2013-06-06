@@ -85,6 +85,9 @@ if [ $UPGRADE_VIRTUALBOX -eq 1 ] ; then
    fi
    if grep "^virtualbox[/ ]" $PackageVersionsFile >/dev/null ; then
       echo "VirtualBox will be upgraded to NorNet package!"
+      if [ -e /etc/init.d/nornet-server ] ; then
+         service /etc/init.d/nornet-server stop || true
+      fi
       sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -y -q virtualbox-nornet-stable >/tmp/install.log 2>&1 &
       wait      
       cat /tmp/install.log
