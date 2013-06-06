@@ -53,6 +53,9 @@ swapUsed=`env LANG=en free -mto | grep Swap | awk '{ print $3 }'    | xargs prin
 swapFree=`env LANG=en free -mto | grep Swap: | awk '{ print $4 }'   | xargs printf "%5d"`
 swapTotal=`env LANG=en free -mto | grep Swap: | awk '{ print $2 }'  | xargs printf "%5d"`
 
+diskRoot=`env LANG=en df /     -hT | grep -vE "^Filesystem|shm" | awk '{ print $6 }'`
+diskHome=`env LANG=en df /home -hT | grep -vE "^Filesystem|shm" | awk '{ print $6 }'`
+
 DISTRIB_ID="Unknown"
 DISTRIB_RELEASE="00.00"
 DISTRIB_CODENAME="unknown"
@@ -77,17 +80,32 @@ echo -en "\x1b[1;34m"
 echo "   ====================================================="
 echo -e "\x1b[0m"
 
-echo "Host:          ${hostnameResult}"
-echo "Uptime:        ${uptime}"
-echo ""
-echo "CPU:           $cores × ${cpu}"
-echo "System Load:   ${systemLoad}"
-echo "Processes:     ${processes}"
-echo "Users:         ${users}"
-echo "Used Memory:   ${memoryUsed} MiB of ${memoryTotal} MiB (${memoryUsed} MiB free)"
-echo "Used Swap:     ${swapUsed} MiB of ${swapTotal} MiB (${swapUsed} MiB free)"
+echo -en "\x1b[33m"
+echo "   Host:             ${hostnameResult}"
+echo "   Uptime:           ${uptime}"
+echo "   CPU:              $cores × ${cpu}; ${processes} processes; ${users} users"
+echo "   System:           ${DISTRIB_ID} ${DISTRIB_RELEASE} (${DISTRIB_CODENAME}) with ${kernel}"
+echo "   Load:             ${systemLoad}"
+echo "   Used Memory:      ${memoryUsed} MiB of ${memoryTotal} MiB (${memoryFree} MiB free)"
+echo "   Used Swap:        ${swapUsed} MiB of ${swapTotal} MiB (${swapFree} MiB free)"
+echo "   Used Diskspace:   ${diskRoot} on /, ${diskHome} on /home"
+echo "   Network:"
 
-echo ""
-echo "Kernel:        ${kernel}"
-echo "System:        ${DISTRIB_ID} ${DISTRIB_RELEASE} (${DISTRIB_CODENAME})"
-echo ""
+echo -en "\x1b[34m"
+allInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//"`
+for interface in $allInterfaces ; do
+   if [[ $interface =~ ^eth ]] ; then
+      echo -n "      `printf "%-8s" "${interface}:"` "
+      addressListIPv4=`ip -4 addr show dev $interface | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+)\/([0-9]+) / { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
+      addressListIPv6=`ip -6 addr show dev $interface | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
+      for address in $addressListIPv4 ; do
+         echo -n "$address "
+      done
+      for address in $addressListIPv6 ; do
+         echo -en "\n               $address "
+      done
+      echo ""      
+   fi
+done
+
+echo -e "\x1b[0m"
