@@ -191,7 +191,7 @@ else
    service ntp restart >/dev/null 2>&1
    service autofs restart >/dev/null 2>&1
 fi
-rm -f hostname.new hosts.new ntp.new interfaces.new auto.master auto.nfs
+rm -f hostname.new hosts.new ntp.new modules.new interfaces.new auto.master auto.nfs
 
 # Store parameters for later re-run.
 echo "$AllParameters" >$LAST_PARAMETERS_FILE
