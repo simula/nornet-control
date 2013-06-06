@@ -108,4 +108,4 @@ for interface in $allInterfaces ; do
    fi
 done
 
-echo -e "\x1b[0m"
+echo -en "\x1b[0m"
