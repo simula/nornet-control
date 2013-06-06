@@ -93,7 +93,7 @@ stop_virtual_systems ()
 
 # ###### Main program #######################################################
 if [ $# -lt 1 ] ; then
-   echo >&2 "Usage: $0 VM_name stop_delay"
+   echo >&2 "Usage: $0 VM_name [stop_delay]"
    exit 1
 fi
 
