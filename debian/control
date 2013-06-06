@@ -71,6 +71,8 @@ Depends: apt-show-versions,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
+Conflicts: landscape-common
+Replaces: landscape-common
 Description: NorNet Management Tools
  This metapackage contains basic software nor NorNet node management. The
  software installed provides a common working environment.
