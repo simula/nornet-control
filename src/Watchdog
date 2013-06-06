@@ -22,7 +22,7 @@
 
 # ###### Main program #######################################################
 if [ $# -ne 1 ] ; then
-   echo >&2 "Usage: configuration_file"
+   echo >&2 "Usage: $0 configuration_file"
    exit 1
 fi
 WATCHDOG_CONFIG="$1"
