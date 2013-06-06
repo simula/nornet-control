@@ -20,8 +20,8 @@
 
 
 # ###### Main program #######################################################
-if [ $# -ne 8 ] ; then
-   echo >&2 "Usage: $0 VM_name start_delay num_cpus memory gethosttime_disabled vnc_port vnc_password options"
+if [ $# -lt 1 ] ; then
+   echo >&2 "Usage: $0 VM_name [start_delay num_cpus memory gethosttime_disabled vnc_port vnc_password options]"
    exit 1
 fi
 
@@ -76,20 +76,22 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
 
    # ====== Set VNC options =================================================
    vncOptions=
-   if [ $VNCPORT -ne 0 ] ; then
-      version=( `VBoxManage --version | tr '.' ' '` )
-      # echo "`env LANG=C date +%FT%H:%M:%S`: VirtualBox version is ${version[0]}.${version[1]}"
-      if [ ${version[0]} -eq 4 -a ${version[1]} -lt 2 ] ; then
-         vncOptions="--vrde off --vnc --vncport $VNCPORT"
-         if [ "$VNCPASSWORD" != "" ] ; then
-            vncOptions="$vncOptions --vncpass \"$VNCPASSWORD\""
+   if [ "$VNCPORT" != "" ] ; then
+      if [ $VNCPORT -ne 0 ] ; then
+         version=( `VBoxManage --version | tr '.' ' '` )
+         # echo "`env LANG=C date +%FT%H:%M:%S`: VirtualBox version is ${version[0]}.${version[1]}"
+         if [ ${version[0]} -eq 4 -a ${version[1]} -lt 2 ] ; then
+            vncOptions="--vrde off --vnc --vncport $VNCPORT"
+            if [ "$VNCPASSWORD" != "" ] ; then
+               vncOptions="$vncOptions --vncpass \"$VNCPASSWORD\""
+            fi
+         else
+            sudo -u $NorNet_LocalNode_NorNetUser VBoxManage setproperty vrdeextpack VNC
+            sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" \
+               --vrdeproperty "VNCPassword=$VNCPASSWORD" \
+               --vrdeauthlibrary null \
+               --vrdeport=$VNCPORT
          fi
-      else
-         sudo -u $NorNet_LocalNode_NorNetUser VBoxManage setproperty vrdeextpack VNC
-         sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" \
-            --vrdeproperty "VNCPassword=$VNCPASSWORD" \
-            --vrdeauthlibrary null \
-            --vrdeport=$VNCPORT
       fi
    fi
 
@@ -102,8 +104,10 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
       "nohup </dev/null VBoxHeadless --startvm \"$NAME\" $vncOptions >\"/var/log/nornet-server-$NAME.log\" 2>&1 & echo \$! >\"/var/run/nornet-server-$NAME.pid\" 2>&1" || true
       
    # ====== Give the system time to boot ====================================
-   echo "`env LANG=C date +%FT%H:%M:%S`: Waiting $STARTDELAY seconds ..."
-   sleep "$STARTDELAY"
+   if [ "$STARTDELAY" != "" ] ; then
+      echo "`env LANG=C date +%FT%H:%M:%S`: Waiting $STARTDELAY seconds ..."
+      sleep "$STARTDELAY"
+   fi
    
 else
    echo "`env LANG=C date +%FT%H:%M:%S`: $NAME is already running -> okay."
