@@ -187,9 +187,9 @@ else
    cp auto.master /etc/auto.master
    cp auto.nfs /etc/auto.nfs
 
-   service networking restart >/dev/null
-   service ntp restart >/dev/null
-   service autofs restart >/dev/null
+   service networking restart >/dev/null 2>&1
+   service ntp restart >/dev/null 2>&1
+   service autofs restart >/dev/null 2>&1
 fi
 rm -f hostname.new hosts.new ntp.new interfaces.new auto.master auto.nfs
 
