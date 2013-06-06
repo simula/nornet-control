@@ -6,3 +6,5 @@
 0 5 * * 0            root  if [ -d /nfs/node ] ; then mkdir -p /nfs/node/backup && System-Backup /nfs/node/backup weekly 7 10800 >>/var/log/nornet-backup.log 2>&1 ; fi
 # Monthly backup on first day of month between 23:00 and 2:00
 0 23 1 * *           root  if [ -d /nfs/node ] ; then mkdir -p /nfs/node/backup && System-Backup /nfs/node/backup monthly 7 10800 >>/var/log/nornet-backup.log 2>&1 ; fi
+# Bi-monthly short SMART disk check between 00:08 and 02:08
+8 0 8,26 * *         root  if [ -e /dev/sda ] ; then Random-Sleep 0 7200 -quiet && smartctl -t short /dev/sda >/dev/null 2>&1 ; fi
