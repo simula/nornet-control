@@ -92,14 +92,18 @@ stop_virtual_systems ()
 
 
 # ###### Main program #######################################################
-if [ $# -ne 2 ] ; then
+if [ $# -lt 1 ] ; then
    echo >&2 "Usage: $0 VM_name stop_delay"
    exit 1
 fi
 
 NORNET_DIRECTORY="/etc/nornet"
 MACHINE_NAME="$1"
-STOPDELAY="$2"
+if [ "$2" != "" ] ; then
+   STOPDELAY="$2"
+else
+   STOPDELAY=0
+fi
 
 
 # ====== Get NorNet user name ===============================================
