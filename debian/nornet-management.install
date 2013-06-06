@@ -1,6 +1,7 @@
 Auto-Update-Keys         /usr/bin
 Random-Sleep             /usr/bin
 System-Backup            /usr/bin
+System-Info              /usr/bin
 System-Maintenance       /usr/bin
 Watchdog                 /usr/bin
 nornet-authorized_keys   /etc/nornet

@@ -43,8 +43,9 @@ cp src/Random-Sleep $PACKAGE-$UPSTREAM_VERSION
 cp src/Routing-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Tunnelbox-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Watchdog $PACKAGE-$UPSTREAM_VERSION
-cp src/System-Maintenance $PACKAGE-$UPSTREAM_VERSION
 cp src/System-Backup $PACKAGE-$UPSTREAM_VERSION
+cp src/System-Info $PACKAGE-$UPSTREAM_VERSION
+cp src/System-Maintenance $PACKAGE-$UPSTREAM_VERSION
 cp src/Start-VSystem $PACKAGE-$UPSTREAM_VERSION
 cp src/Stop-VSystem $PACKAGE-$UPSTREAM_VERSION
 cp src/Check-VSystem $PACKAGE-$UPSTREAM_VERSION

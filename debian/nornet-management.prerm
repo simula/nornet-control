@@ -3,9 +3,8 @@
 set -e
 
 case "$1" in
-   configure)
-      Auto-Update-Keys
-      ln -sf /usr/bin/System-Info /etc/update-motd.d/55-nornet-management
+   remove|upgrade|deconfigure)
+      rm -f /etc/update-motd.d/55-nornet-management || true
       /usr/sbin/update-motd 2>/dev/null || true
       ;;
 esac
