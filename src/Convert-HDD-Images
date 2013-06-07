@@ -28,36 +28,43 @@ MACHINE_NAME="$1"
 IMAGE_FORMAT="$2"
 IMAGE_VARIANT="$3"
 
-
+ 
+# ====== Obtain machine status ==============================================
+echo -e "\x1b[34m`date +%FT%H:%M:%S`: Obtaining configuration of virtual system $MACHINE_NAME ...\x1b[0m"
 MACHINE_STATUS_FILE=`mktemp`
 VBoxManage showvminfo "$MACHINE_NAME" --machinereadable >$MACHINE_STATUS_FILE
 
 CONFIG_FILE=`cat $MACHINE_STATUS_FILE | grep "^CfgFile=" | sed -e "s/^CfgFile=\"//" -e "s/\"$//g"`
 CONFIG_DIR=`dirname "$CONFIG_FILE"`
 
+
+# ====== Find storage controllers ===========================================
+echo -e "\x1b[34m`date +%FT%H:%M:%S`: Looking for storage controllers ...\x1b[0m"
 for controller in 0 1 2 3 ; do
    for port in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 ; do
-      uuid=`cat $MACHINE_STATUS_FILE | grep "^\"SATA Controller-ImageUUID-$port-$controller" | sed -e "s/^\"SATA Controller-ImageUUID-$port-$controller\"=\"//"  -e "s/\"$//" || echo ""`
+      controllerName=`cat $MACHINE_STATUS_FILE | grep "^\"[a-zA-Z0-9 ]*-ImageUUID-$port-$controller" | sed -e "s/^\"\([a-zA-Z0-9 ]*\)-ImageUUID-$port-$controller\"=.*$/\1/" || echo ""`
+      uuid=`cat $MACHINE_STATUS_FILE | grep "^\"$controllerName-ImageUUID-$port-$controller" | sed -e "s/^\"$controllerName-ImageUUID-$port-$controller\"=\"//" -e "s/\"$//" || echo ""`
+      # ====== Check for image attached to controller =======================
       if [ "$uuid" != "" ] ; then
-         oldImage=`cat $MACHINE_STATUS_FILE | grep "^\"SATA Controller-$port-$controller" | sed -e "s/^\"SATA Controller-$port-$controller\"=\"//"  -e "s/\"$//" || echo ""`
-         echo "Controller $controller, port $port: $uuid in $oldImage"
+         oldImage=`cat $MACHINE_STATUS_FILE | grep "^\"$controllerName-$port-$controller" | sed -e "s/^\"$controllerName-$port-$controller\"=\"//" -e "s/\"$//" || echo ""`
+         echo -e "\x1b[34m`date +%FT%H:%M:%S`: Controller $controller ($controllerName), port $port: $uuid in $oldImage\x1b[0m"
          if [ "$oldImage" != "" ] ; then
+            # ====== Check whether a conversion is necessary ================
+            variant=`echo $IMAGE_VARIANT | tr '[:upper:]' '[:lower:]'`
+            newImage="$CONFIG_DIR/$MACHINE_NAME-DH$port-$controller.$variant.$IMAGE_FORMAT"
             if [ "$oldImage" != "$newImage" ] ; then
-               variant=`echo $IMAGE_VARIANT | tr '[:upper:]' '[:lower:]'`
-               newImage="$CONFIG_DIR/$MACHINE_NAME-DH$port-$controller.$variant.$IMAGE_FORMAT"
                if [ ! -e "$newImage" ] ; then
-                  tempNewImage="$newImage.temp"
-                  if [ -e "$tempNewImage" ] ; then
-                     rm -f "$tempNewImage"
-                  fi
+                  echo -e "\x1b[34m`date +%FT%H:%M:%S`: \x1b[0m"
                   
                   # ====== Apply the conversion =============================
-                  echo "   Cloning $oldImage to $newImage ..."
-                  VBoxManage clonehd "$oldImage" "$tempNewImage" --format "$IMAGE_FORMAT" --variant "$IMAGE_VARIANT"
-                  mv "$tempNewImage" "$newImage"
-                  VBoxManage -q storageattach "$MACHINE_NAME" --storagectl "SATA Controller" --port $port --device $controller --type hdd --medium "$newImage"
+                  echo -e "\x1b[34m`date +%FT%H:%M:%S`: Cloning $oldImage to $newImage ...\x1b[0m"
+                  VBoxManage clonehd "$oldImage" "$newImage" --format "$IMAGE_FORMAT" --variant "$IMAGE_VARIANT"
+                  
+                  echo -e "\x1b[34m`date +%FT%H:%M:%S`: Attaching $newImage ...\x1b[0m"
+                  VBoxManage -q storageattach "$MACHINE_NAME" --storagectl "$controllerName" --port $port --device $controller --type hdd --medium "$newImage"
 
                   # ====== Remove old image, if not used any more ===========
+                  echo -e "\x1b[34m`date +%FT%H:%M:%S`: Checking whether $oldImage may be removed...\x1b[0m"
                   HDD_STATUS_FILE=`mktemp`
                   VBoxManage list hdds >$HDD_STATUS_FILE
 
@@ -65,10 +72,10 @@ for controller in 0 1 2 3 ; do
                   if [ "$diskInfo" != "" ] ; then
                      usage=`echo "$diskInfo" | grep "^Usage:" || echo ""`
                      if [ "$usage" = "" ] ; then 
-                        echo "Removing old image $oldImage!"
+                        echo -e "\x1b[34m`date +%FT%H:%M:%S`: Removing old image $oldImage ...\x1b[0m"
                         VBoxManage -q closemedium disk "$uuid" --delete || true
                      else
-                        echo "WARNING: Disk $uuid used.Leaving storage registration as is!"
+                        echo "WARNING: Disk $uuid is still used. Leaving storage registration as is!"
                         echo "$usage"
                      fi
                   else
@@ -76,12 +83,14 @@ for controller in 0 1 2 3 ; do
                   fi
 
                   rm -f $HDD_STATUS_FILE
-               else
-                  echo "Disk $newImage already exists -> skipping conversion!"
+               else 
+                  echo -e "\x1b[34m`date +%FT%H:%M:%S`: WARNING: Disk $newImage already exists -> skipping conversion!\x1b[0m"
                fi
+            else
+               echo -e "\x1b[34m`date +%FT%H:%M:%S`: Disk seems to be converted already. Nothing to do.\x1b[0m"
             fi
          else
-            echo "Disk $uuid not found -> skipping conversion!"
+            echo -e "\x1b[34m`date +%FT%H:%M:%S`: Disk $uuid not found -> skipping conversion!\x1b[0m"
          fi
       fi
    done
