@@ -36,11 +36,10 @@ cores=$(grep -c ^processor /proc/cpuinfo 2>/dev/null)
 [ "$cores" -eq "0" ] && cores=1
 systemLoad=`echo "$uptimeResult" | awk -F 'average:' '{ print $2 }'`
 
-uuptime="uptimeResult"
-if $(echo $ruptime | grep -E "min|days" >/dev/null); then
-   uptime=`echo "$uptimeResult" | awk '{ print $3 $4 }'`
+if $(echo "$uptimeResult" | grep -E "min|days" >/dev/null); then
+   uptime=`echo "$uptimeResult" | awk '{ print $3 " "$4 }' | sed 's/,//g'`
 else
-   uptime=`echo "$uptimeResult" | awk '{ print $3 " hours" }'`
+   uptime=`echo "$uptimeResult" | awk '{ print $3 " hours" }' | sed 's/,//g'`
 fi
 
 processes=`ps axue | grep -vE "^USER|grep|ps" | wc -l`
@@ -97,10 +96,14 @@ for interface in $allInterfaces ; do
    if [[ $interface =~ ^eth ]] ; then
       echo -n "   `printf "%-8s" "${interface}:"` "
       addressListIPv4=`ip -4 addr show dev $interface | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+)\/([0-9]+) / { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
-      addressListIPv6=`ip -6 addr show dev $interface | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
-      for address in $addressListIPv4 ; do
-         echo -n "$address "
-      done
+      addressListIPv6=`ip -6 addr show dev $interface | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`      
+      if [ "$addressListIPv4" != "" ] ; then
+         for address in $addressListIPv4 ; do
+            echo -n "$address   "
+         done
+      else
+           echo -n "(No IPv4)"
+      fi
       for address in $addressListIPv6 ; do
          echo -en "\n            $address "
       done
