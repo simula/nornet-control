@@ -155,7 +155,9 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                   outputFile.write('   gateway   ' + str(gateway.ip) + '\n')
                   outputFile.write('   metric    ' + str(metric) + '\n')
 
-               if ((controlBoxMode == True) and (addedStaticRoute == False)):
+               if ((controlBoxMode == True) and
+                   (providerIndex == defaultProvider) and
+                   (addedStaticRoute == False)):
                   if version == 4:
                      outputFile.write('   up   /sbin/ip -4 route add ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' || true\n')               
                      outputFile.write('   down /sbin/ip -4 route del ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' || true\n')
