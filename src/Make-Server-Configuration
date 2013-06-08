@@ -145,7 +145,7 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
 
                elif ((version == 6) and (providerIndex != defaultProvider)):   # NOTE: Work-around for buggy Ubuntu ifupdown!
                   outputFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' &&')
-                  outputFile.write(' /sbin/ip -' + str(version) + ' route add ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
+                  outputFile.write(' /sbin/ip -' + str(version) + ' route add ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
                   outputFile.write('   down /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' &&')
                   outputFile.write(' /sbin/ip -' + str(version) + ' route del ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
 
