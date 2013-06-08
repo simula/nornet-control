@@ -114,10 +114,14 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
             outputFile.write('\n# ====== ' + providerName + ' (' + str(providerIndex) + ') ======\n')
 
             for version in [ 4, 6 ]:
+               if providerIndex != defaultProvider:
+                  providerIfName = interfaceName + ':' + str(providerIndex)
+               else:
+                  providerIfName = interfaceName
 
                if ((providerIndex != defaultProvider) and (version == 4)):
-                  outputFile.write('auto ' + interfaceName + ':' + str(providerIndex) + '\n')
-                  outputFile.write('iface ' + interfaceName + ':' + str(providerIndex) + ' inet static\n')
+                  outputFile.write('auto ' + providerIfName + '\n')
+                  outputFile.write('iface ' + providerIfName + ' inet static\n')                  
                elif providerIndex == defaultProvider:
                   v = ''
                   if version == 4:
@@ -136,10 +140,10 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                # ====== Addressing =======================================
                addedStaticRoute = False
                if ((version == 6) and (providerIndex != defaultProvider)):   # NOTE: Work-around for buggy Ubuntu ifupdown!
-                  outputFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' &&')
-                  outputFile.write(' /sbin/ip -' + str(version) + ' route add ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
-                  outputFile.write('   down /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' &&')
-                  outputFile.write(' /sbin/ip -' + str(version) + ' route del ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
+                  outputFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + providerIfName + ' &&')
+                  outputFile.write(' /sbin/ip -' + str(version) + ' route add ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
+                  outputFile.write('   down /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + providerIfName + ' &&')
+                  outputFile.write(' /sbin/ip -' + str(version) + ' route del ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
                   addedStaticRoute = True
 
                elif ((version == 4) or (providerIndex == defaultProvider)):
@@ -153,11 +157,11 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
 
                if ((controlBoxMode == True) and (addedStaticRoute == False)):
                   if version == 4:
-                     outputFile.write('   up   /sbin/ip -4 route add ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')               
-                     outputFile.write('   down /sbin/ip -4 route del ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
+                     outputFile.write('   up   /sbin/ip -4 route add ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')               
+                     outputFile.write('   down /sbin/ip -4 route del ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
                   else:
-                     outputFile.write('   up   /sbin/ip -6 route add ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')               
-                     outputFile.write('   down /sbin/ip -6 route del ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
+                     outputFile.write('   up   /sbin/ip -6 route add ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')               
+                     outputFile.write('   down /sbin/ip -6 route del ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
 
 
                # ====== Further parameters ===============================
