@@ -157,11 +157,11 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
 
                if ((controlBoxMode == True) and (addedStaticRoute == False)):
                   if version == 4:
-                     outputFile.write('   up   /sbin/ip -4 route add ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')               
-                     outputFile.write('   down /sbin/ip -4 route del ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
+                     outputFile.write('   up   /sbin/ip -4 route add ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' || true\n')               
+                     outputFile.write('   down /sbin/ip -4 route del ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' || true\n')
                   else:
-                     outputFile.write('   up   /sbin/ip -6 route add ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')               
-                     outputFile.write('   down /sbin/ip -6 route del ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
+                     outputFile.write('   up   /sbin/ip -6 route add ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' || true\n')               
+                     outputFile.write('   down /sbin/ip -6 route del ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' || true\n')
 
 
                # ====== Further parameters ===============================
