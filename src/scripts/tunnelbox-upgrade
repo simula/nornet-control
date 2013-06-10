@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+. /etc/nornet/watchdog-config
+
+echo "Stopping autofs ..."
+service autofs stop || true
+umount -f /nfs/pub || true
+umount -f /nfs/adm || true
+umount -f /nfs/node || true
+umount -f /nfs/sys || true
+
+echo "ip addr add $FALLBACK_ADDRESS dev $FALLBACK_INTERFACE"
+ip addr add "$FALLBACK_ADDRESS" dev "$FALLBACK_INTERFACE" || true
+
+echo "ip link set up dev $FALLBACK_INTERFACE"
+ip link set up dev "$FALLBACK_INTERFACE" || true
+
+echo "ip route add default via $FALLBACK_GATEWAY dev $FALLBACK_INTERFACE"
+ip route add default via "$FALLBACK_GATEWAY" dev "$FALLBACK_INTERFACE" || true
+
+echo "nameserver 8.8.8.8" >/etc/resolv.conf
+
+ping -c5 heise.de
+
+./server-upgrade
