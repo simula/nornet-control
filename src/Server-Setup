@@ -134,6 +134,7 @@ fi
 
 # ====== Create other configurations ========================================
 ( cat /etc/modules | grep -v "^dummy" ; echo "dummy numdummies=1" ) >modules.new
+( cat /etc/default/rcS | sed -e "s/^FSCKFIX=no/FSCKFIX=yes/g" ) >rcS.new
 
 
 # ====== Compare new configurations to old ones =============================
@@ -146,6 +147,8 @@ echo "------ /etc/ntp.conf:"
 colordiff /etc/ntp.conf ntp.new
 echo "------ /etc/modules:"
 colordiff /etc/modules modules.new
+echo "------ /etc/default/rcS:"
+colordiff /etc/default/rcS rcS.new
 echo "------ /etc/network/interfaces:"
 colordiff /etc/network/interfaces interfaces.new
 echo "------ /etc/auto.master:"
@@ -173,6 +176,7 @@ else
    hostname `cat /etc/hostname`
 
    cp modules.new /etc/modules
+   cp rcS.new /etc/default/rcS
 
    cp /etc/ntp.conf /etc/ntp.conf~
    cp ntp.new /etc/ntp.conf
@@ -192,7 +196,7 @@ else
    service ntp restart >/dev/null 2>&1
    service autofs restart >/dev/null 2>&1
 fi
-rm -f hostname.new hosts.new ntp.new modules.new interfaces.new auto.master auto.nfs
+rm -f hostname.new hosts.new ntp.new modules.new rcS.new interfaces.new auto.master auto.nfs
 
 # Store parameters for later re-run.
 echo "$AllParameters" >$LAST_PARAMETERS_FILE
