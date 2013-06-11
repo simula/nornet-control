@@ -29,7 +29,7 @@ log ()
 
 if [ -e /etc/init.d/network ] ; then
    log "Stopping networking (Fedora Core)"
-   /etc/init.d/network stop
+   service network stop
 elif [ -e /etc/init.d/networking ] ; then
    log "Stopping networking (Debian/Ubuntu)"
    service networking stop
@@ -47,7 +47,7 @@ done
 
 log "Unconfiguring remaining interfaces"
 # Possibly, some interfaces are still up. Get rid of them!
-INTERFACES=`ifconfig -a | awk '/^[a-Z]/ { print $1 }'`
+INTERFACES=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//"`
 for interface in $INTERFACES ; do
    echo "Unconfiguring $interface ..."
 
@@ -102,11 +102,11 @@ ip -6 route show
 
 
 if [ -e /etc/init.d/network ] ; then
-   log "Restarting networking (Fedora Core)"
-   /etc/init.d/network stop || true
-   /etc/init.d/network start
+  log "Restarting networking (Fedora Core)"
+  service network stop || true
+  service network start
 elif [ -e /etc/init.d/networking ] ; then
-   log "Restarting networking (Debian/Ubuntu)"
-   /etc/init.d/networking stop || true
-   /etc/init.d/networking start
+  log "Restarting networking (Debian/Ubuntu)"
+  service networking stop || true
+  service networking start
 fi
