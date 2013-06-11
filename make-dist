@@ -29,16 +29,7 @@ cp src/*-config $PACKAGE-$UPSTREAM_VERSION
 cp src/*-constants $PACKAGE-$UPSTREAM_VERSION
 cp src/*-authorized_keys $PACKAGE-$UPSTREAM_VERSION
 cp src/*-config.example $PACKAGE-$UPSTREAM_VERSION
-mkdir $PACKAGE-$UPSTREAM_VERSION/cron-apt
-cp src/cron-apt/5-install $PACKAGE-$UPSTREAM_VERSION/cron-apt/
-mkdir $PACKAGE-$UPSTREAM_VERSION/grub
-cp src/grub/*_theme $PACKAGE-$UPSTREAM_VERSION/grub/
-cp src/grub/grub-defaults $PACKAGE-$UPSTREAM_VERSION/grub/
-cp src/grub/*.jpeg $PACKAGE-$UPSTREAM_VERSION/grub/
-mkdir $PACKAGE-$UPSTREAM_VERSION/pbuilder
-cp src/pbuilder/pbuilderrc $PACKAGE-$UPSTREAM_VERSION/pbuilder/
-mkdir $PACKAGE-$UPSTREAM_VERSION/vsystems
-cp src/vsystems/EXAMPLE-* $PACKAGE-$UPSTREAM_VERSION/vsystems/
+
 cp src/Random-Sleep $PACKAGE-$UPSTREAM_VERSION
 cp src/Routing-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Tunnelbox-Setup $PACKAGE-$UPSTREAM_VERSION
@@ -63,6 +54,28 @@ cp src/Tunnelbox-Bootstrap-Helper $PACKAGE-$UPSTREAM_VERSION
 cp src/Server-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Convert-HDD-Images $PACKAGE-$UPSTREAM_VERSION
 cp src/Reset-Networking $PACKAGE-$UPSTREAM_VERSION
+
+mkdir $PACKAGE-$UPSTREAM_VERSION/cron-apt
+cp src/cron-apt/5-install $PACKAGE-$UPSTREAM_VERSION/cron-apt/
+
+mkdir $PACKAGE-$UPSTREAM_VERSION/grub
+cp src/grub/*_theme $PACKAGE-$UPSTREAM_VERSION/grub/
+cp src/grub/grub-defaults $PACKAGE-$UPSTREAM_VERSION/grub/
+splashImages=`find src/grub/ -name '*.jpeg' -printf '%f '`
+for splashImage in $splashImages ; do
+   convert "src/grub/$splashImage" \
+           -background Gold -gravity Center -font Times -pointsize 24 \
+           label:"NorNet version $UPSTREAM_VERSION, built `env LANG=en date`" \
+           -append \
+           "$PACKAGE-$UPSTREAM_VERSION/grub/$splashImage"
+done
+
+mkdir $PACKAGE-$UPSTREAM_VERSION/pbuilder
+cp src/pbuilder/pbuilderrc $PACKAGE-$UPSTREAM_VERSION/pbuilder/
+
+mkdir $PACKAGE-$UPSTREAM_VERSION/vsystems
+cp src/vsystems/EXAMPLE-* $PACKAGE-$UPSTREAM_VERSION/vsystems/
+
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter
 cp src/Kontrollsenter/NorNet-*.css src/Kontrollsenter/NorNet-*.js src/Kontrollsenter/NorNet-*.php src/Kontrollsenter/NorNet-*.html src/Kontrollsenter/Forward-*.html $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter
 
