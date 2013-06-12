@@ -60,14 +60,18 @@ cp src/cron-apt/5-install $PACKAGE-$UPSTREAM_VERSION/cron-apt/
 mkdir $PACKAGE-$UPSTREAM_VERSION/grub
 cp src/grub/*_theme $PACKAGE-$UPSTREAM_VERSION/grub/
 cp src/grub/grub-defaults $PACKAGE-$UPSTREAM_VERSION/grub/
+convert -background Gold -fill "#02266b" -pointsize 24 -gravity Center -size 1024x caption:"NorNet version $UPSTREAM_VERSION, built `env LANG=en date`" "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png"
 splashImages=`find src/grub/ -name '*.jpeg' -printf '%f '`
 for splashImage in $splashImages ; do
-   convert "src/grub/$splashImage" \
-           -background Gold -gravity Center -font Times -pointsize 24 \
-           label:"NorNet version $UPSTREAM_VERSION, built `env LANG=en date`" \
-           -append \
-           "$PACKAGE-$UPSTREAM_VERSION/grub/$splashImage"
+   bgSize=`identify -format '%wx%h' "src/grub/$splashImage"`
+   convert -size "$bgSize" -composite -gravity South \
+   "src/grub/$splashImage" \
+   "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png" \
+   "$PACKAGE-$UPSTREAM_VERSION/grub/$splashImage"
+   
+   # cp "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png" "$PACKAGE-$UPSTREAM_VERSION/grub/$splashImage" /tmp/x0/
 done
+rm -f "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png"
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/pbuilder
 cp src/pbuilder/pbuilderrc $PACKAGE-$UPSTREAM_VERSION/pbuilder/
