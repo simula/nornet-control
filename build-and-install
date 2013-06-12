@@ -2,15 +2,15 @@
 
 PACKAGES=""
 if [ "$1" = "node" ] ; then
-   PACKAGES="nornet-api nornet-routing nornet-management nornet-node"
+   PACKAGES="nornet-api nornet-management nornet-node"
 elif [ "$1" = "tunnelbox" ] ; then
-   PACKAGES="nornet-api nornet-routing nornet-management nornet-node nornet-tunnelbox"
+   PACKAGES="nornet-api nornet-management nornet-node nornet-tunnelbox"
 elif [ "$1" = "monitor" ] ; then
-   PACKAGES="nornet-api nornet-routing nornet-management nornet-node nornet-monitor"
+   PACKAGES="nornet-api nornet-management nornet-node nornet-monitor"
 elif [ "$1" = "display" ] ; then
-   PACKAGES="nornet-api nornet-routing nornet-management nornet-node nornet-display"
+   PACKAGES="nornet-api nornet-management nornet-node nornet-display"
 elif [ "$1" = "filesrv" ] ; then
-   PACKAGES="nornet-api nornet-routing nornet-management nornet-node nornet-filesrv"
+   PACKAGES="nornet-api nornet-management nornet-node nornet-filesrv"
 elif [ "$1" = "server" ] ; then
    PACKAGES="nornet-api nornet-management nornet-server"
 else
