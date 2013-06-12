@@ -77,10 +77,10 @@ def getCentralSiteNATRangeString():
       return u''
 
 
-# ###### Get NAT blacklist ##################################################
-def getCentralSiteNATBlacklistString():
+# ###### Get blacklist ######################################################
+def getCentralSiteBlacklistString():
    try:
-      return unicode(NorNet_Configuration['NorNet_CentralSite_NAT_Blacklist'])
+      return unicode(NorNet_Configuration['NorNet_CentralSite_Blacklist'])
    except:
       return u''
 
@@ -729,15 +729,44 @@ def makeFirewallConfiguration(fullSiteList, localSite):
    _writeFWConfig(v4File, v6File, ":INPUT ACCEPT [0:0]\n")
    _writeFWConfig(v4File, v6File, ":FORWARD ACCEPT [0:0]\n")
    _writeFWConfig(v4File, v6File, ":OUTPUT ACCEPT [0:0]\n")
-   _writeFWConfig(v4File, v6File, "COMMIT\n")
-
-   v4File.write("*nat\n")
-   v4File.write(":PREROUTING ACCEPT [0:0]\n")
-   v4File.write(":INPUT ACCEPT [0:0]\n")
-   v4File.write(":OUTPUT ACCEPT [0:0]\n")
-   v4File.write(":POSTROUTING ACCEPT [0:0]\n")
+   _writeFWConfig(v4File, v6File, ":logreject - [0:0]\n")
+   _writeFWConfig(v4File, v6File, "-A logdrop -m limit -j LOG --log-prefix \"Blacklist-Reject: \" --log-level 4\n")
+   _writeFWConfig(v4File, v6File, "-A logdrop -j REJECT\n")
 
    if localSiteIndex == NorNet_SiteIndex_Central:
+      # ====== Get blacklist ================================================
+      natBlacklist       = []
+      natBlacklistString = getCentralSiteBlacklistString()
+      if ((natBlacklistString != None) and (natBlacklistString != u'')):
+         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', natBlacklistString)
+         for i in range(0, len(parameters)):
+            try:
+               natBlacklist.append(IPNetwork(parameters[i]))
+            except Exception as e:
+               error('Bad configuration "' + natBlacklistString + '" for NorNet_CentralSite_Blacklist: ' + str(e))                  
+
+
+      # ====== Write FORWARD chain configuration ============================
+      providerList = getNorNetProvidersForSite(localSite)
+      for onlyDefault in [ True, False ]:
+         for providerIndex in providerList:
+            if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
+                 ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
+               provider = providerList[providerIndex]
+               interfaceName = provider['provider_tunnelbox_interface']
+
+               for blacklistNetwork in natBlacklist:
+                  if blacklistNetwork.version == 4:
+                     v4File.write('-A FORWARD -s ' + str(blacklistNetwork) + ' -o ' + interfaceName + ' -j logreject\n')
+                  else:
+                     v6File.write('-A FORWARD -s ' + str(blacklistNetwork) + ' -o ' + interfaceName + ' -j logreject\n')
+
+
+   _writeFWConfig(v4File, v6File, "COMMIT\n")
+
+
+   if localSiteIndex == NorNet_SiteIndex_Central:
+      # ====== Get NAT range ================================================
       sourceNatRangeString = getCentralSiteNATRangeString()
       sourceNatRange       = None
       if ((sourceNatRangeString != None) and (sourceNatRangeString != u'')):
@@ -752,7 +781,8 @@ def makeFirewallConfiguration(fullSiteList, localSite):
                sourceNatRange = [ a1, a2 ]
          except Exception as e:
             error('Bad configuration "' + sourceNatRangeString + '" for NorNet_CentralSite_NAT_Range: ' + str(e))                  
-      
+
+      # ====== Get target (MASQUERADE or SNAT) ==============================
       if sourceNatRange != None:
          natTraget = 'SNAT'
          if len(sourceNatRange) == 1:
@@ -762,23 +792,26 @@ def makeFirewallConfiguration(fullSiteList, localSite):
       else:
          natTraget = 'MASQUERADE'
 
-         
-      natBlacklistString = getCentralSiteNATBlacklistString()
-      if ((natBlacklistString != None) and (natBlacklistString != u'')):
-         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', natBlacklistString)
-         for i in range(0, len(parameters)):
-            try:
-               blacklistNetwork = IPv4Network(parameters[i])
-               v4File.write('-A POSTROUTING -s ' + str(blacklistNetwork) + ' -m limit --limit 2/min -j LOG --log-prefix "NAT-Blacklist-Reject: " --log-level 4\n')
-               v4File.write('-A POSTROUTING -s ' + str(blacklistNetwork) + ' -j REJECT\n')
-            except Exception as e:
-               error('Bad configuration "' + natBlacklistString + '" for NorNet_CentralSite_NAT_Blacklist: ' + str(e))                  
+      # ====== Write IPv4 NAT configuration =================================
+      v4File.write("*nat\n")
+      v4File.write(":PREROUTING ACCEPT [0:0]\n")
+      v4File.write(":INPUT ACCEPT [0:0]\n")
+      v4File.write(":OUTPUT ACCEPT [0:0]\n")
+      v4File.write(":POSTROUTING ACCEPT [0:0]\n")
+      providerList = getNorNetProvidersForSite(localSite)
+      for onlyDefault in [ True, False ]:
+         for providerIndex in providerList:
+            if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
+                 ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
+               provider = providerList[providerIndex]
+               interfaceName = provider['provider_tunnelbox_interface']
       
-      v4File.write("-A POSTROUTING -s " + str(NorNet_Configuration['NorNet_IPv4Prefix'])       + " -j " + natTraget + "\n")
-      v4File.write("-A POSTROUTING -s " + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + " -j " + natTraget + "\n")
+               v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4Prefix'])       + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
+               v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
 
-   v4File.write("COMMIT\n")
-                       
+      v4File.write("COMMIT\n")
+       
+       
    v6File.close()
    v4File.close()
 

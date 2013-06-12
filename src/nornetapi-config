@@ -75,8 +75,9 @@ NorNet_LocalSite_RADVDServer="on"
 # ====== Central Site only! ===============================
 # NAT public address rnage:
 # NorNet_CentralSite_NAT_Range="<Address1> <AddressN>"
-# NAT blacklist (to prohibit e.g. devices phoning home):
-# NorNet_CentralSite_NAT_Blacklist="Address/Range ..."
+
+# Blacklist (to prohibit e.g. devices phoning home):
+# NorNet_CentralSite_Blacklist="Address/Range ..."
 # =========================================================
 
 
