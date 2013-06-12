@@ -60,7 +60,7 @@ cp src/cron-apt/5-install $PACKAGE-$UPSTREAM_VERSION/cron-apt/
 mkdir $PACKAGE-$UPSTREAM_VERSION/grub
 cp src/grub/*_theme $PACKAGE-$UPSTREAM_VERSION/grub/
 cp src/grub/grub-defaults $PACKAGE-$UPSTREAM_VERSION/grub/
-convert -background Gold -fill "#02266b" -font Helvetica-Bold -pointsize 24 -gravity Center -size 1024x caption:"NorNet version $UPSTREAM_VERSION, built `env LANG=en date`" "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png"
+convert -background Gold -fill "#02266b" -font Helvetica-Bold -pointsize 24 -gravity Center -size 1024x42 caption:"NorNet version $UPSTREAM_VERSION, packaged `env LANG=en date`" "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png"
 splashImages=`find src/grub/ -name '*.jpeg' -printf '%f '`
 for splashImage in $splashImages ; do
    bgSize=`identify -format '%wx%h' "src/grub/$splashImage"`
