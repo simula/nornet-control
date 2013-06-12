@@ -5,7 +5,7 @@
 
 CHANGELOG_HEADER="`head -n1 debian/changelog`"
 PACKAGE=`echo $CHANGELOG_HEADER | sed -e "s/(.*//" -e "s/ //g"`
-UPSTREAM_VERSION=`echo $CHANGELOG_HEADER | sed -e "s/[a-Z0-9 ]*(//" -e "s/).*//" -e "s/[0-9]*$//" -e "s/ //g" -e "s/^[0-9]*://" -e "s/-[^ ]*$//g"`
+UPSTREAM_VERSION=`echo $CHANGELOG_HEADER | sed -e "s/[a-zA-Z0-9 ]*(//" -e "s/).*//" -e "s/[0-9]*$//" -e "s/ //g" -e "s/^[0-9]*://" -e "s/-[^ ]*$//g"`
 
 echo "######################################################################"
 echo "CHANGELOG_HEADER:   $CHANGELOG_HEADER"
