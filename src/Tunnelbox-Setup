@@ -392,7 +392,6 @@ deactivateProvider ()
 load-bootstrap-configuration ()
 {
    TUNNELBOX_SITE_INDEX=
-   TUNNELBOX_NAT_RANGE=
    NORNET_INTERFACE=
    NORNET_NETWORK_IPv4=
    NORNET_NETWORK_IPv6=
@@ -474,14 +473,6 @@ activateTunnelbox ()
       make-address "$NORNET_INTERFACE" "$PROVIDER_LOCAL_TUNNELBOX_IPv6" && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
    done
-   
-   if [ $TUNNELBOX_SITE_INDEX -eq 1 ] ; then
-      log-action "Turning on IPv4 NAT ..."
-      for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 ; do
-         make-nat $nornetNetwork "$TUNNELBOX_NAT_RANGE"
-      done && \
-      log-result $RESULT_GOOD || log-result $RESULT_BAD
-   fi
 }
 
 
@@ -489,13 +480,6 @@ activateTunnelbox ()
 deactivateTunnelbox ()
 {
    log "Deactivating tunnelbox"
-   if [ $TUNNELBOX_SITE_INDEX -eq 1 ] ; then
-      log-action "Turning off IPv4 NAT ..."
-      for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 ; do
-         remove-nat $nornetNetwork "$TUNNELBOX_NAT_RANGE" || true
-      done
-      log-result $RESULT_GOOD
-   fi
    for provider in $ALL_PROVIDER_CONFIGS ; do
       load-provider-configuration "$provider" -active-dir-first && \
       if [ $PROVIDER_IS_DEFAULT_PROVIDER -ne 1 ] ; then

@@ -695,6 +695,76 @@ def makeRegistrarConfiguration(localSite):
 
 
 # ###########################################################################
+# #### Firewall Configuration                                            ####
+# ###########################################################################
+
+
+# ###### Write firewall configuration line to IPv4 and IPv6 files ###########
+def _writeFWConfig(v4File, v6File, line):
+   v4File.write(line)
+   v6File.write(line)
+
+
+# ###### Write firewall rules ###############################################
+def makeFirewallConfiguration(fullSiteList, localSite):
+
+   localSiteIndex    = localSite['site_index']
+   localProviderList = getNorNetProvidersForSite(localSite)
+
+   log('Making firewall configuration for ' + localSite['site_long_name'] + ' ...')
+
+   # ====== Generate tunnelbox configuration file ===========================
+   v4File = codecs.open('firewall4-config', 'w', 'utf-8')
+   v6File = codecs.open('firewall6-config', 'w', 'utf-8')
+   
+   _writeFWConfig(v4File, v6File, "*filter\n")
+   _writeFWConfig(v4File, v6File, ":INPUT ACCEPT [0:0]\n")
+   _writeFWConfig(v4File, v6File, ":FORWARD ACCEPT [0:0]\n")
+   _writeFWConfig(v4File, v6File, ":OUTPUT ACCEPT [0:0]\n")
+   _writeFWConfig(v4File, v6File, "COMMIT\n")
+
+   v4File.write("*nat\n")
+   v4File.write(":PREROUTING ACCEPT [0:0]\n")
+   v4File.write(":INPUT ACCEPT [0:0]\n")
+   v4File.write(":OUTPUT ACCEPT [0:0]\n")
+   v4File.write(":POSTROUTING ACCEPT [0:0]\n")
+
+   if localSiteIndex == NorNet_SiteIndex_Central:
+      sourceNatRangeString = getLocalSiteNATRangeString()
+      sourceNatRange       = None
+      if ((sourceNatRangeString != None) and (sourceNatRangeString != u'')):
+         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', sourceNatRangeString)
+         try:
+            if len(parameters) == 1:
+               a1 = IPv4Address(unquote(parameters[0]))
+               sourceNatRange = [ a1 ]
+            elif len(parameters) > 1:
+               a1 = IPv4Address(unquote(parameters[0]))
+               a2 = IPv4Address(unquote(parameters[1]))
+               sourceNatRange = [ a1, a2 ]
+         except Exception as e:
+            error('Bad configuration "' + sourceNatRangeString + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range values: ' + str(e))                  
+      
+      if sourceNatRange != None:
+         natTraget = 'SNAT'
+         if len(sourceNatRange) == 1:
+            natTraget = 'SNAT ' + str(sourceNatRange[0])
+         else:
+            natTraget = 'SNAT ' + str(sourceNatRange[0]) + '-' + str(sourceNatRange[1])
+      else:
+         natTraget = 'MASQUERADE'
+      
+      v4File.write("-A POSTROUTING -s " + str(NorNet_Configuration['NorNet_IPv4Prefix'])       + " -j " + natTraget + "\n")
+      v4File.write("-A POSTROUTING -s " + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + " -j " + natTraget + "\n")
+
+   v4File.write("COMMIT\n")
+                       
+   v6File.close()
+   v4File.close()
+
+
+
+# ###########################################################################
 # #### Tunnel and Routing Configuration                                  ####
 # ###########################################################################
 
@@ -763,29 +833,6 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
    tunnelboxFile = codecs.open('tunnelbox-config', 'w', 'utf-8')
    
    tunnelboxFile.write('TUNNELBOX_SITE_INDEX=' + str(localSite['site_index']) + '\n')
-   if localSiteIndex == NorNet_SiteIndex_Central:
-      sourceNatRangeString = getLocalSiteNATRangeString()
-      sourceNatRange       = None
-      if ((sourceNatRangeString != None) and (sourceNatRangeString != u'')):
-         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', sourceNatRangeString)
-         try:
-            if len(parameters) == 1:
-               a1 = IPv4Address(unquote(parameters[0]))
-               sourceNatRange = [ a1 ]
-            elif len(parameters) > 1:
-               a1 = IPv4Address(unquote(parameters[0]))
-               a2 = IPv4Address(unquote(parameters[1]))
-               sourceNatRange = [ a1, a2 ]
-         except Exception as e:
-            error('Bad configuration "' + sourceNatRangeString + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range values: ' + str(e))                  
-      
-      tunnelboxFile.write('TUNNELBOX_NAT_RANGE=\"')
-      if sourceNatRange != None:
-         if len(sourceNatRange) == 1:
-            outputFile.write(str(sourceNatRange[0]))
-         else:
-            outputFile.write(str(sourceNatRange[0]) + '-' + str(sourceNatRange[1]))
-      tunnelboxFile.write('\"\n')
 
    tunnelboxFile.write('NORNET_INTERFACE="' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '"\n')
    tunnelboxFile.write('NORNET_NETWORK_IPv4="' + str(NorNet_Configuration['NorNet_IPv4Prefix']) + '"\n')
@@ -957,6 +1004,9 @@ if getLocalNodeNorNetInterface() == None:
 
 # ====== Tunnelbox configuration ============================================
 makeTunnelboxConfiguration(fullSiteList, localSite)
+
+# ====== Firewall configuration =============================================
+makeFirewallConfiguration(fullSiteList, localSite)
 
 
 # ====== Prepare additional nodes for DNS configuration =====================
