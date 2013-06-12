@@ -76,6 +76,11 @@ NorNet_LocalSite_RADVDServer="on"
 # NAT public address rnage:
 # NorNet_CentralSite_NAT_Range="<Address1> <AddressN>"
 
+# Additional external interface
+# (an interface for external Internet access, e.g. via NAT)
+# that is *not* part of the provider configuration:
+# NorNet_CentralSite_AdditionalExtInterface='eth3'
+
 # Blacklist (to prohibit e.g. devices phoning home):
 # NorNet_CentralSite_Blacklist="Address/Range ..."
 # =========================================================

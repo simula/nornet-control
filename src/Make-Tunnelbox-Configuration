@@ -77,6 +77,14 @@ def getCentralSiteNATRangeString():
       return u''
 
 
+# ###### Get name of additional external interface ##########################
+def getCentralSiteAdditionalExtInterface():
+   try:
+      return NorNet_Configuration['NorNet_CentralSite_AdditionalExtInterface']
+   except:
+      return ''
+
+
 # ###### Get blacklist ######################################################
 def getCentralSiteBlacklistString():
    try:
@@ -734,6 +742,18 @@ def makeFirewallConfiguration(fullSiteList, localSite):
    _writeFWConfig(v4File, v6File, "-A logreject -j REJECT\n")
 
    if localSiteIndex == NorNet_SiteIndex_Central:
+      # ====== Get external interfaces ======================================
+      externalInterfaces = set()
+      if getCentralSiteAdditionalExtInterface() != None:
+         externalInterfaces.add(getCentralSiteAdditionalExtInterface())
+      providerList = getNorNetProvidersForSite(localSite)
+      for onlyDefault in [ True, False ]:
+         for providerIndex in providerList:
+            if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
+                 ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
+               provider = providerList[providerIndex]
+               externalInterfaces.add(provider['provider_tunnelbox_interface'])
+
       # ====== Get blacklist ================================================
       natBlacklist       = []
       natBlacklistString = getCentralSiteBlacklistString()
@@ -747,19 +767,12 @@ def makeFirewallConfiguration(fullSiteList, localSite):
 
 
       # ====== Write FORWARD chain configuration ============================
-      providerList = getNorNetProvidersForSite(localSite)
-      for onlyDefault in [ True, False ]:
-         for providerIndex in providerList:
-            if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
-                 ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
-               provider = providerList[providerIndex]
-               interfaceName = provider['provider_tunnelbox_interface']
-
-               for blacklistNetwork in natBlacklist:
-                  if blacklistNetwork.version == 4:
-                     v4File.write('-A FORWARD -s ' + str(blacklistNetwork) + ' -o ' + interfaceName + ' -j logreject\n')
-                  else:
-                     v6File.write('-A FORWARD -s ' + str(blacklistNetwork) + ' -o ' + interfaceName + ' -j logreject\n')
+      for interfaceName in externalInterfaces:
+         for blacklistNetwork in natBlacklist:
+            if blacklistNetwork.version == 4:
+               v4File.write('-A FORWARD -s ' + str(blacklistNetwork) + ' -o ' + interfaceName + ' -j logreject\n')
+            else:
+               v6File.write('-A FORWARD -s ' + str(blacklistNetwork) + ' -o ' + interfaceName + ' -j logreject\n')
 
 
    _writeFWConfig(v4File, v6File, "COMMIT\n")
@@ -798,16 +811,9 @@ def makeFirewallConfiguration(fullSiteList, localSite):
       v4File.write(":INPUT ACCEPT [0:0]\n")
       v4File.write(":OUTPUT ACCEPT [0:0]\n")
       v4File.write(":POSTROUTING ACCEPT [0:0]\n")
-      providerList = getNorNetProvidersForSite(localSite)
-      for onlyDefault in [ True, False ]:
-         for providerIndex in providerList:
-            if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
-                 ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
-               provider = providerList[providerIndex]
-               interfaceName = provider['provider_tunnelbox_interface']
-      
-               v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4Prefix'])       + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
-               v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
+      for interfaceName in externalInterfaces:
+         v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4Prefix'])       + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
+         v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
 
       v4File.write("COMMIT\n")
        
