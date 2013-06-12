@@ -22,19 +22,6 @@ Description: NorNet API
  .
  See http://www.nntb.no for details on NorNet!
 
-Package: nornet-routing
-Architecture: any
-Depends: iputils-ping,
-         iputils-tracepath,
-         traceroute,
-         ${misc:Depends},
-         ${shlibs:Depends}
-Description: NorNet Routing Control
- This package contains the scripts to configure the routing of NorNet
- nodes.
- .
- See http://www.nntb.no for details on NorNet!
-
 Package: nornet-management
 Architecture: any
 Depends: apt-show-versions,
@@ -115,20 +102,24 @@ Description: NorNet Node Control
 
 Package: nornet-tunnelbox
 Architecture: any
+Replaces: nornet-routing
+Conflicts: nornet-routing
 Depends: arpwatch,
          bind9,
          grub2,
          ifupdown,
+         iptables-persistent,
+         iputils-ping,
+         iputils-tracepath,
          isc-dhcp-server,
          nornet-api,
          nornet-management,
          nornet-node,
-         nornet-routing,
          ntp,
          python (>= 2.7),
          radvd,
          snmpd,
-         iptables-persistent,
+         traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Tunnelbox Control
