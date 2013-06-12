@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: http://www.nntb.no/
 Build-Depends: debhelper (>= 9),
+               imagemagick,
                libfile-fcntllock-perl,
                python (>= 2.7),
                python-ipaddr,
@@ -71,6 +72,7 @@ Architecture: any
 Depends: apt-file,
          debhelper,
          devscripts,
+         imagemagick,
          kbuild,
          pbuilder,
          ${misc:Depends},
