@@ -70,9 +70,17 @@ def getLocalSiteRADVDConfigurationString():
 
 
 # ###### Get NAT range ######################################################
-def getLocalSiteNATRangeString():
+def getCentralSiteNATRangeString():
    try:
-      return unicode(NorNet_Configuration['NorNet_LocalSite_NAT_Range'])
+      return unicode(NorNet_Configuration['NorNet_CentralSite_NAT_Range'])
+   except:
+      return u''
+
+
+# ###### Get NAT blacklist ##################################################
+def getCentralSiteNATBlacklistString():
+   try:
+      return unicode(NorNet_Configuration['NorNet_CentralSite_NAT_Blacklist'])
    except:
       return u''
 
@@ -730,7 +738,7 @@ def makeFirewallConfiguration(fullSiteList, localSite):
    v4File.write(":POSTROUTING ACCEPT [0:0]\n")
 
    if localSiteIndex == NorNet_SiteIndex_Central:
-      sourceNatRangeString = getLocalSiteNATRangeString()
+      sourceNatRangeString = getCentralSiteNATRangeString()
       sourceNatRange       = None
       if ((sourceNatRangeString != None) and (sourceNatRangeString != u'')):
          parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', sourceNatRangeString)
@@ -743,7 +751,7 @@ def makeFirewallConfiguration(fullSiteList, localSite):
                a2 = IPv4Address(unquote(parameters[1]))
                sourceNatRange = [ a1, a2 ]
          except Exception as e:
-            error('Bad configuration "' + sourceNatRangeString + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range values: ' + str(e))                  
+            error('Bad configuration "' + sourceNatRangeString + '" for NorNet_CentralSite_NAT_Range: ' + str(e))                  
       
       if sourceNatRange != None:
          natTraget = 'SNAT'
@@ -753,6 +761,18 @@ def makeFirewallConfiguration(fullSiteList, localSite):
             natTraget = 'SNAT ' + str(sourceNatRange[0]) + '-' + str(sourceNatRange[1])
       else:
          natTraget = 'MASQUERADE'
+
+         
+      natBlacklistString = getCentralSiteNATBlacklistString()
+      if ((natBlacklistString != None) and (natBlacklistString != u'')):
+         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', natBlacklistString)
+         for i in range(0, len(parameters)):
+            try:
+               blacklistNetwork = IPv4Network(parameters[i])
+               v4File.write('-A POSTROUTING -s ' + str(blacklistNetwork) + ' -m limit --limit 2/min -j LOG --log-prefix "NAT-Blacklist-Reject: " --log-level 4\n')
+               v4File.write('-A POSTROUTING -s ' + str(blacklistNetwork) + ' -j REJECT\n')
+            except Exception as e:
+               error('Bad configuration "' + natBlacklistString + '" for NorNet_CentralSite_NAT_Blacklist: ' + str(e))                  
       
       v4File.write("-A POSTROUTING -s " + str(NorNet_Configuration['NorNet_IPv4Prefix'])       + " -j " + natTraget + "\n")
       v4File.write("-A POSTROUTING -s " + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + " -j " + natTraget + "\n")
