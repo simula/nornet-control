@@ -55,7 +55,7 @@ if [ "$VNCPASSWORD" = "" ] ; then
    VNCPASSWORD="$NorNet_Server_DefaultVNCPassword"
 fi
 if [ "$OPTIONS" = "default" ] ; then
-   OPTIONS="--audio none --mouse ps2 --keyboard ps2 --usb off --hpet on --pae on --hwvirtex on --nestedpaging on --largepages on --hwvirtexexcl on --vtxvpid on"
+   OPTIONS="--audio none --mouse ps2 --keyboard ps2 --usb off --hpet on --pae on --hwvirtex on --nestedpaging on --largepages on --hwvirtexexcl on --vtxvpid on --nictype1 82545EM --nictype2 82545EM --nictype3 82545EM --nictype4 82545EM"
 fi
 
 if [ `Check-VSystem "$NAME"` != "running" ] ; then

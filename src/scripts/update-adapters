@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo vboxmanage modifyvm "$1" --nictype1 "$2" --nictype2 "$2" --nictype3 "$2" --nictype4 "$2"
+vboxmanage modifyvm "$1" --nictype1 "$2" --nictype2 "$2" --nictype3 "$2" --nictype4 "$2"
