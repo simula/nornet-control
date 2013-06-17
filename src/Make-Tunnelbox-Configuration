@@ -277,8 +277,15 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    expireTime        =   84600
 
    # Already-used node names and aliases
-   usedNodes = { 'tunnelbox' : 1, 'ns' : 1, 'ntp' : 1,
-                 'plc' : 1, 'monitor' : 1, 'nfs' : 1, 'tftp' : 1 }   # Reserved names
+   usedNodes = { 'tunnelbox'     : 1,
+                 'tunnelbox-ext' : 1,
+                 'control-ext'   : 1,
+                 'ns'            : 1,
+                 'ntp'           : 1,
+                 'plc'           : 1,
+                 'monitor'       : 1,
+                 'nfs'           : 1,
+                 'tftp'          : 1 }   # Reserved names
 
    # ====== Get hostname in default provider's network ======================
    localDefaultProvider       = localProviderList[localSite['site_default_provider_index']]
@@ -292,6 +299,10 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    # ====== Some useful aliases =============================================
    if hostName != 'tunnelbox':
       writeRR(siteZoneFile, 'tunnelbox.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
+   if hostName != 'tunnelbox-ext':
+      writeRR(siteZoneFile, 'tunnelbox-ext.' + siteFQDN, 'CNAME',
+              getHostnameFromFQDN(hostNameForDefaultProvider) + '-ext.' + 
+              getDomainFromFQDN(hostNameForDefaultProvider))
    if hostName != 'ns':
       writeRR(siteZoneFile, 'ns.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
    if hostName != 'ntp':
@@ -425,20 +436,28 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                  'CNAME',
                  addProviderToName(node['node_name'], 'all') + '.')
 
-      # ====== Add external addresses of tunnelbox ==========================
-      for localProviderIndex in localProviderList:
-         localProvider = localProviderList[localProviderIndex]
-         if node['node_index'] == NorNet_NodeIndex_Tunnelbox:
-            writeRR(siteZoneFile,
-                    addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']) + '-ext') + '.',
-                    'A', str(localProvider['provider_tunnelbox_ipv4'].ip))
-            if localProvider['provider_tunnelbox_ipv6'].ip != IPv6Address('::'):
-               writeRR(siteZoneFile,
-                       addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']) + '-ext') + '.',
-                       'AAAA', str(localProvider['provider_tunnelbox_ipv6'].ip))
+   # ====== Add external addresses of tunnelbox =============================
+   for localProviderIndex in localProviderList:
+      localProvider = localProviderList[localProviderIndex]
+      writeRR(siteZoneFile,
+              hostName + '-ext.' + str.lower(localSite['site_domain']) + '.',
+              'A', str(localProvider['provider_tunnelbox_ipv4'].ip))
+      writeRR(siteZoneFile,
+              addProviderToName(hostName + '-ext.' + str.lower(localSite['site_domain']), str.lower(localProvider['provider_short_name'])) + '.',
+              'A', str(localProvider['provider_tunnelbox_ipv4'].ip))
+      if localProvider['provider_tunnelbox_ipv6'].ip != IPv6Address('::'):
+         writeRR(siteZoneFile,
+                 hostName + '-ext.' + str.lower(localSite['site_domain']) + '.',
+                 'AAAA', str(localProvider['provider_tunnelbox_ipv6'].ip))
+         writeRR(siteZoneFile,
+                 addProviderToName(hostName + '-ext.' + str.lower(localSite['site_domain']), str.lower(localProvider['provider_short_name'])) + '.',
+                 'AAAA', str(localProvider['provider_tunnelbox_ipv6'].ip))
 
+   # ====== Control box =====================================================
+   # print localSite
+
+   # ====== Tunnels =========================================================
    if localSiteIndex == NorNet_SiteIndex_Central:
-      # ====== Tunnels ======================================================
       for localProviderIndex in localProviderList:
          localProvider = localProviderList[localProviderIndex]
          siteZoneFile.write('\n; ====== ' + localProvider['provider_long_name'] + ' Tunnels ======\n')
@@ -456,7 +475,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                      remoteTunnelIP = makeNorNetTunnelIP(remoteSiteIndex, remoteProviderIndex,
                                                          localSiteIndex, localProviderIndex,
                                                          version)
-		     
+
                      localName  = str.lower(remoteProvider['provider_short_name']) + '.' + getHostnameFromFQDN(str.lower(remoteSite['site_domain'])) + '.' + \
                                   str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain'])  + '.'
                      writeRR(siteZoneFile, localName,
