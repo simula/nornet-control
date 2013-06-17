@@ -11,7 +11,8 @@ run-test ()
    localEndpoint="$1"
    remoteEndpoint="$2"
    
-   traceroute -s $localEndpoint $remoteEndpoint | grep -v "^traceroute " | awk '{ print $1 ": " $2 }'
+   traceroute -q 1 -s $localEndpoint $remoteEndpoint | grep -v "^traceroute " | awk '{ print $1 ": " $2 }'
+   sleep 3
 }
 
 
