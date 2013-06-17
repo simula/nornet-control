@@ -775,7 +775,8 @@ def makeFirewallConfiguration(fullSiteList, localSite):
    _writeFWConfig(v4File, v6File, ":OUTPUT ACCEPT [0:0]\n")
    _writeFWConfig(v4File, v6File, ":logreject - [0:0]\n")
    _writeFWConfig(v4File, v6File, "-A logreject -m limit --limit 2/min -j LOG --log-prefix \"Blacklist-Reject: \" --log-level 4\n")
-   _writeFWConfig(v4File, v6File, "-A logreject -j REJECT --reject-with icmp-admin-prohibited\n")
+   v4File.write("-A logreject -j REJECT --reject-with icmp-admin-prohibited\n")
+   v6File.write("-A logreject -j REJECT --reject-with icmp6-adm-prohibited\n")
 
    if localSiteIndex == NorNet_SiteIndex_Central:
       # ====== Get external interfaces ======================================
