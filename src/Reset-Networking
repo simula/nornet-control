@@ -101,6 +101,11 @@ ip route show
 ip -6 route show
 
 
+log "Cleaning /var/run/network/ifstate"
+echo "" >/var/run/network/ifstate
+find /var/run/network/ -name 'ifup.*' | xargs --no-run-if-empty rm -f
+
+
 if [ -e /etc/init.d/network ] ; then
   log "Restarting networking (Fedora Core)"
   service network stop || true
