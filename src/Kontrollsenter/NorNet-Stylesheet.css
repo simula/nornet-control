@@ -123,75 +123,23 @@ hr {
    background:   red;
 }
 
-.main {
-   position:   fixed;
-   width:      100%;
-   height:     100%;
-   background: #cc0000;
-			overflow:none;
-}
-
 .map {
-   position:   relative;
-   float: left;
+   position:   fixed;
    width:      75%;
-  height:     auto;
-/*    top:        0; */
-   right:      0;
-   bottom:     0;
-   left:       0;*/
-   float:      left;
-   background: #0000cc;
-			 border: solid 1px #f00;
-
-resize:both;
-overflow:scroll;
-	
-}
-
-.controls {
-   position: relative;
-   float: right;
-   width:      auto;
    height:     auto;
    top:        36pt;
-   right:      auto;
-   bottom:     auto;
-   left:       auto;
-   background: #00cc00;
-			
-			 border: solid 1px #f00;
- resize:both;
-overflow:auto; 
-}
-
-.controlbar {
-   position: fixed;
-   width:    auto;
-   height:   auto;
-   top:      36pt;
-   right:    0;
-   bottom:   28pt;
-   left:     auto;
-   overflow: auto;
-}
-
-.clockbar {
-   position: fixed;
-   width:    25%;
-   height:   auto;
-   top:      auto;
-   right:    0;
-   bottom:   28pt;
-   left:     auto;
-   overflow: auto;
+   right:      0;
+   bottom:     28pt;
+   left:       0;
+   float:      left;
+   background: #0000cc;
 }
 
 .sidebar {
    position: fixed;
    width:    25%;
    height:   auto;
-   top:      auto;
+   top:      36pt;
    right:    0;
    bottom:   28pt;
    left:     auto;
