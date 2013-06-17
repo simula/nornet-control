@@ -795,7 +795,7 @@ deactivateProvider ()
             remove-table-selector "$PROVIDER_TABLE" "$PROVIDER_TABLE_TOS_PREF" from "$nornetNetwork" tos "$PROVIDER_TOS" || true
          done && \
       fi && \
-      for providerNetwork in $PROVIDER_LOCAL_NETWORK_IPv4 $PROVIDER_LOCAL_NETWORK_IPv6 ; do
+      for providerNetwork in $PROVIDER_LOCAL_NETWORK_IPv4 $PROVIDER_LOCAL_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv6 ; do
          remove-table-selector main "$PROVIDER_TABLE_DEST_PREF" to "$providerNetwork" || true
       done && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
