@@ -590,6 +590,23 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    zoneConfFile.close()
 
 
+   # ====== Write options file ==============================================
+   optionsConfFile = codecs.open('named.conf.options', 'w', 'utf-8')
+   writeAutoConfigInformation(optionsConfFile, '//')
+
+   optionsConfFile.write("options {\n")
+   optionsConfFile.write("\tdirectory          \"/var/cache/bind\";\n")
+   optionsConfFile.write("\tdnssec-enable      yes;\n")
+   optionsConfFile.write("\tdnssec-validation  auto;\n")
+   optionsConfFile.write("\tdnssec-lookaside   auto;\n")
+   optionsConfFile.write("\tauth-nxdomain      no;   # conform to RFC1035\n")
+   optionsConfFile.write("\tempty-zones-enable yes;\n")
+   optionsConfFile.write("\tlisten-on-v6       { any; };\n")
+   optionsConfFile.write("};\n")
+
+   optionsConfFile.close()
+
+
 
 # ###########################################################################
 # #### DHCP Configuration                                                ####

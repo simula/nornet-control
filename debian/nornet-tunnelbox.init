@@ -154,10 +154,10 @@ check_and_configure ()
       
       # ====== Apply DNS update =============================================
       rm -f zones.conf *.db
-      mv updated-tunnelbox-config/zones.conf updated-tunnelbox-config/*.db .
+      mv updated-tunnelbox-config/named.conf.options updated-tunnelbox-config/zones.conf updated-tunnelbox-config/*.db .
       find /etc/bind -name zones.conf | xargs --no-run-if-empty rm -f
       find /etc/bind -name "*.db" | xargs --no-run-if-empty rm -f
-      cp zones.conf *.db /etc/bind/
+      cp named.conf.options zones.conf *.db /etc/bind/
       if [ ! -e /var/cache/bind/slaves ] ; then
          mkdir /var/cache/bind/slaves
       fi
