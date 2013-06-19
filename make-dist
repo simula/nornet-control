@@ -5,7 +5,7 @@
 
 CHANGELOG_HEADER="`head -n1 debian/changelog`"
 PACKAGE=`echo $CHANGELOG_HEADER | sed -e "s/(.*//" -e "s/ //g"`
-UPSTREAM_VERSION=`echo $CHANGELOG_HEADER | sed -e "s/[a-Z0-9 ]*(//" -e "s/).*//" -e "s/[0-9]*$//" -e "s/ //g" -e "s/^[0-9]*://" -e "s/-[^ ]*$//g"`
+UPSTREAM_VERSION=`echo $CHANGELOG_HEADER | sed -e "s/[a-zA-Z0-9 ]*(//" -e "s/).*//" -e "s/[0-9]*$//" -e "s/ //g" -e "s/^[0-9]*://" -e "s/-[^ ]*$//g"`
 
 echo "######################################################################"
 echo "CHANGELOG_HEADER:   $CHANGELOG_HEADER"
@@ -27,23 +27,15 @@ cp src/*.py $PACKAGE-$UPSTREAM_VERSION
 cp src/*.1 $PACKAGE-$UPSTREAM_VERSION
 cp src/*-config $PACKAGE-$UPSTREAM_VERSION
 cp src/*-constants $PACKAGE-$UPSTREAM_VERSION
+cp src/*-authorized_keys $PACKAGE-$UPSTREAM_VERSION
 cp src/*-config.example $PACKAGE-$UPSTREAM_VERSION
-mkdir $PACKAGE-$UPSTREAM_VERSION/cron-apt
-cp src/cron-apt/5-install $PACKAGE-$UPSTREAM_VERSION/cron-apt/
-mkdir $PACKAGE-$UPSTREAM_VERSION/grub
-cp src/grub/*_theme $PACKAGE-$UPSTREAM_VERSION/grub/
-cp src/grub/grub-defaults $PACKAGE-$UPSTREAM_VERSION/grub/
-cp src/grub/*.jpeg $PACKAGE-$UPSTREAM_VERSION/grub/
-mkdir $PACKAGE-$UPSTREAM_VERSION/pbuilder
-cp src/pbuilder/pbuilderrc $PACKAGE-$UPSTREAM_VERSION/pbuilder/
-mkdir $PACKAGE-$UPSTREAM_VERSION/vsystems
-cp src/vsystems/EXAMPLE-* $PACKAGE-$UPSTREAM_VERSION/vsystems/
+
 cp src/Random-Sleep $PACKAGE-$UPSTREAM_VERSION
-cp src/Routing-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Tunnelbox-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Watchdog $PACKAGE-$UPSTREAM_VERSION
-cp src/System-Maintenance $PACKAGE-$UPSTREAM_VERSION
 cp src/System-Backup $PACKAGE-$UPSTREAM_VERSION
+cp src/System-Info $PACKAGE-$UPSTREAM_VERSION
+cp src/System-Maintenance $PACKAGE-$UPSTREAM_VERSION
 cp src/Start-VSystem $PACKAGE-$UPSTREAM_VERSION
 cp src/Stop-VSystem $PACKAGE-$UPSTREAM_VERSION
 cp src/Check-VSystem $PACKAGE-$UPSTREAM_VERSION
@@ -52,6 +44,7 @@ cp src/Make-VSystem-Template $PACKAGE-$UPSTREAM_VERSION
 cp src/Backup-VSystem $PACKAGE-$UPSTREAM_VERSION
 cp src/Backup-All-VSystems $PACKAGE-$UPSTREAM_VERSION
 cp src/Auto-Update-BootCD $PACKAGE-$UPSTREAM_VERSION
+cp src/Auto-Update-Keys $PACKAGE-$UPSTREAM_VERSION
 cp src/Change-VSystem-CDImage $PACKAGE-$UPSTREAM_VERSION
 cp src/check_* $PACKAGE-$UPSTREAM_VERSION
 cp src/Make-*-Configuration $PACKAGE-$UPSTREAM_VERSION
@@ -60,6 +53,32 @@ cp src/Tunnelbox-Bootstrap-Helper $PACKAGE-$UPSTREAM_VERSION
 cp src/Server-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Convert-HDD-Images $PACKAGE-$UPSTREAM_VERSION
 cp src/Reset-Networking $PACKAGE-$UPSTREAM_VERSION
+
+mkdir $PACKAGE-$UPSTREAM_VERSION/cron-apt
+cp src/cron-apt/5-install $PACKAGE-$UPSTREAM_VERSION/cron-apt/
+
+mkdir $PACKAGE-$UPSTREAM_VERSION/grub
+cp src/grub/*_theme $PACKAGE-$UPSTREAM_VERSION/grub/
+cp src/grub/grub-defaults $PACKAGE-$UPSTREAM_VERSION/grub/
+convert -background Gold -fill "#02266b" -font Helvetica-Bold -pointsize 24 -gravity Center -size 1024x42 caption:"NorNet version $UPSTREAM_VERSION, packaged `env LANG=en date`" "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png"
+splashImages=`find src/grub/ -name '*.jpeg' -printf '%f '`
+for splashImage in $splashImages ; do
+   bgSize=`identify -format '%wx%h' "src/grub/$splashImage"`
+   convert -size "$bgSize" -composite -gravity South \
+   "src/grub/$splashImage" \
+   "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png" \
+   "$PACKAGE-$UPSTREAM_VERSION/grub/$splashImage"
+   
+   # cp "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png" "$PACKAGE-$UPSTREAM_VERSION/grub/$splashImage" /tmp/x0/
+done
+rm -f "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png"
+
+mkdir $PACKAGE-$UPSTREAM_VERSION/pbuilder
+cp src/pbuilder/pbuilderrc $PACKAGE-$UPSTREAM_VERSION/pbuilder/
+
+mkdir $PACKAGE-$UPSTREAM_VERSION/vsystems
+cp src/vsystems/EXAMPLE-* $PACKAGE-$UPSTREAM_VERSION/vsystems/
+
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter
 cp src/Kontrollsenter/NorNet-*.css src/Kontrollsenter/NorNet-*.js src/Kontrollsenter/NorNet-*.php src/Kontrollsenter/NorNet-*.html src/Kontrollsenter/Forward-*.html $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter
 

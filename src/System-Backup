@@ -144,7 +144,7 @@ uname -a >$newBackup/sysinfo/uname.txt
 free >$newBackup/sysinfo/free.txt
 df >$newBackup/sysinfo/df.txt
 if [ -e /usr/sbin/smartctl ] ; then
-   smartctl -a /dev/sda >$newBackup/sysinfo/smart-sda.txt || true
+   /usr/sbin/smartctl -a /dev/sda >$newBackup/sysinfo/smart-sda.txt || true
 fi
 # -----------------------------------------------------------------
 

@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: http://www.nntb.no/
 Build-Depends: debhelper (>= 9),
+               imagemagick,
                libfile-fcntllock-perl,
                python (>= 2.7),
                python-ipaddr,
@@ -22,19 +23,6 @@ Description: NorNet API
  .
  See http://www.nntb.no for details on NorNet!
 
-Package: nornet-routing
-Architecture: any
-Depends: iputils-ping,
-         iputils-tracepath,
-         traceroute,
-         ${misc:Depends},
-         ${shlibs:Depends}
-Description: NorNet Routing Control
- This package contains the scripts to configure the routing of NorNet
- nodes.
- .
- See http://www.nntb.no for details on NorNet!
-
 Package: nornet-management
 Architecture: any
 Depends: apt-show-versions,
@@ -47,6 +35,10 @@ Depends: apt-show-versions,
          gpm,
          idn,
          joe,
+         language-pack-de-base,
+         language-pack-en-base,
+         language-pack-nb-base,
+         libfile-fcntllock-perl,
          lsb-base (>= 3.2-14),
          netperfmeter,
          nfs-common,
@@ -60,10 +52,15 @@ Depends: apt-show-versions,
          subnetcalc,
          tftp,
          traceroute,
+         tshark,
+         update-motd,
+         vlan,
          whois,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
+Conflicts: landscape-common
+Replaces: landscape-common
 Description: NorNet Management Tools
  This metapackage contains basic software nor NorNet node management. The
  software installed provides a common working environment.
@@ -75,6 +72,7 @@ Architecture: any
 Depends: apt-file,
          debhelper,
          devscripts,
+         imagemagick,
          kbuild,
          pbuilder,
          ${misc:Depends},
@@ -106,19 +104,24 @@ Description: NorNet Node Control
 
 Package: nornet-tunnelbox
 Architecture: any
+Replaces: nornet-routing
+Conflicts: nornet-routing
 Depends: arpwatch,
          bind9,
          grub2,
          ifupdown,
+         iptables-persistent,
+         iputils-ping,
+         iputils-tracepath,
          isc-dhcp-server,
          nornet-api,
          nornet-management,
          nornet-node,
-         nornet-routing,
          ntp,
          python (>= 2.7),
          radvd,
          snmpd,
+         traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Tunnelbox Control

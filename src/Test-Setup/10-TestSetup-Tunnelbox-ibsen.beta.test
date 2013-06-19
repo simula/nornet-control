@@ -1,0 +1,7 @@
+NAME="TestSetup-Tunnelbox-ibsen.beta.test"
+STARTDELAY=10
+STOPDELAY=30
+NUMCPUS=1
+MEMORY=512
+OPTIONS="default"
+# AUTO_UPDATE_BOOTCD="default"

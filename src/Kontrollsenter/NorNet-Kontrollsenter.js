@@ -311,13 +311,17 @@ function makeKontrollsenter()
 
    // ====== Initialize everything ==========================================
    setAutoMode(autoMode);
-//    updateClock();
+   updateClock();
    setInterval('updateClock()', 1000);
    setLanguage('NO');
-//    makeMap(latitude, longitude, zoomLevel);
+   makeMap(latitude, longitude, zoomLevel);
 
    // Now, get the NorNet status by using AJAX ...
    requestNorNetStatus();
+
+//    // ====== Automatic page refresh =========================================
+//    setTimeout("location.reload(false);", timeout * 1000);
+//    document.getElementById("footer.title").innerHTML = 'URL='+url;
 }
 
 window.onload = makeKontrollsenter;

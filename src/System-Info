@@ -1,0 +1,114 @@
+#!/bin/bash
+#
+# Print system information
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+# ###### Main program #######################################################
+echo ""
+echo "System information as of `env LANG=en date`"
+echo ""
+
+
+# ====== Get system information =============================================
+hostnameResult=`hostname --fqdn`
+uptimeResult=`env LANG=en uptime`
+
+cpu=`uname -m`
+kernel=`uname -r`
+
+cores=$(grep -c ^processor /proc/cpuinfo 2>/dev/null)
+[ "$cores" -eq "0" ] && cores=1
+systemLoad=`echo "$uptimeResult" | awk -F 'average:' '{ print $2 }'`
+
+if $(echo "$uptimeResult" | grep -E "min|days" >/dev/null); then
+   uptime=`echo "$uptimeResult" | awk '{ print $3 " "$4 }' | sed 's/,//g'`
+else
+   uptime=`echo "$uptimeResult" | awk '{ print $3 " hours" }' | sed 's/,//g'`
+fi
+
+processes=`ps axue | grep -vE "^USER|grep|ps" | wc -l`
+users=`who | awk ' { print $1 }' | sort -ud | wc -l`
+
+memoryUsed=`env LANG=en free -mto | grep Mem: | awk '{ print $3 }'  | xargs printf "%5d"`
+memoryFree=`env LANG=en free -mto | grep Mem: | awk '{ print $4 }'  | xargs printf "%5d"`
+memoryTotal=`env LANG=en free -mto | grep Mem: | awk '{ print $2 }' | xargs printf "%5d"`
+swapUsed=`env LANG=en free -mto | grep Swap | awk '{ print $3 }'    | xargs printf "%5d"`
+swapFree=`env LANG=en free -mto | grep Swap: | awk '{ print $4 }'   | xargs printf "%5d"`
+swapTotal=`env LANG=en free -mto | grep Swap: | awk '{ print $2 }'  | xargs printf "%5d"`
+
+diskRoot=`env LANG=en df /     -hT | grep -vE "^Filesystem|shm" | awk '{ print $6 }'`
+diskHome=`env LANG=en df /home -hT | grep -vE "^Filesystem|shm" | awk '{ print $6 }'`
+
+DISTRIB_ID="Unknown"
+DISTRIB_RELEASE="00.00"
+DISTRIB_CODENAME="unknown"
+if [ -e /etc/lsb-release ] ; then
+   . /etc/lsb-release 
+fi
+
+
+# ====== Print system information ===========================================
+
+echo -en "\x1b[1;34m"
+echo "====================================================="
+echo -en "\x1b[1;31m"
+echo "   #     #                 #     #"
+echo "   ##    #   ####   #####  ##    #  ######   #####"
+echo "   # #   #  #    #  #    # # #   #  #          #"
+echo "   #  #  #  #    #  #    # #  #  #  #####      #"
+echo "   #   # #  #    #  #####  #   # #  #          #"
+echo "   #    ##  #    #  #   #  #    ##  #          #"
+echo "   #     #   ####   #    # #     #  ######     #"
+echo -en "\x1b[1;34m"
+echo "====================================================="
+echo -e "\x1b[0m"
+
+echo -en "\x1b[33m"
+echo "Host:             ${hostnameResult}"
+echo "Uptime:           ${uptime}"
+echo "CPU:              $cores × ${cpu}; ${processes} processes; ${users} users"
+echo "System:           ${DISTRIB_ID} ${DISTRIB_RELEASE} (${DISTRIB_CODENAME}) with ${kernel}"
+echo "Load:             ${systemLoad}"
+echo "Used Memory:      ${memoryUsed} MiB of ${memoryTotal} MiB (${memoryFree} MiB free)"
+echo "Used Swap:        ${swapUsed} MiB of ${swapTotal} MiB (${swapFree} MiB free)"
+echo "Used Diskspace:   ${diskRoot} on /, ${diskHome} on /home"
+echo "Network:"
+
+echo -en "\x1b[34m"
+allInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//"`
+for interface in $allInterfaces ; do
+   if [[ $interface =~ ^eth ]] ; then
+      echo -n "   `printf "%-8s" "${interface}:"` "
+      addressListIPv4=`ip -4 addr show dev $interface | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+)\/([0-9]+) / { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
+      addressListIPv6=`ip -6 addr show dev $interface | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`      
+      if [ "$addressListIPv4" != "" ] ; then
+         for address in $addressListIPv4 ; do
+            echo -n "$address   "
+         done
+      else
+           echo -n "(No IPv4)"
+      fi
+      for address in $addressListIPv6 ; do
+         echo -en "\n            $address "
+      done
+      echo ""      
+   fi
+done
+
+echo -en "\x1b[0m"

@@ -1,0 +1,18 @@
+#!/bin/sh -ev
+
+sudo ls -al
+set -ev
+
+ip -6 addr show dev eth0  | grep "inet6" | awk '{ print $2 }' | xargs -n1 --no-run-if-empty sudo ip -6 addr del dev eth0
+
+sudo service nornet-server stop
+sudo ./System-Maintenance -v
+if [ ! -e /etc/nornet/nornetapi-config ] ; then
+   sudo cp nornetapi-config /etc/nornet/
+fi
+sudo rm -f /etc/grub.d/*nornet*theme || true
+sudo apt-get remove --purge -y '^nornet-*' || true
+sudo dpkg -i nornet-management*.deb nornet-api*.deb nornet-server*.deb || true
+sudo apt-get install -fy
+cd ~
+sudo Server-Setup

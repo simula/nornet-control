@@ -70,9 +70,25 @@ def getLocalSiteRADVDConfigurationString():
 
 
 # ###### Get NAT range ######################################################
-def getLocalSiteNATRangeString():
+def getCentralSiteNATRangeString():
    try:
-      return unicode(NorNet_Configuration['NorNet_LocalSite_NAT_Range'])
+      return unicode(NorNet_Configuration['NorNet_CentralSite_NAT_Range'])
+   except:
+      return u''
+
+
+# ###### Get name of additional external interface ##########################
+def getCentralSiteAdditionalExtInterface():
+   try:
+      return NorNet_Configuration['NorNet_CentralSite_AdditionalExtInterface']
+   except:
+      return ''
+
+
+# ###### Get blacklist ######################################################
+def getCentralSiteBlacklistString():
+   try:
+      return unicode(NorNet_Configuration['NorNet_CentralSite_Blacklist'])
    except:
       return u''
 
@@ -261,8 +277,15 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    expireTime        =   84600
 
    # Already-used node names and aliases
-   usedNodes = { 'tunnelbox' : 1, 'ns' : 1, 'ntp' : 1,
-                 'plc' : 1, 'monitor' : 1, 'nfs' : 1, 'tftp' : 1 }   # Reserved names
+   usedNodes = { 'tunnelbox'     : 1,
+                 'tunnelbox-ext' : 1,
+                 'control-ext'   : 1,
+                 'ns'            : 1,
+                 'ntp'           : 1,
+                 'plc'           : 1,
+                 'monitor'       : 1,
+                 'nfs'           : 1,
+                 'tftp'          : 1 }   # Reserved names
 
    # ====== Get hostname in default provider's network ======================
    localDefaultProvider       = localProviderList[localSite['site_default_provider_index']]
@@ -276,6 +299,10 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
    # ====== Some useful aliases =============================================
    if hostName != 'tunnelbox':
       writeRR(siteZoneFile, 'tunnelbox.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
+   if hostName != 'tunnelbox-ext':
+      writeRR(siteZoneFile, 'tunnelbox-ext.' + siteFQDN, 'CNAME',
+              getHostnameFromFQDN(hostNameForDefaultProvider) + '-ext.' + 
+              getDomainFromFQDN(hostNameForDefaultProvider))
    if hostName != 'ns':
       writeRR(siteZoneFile, 'ns.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
    if hostName != 'ntp':
@@ -409,20 +436,28 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                  'CNAME',
                  addProviderToName(node['node_name'], 'all') + '.')
 
-      # ====== Add external addresses of tunnelbox ==========================
-      for localProviderIndex in localProviderList:
-         localProvider = localProviderList[localProviderIndex]
-         if node['node_index'] == NorNet_NodeIndex_Tunnelbox:
-            writeRR(siteZoneFile,
-                    addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']) + '-ext') + '.',
-                    'A', str(localProvider['provider_tunnelbox_ipv4'].ip))
-            if localProvider['provider_tunnelbox_ipv6'].ip != IPv6Address('::'):
-               writeRR(siteZoneFile,
-                       addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']) + '-ext') + '.',
-                       'AAAA', str(localProvider['provider_tunnelbox_ipv6'].ip))
+   # ====== Add external addresses of tunnelbox =============================
+   for localProviderIndex in localProviderList:
+      localProvider = localProviderList[localProviderIndex]
+      writeRR(siteZoneFile,
+              hostName + '-ext.' + str.lower(localSite['site_domain']) + '.',
+              'A', str(localProvider['provider_tunnelbox_ipv4'].ip))
+      writeRR(siteZoneFile,
+              addProviderToName(hostName + '-ext.' + str.lower(localSite['site_domain']), str.lower(localProvider['provider_short_name'])) + '.',
+              'A', str(localProvider['provider_tunnelbox_ipv4'].ip))
+      if localProvider['provider_tunnelbox_ipv6'].ip != IPv6Address('::'):
+         writeRR(siteZoneFile,
+                 hostName + '-ext.' + str.lower(localSite['site_domain']) + '.',
+                 'AAAA', str(localProvider['provider_tunnelbox_ipv6'].ip))
+         writeRR(siteZoneFile,
+                 addProviderToName(hostName + '-ext.' + str.lower(localSite['site_domain']), str.lower(localProvider['provider_short_name'])) + '.',
+                 'AAAA', str(localProvider['provider_tunnelbox_ipv6'].ip))
 
+   # ====== Control box =====================================================
+   # print localSite
+
+   # ====== Tunnels =========================================================
    if localSiteIndex == NorNet_SiteIndex_Central:
-      # ====== Tunnels ======================================================
       for localProviderIndex in localProviderList:
          localProvider = localProviderList[localProviderIndex]
          siteZoneFile.write('\n; ====== ' + localProvider['provider_long_name'] + ' Tunnels ======\n')
@@ -440,7 +475,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                      remoteTunnelIP = makeNorNetTunnelIP(remoteSiteIndex, remoteProviderIndex,
                                                          localSiteIndex, localProviderIndex,
                                                          version)
-		     
+
                      localName  = str.lower(remoteProvider['provider_short_name']) + '.' + getHostnameFromFQDN(str.lower(remoteSite['site_domain'])) + '.' + \
                                   str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain'])  + '.'
                      writeRR(siteZoneFile, localName,
@@ -553,6 +588,23 @@ def makeBindConfiguration(fullSiteList, fullNodeList, localSite, hostName, addit
                 masterSite)
 
    zoneConfFile.close()
+
+
+   # ====== Write options file ==============================================
+   optionsConfFile = codecs.open('named.conf.options', 'w', 'utf-8')
+   writeAutoConfigInformation(optionsConfFile, '//')
+
+   optionsConfFile.write("options {\n")
+   optionsConfFile.write("\tdirectory          \"/var/cache/bind\";\n")
+   optionsConfFile.write("\tdnssec-enable      yes;\n")
+   optionsConfFile.write("\tdnssec-validation  auto;\n")
+   optionsConfFile.write("\tdnssec-lookaside   auto;\n")
+   optionsConfFile.write("\tauth-nxdomain      no;   # conform to RFC1035\n")
+   optionsConfFile.write("\tempty-zones-enable yes;\n")
+   optionsConfFile.write("\tlisten-on-v6       { any; };\n")
+   optionsConfFile.write("};\n")
+
+   optionsConfFile.close()
 
 
 
@@ -695,6 +747,120 @@ def makeRegistrarConfiguration(localSite):
 
 
 # ###########################################################################
+# #### Firewall Configuration                                            ####
+# ###########################################################################
+
+
+# ###### Write firewall configuration line to IPv4 and IPv6 files ###########
+def _writeFWConfig(v4File, v6File, line):
+   v4File.write(line)
+   v6File.write(line)
+
+
+# ###### Write firewall rules ###############################################
+def makeFirewallConfiguration(fullSiteList, localSite):
+
+   localSiteIndex    = localSite['site_index']
+   localProviderList = getNorNetProvidersForSite(localSite)
+
+   log('Making firewall configuration for ' + localSite['site_long_name'] + ' ...')
+
+   # ====== Generate tunnelbox configuration file ===========================
+   v4File = codecs.open('firewall4-config', 'w', 'utf-8')
+   v6File = codecs.open('firewall6-config', 'w', 'utf-8')
+   
+   _writeFWConfig(v4File, v6File, "*filter\n")
+   _writeFWConfig(v4File, v6File, ":INPUT ACCEPT [0:0]\n")
+   _writeFWConfig(v4File, v6File, ":FORWARD ACCEPT [0:0]\n")
+   _writeFWConfig(v4File, v6File, ":OUTPUT ACCEPT [0:0]\n")
+   _writeFWConfig(v4File, v6File, ":logreject - [0:0]\n")
+   _writeFWConfig(v4File, v6File, "-A logreject -m limit --limit 2/min -j LOG --log-prefix \"Blacklist-Reject: \" --log-level 4\n")
+   v4File.write("-A logreject -j REJECT --reject-with icmp-admin-prohibited\n")
+   v6File.write("-A logreject -j REJECT --reject-with icmp6-adm-prohibited\n")
+
+   if localSiteIndex == NorNet_SiteIndex_Central:
+      # ====== Get external interfaces ======================================
+      externalInterfaces = set()
+      if getCentralSiteAdditionalExtInterface() != '':
+         externalInterfaces.add(getCentralSiteAdditionalExtInterface())
+      providerList = getNorNetProvidersForSite(localSite)
+      for onlyDefault in [ True, False ]:
+         for providerIndex in providerList:
+            if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
+                 ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
+               provider = providerList[providerIndex]
+               externalInterfaces.add(provider['provider_tunnelbox_interface'])
+
+      # ====== Get blacklist ================================================
+      natBlacklist       = []
+      natBlacklistString = getCentralSiteBlacklistString()
+      if ((natBlacklistString != None) and (natBlacklistString != u'')):
+         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', natBlacklistString)
+         for i in range(0, len(parameters)):
+            try:
+               natBlacklist.append(IPNetwork(parameters[i]))
+            except Exception as e:
+               error('Bad configuration "' + natBlacklistString + '" for NorNet_CentralSite_Blacklist: ' + str(e))                  
+
+
+      # ====== Write FORWARD chain configuration ============================
+      for interfaceName in externalInterfaces:
+         for blacklistNetwork in natBlacklist:
+            if blacklistNetwork.version == 4:
+               v4File.write('-A FORWARD -s ' + str(blacklistNetwork) + ' -o ' + interfaceName + ' -j logreject\n')
+            else:
+               v6File.write('-A FORWARD -s ' + str(blacklistNetwork) + ' -o ' + interfaceName + ' -j logreject\n')
+
+
+   _writeFWConfig(v4File, v6File, "COMMIT\n")
+
+
+   if localSiteIndex == NorNet_SiteIndex_Central:
+      # ====== Get NAT range ================================================
+      sourceNatRangeString = getCentralSiteNATRangeString()
+      sourceNatRange       = None
+      if ((sourceNatRangeString != None) and (sourceNatRangeString != u'')):
+         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', sourceNatRangeString)
+         try:
+            if len(parameters) == 1:
+               a1 = IPv4Address(unquote(parameters[0]))
+               sourceNatRange = [ a1 ]
+            elif len(parameters) > 1:
+               a1 = IPv4Address(unquote(parameters[0]))
+               a2 = IPv4Address(unquote(parameters[1]))
+               sourceNatRange = [ a1, a2 ]
+         except Exception as e:
+            error('Bad configuration "' + sourceNatRangeString + '" for NorNet_CentralSite_NAT_Range: ' + str(e))                  
+
+      # ====== Get target (MASQUERADE or SNAT) ==============================
+      if sourceNatRange != None:
+         natTraget = 'SNAT'
+         if len(sourceNatRange) == 1:
+            natTraget = 'SNAT ' + str(sourceNatRange[0])
+         else:
+            natTraget = 'SNAT ' + str(sourceNatRange[0]) + '-' + str(sourceNatRange[1])
+      else:
+         natTraget = 'MASQUERADE'
+
+      # ====== Write IPv4 NAT configuration =================================
+      v4File.write("*nat\n")
+      v4File.write(":PREROUTING ACCEPT [0:0]\n")
+      v4File.write(":INPUT ACCEPT [0:0]\n")
+      v4File.write(":OUTPUT ACCEPT [0:0]\n")
+      v4File.write(":POSTROUTING ACCEPT [0:0]\n")
+      for interfaceName in externalInterfaces:
+         v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4Prefix'])       + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
+         v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
+
+      v4File.write("COMMIT\n")
+       
+       
+   v6File.close()
+   v4File.close()
+
+
+
+# ###########################################################################
 # #### Tunnel and Routing Configuration                                  ####
 # ###########################################################################
 
@@ -763,29 +929,6 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
    tunnelboxFile = codecs.open('tunnelbox-config', 'w', 'utf-8')
    
    tunnelboxFile.write('TUNNELBOX_SITE_INDEX=' + str(localSite['site_index']) + '\n')
-   if localSiteIndex == NorNet_SiteIndex_Central:
-      sourceNatRangeString = getLocalSiteNATRangeString()
-      sourceNatRange       = None
-      if ((sourceNatRangeString != None) and (sourceNatRangeString != u'')):
-         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', sourceNatRangeString)
-         try:
-            if len(parameters) == 1:
-               a1 = IPv4Address(unquote(parameters[0]))
-               sourceNatRange = [ a1 ]
-            elif len(parameters) > 1:
-               a1 = IPv4Address(unquote(parameters[0]))
-               a2 = IPv4Address(unquote(parameters[1]))
-               sourceNatRange = [ a1, a2 ]
-         except Exception as e:
-            error('Bad configuration "' + sourceNatRangeString + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range values: ' + str(e))                  
-      
-      tunnelboxFile.write('TUNNELBOX_NAT_RANGE=\"')
-      if sourceNatRange != None:
-         if len(sourceNatRange) == 1:
-            outputFile.write(str(sourceNatRange[0]))
-         else:
-            outputFile.write(str(sourceNatRange[0]) + '-' + str(sourceNatRange[1]))
-      tunnelboxFile.write('\"\n')
 
    tunnelboxFile.write('NORNET_INTERFACE="' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '"\n')
    tunnelboxFile.write('NORNET_NETWORK_IPv4="' + str(NorNet_Configuration['NorNet_IPv4Prefix']) + '"\n')
@@ -957,6 +1100,9 @@ if getLocalNodeNorNetInterface() == None:
 
 # ====== Tunnelbox configuration ============================================
 makeTunnelboxConfiguration(fullSiteList, localSite)
+
+# ====== Firewall configuration =============================================
+makeFirewallConfiguration(fullSiteList, localSite)
 
 
 # ====== Prepare additional nodes for DNS configuration =====================

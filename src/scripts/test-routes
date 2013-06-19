@@ -1,0 +1,29 @@
+#!/bin/bash
+
+LOCAL_P1=11.255.1.50
+LOCAL_P2=11.254.1.50
+REMOTE_P1=11.255.3.50
+REMOTE_P2=11.254.3.50
+
+
+run-test ()
+{
+   localEndpoint="$1"
+   remoteEndpoint="$2"
+   
+   traceroute -q 1 -s $localEndpoint $remoteEndpoint | grep -v "^traceroute " | awk '{ print $1 ": " $2 }'
+   sleep 3
+}
+
+
+echo "P1 <-> P1:"
+run-test $LOCAL_P1 $REMOTE_P1
+
+echo "P1 <-> P2:"
+run-test $LOCAL_P1 $REMOTE_P2
+
+echo "P2 <-> P1:"
+run-test $LOCAL_P2 $REMOTE_P1
+
+echo "P2 <-> P2:"
+run-test $LOCAL_P2 $REMOTE_P2

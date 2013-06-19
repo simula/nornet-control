@@ -1,4 +1,4 @@
-.\" Routing Setup
+.\" Auto-Update-Keys
 .\" Copyright (C) 2012-2013 by Thomas Dreibholz
 .\"
 .\" This program is free software: you can redistribute it and/or modify
@@ -17,19 +17,34 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd July 27, 2012
-.Dt Routing-Setup 1
-.Os Routing-Setup
+.Dd June 4, 2013
+.Dt Auto-Update-Keys 1
+.Os Auto-Update-Keys
 .\" ###### Name #############################################################
 .Sh NAME
-.Nm Routing-Setup
-.Nd NorNet Routing Setup Script
+.Nm Auto-Update-Keys
+.Nd Automatic SSH authorized_keys updater
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
-.Nm Routing-Setup
+.Nm Auto-Update-Keys
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
-.Nm Routing-Setup
-contains bash functions to help configuring NorNet components. It is not
-called directly.
+.Nm Auto-Update-Keys
+copies all SSH keys in /etc/nornet-authorized-keys to the NorNet User's
+.ssh/authorized_keys file. The keys stored there will be tagged by the
+comment lines "BEGIN-OF-NORNET-KEYS" and "END-OF-NORNET-KEYS". All previously
+stored keys in this section (if existing) will be removed.
+.br
+For security reasons, Auto-Update-Keys only works if
+NorNet_LocalNode_SSHAuthorizedKeysUpdate is set to 1 in /etc/nornetapi-config!
 .Pp
+.\" .\" ###### Arguments ########################################################
+.\" .Sh ARGUMENTS
+.\" .Bl -tag -width indent
+.\" .It ...
+.\" .El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Auto-Update-Keys
+.El

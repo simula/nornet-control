@@ -28,113 +28,53 @@
 <div id="header" class="header">
  <h1 class="h1" style="margin: 0px; padding: 0px;" id="header.title">
   <noscript>
-   <h2 class="h2"><em>NorNet Kontrollsenter</em> requires JavaScript!</h2>
+   <h2 class="h2">NorNet Map requires JavaScript!</h2>
   </noscript>
  </h1>
 </div>
 
 
-<div id="main" class="main">
-
 <div id="map_canvas" class="map"></div>
 
-<div id="controls" class="controls">
+<div id="sidebar" class="sidebar">
+ <h2 class="h2" style="text-align: center;">
+  <span id="languages" class="center">...</span>
+  &nbsp;|&nbsp;
+  <img class="selected" id="automode" onclick="setAutoMode(!autoMode);" src="Graphics/Control/AutoMode.png" alt="Auto Mode" height="21" />
+ </h2>
+ <hr />
 
-<!--			<div id="controlbar" class="controlbar">
-				<h2 class="h2" style="text-align: center;">
-					<span id="languages" class="center">...</span>
-					&nbsp;|&nbsp;
-					<img class="selected" id="automode" onclick="setAutoMode(!autoMode);" src="Graphics/Control/AutoMode.png" alt="Auto Mode" height="21" />
-				</h2>
-				<hr />
-			</div>
+<!--  <h2 class="h2" id="sidebar.clock">Time</h2> -->
+  <p class="center">
+  <object id="analog-clock" class="analog-clock" data="Clock/station-clock.svg" type="image/svg+xml">
+   <param name="dial"               value="din 41091.1"/>
+   <param name="hourHand"           value="siemens"/>
+   <param name="minuteHand"         value="siemens"/>
+   <param name="secondHand"         value="din 41071.2"/>
+   <param name="minuteHandBehavior" value="stepping"/>
+   <param name="secondHandBehavior" value="swinging"/>
+   <param name="secondHandStopToGo" value="yes"/>
+   <param name="secondHandStopTime" value="1.5"/>
+   <param name="backgroundColor"    value="rgba(0,0,0,0)"/>
+   <param name="dialColor"          value="rgb(40,40,40)"/>
+   <param name="hourHandColor"      value="rgb(20,20,20)"/>
+   <param name="minuteHandColor"    value="rgb(20,20,20)"/>
+   <param name="secondHandColor"    value="rgb(160,50,40)"/>
+   <param name="axisCoverColor"     value="rgb(20,20,20)"/>
+   <param name="axisCoverRadius"    value="7"/>
+   <param name="updateInterval"     value="50"/>
+  </object>
+  <br />
+  <span id="clock" class="time">--:--:--</span><br />
+  <span id="date" class="date">--</span>
+  </p>
+ <hr />
 
-			<div id="clockbar" class="clockbar">
-					<h2>Hvor mye er klokka?</h2>
-					<p class="center">
-			  <object id="analog-clock" class="analog-clock" data="Clock/station-clock.svg" type="image/svg+xml">
-						<param name="dial"               value="din 41091.1"/>
-						<param name="hourHand"           value="siemens"/>
-						<param name="minuteHand"         value="siemens"/>
-						<param name="secondHand"         value="din 41071.2"/>
-						<param name="minuteHandBehavior" value="stepping"/>
-						<param name="secondHandBehavior" value="swinging"/>
-						<param name="secondHandStopToGo" value="yes"/>
-						<param name="secondHandStopTime" value="1.5"/>
-						<param name="backgroundColor"    value="rgba(0,0,0,0)"/>
-						<param name="dialColor"          value="rgb(40,40,40)"/>
-						<param name="hourHandColor"      value="rgb(20,20,20)"/>
-						<param name="minuteHandColor"    value="rgb(20,20,20)"/>
-						<param name="secondHandColor"    value="rgb(160,50,40)"/>
-						<param name="axisCoverColor"     value="rgb(20,20,20)"/>
-						<param name="axisCoverRadius"    value="7"/>
-						<param name="updateInterval"     value="50"/>
-					</object>
-					<br />
-					<span id="clock" class="time">--:--:--</span><br />
-					<span id="date" class="date">--</span>
-					</p>
-				<hr />
-			</div>
-				
-			<div id="sidebar" class="sidebar">
-				
-				<h2><a class="h2" href="javascript:void(0)" onclick="zoomToDefaultLocation();"><span id="sidebar.sites">Sites</span></a></h2>
-					<h3 class="h3"><span id="sidebar.sites.problems.title">Problems</span></h3>
-						<span id="sidebar.sites.problems"></span>
-					<h3 class="h3"><span id="sidebar.sites.okay.title">Okay</span></h3>
-						<span id="sidebar.sites.okay"></span>
-						<ul>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-						</ul>
-			</div>-->
-
-			<div>
-			 <h2>Test!</h2>
-						<ul>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-							<li>...</li>
-						</ul>
-		</div>
-			
-</div>
+ <h2><a class="h2" href="javascript:void(0)" onclick="zoomToDefaultLocation();"><span id="sidebar.sites">Sites</span></a></h2>
+  <h3 class="h3"><span id="sidebar.sites.problems.title">Problems</span></h3>
+   <span id="sidebar.sites.problems"></span>
+  <h3 class="h3"><span id="sidebar.sites.okay.title">Okay</span></h3>
+   <span id="sidebar.sites.okay"></span>
 
 </div>
 

@@ -48,8 +48,8 @@ VBoxManage modifyvm "$VM_NAME" --cpus "$CPUS" \
                                --memory "$MEMORY_SIZE" --vram "$VRAM" \
                                --rtcuseutc on --firmware bios --chipset piix3 --acpi on --ioapic on \
                                --hwvirtex on --pae on --boot1 dvd --boot2 disk --boot3 none --boot4 none
-# 82545EM
-VBoxManage modifyvm "$VM_NAME" --nic1 bridged --nictype1 virtio --bridgeadapter1 eth0 --cableconnected1 on --macaddress1 auto
+# virtio
+VBoxManage modifyvm "$VM_NAME" --nic1 bridged --nictype1 82545EM --bridgeadapter1 eth0 --cableconnected1 on --macaddress1 auto
 VBoxManage storagectl "$VM_NAME" --name "SATA Controller" --add sata --controller IntelAHCI --sataportcount 4
 VBoxManage storageattach "$VM_NAME" --storagectl "SATA Controller" --port 0 --device 0 --type dvddrive \
                                     --medium "$ISO_NAME"

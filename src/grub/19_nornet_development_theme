@@ -4,13 +4,13 @@
 . /usr/lib/grub/grub-mkconfig_lib
 
 # We want to work in /boot/grub/ only.
-test -d "${GRUB_PREFIX}"; cd "${GRUB_PREFIX}"
+test -d /boot/grub; cd /boot/grub
 
 # ====== NorNet theme =======================================================
-echo >&2 "Using NorNet File Server theme!"
+echo >&2 "Using NorNet Development theme!"
 
 echo "insmod jpeg"   # Load JPEG reader!
-echo "if background_image `make_system_path_relative_to_its_root "/boot/Splash-FileSrv1-1024x768.jpeg"`; then"
+echo "if background_image `make_system_path_relative_to_its_root "/boot/Splash-Development1-1024x768.jpeg"`; then"
 echo "   set menu_color_normal=yellow/black"
 echo "   set menu_color_highlight=red/light-gray"
 echo "   set color_normal=yellow/black"

@@ -25,22 +25,23 @@ parse-interface-configuration ()
 {
    local inputFile="$1"
    local interface="$2"
+   local outputFile="$3"
 
    local found=0
    local writeMode=0
    while read inputLine ; do      
       if [[ $inputLine =~ ^auto([ \t]*)${interface}(:[0-9]*|)([ \t]*)(.*)$ ]] ; then
-         echo "$inputLine"
+         echo "$inputLine" >>$outputFile
          found=1
       else
          # ====== New interface? =========================================
          if [[ $inputLine =~ ^iface([ \t]*)|^([ \t]*)$ ]] ; then
             if [[ $inputLine =~ ^iface([ \t]*)${interface}(:[0-9]*|)([ \t]*)(.*)$ ]] ; then
                writeMode=1
-               echo "$inputLine"
+               echo "$inputLine" >>$outputFile
             else
                if [ $writeMode -eq 1 ] ; then
-                  echo ""
+                  echo "" >>$outputFile
                   writeMode=0
                fi
             fi
@@ -58,7 +59,7 @@ parse-interface-configuration ()
                # Interface has a gateway => may be control box!
                MAY_BE_CONTROLBOX=1
             fi
-            echo "   $inputLine"
+            echo "   $inputLine" >>$outputFile
          fi
       fi
    done <$inputFile
@@ -107,24 +108,24 @@ Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$I
 AllEthernetInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | grep "^eth" | sed -e "s/:$//" | xargs`
 for interface in $AllEthernetInterfaces ; do
    if [ "$interface" != "lo" -a "$interface" != "$InterfaceName" ] ; then
-      (
-         echo -e "\n# ====== Additional interface $interface ======"
-         if parse-interface-configuration /etc/network/interfaces $interface  ; then
-            echo -e "auto $interface"
-            echo -e "iface $interface inet static"
-            echo -e "   address 0.0.0.0"
-            echo -e "   netmask 0.0.0.0"
-         fi
-      ) >>interfaces.new
+      echo -e "\n# ====== Additional interface $interface ======" >>interfaces.new
+      if parse-interface-configuration /etc/network/interfaces $interface interfaces.new ; then
+         (
+            echo "auto $interface"
+            echo "iface $interface inet static"
+            echo "   address 0.0.0.0"
+            echo "   netmask 0.0.0.0"
+         ) >>interfaces.new
+      fi
    fi
 done
 
 if [ $MAY_BE_CONTROLBOX -ne 0 ] ; then   
    if [ "$ControlBoxMode" != "-controlbox" ] ; then
       echo -e  "\n\x1b[31mWARNING: Node has non-NorNet interface with gateway or small metric!\x1b[0m"
-      echo -en "\x1b[31mWARNING: Are you really sure that this node is NOT a Control Box? [yes/no]\x1b[0m? "
+      echo -en "\x1b[31mWARNING: Are you really sure that this node is NOT a Control Box? [confirm/no]\x1b[0m? "
       read -er applyChanges
-      if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
+      if [ "$applyChanges" != "confirm" -a "$applyChanges" != "c" ] ; then
          exit 1
       fi
    fi
@@ -133,6 +134,7 @@ fi
 
 # ====== Create other configurations ========================================
 ( cat /etc/modules | grep -v "^dummy" ; echo "dummy numdummies=1" ) >modules.new
+( cat /etc/default/rcS | sed -e "s/^FSCKFIX=no/FSCKFIX=yes/g" ) >rcS.new
 
 
 # ====== Compare new configurations to old ones =============================
@@ -145,6 +147,8 @@ echo "------ /etc/ntp.conf:"
 colordiff /etc/ntp.conf ntp.new
 echo "------ /etc/modules:"
 colordiff /etc/modules modules.new
+echo "------ /etc/default/rcS:"
+colordiff /etc/default/rcS rcS.new
 echo "------ /etc/network/interfaces:"
 colordiff /etc/network/interfaces interfaces.new
 echo "------ /etc/auto.master:"
@@ -172,6 +176,7 @@ else
    hostname `cat /etc/hostname`
 
    cp modules.new /etc/modules
+   cp rcS.new /etc/default/rcS
 
    cp /etc/ntp.conf /etc/ntp.conf~
    cp ntp.new /etc/ntp.conf
@@ -187,11 +192,11 @@ else
    cp auto.master /etc/auto.master
    cp auto.nfs /etc/auto.nfs
 
-   service networking restart >/dev/null
-   service ntp restart >/dev/null
-   service autofs restart >/dev/null
+   service networking restart >/dev/null 2>&1
+   service ntp restart >/dev/null 2>&1
+   service autofs restart >/dev/null 2>&1
 fi
-rm -f hostname.new hosts.new ntp.new interfaces.new auto.master auto.nfs
+rm -f hostname.new hosts.new ntp.new modules.new rcS.new interfaces.new auto.master auto.nfs
 
 # Store parameters for later re-run.
 echo "$AllParameters" >$LAST_PARAMETERS_FILE

@@ -33,6 +33,9 @@ NorNet_LocalNode_NorNetInterface='eth0'
 # The NorNet user on this system. By default, it is 'nornetpp'.
 # NorNet_LocalNode_NorNetUser='nornetpp'
 
+# Automatically update the NorNet user's SSH authorized_keys.
+# NorNet_LocalNode_SSHAuthorizedKeysUpdate=1
+
 
 # ###### NorNet Server configuration ########################################
 # The default VNC password to access virtual systems on this host. It may be
@@ -59,15 +62,28 @@ NorNet_LocalSite_DefaultProviderIndex=1
 # This is the local tunnelbox's outer IPv4 address for the default provider:
 NorNet_LocalSite_TBDefaultProviderIPv4='128.39.36.143'
 
-# DHCP Configuration
+# DHCP Configuration:
 NorNet_LocalSite_DHCPServer_Dynamic='"40" "49"'
 
 NorNet_LocalSite_DHCPServer_Static200='"f0:de:f1:11:22:33"'
 NorNet_LocalSite_DHCPServer_Static201='"f0:de:f1:aa:bb:cc" "pxe-boot.img"'
 NorNet_LocalSite_DHCPServer_Static202='"f0:de:f1:aa:bb:ee" "pxe-boot.img" "pxe-server.simula.nornet"'
 
-# RADVD Configuration
+# RADVD Configuration:
 NorNet_LocalSite_RADVDServer="on"
+
+# ====== Central Site only! ===============================
+# NAT public address rnage:
+# NorNet_CentralSite_NAT_Range="<Address1> <AddressN>"
+
+# Additional external interface
+# (an interface for external Internet access, e.g. via NAT)
+# that is *not* part of the provider configuration:
+# NorNet_CentralSite_AdditionalExtInterface='eth3'
+
+# Blacklist (to prohibit e.g. devices phoning home):
+# NorNet_CentralSite_Blacklist="Address/Range ..."
+# =========================================================
 
 
 # ###### Additional DNS names ###############################################

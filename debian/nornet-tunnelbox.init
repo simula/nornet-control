@@ -134,12 +134,30 @@ check_and_configure ()
       mv updated-tunnelbox-config/tunnelbox-config updated-tunnelbox-config/*.provider updated-tunnelbox-config/*.interface? .
       Tunnelbox-Setup start -providers "@ALL"
 
+      # ====== Apply firewall update ========================================
+      rm -f firewall4-config firewall6-config
+      mv updated-tunnelbox-config/firewall4-config .
+      mv updated-tunnelbox-config/firewall6-config .
+      needsFirewallUpdate=0
+      if needs_update firewall4-config /etc/iptables/rules.v4 $1 ; then
+         cp firewall4-config /etc/iptables/rules.v4
+         needsFirewallUpdate=1
+      fi
+      if needs_update firewall6-config /etc/iptables/rules.v6 $1 ; then
+         cp firewall6-config /etc/iptables/rules.v6
+         needsFirewallUpdate=1
+      fi
+      if [ $needsFirewallUpdate -ne 0 ] ; then
+         echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Firewall configuration has been updated => restarting iptables-persistent service ...\x1b[0m"
+         service iptables-persistent restart || true
+      fi
+      
       # ====== Apply DNS update =============================================
       rm -f zones.conf *.db
-      mv updated-tunnelbox-config/zones.conf updated-tunnelbox-config/*.db .
+      mv updated-tunnelbox-config/named.conf.options updated-tunnelbox-config/zones.conf updated-tunnelbox-config/*.db .
       find /etc/bind -name zones.conf | xargs --no-run-if-empty rm -f
       find /etc/bind -name "*.db" | xargs --no-run-if-empty rm -f
-      cp zones.conf *.db /etc/bind/
+      cp named.conf.options zones.conf *.db /etc/bind/
       if [ ! -e /var/cache/bind/slaves ] ; then
          mkdir /var/cache/bind/slaves
       fi
