@@ -944,13 +944,13 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
       localProvider = localProviderList[localProviderIndex]
 
       # ====== Settings for IP rules ========================================
-      externalRoutingTableID         = getTableID(2, localProviderIndex)
+      externalRoutingTableID         = getTableID(1, localProviderIndex)
       externalRoutingTablePref       = getTablePref(localProviderIndex, 0)
       
-      internalRoutingTableID         = getTableID(1, localProviderIndex)
-      internalRoutingTableDestPref   = getTablePref(localProviderIndex, 0)
-      internalRoutingTableTOSPref    = getTablePref(localProviderIndex, 1)
-      internalRoutingTableSourcePref = getTablePref(localProviderIndex, 2)
+      internalRoutingTableID         = getTableID(2, localProviderIndex)
+      internalRoutingTableDestPref   = getTablePref(localProviderIndex, 1)
+      internalRoutingTableTOSPref    = getTablePref(localProviderIndex, 2)
+      internalRoutingTableSourcePref = getTablePref(localProviderIndex, 3)
 
       if pathNumber + 1 < len(NorNet_TOSSettings):
          internalRoutingTableTOS = NorNet_TOSSettings[pathNumber + 1]

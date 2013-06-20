@@ -105,6 +105,10 @@ log "Cleaning /var/run/network/ifstate"
 echo "" >/var/run/network/ifstate
 find /var/run/network/ -name 'ifup.*' | xargs --no-run-if-empty rm -f
 
+log "Clearing /var/run/nornet-tunnelbox"
+find /var/run/nornet-tunnelbox/ -name "*.provider" | xargs --no-run-if-empty rm -f
+find /var/run/nornet-tunnelbox/ -name "*.interface*" | xargs --no-run-if-empty rm -f
+
 
 if [ -e /etc/init.d/network ] ; then
   log "Restarting networking (Fedora Core)"

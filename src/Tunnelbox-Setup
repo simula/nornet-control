@@ -341,39 +341,6 @@ make-address ()
 }
 
 
-# ###### Routing table removal ##############################################
-remove-table ()
-{
-   local tableID="$1"             # Table ID
-
-   # ====== Remove routing table ============================================
-   ip route flush table $1
-
-   # ====== Remove all rules pointing to that table =========================
-   ip rule show | (
-     while read inputLine ; do
-         if [[ $inputLine =~ ([0-9]*):(.*)([ \t]*lookup ${tableID}[ \t]*)$ ]] ; then
-            if [ ${#BASH_REMATCH[*]} -eq 4 ] ; then
-               pref=${BASH_REMATCH[1]}
-               rule=${BASH_REMATCH[2]}
-               lookup=${BASH_REMATCH[3]}
-               ip rule del $rule ${lookup} pref $pref
-            fi
-        fi
-     done
-   )
-}
-
-
-# ###### Routing table setup ################################################
-make-table ()
-{
-   local tableID="$1"             # Table ID
-
-   remove-table $tableID
-}
-
-
 # ###### Add or remove selector for routing table ###########################
 add-or-remove-table-selector ()
 {
@@ -615,28 +582,28 @@ load-interface-configuration ()
       fi
    fi
 
-   if [ ! is-ip-address "$TUNNEL_LOCAL_INNER_ADDRESS" ] ; then
+   if ! is-ip-address "$TUNNEL_LOCAL_INNER_ADDRESS" ; then
       echo 2>&1 "ERROR: Bad interface TUNNEL_LOCAL_INNER_ADDRESS setting in $INTERFACE: $TUNNEL_LOCAL_INNER_ADDRESS!"
       exit 1
    fi
-   if [ ! is-ip-address  "$TUNNEL_REMOTE_INNER_ADDRESS" ] ; then
+   if ! is-ip-address  "$TUNNEL_REMOTE_INNER_ADDRESS" ; then
       echo 2>&1 "ERROR: Bad interface TUNNEL_REMOTE_INNER_ADDRESS setting in $INTERFACE: $TUNNEL_REMOTE_INNER_ADDRESS!"
       exit 1
    fi
-   if [ ! is-ip-address  "$TUNNEL_LOCAL_OUTER_ADDRESS" ] ; then
+   if ! is-ip-address  "$TUNNEL_LOCAL_OUTER_ADDRESS" ; then
       echo 2>&1 "ERROR: Bad interface TUNNEL_LOCAL_OUTER_ADDRESS setting in $INTERFACE: $TUNNEL_LOCAL_OUTER_ADDRESS!"
       exit 1
    fi
-   if [ ! is-ip-address "$TUNNEL_REMOTE_OUTER_ADDRESS" ] ; then
+   if ! is-ip-address "$TUNNEL_REMOTE_OUTER_ADDRESS" ; then
       echo 2>&1 "ERROR: Bad interface TUNNEL_REMOTE_OUTER_ADDRESS setting in $INTERFACE: $TUNNEL_REMOTE_OUTER_ADDRESS!"
       exit 1
    fi   
    
-   if [ ! is-ip-network "$REMOTE_SITE_NETWORK" ] ; then
+   if ! is-ip-network "$REMOTE_SITE_NETWORK" ; then
       echo 2>&1 "ERROR: Bad interface REMOTE_SITE_NETWORK setting in $INTERFACE: $REMOTE_SITE_NETWORK!"
       exit 1
    fi
-   if [ ! is-ip-address "$REMOTE_SITE_TUNNELBOX" ] ; then
+   if ! is-ip-address "$REMOTE_SITE_TUNNELBOX" ; then
       echo 2>&1 "ERROR: Bad interface REMOTE_SITE_TUNNELBOX setting in $INTERFACE: $REMOTE_SITE_TUNNELBOX!"
       exit 1
    fi   
@@ -759,7 +726,7 @@ load-provider-configuration ()
    PROVIDER_INTERNAL_NETWORK_IPv4=
    PROVIDER_INTERNAL_NETWORK_IPv6=
    PROVIDER_INTERNAL_TUNNELBOX_IPv4=
-   PROVIDER_INTERNAL_TUNNELBOX_IPv6=
+   PROVIDER_INTERNAL_TUNNELBOX_IPv6=   
    load-configuration "$PROVIDER" "$OPTION"
    
    # ====== Check the input =================================================
@@ -814,46 +781,46 @@ load-provider-configuration ()
       exit 1
    fi
 
-   if [ ! is-ipv4-network "$PROVIDER_EXTERNAL_NETWORK_IPv4" ] ; then
+   if ! is-ipv4-network "$PROVIDER_EXTERNAL_NETWORK_IPv4" ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_NETWORK_IPv4 setting in $PROVIDER: $PROVIDER_EXTERNAL_NETWORK_IPv4!"
       exit 1
    fi
-   if [ ! is-ipv4-address "$PROVIDER_EXTERNAL_TUNNELBOX_IPv4" ] ; then
+   if ! is-ipv4-address "$PROVIDER_EXTERNAL_TUNNELBOX_IPv4" ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_TUNNELBOX_IPv4 setting in $PROVIDER: $PROVIDER_EXTERNAL_TUNNELBOX_IPv4!"
       exit 1
    fi
-   if [ ! is-ipv4-address "$PROVIDER_EXTERNAL_GATEWAY_IPv4" ] ; then
+   if ! is-ipv4-address "$PROVIDER_EXTERNAL_GATEWAY_IPv4" ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_GATEWAY_IPv4 setting in $PROVIDER: $PROVIDER_EXTERNAL_GATEWAY_IPv4!"
       exit 1
    fi
    if [ "$PROVIDER_EXTERNAL_NETWORK_IPv6" != "" ] ; then
-      if [ ! is-ipv6-network "$PROVIDER_EXTERNAL_NETWORK_IPv6" ] ; then
+      if ! is-ipv6-network "$PROVIDER_EXTERNAL_NETWORK_IPv6" ; then
          echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_NETWORK_IPv6 setting in $PROVIDER: $PROVIDER_EXTERNAL_NETWORK_IPv6!"
          exit 1
       fi
-      if [ ! is-ipv6-address "$PROVIDER_EXTERNAL_TUNNELBOX_IPv6" ] ; then
+      if ! is-ipv6-address "$PROVIDER_EXTERNAL_TUNNELBOX_IPv6" ; then
          echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_TUNNELBOX_IPv6 setting in $PROVIDER: $PROVIDER_EXTERNAL_TUNNELBOX_IPv6!"
          exit 1
       fi
-      if [ ! is-ipv6-address "$PROVIDER_EXTERNAL_GATEWAY_IPv6" ] ; then
+      if ! is-ipv6-address "$PROVIDER_EXTERNAL_GATEWAY_IPv6" ; then
          echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_GATEWAY_IPv6 setting in $PROVIDER: $PROVIDER_EXTERNAL_GATEWAY_IPv6!"
          exit 1
       fi
    fi
 
-   if [ ! is-ipv4-network "$PROVIDER_INTERNAL_NETWORK_IPv4" ] ; then
+   if ! is-ipv4-network "$PROVIDER_INTERNAL_NETWORK_IPv4" ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_INTERNAL_NETWORK_IPv4 setting in $PROVIDER: $PROVIDER_INTERNAL_NETWORK_IPv4!"
       exit 1
    fi
-   if [ ! is-ipv6-network "$PROVIDER_INTERNAL_NETWORK_IPv6" ] ; then
+   if ! is-ipv6-network "$PROVIDER_INTERNAL_NETWORK_IPv6" ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_INTERNAL_NETWORK_IPv6 setting in $PROVIDER: $PROVIDER_INTERNAL_NETWORK_IPv6!"
       exit 1
    fi
-   if [ ! is-ipv4-network "$PROVIDER_INTERNAL_TUNNELBOX_IPv4" ] ; then
+   if ! is-ipv4-network "$PROVIDER_INTERNAL_TUNNELBOX_IPv4" ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_INTERNAL_TUNNELBOX_IPv4 setting in $PROVIDER: $PROVIDER_INTERNAL_TUNNELBOX_IPv4!"
       exit 1
    fi
-   if [ ! is-ipv6-network "$PROVIDER_INTERNAL_TUNNELBOX_IPv6" ] ; then
+   if ! is-ipv6-network "$PROVIDER_INTERNAL_TUNNELBOX_IPv6" ] ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_INTERNAL_TUNNELBOX_IPv6 setting in $PROVIDER: $PROVIDER_INTERNAL_TUNNELBOX_IPv6!"
       exit 1
    fi
@@ -872,14 +839,14 @@ activateProvider ()
       # 2. If TOS is set, select outgoing provider accordingly
       # 3. Otherwise, use source address to determine the outgoing provider.
       
-      for externalAddress in $PROVIDER_EXTERNAL_NETWORK_IPv4 $PROVIDER_EXTERNAL_NETWORK_IPv6 ; do
+      for externalAddress in $PROVIDER_EXTERNAL_TUNNELBOX_IPv4 $PROVIDER_EXTERNAL_TUNNELBOX_IPv6 ; do
          add-table-selector "$PROVIDER_EXTERNAL_TABLE" "$PROVIDER_EXTERNAL_TABLE_PREF" from "$externalAddress"
-      done && \      
+      done && \
       ip -4 route add "$PROVIDER_EXTERNAL_NETWORK_IPv4" dev "$PROVIDER_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" && \
-      ip -4 route add default dev "$PROVIDER_EXTERNAL_GATEWAY_IPv4" table "$PROVIDER_EXTERNAL_TABLE" && \
+      ip -4 route add default dev "$PROVIDER_INTERFACE" via "$PROVIDER_EXTERNAL_GATEWAY_IPv4" table "$PROVIDER_EXTERNAL_TABLE" && \
       if [ "$PROVIDER_EXTERNAL_NETWORK_IPv6" != "" ] ; then
          ip -6 route add "$PROVIDER_EXTERNAL_NETWORK_IPv6" dev "$PROVIDER_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" && \
-         ip -6 route add default dev "$PROVIDER_EXTERNAL_GATEWAY_IPv6" table "$PROVIDER_EXTERNAL_TABLE"
+         ip -6 route add default dev "$PROVIDER_INTERFACE" via "$PROVIDER_EXTERNAL_GATEWAY_IPv6" table "$PROVIDER_EXTERNAL_TABLE"
       fi && \
       for providerNetwork in $PROVIDER_INTERNAL_NETWORK_IPv4 $PROVIDER_INTERNAL_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv6 ; do
          add-table-selector main "$PROVIDER_INTERNAL_TABLE_DEST_PREF" to "$providerNetwork"
@@ -894,6 +861,14 @@ activateProvider ()
       done && \
       cp "$CONFIG_DIRECTORY/$PROVIDER" "$ACTIVE_DIRECTORY/$PROVIDER" && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
+      
+      if [ -e /etc/iproute2/rt_tables ] ; then
+         ( cat /etc/iproute2/rt_tables | grep -v "^$PROVIDER_EXTERNAL_TABLE[ \t]+" | grep -v "^$PROVIDER_INTERNAL_TABLE[ \t]+"
+           echo -e "$PROVIDER_EXTERNAL_TABLE\t$PROVIDER_SHORT_NAME-external"
+           echo -e "$PROVIDER_INTERNAL_TABLE\t$PROVIDER_SHORT_NAME-internal"
+         ) >/etc/iproute2/rt_tables.new
+         mv /etc/iproute2/rt_tables.new /etc/iproute2/rt_tables
+      fi
    else
       log-action "Not activating provider $PROVIDER_SHORT_NAME (selected: $2).\n"
    fi
@@ -908,8 +883,12 @@ deactivateProvider ()
    if [[ "$2" =~ ^@ALL$|^${PROVIDER_SHORT_NAME}$|^${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME}$ ]] ; then
       log-action "Deactivating provider $PROVIDER_LONG_NAME."
 
-      remove-table "$PROVIDER_INTERNAL_TABLE" && \
-      remove-table "$PROVIDER_EXTERNAL_TABLE" && \
+      ip -4 route del "$PROVIDER_EXTERNAL_NETWORK_IPv4" dev "$PROVIDER_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" || true && \
+      ip -4 route del default dev "$PROVIDER_INTERFACE" via "$PROVIDER_EXTERNAL_GATEWAY_IPv4" table "$PROVIDER_EXTERNAL_TABLE" || true && \
+      if [ "$PROVIDER_EXTERNAL_NETWORK_IPv6" != "" ] ; then
+         ip -6 route del "$PROVIDER_EXTERNAL_NETWORK_IPv6" dev "$PROVIDER_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" || true && \
+         ip -6 route del default dev "$PROVIDER_INTERFACE" via "$PROVIDER_EXTERNAL_GATEWAY_IPv6" table "$PROVIDER_EXTERNAL_TABLE" || true
+      fi && \
       for providerNetwork in $PROVIDER_INTERNAL_NETWORK_IPv4 $PROVIDER_INTERNAL_NETWORK_IPv6 ; do
          remove-table-selector "$PROVIDER_INTERNAL_TABLE" "$PROVIDER_INTERNAL_TABLE_SOURCE_PREF" from "$providerNetwork" || true
       done && \
@@ -921,9 +900,9 @@ deactivateProvider ()
       for providerNetwork in $PROVIDER_INTERNAL_NETWORK_IPv4 $PROVIDER_INTERNAL_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv6 ; do
          remove-table-selector main "$PROVIDER_INTERNAL_TABLE_DEST_PREF" to "$providerNetwork" || true
       done && \
-      for externalAddress in $PROVIDER_EXTERNAL_NETWORK_IPv4 $PROVIDER_EXTERNAL_NETWORK_IPv6 ; do
+      for externalAddress in $PROVIDER_EXTERNAL_TUNNELBOX_IPv4 $PROVIDER_EXTERNAL_TUNNELBOX_IPv6 ; do
          remove-table-selector "$PROVIDER_EXTERNAL_TABLE" "$PROVIDER_EXTERNAL_TABLE_PREF" from "$externalAddress"
-      done && \      
+      done && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
 
       rm -f "$ACTIVE_DIRECTORY/$PROVIDER"
@@ -1255,7 +1234,7 @@ fi
 
 
 # ====== Flush route caches =================================================
-if [ "$state" = "stop" -o "$state" = "start" -o "$state" = "restart" ] ; then
+if [ "$state" != "status" ] ; then
    log-action "Flushing route cache ..."
    ip -4 route flush cache && \
    ip -6 route flush cache && \
