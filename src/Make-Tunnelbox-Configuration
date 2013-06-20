@@ -866,8 +866,8 @@ def makeFirewallConfiguration(fullSiteList, localSite):
 
 
 # ###### Get ID for routing table ###########################################
-def getTableID(opIndex):
-   return 1000000 + opIndex
+def getTableID(level, opIndex):
+   return (level * 1000000) + opIndex
 
 
 # ###### Get preference for routing table ###################################
@@ -944,39 +944,59 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
       localProvider = localProviderList[localProviderIndex]
 
       # ====== Settings for IP rules ========================================
-      routingTableID         = getTableID(localProviderIndex)
-      routingTableDestPref   = getTablePref(localProviderIndex, 0)
-      routingTableTOSPref    = getTablePref(localProviderIndex, 1)
-      routingTableSourcePref = getTablePref(localProviderIndex, 2)
+      externalRoutingTableID         = getTableID(2, localProviderIndex)
+      externalRoutingTablePref       = getTablePref(localProviderIndex, 0)
+      
+      internalRoutingTableID         = getTableID(1, localProviderIndex)
+      internalRoutingTableDestPref   = getTablePref(localProviderIndex, 0)
+      internalRoutingTableTOSPref    = getTablePref(localProviderIndex, 1)
+      internalRoutingTableSourcePref = getTablePref(localProviderIndex, 2)
 
       if pathNumber + 1 < len(NorNet_TOSSettings):
-         routingTableTOS = NorNet_TOSSettings[pathNumber + 1]
+         internalRoutingTableTOS = NorNet_TOSSettings[pathNumber + 1]
       else:
-         routingTableTOS = 0x00
+         internalRoutingTableTOS = 0x00
 
 
       # ====== Generate provider configuration file =========================
       providerFile = codecs.open(localProvider['provider_short_name'] + '.provider', 'w', 'utf-8')
-      providerFile.write('PROVIDER_INDEX='             + str(localProvider['provider_index']) + '\n')
-      providerFile.write('PROVIDER_INTERFACE="'        + localProvider['provider_tunnelbox_interface'] + '"\n')
-      providerFile.write('PROVIDER_SHORT_NAME="'       + localProvider['provider_short_name'] + '"\n')
-      providerFile.write('PROVIDER_LONG_NAME="'        + localProvider['provider_long_name']  + '"\n')
-      providerFile.write('PROVIDER_TOS='               + str(routingTableTOS)                 + '\n')
-      providerFile.write('PROVIDER_TABLE='             + str(routingTableID)                  + '\n')
-      providerFile.write('PROVIDER_TABLE_DEST_PREF='   + str(routingTableDestPref)            + '\n')
-      providerFile.write('PROVIDER_TABLE_TOS_PREF='    + str(routingTableTOSPref)             + '\n')
-      providerFile.write('PROVIDER_TABLE_SOURCE_PREF=' + str(routingTableSourcePref)          + '\n')
+      providerFile.write('PROVIDER_INDEX='                      + str(localProvider['provider_index']) + '\n')
+      providerFile.write('PROVIDER_INTERFACE="'                 + localProvider['provider_tunnelbox_interface'] + '"\n')
+      providerFile.write('PROVIDER_SHORT_NAME="'                + localProvider['provider_short_name'] + '"\n')
+      providerFile.write('PROVIDER_LONG_NAME="'                 + localProvider['provider_long_name']  + '"\n')
+      providerFile.write('PROVIDER_TOS='                        + str(internalRoutingTableTOS)         + '\n')
       if localProviderIndex == localSite['site_default_provider_index']:
-         providerFile.write('PROVIDER_IS_DEFAULT_PROVIDER=1\n')
+         providerFile.write('PROVIDER_IS_DEFAULT_PROVIDER=1\n\n')
       else:
-         providerFile.write('PROVIDER_IS_DEFAULT_PROVIDER=0\n')
+         providerFile.write('PROVIDER_IS_DEFAULT_PROVIDER=0\n\n')
+
+      providerFile.write('PROVIDER_EXTERNAL_TABLE='             + str(externalRoutingTableID)         + '\n')
+      providerFile.write('PROVIDER_EXTERNAL_TABLE_PREF='        + str(externalRoutingTablePref)       + '\n')
+      providerFile.write('PROVIDER_INTERNAL_TABLE='             + str(internalRoutingTableID)         + '\n')
+      providerFile.write('PROVIDER_INTERNAL_TABLE_DEST_PREF='   + str(internalRoutingTableDestPref)   + '\n')
+      providerFile.write('PROVIDER_INTERNAL_TABLE_TOS_PREF='    + str(internalRoutingTableTOSPref)    + '\n')
+      providerFile.write('PROVIDER_INTERNAL_TABLE_SOURCE_PREF=' + str(internalRoutingTableSourcePref) + '\n')
+
+      externalNetworkIPv4 = IPv4Network(str(localProvider['provider_tunnelbox_ipv4'].network) + '/' + \
+                                        str(localProvider['provider_tunnelbox_ipv4'].prefixlen))
+      providerFile.write('PROVIDER_EXTERNAL_NETWORK_IPv4="' + str(externalNetworkIPv4) + '"\n')
+      providerFile.write('PROVIDER_EXTERNAL_GATEWAY_IPv4="' + str(localProvider['provider_gateway_ipv4']) + '"\n')
+      providerFile.write('PROVIDER_EXTERNAL_TUNNELBOX_IPv4="' + str(localProvider['provider_tunnelbox_ipv4'].ip) + '"\n')
+
+
+      externalNetworkIPv6 = IPv6Network(str(localProvider['provider_tunnelbox_ipv6'].network) + '/' + \
+                                        str(localProvider['provider_tunnelbox_ipv6'].prefixlen))
+      if externalNetworkIPv6.prefixlen > 0:
+         providerFile.write('PROVIDER_EXTERNAL_NETWORK_IPv6="' + str(externalNetworkIPv6) + '"\n')
+         providerFile.write('PROVIDER_EXTERNAL_GATEWAY_IPv6="' + str(localProvider['provider_gateway_ipv6']) + '"\n')
+         providerFile.write('PROVIDER_EXTERNAL_TUNNELBOX_IPv6="' + str(localProvider['provider_tunnelbox_ipv6'].ip) + '"\n')
 
       providerList = getNorNetProvidersForSite(localSite)
       for version in [ 4, 6 ]:
          localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
-         providerFile.write('PROVIDER_LOCAL_NETWORK_IPv' + str(version) + '="' + str(localProviderNetwork) + '"\n')
+         providerFile.write('PROVIDER_INTERNAL_NETWORK_IPv' + str(version) + '="' + str(localProviderNetwork) + '"\n')
          tunnelboxAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
-         providerFile.write('PROVIDER_LOCAL_TUNNELBOX_IPv' + str(version) + '="' + str(tunnelboxAddress) + '"\n')
+         providerFile.write('PROVIDER_INTERNAL_TUNNELBOX_IPv' + str(version) + '="' + str(tunnelboxAddress) + '"\n')
          
 
       providerFile.close()
@@ -1040,8 +1060,8 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
                metric = 10 + pathNumber
                if remoteProviderIndex == localProviderIndex:
                   metric = 5
-               interfaceFile.write('REMOTE_SITE_METRIC=' + str(metric)         + '\n')
-               interfaceFile.write('ROUTING_TABLE='      + str(routingTableID) + '\n')
+               interfaceFile.write('REMOTE_SITE_METRIC=' + str(metric)                 + '\n')
+               interfaceFile.write('ROUTING_TABLE='      + str(internalRoutingTableID) + '\n')
                
                # ====== Default route =======================================
                # The local provider's default route to the
