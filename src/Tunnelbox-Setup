@@ -1234,7 +1234,7 @@ fi
 
 
 # ====== Flush route caches =================================================
-if [ "$state" = "stop" -o "$state" = "start" -o "$state" = "restart" ] ; then
+if [ "$state" != "status" ] ; then
    log-action "Flushing route cache ..."
    ip -4 route flush cache && \
    ip -6 route flush cache && \
