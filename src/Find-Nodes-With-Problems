@@ -31,11 +31,15 @@ from NorNetAPI   import *;
 # ###### Main program #######################################################
 loginToPLC()
 
-print getPLCServer()
-
 nodeList = getPLCServer().GetNodes(getPLCAuthentication(), 
-              { })
+              { 'boot_state' : 'boot' },
+              [ 'hostname', 'boot_state', 'run_level' ])
 
 for node in nodeList:
    print node
-   #print node['hostname'], node['boot_state']
+   if ((node['boot_state'] == 'boot') and
+       (node['run_level'] == 'failboot')):
+      print "-> reinstall"
+      getPLCServer().UpdateNode(getPLCAuthentication(),
+         node['hostname'],
+         { 'boot_state' : 'reinstall' })
