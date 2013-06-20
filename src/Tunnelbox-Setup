@@ -615,28 +615,28 @@ load-interface-configuration ()
       fi
    fi
 
-   if [ ! is-ip-address "$TUNNEL_LOCAL_INNER_ADDRESS" ] ; then
+   if ! is-ip-address "$TUNNEL_LOCAL_INNER_ADDRESS" ; then
       echo 2>&1 "ERROR: Bad interface TUNNEL_LOCAL_INNER_ADDRESS setting in $INTERFACE: $TUNNEL_LOCAL_INNER_ADDRESS!"
       exit 1
    fi
-   if [ ! is-ip-address  "$TUNNEL_REMOTE_INNER_ADDRESS" ] ; then
+   if ! is-ip-address  "$TUNNEL_REMOTE_INNER_ADDRESS" ; then
       echo 2>&1 "ERROR: Bad interface TUNNEL_REMOTE_INNER_ADDRESS setting in $INTERFACE: $TUNNEL_REMOTE_INNER_ADDRESS!"
       exit 1
    fi
-   if [ ! is-ip-address  "$TUNNEL_LOCAL_OUTER_ADDRESS" ] ; then
+   if ! is-ip-address  "$TUNNEL_LOCAL_OUTER_ADDRESS" ; then
       echo 2>&1 "ERROR: Bad interface TUNNEL_LOCAL_OUTER_ADDRESS setting in $INTERFACE: $TUNNEL_LOCAL_OUTER_ADDRESS!"
       exit 1
    fi
-   if [ ! is-ip-address "$TUNNEL_REMOTE_OUTER_ADDRESS" ] ; then
+   if ! is-ip-address "$TUNNEL_REMOTE_OUTER_ADDRESS" ; then
       echo 2>&1 "ERROR: Bad interface TUNNEL_REMOTE_OUTER_ADDRESS setting in $INTERFACE: $TUNNEL_REMOTE_OUTER_ADDRESS!"
       exit 1
    fi   
    
-   if [ ! is-ip-network "$REMOTE_SITE_NETWORK" ] ; then
+   if ! is-ip-network "$REMOTE_SITE_NETWORK" ; then
       echo 2>&1 "ERROR: Bad interface REMOTE_SITE_NETWORK setting in $INTERFACE: $REMOTE_SITE_NETWORK!"
       exit 1
    fi
-   if [ ! is-ip-address "$REMOTE_SITE_TUNNELBOX" ] ; then
+   if ! is-ip-address "$REMOTE_SITE_TUNNELBOX" ; then
       echo 2>&1 "ERROR: Bad interface REMOTE_SITE_TUNNELBOX setting in $INTERFACE: $REMOTE_SITE_TUNNELBOX!"
       exit 1
    fi   
@@ -814,46 +814,46 @@ load-provider-configuration ()
       exit 1
    fi
 
-   if [ ! is-ipv4-network "$PROVIDER_EXTERNAL_NETWORK_IPv4" ] ; then
+   if ! is-ipv4-network "$PROVIDER_EXTERNAL_NETWORK_IPv4" ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_NETWORK_IPv4 setting in $PROVIDER: $PROVIDER_EXTERNAL_NETWORK_IPv4!"
       exit 1
    fi
-   if [ ! is-ipv4-address "$PROVIDER_EXTERNAL_TUNNELBOX_IPv4" ] ; then
+   if ! is-ipv4-address "$PROVIDER_EXTERNAL_TUNNELBOX_IPv4" ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_TUNNELBOX_IPv4 setting in $PROVIDER: $PROVIDER_EXTERNAL_TUNNELBOX_IPv4!"
       exit 1
    fi
-   if [ ! is-ipv4-address "$PROVIDER_EXTERNAL_GATEWAY_IPv4" ] ; then
+   if ! is-ipv4-address "$PROVIDER_EXTERNAL_GATEWAY_IPv4" ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_GATEWAY_IPv4 setting in $PROVIDER: $PROVIDER_EXTERNAL_GATEWAY_IPv4!"
       exit 1
    fi
    if [ "$PROVIDER_EXTERNAL_NETWORK_IPv6" != "" ] ; then
-      if [ ! is-ipv6-network "$PROVIDER_EXTERNAL_NETWORK_IPv6" ] ; then
+      if ! is-ipv6-network "$PROVIDER_EXTERNAL_NETWORK_IPv6" ; then
          echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_NETWORK_IPv6 setting in $PROVIDER: $PROVIDER_EXTERNAL_NETWORK_IPv6!"
          exit 1
       fi
-      if [ ! is-ipv6-address "$PROVIDER_EXTERNAL_TUNNELBOX_IPv6" ] ; then
+      if ! is-ipv6-address "$PROVIDER_EXTERNAL_TUNNELBOX_IPv6" ; then
          echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_TUNNELBOX_IPv6 setting in $PROVIDER: $PROVIDER_EXTERNAL_TUNNELBOX_IPv6!"
          exit 1
       fi
-      if [ ! is-ipv6-address "$PROVIDER_EXTERNAL_GATEWAY_IPv6" ] ; then
+      if ! is-ipv6-address "$PROVIDER_EXTERNAL_GATEWAY_IPv6" ; then
          echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_GATEWAY_IPv6 setting in $PROVIDER: $PROVIDER_EXTERNAL_GATEWAY_IPv6!"
          exit 1
       fi
    fi
 
-   if [ ! is-ipv4-network "$PROVIDER_INTERNAL_NETWORK_IPv4" ] ; then
+   if ! is-ipv4-network "$PROVIDER_INTERNAL_NETWORK_IPv4" ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_INTERNAL_NETWORK_IPv4 setting in $PROVIDER: $PROVIDER_INTERNAL_NETWORK_IPv4!"
       exit 1
    fi
-   if [ ! is-ipv6-network "$PROVIDER_INTERNAL_NETWORK_IPv6" ] ; then
+   if ! is-ipv6-network "$PROVIDER_INTERNAL_NETWORK_IPv6" ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_INTERNAL_NETWORK_IPv6 setting in $PROVIDER: $PROVIDER_INTERNAL_NETWORK_IPv6!"
       exit 1
    fi
-   if [ ! is-ipv4-network "$PROVIDER_INTERNAL_TUNNELBOX_IPv4" ] ; then
+   if ! is-ipv4-network "$PROVIDER_INTERNAL_TUNNELBOX_IPv4" ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_INTERNAL_TUNNELBOX_IPv4 setting in $PROVIDER: $PROVIDER_INTERNAL_TUNNELBOX_IPv4!"
       exit 1
    fi
-   if [ ! is-ipv6-network "$PROVIDER_INTERNAL_TUNNELBOX_IPv6" ] ; then
+   if ! is-ipv6-network "$PROVIDER_INTERNAL_TUNNELBOX_IPv6" ] ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_INTERNAL_TUNNELBOX_IPv6 setting in $PROVIDER: $PROVIDER_INTERNAL_TUNNELBOX_IPv6!"
       exit 1
    fi
