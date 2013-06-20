@@ -839,7 +839,7 @@ activateProvider ()
       # 2. If TOS is set, select outgoing provider accordingly
       # 3. Otherwise, use source address to determine the outgoing provider.
       
-      for externalAddress in $PROVIDER_EXTERNAL_NETWORK_IPv4 $PROVIDER_EXTERNAL_NETWORK_IPv6 ; do
+      for externalAddress in $PROVIDER_EXTERNAL_TUNNELBOX_IPv4 $PROVIDER_EXTERNAL_TUNNELBOX_IPv6 ; do
          add-table-selector "$PROVIDER_EXTERNAL_TABLE" "$PROVIDER_EXTERNAL_TABLE_PREF" from "$externalAddress"
       done && \
       ip -4 route add "$PROVIDER_EXTERNAL_NETWORK_IPv4" dev "$PROVIDER_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" && \
@@ -900,7 +900,7 @@ deactivateProvider ()
       for providerNetwork in $PROVIDER_INTERNAL_NETWORK_IPv4 $PROVIDER_INTERNAL_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv6 ; do
          remove-table-selector main "$PROVIDER_INTERNAL_TABLE_DEST_PREF" to "$providerNetwork" || true
       done && \
-      for externalAddress in $PROVIDER_EXTERNAL_NETWORK_IPv4 $PROVIDER_EXTERNAL_NETWORK_IPv6 ; do
+      for externalAddress in $PROVIDER_EXTERNAL_TUNNELBOX_IPv4 $PROVIDER_EXTERNAL_TUNNELBOX_IPv6 ; do
          remove-table-selector "$PROVIDER_EXTERNAL_TABLE" "$PROVIDER_EXTERNAL_TABLE_PREF" from "$externalAddress"
       done && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
