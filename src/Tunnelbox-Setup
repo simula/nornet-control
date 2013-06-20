@@ -341,39 +341,6 @@ make-address ()
 }
 
 
-# ###### Routing table removal ##############################################
-remove-table ()
-{
-   local tableID="$1"             # Table ID
-
-   # ====== Remove routing table ============================================
-   ip route flush table $1
-
-   # ====== Remove all rules pointing to that table =========================
-   ip rule show | (
-     while read inputLine ; do
-         if [[ $inputLine =~ ([0-9]*):(.*)([ \t]*lookup ${tableID}[ \t]*)$ ]] ; then
-            if [ ${#BASH_REMATCH[*]} -eq 4 ] ; then
-               pref=${BASH_REMATCH[1]}
-               rule=${BASH_REMATCH[2]}
-               lookup=${BASH_REMATCH[3]}
-               ip rule del $rule ${lookup} pref $pref
-            fi
-        fi
-     done
-   )
-}
-
-
-# ###### Routing table setup ################################################
-make-table ()
-{
-   local tableID="$1"             # Table ID
-
-   remove-table $tableID
-}
-
-
 # ###### Add or remove selector for routing table ###########################
 add-or-remove-table-selector ()
 {
@@ -875,14 +842,11 @@ activateProvider ()
       for externalAddress in $PROVIDER_EXTERNAL_NETWORK_IPv4 $PROVIDER_EXTERNAL_NETWORK_IPv6 ; do
          add-table-selector "$PROVIDER_EXTERNAL_TABLE" "$PROVIDER_EXTERNAL_TABLE_PREF" from "$externalAddress"
       done && \
-      echo "A1" && \
-      ip -4 route add "$PROVIDER_EXTERNAL_NETWORK_IPv4" dev "$PROVIDER_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" || true && \
-      echo "A1b" && \
-      ip -4 route add default dev "$PROVIDER_INTERFACE" via "$PROVIDER_EXTERNAL_GATEWAY_IPv4" table "$PROVIDER_EXTERNAL_TABLE" || true && \
+      ip -4 route add "$PROVIDER_EXTERNAL_NETWORK_IPv4" dev "$PROVIDER_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" && \
+      ip -4 route add default dev "$PROVIDER_INTERFACE" via "$PROVIDER_EXTERNAL_GATEWAY_IPv4" table "$PROVIDER_EXTERNAL_TABLE" && \
       if [ "$PROVIDER_EXTERNAL_NETWORK_IPv6" != "" ] ; then
-         echo "A2"
-         ip -6 route add "$PROVIDER_EXTERNAL_NETWORK_IPv6" dev "$PROVIDER_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" || true && \
-         ip -6 route add default dev "$PROVIDER_INTERFACE" via "$PROVIDER_EXTERNAL_GATEWAY_IPv6" table "$PROVIDER_EXTERNAL_TABLE" || true
+         ip -6 route add "$PROVIDER_EXTERNAL_NETWORK_IPv6" dev "$PROVIDER_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" && \
+         ip -6 route add default dev "$PROVIDER_INTERFACE" via "$PROVIDER_EXTERNAL_GATEWAY_IPv6" table "$PROVIDER_EXTERNAL_TABLE"
       fi && \
       for providerNetwork in $PROVIDER_INTERNAL_NETWORK_IPv4 $PROVIDER_INTERNAL_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv6 ; do
          add-table-selector main "$PROVIDER_INTERNAL_TABLE_DEST_PREF" to "$providerNetwork"
@@ -911,8 +875,12 @@ deactivateProvider ()
    if [[ "$2" =~ ^@ALL$|^${PROVIDER_SHORT_NAME}$|^${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME}$ ]] ; then
       log-action "Deactivating provider $PROVIDER_LONG_NAME."
 
-      remove-table "$PROVIDER_INTERNAL_TABLE" && \
-      remove-table "$PROVIDER_EXTERNAL_TABLE" && \
+      ip -4 route del "$PROVIDER_EXTERNAL_NETWORK_IPv4" dev "$PROVIDER_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" || true && \
+      ip -4 route del default dev "$PROVIDER_INTERFACE" via "$PROVIDER_EXTERNAL_GATEWAY_IPv4" table "$PROVIDER_EXTERNAL_TABLE" || true && \
+      if [ "$PROVIDER_EXTERNAL_NETWORK_IPv6" != "" ] ; then
+         ip -6 route del "$PROVIDER_EXTERNAL_NETWORK_IPv6" dev "$PROVIDER_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" || true && \
+         ip -6 route del default dev "$PROVIDER_INTERFACE" via "$PROVIDER_EXTERNAL_GATEWAY_IPv6" table "$PROVIDER_EXTERNAL_TABLE" || true
+      fi && \
       for providerNetwork in $PROVIDER_INTERNAL_NETWORK_IPv4 $PROVIDER_INTERNAL_NETWORK_IPv6 ; do
          remove-table-selector "$PROVIDER_INTERNAL_TABLE" "$PROVIDER_INTERNAL_TABLE_SOURCE_PREF" from "$providerNetwork" || true
       done && \
