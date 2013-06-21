@@ -892,15 +892,17 @@ def makeGRELinkLocal(networkID,
 
 
 # ###### Add routes to remote tunnel endpoints ##############################
-def makeRemoteTunnelRoutesOnCentralRouter(fullSiteList, version,
-                                          nextHopInterface, nextHopAddress,
-                                          remoteSite):
+# From a site A, ensure that the endpoints of a tunnel B <-> C get reachable.
+# In this example, A = local site, B = remote site, C = peer site.
+def makeRemoteSiteTunnelRoutes(fullSiteList, localSite, version,
+                               nextHopInterface, nextHopAddress,
+                               remoteSite):
    additionalStaticRoutes = []
    outgoingProviderList   = getNorNetProvidersForSite(remoteSite)
    for outgoingProviderIndex in outgoingProviderList:
       outgoingProvider = outgoingProviderList[outgoingProviderIndex]
       for peerSiteIndex in fullSiteList:
-         if peerSiteIndex == NorNet_SiteIndex_Central:   # Not to central site
+         if peerSiteIndex == localSite['site_index']:    # Not to local site
             continue
          if peerSiteIndex == remoteSite['site_index']:   # Not the remote site
             continue
@@ -910,18 +912,11 @@ def makeRemoteTunnelRoutesOnCentralRouter(fullSiteList, version,
          for incomingProviderIndex in peerProviderList:
             incomingProvider = peerProviderList[incomingProviderIndex]
             tunnel           = getTunnel(remoteSite, outgoingProvider, peerSite, incomingProvider, version)
-
             if tunnel['tunnel_local_inner_address'].ip < tunnel['tunnel_remote_inner_address'].ip:
                # Route over remote site, but only if the "lower" side of the tunnel is on this site!
                destNetwork = IPNetwork(str(tunnel['tunnel_local_inner_address'].network) + '/' + \
                                        str(tunnel['tunnel_local_inner_address'].prefixlen))
                additionalStaticRoutes.append(destNetwork)
-               #interfaceFile.write(str(destNetwork))
-               #interfaceFile.write('   make-route ' + \
-                                      #'main ' + \
-                                      #str(tunnel['tunnel_local_inner_address'].network) + '/' + str(tunnel['tunnel_local_inner_address'].prefixlen) + ' ' + \
-                                      #nextHopInterface + ' ' + \
-                                      #str(nextHopAddress) + '   && \\\n')
 
    return additionalStaticRoutes
 
@@ -1080,19 +1075,16 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
                    (remoteProviderIndex == remoteSite['site_default_provider_index'])):
                   interfaceFile.write('TUNNEL_IS_DEFAULT_ROUTE=1\n')
 
-               # ====== Route from Central Site to remote site tunnels ======
-               if ((localSiteIndex == NorNet_SiteIndex_Central) and
-                   (localProviderIndex == localSite['site_default_provider_index']) and
+               # ====== Static routes to tunnels between remote sites =======
+               if ((localProviderIndex == localSite['site_default_provider_index']) and
                    (remoteProviderIndex == remoteSite['site_default_provider_index'])):
-                  additionalStaticRoutes = \
-                     makeRemoteTunnelRoutesOnCentralRouter(
-                        fullSiteList, version,
-                        tunnel['tunnel_interface'], tunnel['tunnel_remote_inner_address'].ip,
-                        remoteSite)
+                  additionalStaticRoutes = makeRemoteSiteTunnelRoutes(
+                     fullSiteList, localSite, version,
+                     tunnel['tunnel_interface'], tunnel['tunnel_remote_inner_address'].ip,
+                     remoteSite)
                   if len(additionalStaticRoutes) > 0:
                      interfaceFile.write("ADDITIONAL_STATIC_ROUTES=\"")
                      firstEntry = True
-                     print  additionalStaticRoutes
                      for additionalStaticRoute in additionalStaticRoutes:
                          if firstEntry == True:
                             firstEntry = False
