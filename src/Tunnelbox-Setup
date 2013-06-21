@@ -558,6 +558,7 @@ load-interface-configuration ()
    REMOTE_SITE_NETWORK=
    REMOTE_SITE_METRIC=
    TUNNEL_IS_DEFAULT_ROUTE=0
+   ADDITIONAL_STATIC_ROUTES=
    load-configuration "$INTERFACE" "$OPTION"
    
    # ====== Check the input =================================================
