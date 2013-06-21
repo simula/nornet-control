@@ -647,6 +647,11 @@ activateInterface ()
       if [ $TUNNEL_IS_DEFAULT_ROUTE -eq 1 ] ; then
          make-route "$ROUTING_TABLE" default "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS"
       fi && \
+      if [ "$ADDITIONAL_STATIC_ROUTES" != "" ] ; then
+         for additionalRoute in $ADDITIONAL_STATIC_ROUTES ; do
+            make-route "$additionalRoute" default "$INTERFACE_NAME" "$REMOTE_SITE_TUNNELBOX"
+         done
+      fi && \
       cp "$CONFIG_DIRECTORY/$INTERFACE" "$ACTIVE_DIRECTORY/$INTERFACE" && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
    else
@@ -667,6 +672,11 @@ deactivateInterface ()
          options="--remove-from-existing-tunnel"
       fi
 
+      if [ "$ADDITIONAL_STATIC_ROUTES" != "" ] ; then
+         for additionalRoute in $ADDITIONAL_STATIC_ROUTES ; do
+            remove-route "$additionalRoute" default "$INTERFACE_NAME" "$REMOTE_SITE_TUNNELBOX" || true
+         done
+      fi && \
       if [ $TUNNEL_IS_DEFAULT_ROUTE -eq 1 ] ; then
          remove-route "$ROUTING_TABLE" default "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" || true
       fi && \
