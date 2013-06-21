@@ -54,7 +54,7 @@ cp src/Server-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Convert-HDD-Images $PACKAGE-$UPSTREAM_VERSION
 cp src/Reset-Networking $PACKAGE-$UPSTREAM_VERSION
 
-echo "NorNet version $UPSTREAM_VERSION, packaged `env LANG=en date`" >$PACKAGE-$UPSTREAM_VERSION/nornet-version
+echo "NorNet $UPSTREAM_VERSION, packaged `env LANG=en date`" >$PACKAGE-$UPSTREAM_VERSION/nornet-version
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/cron-apt
 cp src/cron-apt/5-install $PACKAGE-$UPSTREAM_VERSION/cron-apt/
