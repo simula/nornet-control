@@ -103,7 +103,7 @@ start_virtual_systems ()
       STARTDELAY=0
       NUMCPUS=1
       MEMORY=
-      GETHOSTTIMEDISABLED=1
+      GETHOSTTIMEDISABLED=
       VNCPORT=-1
       VNCPASSWORD="$NorNet_Server_DefaultVNCPassword"
       OPTIONS="default"
