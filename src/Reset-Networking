@@ -118,4 +118,8 @@ elif [ -e /etc/init.d/networking ] ; then
   log "Restarting networking (Debian/Ubuntu)"
   service networking stop || true
   service networking start
+  if [ -e /etc/init.d/iptables-persistent ] ; then
+     service iptables-persistent stop || true
+     service iptables-persistent start
+  fi
 fi
