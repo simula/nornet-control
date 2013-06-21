@@ -61,22 +61,36 @@ DISTRIB_CODENAME="unknown"
 if [ -e /etc/lsb-release ] ; then
    . /etc/lsb-release 
 fi
+NORNET_VERSION=""
+if [ -e /etc/nornet/nornet-version ] ; then
+   NORNET_VERSION=`cat /etc/nornet/nornet-version`
+fi
+
 
 
 # ====== Print system information ===========================================
 
 echo -en "\x1b[1;34m"
-echo "====================================================="
+echo "================================================================="
 echo -en "\x1b[1;31m"
-echo "   #     #                 #     #"
-echo "   ##    #   ####   #####  ##    #  ######   #####"
-echo "   # #   #  #    #  #    # # #   #  #          #"
-echo "   #  #  #  #    #  #    # #  #  #  #####      #"
-echo "   #   # #  #    #  #####  #   # #  #          #"
-echo "   #    ##  #    #  #   #  #    ##  #          #"
-echo "   #     #   ####   #    # #     #  ######     #"
+echo "         #     #                 #     #"
+echo "         ##    #   ####   #####  ##    #  ######   #####"
+echo "         # #   #  #    #  #    # # #   #  #          #"
+echo "         #  #  #  #    #  #    # #  #  #  #####      #"
+echo "         #   # #  #    #  #####  #   # #  #          #"
+echo "         #    ##  #    #  #   #  #    ##  #          #"
+echo "         #     #   ####   #    # #     #  ######     #"
 echo -en "\x1b[1;34m"
-echo "====================================================="
+if [ "$NORNET_VERSION" != "" ] ; then
+   echo ""
+   y=$(( (66-${#NORNET_VERSION}) / 2 ))
+   while [ $y -gt 0 ] ; do
+      echo -n " "
+      let y=$y-1
+   done
+   echo $NORNET_VERSION
+fi
+echo "================================================================="
 echo -e "\x1b[0m"
 
 echo -en "\x1b[33m"
