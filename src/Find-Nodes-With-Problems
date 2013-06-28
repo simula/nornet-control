@@ -32,7 +32,7 @@ from NorNetAPI   import *;
 loginToPLC()
 
 nodeList = getPLCServer().GetNodes(getPLCAuthentication(), 
-              { 'boot_state' : 'boot' },
+              { },
               [ 'hostname', 'boot_state', 'run_level' ])
 
 for node in nodeList:
