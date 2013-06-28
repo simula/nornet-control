@@ -1,12 +1,11 @@
 Source: virtualbox
 Section: contrib/misc
 Priority: optional
-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-XSBC-Original-Maintainer: Debian Virtualbox Team <pkg-virtualbox-devel@lists.alioth.debian.org>
+Maintainer: Debian Virtualbox Team <pkg-virtualbox-devel@lists.alioth.debian.org>
 Uploaders: Michael Meskes <meskes@debian.org>,
            Felix Geyer <fgeyer@debian.org>
 Build-Depends: bzip2,
-               debhelper (>= 7.2.7~),
+               debhelper (>= 9),
                default-jdk,
                dkms (>= 2.1.1.1),
                docbook-xml,
@@ -62,13 +61,12 @@ Build-Depends: bzip2,
                xserver-xorg-dev,
                xsltproc,
                yasm (>= 0.7.0),
-               zlib1g-dev,
-               zip
+               zlib1g-dev
 X-Python-Version: >= 2.5
 Standards-Version: 3.9.4
 Homepage: http://www.virtualbox.org/
-Vcs-Git: git://git.debian.org/git/pkg-virtualbox/virtualbox.git
-Vcs-Browser: http://git.debian.org/?p=pkg-virtualbox/virtualbox.git
+Vcs-Git: git://anonscm.debian.org/pkg-virtualbox/virtualbox.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-virtualbox/virtualbox.git
 
 Package: virtualbox-qt
 Architecture: amd64 i386
@@ -141,7 +139,7 @@ Section: contrib/kernel
 Architecture: all
 Depends: ${misc:Depends},
          build-essential,
-         debhelper (>= 5),
+         debhelper (>= 9),
          bzip2,
          kbuild
 Recommends: module-assistant
@@ -175,7 +173,7 @@ Section: contrib/kernel
 Architecture: all
 Depends: ${misc:Depends}, 
          build-essential,
-         debhelper (>= 5),
+         debhelper (>= 9),
          bzip2,
          kbuild
 Recommends: module-assistant
