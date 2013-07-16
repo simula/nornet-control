@@ -9,6 +9,7 @@ Make-VSystem-Template             /usr/bin
 Server-Setup                      /usr/bin
 Show-VSystems                     /usr/bin
 Start-VSystem                     /usr/bin
+Reset-VSystem                     /usr/bin
 Stop-VSystem                      /usr/bin
 grub/??_nornet_server_theme       /etc/grub.d
 grub/Splash-Server1-1024x768.jpeg /boot
