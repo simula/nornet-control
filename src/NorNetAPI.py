@@ -72,10 +72,10 @@ def loginToPLC(overrideUser = None):
       plc_authentication['AuthString'] = password
 
       if plc_server.AuthCheck(plc_authentication) != 1:
-         error('Authorization at PLC failed!')
+         raise Exception('Authorization at PLC failed!')
 
    except:
-      error('Unable to log into PLC!')
+      raise Exception('Unable to log into PLC!')
 
 
 # ###### Get PLC address ####################################################
