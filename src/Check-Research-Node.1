@@ -1,0 +1,46 @@
+.\" Check Research-Node
+.\" Copyright (C) 2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd July 16, 2013
+.Dt Check-Research-Node 1
+.Os Check-Research-Node
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Check-Research-Node
+.Nd Research Node Status Check Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Check-Research-Node
+VM_name
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Check-Research-Node
+checks the status of a given research node by querying the PLC for it.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+.Bl -tag -width indent
+.It VM_name
+The name of the research node (as used by PLC).
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Check-Research-Node nordberg.simula.nornet
+.El
