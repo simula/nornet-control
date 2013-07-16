@@ -33,6 +33,7 @@ cp src/*-config.example $PACKAGE-$UPSTREAM_VERSION
 cp src/Random-Sleep $PACKAGE-$UPSTREAM_VERSION
 cp src/Tunnelbox-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Watchdog $PACKAGE-$UPSTREAM_VERSION
+cp src/Server-Watchdog $PACKAGE-$UPSTREAM_VERSION
 cp src/System-Backup $PACKAGE-$UPSTREAM_VERSION
 cp src/System-Info $PACKAGE-$UPSTREAM_VERSION
 cp src/System-Maintenance $PACKAGE-$UPSTREAM_VERSION

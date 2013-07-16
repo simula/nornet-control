@@ -20,4 +20,4 @@
 
 
 # ###### Main program #######################################################
-VBoxManage list vms | sed -e "s/ {.*}$//g" -e "s/^\"//g" -e "s/\"$//g"
+VBoxManage list vms 2>&1 | grep "^\"" | sed -e "s/ {.*}$//g" -e "s/^\"//g" -e "s/\"$//g"

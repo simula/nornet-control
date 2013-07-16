@@ -10,3 +10,5 @@ Backup-All-VSystems.1
 Make-VSystem-Template.1
 Change-VSystem-CDImage.1
 Auto-Update-BootCD.1
+Reset-VSystem.1
+Server-Watchdog.1

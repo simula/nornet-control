@@ -1,0 +1,48 @@
+.\" Server-Watchdog
+.\" Copyright (C) 2012-2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd July 16, 2013
+.Dt Server-Watchdog 1
+.Os Server-Watchdog
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Server-Watchdog
+.Nd Server Watchdog
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Server-Watchdog
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Server-Watchdog
+runs the watchdog for all virtual systems that have WATCHDOG_COMMAND set in
+their configuration file. After WATCHDOG_MAXFAILURES failures (default: 15),
+of the set command, the virtual system is restarted.
+An example watchdog command could be
+WATCHDOG_COMMAND="ping -c5 -i0.2 -W3 10.1.1.111" (where 10.1.1.111 is the
+virtual system's IP address).
+.Pp
+.\" ###### Arguments ########################################################
+.\" .Sh ARGUMENTS
+.\" .Bl -tag -width indent
+.\" .El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Server-Watchdog
+.El

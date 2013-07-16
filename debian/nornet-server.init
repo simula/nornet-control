@@ -179,7 +179,7 @@ case "$ACTION" in
      stop_virtual_systems "$MACHINE_NAME" >>$LOGFILE 2>&1
      ;;
   restart)
-     stop_virtual_systems  "$MACHINE_NAME" >>$LOGFILE 2>&1
+     stop_virtual_systems  "$MACHINE_NAME" >>$LOGFILE 2>&1 || true
      start_virtual_systems "$MACHINE_NAME" >>$LOGFILE 2>&1
      ;;
   force-reload)
