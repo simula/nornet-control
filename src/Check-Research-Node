@@ -32,7 +32,7 @@ if len(sys.argv) != 2:
 vmName = sys.argv[1]
 
 try:
-   loginToPLC()
+   loginToPLC(quietMode=True)
 
    nodeList = getPLCServer().GetNodes(getPLCAuthentication(), 
                  { 'hostname' : vmName },
