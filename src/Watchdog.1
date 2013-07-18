@@ -51,6 +51,9 @@ reaches the threshold. The failure action is performed only once!
 .It WATCHDOG_FAILURE_FINAL='some-action'
 If the check fails again after the failure action has been performed, the
 given final action (e.g. reset the whole machine) is taken.
+.It WATCHDOG_LOOPMODE=0|1
+If WATCHDOG_LOOPMODE=1, the failure counter is reset after calling
+WATCHDOG_FAILURE_ACTION. That is, it starts counting from 0 again.
 .El
 .Pp
 .\" .\" ###### Arguments ########################################################
