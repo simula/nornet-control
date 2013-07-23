@@ -121,5 +121,5 @@ if [ $REMOVE_TOOLS -eq 1 ] ; then
    dpkg -P cpqacuxe hpacucli hp-health hponcfg hpsmh
    apt-get remove -y libc6-i386 lib32gcc1 xsltproc
    apt-get autoremove -y
-   rm -rf /opt/hp
+   rm -rf /opt/hp /var/spool/hp-health
 fi
