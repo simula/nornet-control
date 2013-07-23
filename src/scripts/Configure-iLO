@@ -69,6 +69,9 @@ NODE_ADDRESS=`host "$NODE_HOSTNAME.$NODE_DOMAINNAME" | awk '/^[a-zA-Z0-9.-]+ has
 NODE_NETMASK="255.255.255.0"
 NODE_TUNNELBOX=`echo "$NODE_ADDRESS" | sed -e 's/^\([0-9]*\.[0-9]*\.[0-9]*\)\.[0-9]*$/\1.1/g'`
 
+SNMP_ADDRESS="10.1.1.3"   # !!! Update if necessary !!!
+
+
 echo -e "\x1b[34mNew iLO settings from hostname:"
 echo "NODE_HOSTNAME=$NODE_HOSTNAME"
 echo "NODE_DOMAINNAME=$NODE_DOMAINNAME"
@@ -84,8 +87,23 @@ fi
 
 
 # ====== Obtain old iLO configuration and generate new one ==================
+NEW_SNMP_CONFIGURATION=/root/snmp.xml
 OLD_ILO_CONFIGURATION=/root/old-ilo-configuration.xml
 NEW_ILO_CONFIGURATION=/root/new-ilo-configuration.xml
+   
+cat >$NEW_SNMP_CONFIGURATION <<EOF
+<RIBCL VERSION="2.0">
+  <LOGIN USER_LOGIN="Administrator" PASSWORD="password">
+  <RIB_INFO MODE="write">
+    <MOD_SNMP_IM_SETTINGS>
+       <SNMP_ADDRESS_1 VALUE="$SNMP_ADDRESS"/>
+       <RIB_TRAPS VALUE="Y"/>
+    </MOD_SNMP_IM_SETTINGS>
+  </RIB_INFO>
+  </LOGIN>
+</RIBCL>
+EOF
+
 hponcfg -w $OLD_ILO_CONFIGURATION
 sed \
    -e "s/^\(.*<DHCP_ENABLE VALUE = \"\).*\(\"\/>\)$/\1N\2/g" \
@@ -98,21 +116,24 @@ sed \
    -e "s/^\(.*<DNS_NAME VALUE = \"\).*\(\"\/>\)$/\1$NODE_HOSTNAME\2/g" \
    -e "s/^\(.*<DOMAIN_NAME VALUE = \"\).*\(\"\/>\)$/\1$NODE_DOMAINNAME\2/g" \
    < $OLD_ILO_CONFIGURATION >$NEW_ILO_CONFIGURATION
-
+   
 
 # ====== Check and apply changes ============================================
 echo -e "\x1b[34mSettings difference to running configuration:\x1b[0m"
 colordiff $OLD_ILO_CONFIGURATION $NEW_ILO_CONFIGURATION || true
+echo "SNMP_ADDRESS=$SNMP_ADDRESS"
 
 echo -en "\x1b[33mApply changes to iLO configuration?\x1b[0m [yes/no]? "
 read -er applyChanges
 if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
    echo "Skipped!"
 else
+
+   hponcfg -f $NEW_SNMP_CONFIGURATION
    hponcfg -f $NEW_ILO_CONFIGURATION
 fi
 
-rm -f $OLD_ILO_CONFIGURATION $NEW_ILO_CONFIGURATION
+rm -f $NEW_SNMP_CONFIGURATION $OLD_ILO_CONFIGURATION $NEW_ILO_CONFIGURATION
 
 
 # ====== Remove HP tools ====================================================
