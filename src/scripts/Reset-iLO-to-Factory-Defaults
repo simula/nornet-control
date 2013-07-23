@@ -2,6 +2,8 @@
 
 # HP DOWNLOAD URL: http://downloads.linux.hp.com/SDR/repo/mcp/pool/non-free/
 
+sudo apt-get install -y libc6-i386 lib32gcc1 xsltproc
 sudo dpkg -i cpqacuxe_9.25.2-3._amd64.deb hpacucli_9.25.2-3._amd64.deb hp-health_9.2.5.1.5-5._amd64.deb hponcfg_4.0.1.3-6._amd64.deb hpsmh_7.1.2-3.2-4._amd64.deb
 sudo hponcfg -r
 sudo dpkg -P cpqacuxe hpacucli hp-health hponcfg hpsmh
+sudo apt-get remove -y libc6-i386 lib32gcc1 xsltproc
