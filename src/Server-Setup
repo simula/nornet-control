@@ -102,6 +102,7 @@ if [ "$ControlBoxMode" != "" -a "$ControlBoxMode" != "-controlbox" ] ; then
    echo >&2 "ERROR: Bad control box mode! Do you mean -controlbox?"
    exit 1
 fi
+cd /root   # Ensure that configurations a written in /root!
 
 # ====== Create network configuration =======================================
 Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers "$ProviderList" $ControlBoxMode || exit 1
