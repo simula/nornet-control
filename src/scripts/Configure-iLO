@@ -92,19 +92,19 @@ sed \
    -e "s/^\(.*<GATEWAY_IP_ADDRESS VALUE = \"\).*\(\"\/>\)$/\1$NODE_TUNNELBOX\2/g" \
    -e "s/^\(.*<DNS_NAME VALUE = \"\).*\(\"\/>\)$/\1$NODE_HOSTNAME\2/g" \
    -e "s/^\(.*<DOMAIN_NAME VALUE = \"\).*\(\"\/>\)$/\1$NODE_DOMAINNAME\2/g" \
-   < $OLD_ILO_CONFIGURATION >NEW_ILO_CONFIGURATION
+   < $OLD_ILO_CONFIGURATION >$NEW_ILO_CONFIGURATION
 
 
 # ====== Check and apply changes ============================================
 echo -e "\x1b[34mSettings difference to running configuration:\x1b[0m"
-colordiff $OLD_ILO_CONFIGURATION NEW_ILO_CONFIGURATION || true
+colordiff $OLD_ILO_CONFIGURATION $NEW_ILO_CONFIGURATION || true
 
 echo -en "\x1b[33mApply changes to iLO configuration?\x1b[0m [yes/no]? "
 read -er applyChanges
 if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
    echo "Skipped!"
 else
-   hponcfg -f NEW_ILO_CONFIGURATION
+   hponcfg -f $NEW_ILO_CONFIGURATION
 fi
 
 rm -f $OLD_ILO_CONFIGURATION $NEW_ILO_CONFIGURATION
