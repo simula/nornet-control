@@ -128,7 +128,7 @@ read -er applyChanges
 if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
    echo "Skipped!"
 else
-
+   hponcfg -r
    hponcfg -f $NEW_SNMP_CONFIGURATION
    hponcfg -f $NEW_ILO_CONFIGURATION
 fi
