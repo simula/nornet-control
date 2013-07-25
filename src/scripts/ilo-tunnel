@@ -1,0 +1,6 @@
+#!/bin/sh
+
+echo "Remote SSH: $1"
+echo "Remote ILO: $2"
+
+sudo ssh nornetpp@$1 -L 443:$2:443
