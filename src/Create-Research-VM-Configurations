@@ -47,7 +47,7 @@ for vm in $VMs ; do
          echo "STOPDELAY=30"
          echo "OPTIONS=\"default\""
          echo "AUTO_UPDATE_BOOTCD=\"default\""
-         echo "WATCHDOG_COMMAND=\"ping -c5 -i0.2 -W3 $address && Check-Research-Node \\\"\$NAME\"\\\"\""
+         echo "WATCHDOG_COMMAND=\"ping -c5 -i0.2 -W3 $address && Check-Research-Node \\\"\$NAME\\\"\""
       ) >"/etc/nornet/vsystems/70-$vm.new"
    fi
    if [ -e /etc/nornet/vsystems/70-$vm ] ; then
