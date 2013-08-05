@@ -149,6 +149,24 @@ stop_virtual_systems ()
 }
 
 
+# ###### Load kernel modules ################################################
+load_modules ()
+{
+   for vboxModule in vboxdrv vboxnetadp vboxnetflt vboxpci ; do
+      modprobe $vboxModule >>$LOGFILE 2>&1 || true
+   done
+}
+
+
+# ###### Unload kernel modules ##############################################
+unload_modules ()
+{
+   for vboxModule in vboxpci vboxnetflt vboxnetadp vboxdrv ; do
+      rmmod $vboxModule >>$LOGFILE 2>&1 || true
+   done
+}
+
+
 # ###### Show status of virtual systems #####################################
 # $1 = Machine name (or "" for ALL)
 show_status ()
@@ -169,21 +187,19 @@ show_status ()
 case "$ACTION" in
   start)
      # First, ensure that VirtualBox kernel modules are loaded!
-     for vboxModule in vboxdrv vboxnetadp vboxnetflt vboxpci ; do
-        modprobe $vboxModule || true
-     done
+     load_modules
      # Now, start the virtual systems.
      start_virtual_systems "$MACHINE_NAME" >>$LOGFILE 2>&1
      ;;
   stop)
      stop_virtual_systems "$MACHINE_NAME" >>$LOGFILE 2>&1
      # Try to unload VirtualBox kernel modules
-     for vboxModule in vboxpci vboxnetflt vboxnetadp vboxdrv ; do
-        rmmod $vboxModule || true
-     done
+     unload_modules
      ;;
   restart)
      stop_virtual_systems  "$MACHINE_NAME" >>$LOGFILE 2>&1 || true
+     unload_modules
+     load_modules
      start_virtual_systems "$MACHINE_NAME" >>$LOGFILE 2>&1
      ;;
   force-reload)
