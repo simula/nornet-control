@@ -70,9 +70,11 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
    if [ "$OPTIONS" != "" ] ; then
       sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" $OPTIONS || true
    fi
-   if [ "$GETHOSTTIMEDISABLED" != "" ] ; then
-      sudo -u $NorNet_LocalNode_NorNetUser VBoxManage setextradata "$NAME" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" $GETHOSTTIMEDISABLED || true
+   if [ "$GETHOSTTIMEDISABLED" = "" ] ; then
+      GETHOSTTIMEDISABLED=0
    fi
+   sudo -u $NorNet_LocalNode_NorNetUser VBoxManage setextradata "$NAME" \
+      "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" $GETHOSTTIMEDISABLED || true
 
    # ====== Set VNC options =================================================
    vncOptions=

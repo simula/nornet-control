@@ -63,7 +63,11 @@ norNetSetup = [
       [ 104,  5, u'nordberg'    ],
       [ 105,  6, u'solvang'     ],
       [ 106,  7, u'nordreaker'  ],
-      [ 107,  8, u'vestreaker'  ]
+      [ 107,  8, u'vestreaker'  ],
+      [ 108,  9, u'skøyen'      ],
+      [ 109, 10, u'vækerø'      ],
+      [ 110, 11, u'akerselva'   ],
+      [ 111, 12, u'ullern'      ]
    ] },
 
  { 'site_index'        : 2,
@@ -82,8 +86,8 @@ norNetSetup = [
    'site_pcu'          : [ IPv4Address('129.240.66.75'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Uninett', 'eth1', IPv4Network('129.240.66.74/29'), IPv4Address('129.240.66.73'),
-                           IPv6Network('::/0'),             IPv6Address('::') ]
+      [ 'Uninett', 'eth1', IPv4Network('129.240.66.74/29'),       IPv4Address('129.240.66.73'),
+                           IPv6Network('2001:700:100:279::4/64'), IPv6Address('2001:700:100:279::1') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'bjørvika' ],

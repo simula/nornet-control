@@ -121,18 +121,20 @@ NorNet_RoutingMetric_AdditionalProvider = 10   # for the first one; next is +1, 
 
 
 # ###### Read configuration file ############################################
-def loadNorNetConfiguration(includeAPIConfiguration = True):
+def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
    sys.stdout = codecs.getwriter('utf8')(sys.stdout)
    sys.stderr = codecs.getwriter('utf8')(sys.stderr)
    sys.stdin  = codecs.getreader('utf8')(sys.stdin)
 
    # ====== Open constants file =============================================
-   log('Reading constants from ' + NorNetPLC_ConstantsFile + ' ...')   
+   if quietMode == False:
+      log('Reading constants from ' + NorNetPLC_ConstantsFile + ' ...')   
    try:
       constantsFile = codecs.open(NorNetPLC_ConstantsFile, 'r', 'utf-8')
    except:
       try:
-         log('###### Cannot open ' + NorNetPLC_ConstantsFile + ', trying fallback file ' + NorNetPLC_FallbackConstantsFile + ' ... ######')
+         if quietMode == False:
+            log('###### Cannot open ' + NorNetPLC_ConstantsFile + ', trying fallback file ' + NorNetPLC_FallbackConstantsFile + ' ... ######')
          constantsFile = codecs.open(NorNetPLC_FallbackConstantsFile, 'r', 'utf-8')
 
       except Exception as e:
@@ -140,12 +142,14 @@ def loadNorNetConfiguration(includeAPIConfiguration = True):
    
    # ====== Open configuration file =========================================
    if includeAPIConfiguration == True:
-      log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')   
+      if quietMode == False:
+         log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')   
       try:
          configFile = codecs.open(NorNetPLC_ConfigFile, 'r', 'utf-8')
       except:
          try:
-            log('###### Cannot open ' + NorNetPLC_ConfigFile + ', trying fallback file ' + NorNetPLC_FallbackConfigFile + ' ... ######')
+            if quietMode == False:
+               log('###### Cannot open ' + NorNetPLC_ConfigFile + ', trying fallback file ' + NorNetPLC_FallbackConfigFile + ' ... ######')
             configFile = codecs.open(NorNetPLC_FallbackConfigFile, 'r', 'utf-8')
 
          except Exception as e:

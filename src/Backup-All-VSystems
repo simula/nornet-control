@@ -43,7 +43,7 @@ if [ ! -d "$DIRECTORY" ] ; then
    exit 1
 fi
 
-VMs=`sudo -u $NorNet_LocalNode_NorNetUser VBoxManage list vms | sed -e "s/ {.*}$//g" -e "s/^\"//g" -e "s/\"$//g"`
+VMs=`sudo -u $NorNet_LocalNode_NorNetUser VBoxManage list vms 2>&1 | grep "^\"" | sed -e "s/ {.*}$//g" -e "s/^\"//g" -e "s/\"$//g"`
 for vm in $VMs ; do
    echo -e "\n\x1b[34m`date +%FT%H:%M:%S`: ====== Backup for virtual system ${vm} ... ======\x1b[0m\n"
  

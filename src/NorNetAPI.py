@@ -42,12 +42,12 @@ from NorNetProviderSetup import *;
 
 
 # ###### Log into PLC #######################################################
-def loginToPLC(overrideUser = None):
+def loginToPLC(overrideUser = None, quietMode = False):
    global plc_server
    global plc_authentication
 
    # ====== Obtain configuration from configuration file ====================
-   loadNorNetConfiguration()
+   loadNorNetConfiguration(quietMode = quietMode)
 
    # ====== Log into PLC ====================================================
    plcAddress = getPLCAddress()
@@ -58,7 +58,8 @@ def loginToPLC(overrideUser = None):
       user     = NorNet_Configuration['NorNetPLC_User']
       password = NorNet_Configuration['NorNetPLC_Password']
    
-   log('Logging into PLC ' + user + '/' + str(plcAddress) + ' ...')
+   if quietMode == False:
+      log('Logging into PLC ' + user + '/' + str(plcAddress) + ' ...')
    try:
       apiURL = 'https://' + str(plcAddress) + '/PLCAPI/'
       if sys.version_info < (3,0,0):
@@ -72,10 +73,10 @@ def loginToPLC(overrideUser = None):
       plc_authentication['AuthString'] = password
 
       if plc_server.AuthCheck(plc_authentication) != 1:
-         error('Authorization at PLC failed!')
+         raise Exception('Authorization at PLC failed!')
 
    except:
-      error('Unable to log into PLC!')
+      raise Exception('Unable to log into PLC!')
 
 
 # ###### Get PLC address ####################################################

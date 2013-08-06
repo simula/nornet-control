@@ -51,7 +51,7 @@ fi
 
 # ====== Get machine configuration ==========================================
 MACHINE_STATUS_FILE=`mktemp`
-sudo -u $NorNet_LocalNode_NorNetUser VBoxManage showvminfo "$MACHINE_NAME" --machinereadable >$MACHINE_STATUS_FILE
+sudo -u $NorNet_LocalNode_NorNetUser env HOME=~$NorNet_LocalNode_NorNetUser VBoxManage showvminfo "$MACHINE_NAME" --machinereadable >$MACHINE_STATUS_FILE
 CONFIG_FILE=`cat $MACHINE_STATUS_FILE | grep "^CfgFile=" | sed -e "s/^CfgFile=\"//" -e "s/\"$//g"`
 CONFIG_DIR=`dirname "$CONFIG_FILE"`
 
@@ -85,7 +85,7 @@ for controller in 0 1 2 3 ; do
                fi
                RESULTS_FILE=`mktemp`
                result=1
-               sudo -u $NorNet_LocalNode_NorNetUser VBoxManage storageattach "$MACHINE_NAME" --storagectl "SATA Controller" --port $port --device $controller --type dvddrive --medium "$ISO_NAME" >$RESULTS_FILE 2>&1 && result=0 || true
+               sudo -u $NorNet_LocalNode_NorNetUser env HOME=~$NorNet_LocalNode_NorNetUser VBoxManage storageattach "$MACHINE_NAME" --storagectl "SATA Controller" --port $port --device $controller --type dvddrive --medium "$ISO_NAME" >$RESULTS_FILE 2>&1 && result=0 || true
                if [ $result -ne 0 ] ; then
                   echo "`env LANG=C date +%FT%H:%M:%S`: ERROR: Changing CD/DVD image to $ISO_NAME has failed!"
                   cat $RESULTS_FILE

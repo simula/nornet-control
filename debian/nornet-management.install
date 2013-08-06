@@ -6,3 +6,4 @@ System-Info              /usr/bin
 System-Maintenance       /usr/bin
 Watchdog                 /usr/bin
 nornet-authorized_keys   /etc/nornet
+nornet-version           /etc/nornet

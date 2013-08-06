@@ -2,11 +2,14 @@ Auto-Update-BootCD                /usr/bin
 Backup-All-VSystems               /usr/bin
 Backup-VSystem                    /usr/bin
 Change-VSystem-CDImage            /usr/bin
+Check-Research-Node               /usr/bin
 Check-VSystem                     /usr/bin
 Convert-HDD-Images                /usr/bin
 Make-Server-Configuration         /usr/bin
 Make-VSystem-Template             /usr/bin
+Reset-VSystem                     /usr/bin
 Server-Setup                      /usr/bin
+Server-Watchdog                   /usr/bin
 Show-VSystems                     /usr/bin
 Start-VSystem                     /usr/bin
 Stop-VSystem                      /usr/bin

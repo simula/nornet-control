@@ -1,0 +1,98 @@
+#!/bin/bash -e
+
+# ###### Check whether parameter is a valid IPv4 address ####################
+is-ipv4-address ()
+{
+   if [[ "$1" =~ ^([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})$ ]] ; then
+      if [ ${BASH_REMATCH[1]} -le 255 -a ${BASH_REMATCH[2]} -le 255 -a ${BASH_REMATCH[3]} -le 255 -a ${BASH_REMATCH[4]} -le 255 ] ; then
+         return 0
+      fi
+   fi
+   return 1
+}
+
+
+# ###### Check whether parameter is a valid IPv4 network ####################
+is-ipv4-network ()
+{
+   if [[ "$1" =~ ^([0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3})/([0-9]{1,2})$ ]] ; then
+      if [ ${BASH_REMATCH[2]} -le 32 ] ; then
+         if is-ipv4-address "${BASH_REMATCH[1]}" ; then
+            return 0
+         fi
+      fi
+   fi
+   return 1
+}
+
+
+# ###### Check whether parameter is a valid IPv6 address ####################
+is-ipv6-address ()
+{
+   if [[ "$1" =~ ^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\s*$ ]] ; then   
+      return 0
+   fi
+   return 1
+}
+
+
+# ###### Check whether parameter is a valid IPv6 network ####################
+is-ipv6-network ()
+{
+   if [[ "$1" =~ ^([0-9a-fA-F:]*)/([0-9]{1,3})$ ]] ; then
+      if [ ${BASH_REMATCH[2]} -le 128 ] ; then
+         if is-ipv6-address "${BASH_REMATCH[1]}" ; then
+            return 0
+         fi
+      fi
+   fi
+   return 1
+}
+
+
+# ###### Check whether parameter is a valid IPv4 or IPv6 address ############
+is-ip-address ()
+{
+   if is-ipv4-address $1 ; then
+      return 0
+   elif is-ipv6-address $1 ; then      
+      return 0
+   fi
+   return 1
+}
+
+
+# ###### Check whether parameter is a valid IPv4 or IPv6 network ############
+is-ip-network ()
+{
+   if is-ipv4-network $1 ; then
+      return 0
+   elif is-ipv6-network $1 ; then      
+      return 0
+   fi
+   return 1
+}
+
+
+
+for a in 127.0.0.1 172.17.3.0/24 2001:700:4100:fe03::1 2001:700:4100:fe03::/64 1.2.3.455 fd00::1::2 ; do
+   echo -n "$a   ->   "
+   
+   if is-ip-address $a ; then
+      echo -n "(address)   "
+   elif is-ip-network $a ; then
+      echo -n "(network)   "
+   fi
+
+   if is-ipv4-address $a ; then
+      echo "IPv4 address"
+   elif is-ipv4-network $a ; then
+      echo "IPv4 network"
+   elif is-ipv6-address $a ; then
+      echo "IPv6 address"
+   elif is-ipv6-network $a ; then
+      echo "IPv6 network"
+   else
+      echo "BAD!"
+   fi
+done

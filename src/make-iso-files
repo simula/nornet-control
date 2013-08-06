@@ -9,5 +9,5 @@ read -er applyChanges
 if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
    echo "Skipped!"
 else
-   ./Make-Boot-ISO --directory=/nfs/adm/ISOs ALL
+   ./Make-Boot-ISO --directory=. ALL
 fi

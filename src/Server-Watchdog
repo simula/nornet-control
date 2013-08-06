@@ -1,0 +1,59 @@
+#!/bin/bash -e
+#
+# Backup all virtual systems
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+# ###### Main program #######################################################
+NORNET_DIRECTORY="/etc/nornet"
+
+# Check whether NorNet directory is existing
+if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
+   . $NORNET_DIRECTORY/nornetapi-config
+elif [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
+fi
+
+mkdir -p /var/tmp/nornet
+VSYSTEMS=`find /etc/nornet/vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
+for vsystem in $VSYSTEMS ; do
+   (
+      WATCHDOG_COMMAND=""
+      . "$vsystem"
+
+      if [ "$WATCHDOG_COMMAND" != "" ] ; then
+         if [ -e "/var/run/nornet-server-$NAME.pid" ] ; then
+            (
+                echo "WATCHDOG_MAXFAILURES=\"15\""
+                echo "WATCHDOG_MAXFINALTRIALS=\"15\""
+                echo "WATCHDOG_FAILCOUNT_FILE=\"/usr/local/share/nornet-server/nornet-server-watchdog-$NAME.failcount\""
+                echo "WATCHDOG_FAILURE_ACTION=\"service nornet-server restart \\\"$NAME\\\"\" ; rm -f \"$WATCHDOG_FAILCOUNT_FILE\""
+                echo "WATCHDOG_FAILURE_FINAL=\"\""
+                echo "WATCHDOG_LOOPMODE=1"
+                cat "$vsystem"             
+            ) >"/var/tmp/nornet/$NAME-watchdog-config"
+
+            Watchdog "/var/tmp/nornet/$NAME-watchdog-config" >>"/var/log/nornet-server-watchdog-$NAME.log" 2>&1
+         fi
+      fi
+   ) &
+done
+wait
