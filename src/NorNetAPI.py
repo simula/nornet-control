@@ -452,13 +452,24 @@ def fetchNorNetSlice(sliceNameToFind):
                                              [ 'slice_id', 'name', 'description', 'url', 'initscript_code', 'expires' ])
       for slice in fullSliceList:
          sliceID = int(slice['slice_id'])
+       
+         sliceTagsList = plc_server.GetSliceTags(plc_authentication,
+                                                 { 'slice_id' : sliceID },
+                                                 [ 'slice_id', 'tagname', 'value' ])
+         if int(getTagValue(sliceTagsList, 'nornet_is_managed_slice', '-1')) < 1:
+            continue
+         sliceNodeIndex = int(getTagValue(sliceTagsList, 'nornet_slice_node_index', '-1'))
+         if ((sliceNodeIndex < 10) or (sliceNodeIndex > 255)):
+            error('Slice ' + sliceNameToFind + ' has invalid node index')
+
          norNetSlice = {
             'slice_id'              : sliceID,
             'slice_name'            : slice['name'],
             'slice_description'     : slice['description'],
             'slice_url'             : slice['url'],
             'slice_initscript_code' : slice['initscript_code'],
-            'slice_expires'         : slice['expires']
+            'slice_expires'         : slice['expires'],
+            'slice_node_index'      : sliceNodeIndex
          }
 
          if sliceNameToFind != None:

@@ -78,6 +78,9 @@ while i < len(sys.argv):
 log('***** Welcome to NorNet! *****')
 loginToPLC()
 
+fullSiteList = fetchNorNetSiteList(False)
+fullNodeList = fetchNorNetNodeList()
+
 
 for sliceUserName in sliceUserNames:
    sliceUser = fetchNorNetUser(sliceUserName)
@@ -92,11 +95,10 @@ if ((action == 'remove') or (action == 'renew')):
       removeNorNetSlice(sliceName)
 
 if ((action == 'add') or (action == 'renew')):   
-   slice = makeNorNetSlice(sliceName, sliceDescription, sliceUrl, '')
+   slice = makeNorNetSlice(sliceName, sliceNodeIndex, sliceDescription, sliceUrl, '')
 
    log('Adding slice to all nodes ...')
-   allNorNetNodes = fetchNorNetNodeList()
-   addNorNetSliceToNorNetNodes(slice, allNorNetNodes)
+   addNorNetSliceToNorNetNodes(fullSiteList, slice, fullNodeList)
 
    if len(sliceUsers) > 0:
       log('Adding users to slice ...')
