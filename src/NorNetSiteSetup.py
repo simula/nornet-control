@@ -444,10 +444,9 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
 
 # ###### Remove NorNet user #################################################
 def removeNorNetUser(userName):
-   user = lookupPersonID(userName)
-   if user != None:
+   userID = lookupPersonID(userName)
+   if userID != None:
       log('Removing NorNet user ' + userName + ' ...')
-      userID = user['person_id']
       getPLCServer().DeletePerson(getPLCAuthentication(), userID)
 
 
@@ -492,3 +491,63 @@ def makeNorNetUser(userName, password, site, title, firstName, lastName, phone, 
       error('Adding user ' + userName + ' has failed: ' + str(e))
 
    return fetchNorNetUser(userName)
+
+
+# ###### Remove NorNet slice ################################################
+def removeNorNetSlice(sliceName):
+   sliceID = lookupSliceID(sliceName)
+   if sliceID != None:
+      log('Removing NorNet slice ' + sliceName + ' ...')
+      getPLCServer().DeleteSlice(getPLCAuthentication(), sliceID)
+
+
+# ###### Create NorNet slice ################################################
+def makeNorNetSlice(sliceName, sliceDescription, sliceUrl, initscriptCode):
+   try:
+      # ====== Add slice =====================================================
+      log('Adding slice ' + sliceName + ' ...')
+      slice = {}
+      slice['name']            = sliceName
+      slice['description']     = sliceDescription
+      slice['url']             = sliceUrl
+      slice['initscript_code'] = initscriptCode
+      slice['max_nodes']       = 1000000
+
+      sliceID = lookupSliceID(sliceName)
+      if sliceID == 0:
+         sliceToAdd = slice
+         sliceID = getPLCServer().AddSlice(getPLCAuthentication(), slice)
+
+      # UpdateSlice() may only have certain fields. Therefore, initialize
+      # "slice" object again, with only the allowed fields included.
+      slice = {}
+      slice['description']     = sliceDescription
+      slice['url']             = sliceUrl
+      slice['initscript_code'] = initscriptCode
+      
+      if getPLCServer().UpdateSlice(getPLCAuthentication(), sliceID, slice) != 1:
+        sliceID = 0
+
+      if sliceID <= 0:
+         error('Unable to add/update slice ' + sliceName)
+
+   except Exception as e:
+      error('Adding slice ' + sliceName + ' has failed: ' + str(e))
+
+   return fetchNorNetSlice(sliceName)
+
+
+# ###### Add NorNet slice to NorNet nodes  ##################################
+def addNorNetSliceToNorNetNodes(slice, nodesList):
+   nodeIDs = []
+   for node in nodesList:
+      nodeIDs.append(int(node['node_id']))
+   getPLCServer().AddSliceToNodes(getPLCAuthentication(),
+                                  slice['slice_id'], nodeIDs)
+
+
+# ###### Add users to NorNet slice  #########################################
+def addNorNetUsersToNorNetSlice(slice, usersList):
+   for user in usersList:
+      getPLCServer().AddPersonToSlice(getPLCAuthentication(),
+                                      user['user_id'], slice['slice_id'])

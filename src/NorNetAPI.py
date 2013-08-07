@@ -436,11 +436,55 @@ def lookupPersonID(eMail):
       return(0)
 
 
+# ###### Fetch list of NorNet slices ########################################
+def fetchNorNetSlice(sliceNameToFind):
+   global plc_server
+   global plc_authentication
+
+   if sliceNameToFind == None:   # Get full list
+      filter = { }
+   else:              # Only perform lookup for given name
+      filter = { 'name' : sliceNameToFind }
+
+   try:
+      norNetSliceList = dict([])
+      fullSliceList   = plc_server.GetSlices(plc_authentication, filter,
+                                             [ 'slice_id', 'name', 'description', 'url', 'initscript_code', 'expires' ])
+      for slice in fullSliceList:
+         sliceID = int(slice['slice_id'])
+         norNetSlice = {
+            'slice_id'              : sliceID,
+            'slice_name'            : slice['name'],
+            'slice_description'     : slice['description'],
+            'slice_url'             : slice['url'],
+            'slice_initscript_code' : slice['initscript_code'],
+            'slice_expires'         : slice['expires']
+         }
+
+         if sliceNameToFind != None:
+            return(norNetSlice)
+
+         norNetSliceList[sliceID] = norNetSlice
+
+      if len(norNetSliceList) == 0:
+         return None
+      return(norNetSliceList)
+
+   except Exception as e:
+      error('Unable to fetch NorNet slice list: ' + str(e))
+
+
+# ###### Fetch list of NorNet slices ########################################
+def fetchNorNetSliceList():
+   log('Fetching NorNet slice list ...')
+   return fetchNorNetSlice(None)
+
+
 # ###### Find slice ID ######################################################
 def lookupSliceID(sliceName):
    try:
       slice = plc_server.GetSlices(plc_authentication,
-                                   {'name': sliceName}, ['slice_id'])
+                                   { 'name' : sliceName }, [ 'slice_id' ])
       sliceID = int(slice[0]['slice_id'])
       return(sliceID)
 
