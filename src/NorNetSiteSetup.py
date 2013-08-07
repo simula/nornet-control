@@ -78,7 +78,15 @@ def makeNorNetTagTypes():
 
    makeTagType('interface/nornet', 'NorNet Managed Interface',        'nornet_is_managed_interface')
    makeTagType('interface/nornet', 'NorNet Interface Provider Index', 'nornet_ifprovider_index')
+   
+   # ====== Special tags for ovs_bridge handling ============================
+   makeTagType('interface/ovs', 'Name of Open vSwitch bridge', 'ovs_bridge')
+   getPLCServer().AddRoleToTagType(getPLCAuthentication(), 'admin', 'ovs_bridge')
+   getPLCServer().AddRoleToTagType(getPLCAuthentication(), 'tech',  'ovs_bridge')
 
+   makeTagType('slice/network', 'Placeholder for interface information while we wait for VirtualInterface objects in PLCAPI', 'interface')
+   getPLCServer().AddRoleToTagType(getPLCAuthentication(), 'admin', 'interface')
+ 
 
 # ###### Remove NorNet site #################################################
 def removeNorNetSite(siteName):
@@ -111,7 +119,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
                    siteNorNetIndex, siteCity, siteProvince, cityCountry, siteCountryCode,
                    siteLatitude, siteLogitude, siteAltitude,
                    providerList, defaultProvider, tbInternalInterface,
-                   dnsServers, ntpServers):
+                   ntpServers):
    siteLabel= makeNameFromUnicode(siteName, False)
    siteName = siteLabel['ascii']
    try:
@@ -335,11 +343,15 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                if interfaceID <= 0:
                   error('Unable to add interface ' + str(ifIPv4.ip))
 
-               if providerIndex != siteDefProviderIndex:
+               if providerIndex == siteDefProviderIndex:
+                  primaryInterfaceID = interfaceID
+                  print 'BRIDGE' + str(norNetInterface)
+                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, "ovs_bridge", 'public0') <= 0:
+                     error('Unable to add "ovs_bridge" tag to interface ' + str(ifIPv4.ip))
+               else:
                   if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, "alias", str(ifAlias)) <= 0:
                      error('Unable to add "alias" tag to interface ' + str(ifIPv4.ip))
-               else:
-                  primaryInterfaceID = interfaceID
+
                if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, 'nornet_is_managed_interface', '1') <= 0:
                   error('Unable to add "nornet_is_managed_interface" tag to interface ' + str(ifIPv4.ip))
                if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, 'nornet_ifprovider_index', str(providerIndex)) <= 0:
@@ -365,7 +377,7 @@ def updateNorNetInterfaces(node, site, norNetInterface):
       error('Updating interfaces of node ' + str(nodeID) + ' has failed: ' + str(e))
 
 
-# ###### Add or update Node tag #############################################
+# ###### Add or update node tag #############################################
 def _addOrUpdateNodeTag(nodeID, tagName, tagValue):
    filter = {
       'tagname' : tagName,
@@ -501,6 +513,19 @@ def removeNorNetSlice(sliceName):
       getPLCServer().DeleteSlice(getPLCAuthentication(), sliceID)
 
 
+# ###### Add or update slice tag ############################################
+def _addOrUpdateSliceTag(sliceID, tagName, tagValue):
+   filter = {
+      'tagname'  : tagName,
+      'slice_id' : sliceID
+   }
+   tags = getPLCServer().GetSliceTags(getPLCAuthentication(), filter, ['slice_tag_id'])
+   if len(tags) == 0:
+      return getPLCServer().AddSliceTag(getPLCAuthentication(), sliceID, tagName, tagValue)
+   else:
+      return getPLCServer().UpdateSliceTag(getPLCAuthentication(), tags[0]['slice_tag_id'], tagValue)
+
+
 # ###### Create NorNet slice ################################################
 def makeNorNetSlice(sliceName, sliceDescription, sliceUrl, initscriptCode):
    try:
@@ -530,6 +555,9 @@ def makeNorNetSlice(sliceName, sliceDescription, sliceUrl, initscriptCode):
 
       if sliceID <= 0:
          error('Unable to add/update slice ' + sliceName)
+
+      if _addOrUpdateSliceTag(sliceID, 'interface', 'public0') <= 0:
+         error('Unable to add "interface" tag to slice ' + sliceName)
 
    except Exception as e:
       error('Adding slice ' + sliceName + ' has failed: ' + str(e))
