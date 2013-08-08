@@ -393,6 +393,18 @@ def _addOrUpdateNodeTag(nodeID, tagName, tagValue):
       return getPLCServer().UpdateNodeTag(getPLCAuthentication(), tags[0]['node_tag_id'], tagValue)
 
 
+# ###### Add or update configuration file ###################################
+def _addOrUpdateConfFile(configuration):
+   filter = {
+      'dest' : configuration['dest']
+   }
+   tags = getPLCServer().GetConfFiles(getPLCAuthentication(), filter, ['conf_file_id'])
+   if len(tags) == 0:
+      return getPLCServer().AddConfFile(getPLCAuthentication(), configuration)
+   else:
+      return getPLCServer().UpdateConfFile(getPLCAuthentication(), tags[0]['conf_file_id'], configuration)
+
+
 # ###### Create NorNet node #################################################
 def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
                    pcuID, pcuPort, norNetInterface,
@@ -436,6 +448,22 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
          error('Unable to add "nornet_node_index" tag to node ' + nodeHostName)
       if _addOrUpdateNodeTag(nodeID, 'nornet_node_interface', norNetInterface) <= 0:
          error('Unable to add "nornet_node_interface" tag to node ' + nodeHostName)
+
+      # ====== Hack to handle openvswitch start/stop correctly ==============
+      # See https://docs.google.com/a/simula.no/document/d/1WRZ7kN6KwZRaeNOi51-uNmintCVwdkzhM2W3To6uV_Y/edit?pli=1 .
+      confFileID = _addOrUpdateConfFile({
+         'file_owner': u'root',
+         'postinstall_cmd': u'/bin/systemctl reenable openvswitch.service',
+         'error_cmd': u'', 'preinstall_cmd': u'',
+         'dest': u'/lib/systemd/system/openvswitch.service',
+         'ignore_cmd_errors': False,
+         'enabled': True,
+         'file_permissions': u'644',
+         'source': u'PlanetLabConf/openvswitch/openvswitch.service',
+         'always_update': False,
+         'file_group': u'root'})
+      if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
+         error('Unable to add openvswitch.service configuration file to node ' + nodeHostName)
 
       # ====== Add node to PCU ==============================================
       if pcuID > 0:
@@ -594,19 +622,23 @@ def getSliceNodeIndexOfNorNetSlice(slice, node):
 
 
 # ###### Find a slice node index for a new slice ############################
-def _findPossibleSliceNodeIndex(fullNodeList, fullSliceList, thisSlice):
+def _findPossibleSliceNodeIndex(fullNodeList, fullSliceList, thisSlice, thisNode):
    possibleSliceNodeIndexes = NorNet_Configuration['NorNet_Slice_NodeIndexRange']
 
    for slice in fullSliceList:
-      if slice['slice_id'] != thisSlice['slice_id']:   # Ignore current slice's allocation
-         for node in fullNodeList:
-            if node['node_id'] in slice['slice_node_ids']:
-               sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
-               if sliceNodeIndex > 0:
-                  try:
-                     possibleSliceNodeIndexes.remove(sliceNodeIndex)
-                  except:
-                     pass
+      for node in fullNodeList:
+         if ((slice['slice_id'] == thisSlice['slice_id']) and
+             (node['node_id'] == thisNode['node_id'])):
+            # Ignore current slice's allocation on current node
+            continue
+
+         if node['node_id'] in slice['slice_node_ids']:
+            sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
+            if sliceNodeIndex > 0:
+               try:
+                  possibleSliceNodeIndexes.remove(sliceNodeIndex)
+               except:
+                  pass
 
    if len(possibleSliceNodeIndexes) > 0:
       i = 0   # int(round(random.uniform(0, len(possibleSliceNodeIndexes)-1)))
@@ -617,16 +649,6 @@ def _findPossibleSliceNodeIndex(fullNodeList, fullSliceList, thisSlice):
 
 # ###### Add NorNet slice to NorNet nodes  ##################################
 def addNorNetSliceToNorNetNodes(fullSiteList, fullNodeList, fullSliceList, slice, nodesList):
-   # ====== Get slice node index ============================================
-   sliceOwnAddresses = slice['slice_own_addresses']
-   if sliceOwnAddresses != 0:
-      sliceNodeIndex = _findPossibleSliceNodeIndex(fullNodeList, fullSliceList, slice)
-      if sliceNodeIndex == 0:
-         error('No possible slice node index available!')
-   else:
-      sliceNodeIndex = None
- 
-   # ====== Create configurations ===========================================
    nodeIDs = []
    for node in nodesList:
       nodeIndex = node['node_index']
@@ -636,7 +658,14 @@ def addNorNetSliceToNorNetNodes(fullSiteList, fullNodeList, fullSliceList, slice
                                      slice['slice_id'], [ node['node_id'] ])
 
       # ====== Give slice its own addresses, if requested ===================
+      sliceOwnAddresses = slice['slice_own_addresses']
       if sliceOwnAddresses != 0:
+         # ====== Get slice node index ======================================
+         sliceNodeIndex = _findPossibleSliceNodeIndex(fullNodeList, fullSliceList, slice, node)
+         if sliceNodeIndex == 0:
+            error('No possible slice node index available!')
+       
+         # ====== Create configuration ======================================
          site = getNorNetSiteOfNode(fullSiteList, node)
          if site == None:
             error('Site not found?!')
