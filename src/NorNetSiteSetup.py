@@ -81,6 +81,7 @@ def makeNorNetTagTypes():
 
    makeTagType('slice/nornet',     'NorNet Managed Slice',            'nornet_is_managed_slice')
    makeTagType('slice/nornet',     'NorNet Slice Node Index',         'nornet_slice_node_index')
+   makeTagType('slice/nornet',     'NorNet Slice Own Addresses',      'nornet_slice_own_addresses')
 
    # ====== Special tags for ovs_bridge handling ============================
    makeTagType('interface/ovs', 'Name of Open vSwitch bridge', 'ovs_bridge')
@@ -535,11 +536,11 @@ def _addOrUpdateSliceTag(sliceID, node, tagName, tagValue):
    if len(tags) == 0:
       return getPLCServer().AddSliceTag(getPLCAuthentication(), sliceID, tagName, tagValue, nodeID)
    else:
-      return getPLCServer().UpdateSliceTag(getPLCAuthentication(), tags[0]['slice_tag_id'], tagValue, nodeID)
+      return getPLCServer().UpdateSliceTag(getPLCAuthentication(), tags[0]['slice_tag_id'], tagValue)
 
 
 # ###### Create NorNet slice ################################################
-def makeNorNetSlice(sliceName, sliceNodeIndex, sliceDescription, sliceUrl, initscriptCode):
+def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initscriptCode):
    try:
       # ====== Add slice =====================================================
       log('Adding slice ' + sliceName + ' ...')
@@ -549,9 +550,6 @@ def makeNorNetSlice(sliceName, sliceNodeIndex, sliceDescription, sliceUrl, inits
       slice['url']             = sliceUrl
       slice['initscript_code'] = initscriptCode
       slice['max_nodes']       = 1000000
-
-      if ((sliceNodeIndex < 10) or (sliceNodeIndex > 255)):
-         error('Invalid setting for sliceNodeIndex: ' + str(sliceNodeIndex))
 
       sliceID = lookupSliceID(sliceName)
       if sliceID == 0:
@@ -573,8 +571,12 @@ def makeNorNetSlice(sliceName, sliceNodeIndex, sliceDescription, sliceUrl, inits
 
       if _addOrUpdateSliceTag(sliceID, None, 'nornet_is_managed_slice', '1') <= 0:
          error('Unable to add "nornet_is_managed_slice" tag to slice ' + sliceName)
-      if _addOrUpdateSliceTag(sliceID, None, 'nornet_slice_node_index', str(sliceNodeIndex)) <= 0:
-         error('Unable to add "nornet_slice_node_index" tag to slice ' + sliceName)
+      if ownAddress == True:
+         allocateOwnAddress = 1
+      else:
+         allocateOwnAddress = 0
+      if _addOrUpdateSliceTag(sliceID, None, 'nornet_slice_own_addresses', str(allocateOwnAddress)) <= 0:
+         error('Unable to add "nornet_slice_own_addresses" tag to slice ' + sliceName)
 
    except Exception as e:
       error('Adding slice ' + sliceName + ' has failed: ' + str(e))
@@ -582,18 +584,59 @@ def makeNorNetSlice(sliceName, sliceNodeIndex, sliceDescription, sliceUrl, inits
    return fetchNorNetSlice(sliceName)
 
 
+# ###### Get slice node index of NorNet slice ###############################
+def getSliceNodeIndexOfNorNetSlice(slice, node):
+   for tag in slice['slice_tags']:
+      if ((tag['node_id'] == node['node_id']) and
+          (tag['tagname'] == 'nornet_slice_node_index')):
+         return(int(tag['value']))
+   return 0
+
+
+# ###### Find a slice node index for a new slice ############################
+def _findPossibleSliceNodeIndex(fullNodeList, fullSliceList, thisSlice):
+   possibleSliceNodeIndexes = NorNet_Configuration['NorNet_Slice_NodeIndexRange']
+
+   for slice in fullSliceList:
+      if slice['slice_id'] != thisSlice['slice_id']:   # Ignore current slice's allocation
+         for node in fullNodeList:
+            if node['node_id'] in slice['slice_node_ids']:
+               sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
+               if sliceNodeIndex > 0:
+                  try:
+                     possibleSliceNodeIndexes.remove(sliceNodeIndex)
+                  except:
+                     pass
+
+   if len(possibleSliceNodeIndexes) > 0:
+      i = 0   # int(round(random.uniform(0, len(possibleSliceNodeIndexes)-1)))
+      return possibleSliceNodeIndexes[i]
+
+   return 0
+
+
 # ###### Add NorNet slice to NorNet nodes  ##################################
-def addNorNetSliceToNorNetNodes(fullSiteList, slice, nodesList):
+def addNorNetSliceToNorNetNodes(fullSiteList, fullNodeList, fullSliceList, slice, nodesList):
+   # ====== Get slice node index ============================================
+   sliceOwnAddresses = slice['slice_own_addresses']
+   if sliceOwnAddresses != 0:
+      sliceNodeIndex = _findPossibleSliceNodeIndex(fullNodeList, fullSliceList, slice)
+      if sliceNodeIndex == 0:
+         error('No possible slice node index available!')
+   else:
+      sliceNodeIndex = None
+ 
+   # ====== Create configurations ===========================================
    nodeIDs = []
    for node in nodesList:
+      nodeIndex = node['node_index']
+      
       # ====== Add slice to node ============================================
       getPLCServer().AddSliceToNodes(getPLCAuthentication(),
-                                  slice['slice_id'], [ node['node_id'] ])
+                                     slice['slice_id'], [ node['node_id'] ])
 
       # ====== Give slice its own addresses, if requested ===================
-      sliceNodeIndex = slice['slice_node_index']
-      if sliceNodeIndex > 0:
-         print node
+      if sliceOwnAddresses != 0:
          site = getNorNetSiteOfNode(fullSiteList, node)
          if site == None:
             error('Site not found?!')
@@ -607,7 +650,7 @@ def addNorNetSliceToNorNetNodes(fullSiteList, slice, nodesList):
          bridgeInterfaceConfig['PRIMARY']       = 'yes'
          bridgeInterfaceConfig['IPV6INIT']      = 'yes'
          bridgeInterfaceConfig['IPV6_AUTOCONF'] = 'no'
-        
+
          addresses       = 0
          secondariesIPv6 = []
          providerList = getNorNetProvidersForSite(site)
@@ -615,8 +658,12 @@ def addNorNetSliceToNorNetNodes(fullSiteList, slice, nodesList):
             for providerIndex in providerList:
                if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
                     ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
-                  ifIPv6 = makeNorNetIP(providerIndex, siteIndex, sliceNodeIndex, 6, sliceNodeIndex)
-                  ifIPv4        = makeNorNetIP(providerIndex, siteIndex, sliceNodeIndex, 4, sliceNodeIndex)
+
+                  # For IPv4, we only have the slice node index.
+                  ifIPv4 = makeNorNetIP(providerIndex, siteIndex, sliceNodeIndex, 4)
+                  # For IPv6, we have enough space to encode node index and slice node index!
+                  ifIPv6 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6, sliceNodeIndex)
+
                   bridgeInterfaceConfig['IPADDR'  + str(addresses)] = str(ifIPv4.ip)
                   bridgeInterfaceConfig['NETMASK' + str(addresses)] = str(ifIPv4.netmask)
 
@@ -642,7 +689,9 @@ def addNorNetSliceToNorNetNodes(fullSiteList, slice, nodesList):
                secondaries = secondaries + str(secondaryIPv6)
             bridgeInterfaceConfig['IPV6ADDR_SECONDARIES'] = secondaries
             
-         print bridgeInterfaceConfig
+         # print bridgeInterfaceConfig
+         if _addOrUpdateSliceTag(slice['slice_id'], node, 'nornet_slice_node_index', str(sliceNodeIndex)) <= 0:
+            error('Unable to add "nornet_slice_node_index" tag to slice ' + sliceName)
          if _addOrUpdateSliceTag(slice['slice_id'], node, 'interface', str(bridgeInterfaceConfig)) <= 0:
             error('Unable to add "interface" tag to slice ' + sliceName)
 

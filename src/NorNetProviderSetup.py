@@ -68,7 +68,6 @@ def makeNorNetIP(provider, site, node, version, sliceIndex = 0):
                       str.replace(hex((p << 8) | s), '0x', '') + '::' + \
                       str.replace(hex(sliceIndex), '0x', '') + ':' + \
                       str.replace(hex(n), '0x', ''))
-      print a
       a = IPv6Address(int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix']) | int(a))
       return IPv6Network(str(a) + '/' + str(prefix))
 

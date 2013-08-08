@@ -447,20 +447,18 @@ def fetchNorNetSlice(sliceNameToFind):
       filter = { 'name' : sliceNameToFind }
 
    try:
-      norNetSliceList = dict([])
+      norNetSliceList = []
       fullSliceList   = plc_server.GetSlices(plc_authentication, filter,
-                                             [ 'slice_id', 'name', 'description', 'url', 'initscript_code', 'expires' ])
+                                             [ 'slice_id', 'node_ids', 'name', 'description', 'url', 'initscript_code', 'expires' ])
       for slice in fullSliceList:
          sliceID = int(slice['slice_id'])
        
          sliceTagsList = plc_server.GetSliceTags(plc_authentication,
                                                  { 'slice_id' : sliceID },
-                                                 [ 'slice_id', 'tagname', 'value' ])
+                                                 [ 'slice_id', 'node_id', 'tagname', 'value' ])
          if int(getTagValue(sliceTagsList, 'nornet_is_managed_slice', '-1')) < 1:
             continue
-         sliceNodeIndex = int(getTagValue(sliceTagsList, 'nornet_slice_node_index', '-1'))
-         if ((sliceNodeIndex < 10) or (sliceNodeIndex > 255)):
-            error('Slice ' + sliceNameToFind + ' has invalid node index')
+         sliceOwnAddresses = int(getTagValue(sliceTagsList, 'nornet_slice_own_addresses', '0'))
 
          norNetSlice = {
             'slice_id'              : sliceID,
@@ -469,13 +467,15 @@ def fetchNorNetSlice(sliceNameToFind):
             'slice_url'             : slice['url'],
             'slice_initscript_code' : slice['initscript_code'],
             'slice_expires'         : slice['expires'],
-            'slice_node_index'      : sliceNodeIndex
+            'slice_node_ids'        : slice['node_ids'],
+            'slice_own_addresses'   : sliceOwnAddresses,
+            'slice_tags'            : sliceTagsList
          }
 
          if sliceNameToFind != None:
             return(norNetSlice)
 
-         norNetSliceList[sliceID] = norNetSlice
+         norNetSliceList.append(norNetSlice)
 
       if len(norNetSliceList) == 0:
          return None

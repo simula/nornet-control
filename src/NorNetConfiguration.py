@@ -71,6 +71,8 @@ NorNet_Configuration = {
    'NorNet_LocalNode_Hostname'                 : 'localhost.localdomain',
    'NorNet_LocalNode_NorNetUser'               : 'nornetpp',
    'NorNet_LocalNode_NorNetInterface'          : None,
+   
+   'NorNet_Slice_NodeIndexRange'               : [],
 
    'NorNet_Provider0'                          : '"UNKNOWN" "unknown" ""'
 }
@@ -160,7 +162,9 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
 
 
    # ====== Build the configuration table ===================================
+   lineNumber = 0
    for line in lines:
+      lineNumber = lineNumber + 1
       if re.match('^[ \t]*[#\n]', line):
          continue
       elif re.match('^[a-zA-Z0-9_]*[ \t]*=', line):
@@ -170,7 +174,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
          NorNet_Configuration[parameterName] = parameterValue
          # print '<' + parameterName + '> = <' + parameterValue + '>'
       else:
-         error('Bad configuration line: ' + line)
+         error('Bad configuration in line ' + str(lineNumber) + ': ' + line)
 
 
    # ====== Build provider table ============================================
@@ -275,6 +279,21 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
          if ((NorNet_Configuration['NorNet_LocalNode_Index'] < 1) or
                (NorNet_Configuration['NorNet_LocalNode_Index'] > 255)):
             error('NorNet_IPv4Prefix NorNet_LocalNode_Index must be in [1,255]!')
+            
+      if NorNet_Configuration['NorNet_Slice_NodeIndexRange'] != None:
+         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', NorNet_Configuration['NorNet_Slice_NodeIndexRange'])
+         try:
+            if len(parameters) == 2:
+               a1 = int(unquote(parameters[0]))
+               a2 = int(unquote(parameters[1]))
+               if ((a1 < 1) or (a1 > 255) or (a2 < 1) or (a2 > 255) or (a2 < a1)):
+                  error('NorNet_Slice_NodeIndexRange bounds must be in [1,255]!')
+               NorNet_Configuration['NorNet_Slice_NodeIndexRange'] = range(a1, a2)
+            else:
+               error('NorNet_Slice_NodeIndexRange bounds must be range in form of \"start end\"!')
+         except Exception as e:
+            error('Bad configuration "' + NorNet_Configuration['NorNet_Slice_NodeIndexRange'] + '" for NorNet_Slice_NodeIndexRange: ' + str(e))
+         
 
 
 # ###### Get central site's domain name #####################################
