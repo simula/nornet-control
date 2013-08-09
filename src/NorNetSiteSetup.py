@@ -404,11 +404,13 @@ def _addOrUpdateConfFile(configuration):
    filter = {
       'dest' : configuration['dest']
    }
-   tags = getPLCServer().GetConfFiles(getPLCAuthentication(), filter, ['conf_file_id'])
-   if len(tags) == 0:
+   confFiles = getPLCServer().GetConfFiles(getPLCAuthentication(), filter, [ 'conf_file_id' ])
+   if len(confFiles) == 0:
       return getPLCServer().AddConfFile(getPLCAuthentication(), configuration)
    else:
-      return getPLCServer().UpdateConfFile(getPLCAuthentication(), tags[0]['conf_file_id'], configuration)
+      if getPLCServer().UpdateConfFile(getPLCAuthentication(), confFiles[0]['conf_file_id'], configuration) == 1:
+         return confFiles[0]['conf_file_id']
+      return 0
 
 
 # ###### Create NorNet node #################################################
@@ -468,7 +470,6 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
          'source': u'PlanetLabConf/openvswitch/openvswitch.service',
          'always_update': False,
          'file_group': u'root'})
-      print 'CONF',confFileID, nodeID
       if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
          error('Unable to add openvswitch.service configuration file to node ' + nodeHostName)
 
