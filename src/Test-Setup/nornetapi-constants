@@ -7,23 +7,20 @@
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 # Prefixes for the internal IPv4 and IPv6 networks
-NorNet_IPv4Prefix="10.0.0.0/8"           # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
-NorNet_IPv6Prefix="2001:700:4100::/48"   # /48 prefix for internal IPv6 space (e.g. '2001:700:4100::/48')
+NorNet_IPv4Prefix="11.0.0.0/8"         # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
+NorNet_IPv6Prefix="fd00:cafe:0::/48"   # /48 prefix for internal IPv6 space (e.g. '2001:700:4100::/48')
 
 # Prefixes for the internal tunnel IPv4 and IPv6 networks
-NorNet_IPv4TunnelPrefix="192.168.0.0/16"              # /16 prefix for internal IPv4 tunnel space (e.g. '192.168.0.0/16')
-NorNet_IPv6TunnelPrefix="2001:700:4100:0:ffff::/80"   # /80 prefix for internal IPv6 tunnel space (e.g. '2001:700:4100:0:ffff::/80')
+NorNet_IPv4TunnelPrefix="172.20.0.0/16"             # /16 prefix for internal IPv4 tunnel space (e.g. '192.168.0.0/16')
+NorNet_IPv6TunnelPrefix="fd00:dead:beef:0:0::/72"   # /72 prefix for internal IPv6 tunnel space (e.g. '2001:700:4100:0:ffff::/72')
 
 # The domain name of the central site
 # (it will e.g. be used with the alias 'nfs' to look up the file server!)
-NorNet_CentralSite_DomainName="simula.nornet"
+NorNet_CentralSite_DomainName="alpha.test"
 
 # Public tunnelbox IP of Central Site for Default Provider. Needed for bootstrapping other tunnelboxes!
-NorNet_CentralSite_BootstrapTunnelbox="128.39.36.143"
-NorNet_CentralSite_BootstrapProviderIndex=1
-
-# Node index range for slices
-NorNet_Slice_NodeIndexRange="120 199"
+NorNet_CentralSite_BootstrapTunnelbox="172.16.1.2"
+NorNet_CentralSite_BootstrapProviderIndex=255
 
 # The provider list
 # ------ Norway -----------------------------------------------------------------------------------

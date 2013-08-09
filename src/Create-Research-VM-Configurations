@@ -1,0 +1,72 @@
+#!/bin/bash -e
+#
+# Create Research VM Configurations
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+NORNET_DIRECTORY="/etc/nornet"
+
+# Check whether NorNet directory is existing
+if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
+   . $NORNET_DIRECTORY/nornetapi-config
+elif [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
+fi
+
+
+VMs=`sudo -u $NorNet_LocalNode_NorNetUser Show-VSystems | grep '^[a-z].*nornet$'`
+echo  "vms=$VMs"
+for vm in $VMs ; do
+   echo $vm
+   echo -e "\x1b[34mConfiguration for $vm:\x1b[0m"
+   
+   address=`host "$vm" | awk '/^[a-zA-Z0-9.-]+ has address/ { print $4 }'`
+   if [ "$address" == "" ] ; then
+      echo "Skipping this machine. It is not in DNS!"      
+   else
+      (
+         echo "NAME=\"$vm"\"
+         echo "STARTDELAY=30"
+         echo "STOPDELAY=30"
+         echo "OPTIONS=\"default\""
+         echo "AUTO_UPDATE_BOOTCD=\"default\""
+         echo "WATCHDOG_COMMAND=\"ping -c5 -i0.2 -W3 $address && Check-Research-Node \\\"\$NAME\\\"\""
+      ) >"/etc/nornet/vsystems/70-$vm.new"
+   fi
+   if [ -e /etc/nornet/vsystems/70-$vm ] ; then
+      echo "Differences to /etc/nornet/vsystems/70-$vm:"
+      colordiff /etc/nornet/vsystems/70-$vm /etc/nornet/vsystems/70-$vm.new || true
+   else
+      echo "New configuration for /etc/nornet/vsystems/70-$vm:"
+      cat /etc/nornet/vsystems/70-$vm.new
+   fi
+
+   echo -en "\x1b[33mApply changes to virtual system configuration?\x1b[0m [yes/no]? "
+   read -er applyChanges
+   if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
+      echo "Skipped!"
+   else
+      mv /etc/nornet/vsystems/70-$vm.new /etc/nornet/vsystems/70-$vm
+
+      # Speed to re-install if the machine is currently not working properly.
+      echo "14" >/usr/local/share/nornet-server/nornet-server-watchdog-$vm.failcount
+      rm -f /usr/local/share/nornet-server/nornet-server-watchdog-$vm.failcount~
+   fi
+done

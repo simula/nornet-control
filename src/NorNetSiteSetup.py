@@ -79,6 +79,18 @@ def makeNorNetTagTypes():
    makeTagType('interface/nornet', 'NorNet Managed Interface',        'nornet_is_managed_interface')
    makeTagType('interface/nornet', 'NorNet Interface Provider Index', 'nornet_ifprovider_index')
 
+   makeTagType('slice/nornet',     'NorNet Managed Slice',            'nornet_is_managed_slice')
+   makeTagType('slice/nornet',     'NorNet Slice Node Index',         'nornet_slice_node_index')
+   makeTagType('slice/nornet',     'NorNet Slice Own Addresses',      'nornet_slice_own_addresses')
+
+   # ====== Special tags for ovs_bridge handling ============================
+   makeTagType('interface/ovs', 'Name of Open vSwitch bridge', 'ovs_bridge')
+   getPLCServer().AddRoleToTagType(getPLCAuthentication(), 'admin', 'ovs_bridge')
+   getPLCServer().AddRoleToTagType(getPLCAuthentication(), 'tech',  'ovs_bridge')
+
+   makeTagType('slice/network', 'Placeholder for interface information while we wait for VirtualInterface objects in PLCAPI', 'interface')
+   getPLCServer().AddRoleToTagType(getPLCAuthentication(), 'admin', 'interface')
+ 
 
 # ###### Remove NorNet site #################################################
 def removeNorNetSite(siteName):
@@ -111,7 +123,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
                    siteNorNetIndex, siteCity, siteProvince, cityCountry, siteCountryCode,
                    siteLatitude, siteLogitude, siteAltitude,
                    providerList, defaultProvider, tbInternalInterface,
-                   dnsServers, ntpServers):
+                   ntpServers):
    siteLabel= makeNameFromUnicode(siteName, False)
    siteName = siteLabel['ascii']
    try:
@@ -288,6 +300,10 @@ def updateNorNetInterfaces(node, site, norNetInterface):
          interfaceID      = interface['interface_id']
          interfaceTagList = getPLCServer().DeleteInterface(getPLCAuthentication(), interfaceID)
 
+      primaryInterfaceID = None
+      ipv6Primary        = None
+      ipv6Gateway        = None
+      ipv6Secondaries    = []
       for onlyDefault in [ True, False ]:
          for providerIndex in providerList:
 
@@ -297,14 +313,14 @@ def updateNorNetInterfaces(node, site, norNetInterface):
 
                if providerIndex == siteDefProviderIndex:
                   # Interface of default provider must use the hostname!
-                  ifHostName     = nodeName.split('.')[0] + '.' + str.lower(siteDomain)
+                  ifHostName = nodeName.split('.')[0] + '.' + str.lower(siteDomain)
                else:
-                  ifHostName     = nodeName.split('.')[0] + '.' + str.lower(providerName) + '.' + str.lower(siteDomain)
-               ifIPv4            = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4)
-               ifGateway         = makeNorNetIP(providerIndex, siteIndex, 1, 4)
-               ifDNS             = ifGateway   # The tunnelbox is also the DNS server
-               ifProviderNetwork = makeNorNetIP(providerIndex, 0, 0, 4)
-               ifAlias           = providerIndex
+                  ifHostName = nodeName.split('.')[0] + '.' + str.lower(providerName) + '.' + str.lower(siteDomain)
+               ifIPv4        = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4)
+               ifIPv6        = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6)
+               ifGatewayIPv4 = makeNorNetIP(providerIndex, siteIndex, 1, 4)
+               ifGatewayIPv6 = makeNorNetIP(providerIndex, siteIndex, 1, 6)
+               ifAlias       = providerIndex
 
                interface = {}
                interface['hostname']      = ifHostName
@@ -315,25 +331,48 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                interface['netmask']       = str(ifIPv4.netmask)
                interface['network']       = str(ifIPv4.network)
                interface['broadcast']     = str(ifIPv4.broadcast)
-               interface['gateway']       = str(ifGateway.ip)
+               interface['gateway']       = str(ifGatewayIPv4.ip)
                if providerIndex == siteDefProviderIndex:
                   interface['is_primary'] = True
-                  interface['dns1']       = str(ifDNS.ip)
+                  interface['dns1']       = str(ifGatewayIPv4.ip)   # The tunnelbox is also the DNS server
+                  ipv6Primary             = ifIPv6
+                  ipv6Gateway             = ifGatewayIPv6.ip
+                  interface['dns2']       = str(ifGatewayIPv6.ip)   # The tunnelbox is also the DNS server
                else:
                   interface['is_primary'] = False
+                  ipv6Secondaries.append(ifIPv6)
                # print interface
 
                interfaceID = getPLCServer().AddInterface(getPLCAuthentication(), nodeID, interface)
                if interfaceID <= 0:
                   error('Unable to add interface ' + str(ifIPv4.ip))
 
-               if providerIndex != siteDefProviderIndex:
+               if providerIndex == siteDefProviderIndex:
+                  primaryInterfaceID = interfaceID
+                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, "ovs_bridge", 'public0') <= 0:
+                     error('Unable to add "ovs_bridge" tag to interface ' + str(ifIPv4.ip))
+               else:
                   if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, "alias", str(ifAlias)) <= 0:
                      error('Unable to add "alias" tag to interface ' + str(ifIPv4.ip))
+
                if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, 'nornet_is_managed_interface', '1') <= 0:
                   error('Unable to add "nornet_is_managed_interface" tag to interface ' + str(ifIPv4.ip))
                if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, 'nornet_ifprovider_index', str(providerIndex)) <= 0:
                   error('Unable to add "nornet_ifprovider_index" tag to interface ' + str(ifIPv4.ip))
+
+
+      if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, "ipv6addr", str(ipv6Primary)) <= 0:
+         error('Unable to add "ipv6addr" tag to interface ' + str(ipv6Primary))
+      if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, "ipv6_defaultgw", str(ipv6Gateway)) <= 0:
+         error('Unable to add "ipv6_defaultgw" tag to interface ' + str(ipv6Gateway))
+            
+      secondaries = ""
+      for secondaryAddress in ipv6Secondaries:
+         if len(secondaries) > 0:
+            secondaries = secondaries + ' ' 
+         secondaries = secondaries + str(secondaryAddress)
+      if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, "ipv6addr_secondaries", secondaries) <= 0:
+         error('Unable to add "ipv6addr_secondaries" tag to interface ' + secondaries)
 
       return(1)
 
@@ -341,7 +380,7 @@ def updateNorNetInterfaces(node, site, norNetInterface):
       error('Updating interfaces of node ' + str(nodeID) + ' has failed: ' + str(e))
 
 
-# ###### Add or update Node tag #############################################
+# ###### Add or update node tag #############################################
 def _addOrUpdateNodeTag(nodeID, tagName, tagValue):
    filter = {
       'tagname' : tagName,
@@ -352,6 +391,18 @@ def _addOrUpdateNodeTag(nodeID, tagName, tagValue):
       return getPLCServer().AddNodeTag(getPLCAuthentication(), nodeID, tagName, tagValue)
    else:
       return getPLCServer().UpdateNodeTag(getPLCAuthentication(), tags[0]['node_tag_id'], tagValue)
+
+
+# ###### Add or update configuration file ###################################
+def _addOrUpdateConfFile(configuration):
+   filter = {
+      'dest' : configuration['dest']
+   }
+   tags = getPLCServer().GetConfFiles(getPLCAuthentication(), filter, ['conf_file_id'])
+   if len(tags) == 0:
+      return getPLCServer().AddConfFile(getPLCAuthentication(), configuration)
+   else:
+      return getPLCServer().UpdateConfFile(getPLCAuthentication(), tags[0]['conf_file_id'], configuration)
 
 
 # ###### Create NorNet node #################################################
@@ -398,6 +449,22 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       if _addOrUpdateNodeTag(nodeID, 'nornet_node_interface', norNetInterface) <= 0:
          error('Unable to add "nornet_node_interface" tag to node ' + nodeHostName)
 
+      # ====== Hack to handle openvswitch start/stop correctly ==============
+      # See https://docs.google.com/a/simula.no/document/d/1WRZ7kN6KwZRaeNOi51-uNmintCVwdkzhM2W3To6uV_Y/edit?pli=1 .
+      confFileID = _addOrUpdateConfFile({
+         'file_owner': u'root',
+         'postinstall_cmd': u'/bin/systemctl reenable openvswitch.service',
+         'error_cmd': u'', 'preinstall_cmd': u'',
+         'dest': u'/lib/systemd/system/openvswitch.service',
+         'ignore_cmd_errors': False,
+         'enabled': True,
+         'file_permissions': u'644',
+         'source': u'PlanetLabConf/openvswitch/openvswitch.service',
+         'always_update': False,
+         'file_group': u'root'})
+      if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
+         error('Unable to add openvswitch.service configuration file to node ' + nodeHostName)
+
       # ====== Add node to PCU ==============================================
       if pcuID > 0:
          oldPCUID = lookupPCUIDforNode(nodeID)
@@ -420,10 +487,9 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
 
 # ###### Remove NorNet user #################################################
 def removeNorNetUser(userName):
-   user = lookupPersonID(userName)
-   if user != None:
+   userID = lookupPersonID(userName)
+   if userID != None:
       log('Removing NorNet user ' + userName + ' ...')
-      userID = user['person_id']
       getPLCServer().DeletePerson(getPLCAuthentication(), userID)
 
 
@@ -468,3 +534,199 @@ def makeNorNetUser(userName, password, site, title, firstName, lastName, phone, 
       error('Adding user ' + userName + ' has failed: ' + str(e))
 
    return fetchNorNetUser(userName)
+
+
+# ###### Remove NorNet slice ################################################
+def removeNorNetSlice(sliceName):
+   sliceID = lookupSliceID(sliceName)
+   if sliceID != None:
+      log('Removing NorNet slice ' + sliceName + ' ...')
+      getPLCServer().DeleteSlice(getPLCAuthentication(), sliceID)
+
+
+# ###### Add or update slice tag ############################################
+def _addOrUpdateSliceTag(sliceID, node, tagName, tagValue):
+   if node != None:   
+      nodeID = node['node_id']
+      filter = {
+         'tagname'  : tagName,
+         'node_id'  : nodeID,
+         'slice_id' : sliceID
+      }
+   else:
+      nodeID = None
+      filter = {
+         'tagname'  : tagName,
+         'slice_id' : sliceID
+      }
+    
+   tags = getPLCServer().GetSliceTags(getPLCAuthentication(), filter, ['slice_tag_id','node_id'])
+   if len(tags) == 0:
+      return getPLCServer().AddSliceTag(getPLCAuthentication(), sliceID, tagName, tagValue, nodeID)
+   else:
+      return getPLCServer().UpdateSliceTag(getPLCAuthentication(), tags[0]['slice_tag_id'], tagValue)
+
+
+# ###### Create NorNet slice ################################################
+def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initscriptCode):
+   try:
+      # ====== Add slice =====================================================
+      log('Adding slice ' + sliceName + ' ...')
+      slice = {}
+      slice['name']            = sliceName
+      slice['description']     = sliceDescription
+      slice['url']             = sliceUrl
+      slice['initscript_code'] = initscriptCode
+      slice['max_nodes']       = 1000000
+
+      sliceID = lookupSliceID(sliceName)
+      if sliceID == 0:
+         sliceToAdd = slice
+         sliceID = getPLCServer().AddSlice(getPLCAuthentication(), slice)
+
+      # UpdateSlice() may only have certain fields. Therefore, initialize
+      # "slice" object again, with only the allowed fields included.
+      slice = {}
+      slice['description']     = sliceDescription
+      slice['url']             = sliceUrl
+      slice['initscript_code'] = initscriptCode
+      
+      if getPLCServer().UpdateSlice(getPLCAuthentication(), sliceID, slice) != 1:
+        sliceID = 0
+
+      if sliceID <= 0:
+         error('Unable to add/update slice ' + sliceName)
+
+      if _addOrUpdateSliceTag(sliceID, None, 'nornet_is_managed_slice', '1') <= 0:
+         error('Unable to add "nornet_is_managed_slice" tag to slice ' + sliceName)
+      if ownAddress == True:
+         allocateOwnAddress = 1
+      else:
+         allocateOwnAddress = 0
+      if _addOrUpdateSliceTag(sliceID, None, 'nornet_slice_own_addresses', str(allocateOwnAddress)) <= 0:
+         error('Unable to add "nornet_slice_own_addresses" tag to slice ' + sliceName)
+
+   except Exception as e:
+      error('Adding slice ' + sliceName + ' has failed: ' + str(e))
+
+   return fetchNorNetSlice(sliceName)
+
+
+# ###### Get slice node index of NorNet slice ###############################
+def getSliceNodeIndexOfNorNetSlice(slice, node):
+   for tag in slice['slice_tags']:
+      if ((tag['node_id'] == node['node_id']) and
+          (tag['tagname'] == 'nornet_slice_node_index')):
+         return(int(tag['value']))
+   return 0
+
+
+# ###### Find a slice node index for a new slice ############################
+def _findPossibleSliceNodeIndex(fullNodeList, fullSliceList, thisSlice, thisNode):
+   possibleSliceNodeIndexes = NorNet_Configuration['NorNet_Slice_NodeIndexRange']
+
+   for slice in fullSliceList:
+      for node in fullNodeList:
+         if ((slice['slice_id'] == thisSlice['slice_id']) and
+             (node['node_id'] == thisNode['node_id'])):
+            # Ignore current slice's allocation on current node
+            continue
+
+         if node['node_id'] in slice['slice_node_ids']:
+            sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
+            if sliceNodeIndex > 0:
+               try:
+                  possibleSliceNodeIndexes.remove(sliceNodeIndex)
+               except:
+                  pass
+
+   if len(possibleSliceNodeIndexes) > 0:
+      i = 0   # int(round(random.uniform(0, len(possibleSliceNodeIndexes)-1)))
+      return possibleSliceNodeIndexes[i]
+
+   return 0
+
+
+# ###### Add NorNet slice to NorNet nodes  ##################################
+def addNorNetSliceToNorNetNodes(fullSiteList, fullNodeList, fullSliceList, slice, nodesList):
+   nodeIDs = []
+   for node in nodesList:
+      nodeIndex = node['node_index']
+      
+      # ====== Add slice to node ============================================
+      getPLCServer().AddSliceToNodes(getPLCAuthentication(),
+                                     slice['slice_id'], [ node['node_id'] ])
+
+      # ====== Give slice its own addresses, if requested ===================
+      sliceOwnAddresses = slice['slice_own_addresses']
+      if sliceOwnAddresses != 0:
+         # ====== Get slice node index ======================================
+         sliceNodeIndex = _findPossibleSliceNodeIndex(fullNodeList, fullSliceList, slice, node)
+         if sliceNodeIndex == 0:
+            error('No possible slice node index available!')
+       
+         # ====== Create configuration ======================================
+         site = getNorNetSiteOfNode(fullSiteList, node)
+         if site == None:
+            error('Site not found?!')
+         siteIndex = site['site_index']
+
+         bridgeInterfaceConfig = {}
+         bridgeInterfaceConfig['bridge']        = 'public0'
+         bridgeInterfaceConfig['BOOTPROTO']     = 'static'
+         bridgeInterfaceConfig['DEVICE']        = 'eth0'
+         bridgeInterfaceConfig['ONBOOT']        = 'yes'
+         bridgeInterfaceConfig['PRIMARY']       = 'yes'
+         bridgeInterfaceConfig['IPV6INIT']      = 'yes'
+         bridgeInterfaceConfig['IPV6_AUTOCONF'] = 'no'
+
+         addresses       = 0
+         secondariesIPv6 = []
+         providerList = getNorNetProvidersForSite(site)
+         for onlyDefault in [ True, False ]:
+            for providerIndex in providerList:
+               if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+                    ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+
+                  # For IPv4, we only have the slice node index.
+                  ifIPv4 = makeNorNetIP(providerIndex, siteIndex, sliceNodeIndex, 4)
+                  # For IPv6, we have enough space to encode node index and slice node index!
+                  ifIPv6 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6, sliceNodeIndex)
+
+                  bridgeInterfaceConfig['IPADDR'  + str(addresses)] = str(ifIPv4.ip)
+                  bridgeInterfaceConfig['NETMASK' + str(addresses)] = str(ifIPv4.netmask)
+
+                  if addresses == 0:
+                     ifGatewayIPv4 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 4)
+                     bridgeInterfaceConfig['GATEWAY'] = str(ifGatewayIPv4.ip)
+                     bridgeInterfaceConfig['DNS1']    = str(ifGatewayIPv4.ip)
+
+                     ifGatewayIPv6 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 6)
+                     bridgeInterfaceConfig['IPV6ADDR']       = str(ifIPv6)
+                     bridgeInterfaceConfig['IPV6_DEFAULTGW'] = str(ifGatewayIPv6.ip)
+                     bridgeInterfaceConfig['DNS2']           = str(ifGatewayIPv6.ip)
+                  else:
+                     secondariesIPv6.append(ifIPv6)
+
+                  addresses = addresses + 1
+                  
+         if addresses > 1:
+            secondaries = ''
+            for secondaryIPv6 in secondariesIPv6:
+               if len(secondaries) > 0:
+                  secondaries = secondaries + ' '
+               secondaries = secondaries + str(secondaryIPv6)
+            bridgeInterfaceConfig['IPV6ADDR_SECONDARIES'] = secondaries
+            
+         # print bridgeInterfaceConfig
+         if _addOrUpdateSliceTag(slice['slice_id'], node, 'nornet_slice_node_index', str(sliceNodeIndex)) <= 0:
+            error('Unable to add "nornet_slice_node_index" tag to slice ' + sliceName)
+         if _addOrUpdateSliceTag(slice['slice_id'], node, 'interface', str(bridgeInterfaceConfig)) <= 0:
+            error('Unable to add "interface" tag to slice ' + sliceName)
+
+
+# ###### Add users to NorNet slice  #########################################
+def addNorNetUsersToNorNetSlice(slice, usersList):
+   for user in usersList:
+      getPLCServer().AddPersonToSlice(getPLCAuthentication(),
+                                      user['user_id'], slice['slice_id'])
