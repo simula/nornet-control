@@ -83,6 +83,12 @@ def makeNorNetTagTypes():
    makeTagType('slice/nornet',     'NorNet Slice Node Index',         'nornet_slice_node_index')
    makeTagType('slice/nornet',     'NorNet Slice Own Addresses',      'nornet_slice_own_addresses')
 
+   # ====== Missing tags for plnet ==========================================
+   makeTagType('interface/config', 'IPv6 Auto-Configuration',          'ipv6_autoconf')
+   for i in range(1,10):
+      makeTagType('interface/config', 'IPv4 Secondary IPv4 Address',   'ipaddr'  + str(i))
+      makeTagType('interface/config', 'IPv4 Secondary IPv4 Netmask',   'netmask' + str(i))
+
    # ====== Special tags for ovs_bridge handling ============================
    makeTagType('interface/ovs', 'Name of Open vSwitch bridge', 'ovs_bridge')
    getPLCServer().AddRoleToTagType(getPLCAuthentication(), 'admin', 'ovs_bridge')
@@ -304,6 +310,7 @@ def updateNorNetInterfaces(node, site, norNetInterface):
       ipv6Primary        = None
       ipv6Gateway        = None
       ipv6Secondaries    = []
+      ipv4SecondaryIndex = 1
       for onlyDefault in [ True, False ]:
          for providerIndex in providerList:
 
@@ -320,52 +327,51 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                ifIPv6        = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6)
                ifGatewayIPv4 = makeNorNetIP(providerIndex, siteIndex, 1, 4)
                ifGatewayIPv6 = makeNorNetIP(providerIndex, siteIndex, 1, 6)
-               ifAlias       = providerIndex
 
-               interface = {}
-               interface['hostname']      = ifHostName
-               interface['ifname']        = norNetInterface
-               interface['type']          = 'ipv4'
-               interface['method']        = 'static'
-               interface['ip']            = str(ifIPv4.ip)
-               interface['netmask']       = str(ifIPv4.netmask)
-               interface['network']       = str(ifIPv4.network)
-               interface['broadcast']     = str(ifIPv4.broadcast)
-               interface['gateway']       = str(ifGatewayIPv4.ip)
                if providerIndex == siteDefProviderIndex:
+                  interface = {}
+                  interface['hostname']   = ifHostName
+                  interface['ifname']     = norNetInterface
+                  interface['type']       = 'ipv4'
+                  interface['method']     = 'static'
+                  interface['ip']         = str(ifIPv4.ip)
+                  interface['netmask']    = str(ifIPv4.netmask)
+                  interface['network']    = str(ifIPv4.network)
+                  interface['broadcast']  = str(ifIPv4.broadcast)
+                  interface['gateway']    = str(ifGatewayIPv4.ip)
                   interface['is_primary'] = True
                   interface['dns1']       = str(ifGatewayIPv4.ip)   # The tunnelbox is also the DNS server
                   ipv6Primary             = ifIPv6
                   ipv6Gateway             = ifGatewayIPv6.ip
                   interface['dns2']       = str(ifGatewayIPv6.ip)   # The tunnelbox is also the DNS server
-               else:
-                  interface['is_primary'] = False
-                  ipv6Secondaries.append(ifIPv6)
-               # print interface
 
-               interfaceID = getPLCServer().AddInterface(getPLCAuthentication(), nodeID, interface)
-               if interfaceID <= 0:
-                  error('Unable to add interface ' + str(ifIPv4.ip))
+                  primaryInterfaceID = getPLCServer().AddInterface(getPLCAuthentication(), nodeID, interface)
+                  if primaryInterfaceID <= 0:
+                     error('Unable to add interface ' + str(ifIPv4.ip))
 
-               if providerIndex == siteDefProviderIndex:
-                  primaryInterfaceID = interfaceID
-                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, "ovs_bridge", 'public0') <= 0:
+                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, "ovs_bridge", 'public0') <= 0:
                      error('Unable to add "ovs_bridge" tag to interface ' + str(ifIPv4.ip))
+                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'nornet_is_managed_interface', '1') <= 0:
+                     error('Unable to add "nornet_is_managed_interface" tag to interface ' + str(ifIPv4.ip))
+                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'nornet_ifprovider_index', str(providerIndex)) <= 0:
+                     error('Unable to add "nornet_ifprovider_index" tag to interface ' + str(ifIPv4.ip))
+                  
                else:
-                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, "alias", str(ifAlias)) <= 0:
-                     error('Unable to add "alias" tag to interface ' + str(ifIPv4.ip))
+                  ipv6Secondaries.append(ifIPv6)
 
-               if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, 'nornet_is_managed_interface', '1') <= 0:
-                  error('Unable to add "nornet_is_managed_interface" tag to interface ' + str(ifIPv4.ip))
-               if getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, 'nornet_ifprovider_index', str(providerIndex)) <= 0:
-                  error('Unable to add "nornet_ifprovider_index" tag to interface ' + str(ifIPv4.ip))
+                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'ipaddr' + str(ipv4SecondaryIndex), str(ifIPv4.ip)) <= 0:
+                     error('Unable to add "ipaddr' + str(ipv4SecondaryIndex) + '" tag to interface ' + str(ifIPv4.ip))
+                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'netmask' + str(ipv4SecondaryIndex), str(ifIPv4.netmask)) <= 0:
+                     error('Unable to add "netmask' + str(ipv4SecondaryIndex) + '" tag to interface ' + str(ifIPv4.ip))
 
 
-      if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, "ipv6addr", str(ipv6Primary)) <= 0:
+      if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'ipv6addr', str(ipv6Primary)) <= 0:
          error('Unable to add "ipv6addr" tag to interface ' + str(ipv6Primary))
-      if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, "ipv6_defaultgw", str(ipv6Gateway)) <= 0:
+      if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'ipv6_autoconf', 'no') <= 0:
+         error('Unable to add "ipv6_autoconf" tag to interface ' + str(ipv6Primary))
+      if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'ipv6_defaultgw', str(ipv6Gateway)) <= 0:
          error('Unable to add "ipv6_defaultgw" tag to interface ' + str(ipv6Gateway))
-            
+
       secondaries = ""
       for secondaryAddress in ipv6Secondaries:
          if len(secondaries) > 0:
@@ -462,6 +468,7 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
          'source': u'PlanetLabConf/openvswitch/openvswitch.service',
          'always_update': False,
          'file_group': u'root'})
+      print 'CONF',confFileID, nodeID
       if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
          error('Unable to add openvswitch.service configuration file to node ' + nodeHostName)
 
@@ -693,8 +700,12 @@ def addNorNetSliceToNorNetNodes(fullSiteList, fullNodeList, fullSliceList, slice
                   # For IPv6, we have enough space to encode node index and slice node index!
                   ifIPv6 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6, sliceNodeIndex)
 
-                  bridgeInterfaceConfig['IPADDR'  + str(addresses)] = str(ifIPv4.ip)
-                  bridgeInterfaceConfig['NETMASK' + str(addresses)] = str(ifIPv4.netmask)
+                  if addresses == 0:
+                     bridgeInterfaceConfig['IPADDR'] = str(ifIPv4.ip)
+                     bridgeInterfaceConfig['NETMASK'] = str(ifIPv4.netmask)
+                  else:
+                     bridgeInterfaceConfig['IPADDR'  + str(addresses)] = str(ifIPv4.ip)
+                     bridgeInterfaceConfig['NETMASK' + str(addresses)] = str(ifIPv4.netmask)
 
                   if addresses == 0:
                      ifGatewayIPv4 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 4)
