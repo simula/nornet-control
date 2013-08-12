@@ -1,4 +1,10 @@
 #!/bin/bash
 
-echo vboxmanage modifyvm "$1" --nictype1 "$2" --nictype2 "$2" --nictype3 "$2" --nictype4 "$2"
-vboxmanage modifyvm "$1" --nictype1 "$2" --nictype2 "$2" --nictype3 "$2" --nictype4 "$2"
+VM="$1"
+TYPE="$2"
+if [ "$TYPE" = "" ] ; then
+   TYPE="virtio"
+fi
+
+echo vboxmanage modifyvm "$VM" --nictype1 "$TYPE" --nictype2 "$TYPE" --nictype3 "$TYPE" --nictype4 "$TYPE" --nicpromisc1 allow-all --nicpromisc2 allow-all --nicpromisc3 allow-all --nicpromisc4 allow-all
+vboxmanage modifyvm "$VM" --nictype1 "$TYPE" --nictype2 "$TYPE" --nictype3 "$TYPE" --nictype4 "$TYPE" --nicpromisc1 allow-all --nicpromisc2 allow-all --nicpromisc3 allow-all --nicpromisc4 allow-all
