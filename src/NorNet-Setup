@@ -407,7 +407,7 @@ def makeSite(site, norNetInformation, ntpServers):
       port = node[1]
       if port <= 0:
         port = i
-      makeNorNetNode(newSite, node[2], address, newPCU, port, 'eth0', 'Amiga 5000', 'reinstall')
+      makeNorNetNode(newSite, node[2], address, newPCU, port, 'eth0', 'Amiga 5000', 'boot')
 
 
 # ###### Make test setup ####################################################
