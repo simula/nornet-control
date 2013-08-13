@@ -54,7 +54,7 @@ NorNet_Configuration = {
    'NorNetPLC_Address'                         : None,
    'NorNetPLC_User'                            : None,
    'NorNetPLC_Password'                        : None,
-   
+
    'NorNet_IPv4Prefix'                         : 'BAD',
    'NorNet_IPv6Prefix'                         : 'BAD',
    'NorNet_IPv4TunnelPrefix'                   : 'BAD',
@@ -71,7 +71,7 @@ NorNet_Configuration = {
    'NorNet_LocalNode_Hostname'                 : 'localhost.localdomain',
    'NorNet_LocalNode_NorNetUser'               : 'nornetpp',
    'NorNet_LocalNode_NorNetInterface'          : None,
-   
+
    'NorNet_Slice_NodeIndexRange'               : [],
 
    'NorNet_Provider0'                          : '"UNKNOWN" "unknown" ""'
@@ -85,6 +85,16 @@ NorNet_ProviderList = { }
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # !!!! WARNING: Do not change unless you really know what you are doing! !!!!
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# Minimum and maximum indices
+NorNet_MinProviderIndex=1
+NorNet_MaxProviderIndex=255
+NorNet_MinSiteIndex=1
+NorNet_MaxSiteIndex=255
+NorNet_MinNodeIndex=1
+NorNet_MaxNodeIndex=255
+NorNet_MinSliceIndex=1
+NorNet_MaxSliceIndex=255
 
 # TOS Settings for provider selection
 NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
@@ -130,7 +140,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
 
    # ====== Open constants file =============================================
    if quietMode == False:
-      log('Reading constants from ' + NorNetPLC_ConstantsFile + ' ...')   
+      log('Reading constants from ' + NorNetPLC_ConstantsFile + ' ...')
    try:
       constantsFile = codecs.open(NorNetPLC_ConstantsFile, 'r', 'utf-8')
    except:
@@ -141,11 +151,11 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
 
       except Exception as e:
          error('Constantsuration file ' + NorNetPLC_FallbackConstantsFile + ' cannot be read: ' + str(e))
-   
+
    # ====== Open configuration file =========================================
    if includeAPIConfiguration == True:
       if quietMode == False:
-         log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')   
+         log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')
       try:
          configFile = codecs.open(NorNetPLC_ConfigFile, 'r', 'utf-8')
       except:
@@ -190,7 +200,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
          providerLongName  = unquote(provider[0])
          providerShortName = makeNameFromUnicode(unquote(provider[1]))['ascii']
          providerURL       = unquote(provider[2])
-         
+
          NorNet_ProviderList[providerIndex] = [ providerLongName, providerShortName, providerURL ]
 
 
@@ -237,7 +247,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
          user = pwd.getpwnam(getLocalNodeNorNetUser())
       except Exception as e:
          error('NorNet_LocalNode_NorNetUser has invalid user "' + str(getLocalNodeNorNetUser()) + '": ' + str(e))
-      
+
       if NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'] != None:
          try:
             NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'] = IPv4Address(NorNet_Configuration['NorNet_CentralSite_BootstrapTunnelbox'])
@@ -261,7 +271,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
          if ((NorNet_Configuration['NorNet_LocalSite_SiteIndex'] < 1) or
                (NorNet_Configuration['NorNet_LocalSite_SiteIndex'] > 255)):
             error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex must be in [1,255]!')
-         
+
       if NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] != None:
          try:
             NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] = int(NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'])
@@ -279,7 +289,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
          if ((NorNet_Configuration['NorNet_LocalNode_Index'] < 1) or
                (NorNet_Configuration['NorNet_LocalNode_Index'] > 255)):
             error('NorNet_IPv4Prefix NorNet_LocalNode_Index must be in [1,255]!')
-            
+
       if NorNet_Configuration['NorNet_Slice_NodeIndexRange'] != None:
          parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', NorNet_Configuration['NorNet_Slice_NodeIndexRange'])
          try:
@@ -293,7 +303,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
                error('NorNet_Slice_NodeIndexRange bounds must be range in form of \"start end\"!')
          except Exception as e:
             error('Bad configuration "' + NorNet_Configuration['NorNet_Slice_NodeIndexRange'] + '" for NorNet_Slice_NodeIndexRange: ' + str(e))
-         
+
 
 
 # ###### Get central site's domain name #####################################
