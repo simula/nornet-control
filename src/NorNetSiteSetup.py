@@ -630,27 +630,41 @@ def getSliceNodeIndexOfNorNetSlice(slice, node):
 
 
 # ###### Find a slice node index for a new slice ############################
-def _findPossibleSliceNodeIndex(fullNodeList, fullSliceList, thisSlice, thisNode):
-   possibleSliceNodeIndexes = NorNet_Configuration['NorNet_Slice_NodeIndexRange']
+def _findPossibleSliceNodeIndex(fullSiteList, fullNodeList, fullSliceList, thisSlice, thisNode):
+   thisSite                 = getNorNetSiteOfNode(fullSiteList, thisNode)
+   possibleSliceNodeIndexes = list(NorNet_Configuration['NorNet_Slice_NodeIndexRange'])
 
-   for slice in fullSliceList:
-      for node in fullNodeList:
+   log('Finding node ID for slice ' + thisSlice['slice_name'] + \
+       ' on node ' + thisNode['node_name'] + \
+       ' at site ' + thisSite['site_long_name'] + ' ...')
+
+   preferredNodeIndex = None
+   for node in fullNodeList:
+      site = getNorNetSiteOfNode(fullSiteList, node)
+      if site['site_id'] != thisSite['site_id']:
+         continue
+
+      log('-> Node ' + node['node_name'])   
+      for slice in fullSliceList:
          if ((slice['slice_id'] == thisSlice['slice_id']) and
              (node['node_id'] == thisNode['node_id'])):
             # Ignore current slice's allocation on current node
-            continue
+            preferredNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
 
-         if node['node_id'] in slice['slice_node_ids']:
+         elif node['node_id'] in slice['slice_node_ids']:
             sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
-            if sliceNodeIndex > 0:
-               try:
-                  possibleSliceNodeIndexes.remove(sliceNodeIndex)
-               except:
-                  pass
+            if ((sliceNodeIndex > 0) and (sliceNodeIndex in possibleSliceNodeIndexes)):
+               possibleSliceNodeIndexes.remove(sliceNodeIndex)
 
    if len(possibleSliceNodeIndexes) > 0:
-      i = 0   # int(round(random.uniform(0, len(possibleSliceNodeIndexes)-1)))
-      return possibleSliceNodeIndexes[i]
+      if ((preferredNodeIndex != None) and
+          (preferredNodeIndex in possibleSliceNodeIndexes)):
+         log('=> Using existing allocation: ' + str(preferredNodeIndex))
+         return preferredNodeIndex
+      else:
+         i = 0   # int(round(random.uniform(0, len(possibleSliceNodeIndexes)-1)))
+         log('=> Using new allocation: ' + str(possibleSliceNodeIndexes[i]))
+         return possibleSliceNodeIndexes[i]
 
    return 0
 
@@ -669,7 +683,7 @@ def addNorNetSliceToNorNetNodes(fullSiteList, fullNodeList, fullSliceList, slice
       sliceOwnAddresses = slice['slice_own_addresses']
       if sliceOwnAddresses != 0:
          # ====== Get slice node index ======================================
-         sliceNodeIndex = _findPossibleSliceNodeIndex(fullNodeList, fullSliceList, slice, node)
+         sliceNodeIndex = _findPossibleSliceNodeIndex(fullSiteList, fullNodeList, fullSliceList, slice, node)
          if sliceNodeIndex == 0:
             error('No possible slice node index available!')
        
@@ -729,12 +743,14 @@ def addNorNetSliceToNorNetNodes(fullSiteList, fullNodeList, fullSliceList, slice
                   secondaries = secondaries + ' '
                secondaries = secondaries + str(secondaryIPv6)
             bridgeInterfaceConfig['IPV6ADDR_SECONDARIES'] = secondaries
-            
-         # print bridgeInterfaceConfig
+
          if _addOrUpdateSliceTag(slice['slice_id'], node, 'nornet_slice_node_index', str(sliceNodeIndex)) <= 0:
             error('Unable to add "nornet_slice_node_index" tag to slice ' + sliceName)
          if _addOrUpdateSliceTag(slice['slice_id'], node, 'interface', str(bridgeInterfaceConfig)) <= 0:
             error('Unable to add "interface" tag to slice ' + sliceName)
+            
+         # Now, the slice list needs to be reloaded in order to update the allocation!
+         fullSliceList = fetchNorNetSliceList()
 
 
 # ###### Add users to NorNet slice  #########################################
