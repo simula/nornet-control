@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# sudo /etc/init.d/nornet-server stop;cd /nfs/pub/src/rn/nornet/nornet-control/src/scripts/;sudo modprobe vboxdrv;Show-VSystems |xargs -n1 ./update-adapters;sudo /etc/init.d/nornet-server start
+
 VM="$1"
 TYPE="$2"
 if [ "$TYPE" = "" ] ; then
