@@ -503,6 +503,15 @@ def lookupSliceID(sliceName):
       return(0)
 
 
+# ###### Get slice node index of NorNet slice ###############################
+def getSliceNodeIndexOfNorNetSlice(slice, node):
+   for tag in slice['slice_tags']:
+      if ((tag['node_id'] == node['node_id']) and
+          (tag['tagname'] == 'nornet_slice_node_index')):
+         return(int(tag['value']))
+   return 0
+
+
 # ###### Get list of node tags ##############################################
 def fetchNodeTagsList(nodeID):
    global plc_server

@@ -141,7 +141,7 @@ def resolveHostname(name, protocol=0):
 
 # ###### Get hostname from FQDN #############################################
 def getHostnameFromFQDN(fqdn):
-   match = re.search('^([a-zA-Z0-9\-]*)\.(.*)', fqdn)
+   match = re.search('^([^\.]*)\.(.*)', fqdn)
    if match != None:
       return match.group(1)
    else:
@@ -150,7 +150,7 @@ def getHostnameFromFQDN(fqdn):
 
 # ###### Get hostname from FQDN #############################################
 def getDomainFromFQDN(fqdn):
-   match = re.search('^([a-zA-Z0-9\-]*)\.(.*)', fqdn)
+   match = re.search('^([^\.]*)\.(.*)', fqdn)
    if match != None:
       return match.group(2)
    else:

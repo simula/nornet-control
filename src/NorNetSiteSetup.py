@@ -620,15 +620,6 @@ def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initscrip
    return fetchNorNetSlice(sliceName)
 
 
-# ###### Get slice node index of NorNet slice ###############################
-def getSliceNodeIndexOfNorNetSlice(slice, node):
-   for tag in slice['slice_tags']:
-      if ((tag['node_id'] == node['node_id']) and
-          (tag['tagname'] == 'nornet_slice_node_index')):
-         return(int(tag['value']))
-   return 0
-
-
 # ###### Find a slice node index for a new slice ############################
 def _findPossibleSliceNodeIndex(fullSiteList, fullNodeList, fullSliceList, thisSlice, thisNode):
    thisSite                 = getNorNetSiteOfNode(fullSiteList, thisNode)
