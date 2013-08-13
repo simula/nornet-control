@@ -188,7 +188,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
 
 
    # ====== Build provider table ============================================
-   for providerIndex in range(0,256):
+   for providerIndex in range(NorNet_MinProviderIndex - 1, NorNet_MaxProviderIndex + 1):
       try:
          provider = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', NorNet_Configuration['NorNet_Provider' + str(providerIndex)])
       except:
@@ -259,36 +259,36 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
             NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] = int(NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'])
          except Exception as e:
             error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapProviderIndex "' + NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] + ' is invalid: ' + str(e))
-         if ((NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] < 1) or
-             (NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] > 255)):
-            error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapProviderIndex must be in [1,255]!')
+         if ((NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] < NorNet_MinSiteIndex) or
+             (NorNet_Configuration['NorNet_CentralSite_BootstrapProviderIndex'] > NorNet_MaxSiteIndex)):
+            error('NorNet_IPv4Prefix NorNet_CentralSite_BootstrapProviderIndex must be in [' + str(NorNet_MinSiteIndex) + '-' + str(NorNet_MaxSiteIndex) + ']!')
 
       if NorNet_Configuration['NorNet_LocalSite_SiteIndex'] != None:
          try:
             NorNet_Configuration['NorNet_LocalSite_SiteIndex'] = int(NorNet_Configuration['NorNet_LocalSite_SiteIndex'])
          except Exception as e:
             error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex "' + NorNet_Configuration['NorNet_LocalSite_SiteIndex'] + ' is invalid: ' + str(e))
-         if ((NorNet_Configuration['NorNet_LocalSite_SiteIndex'] < 1) or
-               (NorNet_Configuration['NorNet_LocalSite_SiteIndex'] > 255)):
-            error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex must be in [1,255]!')
+         if ((NorNet_Configuration['NorNet_LocalSite_SiteIndex'] < NorNet_MinSiteIndex) or
+               (NorNet_Configuration['NorNet_LocalSite_SiteIndex'] > NorNet_MaxSiteIndex)):
+            error('NorNet_IPv4Prefix NorNet_LocalSite_SiteIndex must be in [' + str(NorNet_MinSiteIndex) + '-' + str(NorNet_MaxSiteIndex) + ']!')
 
       if NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] != None:
          try:
             NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] = int(NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'])
          except Exception as e:
             error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex "' + NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] + ' is invalid: ' + str(e))
-         if ((NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] < 1) or
-               (NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] > 255)):
-            error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex must be in [1,255]!')
+         if ((NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] < NorNet_MinProviderIndex) or
+               (NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] > NorNet_MaxProviderIndex)):
+            error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex must be in [' + str(NorNet_MinProviderIndex) + '-' + str(NorNet_MaxProviderIndex) + ']!')
 
       if NorNet_Configuration['NorNet_LocalNode_Index'] != None:
          try:
             NorNet_Configuration['NorNet_LocalNode_Index'] = int(NorNet_Configuration['NorNet_LocalNode_Index'])
          except Exception as e:
             error('NorNet_IPv4Prefix NorNet_LocalNode_Index "' + NorNet_Configuration['NorNet_LocalNode_Index'] + ' is invalid: ' + str(e))
-         if ((NorNet_Configuration['NorNet_LocalNode_Index'] < 1) or
-               (NorNet_Configuration['NorNet_LocalNode_Index'] > 255)):
-            error('NorNet_IPv4Prefix NorNet_LocalNode_Index must be in [1,255]!')
+         if ((NorNet_Configuration['NorNet_LocalNode_Index'] < NorNet_MinNodeIndex) or
+               (NorNet_Configuration['NorNet_LocalNode_Index'] > NorNet_MaxNodeIndex)):
+            error('NorNet_IPv4Prefix NorNet_LocalNode_Index must be in [' + str(NorNet_MinNodeIndex) + '-' + str(NorNet_MinNodeIndex) + ']!')
 
       if NorNet_Configuration['NorNet_Slice_NodeIndexRange'] != None:
          parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', NorNet_Configuration['NorNet_Slice_NodeIndexRange'])
@@ -296,8 +296,9 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
             if len(parameters) == 2:
                a1 = int(unquote(parameters[0]))
                a2 = int(unquote(parameters[1]))
-               if ((a1 < 1) or (a1 > 255) or (a2 < 1) or (a2 > 255) or (a2 < a1)):
-                  error('NorNet_Slice_NodeIndexRange bounds must be in [1,255]!')
+               if ((a1 < NorNet_MinSliceIndex) or (a1 > NorNet_MaxSliceIndex) or \
+                   (a2 < NorNet_MinSliceIndex) or (a2 > NorNet_MaxSliceIndex) or (a2 < a1)):
+                  error('NorNet_Slice_NodeIndexRange bounds must be in [' + str(NorNet_MaxSliceIndex) + '-' + str(NorNet_MaxSliceIndex) + ']!')
                NorNet_Configuration['NorNet_Slice_NodeIndexRange'] = range(a1, a2)
             else:
                error('NorNet_Slice_NodeIndexRange bounds must be range in form of \"start end\"!')

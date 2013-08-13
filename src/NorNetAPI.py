@@ -57,7 +57,7 @@ def loginToPLC(overrideUser = None, quietMode = False):
    else:
       user     = NorNet_Configuration['NorNetPLC_User']
       password = NorNet_Configuration['NorNetPLC_Password']
-   
+
    if quietMode == False:
       log('Logging into PLC ' + user + '/' + str(plcAddress) + ' ...')
    try:
@@ -143,7 +143,7 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
             # error('Site ' + siteName + ' has no NorNet Default Provider Index')
          if ((not re.match(r"^[a-zA-Z][a-zA-Z0-9]*$", siteAbbrev)) and (siteNameToFind == None)):
             error('Bad site abbreviation ' + siteAbbrev)
-         if (((siteIndex < 0) or (siteIndex > 255)) and (siteNameToFind == None)):
+         if (((siteIndex < NorNet_MinSiteIndex) or (siteIndex > NorNet_MaxSiteIndex)) and (siteNameToFind == None)):
             error('Bad site index ' + str(siteIndex))
 
          norNetSite = {
@@ -198,7 +198,7 @@ def getNorNetProvidersForSite(norNetSite):
          if not providerGwIPv4 in providerTbIPv4:
             error('Bad IPv4 network/gateway settings of provider ' + providerInfo[0] + \
                   ': ' + str(providerGwIPv4) + ' not in ' + str(providerGwIPv4))
-         providerTbIPv6      = IPv6Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::/0'))         
+         providerTbIPv6      = IPv6Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::/0'))
          providerGwIPv6      = IPv6Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_gateway_ipv6', '::'))
          if not providerGwIPv6 in providerTbIPv6:
             error('Bad IPv6 network/gateway settings of provider ' + providerInfo[0] + \
@@ -452,7 +452,7 @@ def fetchNorNetSlice(sliceNameToFind):
                                              [ 'slice_id', 'node_ids', 'name', 'description', 'url', 'initscript_code', 'expires' ])
       for slice in fullSliceList:
          sliceID = int(slice['slice_id'])
-       
+
          sliceTagsList = plc_server.GetSliceTags(plc_authentication,
                                                  { 'slice_id' : sliceID },
                                                  [ 'slice_id', 'node_id', 'tagname', 'value' ])

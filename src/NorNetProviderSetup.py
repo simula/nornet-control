@@ -35,12 +35,12 @@ def makeNorNetIP(provider, site, node, version, sliceIndex = 0):
    p = int(provider)
    s = int(site)
    n = int(node)
-   if ((p < 0) | (p > 255)):
-      error('Bad provider ID')
-   if ((s < 0) | (s > 255)):
-      error('Bad site ID')
-   if ((n < 0) | (n > 255)):
-      error('Bad host ID')
+   if ((p < NorNetConfiguration.NorNet_MinProviderIndex - 1) or (p > NorNetConfiguration.NorNet_MaxProviderIndex)):
+      error('Bad provider index')
+   if ((s < NorNetConfiguration.NorNet_MinSiteIndex - 1) or (s > NorNetConfiguration.NorNet_MaxSiteIndex)):
+      error('Bad site index')
+   if ((n < NorNetConfiguration.NorNet_MinNodeIndex - 1) or (n > NorNetConfiguration.NorNet_MaxNodeIndex)):
+      error('Bad node index')
 
    # ====== IPv4 handling ===================================================
    if version == 4:
@@ -116,14 +116,14 @@ def getMyNorNetInformation():
 
 # ###### Get NorNet tunnel inner IPv4 address ###############################
 def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingProvider, version):
-   if ((outgoingSite < 0) | (outgoingSite > 255)):
-      error('Bad site ID')
-   if ((incomingSite < 0) | (incomingSite > 255)):
-      error('Bad site ID')
-   if ((outgoingProvider < 0) | (outgoingProvider > 255)):
-      error('Bad provider ID')
-   if ((incomingProvider < 0) | (incomingProvider > 255)):
-      error('Bad provider ID')
+   if ((outgoingSite < NorNetConfiguration.NorNet_MinSiteIndex - 1) or (outgoingSite > NorNetConfiguration.NorNet_MaxSiteIndex)):
+      error('Bad site index')
+   if ((incomingSite < NorNetConfiguration.NorNet_MinSiteIndex - 1) or (incomingSite > NorNetConfiguration.NorNet_MaxSiteIndex)):
+      error('Bad site index')
+   if ((outgoingProvider < NorNetConfiguration.NorNet_MinProviderIndex - 1) or (outgoingProvider > NorNetConfiguration.NorNet_MaxProviderIndex)):
+      error('Bad provider index')
+   if ((incomingProvider < NorNetConfiguration.NorNet_MinProviderIndex - 1) or (incomingProvider > NorNetConfiguration.NorNet_MaxProviderIndex)):
+      error('Bad provider index')
 
    if ((outgoingSite == 0) and (incomingSite == 0)):
       if version == 4:
@@ -164,14 +164,14 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
 
 # ###### Get NorNet interface IPv4 address ##################################
 def makeNorNetTunnelKey(outgoingSite, outgoingProvider, incomingSite, incomingProvider):
-   if ((outgoingSite < 0) | (outgoingSite > 255)):
-      error('Bad site ID')
-   if ((incomingSite < 0) | (incomingSite > 255)):
-      error('Bad site ID')
-   if ((outgoingProvider < 0) | (outgoingProvider > 255)):
-      error('Bad provider ID')
-   if ((incomingProvider < 0) | (incomingProvider > 255)):
-      error('Bad provider ID')
+   if ((outgoingSite < NorNetConfiguration.NorNet_MinSiteIndex) or (outgoingSite > NorNetConfiguration.NorNet_MaxSiteIndex)):
+      error('Bad site index')
+   if ((incomingSite < NorNetConfiguration.NorNet_MinSiteIndex) or (incomingSite > NorNetConfiguration.NorNet_MaxSiteIndex)):
+      error('Bad site index')
+   if ((outgoingProvider < NorNetConfiguration.NorNet_MinProviderIndex) or (outgoingProvider > NorNetConfiguration.NorNet_MaxProviderIndex)):
+      error('Bad provider index')
+   if ((incomingProvider < NorNetConfiguration.NorNet_MinProviderIndex) or (incomingProvider > NorNetConfiguration.NorNet_MaxProviderIndex)):
+      error('Bad provider index')
 
    if incomingSite < outgoingSite:
       sLow  = incomingSite

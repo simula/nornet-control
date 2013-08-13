@@ -1205,7 +1205,6 @@ for slice in fullSliceList:
          sliceDNSName   = str.replace(slice['slice_name'], '_', '-')
          sliceHostname  = sliceDNSName + '.' + getHostnameFromFQDN(node['node_utf8'])
          sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
-         print sliceHostname
          sliceNode = makeNodeForDNS(sliceHostname,
                                     getNorNetSiteOfNode(fullSiteList, node),
                                     getSliceNodeIndexOfNorNetSlice(slice, node),
