@@ -1207,20 +1207,23 @@ for i in range(NorNet_MinNodeIndex + 1, NorNet_MaxNodeIndex + 1):
          aliases[i] = parameters
 
 # ====== Handle slices ======================================================
-for slice in fullSliceList:
-   for node in siteNodeList:
-      if node['node_id'] in slice['slice_node_ids']:
-         sliceDNSName   = str.replace(slice['slice_name'], '_', '-')
-         sliceHostname  = sliceDNSName + '.' + getHostnameFromFQDN(node['node_utf8'])
-         sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
-         sliceNode = makeNodeForDNS(sliceHostname,
-                                    getNorNetSiteOfNode(fullSiteList, node),
-                                    node['node_index'],
-                                    node['node_model'], 'Slice ' + slice['slice_name'],
-                                   'slice')
-         # Add a pseudo entry to create a slice address later
-         sliceNode['pseudo_slice_node_index'] = getSliceNodeIndexOfNorNetSlice(slice, node)
-         additionalNodes.append(sliceNode)
+if fullSliceList != None:
+   for slice in fullSliceList:
+      for node in siteNodeList:
+         if node['node_id'] in slice['slice_node_ids']:
+            sliceDNSName   = str.replace(slice['slice_name'], '_', '-')
+            sliceHostname  = sliceDNSName + '.' + getHostnameFromFQDN(node['node_utf8'])
+            sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
+            sliceNode = makeNodeForDNS(sliceHostname,
+                                       getNorNetSiteOfNode(fullSiteList, node),
+                                       node['node_index'],
+                                       node['node_model'], 'Slice ' + slice['slice_name'],
+                                      'slice')
+            # Add a pseudo entry to create a slice address later
+            sliceNode['pseudo_slice_node_index'] = getSliceNodeIndexOfNorNetSlice(slice, node)
+            additionalNodes.append(sliceNode)
+else:
+   log('WARNING: There are no slices! Is the user role correct?')
 
 
 # ====== Create Bind configuration ==========================================
