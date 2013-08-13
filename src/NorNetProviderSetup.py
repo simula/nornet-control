@@ -41,6 +41,8 @@ def makeNorNetIP(provider, site, node, version, sliceIndex = 0):
       error('Bad site index')
    if ((n < NorNetConfiguration.NorNet_MinNodeIndex - 1) or (n > NorNetConfiguration.NorNet_MaxNodeIndex)):
       error('Bad node index')
+   if ((sliceIndex < NorNetConfiguration.NorNet_MinSliceIndex - 1) or (sliceIndex > NorNetConfiguration.NorNet_MaxSliceIndex)):
+      error('Bad slice index')
 
    # ====== IPv4 handling ===================================================
    if version == 4:
@@ -50,6 +52,11 @@ def makeNorNetIP(provider, site, node, version, sliceIndex = 0):
          prefix = 16;    # NorNet + Provider
       else:
          prefix = 8;     # NorNet
+
+      # For IPv4, we only have the slice node index.
+      if sliceIndex != 0:
+         # Replace the node index by the slice index.
+         n = sliceIndex
 
       a = IPv4Address('0.' + str(p) + '.' + str(s) + '.' + str(n))
       a = int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix']) | int(a)
@@ -63,6 +70,8 @@ def makeNorNetIP(provider, site, node, version, sliceIndex = 0):
          prefix = 56;    # NorNet + Provider
       else:
          prefix = 48;    # NorNet
+
+      # For IPv6, we have enough space to encode node index and slice node index!
 
       a = IPv6Address('0:0:0:' + \
                       str.replace(hex((p << 8) | s), '0x', '') + '::' + \

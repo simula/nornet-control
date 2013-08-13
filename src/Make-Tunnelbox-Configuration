@@ -350,8 +350,16 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
 
             # ====== Add internal addresses =================================
             for version in [ 4, 6 ]:
-               # ====== Skip unsupported address family =====================
-               nodeAddress = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], version)
+               # ====== Obtain the address ==================================
+               try:
+                  # Try to read the pseudo entry with the slice node index.
+                  sliceNodeIndex = node['pseudo_slice_node_index']
+               except:
+                  # No slice, just a regular node.
+                  sliceNodeIndex = 0
+
+               nodeAddress = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], version, sliceNodeIndex)
+
                # ====== Hostname for default provider's address =============
                if phase == 1:
                   if localProviderIndex == localSite['site_default_provider_index']:
@@ -1207,9 +1215,11 @@ for slice in fullSliceList:
          sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
          sliceNode = makeNodeForDNS(sliceHostname,
                                     getNorNetSiteOfNode(fullSiteList, node),
-                                    getSliceNodeIndexOfNorNetSlice(slice, node),
+                                    node['node_index'],
                                     node['node_model'], 'Slice ' + slice['slice_name'],
                                    'slice')
+         # Add a pseudo entry to create a slice address later
+         sliceNode['pseudo_slice_node_index'] = getSliceNodeIndexOfNorNetSlice(slice, node)
          additionalNodes.append(sliceNode)
 
 
