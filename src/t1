@@ -5,11 +5,24 @@ from NorNetTools         import *;
 from NorNetConfiguration import *;
 
 
-print removeComment('"ilo-åklungen"       "HP DL-320"  "iLO on Physical Server #1"')
-print removeComment('\'"ilo-åklungen"       "HP DL-320"  "iLO on Physical Server #1"\'')
 
-print removeComment('"ilo-åklungen"       "HP DL-320"  "iLO on Physical Server #1" # bla')
-print removeComment('\'"ilo-åklungen"       "HP DL-320"  "iLO on Physical Server #1"\' # bla bla')
+# ###### Get hostname from FQDN #############################################
+def getHostnameFromFQDN(fqdn):
+   match = re.search('^([^\.]*)\.(.*)', fqdn)
+   if match != None:
+      return match.group(1)
+   else:
+      return fqdn
 
-print removeComment('"ilo-åklungen"       "HP DL-320"  "iLO on Physical Server #1" # bla """"')
-print removeComment('\'"ilo-åklungen"       "HP DL-320"  "iLO on Physical Server #1"\' # bla bla \'"\'')
+
+# ###### Get hostname from FQDN #############################################
+def getDomainFromFQDN(fqdn):
+   match = re.search('^([^\.]*)\.(.*)', fqdn)
+   if match != None:
+      return match.group(2)
+   else:
+      return ''
+
+
+for fqdn in [ "åklungen.alpha.test", "test.alpha.test", "system.alpha.test", "rekesmørbrød.alpha.test", "kölsch.alpha.test" ]:
+   print getHostnameFromFQDN(fqdn), "\t", getDomainFromFQDN(fqdn)
