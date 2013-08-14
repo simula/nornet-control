@@ -152,7 +152,7 @@ def addProviderToName(hostName, providerName, domainName):
    if getDomainFromFQDN(hostName) != domainName:
       hostName2 = getHostnameFromFQDN(getDomainFromFQDN(hostName))
       if getDomainFromFQDN(getDomainFromFQDN(hostName)) != domainName:
-         error('Bad host name/domain name: ' + hostName + '/' + domainName)
+         raise Exception('Bad host name/domain name: ' + hostName + '/' + domainName)
       hostName = hostName1 + '.' + hostName2
    else:
       hostName = hostName1
@@ -365,63 +365,63 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
                   if localProviderIndex == localSite['site_default_provider_index']:
                      if version == 6:   # Just add entry once!
                         writeRR(siteZoneFile, node['node_name'] + '.', 'CNAME',
-                                addProviderToName(node['node_name'],
-                                                  str.lower(localProvider['provider_short_name']), localSite['site_domain']))
+                                addProviderToName(node['node_name'] + '.',
+                                                  str.lower(localProvider['provider_short_name']), siteFQDN))
                         # ====== Special aliases () ============================
                         # For PLC, Monitor, File Server
                         if ((localSite['site_index'] == NorNet_SiteIndex_PLC) and
                             (node['node_index'] == NorNet_NodeIndex_PLC) and
                             (node['node_name'] != 'plc')):
                            writeRR(siteZoneFile, 'plc.' + siteFQDN, 'CNAME',
-                                   addProviderToName(node['node_name'],
-                                                     str.lower(localProvider['provider_short_name']), localSite['site_domain']))
+                                   addProviderToName(node['node_name'] + '.',
+                                                     str.lower(localProvider['provider_short_name']), siteFQDN))
                         if ((localSite['site_index'] == NorNet_SiteIndex_Monitor) and
                             (node['node_index'] == NorNet_NodeIndex_Monitor) and
                             (node['node_name'] != 'monitor')):
                            writeRR(siteZoneFile, 'monitor.' + siteFQDN, 'CNAME',
-                                   addProviderToName(node['node_name'],
-                                                     str.lower(localProvider['provider_short_name']), localSite['site_domain']))
+                                   addProviderToName(node['node_name'] + '.',
+                                                     str.lower(localProvider['provider_short_name']), siteFQDN))
                            writeRR(siteZoneFile, siteFQDN, 'MX',
-                                   '10 ' + addProviderToName(node['node_name'],
-                                                             str.lower(localProvider['provider_short_name']), localSite['site_domain']))
+                                   '10 ' + addProviderToName(node['node_name'] + '.',
+                                                             str.lower(localProvider['provider_short_name']), siteFQDN))
                         if ((localSite['site_index'] == NorNet_SiteIndex_FileSrv) and
                             (node['node_index'] == NorNet_NodeIndex_FileSrv)):
                            if (node['node_name'] != 'nfs'):
                               writeRR(siteZoneFile, 'nfs.' + siteFQDN, 'CNAME',
-                                      addProviderToName(node['node_name'],
-                                                        str.lower(localProvider['provider_short_name']), localSite['site_domain']))
+                                      addProviderToName(node['node_name'] + '.',
+                                                        str.lower(localProvider['provider_short_name']), siteFQDN))
                            if (node['node_name'] != 'tftp'):
                                writeRR(siteZoneFile, 'tftp.' + siteFQDN, 'CNAME',
-                                       addProviderToName(node['node_name'],
-                                                         str.lower(localProvider['provider_short_name']), localSite['site_domain']))
+                                       addProviderToName(node['node_name'] + '.',
+                                                         str.lower(localProvider['provider_short_name']), siteFQDN))
                # ====== Hostname for current provider's address =============
                elif phase == 2:
                   if includeNodeIP(node, localSite, localProviderIndex, version):
                      writeRR(siteZoneFile,
-                             addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']), localSite['site_domain']),
+                             addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN),
                              rrTypeForAddress(nodeAddress),
                              str(nodeAddress.ip))
                   if version == 6:   # Just add entry once!
                      writeRR(siteZoneFile,
-                             addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']), localSite['site_domain']),
+                             addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN),
                              'HINFO', '"' + node['node_model'] + '/' + localProvider['provider_long_name'] + '" "' + node['node_type'] + '"')
                      writeLOC(siteZoneFile,
-                              addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']), localSite['site_domain']),
+                              addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN),
                               localSite)
                # ====== Hostname with *all* addresses =======================
                else:
                   if includeNodeIP(node, localSite, localProviderIndex, version):
                      writeRR(siteZoneFile,
-                             addProviderToName(node['node_name'], 'all', localSite['site_domain']),
+                             addProviderToName(node['node_name'] + '.', 'all', siteFQDN),
                              rrTypeForAddress(nodeAddress),
                              str(nodeAddress.ip))
                   if ((localProviderIndex == localSite['site_default_provider_index']) and
                       (version == 6)):   # Just add entry once!
                      writeRR(siteZoneFile,
-                             addProviderToName(node['node_name'], 'all', localSite['site_domain']),
+                             addProviderToName(node['node_name'] + '.', 'all', siteFQDN),
                              'HINFO', '"' + node['node_model'] + '" "' + node['node_type'] + '"')
                      writeLOC(siteZoneFile,
-                              addProviderToName(node['node_name'], 'all', localSite['site_domain']),
+                              addProviderToName(node['node_name'] + '.', 'all', siteFQDN),
                               localSite)
 
       # ====== Add aliases =========================================
@@ -452,18 +452,18 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
          for localProviderIndex in localProviderList:
             localProvider = localProviderList[localProviderIndex]
             writeRR(siteZoneFile,
-                    addProviderToName(aliasName.encode('idna'), str.lower(localProvider['provider_short_name']), localSite['site_domain']),
+                    addProviderToName(aliasName.encode('idna') + '.', str.lower(localProvider['provider_short_name']), siteFQDN),
                     'CNAME',
-                    addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']), localSite['site_domain']))
+                    addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN))
             if localProviderIndex == localSite['site_default_provider_index']:
                writeRR(siteZoneFile,
-                       aliasName.encode('idna'),
+                       aliasName.encode('idna') + '.',
                        'CNAME',
-                       addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']), localSite['site_domain']))
+                       addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN))
          writeRR(siteZoneFile,
-                 addProviderToName(aliasName.encode('idna'), 'all', localSite['site_domain']),
+                 addProviderToName(aliasName.encode('idna') + '.', 'all', siteFQDN),
                  'CNAME',
-                 addProviderToName(node['node_name'], 'all', localSite['site_domain']))
+                 addProviderToName(node['node_name'] + '.', 'all', siteFQDN))
 
    # ====== Add external addresses of tunnelbox =============================
    for localProviderIndex in localProviderList:
