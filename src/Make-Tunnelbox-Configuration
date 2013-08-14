@@ -530,7 +530,16 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
          for node in fullNodeList:
             if not includeNodeIP(node, localSite, localProviderIndex, version):
                continue
-            providerAddress = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], version)
+
+            # ====== Obtain the address ==================================
+            try:
+               # Try to read the pseudo entry with the slice node index.
+               sliceNodeIndex = node['pseudo_slice_node_index']
+            except:
+               # No slice, just a regular node.
+               sliceNodeIndex = 0
+
+            providerAddress = makeNorNetIP(localProviderIndex, localSiteIndex, node['node_index'], version, sliceNodeIndex)
             prefixLength    = 32
             if version == 6:
                prefixLength = 128
