@@ -72,7 +72,7 @@ NorNet_Configuration = {
    'NorNet_LocalNode_NorNetUser'               : 'nornetpp',
    'NorNet_LocalNode_NorNetInterface'          : None,
 
-   'NorNet_Slice_NodeIndexRange'               : [],
+   'NorNet_Slice_NodeIndexRange'               : None,
 
    'NorNet_Provider0'                          : '"UNKNOWN" "unknown" ""'
 }
