@@ -48,6 +48,11 @@ NorNet_LocalNode_NorNetInterface='eth0'
 # NorNet_FileServ_RWSystems='"kringsjaa.simula.nornet" "nordmarka.simula.nornet" "frognerseteren.simula.nornet" "voksenkollen.simula.nornet"'
 
 
+# ###### PLC configuration ##################################################
+# Node index range for slices
+NorNet_Slice_NodeIndexRange="120 199"
+
+
 # ###### NorNet Tunnelbox configuration #####################################
 # NOTE:
 # The following information is only necessary to bootstrap a tunnelbox on the

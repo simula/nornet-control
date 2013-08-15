@@ -22,9 +22,6 @@ NorNet_CentralSite_DomainName="simula.nornet"
 NorNet_CentralSite_BootstrapTunnelbox="128.39.36.143"
 NorNet_CentralSite_BootstrapProviderIndex=1
 
-# Node index range for slices
-NorNet_Slice_NodeIndexRange="120 199"
-
 # The provider list
 # ------ Norway -----------------------------------------------------------------------------------
 NorNet_Provider1='"Uninett"                                 "uninett"    "http://www.uninett.no/"'
