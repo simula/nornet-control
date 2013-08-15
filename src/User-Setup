@@ -101,13 +101,13 @@ if ((action == 'remove') or (action == 'renew')):
    if userID != 0:
       removeNorNetUser(userName)
 
-if ((action == 'add') or (action == 'renew')):   
+if ((action == 'add') or (action == 'renew')):
 
    if siteName != None:
       site = fetchNorNetSite(siteName, False)
       if site == None:
          error('Cannot find site ' + siteName)
    else:
-      site = None  
+      site = None
 
    makeNorNetUser(userName, password, site, title, firstName, lastName, phone, url, publicKey, roles)
