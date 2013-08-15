@@ -1190,7 +1190,7 @@ makeFirewallConfiguration(fullSiteList, localSite)
 # ====== Prepare additional nodes for DNS configuration =====================
 additionalNodes = []
 aliases = {}
-for i in range(NorNet_MinNodeIndex + 1, NorNet_MaxNodeIndex + 1):
+for i in range(NorNet_MinNodeIndex, NorNet_MaxNodeIndex + 1):
    # ====== Handle nodes ====================================================
    nodeConfiguration = getLocalNodeConfigurationString(i)
    if nodeConfiguration != u'':
