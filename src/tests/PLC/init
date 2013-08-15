@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ./User-Setup add --user=dreibh@simula.no --firstname=Thomas --lastname=Dreibholz "--title=Priv.-Doz. Dr." --pi --tech --user --password=set-a-password-here "--url=http://www.nntb.no"
-./User-Setup add --user=dummy@simula.nornet --firstname=Ola --lastname=Nordmann "--site=NorNet Testbed Central" --tech --password=dummy-password "--url=http://www.nntb.no"
+./User-Setup add --user=dummy@simula.nornet --firstname=Ola --lastname=Nordmann "--site=NorNet Testbed Central" --tech --user --password=dummy-password "--url=http://www.nntb.no"
 
 # Add "tech" user:
 ./NorNet-Setup manage ALL --user=dummy@simula.nornet
