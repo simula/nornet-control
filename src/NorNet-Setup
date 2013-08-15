@@ -528,10 +528,7 @@ while i < len(sys.argv):
 
 # ====== Set user ===========================================================
 if userID != 0:
-   log('Setting PI for all sites ...')
-   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'user', userID)
-   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'pi',   userID)
-   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'tech', userID)
+   log('Adding user to all sites ...')
    # ====== Add user to all sites ===========================================
    allNorNetSites = fetchNorNetSiteList(False)
    for siteIndex in allNorNetSites:

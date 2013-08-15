@@ -43,7 +43,7 @@ if len(sys.argv) > 2:
    elif sys.argv[1] == 'remove':
       action = 'remove'
 if action == '':
-   error('Usage: ' + sys.argv[0] + ' add|renew|remove [--user=User] [--site=Site] [--password=Password] [--firstname=Name] [--lastname=Name] [--phone=Phone] [--url=URL] [--publickey=Key] [--pi] [--tech]')
+   error('Usage: ' + sys.argv[0] + ' add|renew|remove [--user=User] [--site=Site] [--password=Password] [--firstname=Name] [--lastname=Name] [--phone=Phone] [--url=URL] [--publickey=Key] [--admin] [--pi] [--tech] [--user]')
 
 
 userName  = None
@@ -55,7 +55,7 @@ firstName = 'Ola'
 lastName  = 'Nordmann'
 phone     = ''
 url       = ''
-roles     = [ 'user' ]
+roles     = [ ]
 
 i = 2
 while i < len(sys.argv):
@@ -82,10 +82,14 @@ while i < len(sys.argv):
       else:
         error('Invalid option parameter: ' + sys.argv[i])
    else:
-     if sys.argv[i] == '--tech':
-        roles.append('tech')
+     if sys.argv[i] == '--admin':
+        roles.append('admin')
      elif sys.argv[i] == '--pi':
         roles.append('pi')
+     elif sys.argv[i] == '--tech':
+        roles.append('tech')
+     elif sys.argv[i] == '--user':
+        roles.append('user')
      else:
         error('Invalid role parameter: ' + sys.argv[i])
 

@@ -105,7 +105,7 @@ norNetSetup = [
    'site_providers' : [
       [ 'Provider Eins', 'eth1', IPv4Network('172.16.3.2/24'),     IPv4Address('172.16.3.1'),
                                  IPv6Network('fd00:16:3::2/64'),   IPv6Address('fd00:16:3::1') ],
-      [ 'Provider Zwei', 'eth2', IPv4Network('172.17.3.2/24'),     IPv4Address('172.17.3.1'),                                 
+      [ 'Provider Zwei', 'eth2', IPv4Network('172.17.3.2/24'),     IPv4Address('172.17.3.1'),
                                  # IPv6Network('fd00:17:3::2/64'),   IPv6Address('fd00:17:3::1') ]
                                  IPv6Network('::/0'),  IPv6Address('::') ]
    ],
@@ -280,10 +280,7 @@ while i < len(sys.argv):
 
 # ====== Set user ===========================================================
 if userID != 0:
-   log('Setting PI for all sites ...')
-   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'user', userID)
-   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'pi',   userID)
-   getPLCServer().AddRoleToPerson(getPLCAuthentication(), 'tech', userID)
+   log('Adding user to all sites ...')
    # ====== Add user to all sites ===========================================
    allNorNetSites = fetchNorNetSiteList(False)
    for siteIndex in allNorNetSites:
