@@ -331,7 +331,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
 
 
    # ====== Write forward lookup configuration ==============================
-   for node in fullNodeList:
+   for node in sorted(fullNodeList, key = lambda x: x['node_index']):
       # ====== Ensure that name is unique ===================================
       alreadyExisting = False
       try:
