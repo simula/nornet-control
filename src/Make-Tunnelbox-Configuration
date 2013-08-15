@@ -545,7 +545,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
                prefixLength = 128
             writeRR(providerZoneFile,
                     getZoneForAddress(providerAddress, prefixLength),
-                    'PTR', addProviderToName(node['node_name'], str.lower(localProvider['provider_short_name']), localSite['site_domain']))
+                    'PTR', addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN))
 
          providerZoneFile.close()
 
