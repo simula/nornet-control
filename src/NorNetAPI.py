@@ -477,8 +477,6 @@ def fetchNorNetSlice(sliceNameToFind):
 
          norNetSliceList.append(norNetSlice)
 
-      if len(norNetSliceList) == 0:
-         return None
       return(norNetSliceList)
 
    except Exception as e:
