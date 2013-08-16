@@ -211,7 +211,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 7,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Universitetet i Agder',
    'site_short_name'   : 'UiA',
    'site_url'          : 'http://www.uia.nornet',
