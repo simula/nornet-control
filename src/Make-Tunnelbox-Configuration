@@ -449,21 +449,28 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
       # Write CNAMEs
       for aliasName in aliasList:
          usedNodes[aliasName] = 1
-         for localProviderIndex in localProviderList:
-            localProvider = localProviderList[localProviderIndex]
+         punycodeName = aliasName.encode('idna')
+         if punycodeName != node['node_name']:
+            for localProviderIndex in localProviderList:
+               localProvider = localProviderList[localProviderIndex]
+
+               if localProviderIndex == localSite['site_default_provider_index']:
+                  writeRR(siteZoneFile,
+                          punycodeName + '.',
+                          'CNAME',
+                          addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN))
+               else:
+                  writeRR(siteZoneFile,
+                          addProviderToName(punycodeName + '.', str.lower(localProvider['provider_short_name']), siteFQDN),
+                          'CNAME',
+                          addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN))
+
             writeRR(siteZoneFile,
-                    addProviderToName(aliasName.encode('idna') + '.', str.lower(localProvider['provider_short_name']), siteFQDN),
+                    addProviderToName(punycodeName + '.', 'all', siteFQDN),
                     'CNAME',
-                    addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN))
-            if localProviderIndex == localSite['site_default_provider_index']:
-               writeRR(siteZoneFile,
-                       aliasName.encode('idna') + '.',
-                       'CNAME',
-                       addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN))
-         writeRR(siteZoneFile,
-                 addProviderToName(aliasName.encode('idna') + '.', 'all', siteFQDN),
-                 'CNAME',
-                 addProviderToName(node['node_name'] + '.', 'all', siteFQDN))
+                    addProviderToName(node['node_name'] + '.', 'all', siteFQDN))
+         #else:
+            #print 'skip:', punycodeName
 
    # ====== Add external addresses of tunnelbox =============================
    for localProviderIndex in localProviderList:
