@@ -486,34 +486,33 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
    # print localSite
 
    # ====== Tunnels =========================================================
-   if localSiteIndex == NorNet_SiteIndex_Central:
-      for localProviderIndex in localProviderList:
-         localProvider = localProviderList[localProviderIndex]
-         siteZoneFile.write('\n; ====== ' + localProvider['provider_long_name'] + ' Tunnels ======\n')
+   for localProviderIndex in localProviderList:
+      localProvider = localProviderList[localProviderIndex]
+      siteZoneFile.write('\n; ====== ' + localProvider['provider_long_name'] + ' Tunnels ======\n')
 
-         for remoteSiteIndex in fullSiteList:
-            if remoteSiteIndex != localSiteIndex:
-               remoteSite = fullSiteList[remoteSiteIndex]
-               remoteProviderList = getNorNetProvidersForSite(remoteSite)
-               for remoteProviderIndex in remoteProviderList:
-                  remoteProvider = remoteProviderList[remoteProviderIndex]
-                  for version in [ 4, 6 ]:
-                     localTunnelIP  = makeNorNetTunnelIP(localSiteIndex, localProviderIndex,
-                                                         remoteSiteIndex, remoteProviderIndex,
-                                                         version)
-                     remoteTunnelIP = makeNorNetTunnelIP(remoteSiteIndex, remoteProviderIndex,
-                                                         localSiteIndex, localProviderIndex,
-                                                         version)
+      for remoteSiteIndex in fullSiteList:
+         if remoteSiteIndex != localSiteIndex:
+            remoteSite = fullSiteList[remoteSiteIndex]
+            remoteProviderList = getNorNetProvidersForSite(remoteSite)
+            for remoteProviderIndex in remoteProviderList:
+               remoteProvider = remoteProviderList[remoteProviderIndex]
+               for version in [ 4, 6 ]:
+                  localTunnelIP  = makeNorNetTunnelIP(localSiteIndex, localProviderIndex,
+                                                      remoteSiteIndex, remoteProviderIndex,
+                                                      version)
+                  remoteTunnelIP = makeNorNetTunnelIP(remoteSiteIndex, remoteProviderIndex,
+                                                      localSiteIndex, localProviderIndex,
+                                                      version)
 
-                     localName  = str.lower(remoteProvider['provider_short_name']) + '.' + getHostnameFromFQDN(str.lower(remoteSite['site_domain'])) + '.' + \
-                                  str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain'])  + '.'
-                     writeRR(siteZoneFile, localName,
-                             rrTypeForAddress(localTunnelIP), str(localTunnelIP.ip))
-                     writeRR(siteZoneFile, localName,
-                             'HINFO', '"Tunnel Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '" ' +
-                             '"Remote Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '"')
-                     writeLOC(siteZoneFile, localName, localSite)
-                     siteZoneFile.write('\n')
+                  localName  = str.lower(remoteProvider['provider_short_name']) + '.' + getHostnameFromFQDN(str.lower(remoteSite['site_domain'])) + '.' + \
+                                      str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain'])  + '.'
+                  writeRR(siteZoneFile, localName,
+                          rrTypeForAddress(localTunnelIP), str(localTunnelIP.ip))
+                  writeRR(siteZoneFile, localName,
+                          'HINFO', '"Tunnel Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '" ' +
+                          '"Remote Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '"')
+                  writeLOC(siteZoneFile, localName, localSite)
+                  siteZoneFile.write('\n')
 
    siteZoneFile.close()
 
