@@ -839,7 +839,6 @@ def makeFirewallConfiguration(fullSiteList, localSite):
       parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', dnatOptionsString)
       for i in range(0, len(parameters)):
          try:
-            print parameters[i]
             options = unquote(parameters[i]).split()
             if len(options) != 4:
                error('Bad configuration "' + parameters[i] + '" inside NorNet_LocalSite_DNAT_Options')
@@ -857,8 +856,6 @@ def makeFirewallConfiguration(fullSiteList, localSite):
             dnatOptions.append([ interface, protocol, portRange, destination])
          except Exception as e:
             error('Bad configuration "' + dnatOptionsString + '" for NorNet_LocalSite_DNAT_Options: ' + str(e))
-
-   print  dnatOptions
 
 
    # ====== Get external interfaces ======================================
