@@ -67,6 +67,9 @@ NorNet_LocalSite_DefaultProviderIndex=1
 # This is the local tunnelbox's outer IPv4 address for the default provider:
 NorNet_LocalSite_TBDefaultProviderIPv4='128.39.36.143'
 
+# DNAT mappings for port mapping of external ports to internal systems:
+# NorNet_LocalSite_DNAT_Options='"tcp 5060 11.255.1.51" "udp 5060 11.255.1.51"'
+
 # DHCP Configuration:
 NorNet_LocalSite_DHCPServer_Dynamic='"40" "49"'
 
