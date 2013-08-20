@@ -1,0 +1,50 @@
+#!/bin/bash
+
+SNIFFING_INTERFACE="eth1"
+SNIFFING_INTERFACE_GATEWAY="172.16.3.1"
+SNIFFING_INTERFACE_PROVIDER=255
+SNIFFER_ADDRESS="172.31.1.3"
+
+FORWARDING_INTERFACE="tdr0"
+FORWARDING_LOCAL="2001:700:4100:101::33"
+FORWARDING_REMOTE="2001:700:4100:101::32"
+
+
+remove-sniffer ()
+{
+   echo "rem..."
+   ip rule del iif "$FORWARDING_INTERFACE" lookup $precedence
+   ip -4 route del "$SNIFFER_ADDRESS/32" dev "$FORWARDING_INTERFACE"
+   ip -6 tunnel del "$FORWARDING_INTERFACE" mode ip4ip6 local "$FORWARDING_LOCAL" remote "$FORWARDING_REMOTE"
+   iptables -t nat -D PREROUTING -i "$SNIFFING_INTERFACE" -p tcp --dport 5060 -j DNAT --to "$SNIFFER_ADDRESS"
+   echo "rem OK!"
+}
+
+
+install-sniffer ()
+{
+   remove-sniffer
+   echo "i1"
+   ip -6 tunnel add "$FORWARDING_INTERFACE" mode ip4ip6 local "$FORWARDING_LOCAL" remote "$FORWARDING_REMOTE"
+   echo "i2"
+   ip link set dev "$FORWARDING_INTERFACE" up
+   echo "i3"
+   ip -4 route add "$SNIFFER_ADDRESS/32" dev "$FORWARDING_INTERFACE"
+
+
+   ip rule add iif "$FORWARDING_INTERFACE" lookup $precedence
+
+   echo "????"
+   iptables -t nat -A PREROUTING -i "$SNIFFING_INTERFACE" -p tcp --dport 5060 -j DNAT --to "$SNIFFER_ADDRESS"
+}
+
+#    iptables -t nat -A PREROUTING -i $SNIFFING_INTERFACE -p
+
+
+
+# NOTE: Make sure that the provider ID is right
+# If changing the precedence scheme in Make-Tunnelbox-Configuration,
+# make sure to adapt the following line, too!
+let precedence=1000+$SNIFFING_INTERFACE_PROVIDER
+
+install-sniffer
