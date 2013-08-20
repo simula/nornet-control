@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
-# Tunnelbox Setup
-# Copyright (C) 2012-2013 by Thomas Dreibholz
+# Probe Endpoint Setup
+# Copyright (C) 2013 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,8 @@
 
 # Example:
 #
-# Probe-Endpoint-Setup 1000 gamma1 11.254.1.50 11.254.3.1 0x00030001 192.168.3.1
+# Probe-Endpoint-Setup add 1000 gamma1 11.254.1.50 11.254.3.1 0x00030001 192.168.3.1
+# Probe-Endpoint-Setup add 1001 gamma2 11.254.1.50 11.254.3.1 0x00030002 192.168.3.2
 #
 # TABLE=1000
 # FORWARDING_INTERFACE="tdr3-1"
@@ -34,22 +35,27 @@
 # COLLECTOR_ADDRESS="192.168.3.1"
 
 
-if [ "$#" -ne 6 ] ; then
-   echo >&2 "Usage: $0 table_id fwd_interface fwd_local fwd_remote fwd_gre_key collector_addr"
+if [ "$#" -ne 7 ] ; then
+   echo >&2 "Usage: $0 add|remove table_id fwd_interface fwd_local fwd_remote fwd_gre_key collector_addr"
    exit 1
 fi
 
+ACTION="$1"
+if [ "$ACTION" != "add" -a "$ACTION" != "remove" ] ; then
+   echo >&2 "ERROR: Bad action \"$ACTION\"."
+   exit 1
+fi
 
-TABLE="$1"
+TABLE="$2"
 
-FORWARDING_INTERFACE="$2"
-FORWARDING_LOCAL="$3"
-FORWARDING_REMOTE="$4"
-FORWARDING_GRE_KEY="$5"
+FORWARDING_INTERFACE="$3"
+FORWARDING_LOCAL="$4"
+FORWARDING_REMOTE="$5"
+FORWARDING_GRE_KEY="$6"
 FORWARDING_TTL="64"
 FORWARDING_MTU="1280"
 
-COLLECTOR_ADDRESS="$6"
+COLLECTOR_ADDRESS="$7"
 
 
 remove-sniffer ()
@@ -73,5 +79,9 @@ install-sniffer ()
 }
 
 
-install-sniffer
+if [ "$ACTION" = "add" ] ; then
+   install-sniffer
+else
+   remove-sniffer
+fi
 ip -4 route flush cache
