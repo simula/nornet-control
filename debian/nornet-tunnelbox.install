@@ -1,4 +1,5 @@
 Make-Tunnelbox-Configuration         /usr/bin
+Probe-Interface-Setup                /usr/bin
 Tunnelbox-Bootstrap-Helper           /usr/bin
 Tunnelbox-NAT-Helper                 /usr/bin
 Tunnelbox-Setup                      /usr/bin
