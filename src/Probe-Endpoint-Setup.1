@@ -1,0 +1,62 @@
+.\" Probe-Endpoint Setup
+.\" Copyright (C) 2012-2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd August 20, 2013
+.Dt Probe-Endpoint-Setup 1
+.Os Probe-Endpoint-Setup
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Probe-Endpoint-Setup
+.Nd NorNet Probe Endpoint Setup Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Probe-Endpoint-Setup
+add|remove table_id fwd_interface fwd_local fwd_remote fwd_gre_key collector_addr
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Probe-Endpoint-Setup
+sets up GRE tunnel and routing to a packet probe endpoint at the probe endpoint (i.e. the collector).
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following options are available:
+.Bl -tag -width indent
+.It add|remove
+Add or remove configuration.
+.It table_id
+The routing table ID for the return route. It MUST be unique for each tunnel!
+.It fwd_interface
+The name of the forwarding interface (i.e. the GRE tunnel).
+.It fwd_local
+The local IP address of the GRE tunnel.
+.It fwd_remote
+The remove IP address of the GRE tunnel.
+.It fwd_gre_key
+The key of the GRE tunnel.
+.It collector_addr
+The IP address of the collector (i.e. the local instance that collects the packets).
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Probe-Endpoint-Setup add 1000 gamma1 11.254.1.50 11.254.3.1 0x00030001 192.168.3.1
+.It Probe-Endpoint-Setup add 1001 gamma2 11.254.1.50 11.254.3.1 0x00030002 192.168.3.2
+.It Probe-Endpoint-Setup remove 1001 gamma2 11.254.1.50 11.254.3.1 0x00030002 192.168.3.2
+.It Probe-Endpoint-Setup remove 1000 gamma1 11.254.1.50 11.254.3.1 0x00030001 192.168.3.1
+.El
