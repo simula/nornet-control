@@ -839,25 +839,23 @@ def makeFirewallConfiguration(fullSiteList, localSite):
       parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', dnatOptionsString)
       for i in range(0, len(parameters)):
          try:
-            print parameters[i]
             options = unquote(parameters[i]).split()
-            if len(options) != 3:
+            if len(options) != 4:
                error('Bad configuration "' + parameters[i] + '" inside NorNet_LocalSite_DNAT_Options')
-            protocol = options[0]
+            interface = options[0]
+            protocol  = options[1]
             if ((protocol != 'tcp') and
                 (protocol != 'udp') and
                 (protocol != 'sctp')):
                error('Bad configuration "' + parameters[i] + '" inside NorNet_LocalSite_DNAT_Options: invalid protocol!')
-            portRange = options[1]
+            portRange = options[2]
             try:
-               destination = IPv4Address(options[2])
+               destination = IPv4Address(options[3])
             except:
                error('Bad configuration "' + parameters[i] + '" inside NorNet_LocalSite_DNAT_Options: destination is not an IPv4 address!')
-            dnatOptions.append([ protocol, portRange, destination])
+            dnatOptions.append([ interface, protocol, portRange, destination])
          except Exception as e:
             error('Bad configuration "' + dnatOptionsString + '" for NorNet_LocalSite_DNAT_Options: ' + str(e))
-
-   print  dnatOptions
 
 
    # ====== Get external interfaces ======================================
@@ -939,11 +937,10 @@ def makeFirewallConfiguration(fullSiteList, localSite):
 
    if len(dnatOptions) > 0:
       for dnatOption in dnatOptions:
-         for interfaceName in externalInterfaces:
-            v4File.write('-A PREROUTING -i "' + interfaceName + '"' + \
-                         ' -p "' + dnatOption[0] + '"' + \
-                         ' --dport "' + dnatOption[1] + '"' + \
-                         ' -j DNAT --to ' + str(dnatOption[2]) + "\n")
+         v4File.write('-A PREROUTING -i "' + dnatOption[0] + '"' + \
+                      ' -p "' + dnatOption[1] + '"' + \
+                      ' --dport "' + dnatOption[2] + '"' + \
+                      ' -j DNAT --to ' + str(dnatOption[3]) + "\n")
 
    v4File.write("COMMIT\n")
 

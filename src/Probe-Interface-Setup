@@ -1,50 +1,94 @@
-#!/bin/bash
+#!/bin/bash -e
+#
+# Probe Interface Setup
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
 
-SNIFFING_INTERFACE="eth1"
-SNIFFING_INTERFACE_GATEWAY="172.16.3.1"
-SNIFFING_INTERFACE_PROVIDER=255
-SNIFFER_ADDRESS="172.31.1.3"
 
-FORWARDING_INTERFACE="tdr0"
-FORWARDING_LOCAL="2001:700:4100:101::33"
-FORWARDING_REMOTE="2001:700:4100:101::32"
+# Example:
+#
+# Probe-Interface-Setup add eth1 255 tdr1 11.254.3.1 11.254.1.50 0x00030001 192.168.3.1
+# Probe-Interface-Setup add eth2 254 tdr2 11.254.3.1 11.254.1.50 0x00030002 192.168.3.2
+#
+# SNIFFING_INTERFACE="eth1"
+# SNIFFING_INTERFACE_PROVIDER=255
+# FORWARDING_INTERFACE="tdr1"
+# FORWARDING_LOCAL="11.254.3.1"
+# FORWARDING_REMOTE="11.254.1.50"
+# FORWARDING_GRE_KEY="0x00030001"
+# FORWARDING_TTL="64"
+# FORWARDING_MTU="1280"
+# COLLECTOR_ADDRESS="192.168.3.1"
+
+
+if [ "$#" -ne 8 ] ; then
+   echo >&2 "Usage: $0 add|remove sniffing_interface sniffing_provider_index fwd_interface fwd_local fwd_remote fwd_gre_key collector_addr"
+   exit 1
+fi
+      
+ACTION="$1"
+if [ "$ACTION" != "add" -a "$ACTION" != "remove" ] ; then
+   echo >&2 "ERROR: Bad action \"$ACTION\"."
+   exit 1
+fi
+     
+SNIFFING_INTERFACE="$2"
+SNIFFING_INTERFACE_PROVIDER="$3"
+
+FORWARDING_INTERFACE="$4"
+FORWARDING_LOCAL="$5"
+FORWARDING_REMOTE="$6"
+FORWARDING_GRE_KEY="$7"
+FORWARDING_TTL="64"
+FORWARDING_MTU="1280"
+
+COLLECTOR_ADDRESS="$8"
+
+PRECEDENCE="100"
 
 
 remove-sniffer ()
 {
-   echo "rem..."
-   ip rule del iif "$FORWARDING_INTERFACE" lookup $precedence
-   ip -4 route del "$SNIFFER_ADDRESS/32" dev "$FORWARDING_INTERFACE"
-   ip -6 tunnel del "$FORWARDING_INTERFACE" mode ip4ip6 local "$FORWARDING_LOCAL" remote "$FORWARDING_REMOTE"
-   iptables -t nat -D PREROUTING -i "$SNIFFING_INTERFACE" -p tcp --dport 5060 -j DNAT --to "$SNIFFER_ADDRESS"
-   echo "rem OK!"
+   ip rule del iif "$FORWARDING_INTERFACE" lookup "$table" >/dev/null 2>&1 || true
+   ip -4 route del "$COLLECTOR_ADDRESS/32" dev "$FORWARDING_INTERFACE" >/dev/null 2>&1 || true
+   ip -6 tunnel del "$FORWARDING_INTERFACE" >/dev/null 2>&1 || true
 }
 
 
 install-sniffer ()
 {
    remove-sniffer
-   echo "i1"
-   ip -6 tunnel add "$FORWARDING_INTERFACE" mode ip4ip6 local "$FORWARDING_LOCAL" remote "$FORWARDING_REMOTE"
-   echo "i2"
-   ip link set dev "$FORWARDING_INTERFACE" up
-   echo "i3"
-   ip -4 route add "$SNIFFER_ADDRESS/32" dev "$FORWARDING_INTERFACE"
-
-
-   ip rule add iif "$FORWARDING_INTERFACE" lookup $precedence
-
-   echo "????"
-   iptables -t nat -A PREROUTING -i "$SNIFFING_INTERFACE" -p tcp --dport 5060 -j DNAT --to "$SNIFFER_ADDRESS"
+   ip tunnel add "$FORWARDING_INTERFACE" mode gre key "$FORWARDING_GRE_KEY" local "$FORWARDING_LOCAL" remote "$FORWARDING_REMOTE" ttl "$FORWARDING_TTL"
+   ip link set dev "$FORWARDING_INTERFACE" up mtu "$FORWARDING_MTU"
+   ip -4 route add "$COLLECTOR_ADDRESS/32" dev "$FORWARDING_INTERFACE"
+   ip rule add iif "$FORWARDING_INTERFACE" lookup "$table" pref "$PRECEDENCE"
 }
-
-#    iptables -t nat -A PREROUTING -i $SNIFFING_INTERFACE -p
-
 
 
 # NOTE: Make sure that the provider ID is right
-# If changing the precedence scheme in Make-Tunnelbox-Configuration,
+# If changing the table scheme in Make-Tunnelbox-Configuration,
 # make sure to adapt the following line, too!
-let precedence=1000+$SNIFFING_INTERFACE_PROVIDER
+let table=1000000+$SNIFFING_INTERFACE_PROVIDER
 
-install-sniffer
+
+if [ "$ACTION" = "add" ] ; then
+   install-sniffer
+else
+   remove-sniffer
+fi
+ip -4 route flush cache
