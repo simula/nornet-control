@@ -3,6 +3,5 @@ NTP:
 - The Central Site tunnelbox is only server (provides time, but does not get time from other tunnelboxes).
 
 SNMP:
-- Trap sink (monitoring station) is highest node on Central Site.
 - snmpd does not like non-unique IPv6 link-local addresses (although they are on different interfaces, which is perfectly okay). GRE tunnels may have non-unique IPv6 link-local addresses, since they are automatically generated.
 Solution: Make-Tunnelbox-Configuration sets the link-local addresses of GRE tunnels explicitly. The automatically-generated addresses are removed.
