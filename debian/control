@@ -78,6 +78,7 @@ Depends: apt-file,
          imagemagick,
          kbuild,
          pbuilder,
+         r-base,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Development Tools

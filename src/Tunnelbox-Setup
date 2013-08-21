@@ -160,7 +160,7 @@ remove-tunnel ()
    if [[ "$miscOptions" =~ --remove-from-existing-tunnel ]] ; then
       removeFromExistingTunnel=1
    fi
-   
+
    if [ "$innerV6option" = "" ] ; then
       ip addr del $innerLocalIP peer $innerRemoteIP dev $interface || true
    else
@@ -282,7 +282,7 @@ show-tunnel ()
 
    success=0
    echo -n " ."
-   if [[ "$innerRemoteIP" =~ : ]] ; then   
+   if [[ "$innerRemoteIP" =~ : ]] ; then
       ping6 -w3 -c1 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && \
       if [ "$tunnelbox" != "" ] ; then
          echo -n "."
@@ -460,7 +460,7 @@ is-ipv4-network ()
 # ###### Check whether parameter is a valid IPv6 address ####################
 is-ipv6-address ()
 {
-   if [[ "$1" =~ ^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\s*$ ]] ; then   
+   if [[ "$1" =~ ^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\s*$ ]] ; then
       return 0
    fi
    return 1
@@ -486,7 +486,7 @@ is-ip-address ()
 {
    if is-ipv4-address $1 ; then
       return 0
-   elif is-ipv6-address $1 ; then      
+   elif is-ipv6-address $1 ; then
       return 0
    fi
    return 1
@@ -498,7 +498,7 @@ is-ip-network ()
 {
    if is-ipv4-network $1 ; then
       return 0
-   elif is-ipv6-network $1 ; then      
+   elif is-ipv6-network $1 ; then
       return 0
    fi
    return 1
@@ -523,7 +523,7 @@ load-configuration ()
       echo >&2 "ERROR: load-configuration called with invalid option \"$option\"!"
       exit 1
    fi
-   
+
    for directory in $directories ; do
       if [ -e "$directory/$configFile" ] ; then
          . $directory/$configFile
@@ -560,7 +560,7 @@ load-interface-configuration ()
    TUNNEL_IS_DEFAULT_ROUTE=0
    ADDITIONAL_STATIC_ROUTES=
    load-configuration "$INTERFACE" "$OPTION"
-   
+
    # ====== Check the input =================================================
    if [ "$INTERFACE_DESCRIPTION" = "" ] ; then
       echo 2>&1 "ERROR: Missing INTERFACE_DESCRIPTION setting in $INTERFACE!"
@@ -598,8 +598,8 @@ load-interface-configuration ()
    if ! is-ip-address "$TUNNEL_REMOTE_OUTER_ADDRESS" ; then
       echo 2>&1 "ERROR: Bad interface TUNNEL_REMOTE_OUTER_ADDRESS setting in $INTERFACE: $TUNNEL_REMOTE_OUTER_ADDRESS!"
       exit 1
-   fi   
-   
+   fi
+
    if ! is-ip-network "$REMOTE_SITE_NETWORK" ; then
       echo 2>&1 "ERROR: Bad interface REMOTE_SITE_NETWORK setting in $INTERFACE: $REMOTE_SITE_NETWORK!"
       exit 1
@@ -607,7 +607,7 @@ load-interface-configuration ()
    if ! is-ip-address "$REMOTE_SITE_TUNNELBOX" ; then
       echo 2>&1 "ERROR: Bad interface REMOTE_SITE_TUNNELBOX setting in $INTERFACE: $REMOTE_SITE_TUNNELBOX!"
       exit 1
-   fi   
+   fi
 
    if [[ ! "$REMOTE_SITE_METRIC" =~ ^[0-9]+$ ]] ; then
       echo 2>&1 "ERROR: Bad interface REMOTE_SITE_METRIC setting in $INTERFACE: $REMOTE_SITE_METRIC!"
@@ -628,17 +628,17 @@ load-interface-configuration ()
 activateInterface ()
 {
    load-interface-configuration "$1" -config-dir-first
-   
+
    if [[ "$2" =~ ^@ALL$|^${INTERFACE_PROVIDER}$|^${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER}$ ]] ; then
       log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
-      
+
       options=""
       if [ "$INTERFACE_TYPE" = "existing-gre" ] ; then
          options="--add-to-existing-tunnel"
       elif [ "$TUNNEL_V6LINKLOCAL_ADDRESS" != "" ] ; then
          options="--v6-linklocal $TUNNEL_V6LINKLOCAL_ADDRESS"
       fi
-      
+
       make-tunnel "$INTERFACE_NAME" "$GRE_KEY" \
          "$TUNNEL_LOCAL_OUTER_ADDRESS" "$TUNNEL_REMOTE_OUTER_ADDRESS" \
          "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" "$TUNNEL_INNER_PREFIX" "$options" && \
@@ -666,7 +666,7 @@ deactivateInterface ()
    load-interface-configuration "$1" -active-dir-first
    if [[ "$2" =~ ^@ALL$|^${INTERFACE_PROVIDER}$|^${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER}$ ]] ; then
       log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
-      
+
       options=""
       if [ "$INTERFACE_TYPE" = "existing-gre" ] ; then
          options="--remove-from-existing-tunnel"
@@ -737,9 +737,9 @@ load-provider-configuration ()
    PROVIDER_INTERNAL_NETWORK_IPv4=
    PROVIDER_INTERNAL_NETWORK_IPv6=
    PROVIDER_INTERNAL_TUNNELBOX_IPv4=
-   PROVIDER_INTERNAL_TUNNELBOX_IPv6=   
+   PROVIDER_INTERNAL_TUNNELBOX_IPv6=
    load-configuration "$PROVIDER" "$OPTION"
-   
+
    # ====== Check the input =================================================
    if [[ ! "$PROVIDER_INDEX" =~ ^[0-9]+$ ]] ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_INDEX setting in $PROVIDER: $PROVIDER_INDEX!"
@@ -756,12 +756,12 @@ load-provider-configuration ()
    if [ "$PROVIDER_LONG_NAME" = "" ] ; then
       echo 2>&1 "ERROR: Missing PROVIDER_LONG_NAME setting in $PROVIDER!"
       exit 1
-   fi   
+   fi
    if [[ ! "$PROVIDER_TOS" =~ ^[0-9]+$ ]] ; then
       echo 2>&1 "ERROR: Bad provider TOS setting in $PROVIDER: $PROVIDER_TOS!"
       exit 1
    fi
-   
+
    if [[ ! "$PROVIDER_EXTERNAL_TABLE" =~ ^[0-9]+$ ]] ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_TABLE setting in $PROVIDER: $PROVIDER_EXTERNAL_TABLE!"
       exit 1
@@ -770,7 +770,7 @@ load-provider-configuration ()
       echo 2>&1 "ERROR: Bad provider PROVIDER_EXTERNAL_TABLE_PREF setting in $PROVIDER: $PROVIDER_EXTERNAL_TABLE_PREF!"
       exit 1
    fi
-   
+
    if [[ ! "$PROVIDER_INTERNAL_TABLE" =~ ^[0-9]+$ ]] ; then
       echo 2>&1 "ERROR: Bad provider PROVIDER_INTERNAL_TABLE setting in $PROVIDER: $PROVIDER_INTERNAL_TABLE!"
       exit 1
@@ -849,7 +849,7 @@ activateProvider ()
       # 1. For directly connected NorNet networks, skip further rules and go to "main" table instead.
       # 2. If TOS is set, select outgoing provider accordingly
       # 3. Otherwise, use source address to determine the outgoing provider.
-      
+
       for externalAddress in $PROVIDER_EXTERNAL_TUNNELBOX_IPv4 $PROVIDER_EXTERNAL_TUNNELBOX_IPv6 ; do
          add-table-selector "$PROVIDER_EXTERNAL_TABLE" "$PROVIDER_EXTERNAL_TABLE_PREF" from "$externalAddress"
       done && \
@@ -872,7 +872,7 @@ activateProvider ()
       done && \
       cp "$CONFIG_DIRECTORY/$PROVIDER" "$ACTIVE_DIRECTORY/$PROVIDER" && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
-      
+
       if [ -e /etc/iproute2/rt_tables ] ; then
          ( cat /etc/iproute2/rt_tables | grep -v "^$PROVIDER_EXTERNAL_TABLE[ \t]+" | grep -v "^$PROVIDER_INTERNAL_TABLE[ \t]+"
            echo -e "$PROVIDER_EXTERNAL_TABLE\t$PROVIDER_SHORT_NAME-external"
@@ -938,7 +938,7 @@ load-bootstrap-configuration ()
    NORNET_NETWORK_IPv6=
    NORNET_TUNNEL_NETWORK_IPv4=
    NORNET_TUNNEL_NETWORK_IPv6=
-   
+
    if [ ! -e "$TUNNELBOX_BOOSTRAP_FILE" ] ; then
       echo >&2 "ERROR: Bootstrap configuration $TUNNELBOX_BOOSTRAP_FILE not found!"
       exit 1
@@ -948,7 +948,7 @@ load-bootstrap-configuration ()
    if [ "$NORNET_INTERFACE" = "" ] ; then
       echo 2>&1 "ERROR: Missing NORNET_INTERFACE setting in $TUNNELBOX_BOOSTRAP_FILE!"
       exit 1
-   fi   
+   fi
    if [[ ! "$TUNNELBOX_SITE_INDEX" =~ ^[0-9]+$ ]] ; then
       echo 2>&1 "ERROR: Bad bootstrap TUNNELBOX_SITE_INDEX setting in $TUNNELBOX_BOOSTRAP_FILE: TUNNELBOX_SITE_INDEX!"
       exit 1
@@ -960,7 +960,7 @@ load-bootstrap-configuration ()
    if [[ ! "$NORNET_TUNNEL_NETWORK_IPv4" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]+$ ]] ; then
       echo 2>&1 "ERROR: Bad bootstrap NORNET_NETWORK_IPv4 setting in $TUNNELBOX_BOOSTRAP_FILE: $NORNET_TUNNEL_NETWORK_IPv4!"
       exit 1
-   fi   
+   fi
    if [[ ! "$NORNET_NETWORK_IPv6" =~ ^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\s*/[0-9]+$ ]] ; then
       echo 2>&1 "ERROR: Bad bootstrap NORNET_NETWORK_IPv6 setting in $TUNNELBOX_BOOSTRAP_FILE: $NORNET_NETWORK_IPv6!"
       exit 1
@@ -977,7 +977,7 @@ activateTunnelbox ()
 {
    log "Activating tunnelbox"
    log-action "Deactivating reverse path filtering ..."
-   
+
    ALL_INTERFACES=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//"`
    sysctl -q -w net.ipv4.conf.default.rp_filter=0        || true
    sysctl -q -w net.ipv4.conf.all.rp_filter=0            || true
@@ -997,11 +997,11 @@ activateTunnelbox ()
       sysctl -q -w net.ipv6.conf.$interface.accept_redirects=0 || true
    done
    log-result $RESULT_GOOD
-   
+
    log-action "Turning on ECN ..."
    sysctl -q -w net.ipv4.tcp_ecn=1 && \
    log-result $RESULT_GOOD || log-result $RESULT_BAD
-   
+
    log-action "Turning on Forwarding ..."
    sysctl -q -w net.ipv4.ip_forward=1 && \
    sysctl -q -w net.ipv6.conf.all.forwarding=1 && \
@@ -1167,7 +1167,7 @@ fi
 # ====== Start/stop tunnelbox ===============================================
 if [ "$selectedProviders" == "@ALL" ] ; then
    if [ "$state" = "stop" -o "$state" = "restart" ] ; then
-      deactivateTunnelbox  
+      deactivateTunnelbox
    fi
    if [ "$state" = "start" -o "$state" = "restart" ] ; then
       activateTunnelbox
@@ -1184,7 +1184,7 @@ if [ "$state" = "stop" -o "$state" = "restart" ] ; then
       deactivateInterface "$interface" "$selectedProviders" || true
    done
    log "Deactivating providers"
-   for provider in `echo "$ALL_PROVIDER_CONFIGS $ACTIVE_PROVIDER_CONFIGS" | xargs -n1 | sort -ru` ; do 
+   for provider in `echo "$ALL_PROVIDER_CONFIGS $ACTIVE_PROVIDER_CONFIGS" | xargs -n1 | sort -ru` ; do
       deactivateProvider "$provider" "$selectedProviders" || true
    done
 fi
@@ -1201,7 +1201,7 @@ if [ "$state" = "start" -o "$state" = "restart" ] ; then
             deactivateProvider "$provider" "$selectedProviders"
             activateProvider   "$provider" "$selectedProviders"
          fi
-      fi   
+      fi
    done
 
    log "Activating interfaces"
@@ -1223,7 +1223,7 @@ if [ "$state" = "start" -o "$state" = "restart" ] ; then
          deactivateInterface "$interface" "$selectedProviders"
       fi
    done
-   
+
    log "Checking for removed providers"
    PROVIDER_CONFIGS=`find "$ACTIVE_DIRECTORY" -name '*.provider' -printf "%f\n\n" | sort`
    for provider in $PROVIDER_CONFIGS ; do

@@ -40,13 +40,13 @@ if [ "$#" -ne 8 ] ; then
    echo >&2 "Usage: $0 add|remove sniffing_interface sniffing_provider_index fwd_interface fwd_local fwd_remote fwd_gre_key collector_addr"
    exit 1
 fi
-      
+
 ACTION="$1"
 if [ "$ACTION" != "add" -a "$ACTION" != "remove" ] ; then
    echo >&2 "ERROR: Bad action \"$ACTION\"."
    exit 1
 fi
-     
+
 SNIFFING_INTERFACE="$2"
 SNIFFING_INTERFACE_PROVIDER="$3"
 
@@ -65,8 +65,8 @@ PRECEDENCE="100"
 remove-sniffer ()
 {
    ip rule del iif "$FORWARDING_INTERFACE" lookup "$table" >/dev/null 2>&1 || true
-   ip -4 route del "$COLLECTOR_ADDRESS/32" dev "$FORWARDING_INTERFACE" >/dev/null 2>&1 || true
-   ip -6 tunnel del "$FORWARDING_INTERFACE" >/dev/null 2>&1 || true
+   ip route del "$COLLECTOR_ADDRESS/32" dev "$FORWARDING_INTERFACE" >/dev/null 2>&1 || true
+   ip tunnel del "$FORWARDING_INTERFACE" >/dev/null 2>&1 || true
 }
 
 
@@ -75,7 +75,7 @@ install-sniffer ()
    remove-sniffer
    ip tunnel add "$FORWARDING_INTERFACE" mode gre key "$FORWARDING_GRE_KEY" local "$FORWARDING_LOCAL" remote "$FORWARDING_REMOTE" ttl "$FORWARDING_TTL"
    ip link set dev "$FORWARDING_INTERFACE" up mtu "$FORWARDING_MTU"
-   ip -4 route add "$COLLECTOR_ADDRESS/32" dev "$FORWARDING_INTERFACE"
+   ip route add "$COLLECTOR_ADDRESS/32" dev "$FORWARDING_INTERFACE"
    ip rule add iif "$FORWARDING_INTERFACE" lookup "$table" pref "$PRECEDENCE"
 }
 

@@ -63,7 +63,7 @@ remove-sniffer ()
 {
    ip route del default dev "$FORWARDING_INTERFACE" table "$TABLE" >/dev/null 2>&1 || true
    ip rule del from "$COLLECTOR_ADDRESS" lookup "$TABLE" pref "$PREFERENCE" >/dev/null 2>&1 || true
-   ip -6 tunnel del "$FORWARDING_INTERFACE" >/dev/null 2>&1 || true
+   ip tunnel del "$FORWARDING_INTERFACE" >/dev/null 2>&1 || true
 }
 
 
@@ -73,7 +73,7 @@ install-sniffer ()
 
    ip tunnel add "$FORWARDING_INTERFACE" mode gre key "$FORWARDING_GRE_KEY" local "$FORWARDING_LOCAL" remote "$FORWARDING_REMOTE" ttl "$FORWARDING_TTL"
    ip link set dev "$FORWARDING_INTERFACE" up mtu "$FORWARDING_MTU"
-   ip -4 addr add "$COLLECTOR_ADDRESS/32" dev "$FORWARDING_INTERFACE"
+   ip addr add "$COLLECTOR_ADDRESS/32" dev "$FORWARDING_INTERFACE"
 
    ip rule add from "$COLLECTOR_ADDRESS" lookup "$TABLE" pref "$PREFERENCE"
    ip route add default dev "$FORWARDING_INTERFACE" table "$TABLE"
