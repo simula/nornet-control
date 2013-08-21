@@ -64,13 +64,13 @@ PRECEDENCE="100"
 
 remove-sniffer ()
 {
-   ip rule del iif "$FORWARDING_INTERFACE" lookup "$table" >/dev/null 2>&1 || true
-   ip route del "$COLLECTOR_ADDRESS/32" dev "$FORWARDING_INTERFACE" >/dev/null 2>&1 || true
-   ip link set dev "$FORWARDING_INTERFACE" down >/dev/null 2>&1 || true
+   ip rule del iif "$FORWARDING_INTERFACE" lookup "$table" || true
+   ip route del "$COLLECTOR_ADDRESS/32" dev "$FORWARDING_INTERFACE" || true
+   ip link set dev "$FORWARDING_INTERFACE" down || true
 
    # NOTE: Sometimes on system shutdown, "ip tunnel del ..." hangs with
    # unregister_netdevice: waiting for tunl1 to become free.
-   # If this happens, kill "ip" to make sure the reboot can proceed.
+   # If this happens, kill "ip" and continue to let the system reboot.
    intTimeout=8
    killTimeout=10
    timeout -s INT -k $intTimeout $killTimeout ip tunnel del "$FORWARDING_INTERFACE" || true
@@ -79,7 +79,8 @@ remove-sniffer ()
 
 install-sniffer ()
 {
-   remove-sniffer
+   remove-sniffer >/dev/null 2>&1
+
    ip tunnel add "$FORWARDING_INTERFACE" mode gre key "$FORWARDING_GRE_KEY" local "$FORWARDING_LOCAL" remote "$FORWARDING_REMOTE" ttl "$FORWARDING_TTL"
    ip link set dev "$FORWARDING_INTERFACE" up mtu "$FORWARDING_MTU"
    ip route add "$COLLECTOR_ADDRESS/32" dev "$FORWARDING_INTERFACE"
