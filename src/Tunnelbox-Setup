@@ -874,7 +874,7 @@ activateProvider ()
       log-result $RESULT_GOOD || log-result $RESULT_BAD
 
       if [ -e /etc/iproute2/rt_tables ] ; then
-         ( cat /etc/iproute2/rt_tables | grep -v "^$PROVIDER_EXTERNAL_TABLE[ \t]+" | grep -v "^$PROVIDER_INTERNAL_TABLE[ \t]+"
+         ( cat /etc/iproute2/rt_tables | grep -v "^$PROVIDER_EXTERNAL_TABLE[[:space:]]" | grep -v "^$PROVIDER_INTERNAL_TABLE[[:space:]]"
            echo -e "$PROVIDER_EXTERNAL_TABLE\t$PROVIDER_SHORT_NAME-external"
            echo -e "$PROVIDER_INTERNAL_TABLE\t$PROVIDER_SHORT_NAME-internal"
          ) >/etc/iproute2/rt_tables.new
