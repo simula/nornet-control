@@ -97,29 +97,19 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
 
    outputFile.write('# ====== NorNet-Internal Networks ======\n')
    outputFile.write('auto ' + interfaceName + '\n')
-   outputFile.write('iface ' + interfaceName + ' inet manual\n')
 
-   # Turn off IPv6 auto-configuration and privacy extensions (since we are a server!)
-   outputFile.write('   pre-up /sbin/sysctl -q -e -w ' + \
-                    'net.ipv6.conf.' + interfaceName + '.use_tempaddr=0 ' + \
-                    'net.ipv6.conf.' + interfaceName + '.accept_ra=0 '    + \
-                    'net.ipv6.conf.' + interfaceName + '.autoconf=0 '     + \
-                    ' || true\n')
-   outputFile.write('   pre-up    /sbin/ip link set up   dev ' + interfaceName + '\n')
-   outputFile.write('   post-down /sbin/ip link set down dev ' + interfaceName + '\n')
+   logSuffix = " >>/var/log/nornet-ifupdown.log 2>&1"
 
-   dnsServers = []
-   for onlyDefault in [ True, False ]:
-      providerNumber = 0
-      for providerIndex in providerList:
-         if ( ((onlyDefault == True)  and (providerIndex == defaultProvider)) or \
-              ((onlyDefault == False) and (providerIndex != defaultProvider)) ):
-            try:
-               providerName = NorNet_ProviderList[providerIndex][0]
-            except:
-               providerName = '???'
-
-            for version in [ 4, 6 ]:
+   for version in [ 4, 6 ]:
+      for onlyDefault in [ True, False ]:
+         providerNumber = 0
+         for providerIndex in providerList:
+            if ( ((onlyDefault == True)  and (providerIndex == defaultProvider)) or \
+                 ((onlyDefault == False) and (providerIndex != defaultProvider)) ):
+               try:
+                  providerName = NorNet_ProviderList[providerIndex][0]
+               except:
+                  providerName = '???'
 
                # ====== Addressing =======================================
                address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
@@ -129,28 +119,35 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                   metric = NorNet_RoutingMetric_DefaultProvider
 
                # ====== Write configuration =================================
-               if version == 4:
-                  outputFile.write('   # ====== ' + providerName + ' (' + str(providerIndex) + ') ======\n')
+               if providerIndex == defaultProvider:
+                  if version == 4:
+                     outputFile.write('iface ' + interfaceName + ' inet manual\n')
+                  else:
+                     outputFile.write('\niface ' + interfaceName + ' inet6 manual\n')
+
+                     # Turn off IPv6 auto-configuration and privacy extensions (since we are a server!)
+                     outputFile.write('   pre-up /sbin/sysctl -q -e -w ' + \
+                                      'net.ipv6.conf.' + interfaceName + '.use_tempaddr=0 ' + \
+                                      'net.ipv6.conf.' + interfaceName + '.accept_ra=0 '    + \
+                                      'net.ipv6.conf.' + interfaceName + '.autoconf=0 '     + \
+                                      ' || true\n')
+
+                  outputFile.write('   pre-up    ( /bin/echo "`/bin/date` pre-up: ' + interfaceName + '"    ; /sbin/ip link set up   dev ' + interfaceName + ')' + logSuffix + '\n')
+                  outputFile.write('   post-down ( /bin/echo "`/bin/date` post-down: ' + interfaceName + '" ; /sbin/ip link set down dev ' + interfaceName + ' >/dev/null 2>&1 )' + logSuffix + '\n')
+
+
+               outputFile.write('   # ====== ' + providerName + ' (' + str(providerIndex) + ') ======\n')
+               outputFile.write('   up   ( /bin/echo "`/bin/date` add: ' + str(address) + '" ; /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ' &&')
+               outputFile.write(' /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true )' + logSuffix + '\n')
+               outputFile.write('   down ( /bin/echo "`/bin/date` del: ' + str(address) + '" ; /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ' >/dev/null 2>&1 &&')
+               outputFile.write(' /sbin/ip -' + str(version) + ' route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' >/dev/null 2>&1 || true )' + logSuffix + '\n')
 
                if providerIndex == defaultProvider:
-                  # The tunnelbox is also the site's DNS server!
-                  dnsServers.append(gateway.ip)
-
-               outputFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ' &&')
-               outputFile.write(' /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true\n')
-               outputFile.write('   down /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ' &&')
-               outputFile.write(' /sbin/ip -' + str(version) + ' route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true\n')
+                  # Add DNS configuration.
+                  outputFile.write('   dns-nameservers ' + str(gateway.ip) + '\n')
+                  outputFile.write('   dns-search      ' + domainName + '\n')
 
             providerNumber = providerNumber + 1
-
-   outputFile.write('   # ====== Additional configuration ======\n')
-   # Add DNS configuration.
-   outputFile.write('   dns-nameservers')
-   for dnsServer in dnsServers:
-      outputFile.write(' ' + str(dnsServer))
-   outputFile.write('\n   dns-search      ' + domainName + '\n')
-
-   outputFile.write('\niface ' + interfaceName + ' inet6 manual\n\n')
 
    outputFile.close()
 
