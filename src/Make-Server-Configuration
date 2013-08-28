@@ -90,7 +90,7 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                     providerList, defaultProvider, interfaceName,
                     controlBoxMode = True):
    outputFile = codecs.open(outputName, 'w', 'utf-8')
-   
+
    if controlBoxMode == False:
       destinationNetworkIPv4 = 'default'
       destinationNetworkIPv6 = 'default'
@@ -121,7 +121,7 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
 
                if ((providerIndex != defaultProvider) and (version == 4)):
                   outputFile.write('auto ' + providerIfName + '\n')
-                  outputFile.write('iface ' + providerIfName + ' inet static\n')                  
+                  outputFile.write('iface ' + providerIfName + ' inet static\n')
                elif providerIndex == defaultProvider:
                   v = ''
                   if version == 4:
@@ -140,9 +140,9 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                # ====== Addressing =======================================
                addedStaticRoute = False
                if ((version == 6) and (providerIndex != defaultProvider)):   # NOTE: Work-around for buggy Ubuntu ifupdown!
-                  outputFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + providerIfName + ' &&')
+                  outputFile.write('   up        /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + providerIfName + ' &&')
                   outputFile.write(' /sbin/ip -' + str(version) + ' route add ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
-                  outputFile.write('   down /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + providerIfName + ' &&')
+                  outputFile.write('   down      /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + providerIfName + ' &&')
                   outputFile.write(' /sbin/ip -' + str(version) + ' route del ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
                   addedStaticRoute = True
 
@@ -150,35 +150,38 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                   outputFile.write('   address   ' + str(address.ip) + '\n')
                   if version == 4:
                      outputFile.write('   netmask   ' + str(address.netmask) + '\n')
+                     outputFile.write('   gateway   ' + str(gateway.ip) + '\n')
+                     outputFile.write('   metric    ' + str(metric) + '\n')
                   else:
                      outputFile.write('   netmask   ' + str(address.prefixlen) + '\n')
-                  outputFile.write('   gateway   ' + str(gateway.ip) + '\n')
-                  outputFile.write('   metric    ' + str(metric) + '\n')
+                     # Debian "interfaces" does not provide a "metric" option for inet6. Just add default route manually.
+                     outputFile.write('   up        /sbin/ip -6 route add default via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
+                     outputFile.write('   down      /sbin/ip -6 route del default via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
 
                if ((controlBoxMode == True) and
                    (providerIndex == defaultProvider) and
                    (addedStaticRoute == False)):
                   if version == 4:
-                     outputFile.write('   up   /sbin/ip -4 route add ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' || true\n')               
-                     outputFile.write('   down /sbin/ip -4 route del ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' || true\n')
+                     outputFile.write('   up        /sbin/ip -4 route add ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
+                     outputFile.write('   down      /sbin/ip -4 route del ' + destinationNetworkIPv4 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
                   else:
-                     outputFile.write('   up   /sbin/ip -6 route add ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' || true\n')               
-                     outputFile.write('   down /sbin/ip -6 route del ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' || true\n')
+                     outputFile.write('   up        /sbin/ip -6 route add ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
+                     outputFile.write('   down      /sbin/ip -6 route del ' + destinationNetworkIPv6 + ' via ' + str(gateway.ip) + ' dev ' + providerIfName + ' metric ' + str(metric) + ' || true\n')
 
 
                # ====== Further parameters ===============================
                if providerIndex == defaultProvider:
                   # ====== IPv6 options ==================================
                   if version == 6:
-                     outputFile.write('   # autoconf  0\n')
-                     outputFile.write('   # accept_ra 0\n')
-                     outputFile.write('   # privext   0\n')
+                     outputFile.write('   autoconf  0\n')
+                     outputFile.write('   accept_ra 0\n')
+                     outputFile.write('   privext   0\n')
 
                   # ====== DNS ===========================================
                   dnsAddress = gateway   # The tunnelbox is also the site's DNS server!
                   outputFile.write('   dns-nameservers ' + str(dnsAddress.ip) + '\n')
                   outputFile.write('   dns-search      ' + domainName + '\n')
-                  
+
             providerNumber = providerNumber + 1
 
    outputFile.close()
