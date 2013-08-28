@@ -96,16 +96,21 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
    outputFile.write('iface lo inet loopback\n\n')
 
    outputFile.write('# ====== NorNet-Internal Networks ======\n')
-   for version in [ 4, 6 ]:
-      for onlyDefault in [ True, False ]:
-         providerNumber = 0
-         for providerIndex in providerList:
-            if ( ((onlyDefault == True)  and (providerIndex == defaultProvider)) or \
-                 ((onlyDefault == False) and (providerIndex != defaultProvider)) ):
-               try:
-                  providerName = NorNet_ProviderList[providerIndex][0]
-               except:
-                  providerName = '???'
+   outputFile.write('auto ' + interfaceName + '\n')
+   outputFile.write('iface ' + interfaceName + ' inet static\n')
+
+   dnsServers = []
+   for onlyDefault in [ True, False ]:
+      providerNumber = 0
+      for providerIndex in providerList:
+         if ( ((onlyDefault == True)  and (providerIndex == defaultProvider)) or \
+              ((onlyDefault == False) and (providerIndex != defaultProvider)) ):
+            try:
+               providerName = NorNet_ProviderList[providerIndex][0]
+            except:
+               providerName = '???'
+
+            for version in [ 4, 6 ]:
 
                # ====== Addressing =======================================
                address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
@@ -115,38 +120,48 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                   metric = NorNet_RoutingMetric_DefaultProvider
 
                # ====== Write configuration =================================
-               if providerIndex == defaultProvider:   # Default provider
-                  if version == 4:
-                     outputFile.write('auto ' + interfaceName + '\n')
-                     outputFile.write('iface ' + interfaceName + ' inet static\n')
-                     outputFile.write('   # ====== ' + providerName + ' (' + str(providerIndex) + ') ======\n')
-                     outputFile.write('   address         ' + str(address.ip) + '\n')
-                     outputFile.write('   netmask         ' + str(address.netmask) + '\n')
-                     outputFile.write('   gateway         ' + str(gateway.ip) + '\n')
-                     outputFile.write('   metric          ' + str(metric) + '\n')
-                  else:
-                     outputFile.write('\niface ' + interfaceName + ' inet6 static\n')
-                     outputFile.write('   # ====== ' + providerName + ' (' + str(providerIndex) + ') ======\n')
-                     outputFile.write('   address         ' + str(address.ip) + '\n')
-                     outputFile.write('   netmask         ' + str(address.prefixlen) + '\n')
-                     outputFile.write('   autoconf        0\n')
-                     outputFile.write('   accept_ra       0\n')
-                     outputFile.write('   privext         0\n')
-                     # Debian "interfaces" does not provide a "metric" option for inet6. Just add default route manually.
-                     outputFile.write('   up              /sbin/ip -6 route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true\n')
-                     outputFile.write('   down            /sbin/ip -6 route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true\n')
-                  # Add DNS configuration. The tunnelbox is also the site's DNS server!
-                  outputFile.write('   dns-nameservers ' + str(gateway.ip) + '\n')
-                  outputFile.write('   dns-search      ' + domainName + '\n')
-
-               else:   # Non-default provider
+               if version == 4:
                   outputFile.write('   # ====== ' + providerName + ' (' + str(providerIndex) + ') ======\n')
-                  outputFile.write('   up              /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ' &&')
+
+               if providerIndex == defaultProvider:
+                  # The tunnelbox is also the site's DNS server!
+                  dnsServers.append(gateway.ip)
+
+               if ((providerIndex == defaultProvider) and (version == 4)):
+                  outputFile.write('   address         ' + str(address.ip) + '\n')
+                  outputFile.write('   netmask         ' + str(address.netmask) + '\n')
+                  outputFile.write('   gateway         ' + str(gateway.ip) + '\n')
+                  outputFile.write('   metric          ' + str(metric) + '\n')
+                  #else:
+                     #outputFile.write('\niface ' + interfaceName + ' inet6 static\n')
+                     #outputFile.write('   # ====== ' + providerName + ' (' + str(providerIndex) + ') ======\n')
+                     #outputFile.write('   address         ' + str(address.ip) + '\n')
+                     #outputFile.write('   netmask         ' + str(address.prefixlen) + '\n')
+                     #outputFile.write('   autoconf        0\n')
+                     #outputFile.write('   accept_ra       0\n')
+                     #outputFile.write('   privext         0\n')
+                     ## Debian "interfaces" does not provide a "metric" option for inet6. Just add default route manually.
+                     #outputFile.write('   up              /sbin/ip -6 route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true\n')
+                     #outputFile.write('   down            /sbin/ip -6 route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true\n')
+                  ## Add DNS configuration. The tunnelbox is also the site's DNS server!
+                  #outputFile.write('   dns-nameservers ' + str(gateway.ip) + '\n')
+                  #outputFile.write('   dns-search      ' + domainName + '\n')
+
+               else:
+                  # Debian "interfaces" does not provide a "metric" option for inet6. Just add default route manually.
+                  outputFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ' &&')
                   outputFile.write(' /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true\n')
-                  outputFile.write('   down            /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ' &&')
+                  outputFile.write('   down /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ' &&')
                   outputFile.write(' /sbin/ip -' + str(version) + ' route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true\n')
 
             providerNumber = providerNumber + 1
+
+   # Add DNS configuration.
+   outputFile.write('   # ====== Additional configuration ======\n')
+   outputFile.write('   dns-nameservers')
+   for dnsServer in dnsServers:
+      outputFile.write(' ' + str(dnsServer))
+   outputFile.write('\n   dns-search      ' + domainName + '\n')
 
    outputFile.close()
 

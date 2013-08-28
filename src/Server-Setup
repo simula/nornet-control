@@ -29,7 +29,7 @@ parse-interface-configuration ()
 
    local found=0
    local writeMode=0
-   while read inputLine ; do      
+   while read inputLine ; do
       if [[ $inputLine =~ ^auto([ \t]*)${interface}(:[0-9]*|)([ \t]*)(.*)$ ]] ; then
          echo "$inputLine" >>$outputFile
          found=1
@@ -45,7 +45,7 @@ parse-interface-configuration ()
                   writeMode=0
                fi
             fi
-            
+
          # ====== Write interface configuration ==========================
          elif [ $writeMode -eq 1 ] ; then
             if [[ $inputLine =~ ^([ \t]*)metric([ \t]*)([0-9]*)([ \t]*)(.*)$ ]] ; then
@@ -109,7 +109,7 @@ Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$I
 AllEthernetInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | grep "^eth" | sed -e "s/:$//" | xargs`
 for interface in $AllEthernetInterfaces ; do
    if [ "$interface" != "lo" -a "$interface" != "$InterfaceName" ] ; then
-      echo -e "\n# ====== Additional interface $interface ======" >>interfaces.new
+      echo -e "\n# ====== Additional Interface $interface ======" >>interfaces.new
       if parse-interface-configuration /etc/network/interfaces $interface interfaces.new ; then
          (
             echo "auto $interface"
@@ -121,7 +121,7 @@ for interface in $AllEthernetInterfaces ; do
    fi
 done
 
-if [ $MAY_BE_CONTROLBOX -ne 0 ] ; then   
+if [ $MAY_BE_CONTROLBOX -ne 0 ] ; then
    if [ "$ControlBoxMode" != "-controlbox" ] ; then
       echo -e  "\n\x1b[31mWARNING: Node has non-NorNet interface with gateway or small metric!\x1b[0m"
       echo -en "\x1b[31mWARNING: Are you really sure that this node is NOT a Control Box? [confirm/no]\x1b[0m? "
@@ -153,7 +153,7 @@ colordiff /etc/default/rcS rcS.new
 echo "------ /etc/network/interfaces:"
 colordiff /etc/network/interfaces interfaces.new
 echo "------ /etc/auto.master:"
-colordiff /etc/auto.master auto.master  
+colordiff /etc/auto.master auto.master
 echo "------ /etc/auto.nfs:"
 if [ -e /etc/auto.nfs ] ; then
    colordiff /etc/auto.nfs auto.nfs
@@ -187,7 +187,7 @@ else
    if [ -e /etc/udev/rules.d/70-persistent-net.rules ] ; then
       rm /etc/udev/rules.d/70-persistent-net.rules
    fi
-   
+
    cp /etc/auto.master /etc/auto.master~
    cp /etc/auto.nfs /etc/auto.nfs~
    cp auto.master /etc/auto.master
