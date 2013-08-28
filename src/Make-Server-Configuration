@@ -139,7 +139,7 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                   # For some reason, listening to the solicited node multicast
                   # address sometimes does not work. Then, IPv6 connectivity is lost.
                   # Turning on promiscuous mode as a work-around here!
-                  outputFile.write('   pre-up    ( /bin/echo "`/bin/date` pre-up: ' + interfaceName + '"    ; /sbin/ip link set up   promisc on  dev ' + interfaceName + ')' + logSuffix + '\n')
+                  outputFile.write('   pre-up    ( /bin/echo "`/bin/date` pre-up: ' + interfaceName + '"    ; /sbin/ip link set up   promisc on  dev ' + interfaceName + ' )' + logSuffix + '\n')
                   outputFile.write('   post-down ( /bin/echo "`/bin/date` post-down: ' + interfaceName + '" ; /sbin/ip link set down promisc off dev ' + interfaceName + ' >/dev/null 2>&1 )' + logSuffix + '\n')
 
                # ====== Write address and default route =====================
