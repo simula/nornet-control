@@ -117,6 +117,9 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                metric = NorNet_RoutingMetric_AdditionalProvider + providerNumber
                if providerIndex == defaultProvider:
                   metric = NorNet_RoutingMetric_DefaultProvider
+               addrOpts = ''
+               if version == 4:
+                  addrOpts = ' broadcast ' + str(address.broadcast)
 
                # ====== Write configuration =================================
                if providerIndex == defaultProvider:
@@ -137,9 +140,9 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
 
 
                outputFile.write('   # ====== ' + providerName + ' (' + str(providerIndex) + ') ======\n')
-               outputFile.write('   up   ( /bin/echo "`/bin/date` add: ' + str(address) + '" ; /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ' &&')
+               outputFile.write('   up   ( /bin/echo "`/bin/date` add: ' + str(address) + '" ; /sbin/ip -' + str(version) + ' addr add ' + str(address) + addrOpts + ' dev ' + interfaceName + ' &&')
                outputFile.write(' /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true )' + logSuffix + '\n')
-               outputFile.write('   down ( /bin/echo "`/bin/date` del: ' + str(address) + '" ; /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ' >/dev/null 2>&1 &&')
+               outputFile.write('   down ( /bin/echo "`/bin/date` del: ' + str(address) + '" ; /sbin/ip -' + str(version) + ' addr del ' + str(address) + addrOpts + ' dev ' + interfaceName + ' >/dev/null 2>&1 &&')
                outputFile.write(' /sbin/ip -' + str(version) + ' route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' >/dev/null 2>&1 || true )' + logSuffix + '\n')
 
                if providerIndex == defaultProvider:
