@@ -135,18 +135,22 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                                       'net.ipv6.conf.' + interfaceName + '.autoconf=0 '     + \
                                       ' || true\n')
 
-                  outputFile.write('   pre-up    ( /bin/echo "`/bin/date` pre-up: ' + interfaceName + '"    ; /sbin/ip link set up   dev ' + interfaceName + ')' + logSuffix + '\n')
-                  outputFile.write('   post-down ( /bin/echo "`/bin/date` post-down: ' + interfaceName + '" ; /sbin/ip link set down dev ' + interfaceName + ' >/dev/null 2>&1 )' + logSuffix + '\n')
+                  # NOTE:
+                  # For some reason, listening to the solicited node multicast
+                  # address sometimes does not work. Then, IPv6 connectivity is lost.
+                  # Turning on promiscuous mode as a work-around here!
+                  outputFile.write('   pre-up    ( /bin/echo "`/bin/date` pre-up: ' + interfaceName + '"    ; /sbin/ip link set up   promisc on  dev ' + interfaceName + ')' + logSuffix + '\n')
+                  outputFile.write('   post-down ( /bin/echo "`/bin/date` post-down: ' + interfaceName + '" ; /sbin/ip link set down promisc off dev ' + interfaceName + ' >/dev/null 2>&1 )' + logSuffix + '\n')
 
-
+               # ====== Write address and default route =====================
                outputFile.write('   # ====== ' + providerName + ' (' + str(providerIndex) + ') ======\n')
                outputFile.write('   up   ( /bin/echo "`/bin/date` add: ' + str(address) + '" ; /sbin/ip -' + str(version) + ' addr add ' + str(address) + addrOpts + ' dev ' + interfaceName + ' &&')
                outputFile.write(' /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true )' + logSuffix + '\n')
                outputFile.write('   down ( /bin/echo "`/bin/date` del: ' + str(address) + '" ; /sbin/ip -' + str(version) + ' addr del ' + str(address) + addrOpts + ' dev ' + interfaceName + ' >/dev/null 2>&1 &&')
                outputFile.write(' /sbin/ip -' + str(version) + ' route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' >/dev/null 2>&1 || true )' + logSuffix + '\n')
 
+               # ====== Write DNS configuration =============================
                if providerIndex == defaultProvider:
-                  # Add DNS configuration.
                   outputFile.write('   dns-nameservers ' + str(gateway.ip) + '\n')
                   outputFile.write('   dns-search      ' + domainName + '\n')
 
