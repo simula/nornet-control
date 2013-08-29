@@ -263,9 +263,9 @@ def makeInterfaceConfiguration(fullSiteList, localNode, interfaceOverride, varia
                   if providerIndex == localSite['site_default_provider_index']:
                      # ====== IPv6 options ==================================
                      if version == 6:
-                        debianFile.write('\t# autoconf  0\n')
-                        debianFile.write('\t# accept_ra 0\n')
-                        debianFile.write('\t# privext   0\n')
+                        debianFile.write('\tautoconf  0\n')
+                        debianFile.write('\taccept_ra 0\n')
+                        debianFile.write('\tprivext   0\n')
 
                      # ====== DNS ===========================================
                      dnsAddress = gateway   # The tunnelbox is also the site's DNS server!

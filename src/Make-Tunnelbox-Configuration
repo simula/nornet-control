@@ -85,6 +85,14 @@ def getCentralSiteAdditionalExtInterface():
       return ''
 
 
+# ###### Get DNAT string ####################################################
+def getLocalSiteDNATOptionsString():
+   try:
+      return unicode(NorNet_Configuration['NorNet_LocalSite_DNAT_Options'])
+   except:
+      return u''
+
+
 # ###### Get blacklist ######################################################
 def getCentralSiteBlacklistString():
    try:
@@ -822,19 +830,48 @@ def makeFirewallConfiguration(fullSiteList, localSite):
    v4File.write("-A logreject -j REJECT --reject-with icmp-admin-prohibited\n")
    v6File.write("-A logreject -j REJECT --reject-with icmp6-adm-prohibited\n")
 
-   if localSiteIndex == NorNet_SiteIndex_Central:
-      # ====== Get external interfaces ======================================
-      externalInterfaces = set()
-      if getCentralSiteAdditionalExtInterface() != '':
-         externalInterfaces.add(getCentralSiteAdditionalExtInterface())
-      providerList = getNorNetProvidersForSite(localSite)
-      for onlyDefault in [ True, False ]:
-         for providerIndex in providerList:
-            if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
-                 ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
-               provider = providerList[providerIndex]
-               externalInterfaces.add(provider['provider_tunnelbox_interface'])
 
+
+   # ====== Get DNAT options =============================================
+   dnatOptions       = []
+   dnatOptionsString = getLocalSiteDNATOptionsString()
+   if ((dnatOptionsString != None) and (dnatOptionsString != u'')):
+      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', dnatOptionsString)
+      for i in range(0, len(parameters)):
+         try:
+            options = unquote(parameters[i]).split()
+            if len(options) != 4:
+               error('Bad configuration "' + parameters[i] + '" inside NorNet_LocalSite_DNAT_Options')
+            interface = options[0]
+            protocol  = options[1]
+            if ((protocol != 'tcp') and
+                (protocol != 'udp') and
+                (protocol != 'sctp')):
+               error('Bad configuration "' + parameters[i] + '" inside NorNet_LocalSite_DNAT_Options: invalid protocol!')
+            portRange = options[2]
+            try:
+               destination = IPv4Address(options[3])
+            except:
+               error('Bad configuration "' + parameters[i] + '" inside NorNet_LocalSite_DNAT_Options: destination is not an IPv4 address!')
+            dnatOptions.append([ interface, protocol, portRange, destination])
+         except Exception as e:
+            error('Bad configuration "' + dnatOptionsString + '" for NorNet_LocalSite_DNAT_Options: ' + str(e))
+
+
+   # ====== Get external interfaces ======================================
+   externalInterfaces = set()
+   if getCentralSiteAdditionalExtInterface() != '':
+      externalInterfaces.add(getCentralSiteAdditionalExtInterface())
+   providerList = getNorNetProvidersForSite(localSite)
+   for onlyDefault in [ True, False ]:
+      for providerIndex in providerList:
+         if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
+              ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
+            provider = providerList[providerIndex]
+            externalInterfaces.add(provider['provider_tunnelbox_interface'])
+
+
+   if localSiteIndex == NorNet_SiteIndex_Central:
       # ====== Get blacklist ================================================
       natBlacklist       = []
       natBlacklistString = getCentralSiteBlacklistString()
@@ -846,7 +883,6 @@ def makeFirewallConfiguration(fullSiteList, localSite):
             except Exception as e:
                error('Bad configuration "' + natBlacklistString + '" for NorNet_CentralSite_Blacklist: ' + str(e))
 
-
       # ====== Write FORWARD chain configuration ============================
       for interfaceName in externalInterfaces:
          for blacklistNetwork in natBlacklist:
@@ -854,7 +890,6 @@ def makeFirewallConfiguration(fullSiteList, localSite):
                v4File.write('-A FORWARD -s ' + str(blacklistNetwork) + ' -o ' + interfaceName + ' -j logreject\n')
             else:
                v6File.write('-A FORWARD -s ' + str(blacklistNetwork) + ' -o ' + interfaceName + ' -j logreject\n')
-
 
    _writeFWConfig(v4File, v6File, "COMMIT\n")
 
@@ -885,19 +920,29 @@ def makeFirewallConfiguration(fullSiteList, localSite):
             natTraget = 'SNAT ' + str(sourceNatRange[0]) + '-' + str(sourceNatRange[1])
       else:
          natTraget = 'MASQUERADE'
+   else:
+      natTraget = None
 
-      # ====== Write IPv4 NAT configuration =================================
-      v4File.write("*nat\n")
-      v4File.write(":PREROUTING ACCEPT [0:0]\n")
-      v4File.write(":INPUT ACCEPT [0:0]\n")
-      v4File.write(":OUTPUT ACCEPT [0:0]\n")
-      v4File.write(":POSTROUTING ACCEPT [0:0]\n")
+
+   # ====== Write IPv4 NAT configuration =================================
+   v4File.write("*nat\n")
+   v4File.write(":PREROUTING ACCEPT [0:0]\n")
+   v4File.write(":INPUT ACCEPT [0:0]\n")
+   v4File.write(":OUTPUT ACCEPT [0:0]\n")
+   v4File.write(":POSTROUTING ACCEPT [0:0]\n")
+   if natTraget != None:
       for interfaceName in externalInterfaces:
          v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4Prefix'])       + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
          v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
 
-      v4File.write("COMMIT\n")
+   if len(dnatOptions) > 0:
+      for dnatOption in dnatOptions:
+         v4File.write('-A PREROUTING -i "' + dnatOption[0] + '"' + \
+                      ' -p "' + dnatOption[1] + '"' + \
+                      ' --dport "' + dnatOption[2] + '"' + \
+                      ' -j DNAT --to ' + str(dnatOption[3]) + "\n")
 
+   v4File.write("COMMIT\n")
 
    v6File.close()
    v4File.close()

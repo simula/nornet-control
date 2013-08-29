@@ -96,6 +96,7 @@ backup_file /etc/ntp.conf    $newBackup
 backup_file /etc/auto.master $newBackup
 backup_file /etc/auto.nfs    $newBackup
 backup_file /etc/exports     $newBackup
+backup_file /etc/rc.local    $newBackup
 
 # ------ Network ------------------------
 mkdir -p $newBackup/network

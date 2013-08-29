@@ -29,9 +29,12 @@ cp src/*-config $PACKAGE-$UPSTREAM_VERSION
 cp src/*-constants $PACKAGE-$UPSTREAM_VERSION
 cp src/*-authorized_keys $PACKAGE-$UPSTREAM_VERSION
 cp src/*-config.example $PACKAGE-$UPSTREAM_VERSION
+cp src/rt_tables.example $PACKAGE-$UPSTREAM_VERSION
 
 cp src/Random-Sleep $PACKAGE-$UPSTREAM_VERSION
 cp src/Tunnelbox-Setup $PACKAGE-$UPSTREAM_VERSION
+cp src/Probe-Interface-Setup $PACKAGE-$UPSTREAM_VERSION
+cp src/Probe-Endpoint-Setup $PACKAGE-$UPSTREAM_VERSION
 cp src/Watchdog $PACKAGE-$UPSTREAM_VERSION
 cp src/Server-Watchdog $PACKAGE-$UPSTREAM_VERSION
 cp src/System-Backup $PACKAGE-$UPSTREAM_VERSION
@@ -73,7 +76,7 @@ for splashImage in $splashImages ; do
    "src/grub/$splashImage" \
    "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png" \
    "$PACKAGE-$UPSTREAM_VERSION/grub/$splashImage"
-   
+
    # cp "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png" "$PACKAGE-$UPSTREAM_VERSION/grub/$splashImage" /tmp/x0/
 done
 rm -f "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png"
@@ -88,7 +91,7 @@ mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter
 cp src/Kontrollsenter/NorNet-*.css src/Kontrollsenter/NorNet-*.js src/Kontrollsenter/NorNet-*.php src/Kontrollsenter/NorNet-*.html src/Kontrollsenter/Forward-*.html $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/Monitor
-cp src/Monitor/*.cfg $PACKAGE-$UPSTREAM_VERSION/Monitor/ 
+cp src/Monitor/*.cfg $PACKAGE-$UPSTREAM_VERSION/Monitor/
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics

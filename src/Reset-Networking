@@ -32,15 +32,15 @@ if [ -e /etc/init.d/network ] ; then
    service network stop
 elif [ -e /etc/init.d/networking ] ; then
    log "Stopping networking (Debian/Ubuntu)"
-   service networking stop
+   service networking stop 2>&1 | grep -v "Unknown instance"
 fi
 
 
 log "Unconfiguring remaining tunnels"
-TUNNELS=`( ip tunnel show && ip -6 tunnel show ) | awk '/[a-zA-Z0-9\-]*:/ { print $1 }'`
+TUNNELS=`( ip tunnel show && ip -6 tunnel show ) | awk '/[a-zA-Z0-9\-]*:/ { print $1 }'` | sed -e "s/://g"
 for tunnel in $TUNNELS ; do
    echo "Unconfiguring $tunnel ..."
-   echo "ip tunnel del $tunnel"
+   # echo "ip tunnel del $tunnel"
    ip tunnel del $tunnel
 done
 
@@ -56,7 +56,7 @@ for interface in $INTERFACES ; do
    ADDRESSES=`ip -4 addr show dev $interface | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+)\/([0-9]+) / { print $2 }'`
    for address in $ADDRESSES ; do
       if [ "$address" != "127.0.0.1/8" ] ; then
-         echo ip -4 addr del $address dev $interface
+         # echo ip -4 addr del $address dev $interface
          ip -4 addr del $address dev $interface
       else
          shutdown=0
@@ -66,7 +66,7 @@ for interface in $INTERFACES ; do
    ADDRESSES=`ip -6 addr show dev $interface | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }'`
    for address in $ADDRESSES ; do
       if [ "$address" != "::1/128" ] ; then
-         echo ip -6 addr del $address dev $interface
+         # echo ip -6 addr del $address dev $interface
          ip -6 addr del $address dev $interface
       else
          shutdown=0
@@ -105,10 +105,11 @@ log "Cleaning /var/run/network/ifstate"
 echo "" >/var/run/network/ifstate
 find /var/run/network/ -name 'ifup.*' | xargs --no-run-if-empty rm -f
 
-log "Clearing /var/run/nornet-tunnelbox"
-find /var/run/nornet-tunnelbox/ -name "*.provider" | xargs --no-run-if-empty rm -f
-find /var/run/nornet-tunnelbox/ -name "*.interface*" | xargs --no-run-if-empty rm -f
-
+if [ -e /var/run/nornet-tunnelbox ] ; then
+   log "Clearing /var/run/nornet-tunnelbox"
+   find /var/run/nornet-tunnelbox/ -name "*.provider" | xargs --no-run-if-empty rm -f
+   find /var/run/nornet-tunnelbox/ -name "*.interface*" | xargs --no-run-if-empty rm -f
+fi
 
 if [ -e /etc/init.d/network ] ; then
   log "Restarting networking (Fedora Core)"
@@ -116,7 +117,7 @@ if [ -e /etc/init.d/network ] ; then
   service network start
 elif [ -e /etc/init.d/networking ] ; then
   log "Restarting networking (Debian/Ubuntu)"
-  service networking stop || true
+  service networking stop 2>&1 | grep -v "Unknown instance" || true
   service networking start
   if [ -e /etc/init.d/iptables-persistent ] ; then
      service iptables-persistent stop || true
