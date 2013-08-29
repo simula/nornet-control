@@ -34,6 +34,29 @@ log ()
 }
 
 
+# ###### Wait for link on given interface ###################################
+# $1 = Interface
+wait_for_link ()
+{
+   echo -en "Waiting for link "
+   i=0
+   while [ $i -lt 25 ] ; do
+      if [ -e /sbin/ethtool ] ; then
+         link=`/sbin/ethtool $1 | grep "Link detected" | sed -e "s/[ \t]*Link detected: //g"`
+      else
+         link="unknown"
+      fi
+      echo -en "."
+      if [ "$link" = "yes" ] ; then
+         break
+      fi
+      sleep 0.25
+      let i=i+1
+   done
+   echo " done."
+}
+
+
 # ###########################################################################
 # #### Main Program                                                      ####
 # ###########################################################################
@@ -53,7 +76,7 @@ fi
 
 if [ "$state" = "pre-up" ] ; then
    (
-      log "Pre-Up of interface $interface"
+      log "Pre-Up of interface $interface/$type"
       if [ "$type" == "ipv6" ] ; then
          /sbin/sysctl -q -e -w net.ipv6.conf.$interface.use_tempaddr=0 net.ipv6.conf.$interface.accept_ra=0 net.ipv6.conf.$interface.autoconf=0 || true
       fi
@@ -63,11 +86,19 @@ if [ "$state" = "pre-up" ] ; then
       # address sometimes does not work. Then, IPv6 connectivity is lost.
       # Turning on promiscuous mode as a work-around here!
       /sbin/ip link set up promisc on dev "$interface" || true
+
+      # NOTE:
+      # The interface is going up now. It may take a few seconds until
+      # auto-negotiation is done. When the interface is finally ready,
+      # the kernel seems to remove IPv6 addresses. As work-around, try
+      # to wait a moment until the interface is actually up before
+      # configuring addresses.
+      wait_for_link $interface
    ) >>$logFile 2>&1
 
 elif [ "$state" = "post-up" ] ; then
    (
-      log "Post-Up of interface $interface"
+      log "Post-Up of interface $interface/$type"
       if [ "$type" == "ipv4" ] ; then
          ip -4 addr show dev "$interface"
       else
@@ -77,7 +108,7 @@ elif [ "$state" = "post-up" ] ; then
 
 elif [ "$state" = "post-down" ] ; then
    (
-      log "Post-Down of interface $interface"
+      log "Post-Down of interface $interface/$type"
       /sbin/ip link set down promisc off dev "$interface" || true
    ) >>$logFile 2>&1
 
@@ -88,7 +119,7 @@ elif [ "$state" = "up" ] ; then
    shift ; shift ; shift
 
    (
-      log "Up of interface $interface"
+      log "Up of interface $interface/$type"
 
       while [ "$4" != "" ] ; do
          address="$1"
@@ -98,8 +129,8 @@ elif [ "$state" = "up" ] ; then
          options="$5"
          shift ; shift ; shift ; shift ; shift
          /bin/echo "Adding $address, route to $network via $gateway with metric $metric ..."
-         /sbin/ip addr add "$address" dev "$interface" $options || /bin/echo "ERROR: Failed to add address"
-         /sbin/ip route add "$network" via "$gateway" dev "$interface" metric "$metric" || /bin/echo "ERROR: Failed to add route"
+         /sbin/ip addr add "$address" dev "$interface" $options || /bin/echo "ERROR: Failed to add address" || true
+         /sbin/ip route add "$network" via "$gateway" dev "$interface" metric "$metric" || /bin/echo "ERROR: Failed to add route" || true
       done
 
    ) >>$logFile 2>&1
@@ -111,7 +142,7 @@ elif [ "$state" = "down" ] ; then
    shift ; shift ; shift
 
    (
-      log "Down of interface $interface"
+      log "Down of interface $interface/$type"
 
       while [ "$4" != "" ] ; do
          address="$1"
