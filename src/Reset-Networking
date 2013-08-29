@@ -37,7 +37,7 @@ fi
 
 
 log "Unconfiguring remaining tunnels"
-TUNNELS=`( ip tunnel show && ip -6 tunnel show ) | awk '/[a-Z0-9\-]*:/ { print $1 }'`
+TUNNELS=`( ip tunnel show && ip -6 tunnel show ) | awk '/[a-zA-Z0-9\-]*:/ { print $1 }'`
 for tunnel in $TUNNELS ; do
    echo "Unconfiguring $tunnel ..."
    echo "ip tunnel del $tunnel"
