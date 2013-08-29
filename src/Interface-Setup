@@ -90,15 +90,16 @@ elif [ "$state" = "up" ] ; then
    (
       log "Up of interface $interface"
 
-      while [ "$3" != "" ] ; do
+      while [ "$4" != "" ] ; do
          address="$1"
-         gateway="$2"
-         metric="$3"
-         options="$4"
-         shift ; shift ; shift ; shift
-         /bin/echo "Adding $address via $gateway metric $metric ..."
+         network="$2"
+         gateway="$3"
+         metric="$4"
+         options="$5"
+         shift ; shift ; shift ; shift ; shift
+         /bin/echo "Adding $address, route to $network via $gateway with metric $metric ..."
          /sbin/ip addr add "$address" dev "$interface" $options || /bin/echo "ERROR: Failed to add address"
-         /sbin/ip route add default via "$gateway" dev "$interface" metric "$metric" || /bin/echo "ERROR: Failed to add route"
+         /sbin/ip route add "$network" via "$gateway" dev "$interface" metric "$metric" || /bin/echo "ERROR: Failed to add route"
       done
 
    ) >>$logFile 2>&1
@@ -112,14 +113,15 @@ elif [ "$state" = "down" ] ; then
    (
       log "Down of interface $interface"
 
-      while [ "$3" != "" ] ; do
+      while [ "$4" != "" ] ; do
          address="$1"
-         gateway="$2"
-         metric="$3"
-         options="$4"
-         shift ; shift ; shift ; shift
-         /bin/echo "Removing $address via $gateway metric $metric ..."
-         /sbin/ip route del default via "$gateway" dev "$interface" metric "$metric" || /bin/echo "ERROR: Failed to remove route"
+         network="$2"
+         gateway="$3"
+         metric="$4"
+         options="$5"
+         shift ; shift ; shift ; shift ; shift
+         /bin/echo "Removing $address, route to $network via $gateway with metric $metric ..."
+         /sbin/ip route del "$network" via "$gateway" dev "$interface" metric "$metric" || /bin/echo "ERROR: Failed to remove route"
          /sbin/ip addr del "$address" dev "$interface" $options || /bin/echo "ERROR: Failed to remove address"
       done
 

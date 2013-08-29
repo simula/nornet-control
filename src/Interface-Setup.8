@@ -29,7 +29,7 @@
 .Nm Interface-Setup
 pre-up|up|post-up|pre-down|down|post-down
 ipv4|ipv6
-.Op address/prefix gateway metric options
+.Op address/prefix network gateway metric options
 .Op ...
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
@@ -46,9 +46,11 @@ The following options are available:
 This is the state of the interface configuration.
 .It ipv4|ipv6
 This is the IP protocol of the interface configuration (IPv4 or IPv6).
-.It address/prefix gateway metric options
-This is the combination of address/prefix, default gateway, corresponding
-routing metric and options for the up and down states.
+.It address/prefix network gateway metric options
+This is the combination of address/prefix, network and its default gateway,
+corresponding routing metric and options for the "up" and "down" states. The
+networks is usually either "default" or the whole NorNet network. A route
+over the provided gateway is then configured.
 .br
 Options can e.g. be "broadcast 10.1.1.255" (i.e. a broadcast address for
 IPv4). The options will be passed to "ip addr ...". Note, that options have
@@ -58,9 +60,9 @@ to be provided. If there are none, just provide an empty string (i.e. "")!
 .Sh EXAMPLES
 .Bl -tag -width indent
 .It Interface-Setup eth0 pre-up ipv6
-.It Interface-Setup eth0 up ipv6 2001:700:4100:101::99/64 2001:700:4100:101::1 5 "" 2001:700:4100:201::99/64 2001:700:4100:201::1 ""
+.It Interface-Setup eth0 up ipv6 2001:700:4100:101::99/64 default 2001:700:4100:101::1 5 "" 2001:700:4100:201::99/64 default  2001:700:4100:201::1 ""
 .It Interface-Setup eth0 post-up ipv6
 .It Interface-Setup eth0 pre-down ipv6
-.It Interface-Setup eth0 down ipv6 2001:700:4100:101::99/64 2001:700:4100:101::1 5 "" 2001:700:4100:201::99/64 2001:700:4100:201::1 ""
+.It Interface-Setup eth0 down ipv6 2001:700:4100:101::99/64 default 2001:700:4100:101::1 5 "" 2001:700:4100:201::99/64 default  2001:700:4100:201::1 ""
 .It Interface-Setup eth0 post-down ipv6
 .El

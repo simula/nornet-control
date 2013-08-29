@@ -122,6 +122,11 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                if version == 4:
                   addrOpts = 'broadcast ' + str(address.broadcast)
 
+               if controlBoxMode == False:
+                  network = 'default'
+               else:
+                  network = str(makeNorNetIP(0, 0, 0, version))
+
                # ====== Write configuration =================================
                if providerIndex == defaultProvider:
                   if version == 4:
@@ -134,7 +139,7 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                   outputFile.write('\tdns-nameservers ' + str(gateway.ip) + '\n')
                   outputFile.write('\tdns-search      ' + domainName + '\n')
 
-               providerConfigs.append([ address, gateway.ip, metric, addrOpts ])
+               providerConfigs.append([ str(address), network, str(gateway.ip), str(metric), addrOpts ])
 
             providerNumber = providerNumber + 1
 
@@ -147,10 +152,11 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                            action + '      ipv' + str(version))
          for providerConfig in providerConfigs:
             outputFile.write('\t' + \
-                             str(providerConfig[0]) + ' ' + \
-                             str(providerConfig[1]) + ' ' + \
-                             str(providerConfig[2]) + ' ' + \
-                             '"' + providerConfig[3] + '"')
+                             providerConfig[0] + ' ' + \
+                             providerConfig[1] + ' ' + \
+                             providerConfig[2] + ' ' + \
+                             providerConfig[3] + ' ' + \
+                             '"' + providerConfig[4] + '"')
          outputFile.write('\n')
 
       for action in [ 'post-up  ', 'post-down' ]:
