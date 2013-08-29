@@ -38,7 +38,7 @@ parse-interface-configuration ()
          if [[ $inputLine =~ ^iface([ \t]*)|^([ \t]*)$ ]] ; then
             if [[ $inputLine =~ ^iface([ \t]*)${interface}(:[0-9]*|)([ \t]*)(.*)$ ]] ; then
                writeMode=1
-               echo "$inputLine" >>$outputFile
+               echo "$inputLine" | sed -e "s/^[ \t][ \t]*/\t/g" >>$outputFile
             else
                if [ $writeMode -eq 1 ] ; then
                   echo "" >>$outputFile
@@ -59,7 +59,7 @@ parse-interface-configuration ()
                # Interface has a gateway => may be control box!
                MAY_BE_CONTROLBOX=1
             fi
-            echo "   $inputLine" >>$outputFile
+            echo -e "\t$inputLine" >>$outputFile
          fi
       fi
    done <$inputFile

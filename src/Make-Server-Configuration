@@ -101,8 +101,9 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
    logSuffix = " >>/var/log/nornet-ifupdown.log 2>&1"
 
    for version in [ 4, 6 ]:
+      providerConfigs = []
       for onlyDefault in [ True, False ]:
-         providerNumber = 0
+         providerNumber  = 0
          for providerIndex in providerList:
             if ( ((onlyDefault == True)  and (providerIndex == defaultProvider)) or \
                  ((onlyDefault == False) and (providerIndex != defaultProvider)) ):
@@ -128,33 +129,33 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                   else:
                      outputFile.write('\niface ' + interfaceName + ' inet6 manual\n')
 
-                     # Turn off IPv6 auto-configuration and privacy extensions (since we are a server!)
-                     outputFile.write('   pre-up /sbin/sysctl -q -e -w ' + \
-                                      'net.ipv6.conf.' + interfaceName + '.use_tempaddr=0 ' + \
-                                      'net.ipv6.conf.' + interfaceName + '.accept_ra=0 '    + \
-                                      'net.ipv6.conf.' + interfaceName + '.autoconf=0 '     + \
-                                      ' || true\n')
-
                   # NOTE:
                   # For some reason, listening to the solicited node multicast
                   # address sometimes does not work. Then, IPv6 connectivity is lost.
                   # Turning on promiscuous mode as a work-around here!
-                  outputFile.write('   pre-up    ( /bin/echo "`/bin/date` pre-up: ' + interfaceName + '"    ; /sbin/ip link set up   promisc on  dev ' + interfaceName + ' )' + logSuffix + '\n')
-                  outputFile.write('   post-down ( /bin/echo "`/bin/date` post-down: ' + interfaceName + '" ; /sbin/ip link set down promisc off dev ' + interfaceName + ' >/dev/null 2>&1 )' + logSuffix + '\n')
-
-               # ====== Write address and default route =====================
-               outputFile.write('   # ====== ' + providerName + ' (' + str(providerIndex) + ') ======\n')
-               outputFile.write('   up   ( /bin/echo "`/bin/date` add: ' + str(address) + '" ; /sbin/ip -' + str(version) + ' addr add ' + str(address) + addrOpts + ' dev ' + interfaceName + ' &&')
-               outputFile.write(' /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' || true )' + logSuffix + '\n')
-               outputFile.write('   down ( /bin/echo "`/bin/date` del: ' + str(address) + '" ; /sbin/ip -' + str(version) + ' addr del ' + str(address) + addrOpts + ' dev ' + interfaceName + ' >/dev/null 2>&1 &&')
-               outputFile.write(' /sbin/ip -' + str(version) + ' route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ' metric ' + str(metric) + ' >/dev/null 2>&1 || true )' + logSuffix + '\n')
+                  for action in [ 'pre-up   ', 'post-up  ', 'post-down' ]:
+                     outputFile.write('\t' + action + '       /sbin/Interface-Setup ' + action + ' ' + \
+                                      interfaceName + ' ipv' + str(version) + '\n')
 
                # ====== Write DNS configuration =============================
                if providerIndex == defaultProvider:
-                  outputFile.write('   dns-nameservers ' + str(gateway.ip) + '\n')
-                  outputFile.write('   dns-search      ' + domainName + '\n')
+                  outputFile.write('\tdns-nameservers ' + str(gateway.ip) + '\n')
+                  outputFile.write('\tdns-search      ' + domainName + '\n')
+
+               providerConfigs.append([ address, gateway.ip, metric ])
 
             providerNumber = providerNumber + 1
+
+      # ====== Write address and default route ==============================
+      for action in [ 'up  ', 'down' ]:
+         outputFile.write('\t' + action + '            /sbin/Interface-Setup ' + action + ' ' + \
+                          interfaceName + ' ipv' + str(version))
+         for providerConfig in providerConfigs:
+            outputFile.write('\t' + \
+                             str(providerConfig[0]) + ' ' + \
+                             str(providerConfig[1]) + ' ' + \
+                             str(providerConfig[2]) + '\t')
+         outputFile.write('\n')
 
    outputFile.close()
 
