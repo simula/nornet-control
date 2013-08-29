@@ -1,4 +1,5 @@
 Auto-Update-Keys         /usr/bin
+Interface-Setup          /sbin
 Probe-Endpoint-Setup     /usr/bin
 Random-Sleep             /usr/bin
 Reset-Networking         /usr/bin

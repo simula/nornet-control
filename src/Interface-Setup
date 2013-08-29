@@ -22,7 +22,7 @@
 # ###### Exit with usage information ########################################
 exit_with_usage ()
 {
-   /bin/echo >&2 "Usage: $0 interface pre-up|up|down|post-down [ipv4|ipv6] [address/prefix gateway metric] ..."
+   /bin/echo >&2 "Usage: $0 interface pre-up|up|post-up|pre-down|down|post-down ipv4|ipv6 [address/prefix gateway metric] ..."
    exit 1
 }
 
