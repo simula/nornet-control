@@ -120,7 +120,7 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                   metric = NorNet_RoutingMetric_DefaultProvider
                addrOpts = ''
                if version == 4:
-                  addrOpts = ' broadcast ' + str(address.broadcast)
+                  addrOpts = 'broadcast ' + str(address.broadcast)
 
                # ====== Write configuration =================================
                if providerIndex == defaultProvider:
@@ -129,33 +129,33 @@ def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex,
                   else:
                      outputFile.write('\niface ' + interfaceName + ' inet6 manual\n')
 
-                  # NOTE:
-                  # For some reason, listening to the solicited node multicast
-                  # address sometimes does not work. Then, IPv6 connectivity is lost.
-                  # Turning on promiscuous mode as a work-around here!
-                  for action in [ 'pre-up   ', 'post-up  ', 'post-down' ]:
-                     outputFile.write('\t' + action + '       /sbin/Interface-Setup ' + action + ' ' + \
-                                      interfaceName + ' ipv' + str(version) + '\n')
-
                # ====== Write DNS configuration =============================
                if providerIndex == defaultProvider:
                   outputFile.write('\tdns-nameservers ' + str(gateway.ip) + '\n')
                   outputFile.write('\tdns-search      ' + domainName + '\n')
 
-               providerConfigs.append([ address, gateway.ip, metric ])
+               providerConfigs.append([ address, gateway.ip, metric, addrOpts ])
 
             providerNumber = providerNumber + 1
 
       # ====== Write address and default route ==============================
+      outputFile.write('\tpre-up          /sbin/Interface-Setup ' + interfaceName + ' ' + \
+                        'pre-up    ipv' + str(version) + '\n')
+
       for action in [ 'up  ', 'down' ]:
-         outputFile.write('\t' + action + '            /sbin/Interface-Setup ' + action + ' ' + \
-                          interfaceName + ' ipv' + str(version))
+         outputFile.write('\t' + action + '            /sbin/Interface-Setup ' + interfaceName + ' ' + \
+                           action + '      ipv' + str(version))
          for providerConfig in providerConfigs:
             outputFile.write('\t' + \
                              str(providerConfig[0]) + ' ' + \
                              str(providerConfig[1]) + ' ' + \
-                             str(providerConfig[2]) + '\t')
+                             str(providerConfig[2]) + ' ' + \
+                             '"' + providerConfig[3] + '"')
          outputFile.write('\n')
+
+      for action in [ 'post-up  ', 'post-down' ]:
+         outputFile.write('\t' + action + '       /sbin/Interface-Setup ' + interfaceName + ' ' + \
+                           action + ' ipv' + str(version) + '\n')
 
    outputFile.close()
 

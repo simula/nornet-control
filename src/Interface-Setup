@@ -22,7 +22,7 @@
 # ###### Exit with usage information ########################################
 exit_with_usage ()
 {
-   /bin/echo >&2 "Usage: $0 interface pre-up|up|post-up|pre-down|down|post-down ipv4|ipv6 [address/prefix gateway metric] ..."
+   /bin/echo >&2 "Usage: $0 interface pre-up|up|post-up|pre-down|down|post-down ipv4|ipv6 [address/prefix gateway metric options] ..."
    exit 1
 }
 
@@ -43,7 +43,7 @@ if [ $# -lt 3 ] ; then
    exit_with_usage
 fi
 
-logFile=/dev/stdout
+logFile="/var/log/nornet-ifupdown.log"
 interface="$1"
 state="$2"
 type="$3"
@@ -57,6 +57,11 @@ if [ "$state" = "pre-up" ] ; then
       if [ "$type" == "ipv6" ] ; then
          /sbin/sysctl -q -e -w net.ipv6.conf.$interface.use_tempaddr=0 net.ipv6.conf.$interface.accept_ra=0 net.ipv6.conf.$interface.autoconf=0 || true
       fi
+
+      # NOTE:
+      # For some reason, listening to the solicited node multicast
+      # address sometimes does not work. Then, IPv6 connectivity is lost.
+      # Turning on promiscuous mode as a work-around here!
       /sbin/ip link set up promisc on dev "$interface" || true
    ) >>$logFile 2>&1
 
@@ -68,7 +73,7 @@ elif [ "$state" = "post-up" ] ; then
       else
          ip -6 addr show dev "$interface"
       fi
-   )
+   ) >>$logFile 2>&1
 
 elif [ "$state" = "post-down" ] ; then
    (
@@ -89,9 +94,10 @@ elif [ "$state" = "up" ] ; then
          address="$1"
          gateway="$2"
          metric="$3"
-         shift ; shift ; shift
+         options="$4"
+         shift ; shift ; shift ; shift
          /bin/echo "Adding $address via $gateway metric $metric ..."
-         /sbin/ip addr add "$address" dev "$interface" || /bin/echo "ERROR: Failed to add address"
+         /sbin/ip addr add "$address" dev "$interface" $options || /bin/echo "ERROR: Failed to add address"
          /sbin/ip route add default via "$gateway" dev "$interface" metric "$metric" || /bin/echo "ERROR: Failed to add route"
       done
 
@@ -110,10 +116,11 @@ elif [ "$state" = "down" ] ; then
          address="$1"
          gateway="$2"
          metric="$3"
-         shift ; shift ; shift
+         options="$4"
+         shift ; shift ; shift ; shift
          /bin/echo "Removing $address via $gateway metric $metric ..."
          /sbin/ip route del default via "$gateway" dev "$interface" metric "$metric" || /bin/echo "ERROR: Failed to remove route"
-         /sbin/ip addr del "$address" dev "$interface" || /bin/echo "ERROR: Failed to remove address"
+         /sbin/ip addr del "$address" dev "$interface" $options || /bin/echo "ERROR: Failed to remove address"
       done
 
    ) >>$logFile 2>&1
