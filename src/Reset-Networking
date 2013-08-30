@@ -37,7 +37,7 @@ fi
 
 
 log "Unconfiguring remaining tunnels"
-TUNNELS=`( ip tunnel show && ip -6 tunnel show ) | awk '/[a-zA-Z0-9\-]*:/ { print $1 }'` | sed -e "s/://g"
+TUNNELS=`( ip tunnel show && ip -6 tunnel show ) | awk '/[a-zA-Z0-9\-]*:/ { print $1 }' | sed -e "s/://g" | sort`
 for tunnel in $TUNNELS ; do
    echo "Unconfiguring $tunnel ..."
    # echo "ip tunnel del $tunnel"
@@ -47,7 +47,7 @@ done
 
 log "Unconfiguring remaining interfaces"
 # Possibly, some interfaces are still up. Get rid of them!
-INTERFACES=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//"`
+INTERFACES=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//" | sort`
 for interface in $INTERFACES ; do
    echo "Unconfiguring $interface ..."
 
