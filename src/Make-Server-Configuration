@@ -233,12 +233,12 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
 
 
       # ====== Write routes files ===========================================
-      routesIPv4File = codecs.open('routes' + suffix, 'w', 'utf-8')
+      routesIPv4File = codecs.open('route' + suffix, 'w', 'utf-8')
       for route in routesIPv4:
          routesIPv4File.write(route[0] + ' via ' + route[1] + ' metric ' + route[2] + '\n')
       routesIPv4File.close()
 
-      routesIPv6File = codecs.open('routes6' + suffix, 'w', 'utf-8')
+      routesIPv6File = codecs.open('route6' + suffix, 'w', 'utf-8')
       for route in routesIPv6:
          routesIPv6File.write(route[0] + ' via ' + route[1] + ' metric ' + route[2] + '\n')
       routesIPv6File.close()

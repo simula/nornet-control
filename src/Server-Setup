@@ -207,21 +207,22 @@ else
    cp /etc/ntp.conf /etc/ntp.conf~
    cp ntp.new /etc/ntp.conf
 
-   cp /etc/network/interfaces /etc/network/interfaces~
    if [ "$Variant" = "Debian" ] ; then
+      cp /etc/network/interfaces /etc/network/interfaces~
       cp interfaces.new /etc/network/interfaces
    elif [ "$Variant" = "Fedora" ] ; then
       if [ -e /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ] ; then
          cp /etc/sysconfig/network-scripts/ifcfg-$InterfaceName /etc/sysconfig/network-scripts/ifcfg-$InterfaceName~
       fi
-      cp ifcfg.new /etc/sysconfig/network-scripts/ifcfg-$InterfaceName
       if [ -e /etc/sysconfig/network-scripts/route-$InterfaceName ] ; then
          cp /etc/sysconfig/network-scripts/route-$InterfaceName /etc/sysconfig/network-scripts/route-$InterfaceName~
       fi
-      cp route.new /etc/sysconfig/network-scripts/route-$InterfaceName
       if [ -e /etc/sysconfig/network-scripts/route6-$InterfaceName ] ; then
          cp /etc/sysconfig/network-scripts/route6-$InterfaceName /etc/sysconfig/network-scripts/route6-$InterfaceName~
       fi
+      rm -f /etc/sysconfig/network-scripts/ifcfg-$InterfaceName* >/dev/null 2>&1 || true
+      cp ifcfg.new /etc/sysconfig/network-scripts/ifcfg-$InterfaceName
+      cp route.new /etc/sysconfig/network-scripts/route-$InterfaceName
       cp route6.new /etc/sysconfig/network-scripts/route6-$InterfaceName
    fi
    if [ -e /etc/udev/rules.d/70-persistent-net.rules ] ; then
