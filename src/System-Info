@@ -59,7 +59,7 @@ DISTRIB_ID="Unknown"
 DISTRIB_RELEASE="00.00"
 DISTRIB_CODENAME="unknown"
 if [ -e /etc/lsb-release ] ; then
-   . /etc/lsb-release 
+   . /etc/lsb-release
 elif [ -e /etc/fedora-release ] ; then
    DISTRIB_ID=`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\1/g"`
    DISTRIB_RELEASE=`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\2/g"`
@@ -109,12 +109,12 @@ echo "Used Diskspace:   ${diskRoot} on /, ${diskHome} on /home"
 echo "Network:"
 
 echo -en "\x1b[34m"
-allInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//"`
+allInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//" | sort`
 for interface in $allInterfaces ; do
    if [[ $interface =~ ^eth ]] ; then
       echo -n "   `printf "%-8s" "${interface}:"` "
       addressListIPv4=`ip -4 addr show dev $interface | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+)\/([0-9]+) / { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
-      addressListIPv6=`ip -6 addr show dev $interface | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`      
+      addressListIPv6=`ip -6 addr show dev $interface | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
       if [ "$addressListIPv4" != "" ] ; then
          for address in $addressListIPv4 ; do
             echo -n "$address   "
@@ -125,7 +125,7 @@ for interface in $allInterfaces ; do
       for address in $addressListIPv6 ; do
          echo -en "\n            $address "
       done
-      echo ""      
+      echo ""
    fi
 done
 
