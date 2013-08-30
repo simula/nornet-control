@@ -90,6 +90,17 @@ if [ $# -lt 8 -o \
    exit 1
 fi
 
+# ====== Find distribution variant ==========================================
+Variant=""
+if [ -e /etc/network/interfaces ] ; then
+   Variant="Debian"
+elif [ -e /etc/sysconfig/network ] ; then
+   Variant="Fedora"
+else
+   echo >&2 "ERROR: Unknown/unsupported operating system? Cannot determine how to configure network!"
+   exit 1
+fi
+
 # ====== Initialise =========================================================
 AllParameters="$@"
 FQDN="$1"
@@ -105,7 +116,7 @@ fi
 cd /root   # Ensure that configurations a written in /root!
 
 # ====== Create network configuration =======================================
-Make-Server-Configuration "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers "$ProviderList" $ControlBoxMode || exit 1
+Make-Server-Configuration "$Variant" "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers "$ProviderList" $ControlBoxMode || exit 1
 AllEthernetInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | grep "^eth" | sed -e "s/:$//" | xargs`
 for interface in $AllEthernetInterfaces ; do
    if [ "$interface" != "lo" -a "$interface" != "$InterfaceName" ] ; then
@@ -150,8 +161,22 @@ echo "------ /etc/modules:"
 colordiff /etc/modules modules.new
 echo "------ /etc/default/rcS:"
 colordiff /etc/default/rcS rcS.new
-echo "------ /etc/network/interfaces:"
-colordiff /etc/network/interfaces interfaces.new
+if [ -e interfaces.new -a  -e /etc/network/interfaces ] ; then
+   echo "------ /etc/network/interfaces:"
+   colordiff /etc/network/interfaces interfaces.new
+fi
+if [ -e ifcfg.new -a  -e /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ] ; then
+   echo "------ /etc/sysconfig/network-scripts/ifcfg-$InterfaceName:"
+   colordiff /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ifcfg.new
+fi
+if [ -e route.new -a  -e /etc/sysconfig/network-scripts/route-$InterfaceName ] ; then
+   echo "------ /etc/sysconfig/network-scripts/route-$InterfaceName:"
+   colordiff /etc/sysconfig/network-scripts/route-$InterfaceName route.new
+fi
+if [ -e route6.new -a  -e /etc/sysconfig/network-scripts/route6-$InterfaceName ] ; then
+   echo "------ /etc/sysconfig/network-scripts/route6-$InterfaceName:"
+   colordiff /etc/sysconfig/network-scripts/route6-$InterfaceName route6.new
+fi
 echo "------ /etc/auto.master:"
 colordiff /etc/auto.master auto.master
 echo "------ /etc/auto.nfs:"
@@ -183,7 +208,22 @@ else
    cp ntp.new /etc/ntp.conf
 
    cp /etc/network/interfaces /etc/network/interfaces~
-   cp  interfaces.new /etc/network/interfaces
+   if [ "$Variant" = "Debian" ] ; then
+      cp interfaces.new /etc/network/interfaces
+   elif [ "$Variant" = "Fedora" ] ; then
+      if [ -e /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ] ; then
+         cp /etc/sysconfig/network-scripts/ifcfg-$InterfaceName /etc/sysconfig/network-scripts/ifcfg-$InterfaceName~
+      fi
+      cp ifcfg.new /etc/sysconfig/network-scripts/ifcfg-$InterfaceName
+      if [ -e /etc/sysconfig/network-scripts/route-$InterfaceName ] ; then
+         cp /etc/sysconfig/network-scripts/route-$InterfaceName /etc/sysconfig/network-scripts/route-$InterfaceName~
+      fi
+      cp route.new /etc/sysconfig/network-scripts/route-$InterfaceName
+      if [ -e /etc/sysconfig/network-scripts/route6-$InterfaceName ] ; then
+         cp /etc/sysconfig/network-scripts/route6-$InterfaceName /etc/sysconfig/network-scripts/route6-$InterfaceName~
+      fi
+      cp route6.new /etc/sysconfig/network-scripts/route6-$InterfaceName
+   fi
    if [ -e /etc/udev/rules.d/70-persistent-net.rules ] ; then
       rm /etc/udev/rules.d/70-persistent-net.rules
    fi
@@ -197,7 +237,7 @@ else
    service ntp restart >/dev/null 2>&1
    service autofs restart >/dev/null 2>&1
 fi
-rm -f hostname.new hosts.new ntp.new modules.new rcS.new interfaces.new auto.master auto.nfs
+rm -f hostname.new hosts.new ntp.new modules.new rcS.new interfaces.new ifcfg.new route.new route6.new auto.master auto.nfs
 
 # Store parameters for later re-run.
 echo "$AllParameters" >$LAST_PARAMETERS_FILE
