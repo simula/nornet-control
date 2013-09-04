@@ -50,8 +50,8 @@ norNetSetup = [
    'site_pcu'          : [ IPv4Address('128.39.36.131'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Uninett',  'eth1', IPv4Network('128.39.36.143/23'),                  IPv4Address('128.39.36.1'),
-                            IPv6Network('::/0'),                              IPv6Address('::') ],
+      [ 'Uninett',  'eth1', IPv4Network('158.39.4.2/24'),                     IPv4Address('158.39.4.1'),
+                            IPv6Network('2001:700:4100:4::2/64'),             IPv6Address('2001:700:4100:4::1') ],
       [ 'Hafslund', 'eth2', IPv4Network('77.88.71.151/26'),                   IPv4Address('77.88.71.133'),
                             IPv6Network('2a02:270:2014:111:77:88:71:151/64'), IPv6Address('2a02:270:2014:111::1') ]
    ],
