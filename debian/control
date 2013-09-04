@@ -113,6 +113,7 @@ Replaces: nornet-routing
 Conflicts: nornet-routing
 Depends: arpwatch,
          bind9,
+         conntrack,
          grub2,
          ifupdown,
          iptables-persistent,
