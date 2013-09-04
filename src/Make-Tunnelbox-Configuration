@@ -913,13 +913,12 @@ def makeFirewallConfiguration(fullSiteList, localSite):
 
       # ====== Get target (MASQUERADE or SNAT) ==============================
       if sourceNatRange != None:
-         natTraget = 'SNAT'
          if len(sourceNatRange) == 1:
-            natTraget = 'SNAT ' + str(sourceNatRange[0])
+            natTraget = 'SNAT --random --to-source ' + str(sourceNatRange[0])
          else:
-            natTraget = 'SNAT ' + str(sourceNatRange[0]) + '-' + str(sourceNatRange[1])
+            natTraget = 'SNAT --random --to-source ' + str(sourceNatRange[0]) + '-' + str(sourceNatRange[1])
       else:
-         natTraget = 'MASQUERADE'
+         natTraget = 'MASQUERADE --random'
    else:
       natTraget = None
 
