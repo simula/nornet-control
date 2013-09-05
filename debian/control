@@ -92,7 +92,7 @@ Description: NorNet Development Tools
 Package: nornet-node
 Architecture: any
 Conflicts: miredo
-Depends: grub2,
+Depends: grub2-common,
          nornet-api,
          nornet-management,
          ntp,
@@ -114,7 +114,6 @@ Conflicts: nornet-routing
 Depends: arpwatch,
          bind9,
          conntrack,
-         grub2,
          ifupdown,
          iptables-persistent,
          iputils-ping,
