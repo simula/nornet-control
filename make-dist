@@ -66,6 +66,9 @@ echo "NorNet $UPSTREAM_VERSION, packaged `env LANG=en date`" >$PACKAGE-$UPSTREAM
 mkdir $PACKAGE-$UPSTREAM_VERSION/cron-apt
 cp src/cron-apt/5-install $PACKAGE-$UPSTREAM_VERSION/cron-apt/
 
+mkdir $PACKAGE-$UPSTREAM_VERSION/background
+cp src/background/*.png $PACKAGE-$UPSTREAM_VERSION/background/
+
 mkdir $PACKAGE-$UPSTREAM_VERSION/grub
 cp src/grub/*_theme $PACKAGE-$UPSTREAM_VERSION/grub/
 cp src/grub/grub-defaults $PACKAGE-$UPSTREAM_VERSION/grub/
