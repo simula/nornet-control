@@ -27,6 +27,7 @@ IFS=$'\t'
                sudo -u $uname ssh-keygen -f /home/$uname/.ssh/id_rsa -N ""
             fi
             sudo cp /home/$uname/.ssh/id_rsa.pub $uname.pub
+            sudo cp /home/$uname/.ssh/id_rsa $uname.rsa
             
          elif [ "$1" = "remove" ] ; then
             echo -e "\x1b[34mRemoving $uname ($gname $fname) ...\x1b[0m"
@@ -36,6 +37,7 @@ IFS=$'\t'
             fi
             deluser $uname || true
             rm -rf /home/$uname
+            rm $uname.pub $uname.rsa
          fi
       fi
    done
