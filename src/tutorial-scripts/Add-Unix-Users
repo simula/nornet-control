@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+ACCOUNTS="accounts.txt"
+
+
+IFS=$'\t'
+(
+   while read number uname passwd gname fname a b c d e f ; do
+      if [[ "$number"  =~ ^[0-9]+$ ]] ; then
+         echo -e "\x1b[34mAdding $uname ($gname $fname) ...\x1b[0m"
+         
+         adduser $uname --gecos "$gname $fname" --disabled-password || true
+         echo "$uname:$passwd" | chpasswd
+         if [ ! -e /home/$uname/.ssh/id_rsa ] ; then
+            sudo -u $uname ssh-keygen -f /home/$uname/.ssh/id_rsa -N ""
+         fi
+         sudo cp /home/$uname/.ssh/id_rsa.pub $uname.pub
+      fi
+   done
+) <$ACCOUNTS
