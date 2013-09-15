@@ -1,0 +1,9 @@
+1. Write user list (participants list) as CSV file with "TAB" as separator.
+
+2. Run Make-Accounts <CSV_filename>
+
+3. Run "sudo Tutorial-User-Setup add" on the login server.
+
+4. Run "sudo Tutorial-Experiment-Setup add" on the PLC server.
+Also see Tutorial-Experiment-Setup for name of slice, domain and site! May
+be adapted before using the script!
