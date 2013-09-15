@@ -2,8 +2,9 @@
 
 ACCOUNTS="accounts.txt"
 
-SITE="Simula Research Laboratory"
-SLICENAME="srl_tutorial"
+SITE="Alpha Site"
+DOMAIN="alpha.test"
+SLICENAME="as_tutorial"
 SLICEDESC="A test slice for the NorNet tutorial sessions."
 SLICEURL="http://www.nntb.no"
 
@@ -23,14 +24,16 @@ IFS=$'\t'
 (
    while read number uname passwd gname fname a b c d e f ; do
       if [[ "$number"  =~ ^[0-9]+$ ]] ; then
+         keyName="$uname.pub"
+         uname="$uname@$DOMAIN"
        
          if [ "$action" = "add" ] ; then
             echo -e "\x1b[34mAdding $uname ($gname $fname) ...\x1b[0m"
             publicKeyArg=""
-            if [ -e "$uname.pub" ] ; then
-               publicKeyArg="--publickey=`cat $uname.pub`"
+            if [ -e "$keyName" ] ; then
+               publicKeyArg="--publickey=`cat $keyName`"
             else
-               echo "WARNING: $uname has no key ($uname.pub not found)!"
+               echo "WARNING: $uname has no key ($keyName not found)!"
             fi
             ../User-Setup add "--user=$uname" "--site=$SITE" "--firstname=$gname" "--lastname=$fname" --user "$publicKeyArg"
             userArgs="$userArgs --user=$uname"
@@ -44,7 +47,7 @@ IFS=$'\t'
 
    if [ "$action" = "add" ] ; then
       echo -e "\x1b[34mAdding slice $SLICENAME ...\x1b[0m"
-      ../Slice-Setup add "--name=$SLICENAME" --own-addresses "--description=$SLICEDESC" $userArgs
+      echo $userArgs | xargs ../Slice-Setup add "--name=$SLICENAME" --own-addresses "--description=$SLICEDESC"
    elif [ "$1" = "remove" ] ; then
       echo -e "\x1b[34mRemoving slice $SLICENAME ...\x1b[0m"
       ../Slice-Setup remove "--name=$SLICENAME"
