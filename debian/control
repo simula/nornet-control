@@ -75,11 +75,17 @@ Description: NorNet Management Tools
 Package: nornet-development
 Architecture: any
 Depends: apt-file,
+         autoconf,
+         automake,
          debhelper,
          devscripts,
          imagemagick,
          kbuild,
+         libglib2.0-dev,
+         libsctp-dev,
+         libtool,
          pbuilder,
+         pkg-config,
          r-base,
          ${misc:Depends},
          ${shlibs:Depends}
