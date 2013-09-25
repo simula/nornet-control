@@ -463,9 +463,10 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
          error('Unable to add/update node ' + nodeHostName)
 
       # Set extensions.
-      # Initially, add NorNetBase. Then NodeUpdate will install all packages
-      # that are listed in the group extensionNorNetNode.
-      getPLCServer().SetNodeExtensions(getPLCAuthentication(), nodeID, 'NorNetNode')
+      # Initially, add NorNetManagement and NorNetNode. Then,
+      # NodeUpdate will install all packages that are listed
+      # in the groups extensionNorNetManagement and extensionNorNetNode.
+      getPLCServer().SetNodeExtensions(getPLCAuthentication(), nodeID, 'NorNetManagement NorNetNode')
 
       if _addOrUpdateNodeTag(nodeID, 'nornet_node_utf8', nodeHostNameUTF8) <= 0:
          error('Unable to add "nornet_node_utf8" tag to node ' + nodeHostName)
