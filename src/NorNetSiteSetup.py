@@ -179,7 +179,8 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
          error('Unable to add "nornet_site_altitude" tag to site ' + siteName)
 
       # ====== Set providers ================================================
-      gotDefaultProvider = False
+      gotDefaultProvider   = False
+      defaultProviderIndex = None
       i = 0
       for provider in providerList:
          if i <= NorNet_MaxProviders:
@@ -192,6 +193,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
             if providerIndex <= 0:
                error("Bad provider " + provider)
             if providerName == defaultProvider:
+               defaultProviderIndex = providerIndex
                if _addOrUpdateSiteTag(siteID, 'nornet_site_default_provider_index', str(providerIndex)) <= 0:
                   error('Unable to add "nornet_site_default_provider_index" tag to site ' + siteName)
                gotDefaultProvider = True
@@ -227,6 +229,18 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
          if _addOrUpdateSiteTag(siteID, 'nornet_site_ntp' + str(1 + i), str(IPNetwork(ntpServers[i]).ip)) <= 0:
             error('Unable to add "nornet_site_ntp' + str(1 + i) + '" tag to site ' + siteName)
 
+      # Write a PlanetLabConf file to set the NTP server of nodes at the site
+      plcSiteNTPConfName = '/var/www/html/PlanetLabConf/ntp/ntp.conf.' + siteNorNetDomain
+      try:
+         plcSiteNTPConf = codecs.open(plcSiteNTPConfName, 'w', 'utf-8')
+         for version in [ 6 ]:
+            ntpAddress = makeNorNetIP(defaultProviderIndex, siteNorNetIndex, NorNet_NodeIndex_Tunnelbox, version)
+            plcSiteNTPConf.write('server ' + str(ntpAddress.ip) + "\n")
+         plcSiteNTPConf.close()
+      except:
+         print('WARNING: Unable to write ' + plcSiteNTPConfName)
+
+      # ====== Set internal interface =======================================
       if _addOrUpdateSiteTag(siteID, 'nornet_site_tb_internal_interface', tbInternalInterface) <= 0:
          error('Unable to add "nornet_site_tb_internal_interface" tag to site ' + siteName)
 
