@@ -2,9 +2,14 @@
 
 ACCOUNTS="accounts.txt"
 
-SITE="Alpha Site"
-DOMAIN="alpha.test"
-SLICENAME="as_tutorial"
+#SITE="Alpha Site"
+#DOMAIN="alpha.test"
+#SLICENAME="as_tutorial"
+
+SITE="Simula Research Laboratory"
+DOMAIN="simula.nornet"
+SLICENAME="srl_tutorial"
+
 SLICEDESC="A test slice for the NorNet tutorial sessions."
 SLICEURL="http://www.nntb.no"
 
@@ -35,7 +40,7 @@ IFS=$'\t'
             else
                echo "WARNING: $uname has no key ($keyName not found)!"
             fi
-            ../User-Setup add "--user=$uname" "--site=$SITE" "--firstname=$gname" "--lastname=$fname" --user "$publicKeyArg"
+            ../User-Setup add "--user=$uname" "--password=$passwd" "--site=$SITE" "--firstname=$gname" "--lastname=$fname" --user "$publicKeyArg"
             userArgs="$userArgs --user=$uname"
 
          elif [ "$1" = "remove" ] ; then
