@@ -14,6 +14,7 @@
 <packagereq type="mandatory">htop</packagereq>
 <packagereq type="mandatory">idn</packagereq>
 <packagereq type="mandatory">joe</packagereq>
+<packagereq type="mandatory">kernel-modules-extra</packagereq>
 <packagereq type="mandatory">lksctp-tools</packagereq>
 <packagereq type="mandatory">net-snmp-utils</packagereq>
 <packagereq type="mandatory">nfs-utils</packagereq>
