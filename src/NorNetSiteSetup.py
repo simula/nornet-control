@@ -35,6 +35,18 @@ from NorNetProviderSetup import *;
 
 
 
+# ###### Add or update site tag #############################################
+def _addOrUpdateInitScript(initScript):
+   filter = {
+      'name' : initScript['name']
+   }
+   tags = getPLCServer().GetInitScripts(getPLCAuthentication(), filter, ['initscript_id'])
+   if len(tags) == 0:
+      return getPLCServer().AddInitScript(getPLCAuthentication(), initScript)
+   else:
+      return getPLCServer().UpdateInitScript(getPLCAuthentication(), tags[0]['initscript_id'], initScript)
+
+
 # ###### Create tag type ####################################################
 def makeTagType(category, description, tagName):
    found = getPLCServer().GetTagTypes(getPLCAuthentication(), tagName, ['tag_type_id'])
@@ -96,6 +108,16 @@ def makeNorNetTagTypes():
 
    makeTagType('slice/network', 'Placeholder for interface information while we wait for VirtualInterface objects in PLCAPI', 'interface')
    getPLCServer().AddRoleToTagType(getPLCAuthentication(), 'admin', 'interface')
+
+   # ====== Add init scripts ================================================
+   initScript = {}
+   initScript['name']    = 'nornet_slice_initscript'
+   initScript['enabled'] = True
+   initScript['script']  = \
+"""
+#!/bin/bash
+"""
+   _addOrUpdateInitScript(initScript)
 
 
 # ###### Remove NorNet site #################################################
@@ -480,16 +502,17 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       # ====== Hack to handle openvswitch start/stop correctly ==============
       # See https://docs.google.com/a/simula.no/document/d/1WRZ7kN6KwZRaeNOi51-uNmintCVwdkzhM2W3To6uV_Y/edit?pli=1 .
       confFileID = _addOrUpdateConfFile({
-         'file_owner': u'root',
-         'postinstall_cmd': u'/bin/systemctl reenable openvswitch.service',
-         'error_cmd': u'', 'preinstall_cmd': u'',
-         'dest': u'/lib/systemd/system/openvswitch.service',
-         'ignore_cmd_errors': False,
-         'enabled': True,
-         'file_permissions': u'644',
-         'source': u'PlanetLabConf/openvswitch/openvswitch.service',
-         'always_update': False,
-         'file_group': u'root'})
+         'file_owner'        : u'root',
+         'postinstall_cmd'   : u'/bin/systemctl reenable openvswitch.service',
+         'error_cmd'         : u'',
+         'preinstall_cmd'    : u'',
+         'dest'              : u'/lib/systemd/system/openvswitch.service',
+         'ignore_cmd_errors' : False,
+         'enabled'           : True,
+         'file_permissions'  : u'644',
+         'source'            : u'PlanetLabConf/openvswitch/openvswitch.service',
+         'always_update'     : False,
+         'file_group'        : u'root'})
       if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
          error('Unable to add openvswitch.service configuration file to node ' + nodeHostName)
 
