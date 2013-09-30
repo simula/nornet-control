@@ -61,7 +61,7 @@ def loginToPLC(overrideUser = None, quietMode = False):
    if quietMode == False:
       log('Logging into PLC ' + user + '/' + str(plcAddress) + ' ...')
    try:
-      apiURL = 'https://' + str(plcAddress) + '/PLCAPI/'
+      apiURL = 'https://[' + str(plcAddress) + ']/PLCAPI/'
       if sys.version_info < (3,0,0):
          plc_server = xmlrpclib.ServerProxy(apiURL, allow_none=True)
       else:
@@ -84,7 +84,10 @@ def getPLCAddress():
    try:
       return IPv4Address(NorNet_Configuration['NorNetPLC_Address'])
    except Exception as e:
-      error('Invalid or missing setting of NorNetPLC_Address: ' + str(e))
+      try:
+         return IPv6Address(NorNet_Configuration['NorNetPLC_Address'])
+      except Exception as e:
+         error('Invalid or missing setting of NorNetPLC_Address: ' + str(e))
 
 
 # ###### Get PLC server object ##############################################
