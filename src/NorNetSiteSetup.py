@@ -110,14 +110,19 @@ def makeNorNetTagTypes():
    getPLCServer().AddRoleToTagType(getPLCAuthentication(), 'admin', 'interface')
 
    # ====== Add init scripts ================================================
+   try:
+      initScriptFile = codecs.open('nornet-slice-initscript', 'r', 'utf-8')
+      initScriptCode = initScriptFile.read()
+      initScriptFile.close()
+   except:
+      error('Cannot read nornet-slice-initscript')
+
    initScript = {}
    initScript['name']    = 'nornet_slice_initscript'
    initScript['enabled'] = True
-   initScript['script']  = \
-"""
-#!/bin/bash
-"""
+   initScript['script']  = initScriptCode
    _addOrUpdateInitScript(initScript)
+   # print initScriptCode
 
 
 # ###### Remove NorNet site #################################################
@@ -254,7 +259,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
       # Write a PlanetLabConf file to set the NTP server of nodes at the site
       plcSiteNTPConfName = '/var/www/html/PlanetLabConf/ntp/ntp.conf.' + siteNorNetDomain
       try:
-         plcSiteNTPConf = codecs.open(plcSiteNTPConfName, 'w', 'utf-8')
+         plcSiteNTPConf = codecs.ope(plcSiteNTPConfName, 'w', 'utf-8')
          for version in [ 6 ]:
             ntpAddress = makeNorNetIP(defaultProviderIndex, siteNorNetIndex, NorNet_NodeIndex_Tunnelbox, version)
             plcSiteNTPConf.write('server ' + str(ntpAddress.ip) + "\n")
@@ -619,16 +624,16 @@ def _addOrUpdateSliceTag(sliceID, node, tagName, tagValue):
 
 
 # ###### Create NorNet slice ################################################
-def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initscriptCode):
+def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScript):
    try:
       # ====== Add slice =====================================================
       log('Adding slice ' + sliceName + ' ...')
       slice = {}
-      slice['name']            = sliceName
-      slice['description']     = sliceDescription
-      slice['url']             = sliceUrl
-      slice['initscript_code'] = initscriptCode
-      slice['max_nodes']       = 1000000
+      slice['name']        = sliceName
+      slice['description'] = sliceDescription
+      slice['url']         = sliceUrl
+      slice['initscript']  = initScript
+      slice['max_nodes']   = 1000000
 
       sliceID = lookupSliceID(sliceName)
       if sliceID == 0:
@@ -638,9 +643,9 @@ def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initscrip
       # UpdateSlice() may only have certain fields. Therefore, initialize
       # "slice" object again, with only the allowed fields included.
       slice = {}
-      slice['description']     = sliceDescription
-      slice['url']             = sliceUrl
-      slice['initscript_code'] = initscriptCode
+      slice['description'] = sliceDescription
+      slice['url']         = sliceUrl
+      slice['initscript']  = initScript
 
       if getPLCServer().UpdateSlice(getPLCAuthentication(), sliceID, slice) != 1:
         sliceID = 0

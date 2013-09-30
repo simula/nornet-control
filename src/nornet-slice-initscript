@@ -1,42 +1,65 @@
 #!/bin/bash
-command=$1; shift
-slicename=$1; shift
 
-# that can make sense if needed
-# source /etc/init.d/functions
+command=$1   ; shift
+slicename=$1 ; shift
 
-# a reasonably tested function for installing with yum
+# The packages to be installed inside a NorNet sliver
+NORNET_PACKAGES="autoconf automake libtool gcc gcc-c++ gdb automake autoconf joe libstdc++-devel boost-devel gcc gcc-c++ glib-devel glib2-devel make subversion libpcap bzip2-devel findutils valgrind strace lksctp-tools-devel ImageMagick-devel GeoIP-devel libcurl-devel openssl-devel bison flex subversion git R htop mlocate"
+
+
+# ###### yum-based package installation #####################################
 function yum_install () {
-    pkg="$1"; shift
-    while true; do
-        rpm -q $pkg && continue
-        sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY
-        sudo yum -y install $pkg
-        sleep 10
-    done
-    echo $pkg installed
+   packages=$1 ; shift
+   while true ; do
+      # If all packages are installed, we are done.
+      rpm -q $packages && break
+
+      # Install the given packages.
+      # sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY
+      sudo yum -y install $packages
+
+      # Try again after a short break ...
+      sleep 10
+   done
+   echo "$packages installed."
 }
 
-####################
+
+# ###### Start sliver #######################################################
 function start () {
    (
-      echo "`/bin/date`: Running slice initscript!"
-      yum_install yum-plugin-fastestmirror autoconf automake libtool gcc gcc-c++ gdb automake autoconf joe libstdc++-devel boost-devel gcc gcc-c++ glib-devel glib2-devel make subversion libpcap bzip2-devel findutils valgrind strace lksctp-tools-devel ImageMagick-devel GeoIP-devel libcurl-devel openssl-devel bison flex subversion git R htop mlocate
+      echo "`/bin/date`: Running slice initscript ..."
+      yum_install yum-plugin-fastestmirror
+      yum_install $NORNET_PACKAGES
+      echo "`/bin/date`: Done!"
    ) >>/var/log/nornet-sliceinit.log 2>&1
 }
 
+
+# ###### Stop sliver ########################################################
 function stop () {
    dummy=0
 }
 
-####################
+
+# ###### Restart sliver #####################################################
 function restart () {
   stop
   start
 }
+
+
 case $command in
-start) start ;;
-stop) stop ;;
-restart) restart ;;
-*) echo "Unknown command in initscript $command for slice $slicename" ;;
+   start)
+      start
+      ;;
+   stop)
+      stop
+      ;;
+   restart)
+      restart
+      ;;
+   *)
+      echo "Unknown command in initscript $command for slice $slicename"
+      ;;
 esac

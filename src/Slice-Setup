@@ -96,8 +96,8 @@ if ((action == 'remove') or (action == 'renew')):
    if sliceID != 0:
       removeNorNetSlice(sliceName)
 
-if ((action == 'add') or (action == 'renew')):   
-   slice = makeNorNetSlice(sliceName, ownAddresses, sliceDescription, sliceUrl, '')
+if ((action == 'add') or (action == 'renew')):
+   slice = makeNorNetSlice(sliceName, ownAddresses, sliceDescription, sliceUrl, 'nornet_slice_initscript')
 
    log('Adding slice to all nodes ...')
    addNorNetSliceToNorNetNodes(fullSiteList, fullNodeList, fullSliceList, slice, fullNodeList)
