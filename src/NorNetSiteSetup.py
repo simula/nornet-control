@@ -259,7 +259,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
       # Write a PlanetLabConf file to set the NTP server of nodes at the site
       plcSiteNTPConfName = '/var/www/html/PlanetLabConf/ntp/ntp.conf.' + siteNorNetDomain
       try:
-         plcSiteNTPConf = codecs.ope(plcSiteNTPConfName, 'w', 'utf-8')
+         plcSiteNTPConf = codecs.open(plcSiteNTPConfName, 'w', 'utf-8')
          for version in [ 6 ]:
             ntpAddress = makeNorNetIP(defaultProviderIndex, siteNorNetIndex, NorNet_NodeIndex_Tunnelbox, version)
             plcSiteNTPConf.write('server ' + str(ntpAddress.ip) + "\n")
