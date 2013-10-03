@@ -45,7 +45,7 @@ def makeTFTPDConfiguration():
 
    outputFile.write('TFTP_USERNAME="tftp"\n')
    outputFile.write('TFTP_DIRECTORY="/filesrv/adm/TFTP"\n')
-   outputFile.write('TFTP_ADDRESS="[::]:69" \n')   
+   outputFile.write('TFTP_ADDRESS="[::]:69" \n')
    outputFile.write('TFTP_OPTIONS="--secure"\n')
 
    outputFile.close()
@@ -55,7 +55,7 @@ def makeTFTPDConfiguration():
 def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
    outputFile = codecs.open('nfsd-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
-   
+
    nfsOptions = 'subtree_check,async,no_wdelay,all_squash,anonuid=' + str(uid) + ',anongid=' + str(gid)
 
    # ====== Global shares ===================================================
@@ -106,9 +106,12 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
       for nodeIndex in range(1, 255):
          nodeDirectory = str(nodeIndex)
          makeDir(nodeDirectory)
-         obsoleteNodes.remove(nodeDirectory)
+         try:
+            obsoleteNodes.remove(nodeDirectory)
+         except:
+            pass
 
-         outputFile.write('/filesrv/sys/' + siteDirectory + '/' + nodeDirectory + '\t')        
+         outputFile.write('/filesrv/sys/' + siteDirectory + '/' + nodeDirectory + '\t')
          siteProviderList = getNorNetProvidersForSite(site)
          for providerIndex in siteProviderList:
             provider = siteProviderList[providerIndex]
@@ -180,7 +183,7 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
    outputFile.close()
 
    # ====== Remove obsolete site links ======================================
-   for obsoleteSite in obsoleteSites:         
+   for obsoleteSite in obsoleteSites:
       try:
          if os.path.islink(obsoleteSite):
             os.unlink(obsoleteSite)
