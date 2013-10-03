@@ -26,6 +26,7 @@ Description: NorNet API
 Package: nornet-management
 Architecture: any
 Depends: apt-show-versions,
+         arping,
          autofs,
          colordiff,
          cron,
@@ -39,6 +40,7 @@ Depends: apt-show-versions,
          language-pack-de-base,
          language-pack-en-base,
          language-pack-nb-base,
+         libc6-i386,
          libfile-fcntllock-perl,
          lksctp-tools,
          lsb-base (>= 3.2-14),
