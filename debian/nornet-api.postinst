@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+if [ ! -e /etc/nornet/nornetapi-constants ] ; then
+   cp /usr/share/doc/nornet-api/examples/nornetapi-constants /etc/nornet/nornetapi-constants
+fi
+
+#DEBHELPER#
+
+exit 0

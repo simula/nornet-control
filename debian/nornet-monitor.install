@@ -9,7 +9,9 @@ Kontrollsenter/Graphics/Markers/*.svg     /var/www/Kontrollsenter/Graphics/Marke
 Kontrollsenter/Graphics/Sites/*.jpeg      /var/www/Kontrollsenter/Graphics/Sites/
 Kontrollsenter/NorNet-*                   /var/www/Kontrollsenter
 Make-Monitor-Configuration                /usr/bin
+Monitor/nornet-commands.cfg               /etc/nagios3
+Monitor/nornet-services.cfg               /etc/nagios3
 check_site                                /usr/lib/nagios/plugins
 check_tunnel                              /usr/lib/nagios/plugins
-grub/08_nornet_monitor_theme              /etc/grub.d
+grub/??_nornet_monitor_theme              /etc/grub.d
 grub/Splash-Monitor1-1024x768.jpeg        /boot

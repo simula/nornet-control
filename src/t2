@@ -1,81 +1,98 @@
-#!/bin/bash
+#!/bin/bash -e
 
-providersOld="uninett telekom netcom telenor"
-providersNew="uninett hafslund dfn"
-
-# ###### Check whether a provider is in a list of available providers #######
-check-providers ()
+# ###### Check whether parameter is a valid IPv4 address ####################
+is-ipv4-address ()
 {
-   local availableProviders="$1"
-   local selectedProviders=`echo $2 | sed -e "s/,/ /g"`
-   if [ "$selectedProviders" != "@ALL" ] ; then
-      for b in $selectedProviders ; do
-         found=0
-         for a in $availableProviders ; do
-            if [ "$a" == "$b" ] ; then
-               found=1
-            fi
-         done
-         if [ $found -eq 0 ] ; then
-            echo >&2 "ERROR: Provider \"$b\" is not in the list of available providers \"$availableProviders\"!"
-            exit 1
-         fi
-      done
+   if [[ "$1" =~ ^([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})$ ]] ; then
+      if [ ${BASH_REMATCH[1]} -le 255 -a ${BASH_REMATCH[2]} -le 255 -a ${BASH_REMATCH[3]} -le 255 -a ${BASH_REMATCH[4]} -le 255 ] ; then
+         return 0
+      fi
    fi
+   return 1
 }
 
 
-# ###### Compare two lists of labels and return removed labels ##############
-get-removed-labels ()
+# ###### Check whether parameter is a valid IPv4 network ####################
+is-ipv4-network ()
 {
-   local oldLabels="$1"
-   local newLabels="$2"
-
-   local removedLabels=""
-   for o in $oldLabels ; do
-      found=0
-      for n in $newLabels ; do
-         if [ "$o" = "$n" ] ; then
-            found=1
-            break
-         fi
-      done
-      if [ $found -eq 0 ] ; then
-         if [ "$removedLabels" = "" ] ; then
-            removedLabels="$o"
-         else
-            removedLabels="$removedLabels $o"
+   if [[ "$1" =~ ^([0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3})/([0-9]{1,2})$ ]] ; then
+      if [ ${BASH_REMATCH[2]} -le 32 ] ; then
+         if is-ipv4-address "${BASH_REMATCH[1]}" ; then
+            return 0
          fi
       fi
-   done
-   echo "$removedLabels"
+   fi
+   return 1
 }
 
 
-check-providers "$providersNew" "hafslund,dfn"
+# ###### Check whether parameter is a valid IPv6 address ####################
+is-ipv6-address ()
+{
+   if [[ "$1" =~ ^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\s*$ ]] ; then   
+      return 0
+   fi
+   return 1
+}
 
 
-get-removed-labels "$providersOld" "$providersNew"
+# ###### Check whether parameter is a valid IPv6 network ####################
+is-ipv6-network ()
+{
+   if [[ "$1" =~ ^([0-9a-fA-F:]*)/([0-9]{1,3})$ ]] ; then
+      if [ ${BASH_REMATCH[2]} -le 128 ] ; then
+         if is-ipv6-address "${BASH_REMATCH[1]}" ; then
+            return 0
+         fi
+      fi
+   fi
+   return 1
+}
 
 
-selectedProviders="@ALL"
-echo "SEL=$selectedProviders"
+# ###### Check whether parameter is a valid IPv4 or IPv6 address ############
+is-ip-address ()
+{
+   if is-ipv4-address $1 ; then
+      return 0
+   elif is-ipv6-address $1 ; then      
+      return 0
+   fi
+   return 1
+}
 
-check-providers "$providersNew" "$selectedProviders"
 
-for provider in $providersOld ; do
-   if [[ "$selectedProviders" =~ ^\*$|^$provider$$|^$provider$([ ])|([ ])$provider$([ ])|([ ])$provider$$ ]] ; then\
-      echo "Configuring provider $provider ..."
+# ###### Check whether parameter is a valid IPv4 or IPv6 network ############
+is-ip-network ()
+{
+   if is-ipv4-network $1 ; then
+      return 0
+   elif is-ipv6-network $1 ; then      
+      return 0
+   fi
+   return 1
+}
+
+
+
+for a in 127.0.0.1 172.17.3.0/24 2001:700:4100:fe03::1 2001:700:4100:fe03::/64 1.2.3.455 fd00::1::2 ; do
+   echo -n "$a   ->   "
+   
+   if is-ip-address $a ; then
+      echo -n "(address)   "
+   elif is-ip-network $a ; then
+      echo -n "(network)   "
+   fi
+
+   if is-ipv4-address $a ; then
+      echo "IPv4 address"
+   elif is-ipv4-network $a ; then
+      echo "IPv4 network"
+   elif is-ipv6-address $a ; then
+      echo "IPv6 address"
+   elif is-ipv6-network $a ; then
+      echo "IPv6 network"
    else
-      echo "Skipping provider $provider ..."
+      echo "BAD!"
    fi
 done
-
-#    for provider in providerList:
-#       outputFile.write('if [[ "$selectedProviders" =~ ^\\*$|^$provider$$|^$provider$,|,$provider$,|,$provider$$ ]] ; then\n')
-#       outputFile.write('   echo "Configuring ' + configFileList[i] + '"\n')
-#       outputFile.write('   . ./' + configFileList[i] + ' || tbc_success=0\n')
-#       outputFile.write('else\n')
-#       outputFile.write('   echo "Skipping ' + configFileList[i] + '"\n')
-#       outputFile.write('fi\n')
-#       i = i + 1

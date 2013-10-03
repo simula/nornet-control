@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# sudo /etc/init.d/nornet-server stop;cd /nfs/pub/src/rn/nornet/nornet-control/src/scripts/;sudo modprobe vboxdrv;Show-VSystems |xargs -n1 ./update-adapters;sudo /etc/init.d/nornet-server start
+
+VM="$1"
+TYPE="$2"
+if [ "$TYPE" = "" ] ; then
+   TYPE="virtio"
+fi
+
+echo vboxmanage modifyvm "$VM" --nictype1 "$TYPE" --nictype2 "$TYPE" --nictype3 "$TYPE" --nictype4 "$TYPE" --nicpromisc1 allow-all --nicpromisc2 allow-all --nicpromisc3 allow-all --nicpromisc4 allow-all
+vboxmanage modifyvm "$VM" --nictype1 "$TYPE" --nictype2 "$TYPE" --nictype3 "$TYPE" --nictype4 "$TYPE" --nicpromisc1 allow-all --nicpromisc2 allow-all --nicpromisc3 allow-all --nicpromisc4 allow-all

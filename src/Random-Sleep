@@ -1,0 +1,59 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Random Sleep
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+import sys;
+import time;
+import datetime;
+import random;
+
+
+# ###### Main program #######################################################
+if len(sys.argv) < 3:
+   sys.stderr.write('Usage: ' + sys.argv[0] + ' min_sleep_time max_sleep_time [-quiet]\n')
+   sys.exit(1)
+
+try:
+   minSleepTime = float(sys.argv[1])
+   maxSleepTime = float(sys.argv[2])
+except Exception as e:
+   sys.stderr.write('Bad parameters: ' + str(e) + '\n')
+   sys.exit(1)
+
+quietMode = False
+for i in range(3, len(sys.argv)):
+   if sys.argv[i] == '-quiet':
+      quietMode = True
+   else:
+      sys.stderr.write('Unknown parameter: ' + sys.argv[i] + '\n')
+      sys.exit(1)
+
+
+sleepTime = random.uniform(minSleepTime, maxSleepTime)
+
+if not quietMode:
+   print datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + \
+         ': Sleeping random ' + str(sleepTime) + ' seconds out of range [' + \
+         str(minSleepTime) + ', ' + str(maxSleepTime) + '] ...'
+
+time.sleep(sleepTime)
+
+if not quietMode:
+   print datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + ': Woke up!'

@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd February 5, 2013
+.Dd May 29, 2013
 .Dt Server-Setup 1
 .Os Server-Setup
 .\" ###### Name #############################################################
@@ -31,28 +31,39 @@ FQDN
 node_index
 \-site site_index
 \-interface interface_name
-\-providers default_provider [provider2] ...
+\-providers default_provider[,provider2,...]
+.Op \-controlbox
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
 .Nm Server-Setup
 generates and sets the server configuration for a NorNet physical machine,
 based on hostname, site index, node index and NorNet interface name. It is
 intended to be used on a freshly-installed server system.
+.br
+For all Ethernet interfaces not being the NorNet interface, the exisiting
+configuration is copied (from /etc/network/interface). If no configuration
+is provided, an empty configuration is generated (IP: 0.0.0.0). This sets the
+corresponding interface up, without IP configuration. Then, it can be
+accessed from within virtual machines running on the system.
 .Pp
 .\" ###### Arguments ########################################################
 .Sh ARGUMENTS
 The following parameters need to be provided:
 .Bl -tag -width indent
 .It node_index
-Provides the node index (1-255).
+Provides the node index.
 .It \-site site_index
-Provides the site index (1-255).
+Provides the site index.
 .It \-interface interface_name
 Provides the NorNet interface name (e.g. eth0).
-.It \-providers default_provider [provider2] ...
+.It \-providers default_provider[,provider2,...]
 Provides the providers the server is conntected to. They will be configured
 on the NorNet interface. Providers can be given by their name or provider
 index.
+.It \-controlbox
+If set, the node is a Control Box. That is, the default routes are not via
+the NorNet network. In this case, static routes for just the NorNet address
+range are configured instead of using default routes.
 .El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES

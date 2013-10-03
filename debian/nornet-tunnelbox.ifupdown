@@ -20,24 +20,26 @@
 
 LOGFILE="/var/log/nornet-tunnelbox.log"
 
-echo "`env LANG=C date +%FT%H:%M:%S`: ###### IF-$MODE/$PHASE for $IFACE ($ADDRFAM/$IF_ADDRESS/$METHOD) ######"  >>$LOGFILE
-cd /etc/nornet
-. ./tunnelbox-providers
-# env   >>$LOGFILE
-eval "provider=\$provider_for_if_$IFACE"
-if [ "$provider" != "" ] ; then
-   eval "ipv4=\$ipv4_for_provider_$provider"
-   eval "ipv6=\$ipv6_for_provider_$provider"
-   echo "Provider is $provider ($ipv4, $ipv6)."   >>$LOGFILE
-   if [ "$ipv6" = "::" -a "$ADDRFAM" = "inet" ] ; then
-      echo "IPv4-only interface!"   >>$LOGFILE
-      /etc/init.d/nornet-tunnelbox $MODE -providers $provider -event "IF-$MODE/$PHASE"   >>$LOGFILE
-   elif  [ "$ipv6" != "::" -a "$ADDRFAM" = "inet6" ] ; then
-      echo "IPv4/IPv6 interface!"   >>$LOGFILE
-      /etc/init.d/nornet-tunnelbox $MODE -providers $provider -event "IF-$MODE/$PHASE"   >>$LOGFILE
-   else
-      echo "No action necessary."   >>$LOGFILE
+echo "`env LANG=C date +%FT%H:%M:%S`: ###### IF-$MODE/$PHASE for $IFACE ($ADDRFAM/$IF_ADDRESS/$METHOD) ######" >>$LOGFILE
+
+PROVIDERS=`find /etc/nornet -name "*.provider"`
+for provider in $PROVIDERS ; do
+   PROVIDER_INTERFACE=
+   PROVIDER_EXTERNAL_TUNNELBOX_IPv6=
+   PROVIDER_EXTERNAL_TUNNELBOX_IPv4=
+   . $provider || true
+   if [ "$PROVIDER_INTERFACE" = "$IFACE" ] ; then
+      echo "Provider is $PROVIDER_LONG_NAME ($PROVIDER_EXTERNAL_TUNNELBOX_IPv4, $PROVIDER_EXTERNAL_TUNNELBOX_IPv6)." >>$LOGFILE
+      if [ "$PROVIDER_EXTERNAL_TUNNELBOX_IPv6" = "" -a "$ADDRFAM" = "inet" ] ; then
+         echo "IPv4-only interface!" >>$LOGFILE
+         invoke-rc.d nornet-tunnelbox $MODE -providers $PROVIDER_SHORT_NAME -event "IF-$MODE/$PHASE" >>$LOGFILE
+      elif  [ "$PROVIDER_EXTERNAL_TUNNELBOX_IPv6" != "" -a "$ADDRFAM" = "inet6" ] ; then
+         echo "IPv4/IPv6 interface!" >>$LOGFILE
+         invoke-rc.d nornet-tunnelbox $MODE -providers $PROVIDER_SHORT_NAME -event "IF-$MODE/$PHASE" >>$LOGFILE
+      else
+         echo "No action necessary." >>$LOGFILE
+      fi
+      exit 0
    fi
-else
-   echo "Nothing to do for interface $IFACE."   >>$LOGFILE
-fi
+done
+echo "Nothing to do for interface $IFACE." >>$LOGFILE

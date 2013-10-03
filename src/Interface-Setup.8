@@ -1,0 +1,68 @@
+.\" Interface Setup
+.\" Copyright (C) 2012-2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd August 29, 2013
+.Dt Interface-Setup 8
+.Os Interface-Setup
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Interface-Setup
+.Nd NorNet Interface Setup Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Interface-Setup
+pre-up|up|post-up|pre-down|down|post-down
+ipv4|ipv6
+.Op address/prefix network gateway metric options
+.Op ...
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Interface-Setup
+is a helper script to make it easier to write manual interface setup
+configurations in /etc/network/interfaces. Logs will be written to
+/var/log/nornet-ifupdown.log.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following options are available:
+.Bl -tag -width indent
+.It pre-up|up|post-up|pre-down|down|post-down
+This is the state of the interface configuration.
+.It ipv4|ipv6
+This is the IP protocol of the interface configuration (IPv4 or IPv6).
+.It address/prefix network gateway metric options
+This is the combination of address/prefix, network and its default gateway,
+corresponding routing metric and options for the "up" and "down" states. The
+networks is usually either "default" or the whole NorNet network. A route
+over the provided gateway is then configured.
+.br
+Options can e.g. be "broadcast 10.1.1.255" (i.e. a broadcast address for
+IPv4). The options will be passed to "ip addr ...". Note, that options have
+to be provided. If there are none, just provide an empty string (i.e. "")!
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Interface-Setup eth0 pre-up ipv6
+.It Interface-Setup eth0 up ipv6 2001:700:4100:101::99/64 default 2001:700:4100:101::1 5 "" 2001:700:4100:201::99/64 default  2001:700:4100:201::1 ""
+.It Interface-Setup eth0 post-up ipv6
+.It Interface-Setup eth0 pre-down ipv6
+.It Interface-Setup eth0 down ipv6 2001:700:4100:101::99/64 default 2001:700:4100:101::1 5 "" 2001:700:4100:201::99/64 default  2001:700:4100:201::1 ""
+.It Interface-Setup eth0 post-down ipv6
+.El

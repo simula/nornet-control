@@ -51,6 +51,11 @@ d-i partman/choose_partition            select finish
 d-i partman-auto/method                 string regular
 d-i partman-auto/expert_recipe          string \
       boot-root ::                                                \
+              64 64 64 fat16                                      \
+                      $primary{ }                                 \
+                      method{ efi }                               \
+                      format{ /boot/efi }                         \
+              .                                                   \
               8192 10000 8192 reiserfs                            \
                       $primary{ } $bootable{ }                    \
                       method{ format } format{ }                  \

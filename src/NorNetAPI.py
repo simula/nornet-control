@@ -22,7 +22,7 @@
 
 import re;
 import sys;
-import codecs;
+import pwd;
 import getpass;
 
 # XML-RPC
@@ -35,85 +35,33 @@ else:
 from ipaddr import IPAddress, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
+from NorNetConfiguration import *;
 from NorNetTools         import *;
 from NorNetProviderSetup import *;
 
 
 
-NorNetPLC_ConfigFile                   = '/etc/nornet/nornetapi-config'
-NorNetPLC_FallbackConfigFile           = 'nornetapi-config'
-
-
-NorNetPLC_Address                      = None
-NorNetPLC_User                         = None
-NorNetPLC_Password                     = None
-
-NorNet_LocalSite_SiteIndex             = None
-NorNet_LocalSite_DefaultProviderIndex  = None
-NorNet_LocalSite_TBDefaultProviderIPv4 = None
-
-NorNet_LocalNode_Hostname              = None
-NorNet_LocalNode_Index                 = None
-NorNet_LocalNode_NorNetInterface       = None
-
-NorNet_FileServ_RWSystems              = None
-NorNet_LocalSite_DHCPServer_Dynamic    = None
-
-
-# ###### Read configuration file ############################################
-def loadNorNetConfiguration():
-   log('Reading configuration from ' + NorNetPLC_ConfigFile + ' ...')
-   try:
-      inputFile = codecs.open(NorNetPLC_ConfigFile, 'r', 'utf-8')
-   except:
-      try:
-         log('###### Cannot open ' + NorNetPLC_ConfigFile + ', trying fallback file ' + NorNetPLC_FallbackConfigFile + ' ... ######')
-         inputFile = codecs.open(NorNetPLC_FallbackConfigFile, 'r', 'utf-8')
-
-      except Exception as e:
-         error('Configuration file ' + NorNetPLC_FallbackConfigFile + ' cannot be read: ' + str(e))
-
-   lines = tuple(inputFile)
-   for line in lines:
-      if re.match('^[ \t]*[#\n]', line):
-         continue
-      elif re.match('^[a-zA-Z0-9_]*[ \t]*=', line):
-         unicodeCommand = line.replace('=\'','=u\'')   # Interpret string as Unicode!
-         # print unicodeCommand
-         exec(unicodeCommand, globals())
-      else:
-         error('Bad configuration line: ' + line)
-
-   if NorNetPLC_Address == None:
-      error('NorNetPLC_Address has not been set in configuration file!')
-   if NorNetPLC_User == None:
-      error('NorNetPLC_User has not been set in configuration file!')
-   if NorNetPLC_Password == None:
-      error('NorNetPLC_Password has not been set in configuration file!')
-
-   sys.stdout = codecs.getwriter('utf8')(sys.stdout)
-   sys.stderr = codecs.getwriter('utf8')(sys.stderr)
-   sys.stdin  = codecs.getreader('utf8')(sys.stdin)
-
-
 # ###### Log into PLC #######################################################
-def loginToPLC(overrideUser = None):
+def loginToPLC(overrideUser = None, quietMode = False):
    global plc_server
    global plc_authentication
 
    # ====== Obtain configuration from configuration file ====================
-   loadNorNetConfiguration()
+   loadNorNetConfiguration(quietMode = quietMode)
 
    # ====== Log into PLC ====================================================
+   plcAddress = getPLCAddress()
    if overrideUser != None:
       user     = overrideUser
       password = getpass.getpass('Password for user ' + user + ': ')
    else:
-      user     = NorNetPLC_User
-      password = NorNetPLC_Password
-   log('Logging into PLC ' + user + '/' + NorNetPLC_Address + ' ...')
+      user     = NorNet_Configuration['NorNetPLC_User']
+      password = NorNet_Configuration['NorNetPLC_Password']
+
+   if quietMode == False:
+      log('Logging into PLC ' + user + '/' + str(plcAddress) + ' ...')
    try:
-      apiURL     = 'https://' + NorNetPLC_Address + '/PLCAPI/'
+      apiURL = 'https://[' + str(plcAddress) + ']/PLCAPI/'
       if sys.version_info < (3,0,0):
          plc_server = xmlrpclib.ServerProxy(apiURL, allow_none=True)
       else:
@@ -125,15 +73,21 @@ def loginToPLC(overrideUser = None):
       plc_authentication['AuthString'] = password
 
       if plc_server.AuthCheck(plc_authentication) != 1:
-         error('Authorization at PLC failed!')
+         raise Exception('Authorization at PLC failed!')
 
    except:
-      error('Unable to log into PLC!')
+      raise Exception('Unable to log into PLC!')
 
 
 # ###### Get PLC address ####################################################
 def getPLCAddress():
-   return IPv4Address(NorNetPLC_Address)
+   try:
+      return IPv4Address(NorNet_Configuration['NorNetPLC_Address'])
+   except Exception as e:
+      try:
+         return IPv6Address(NorNet_Configuration['NorNetPLC_Address'])
+      except Exception as e:
+         error('Invalid or missing setting of NorNetPLC_Address: ' + str(e))
 
 
 # ###### Get PLC server object ##############################################
@@ -144,68 +98,6 @@ def getPLCServer():
 # ###### Get PLC authentication object ######################################
 def getPLCAuthentication():
    return plc_authentication
-
-
-# ###### Get local Site Index ###############################################
-def getLocalSiteIndex():
-   return int(NorNet_LocalSite_SiteIndex)
-
-
-# ###### Get local Default Provider Index ###################################
-def getLocalDefaultProviderIndex():
-   return int(NorNet_LocalSite_DefaultProviderIndex)
-
-
-# ###### Get local tunnelbox's outer IPv4 address ###########################
-def getLocalTunnelboxDefaultProviderIPv4():
-   return NorNet_LocalSite_TBDefaultProviderIPv4
-
-
-# ###### Get local node hostname ############################################
-def getLocalNodeHostname():
-   return NorNet_LocalNode_Hostname
-
-
-# ###### Get local node index ###############################################
-def getLocalNodeIndex():
-   return int(NorNet_LocalNode_Index)
-
-
-# ###### Get local node hostname ############################################
-def getLocalNodeNorNetInterface():
-   return NorNet_LocalNode_NorNetInterface
-
-
-# ###### Get local node configuration string ################################
-def getLocalNodeConfigurationString(nodeIndex):
-   try:
-      return unicode(eval('NorNet_LocalSite_Node' + str(nodeIndex)))
-   except:
-      return u''
-
-
-# ###### Get local node configuration string ################################
-def getFileServRWSystemsConfigurationString():
-   try:
-      return eval('NorNet_FileServ_RWSystems')
-   except:
-      return ''
-
-
-# ###### Get DHCPD node configuration string ################################
-def getLocalSiteDHCPServerDynamicConfigurationString():
-   try:
-      return eval('NorNet_LocalSite_DHCPServer_Dynamic')
-   except:
-      return u''
-
-
-# ###### Get DHCPD node configuration string ################################
-def getLocalSiteDHCPServerStaticConfigurationString(nodeIndex):
-   try:
-      return unicode(eval('NorNet_LocalSite_DHCPServer_Static' + str(nodeIndex)))
-   except:
-      return u''
 
 
 # ###### Find site ID #######################################################
@@ -254,7 +146,7 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
             # error('Site ' + siteName + ' has no NorNet Default Provider Index')
          if ((not re.match(r"^[a-zA-Z][a-zA-Z0-9]*$", siteAbbrev)) and (siteNameToFind == None)):
             error('Bad site abbreviation ' + siteAbbrev)
-         if (((siteIndex < 0) or (siteIndex > 255)) and (siteNameToFind == None)):
+         if (((siteIndex < NorNet_MinSiteIndex) or (siteIndex > NorNet_MaxSiteIndex)) and (siteNameToFind == None)):
             error('Bad site index ' + str(siteIndex))
 
          norNetSite = {
@@ -263,6 +155,7 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
             'site_index'                  : siteIndex,
             'site_short_name'             : siteAbbrev,
             'site_long_name'              : site['name'],
+            'site_utf8'                   : getTagValue(siteTagsList, 'nornet_site_utf8', unicode(site['name'])),
             'site_domain'                 : siteDomain,
             'site_latitude'               : site['latitude'],
             'site_longitude'              : site['longitude'],
@@ -303,18 +196,28 @@ def getNorNetProvidersForSite(norNetSite):
          if providerIndex <= 0:
             continue
          providerInfo        = getNorNetProviderInfo(providerIndex)
-         providerTbIPv4      = IPv4Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv4', '0.0.0.0'))
-         providerTbIPv6      = IPv6Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::'))
+         providerTbIPv4      = IPv4Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv4', '0.0.0.0/0'))
+         providerGwIPv4      = IPv4Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_gateway_ipv4', '0.0.0.0'))
+         if not providerGwIPv4 in providerTbIPv4:
+            error('Bad IPv4 network/gateway settings of provider ' + providerInfo[0] + \
+                  ': ' + str(providerGwIPv4) + ' not in ' + str(providerGwIPv4))
+         providerTbIPv6      = IPv6Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::/0'))
+         providerGwIPv6      = IPv6Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_gateway_ipv6', '::'))
+         if not providerGwIPv6 in providerTbIPv6:
+            error('Bad IPv6 network/gateway settings of provider ' + providerInfo[0] + \
+                  ': ' + str(providerGwIPv6) + ' not in ' + str(providerGwIPv6))
          providerTbInterface = getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_interface', '')
          if not re.match(r"^[a-zA-Z0-9_-]*$", providerTbInterface):
             error('Bad interface name ' + providerTbInterface)
          norNetProvider = {
             'provider_index'               : providerIndex,
-            'provider_short_name'          : providerInfo[1],
             'provider_long_name'           : providerInfo[0],
+            'provider_short_name'          : providerInfo[1],
             'provider_tunnelbox_ipv4'      : providerTbIPv4,
             'provider_tunnelbox_ipv6'      : providerTbIPv6,
-            'provider_tunnelbox_interface' : providerTbInterface
+            'provider_tunnelbox_interface' : providerTbInterface,
+            'provider_gateway_ipv4'        : providerGwIPv4,
+            'provider_gateway_ipv6'        : providerGwIPv6
          }
 
          norNetProviderList[providerIndex] = norNetProvider
@@ -405,6 +308,8 @@ def fetchNorNetNode(nodeNameToFind = None, site = None):
             'node_model'            : node['model'],
             'node_type'             : 'NorNet Managed Node',
             'node_state'            : node['boot_state'],
+            'node_v4only'           : 0,
+            'node_v6only'           : 0,
             'node_tags'             : nodeTagsList
          }
 
@@ -534,16 +439,78 @@ def lookupPersonID(eMail):
       return(0)
 
 
+# ###### Fetch list of NorNet slices ########################################
+def fetchNorNetSlice(sliceNameToFind):
+   global plc_server
+   global plc_authentication
+
+   if sliceNameToFind == None:   # Get full list
+      filter = { }
+   else:              # Only perform lookup for given name
+      filter = { 'name' : sliceNameToFind }
+
+   try:
+      norNetSliceList = []
+      fullSliceList   = plc_server.GetSlices(plc_authentication, filter,
+                                             [ 'slice_id', 'node_ids', 'name', 'description', 'url', 'initscript_code', 'expires' ])
+      for slice in fullSliceList:
+         sliceID = int(slice['slice_id'])
+
+         sliceTagsList = plc_server.GetSliceTags(plc_authentication,
+                                                 { 'slice_id' : sliceID },
+                                                 [ 'slice_id', 'node_id', 'tagname', 'value' ])
+         if int(getTagValue(sliceTagsList, 'nornet_is_managed_slice', '-1')) < 1:
+            continue
+         sliceOwnAddresses = int(getTagValue(sliceTagsList, 'nornet_slice_own_addresses', '0'))
+
+         norNetSlice = {
+            'slice_id'              : sliceID,
+            'slice_name'            : slice['name'],
+            'slice_description'     : slice['description'],
+            'slice_url'             : slice['url'],
+            'slice_initscript_code' : slice['initscript_code'],
+            'slice_expires'         : slice['expires'],
+            'slice_node_ids'        : slice['node_ids'],
+            'slice_own_addresses'   : sliceOwnAddresses,
+            'slice_tags'            : sliceTagsList
+         }
+
+         if sliceNameToFind != None:
+            return(norNetSlice)
+
+         norNetSliceList.append(norNetSlice)
+
+      return(norNetSliceList)
+
+   except Exception as e:
+      error('Unable to fetch NorNet slice list: ' + str(e))
+
+
+# ###### Fetch list of NorNet slices ########################################
+def fetchNorNetSliceList():
+   log('Fetching NorNet slice list ...')
+   return fetchNorNetSlice(None)
+
+
 # ###### Find slice ID ######################################################
 def lookupSliceID(sliceName):
    try:
       slice = plc_server.GetSlices(plc_authentication,
-                                   {'name': sliceName}, ['slice_id'])
+                                   { 'name' : sliceName }, [ 'slice_id' ])
       sliceID = int(slice[0]['slice_id'])
       return(sliceID)
 
    except:
       return(0)
+
+
+# ###### Get slice node index of NorNet slice ###############################
+def getSliceNodeIndexOfNorNetSlice(slice, node):
+   for tag in slice['slice_tags']:
+      if ((tag['node_id'] == node['node_id']) and
+          (tag['tagname'] == 'nornet_slice_node_index')):
+         return(int(tag['value']))
+   return 0
 
 
 # ###### Get list of node tags ##############################################

@@ -7,4 +7,5 @@ fi
 
 cp lang $1/syslinux/
 cp txt.cfg $1/syslinux/
+cp grub.cfg $1/boot/grub/grub.cfg
 cp *.seed $1/preseed/

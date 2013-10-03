@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+   configure)
+      Auto-Update-Keys
+      ln -sf /usr/bin/System-Info /etc/update-motd.d/55-nornet-management
+      /usr/sbin/update-motd 2>/dev/null || true
+      ;;
+esac
+
+#DEBHELPER#
+
+exit 0

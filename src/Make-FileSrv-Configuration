@@ -19,26 +19,32 @@
 #
 # Contact: dreibh@simula.no
 
-
 import sys;
 import time;
 import adns;
 
 # NorNet
-from NorNetAPI       import *;
-from NorNetNodeSetup import *;
+from NorNetConfiguration import *;
+from NorNetAPI           import *;
+from NorNetNodeSetup     import *;
+
+
+
+# ###### Get local node configuration string ################################
+def getFileServRWSystemsConfigurationString():
+   try:
+      return NorNet_Configuration['NorNet_FileServ_RWSystems']
+   except:
+      return ''
 
 
 # ###### Generate TFTP daemon configuration #################################
-def makeTFTPDConfiguration(configNamePrefix):
-   if configNamePrefix == None:
-      configNamePrefix = 'tftpd-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-config'
-   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+def makeTFTPDConfiguration():
+   outputFile = codecs.open('tftpd-hpa-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
 
    outputFile.write('TFTP_USERNAME="tftp"\n')
-   outputFile.write('TFTP_DIRECTORY="/filesrv/tftp"\n')
+   outputFile.write('TFTP_DIRECTORY="/filesrv/adm/TFTP"\n')
    outputFile.write('TFTP_ADDRESS="[::]:69" \n')   
    outputFile.write('TFTP_OPTIONS="--secure"\n')
 
@@ -46,55 +52,70 @@ def makeTFTPDConfiguration(configNamePrefix):
 
 
 # ###### Generate NFS daemon configuration ##################################
-def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
-   if configNamePrefix == None:
-      configNamePrefix = 'tftpd-' + localSite['site_short_name']
-   configurationName = configNamePrefix + '-config'
-   outputFile = codecs.open(configurationName, 'w', 'utf-8')
+def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
+   outputFile = codecs.open('nfsd-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
+   
+   nfsOptions = 'subtree_check,async,no_wdelay,all_squash,anonuid=' + str(uid) + ',anongid=' + str(gid)
 
    # ====== Global shares ===================================================
    log('Writing global configuration ...')
+   outputFile.write('# Global shares\n')
    outputFile.write('/filesrv/pub\t')
    for version in [ 4, 6 ]:
-      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,rw)\t')
-      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,rw)\t')
+      outputFile.write(str(makeNorNetIP(0, 0, 0, version)) + '(' + nfsOptions + ',rw)\t')
+      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(' + nfsOptions + ',rw)\t')
    outputFile.write('\n')
    outputFile.write('/filesrv/adm\t')
    for i in range(0, len(rwSystemList)):
-      outputFile.write(rwSystemList[i] + '(subtree_check,sync,rw)\t')
+      outputFile.write(rwSystemList[i] + '(' + nfsOptions + ',rw)\t')
    for version in [ 4, 6 ]:
-      outputFile.write(str(makeNorNetIP(0, 0, 0, 0, version)) + '(subtree_check,sync,ro)\t')
-      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(subtree_check,sync,ro)\t')
+      outputFile.write(str(makeNorNetIP(0, 0, 0, version)) + '(' + nfsOptions + ',ro)\t')
+      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(' + nfsOptions + ',ro)\t')
    outputFile.write('\n')
+   outputFile.write('/filesrv/sys\t')
+   for i in range(0, len(rwSystemList)):
+      outputFile.write(rwSystemList[i] + '(' + nfsOptions + ',rw)\t')
+   outputFile.write('\n\n')
 
    # ====== Per-node private share ==========================================
+   makeDir('/filesrv/sys')
+   originalDirectory = changeDir('/filesrv/sys')
+   obsoleteSites     = os.listdir('.')
+
    log('Writing per-node configuration ...')
+   outputFile.write('# Per-node shares\n')
    adnsResolver = adns.init()
    for siteIndex in fullSiteList:
-      siteQueryList     = [ None ]
-      site              = fullSiteList[siteIndex]
-      siteDirectory     = '/filesrv/sys/' + site['site_domain']
-      for nodeIndex in range(1, 255):
-         nodeDirectory = siteDirectory + '/' + str(nodeIndex)
-         try:
-            if nodeIndex == 1:
-               try:
-                  os.mkdir(siteDirectory, 0755);
-               except:
-                  dummy=1
-            os.mkdir(nodeDirectory, 0755);
-         except:
-            dummy=1
+      # ====== Prepare site directory =======================================
+      siteQueryList = [ None ]
+      site          = fullSiteList[siteIndex]
+      siteDirectory = str(site['site_index'])
+      siteLink      = site['site_domain']
+      makeDir(siteDirectory)
+      makeSymlink(siteLink, siteDirectory)
+      oldDirectory  = changeDir(siteDirectory)
+      obsoleteNodes = os.listdir('.')
+      try:
+         obsoleteSites.remove(siteDirectory)
+         obsoleteSites.remove(siteLink)
+      except:
+         pass
 
-         outputFile.write(nodeDirectory + '\t')        
+      # ====== Prepare node directories =====================================
+      for nodeIndex in range(1, 255):
+         nodeDirectory = str(nodeIndex)
+         makeDir(nodeDirectory)
+         obsoleteNodes.remove(nodeDirectory)
+
+         outputFile.write('/filesrv/sys/' + siteDirectory + '/' + nodeDirectory + '\t')        
          siteProviderList = getNorNetProvidersForSite(site)
          for providerIndex in siteProviderList:
             provider = siteProviderList[providerIndex]
             for version in [ 4, 6 ]:
                # ====== Add entry for node ==================================
-               nodeAddress = makeNorNetIP(providerIndex, siteIndex, nodeIndex, -1, version)
-               outputFile.write(str(nodeAddress.ip) + '(subtree_check,sync,ro)\t')
+               nodeAddress = makeNorNetIP(providerIndex, siteIndex, nodeIndex, version)
+               outputFile.write(str(nodeAddress.ip) + '(' + nfsOptions + ',rw)\t')
 
                # ====== Query DNS for the node's name =======================
                if ((version == 4) and
@@ -103,8 +124,21 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
                   query = adnsResolver.submit_reverse(str(nodeAddress.ip), adns.rr.PTR)
                   siteQueryList.append(query)
 
-         for i in range(0, len(rwSystemList)):
-            outputFile.write(rwSystemList[i] + '(subtree_check,sync,rw)\t')
+            # ====== Add tunnel IP addresses for a tunnelbox ================
+            # The route to the Central Site goes over the tunnel, i.e. the
+            # routing will choose the tunnel IP as source address!
+            if nodeIndex == NorNet_NodeIndex_Tunnelbox:
+               for remoteSiteIndex in fullSiteList:
+                  if remoteSiteIndex != siteIndex:
+                     remoteSite = fullSiteList[remoteSiteIndex]
+                     remoteProviderList = getNorNetProvidersForSite(remoteSite)
+                     for remoteProviderIndex in remoteProviderList:
+                        remoteProvider = remoteProviderList[remoteProviderIndex]
+                        for version in [ 4, 6 ]:
+                           localInnerAddress =  makeNorNetTunnelIP(siteIndex, providerIndex,
+                                                                  remoteSiteIndex, remoteProviderIndex, version)
+                           outputFile.write(str(localInnerAddress.ip) + '(' + nfsOptions + ',rw)\t')
+
          outputFile.write('\n')
 
       # ====== Create symlinks with host name ===============================
@@ -114,35 +148,48 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, configNamePrefix):
          resolvedNames = resolvedNames + len(adnsResolver.completed())
          # print resolvedNames
 
-      # All names are resolved now (successfully or unsuccessfully)!    
-      oldDirectory = os.getcwd()
-      os.chdir(siteDirectory)
+      # All names are resolved now (successfully or unsuccessfully)!
+      successfulNameResolutions = 0
       for i in range(1,len(siteQueryList)):
          answer = siteQueryList[i].check()
          if answer[0] == 0:
             # print i,hostName,answer[3][0]
-            linkName           = getHostnameFromFQDN(str(answer[3][0]))
-            newLinkTarget      = str(i)
-            existingLinkTarget = None            
+            successfulNameResolutions = successfulNameResolutions + 1
+            nodeName = str(i)
+            nodeLink = getHostnameFromFQDN(str(answer[3][0]))
+            linkName = getHostnameFromFQDN(str(answer[3][0]))
+            makeSymlink(nodeLink, nodeName)
             try:
-               existingLinkTarget = os.readlink(linkName)
+               obsoleteNodes.remove(nodeLink)
             except:
-               existingLinkTarget = None
+               pass
 
-            if existingLinkTarget != newLinkTarget:
-               print('Adding/changing link ' + linkName + ' -> ' + newLinkTarget + ' in ' + siteDirectory)
-               try:
-                  os.unlink(linkName)
-               except Exception as e:
-                  dummy=1
-               try:
-                  os.symlink(newLinkTarget, linkName)
-               except Exception as e:
-                  dummy=1
+      # ====== Remove obsolete node links ======================================
+      # Only perform cleanup if some name resolutions have been successful.
+      # Otherwise, just a DNS problem could remove valid links!
+      if successfulNameResolutions > 0:
+         for obsoleteNode in obsoleteNodes:
+            try:
+               if os.path.islink(obsoleteNode):
+                  os.unlink(obsoleteNode)
+            except:
+               pass
 
-      os.chdir(oldDirectory)
-      
+      changeDir(oldDirectory)
+
    outputFile.close()
+
+   # ====== Remove obsolete site links ======================================
+   for obsoleteSite in obsoleteSites:         
+      try:
+         if os.path.islink(obsoleteSite):
+            os.unlink(obsoleteSite)
+         elif os.path.isdir(obsoleteSite):
+            os.rmdir(obsoleteSite)
+      except:
+         pass
+
+   changeDir(originalDirectory)
 
 
 
@@ -151,8 +198,6 @@ loginToPLC()
 
 fullSiteList = fetchNorNetSiteList(False)
 # NOTE: Site list also includes disabled sites!
-#fullNodeList = fetchNorNetNodeList()
-
 
 rwSystemList = []
 rwSystems = getFileServRWSystemsConfigurationString()
@@ -165,6 +210,9 @@ if rwSystems != None:
       # print resolveHostname(name, AF_INET6)
       rwSystemList.append(name)
 
+user = pwd.getpwnam(getLocalNodeNorNetUser())
+uid  = user.pw_uid
+gid  = user.pw_gid
 
-makeTFTPDConfiguration('tftpd-hpa')
-makeNFSDConfiguration(fullSiteList, rwSystemList, 'nfsd')
+makeTFTPDConfiguration()
+makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid)

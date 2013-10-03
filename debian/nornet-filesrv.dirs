@@ -1,5 +1,6 @@
 filesrv
-filesrv/tftp
-filesrv/pub
 filesrv/adm
+filesrv/adm/TFTP
+filesrv/adm/ISOs
+filesrv/pub
 filesrv/sys

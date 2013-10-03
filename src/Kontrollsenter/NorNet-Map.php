@@ -142,6 +142,9 @@ foreach ($status as $hostName => $hostEntry) {
                     '"' . $strokeDashstyle . '", ' .
                     '2);' . "\n";
              }
+             else {
+                echo '   removeConnection("window.' . $localIdentifer . '_to_' . $remoteIdentifer . '");' . "\n";
+             }
          }
       }
    }

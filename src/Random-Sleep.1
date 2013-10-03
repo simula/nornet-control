@@ -1,0 +1,55 @@
+.\" Random Sleep
+.\" Copyright (C) 2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd May 29, 2013
+.Dt Random-Sleep 1
+.Os Random-Sleep
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Random-Sleep
+.Nd Random Sleep
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Random-Sleep
+min_sleep_time
+max_sleep_time
+.Op quiet
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Random-Sleep
+waits a randomly chosen time from min_sleep_time to max_sleep_time. 
+It can be used to decouple time-scheduled operations on systems.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+.Bl -tag -width indent
+.It min_sleep_time
+The minimum sleep time in seconds (floating point number).
+.It max_sleep_time
+The maximum sleep time in seconds (floating point number).
+.It Op quiet
+If specified, no output is generated. Otherwise, the program prints the
+selected waiting time.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Random-Sleep 0 3600
+.It Random-Sleep 3.25 7.75 -quiet
+.El

@@ -1,8 +1,7 @@
 #!/bin/bash -e
-# -*- coding: utf-8 -*-
 #
 # Make Research VM
-# Copyright (C) 2012 by Thomas Dreibholz
+# Copyright (C) 2012-2013 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,37 +18,49 @@
 #
 # Contact: dreibh@simula.no
 
-if [ $# -ne 4 ] ; then
-   echo >&2 "Usage: $0 VM_name ISO_name memory_MiB disk_GiB"
+
+if [ $# -lt 4 ] ; then
+   echo >&2 "Usage: $0 VM_name ISO_name memory_MiB disk_GiB [Fixed|Standard]"
    exit 1
 fi
 
 VM_NAME="$1"
 ISO_NAME="$2"
+if [ ! -e "$ISO_NAME" ] ; then
+   echo >&2 "ERROR: ISO file $ISO_NAME does not exist!"
+   exit 1
+fi
 let MEMORY_SIZE=1*$3
 let DISK_SIZE=1024*$4
+VARIANT="$5"
+if [ "$VARIANT" = "" ] ; then
+   VARIANT="Fixed"
+fi
 
-CPUS="2"
+CPUS="1"
 VRAM="16"
 
 
 VBoxManage unregistervm "$VM_NAME" --delete || true
 
-VBoxManage createvm --register --name "$VM_NAME" --ostype Ubuntu_64
+VBoxManage createvm --register --name "$VM_NAME" --ostype Fedora_64
 VBoxManage modifyvm "$VM_NAME" --cpus "$CPUS" \
                                --memory "$MEMORY_SIZE" --vram "$VRAM" \
-                               --rtcuseutc on --firmware bios --chipset ich9 --acpi on --ioapic on \
+                               --rtcuseutc on --firmware bios --chipset piix3 --acpi on --ioapic on \
                                --hwvirtex on --pae on --boot1 dvd --boot2 disk --boot3 none --boot4 none
-VBoxManage modifyvm "$VM_NAME" --nic1 bridged --nictype1 82545EM --bridgeadapter1 eth0  --cableconnected1 on --macaddress1 auto
+# virtio
+VBoxManage modifyvm "$VM_NAME" --nic1 bridged --nictype1 82545EM --bridgeadapter1 eth0 --cableconnected1 on --macaddress1 auto --nicpromisc1 allow-all
 VBoxManage storagectl "$VM_NAME" --name "SATA Controller" --add sata --controller IntelAHCI --sataportcount 4
 VBoxManage storageattach "$VM_NAME" --storagectl "SATA Controller" --port 0 --device 0 --type dvddrive \
                                     --medium "$ISO_NAME"
-VBoxManage createhd --filename "$HOME/VirtualBox VMs/$VM_NAME/DH0.vdi" --size "$DISK_SIZE" --format vdi --variant Fixed
+VBoxManage createhd --filename "$HOME/VirtualBox VMs/$VM_NAME/DH0.vdi" --size "$DISK_SIZE" --format vdi --variant "$VARIANT"
 VBoxManage storageattach "$VM_NAME" --storagectl "SATA Controller" --port 1 --device 0 --type hdd \
                                     --medium "$HOME/VirtualBox VMs/$VM_NAME/DH0.vdi"
 
 (
    echo "NAME=\"$VM_NAME"\"
-   echo "STARTDELAY=60"
-   echo "STOPDELAY=60"
+   echo "STARTDELAY=30"
+   echo "STOPDELAY=30"
+   echo "OPTIONS=\"default\""
+   echo "AUTO_UPDATE_BOOTCD=\"default\""
 ) >"70-$VM_NAME"

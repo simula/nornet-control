@@ -1,17 +1,28 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
-
-from NorNetProviderSetup import *;
 from NorNetTools         import *;
-
-import os;
-import re;
+from NorNetConfiguration import *;
 
 
-print makeDNSNameFromUnicode(u'test123456789.xzy')
-print makeDNSNameFromUnicode(u'test123456789.äöü.æøå.xzyß')
-print makeDNSNameFromUnicode(u'köln.äüö')
-print makeDNSNameFromUnicode(u'bygdøy.æå')
+
+# ###### Get hostname from FQDN #############################################
+def getHostnameFromFQDN(fqdn):
+   match = re.search('^([^\.]*)\.(.*)', fqdn)
+   if match != None:
+      return match.group(1)
+   else:
+      return fqdn
+
+
+# ###### Get hostname from FQDN #############################################
+def getDomainFromFQDN(fqdn):
+   match = re.search('^([^\.]*)\.(.*)', fqdn)
+   if match != None:
+      return match.group(2)
+   else:
+      return ''
+
+
+for fqdn in [ "åklungen.alpha.test", "test.alpha.test", "system.alpha.test", "rekesmørbrød.alpha.test", "kölsch.alpha.test" ]:
+   print getHostnameFromFQDN(fqdn), "\t", getDomainFromFQDN(fqdn)

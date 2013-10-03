@@ -1,0 +1,104 @@
+#!/bin/bash -e
+#
+# Change CD image of virtual system
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+NORNET_DIRECTORY="/etc/nornet"
+DELAY=0
+if [ $# -gt 0 ] ; then
+   DELAY=$1
+fi
+
+
+# ====== Get NorNet user name ===============================================
+if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
+   . $NORNET_DIRECTORY/nornetapi-config
+elif [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
+fi
+
+
+# ====== Wait (random time to decouple workloads) ===========================
+echo "`env LANG=C date +%FT%H:%M:%S`: Starting check for Boot-CD updates."
+if [ $DELAY -gt 0 ] ; then
+   Random-Sleep 0 $DELAY
+fi
+
+
+# ====== Check all configured virtual systems ===============================
+VSYSTEMS=`find $NORNET_DIRECTORY/vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
+LOCAL_ISODIR="/home/$NorNet_LocalNode_NorNetUser/ISOs"
+sudo -u $NorNet_LocalNode_NorNetUser mkdir -p "$LOCAL_ISODIR"
+chown -R $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser "$LOCAL_ISODIR"
+for vsystem in $VSYSTEMS ; do
+   NAME="BAD-NAME"
+   AUTO_UPDATE_BOOTCD=""
+   ( . $vsystem
+      if [ "$AUTO_UPDATE_BOOTCD" != "" ] ; then
+         if [ "$AUTO_UPDATE_BOOTCD" = "default" ] ; then
+            AUTO_UPDATE_BOOTCD="/nfs/adm/ISOs"   # The default path
+         fi
+         if [ -d "$AUTO_UPDATE_BOOTCD" ] ; then
+            if [ -e "$AUTO_UPDATE_BOOTCD/$NAME.iso" ] ; then
+               updated=0
+               if [ ! -e "$LOCAL_ISODIR/$NAME.iso" ] ; then
+                  echo "`env LANG=C date +%FT%H:%M:%S`: Update for $NAME. Copying $AUTO_UPDATE_BOOTCD/$NAME.iso to $LOCAL_ISODIR ..."
+                  sudo -u $NorNet_LocalNode_NorNetUser cp "$AUTO_UPDATE_BOOTCD/$NAME.iso" "$LOCAL_ISODIR/$NAME.iso"
+                  updated=1
+               elif [ "$AUTO_UPDATE_BOOTCD/$NAME.iso" -nt "$LOCAL_ISODIR/$NAME.iso" ] ; then
+                  echo "`env LANG=C date +%FT%H:%M:%S`: Update for $NAME. Copying updated $AUTO_UPDATE_BOOTCD/$NAME.iso to $LOCAL_ISODIR ..."
+                  sudo -u $NorNet_LocalNode_NorNetUser cp "$AUTO_UPDATE_BOOTCD/$NAME.iso" "$LOCAL_ISODIR/$NAME.iso.tmp" && \
+                  sudo -u $NorNet_LocalNode_NorNetUser mv "$LOCAL_ISODIR/$NAME.iso.tmp" "$LOCAL_ISODIR/$NAME.iso"
+                  updated=1
+               else
+                  echo "`env LANG=C date +%FT%H:%M:%S`: No update for $NAME ($AUTO_UPDATE_BOOTCD/$NAME.iso) necessary."
+               fi
+               if [ $updated -ne 0 ] ; then
+                  # ====== Shut down system =================================
+                  status=`Check-VSystem "$NAME"`
+                  if [ "$status" = "running" -o "$status" = "paused" ] ; then
+                     echo "`env LANG=C date +%FT%H:%M:%S`: Shutting down $NAME ..."
+                     service nornet-server stop "$NAME" || true
+                  fi
+
+                  # ====== Change CD/DVD image ==============================
+                  echo "`env LANG=C date +%FT%H:%M:%S`: Inserting $LOCAL_ISODIR into $NAME ..."
+                  Change-VSystem-CDImage "$NAME" "$LOCAL_ISODIR/$NAME.iso" || true
+                  echo "`env LANG=C date +%FT%H:%M:%S`: Done!"
+
+                  # ====== Restart system ===================================
+                  if [ "$status" = "running" -o "$status" = "paused" ] ; then
+                     echo "`env LANG=C date +%FT%H:%M:%S`: Resarting $NAME ..."
+                     service nornet-server start "$NAME" || true
+                  fi
+               fi
+            else
+               echo "`env LANG=C date +%FT%H:%M:%S`: There is no image $AUTO_UPDATE_BOOTCD/$NAME.iso -> skipping."
+            fi
+         else
+            echo "`env LANG=C date +%FT%H:%M:%S`: ISO directory $AUTO_UPDATE_BOOTCD does not exist!"
+         fi
+      fi
+   ) || true
+done
+
+echo "`env LANG=C date +%FT%H:%M:%S`: Finished check for Boot-CD updates."

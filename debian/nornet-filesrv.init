@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # --------------- NorNet -- The Multi-Homing Testbed Project ----------------
 #
 # Copyright (C) 2013 by Thomas Dreibholz
@@ -61,6 +61,7 @@ cd "$NORNET_DIRECTORY"
 # Load configuration from API config file
 NorNet_LocalNode_Hostname=""
 NorNet_LocalNode_NorNetInterface=""
+NorNet_LocalNode_NorNetUser=""
 if [ ! -e ./nornetapi-config ] ; then
    echo >&2 "ERROR: $NORNET_DIRECTORY/nornetapi-config does not exist!"
    exit 0
@@ -74,9 +75,12 @@ if [ "$NorNet_LocalNode_NorNetInterface" = "" ] ; then
    echo >&2 "ERROR: NorNet_LocalNode_NorNetInterface is not set!"
    exit 1
 fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
+fi
 
 # Log what is going on ...
-echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE 2>&1
+echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######\x1b[0m"  >>$LOGFILE 2>&1
 
 
 # ###### Check whether file needs an update #################################
@@ -102,11 +106,18 @@ needs_update ()
 # ###### Get new configuration into temporary directory #####################
 get_new_filesrv_configuration ()
 {
-   echo "Getting new configuration ..."
+   echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Getting new configuration ...\x1b[0m"
    rm -rf updated-filesrv-config
    mkdir updated-filesrv-config
    cd updated-filesrv-config
-   Make-FileSrv-Configuration
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser .
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser /filesrv
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser /filesrv/pub
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser /filesrv/sys
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser /filesrv/adm
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser /filesrv/adm/TFTP
+   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser /filesrv/adm/ISOs
+   sudo -u $NorNet_LocalNode_NorNetUser Make-FileSrv-Configuration
    cd ..
    mv updated-filesrv-config/* .
    rmdir updated-filesrv-config
@@ -118,17 +129,20 @@ check_and_configure ()
 {
    get_new_filesrv_configuration
    if needs_update tftpd-hpa-config /etc/default/tftpd-hpa $1 ; then
-      echo "TFTP configuration has been updated => restarting tftp-hpa service ..."
+      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: TFTP configuration has been updated => restarting tftp-hpa service ...\x1b[0m"
       cp tftpd-hpa-config /etc/default/tftpd-hpa
-      service tftpd-hpa restart
+      service tftpd-hpa restart >/dev/null || true
    fi
    if needs_update nfsd-config /etc/exports $1 ; then
-      echo "NFS configuration has been updated!"
+      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: NFS configuration has been updated!\x1b[0m"
       cp nfsd-config /etc/exports
    fi
-   # Always reload this service. It may update exports for
-   # now-available DNS names!
-   service nfs-kernel-server reload
+   if [ ! -d /nfs ] ; then
+      ln -s /filesrv /nfs
+   fi
+   # Always reload this service. It may update exports for now-available DNS names!
+   echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Reloading NFS configuration ...\x1b[0m"
+   service nfs-kernel-server reload >/dev/null || true
 }
 
 

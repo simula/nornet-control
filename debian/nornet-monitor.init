@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 # --------------- NorNet -- The Multi-Homing Testbed Project ----------------
 #
-# Copyright (C) 2012 by Thomas Dreibholz
+# Copyright (C) 2012-2013 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -76,7 +76,7 @@ if [ "$NorNet_LocalNode_NorNetInterface" = "" ] ; then
 fi
 
 # Log what is going on ...
-echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE 2>&1
+echo -e "\x1b[32m`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######\x1b[0m"  >>$LOGFILE 2>&1
 
 
 # ###### Check whether file needs an update #################################
@@ -102,7 +102,7 @@ needs_update ()
 # ###### Get new configuration into temporary directory #####################
 get_new_monitor_configuration ()
 {
-   echo "Getting new configuration ..."
+   echo -e "\x1b[32m`env LANG=C date +%FT%H:%M:%S`: Getting new configuration ...\x1b[0m"
    rm -rf updated-monitor-config
    mkdir updated-monitor-config
    cd updated-monitor-config
@@ -117,10 +117,10 @@ get_new_monitor_configuration ()
 check_and_configure ()
 {
    get_new_monitor_configuration
-   if needs_update nagios-config /etc/nagios3/nornet.cfg $1 ; then
-      echo "Nagios configuration has been updated => restarting Nagios service ..."
-      cp nagios-config /etc/nagios3/nornet.cfg
-      service nagios3 reload   # "reload" is sufficient here => faster!
+   if needs_update nagios-config /etc/nagios3/nornet-testbed.cfg $1 ; then
+      echo -e "\x1b[32m`env LANG=C date +%FT%H:%M:%S`: Nagios configuration has been updated => restarting Nagios service ...\x1b[0m"
+      cp nagios-config /etc/nagios3/nornet-testbed.cfg
+      service nagios3 reload >/dev/null || true   # "reload" is sufficient here => faster!
    fi
 }
 

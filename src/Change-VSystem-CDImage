@@ -1,0 +1,112 @@
+#!/bin/bash -e
+#
+# Change CD image of virtual system
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+if [ $# -lt 2 ] ; then
+   echo >&2 "Usage: $0 VM_name ISO_name|empty [-restart-on-change]"
+   exit 1
+fi
+
+NORNET_DIRECTORY="/etc/nornet"
+MACHINE_NAME="$1"
+if [ "$2" = "empty" ] ; then
+   ISO_NAME="emptydrive"
+else
+   ISO_NAME="`dirname $2`/`basename $2`"   # Get absolute path name!
+   if [ ! -e "$ISO_NAME" ] ; then
+      echo >&2 "ERROR: ISO file $ISO_NAME not found!"
+      exit 1
+   fi
+fi
+OPTION="$3"
+
+
+# ====== Get NorNet user name ===============================================
+if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
+   . $NORNET_DIRECTORY/nornetapi-config
+elif [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
+fi
+
+
+# ====== Get machine configuration ==========================================
+MACHINE_STATUS_FILE=`mktemp`
+sudo -u $NorNet_LocalNode_NorNetUser env HOME=~$NorNet_LocalNode_NorNetUser VBoxManage showvminfo "$MACHINE_NAME" --machinereadable >$MACHINE_STATUS_FILE
+CONFIG_FILE=`cat $MACHINE_STATUS_FILE | grep "^CfgFile=" | sed -e "s/^CfgFile=\"//" -e "s/\"$//g"`
+CONFIG_DIR=`dirname "$CONFIG_FILE"`
+
+
+# ====== Search for first CD/DVD drive ======================================
+result=0
+for controller in 0 1 2 3 ; do
+   for port in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 ; do
+      imageFile=`cat $MACHINE_STATUS_FILE | grep "^\"SATA Controller-$port-$controller" | sed -e "s/^\"SATA Controller-$port-$controller\"=\"//"  -e "s/\"$//" || echo ""`
+      if [ "$imageFile" != "" ] ; then
+         oldImage=`cat $MACHINE_STATUS_FILE | grep "^\"SATA Controller-$port-$controller" | sed -e "s/^\"SATA Controller-$port-$controller\"=\"//"  -e "s/\"$//" || echo ""`
+         if [ "$oldImage" = "emptydrive" -o "`echo "$oldImage" | grep ".iso$"`" != "" ] ; then
+            # ====== Found CD/DVD drive. Does it need CD/DVD change? ========
+            if [ "$oldImage" != "$ISO_NAME" ] ; then
+               echo "Controller $controller, port $port: $imageFile -> $ISO_NAME"
+               
+               # ====== Shut down virtual system ============================
+               status=`Check-VSystem "$MACHINE_NAME"`
+               if [ "$OPTION" = "-restart-on-change" ] ; then
+                  if [ "$status" = "running" -o "$status" = "paused" ] ; then
+                     echo "`env LANG=C date +%FT%H:%M:%S`: Shutting down $MACHINE_NAME ..."
+                     service nornet-server stop "$MACHINE_NAME" || true
+                  fi
+               fi
+
+               # ====== Change image ========================================
+               echo "`env LANG=C date +%FT%H:%M:%S`: Inserting $ISO_NAME into $MACHINE_NAME ..."
+               tempStatus=`Check-VSystem "$MACHINE_NAME"`
+               if [ "$tempStatus" != "poweroff" -a "$tempStatus" != "aborted" ] ; then
+                  echo "`env LANG=C date +%FT%H:%M:%S`: ERROR: Failed to shut down $MACHINE_NAME?! Status=$tempStatus."
+               fi
+               RESULTS_FILE=`mktemp`
+               result=1
+               sudo -u $NorNet_LocalNode_NorNetUser env HOME=~$NorNet_LocalNode_NorNetUser VBoxManage storageattach "$MACHINE_NAME" --storagectl "SATA Controller" --port $port --device $controller --type dvddrive --medium "$ISO_NAME" >$RESULTS_FILE 2>&1 && result=0 || true
+               if [ $result -ne 0 ] ; then
+                  echo "`env LANG=C date +%FT%H:%M:%S`: ERROR: Changing CD/DVD image to $ISO_NAME has failed!"
+                  cat $RESULTS_FILE
+               fi
+               rm -f $RESULTS_FILE
+
+               # ====== Restart virtual system ==============================
+               if [ "$OPTION" = "-restart-on-change" ] ; then
+                  if [ "$status" = "running" -o "$status" = "paused" ] ; then
+                     echo "`env LANG=C date +%FT%H:%M:%S`: Restarting $MACHINE_NAME ..."
+                     service nornet-server start "$MACHINE_NAME" || true
+                  fi
+               fi
+            else
+               echo "Controller $controller, port $port: $imageFile already set."
+            fi
+         fi
+         rm -f $MACHINE_STATUS_FILE
+         exit 0
+      fi
+   done
+done
+rm -f $MACHINE_STATUS_FILE
+exit $result

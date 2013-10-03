@@ -22,7 +22,7 @@
 
 # ###### Main program #######################################################
 if [ $# -ne 1 ] ; then
-   echo >&2 "Usage: configuration_file"
+   echo >&2 "Usage: $0 configuration_file"
    exit 1
 fi
 WATCHDOG_CONFIG="$1"
@@ -32,6 +32,7 @@ WATCHDOG_FAILCOUNT_FILE="watchdog-failcount"
 WATCHDOG_COMMAND=""   # false
 WATCHDOG_MAXFAILURES="3"
 WATCHDOG_MAXFINALTRIALS="2"
+WATCHDOG_LOOPMODE=0
 WATCHDOG_FAILURE_ACTION='echo "Something is going wrong!"'
 WATCHDOG_FAILURE_FINAL='echo "Something is going *really* wrong!"'
 
@@ -58,7 +59,11 @@ else
 
    if [ $failures -ge $WATCHDOG_MAXFAILURES ] ; then
       echo -en "\x1b[34m`date +%FT%H:%M:%S`: Check failed $failures/$WATCHDOG_MAXFAILURES --> Performing action!\x1b[0m\n"
-      echo "-1000000" >"$WATCHDOG_FAILCOUNT_FILE"
+      if [ $WATCHDOG_LOOPMODE -eq 0 ] ; then
+         echo "-1000000" >"$WATCHDOG_FAILCOUNT_FILE"
+      else
+         rm -f "$WATCHDOG_FAILCOUNT_FILE"
+      fi
       eval $WATCHDOG_FAILURE_ACTION
    elif [ $failures -lt 0 -a $failures -ge -1000000 ] ; then
       let finalTrials=$failures+1000000

@@ -1,0 +1,53 @@
+.\" Stop VSystem
+.\" Copyright (C) 2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd February 25, 2013
+.Dt Stop-VSystem 1
+.Os Stop-VSystem
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Stop-VSystem
+.Nd Virtual System Stop Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Stop-VSystem
+VM_name
+.Op stop_delay
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Stop-VSystem
+stops the given virtual system by first sending an ACPI power button event.
+Within the given timeout, further ACPI power button events are issued every
+second. If the system is not in a shutdown state within this timeout, it is
+hard-stopped by powering it off.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+.Bl -tag -width indent
+.It VM_name
+The name of the virtual system (as used by VirtualBox).
+.It stop_delay
+The time (in seconds) to wait for the system to gracefully shut down upon
+ACPI power button events. After that time, it is just powered off.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Stop-VSystem NorNet-PLC-vigelandsparken.simula.nornet 60
+.El

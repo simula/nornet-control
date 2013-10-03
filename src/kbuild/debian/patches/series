@@ -1,0 +1,8 @@
+01_gnukfreebsd.diff
+02_sh4.diff
+03_dprintf-posix2008.diff
+04_armv7l.diff
+05_hppa-disable-threads.diff
+06_binutils-gold.diff
+07_special-chars-build-path.diff
+08_no_o3_optimization.diff

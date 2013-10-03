@@ -1,0 +1,41 @@
+Source: kbuild
+Section: devel
+Priority: extra
+Maintainer: Debian Virtualbox Team <pkg-virtualbox-devel@lists.alioth.debian.org>
+Uploaders: Michael Meskes <meskes@debian.org>,
+           Felix Geyer <fgeyer@debian.org>
+Build-Depends: debhelper (>= 9),
+               autoconf,
+               automake,
+               autopoint,
+               byacc,
+               flex,
+               libacl1-dev,
+               texinfo
+Standards-Version: 3.9.4
+Homepage: http://svn.netlabs.org/kbuild
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-virtualbox/kbuild.git
+Vcs-Git: git://anonscm.debian.org/pkg-virtualbox/kbuild.git
+
+Package: kbuild
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: framework for writing simple makefiles for complex tasks
+ The goals of the kBuild framework:
+  - Similar behavior cross all supported platforms.
+  - Flexibility, don't create unnecessary restrictions preventing ad-hoc
+    solutions.
+  - Makefile can very simple to write and maintain.
+ .
+ There are four concepts being tried out in the current kBuild incaration:
+  - One configuration file for a subtree automatically included.
+  - Target configuration templates as the primary mechanism for makefile
+    simplification.
+  - Tools and SDKs for helping out the templates with flexibility.
+  - Non-recursive makefile method by using sub-makefiles.
+ .
+ kBuild does not provide any facilities for checking compiler/library/header
+ configurations, that's not in its scope. If this is important for your
+ project, check out the autoconf tool in the GNU build system. It is possible
+ to use kBuild together with autoconf if you like, but you might just as well
+ use the full GNU package.

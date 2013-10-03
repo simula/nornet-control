@@ -1,6 +1,6 @@
 //
 // NorNet Kontrollsenter JavaScript Functions
-// Copyright (C) 2012 by Thomas Dreibholz
+// Copyright (C) 2012-2013 by Thomas Dreibholz
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -89,7 +89,7 @@ monthNames['NO'][2]  = "mars";
 monthNames['NO'][3]  = "april";
 monthNames['NO'][4]  = "mai";
 monthNames['NO'][5]  = "juni";
-monthNames['NO'][6]  = "july";
+monthNames['NO'][6]  = "juli";
 monthNames['NO'][7]  = "august";
 monthNames['NO'][8]  = "september";
 monthNames['NO'][9]  = "oktober";

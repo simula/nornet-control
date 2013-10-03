@@ -1,2 +1,11 @@
-System-Maintenance   /usr/bin
-Watchdog             /usr/bin
+Auto-Update-Keys         /usr/bin
+Interface-Setup          /sbin
+Probe-Endpoint-Setup     /usr/bin
+Random-Sleep             /usr/bin
+Reset-Networking         /usr/bin
+System-Backup            /usr/bin
+System-Info              /usr/bin
+System-Maintenance       /usr/bin
+Watchdog                 /usr/bin
+nornet-authorized_keys   /etc/nornet
+nornet-version           /etc/nornet

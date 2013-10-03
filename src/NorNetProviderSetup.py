@@ -19,148 +19,72 @@
 #
 # Contact: dreibh@simula.no
 
-
 import hashlib;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
+import NorNetConfiguration;
 from NorNetTools import *;
 
 
-# ====== Adapt if necessary =================================================
-
-NorNet_ProviderList = {
-#   ID     Name                                Short Name (ASCII only!)
-# =====================================================================
-     0 : [ 'UNKNOWN',                          'unknown'  ],
-
-     1 : [ 'Uninett',                          'uninett'  ],
-     2 : [ 'Hafslund',                         'hafslund' ],
-
-   100 : [ 'Telenor',                          'telenor'  ],
-   101 : [ 'NetCom',                           'netcom'   ],
-   102 : [ 'Tele2',                            'tele2'    ],
-   103 : [ 'ICE',                              'ice'      ],
-
-   222 : [ 'Deutsches Forschungsnetz',         'dfn'      ],
-   223 : [ 'Deutsche Telekom',                 'dtag'     ],
-   224 : [ 'Versatel',                         'versatel' ]
-}
-
-# Prefixes for the internal IPv4 and IPv6 networks
-NorNet_IPv4Prefix = IPv4Network('10.0.0.0/8')       # /8 prefix for internal IPv4 space (e.g. '10.0.0.0/8')
-NorNet_IPv6Prefix = IPv6Network('fd00:0000::/32')   # /32 prefix for internal IPv6 space (e.g. 'fd00:0000::/32')
-
-# The domain name of the central site
-# (it will e.g. be used with the alias 'nfs' to look up the file server!)
-NorNet_CentralSite_DomainName = 'simula.nornet'
-
-# Source NAT range for IPv4 (to be set up at Central Site)
-# NorNet_CentralSiteIPv4NATRange = [ IPv4Address('132.252.156.240'), IPv4Address('132.252.156.249') ]
-NorNet_CentralSiteIPv4NATRange = [ IPv4Address('0.0.0.0'), IPv4Address('0.0.0.0') ]
-
-# Public tunnelbox IP of Central Site for Default Provider. Needed for bootstrapping other tunnelboxes!
-NorNet_CentralSite_BootstrapTunnelbox     = IPv4Address('128.39.36.143')
-NorNet_CentralSite_BootstrapProviderIndex = 1
-
-# TOS Settings for provider selection
-NorNet_TOSSettings = [ 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C ]
-
-# Maximum number of NTP servers (e.g. 6+6 = 6x IPv4 + 6x IPv6)
-NorNet_MaxNTPServers = 12
-
-# ===========================================================================
-
-# Maximum number of providers per site
-NorNet_MaxProviders = 8
-
-# NorNet Internet connection to/from outside world goes via Site 1!
-NorNet_SiteIndex_Central = 1
-
-# NorNet Tunnelbox is always Node 1!
-NorNet_NodeIndex_Tunnelbox = 1
-
-# PLC is Node 2 on the Central Site!
-NorNet_SiteIndex_PLC = NorNet_SiteIndex_Central
-NorNet_NodeIndex_PLC = 2
-
-# NorNet Monitor is Node 3 on the Central Site!
-NorNet_SiteIndex_Monitor  = NorNet_SiteIndex_Central
-NorNet_NodeIndex_Monitor  = 3
-
-# NorNet Monitor is Node 4 on the Central Site!
-NorNet_SiteIndex_FileSrv  = NorNet_SiteIndex_Central
-NorNet_NodeIndex_FileSrv  = 4
-
-
-
-# ###### Get NorNet provider information ####################################
-def getNorNetProviderInfo(providerIndex):
-   try:
-      return NorNet_ProviderList[providerIndex]
-   except:
-      return NorNet_ProviderList[0]
-
 
 # ###### Get NorNet interface IPv4 address ##################################
-def makeNorNetIP(provider, site, node, subnode, version):
+def makeNorNetIP(provider, site, node, version, sliceIndex = 0):
    p = int(provider)
    s = int(site)
    n = int(node)
-   v = int(subnode)
-   if ((p < 0) | (p > 255)):
-      error('Bad provider ID')
-   if ((s < 0) | (s > 255)):
-      error('Bad site ID')
-   if ((n < 0) | (n > 255)):
-      error('Bad host ID')
+   if ((p < NorNetConfiguration.NorNet_MinProviderIndex - 1) or (p > NorNetConfiguration.NorNet_MaxProviderIndex)):
+      error('Bad provider index')
+   if ((s < NorNetConfiguration.NorNet_MinSiteIndex - 1) or (s > NorNetConfiguration.NorNet_MaxSiteIndex)):
+      error('Bad site index')
+   if ((n < NorNetConfiguration.NorNet_MinNodeIndex - 1) or (n > NorNetConfiguration.NorNet_MaxNodeIndex)):
+      error('Bad node index')
+   if ((sliceIndex < NorNetConfiguration.NorNet_MinSliceIndex - 1) or (sliceIndex > NorNetConfiguration.NorNet_MaxSliceIndex)):
+      error('Bad slice index')
 
    # ====== IPv4 handling ===================================================
    if version == 4:
-      if v > 0:   # Ignore negative values!
-         error('Bad subnode ID; must be 0 for IPv4')
       if s != 0:
          prefix = 24;    # NorNet + Provider + Site
       elif p != 0:
          prefix = 16;    # NorNet + Provider
       else:
          prefix = 8;     # NorNet
+
+      # For IPv4, we only have the slice node index.
+      if sliceIndex != 0:
+         # Replace the node index by the slice index.
+         n = sliceIndex
+
       a = IPv4Address('0.' + str(p) + '.' + str(s) + '.' + str(n))
-      a = int(NorNet_IPv4Prefix) | int(a)
+      a = int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix']) | int(a)
       return IPv4Network(str(IPv4Address(a)) + '/' + str(prefix))
 
    # ====== IPv6 handling ===================================================
    else:
-      nodeNet = n
-      nodeNum = 0
-      if v != 0:
-         prefix = 64     # NorNet + Provider + Site + NodeNetwork + VirtalNodeNet
-         if v < 0:       # Special case: NodeNetwork zero; get IP of node in this network.
-             v = 0
-             nodeNet = 0
-             nodeNum = n
-      elif n != 0:
-         prefix = 56     # NorNet + Provider + Site + NodeNetwork
-      elif s != 0:
-         prefix = 48;    # NorNet + Provider + Site
+      if s != 0:
+         prefix = 64;    # NorNet + Provider + Site
       elif p != 0:
-         prefix = 40;    # NorNet + Provider
+         prefix = 56;    # NorNet + Provider
       else:
-         prefix = 32;    # NorNet
-      a = IPv6Address('0:0:' + \
-                      str.replace(hex((p << 8) | s), '0x', '') + ':' + \
-                      str.replace(hex((nodeNet << 8) | v), '0x', '') + '::' + \
-                      str.replace(hex(nodeNum), '0x', ''))
-      a = int(NorNet_IPv6Prefix) | int(a)
-      return IPv6Network(str(IPv6Address(a)) + '/' + str(prefix))
+         prefix = 48;    # NorNet
+
+      # For IPv6, we have enough space to encode node index and slice node index!
+
+      a = IPv6Address('0:0:0:' + \
+                      str.replace(hex((p << 8) | s), '0x', '') + '::' + \
+                      str.replace(hex(sliceIndex), '0x', '') + ':' + \
+                      str.replace(hex(n), '0x', ''))
+      a = IPv6Address(int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix']) | int(a))
+      return IPv6Network(str(a) + '/' + str(prefix))
 
 
 # ###### Get NorNet information from address ################################
 def getNorNetInformationForAddress(address):
    norNetInformation = None
-   if NorNet_IPv6Prefix.Contains(address):
+   if NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix'].Contains(address):
       a = int(address)
       b = int((a >> 64) & 0xffffffff)
       norNetInformation = {
@@ -171,7 +95,7 @@ def getNorNetInformationForAddress(address):
          'vnet_index':     (b & 0x000000ff)
       }
 
-   if NorNet_IPv4Prefix.Contains(address):
+   if NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix'].Contains(address):
       a = int(address)
       norNetInformation = {
          'address':        address,
@@ -188,12 +112,12 @@ def getNorNetInformationForAddress(address):
 def getMyNorNetInformation():
    localAddressList = getLocalAddresses(6)
    for address in localAddressList:
-      if NorNet_IPv6Prefix.Contains(address):
+      if NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix'].Contains(address):
          return getNorNetInformationForAddress(address)
 
    localAddressList = getLocalAddresses(4)
    for address in localAddressList:
-      if NorNet_IPv4Prefix.Contains(address):
+      if NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix'].Contains(address):
          return getNorNetInformationForAddress(address)
 
    return None
@@ -201,20 +125,20 @@ def getMyNorNetInformation():
 
 # ###### Get NorNet tunnel inner IPv4 address ###############################
 def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingProvider, version):
-   if ((outgoingSite < 0) | (outgoingSite > 255)):
-      error('Bad site ID')
-   if ((incomingSite < 0) | (incomingSite > 255)):
-      error('Bad site ID')
-   if ((outgoingProvider < 0) | (outgoingProvider > 255)):
-      error('Bad provider ID')
-   if ((incomingProvider < 0) | (incomingProvider > 255)):
-      error('Bad provider ID')
+   if ((outgoingSite < NorNetConfiguration.NorNet_MinSiteIndex - 1) or (outgoingSite > NorNetConfiguration.NorNet_MaxSiteIndex)):
+      error('Bad site index')
+   if ((incomingSite < NorNetConfiguration.NorNet_MinSiteIndex - 1) or (incomingSite > NorNetConfiguration.NorNet_MaxSiteIndex)):
+      error('Bad site index')
+   if ((outgoingProvider < NorNetConfiguration.NorNet_MinProviderIndex - 1) or (outgoingProvider > NorNetConfiguration.NorNet_MaxProviderIndex)):
+      error('Bad provider index')
+   if ((incomingProvider < NorNetConfiguration.NorNet_MinProviderIndex - 1) or (incomingProvider > NorNetConfiguration.NorNet_MaxProviderIndex)):
+      error('Bad provider index')
 
    if ((outgoingSite == 0) and (incomingSite == 0)):
       if version == 4:
-         return IPv4Network('192.168.0.0/16')
+         return NorNetConfiguration.NorNet_Configuration['NorNet_IPv4TunnelPrefix']
       else:
-         return IPv6Network('fdff:ffff::/32')
+         return NorNetConfiguration.NorNet_Configuration['NorNet_IPv6TunnelPrefix']
 
    if incomingSite < outgoingSite:
       side  = 1
@@ -232,31 +156,31 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
 
    source      = str.replace(hex((sHigh << 8) | pHigh), '0x', '')
    destination = str.replace(hex((sLow << 8)  | pLow), '0x', '')
-   address     = 'fdff:ffff:' + source + ':' + destination + '::'
+   address     = IPv6Address(int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv6TunnelPrefix'].ip) | int(IPv6Address('0:0:0:0:0:' + source + ':' + destination + ':0')))
    if version == 4:
       # The space is to small in IPv4 addresses. Use MD5 to create most likely
       # unique addresses.
       m = hashlib.md5()
-      m.update(address)
+      m.update(str(address))
       s = m.hexdigest()
       address = (int(s[0:4], 16) & 0xfffc) | side
-      address = int(IPv4Address('192.168.0.0')) | address
+      address = int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4TunnelPrefix']) | address
       return IPv4Network(str(IPv4Address(address)) + '/30')
    else:
-      address = address + str(side)
-      return IPv6Network(address + '/64')
+      address = IPv6Address(int(address) | side)
+      return IPv6Network(str(address) + '/112')
 
 
 # ###### Get NorNet interface IPv4 address ##################################
 def makeNorNetTunnelKey(outgoingSite, outgoingProvider, incomingSite, incomingProvider):
-   if ((outgoingSite < 0) | (outgoingSite > 255)):
-      error('Bad site ID')
-   if ((incomingSite < 0) | (incomingSite > 255)):
-      error('Bad site ID')
-   if ((outgoingProvider < 0) | (outgoingProvider > 255)):
-      error('Bad provider ID')
-   if ((incomingProvider < 0) | (incomingProvider > 255)):
-      error('Bad provider ID')
+   if ((outgoingSite < NorNetConfiguration.NorNet_MinSiteIndex) or (outgoingSite > NorNetConfiguration.NorNet_MaxSiteIndex)):
+      error('Bad site index')
+   if ((incomingSite < NorNetConfiguration.NorNet_MinSiteIndex) or (incomingSite > NorNetConfiguration.NorNet_MaxSiteIndex)):
+      error('Bad site index')
+   if ((outgoingProvider < NorNetConfiguration.NorNet_MinProviderIndex) or (outgoingProvider > NorNetConfiguration.NorNet_MaxProviderIndex)):
+      error('Bad provider index')
+   if ((incomingProvider < NorNetConfiguration.NorNet_MinProviderIndex) or (incomingProvider > NorNetConfiguration.NorNet_MaxProviderIndex)):
+      error('Bad provider index')
 
    if incomingSite < outgoingSite:
       sLow  = incomingSite
@@ -272,3 +196,49 @@ def makeNorNetTunnelKey(outgoingSite, outgoingProvider, incomingSite, incomingPr
    tunnelID = (sLow << 24) | (pLow << 16) | \
               (sHigh << 8) | (pHigh)
    return(tunnelID)
+
+
+# ###### Get tunnel configuration ###########################################
+def getTunnel(localSite, localProvider, remoteSite, remoteProvider, version):
+   localSiteIndex      = localSite['site_index']
+   localProviderIndex  = localProvider['provider_index']
+   remoteProviderIndex = remoteProvider['provider_index']
+   remoteSiteIndex     = remoteSite['site_index']
+
+   # ====== Get tunnel configuration ========================================
+   tunnelOverIPv4 = False
+   if (version != 4):
+      try:
+         localOuterAddress  = localProvider['provider_tunnelbox_ipv6']
+         remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv6']
+         if ((localOuterAddress.ip == IPv6Address('::')) or (remoteOuterAddress == IPv6Address('::'))):
+            tunnelOverIPv4 = True
+         else:
+            tunnelInterface = 'seks' + str(remoteSiteIndex) + "-" + str(localProviderIndex) + '-' + str(remoteProviderIndex)
+      except:
+         tunnelOverIPv4 = True
+
+   if ((version == 4) or (tunnelOverIPv4 == True)):
+      localOuterAddress  = localProvider['provider_tunnelbox_ipv4']
+      remoteOuterAddress = remoteProvider['provider_tunnelbox_ipv4']
+      tunnelInterface    = 'gre' + str(remoteSiteIndex) + "-" + str(localProviderIndex) + '-' + str(remoteProviderIndex)
+
+   localInnerAddress     =  makeNorNetTunnelIP(localSiteIndex, localProviderIndex,
+                                               remoteSiteIndex, remoteProviderIndex, version)
+   remoteInnerAddress    =  makeNorNetTunnelIP(remoteSiteIndex, remoteProviderIndex,
+                                               localSiteIndex, localProviderIndex, version)
+   tunnelKey = makeNorNetTunnelKey(localSiteIndex, localProviderIndex,
+                                   remoteSiteIndex, remoteProviderIndex)
+
+   # ====== Create tunnel structure =========================================
+   norNetTunnel = {
+      'tunnel_interface'            : tunnelInterface,
+      'tunnel_local_outer_address'  : localOuterAddress,
+      'tunnel_remote_outer_address' : remoteOuterAddress,
+      'tunnel_local_inner_address'  : localInnerAddress,
+      'tunnel_remote_inner_address' : remoteInnerAddress,
+      'tunnel_key'                  : tunnelKey,
+      'tunnel_over_ipv4'            : tunnelOverIPv4
+   }
+
+   return norNetTunnel

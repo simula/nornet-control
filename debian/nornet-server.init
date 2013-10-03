@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 # --------------- NorNet -- The Multi-Homing Testbed Project ----------------
 #
-# Copyright (C) 2012 by Thomas Dreibholz
+# Copyright (C) 2012-2013 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,13 +32,13 @@
 
 NAME="nornet-server"
 DESC="NorNet Virtual Systems"
-NORNET_USER="nornetpp"
 NORNET_DIRECTORY="/etc/nornet"
 LOGFILE="/var/log/nornet-server.log"
 # NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
 # LOGFILE="/tmp/nornet-server.log"
 PATH=$NORNET_DIRECTORY:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 ACTION="$1"
+MACHINE_NAME="$2"
 shift
 
 
@@ -63,123 +63,149 @@ cd "$NORNET_DIRECTORY"
 # Load configuration from API config file
 NorNet_LocalNode_Hostname=""
 NorNet_LocalNode_NorNetInterface=""
+NorNet_LocalNode_NorNetUser=""
+NorNet_Server_DefaultVNCPassword=""
 if [ ! -e ./vsystems ] ; then
    echo >&2 "ERROR: $NORNET_DIRECTORY/vsystems does not exist!"
    exit 0
 fi
+if [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
+fi
+if [ "$NorNet_Server_DefaultVNCPassword" = "" ] ; then
+   NorNet_Server_DefaultVNCPassword="Access4Me"
+fi
+
 
 # Log what is going on ...
-echo "`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######"  >>$LOGFILE 2>&1
+echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ###### $0 $ACTION $@ ######\x1b[0m"  >>$LOGFILE 2>&1
 
 
 # ###### Start virtual systems ##############################################
+# $1 = Machine name (or "" for ALL)
 start_virtual_systems ()
 {
-   VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
+   cd vsystems
+   echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Starting virtual systems ...\x1b[0m"
+   VSYSTEMS=`find . -name "[0-9][0-9]*[a-zA-Z0-9]" -printf "%f\\n" | sort`
+   lastID=-1
    for vsystem in $VSYSTEMS ; do
-      echo "Processing $vsystem ..."
+      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ...\x1b[0m"
+      let SYSNUM=10*${vsystem:0:2} || true   # 10*start priority (from first 2 characters of file name)
+      if [ $SYSNUM -le $lastID ] ; then
+         let SYSNUM=$lastID+1 || true
+      fi
+      lastID=$SYSNUM
       NAME="BAD-NAME"
       STARTDELAY=0
-      ( . ./$vsystem && \
-        echo "Starting $NAME" && \
-        sudo -u $NORNET_USER vboxmanage startvm "$NAME" --type headless && \
-        echo "Waiting $STARTDELAY seconds ..." && \
-        sleep "$STARTDELAY" \
+      NUMCPUS=1
+      MEMORY=
+      GETHOSTTIMEDISABLED=
+      VNCPORT=-1
+      VNCPASSWORD="$NorNet_Server_DefaultVNCPassword"
+      OPTIONS="default"
+      ( . ./$vsystem
+        vncOptions=
+        if [ $VNCPORT -eq -1 ] ; then
+           let VNCPORT=5000+$SYSNUM || true
+        fi
+        if [ "$1" = "" -o "$NAME" = "$1" ] ; then
+           if [ "$NAME" = "$1" ] ; then
+              STARTDELAY=0   # Do not wait when restricted to one machine!
+           fi
+           Start-VSystem "$NAME" "$STARTDELAY" "$NUMCPUS" "$MEMORY" "$GETHOSTTIMEDISABLED" "$VNCPORT" "$VNCPASSWORD" "$OPTIONS" || true
+        else
+           echo "Skipped".
+        fi
       ) || true
    done
-}
-
-
-# ###### Get machine state ##################################################
-get_machine_state ()
-# $1 = Name
-{
-   status="BAD_MACHINE"
-   s=`sudo -u $NORNET_USER vboxmanage showvminfo "$1" --machinereadable | grep VMState=` && status=`echo $s | sed -e "s/VMState=//" -e "s/\"//g"` || true
-   echo "$status"
-}
-
-
-# ###### Wait for shutdown ##################################################
-wait_for_shutdown ()
-# $1 = Name
-# $2 = Timeout
-{
-   i=0
-   while [ $i -lt $2 ] ; do
-      echo -n "."
-      sleep 1
-      i=$(($i+1))
-
-      status=`get_machine_state "$NAME"`
-      if [ "$status" = "aborted" -o "$status" = "poweroff" -o "$status" = "stuck" ] ; then
-         echo " OK!"
-         break
-      fi
-      # Again send ACPI powerbutton.
-      # If the system had been booting, the event might have been missed.
-      sudo -u $NORNET_USER vboxmanage controlvm "$1" acpipowerbutton || true
-   done
+   echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Done!\x1b[0m"
+   cd ..
 }
 
 
 # ###### Stop virtual systems ###############################################
+# $1 = Machine name (or "" for ALL)
 stop_virtual_systems ()
 {
+   echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Stopping virtual systems ...\x1b[0m"
    VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
    for vsystem in $VSYSTEMS ; do
-      echo "Processing $vsystem ..."
+      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ... $1\x1b[0m"
       NAME="BAD-NAME"
       STOPDELAY=0
       ( . ./$vsystem && \
-        status=`get_machine_state "$NAME"` && \
-        if [ "$status" = "paused" ] ; then
-           sudo -u $NORNET_USER vboxmanage controlvm "$NAME" resume || true
-           status=`get_machine_state "$NAME"`
-        fi
-        if [ "$status" = "running" ] ; then
-           echo "Stopping $NAME (ACPI power button) ..." && \
-           sudo -u $NORNET_USER vboxmanage controlvm "$NAME" acpipowerbutton && \
-           wait_for_shutdown "$NAME" "$STOPDELAY" && \
-           echo "Stopping $NAME (power off) ..." && \
-           sudo -u $NORNET_USER vboxmanage controlvm "$NAME" poweroff
+        if [ "$1" = "" -o "$NAME" = "$1" ] ; then
+           Stop-VSystem "$NAME" "$STOPDELAY"
+        else
+           echo "Skipped".
         fi
       ) || true
+   done
+   echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Done!\x1b[0m"
+}
+
+
+# ###### Load kernel modules ################################################
+load_modules ()
+{
+   for vboxModule in vboxdrv vboxnetadp vboxnetflt vboxpci ; do
+      modprobe $vboxModule >>$LOGFILE 2>&1 || true
+   done
+}
+
+
+# ###### Unload kernel modules ##############################################
+unload_modules ()
+{
+   for vboxModule in vboxpci vboxnetflt vboxnetadp vboxdrv ; do
+      rmmod $vboxModule >>$LOGFILE 2>&1 || true
    done
 }
 
 
 # ###### Show status of virtual systems #####################################
+# $1 = Machine name (or "" for ALL)
 show_status ()
 {
    VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
    for vsystem in $VSYSTEMS ; do
       NAME="BAD-NAME"
       ( . ./$vsystem && \
-         status=`get_machine_state "$NAME"` && \
-         echo "$vsystem: $NAME -> $status"
+        if [ "$1" = "" -o "$NAME" = "$1" ] ; then
+           echo "$vsystem: $NAME -> `Check-VSystem "$NAME"`"
+        fi
       ) || true
    done
 }
+
 
 # ###### Main program #######################################################
 case "$ACTION" in
   start)
      # First, ensure that VirtualBox kernel modules are loaded!
-     /etc/init.d/virtualbox start >>$LOGFILE 2>&1
-     start_virtual_systems >>$LOGFILE 2>&1
+     load_modules
+     # Now, start the virtual systems.
+     start_virtual_systems "$MACHINE_NAME" >>$LOGFILE 2>&1
      ;;
   stop)
-     stop_virtual_systems >>$LOGFILE 2>&1
+     stop_virtual_systems "$MACHINE_NAME" >>$LOGFILE 2>&1
+     # Try to unload VirtualBox kernel modules
+     unload_modules
      ;;
   restart)
-     stop_virtual_systems  >>$LOGFILE 2>&1
-     start_virtual_systems >>$LOGFILE 2>&1
+     stop_virtual_systems  "$MACHINE_NAME" >>$LOGFILE 2>&1 || true
+     unload_modules
+     load_modules
+     start_virtual_systems "$MACHINE_NAME" >>$LOGFILE 2>&1
      ;;
   force-reload)
      ;;
   status)
-     show_status
+     show_status "$MACHINE_NAME"
      ;;
   *)
      N=/etc/init.d/$NAME

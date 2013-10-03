@@ -1,0 +1,64 @@
+.\" Tunnelbox Setup
+.\" Copyright (C) 2012-2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd August 20, 2013
+.Dt Probe-Interface-Setup 1
+.Os Probe-Interface-Setup
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Probe-Interface-Setup
+.Nd NorNet Probe Interface Setup Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Probe-Interface-Setup
+add|remove sniffing_interface sniffing_provider_index fwd_interface fwd_local fwd_remote fwd_gre_key collector_addr
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Probe-Interface-Setup
+sets up GRE tunnel and routing to a packet probe endpoint at the tunnelbox.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following options are available:
+.Bl -tag -width indent
+.It add|remove
+Add or remove configuration.
+.It sniffing_interface
+The name of the sniffing interface (i.e. the external interface of the tunnelbox).
+.It sniffing_provider_index
+The provider index of the sniffing interface's provider. Its index is important, since it is used to compute the correct routing table ID!
+.It fwd_interface
+The name of the forwarding interface (i.e. the GRE tunnel).
+.It fwd_local
+The local IP address of the GRE tunnel.
+.It fwd_remote
+The remove IP address of the GRE tunnel.
+.It fwd_gre_key
+The key of the GRE tunnel.
+.It collector_addr
+The IP address of the collector (i.e. the remote instance that collects the packets).
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Probe-Interface-Setup add eth1 255 tdr1 11.254.3.1 11.254.1.50 0x00030001 192.168.3.1
+.It Probe-Interface-Setup add eth2 254 tdr2 11.254.3.1 11.254.1.50 0x00030002 192.168.3.2
+.It Probe-Interface-Setup remove eth2 254 tdr2 11.254.3.1 11.254.1.50 0x00030002 192.168.3.2
+.It Probe-Interface-Setup remove eth1 255 tdr1 11.254.3.1 11.254.1.50 0x00030001 192.168.3.1
+.El

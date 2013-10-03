@@ -1,0 +1,1 @@
+cat nodes.txt |xargs -n1 -i§ scp -oStrictHostKeyChecking=no -oConnectTimeout=15 -i /etc/planetlab/root_ssh_key.rsa /nfs/pub/plnet.py root@§:/usr/bin/plnet

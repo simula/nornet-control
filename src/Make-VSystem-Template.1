@@ -1,0 +1,55 @@
+.\" Backup VSystem
+.\" Copyright (C) 2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd May 29, 2013
+.Dt Make-VSystem-Template 1
+.Os Make-VSystem-Template
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Make-VSystem-Template
+.Nd Virtual System Template Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Make-VSystem-Template
+precedence
+vsystem1
+.Op ...
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Make-VSystem-Template
+creates a virtual system template for each provided virtual system name. The
+templates could then be copied to /etc/nornet/vsystems, in order to
+automatically start/stop the virtual systems with the nornet-server service.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+.Bl -tag -width indent
+.It precedence
+The precedence for the templates to be created.
+.It vsystem1
+The first virtual system.
+.It Op ...
+Further virtual systems.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Make-VSystem-Template 35 NorNet-Monitor-holmenkollen.simula.nornet
+.It Make-VSystem-Template 70 Test1 Test2 Test3
+.El

@@ -28,6 +28,7 @@ from socket import getaddrinfo, AF_INET, AF_INET6;
 import os;
 import re;
 import sys;
+import errno;
 import codecs;
 import datetime;
 import crypt;
@@ -37,7 +38,7 @@ import string;
 
 # ###### Print log message ##################################################
 def log(logstring):
-   print(datetime.datetime.now().isoformat() + ' ' + logstring);
+   print('\x1b[32m' + datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + ': ' + logstring + '\x1b[0m');
 
 
 # ###### Abort with error ###################################################
@@ -52,7 +53,34 @@ def unquote(string):
    m = re.match(r'''^"(.*)"$''', string)
    if m != None:
       return m.group(1)
+   m = re.match(r'''^\'(.*)\'$''', string)
+   if m != None:
+      return m.group(1)
    return string
+
+
+# ###### Remove shell-style comment from input line #########################
+def removeComment(line):
+   quoteStack = []
+   inEscape   = False
+
+   for i, c in enumerate(line):
+      if ((len(quoteStack) == 0) and (c == '#')):
+         # '#' is comment => remove it.
+         return line[:i].strip()
+      elif inEscape:
+         # Backslash => continue.
+         inEscape = False
+      elif ((len(quoteStack) > 0) and (c == '\\')):
+         # In quote and next character is to be escaped.
+         inEscape = True
+      elif ((c == '"') or (c == '\'')):
+         if ((len(quoteStack) > 0) and (c == quoteStack[len(quoteStack) - 1])):
+            quoteStack.pop()
+         else:
+            quoteStack.append(c)
+
+   return line
 
 
 # ###### Get tag value or return a default ##################################
@@ -113,7 +141,7 @@ def resolveHostname(name, protocol=0):
 
 # ###### Get hostname from FQDN #############################################
 def getHostnameFromFQDN(fqdn):
-   match = re.search('^([a-zA-Z0-9\-]*)\.(.*)', fqdn)
+   match = re.search('^([^\.]*)\.(.*)', fqdn)
    if match != None:
       return match.group(1)
    else:
@@ -122,7 +150,7 @@ def getHostnameFromFQDN(fqdn):
 
 # ###### Get hostname from FQDN #############################################
 def getDomainFromFQDN(fqdn):
-   match = re.search('^([a-zA-Z0-9\-]*)\.(.*)', fqdn)
+   match = re.search('^([^\.]*)\.(.*)', fqdn)
    if match != None:
       return match.group(2)
    else:
@@ -174,15 +202,19 @@ def getZoneForAddress(addressObject, prefix):
 
 
 # ###### Convert name to unicode, ASCII and punycode representations ########
-def makeDNSNameFromUnicode(name):
+def makeNameFromUnicode(name, isDNSName = True):
    unicodeName  = unicode(name)
    punycodeName = unicodeName.encode("idna")
    asciiName    = ''
    for i in range(0, len(unicodeName)):
       if ( ((unicodeName[i] >= 'a') and
             (unicodeName[i] <= 'z')) or
+           ((isDNSName == False) and
+            (unicodeName[i] >= 'A') and
+            (unicodeName[i] <= 'Z')) or
            ((unicodeName[i] >= '0') and
             (unicodeName[i] <= '9')) or
+           ((isDNSName == False) and (unicodeName[i] == ' ')) or
            (unicodeName[i] == '-') or
            (unicodeName[i] == '.')):
          asciiName = asciiName + unicodeName[i]
@@ -197,7 +229,7 @@ def makeDNSNameFromUnicode(name):
       elif (unicodeName[i] == u'å'):
          asciiName = asciiName + 'aa'
       else:
-         error('Unhandled character ' + unicodeName[i] + ' in name ' + unicodeName)
+         error('Unhandled character "' + unicodeName[i] + '" in name ' + unicodeName)
          
    dnsName = {
       'utf8'     : unicodeName,
@@ -205,3 +237,40 @@ def makeDNSNameFromUnicode(name):
       'punycode' : punycodeName
    }
    return dnsName
+
+
+# ###### Make directory, if it is not yet existing ##########################
+def makeDir(path):
+   try:
+      os.mkdir(path, 0755)
+   except OSError as e:
+      if e.errno == errno.EEXIST and os.path.isdir(path):
+         pass
+      else:
+         raise
+
+
+# ###### Change current directory, return previous one ######################
+def changeDir(path):
+   oldDirectory = os.getcwd()
+   os.chdir(path)
+   return oldDirectory
+
+
+# ###### Create, or update existing, symlink ################################
+def makeSymlink(linkName, newLinkTarget):
+   existingLinkTarget = None            
+   try:
+      existingLinkTarget = os.readlink(linkName)
+   except:
+      existingLinkTarget = None
+
+   if existingLinkTarget != newLinkTarget:
+      try:
+         os.unlink(linkName)
+      except Exception as e:
+         pass
+      try:
+         os.symlink(newLinkTarget, linkName)
+      except Exception as e:
+         pass

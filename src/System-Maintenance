@@ -1,40 +1,163 @@
 #!/bin/bash -e
+#
+# System Maintenance
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
 
-# Fixes
+INTERACTIVE_KERNEL_REMOVAL=0
+DONT_TOUCH_GRUB=0
+KEEP_INTERFACE_MAPPINGS=0
+UPGRADE_VIRTUALBOX=0
+while [ $# -gt 0 ] ; do
+   if [ "$1" = "-interactive-kernel-removal" -o "$1" = "-k" ] ; then
+      INTERACTIVE_KERNEL_REMOVAL=1
+   elif [ "$1" = "-dont-touch-grub" -o "$1" = "-g" ] ; then
+      KEEP_INTERFACE_MAPPINGS=1
+   elif [ "$1" = "-keep-interface-mappings" -o "$1" = "-m" ] ; then
+      KEEP_INTERFACE_MAPPINGS=1
+   elif [ "$1" = "-upgrade-virtualbox" -o "$1" = "-v" ] ; then
+      UPGRADE_VIRTUALBOX=1
+   else
+      echo 2>&1 "Usage: $0 [-interactive-kernel-removal|-k] [dont-touch-grub|-g] [-keep-interface-mappings|-m] [-upgrade-virtualbox|-v]"
+      exit 1
+   fi
+   shift
+done
+
+# ====== Stop AutoFS ========================================================
+if [ -e /etc/init.d/autofs ] ; then
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Stopping AutoFS service ...\x1b[0m"
+   sudo service autofs stop >/dev/null 2>&1 || true
+fi
+
+# ====== dpkg package fixes =================================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Applying package fixes, if necessary ...\x1b[0m"
 sudo DEBIAN_FRONTEND=noninteractive dpkg --configure -a  >/tmp/install.log 2>&1 &
 wait
 cat /tmp/install.log
 
-# Update package repositories
+# ====== Update package repositories ========================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Updating package repositories ...\x1b[0m"
 sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq
 
-# Fixes
+# ====== apt-get package fixes ==============================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing missing dependencies, if necessary ...\x1b[0m"
 sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -f -y -q  >/tmp/install.log 2>&1 &
 wait
 cat /tmp/install.log
 
-# Remove obsolete kernel packages
-echo -e "\x1b[34m`date +%FT%H:%M:%S`: Removing obsolete kernels ...\x1b[0m"
-ktype=$(uname -r | sed 's/.*-\(generic\|i386\|server\|common\|rt\|xen\|ec2\)/\1/')
-sudo DEBIAN_FRONTEND=noninteractive nohup apt-get remove -y -qq --purge 'linux-(headers|image)-.*' linux-headers-$(uname -r)+ linux-headers-$(uname -r | sed s/-$ktype//)+ linux-headers-$ktype+ linux-image-$(uname -r)+ linux-image-$ktype+ linux-$ktype+ >/tmp/install.log 2>&1 &
-wait
-cat /tmp/install.log
-
-# System update
+# ====== System update ======================================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing updates ...\x1b[0m"
 sudo DEBIAN_FRONTEND=noninteractive nohup apt-get dist-upgrade -y -q >/tmp/install.log 2>&1 &
 wait
 cat /tmp/install.log
 
+# ====== Check for VirtualBox upgrade =======================================
+if [ $UPGRADE_VIRTUALBOX -eq 1 ] ; then
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Checking for VirtualBox upgrade possibility ...\x1b[0m"
+   PackageVersionsFile=`mktemp`
+   apt-show-versions >$PackageVersionsFile
+   if grep "^virtualbox-guest-utils-nornet-" $PackageVersionsFile >/dev/null ; then
+      echo "VirtualBox guest utilities are already installed from NorNet package. Great!"
+   fi
+   if grep "^virtualbox-guest-utils[/ ]" $PackageVersionsFile >/dev/null ; then
+      echo "VirtualBox guest utilities will be upgraded to NorNet package!"
+      sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -y -q virtualbox-guest-utils-nornet-stable >/tmp/install.log 2>&1 &
+      wait      
+      cat /tmp/install.log
+   fi
+   if grep "^virtualbox-nornet-" $PackageVersionsFile >/dev/null ; then
+      echo "VirtualBox is already installed from NorNet package. Great!"
+   fi
+   if grep "^virtualbox[/ ]" $PackageVersionsFile >/dev/null ; then
+      echo "VirtualBox will be upgraded to NorNet package!"
+      if [ -e /etc/init.d/nornet-server ] ; then
+         service /etc/init.d/nornet-server stop || true
+      fi
+      sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -y -q virtualbox-nornet-stable >/tmp/install.log 2>&1 &
+      wait      
+      cat /tmp/install.log
+   fi
+   rm -f $PackageVersionsFile
+fi
+
+# ====== Auto-remove ========================================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Cleaning up ...\x1b[0m"
-sudo DEBIAN_FRONTEND=noninteractive apt-get autoremove -y -q >/tmp/install.log 2>&1 &
+sudo DEBIAN_FRONTEND=noninteractive nohup apt-get autoremove -y -q >/tmp/install.log 2>&1 &
 wait
 cat /tmp/install.log
 sudo DEBIAN_FRONTEND=noninteractive apt-get clean
 
+# ====== Remove obsolete kernel packages ====================================
+echo -e "\x1b[34m`date +%FT%H:%M:%S`: Removing obsolete kernels ...\x1b[0m"
+
+kernelType=$(uname -r | sed 's/.*-\(generic\|i386\|server\|common\|rt\|xen\|ec2\)/\1/')
+kernelBootVersion=$(uname -r | sed s/-$kernelType//)
+kernelDiskVersion=$(ls -t /boot/vmlinuz-*-$kernelType | head -n1 | sed -e "s/\/boot\/vmlinuz-//" -e "s/-$kernelType//")
+
+echo "Kernel Type:         $kernelType"
+echo "Kernel Boot Version: $kernelBootVersion"
+echo "Kernel Disk Version: $kernelDiskVersion"
+
+if [ $INTERACTIVE_KERNEL_REMOVAL -eq 0 ] ; then
+   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get remove -y -qq --purge \
+      'linux-(headers|image)-.*' \
+      linux-headers-$kernelBootVersion-$kernelType+ \
+      linux-headers-$kernelBootVersion+ \
+      linux-headers-$kernelDiskVersion-$kernelType+ \
+      linux-headers-$kernelDiskVersion+ \
+      linux-headers-$kernelType+ \
+      linux-image-$kernelBootVersion-$kernelType+ \
+      linux-image-$kernelDiskVersion-$kernelType+ \
+      linux-image-$kernelType+ \
+      linux-$kernelType+ \
+         >/tmp/install.log 2>&1 &
+   wait
+   cat /tmp/install.log
+else
+   sudo apt-get remove --purge \
+      'linux-(headers|image)-.*' \
+      linux-headers-$kernelBootVersion-$kernelType+ \
+      linux-headers-$kernelBootVersion+ \
+      linux-headers-$kernelDiskVersion-$kernelType+ \
+      linux-headers-$kernelDiskVersion+ \
+      linux-headers-$kernelType+ \
+      linux-image-$kernelBootVersion-$kernelType+ \
+      linux-image-$kernelDiskVersion-$kernelType+ \
+      linux-image-$kernelType+ \
+      linux-$kernelType+
+fi
+      
+# Possibly for newer versions, add:
+# linux-image-extra-$(uname -r)+
+
+# ====== Fix bootloader =====================================================
+if [ $DONT_TOUCH_GRUB -eq 0 ] ; then
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Ensuring that Grub configuration is up-to-date ...\x1b[0m"
+   sudo nohup </dev/null grub-install /dev/sda >/tmp/install.log 2>&1
+   if ! sudo nohup update-grub sudo nohup </dev/null grub-install /dev/sda >>/tmp/install.log 2>&1 ; then
+      cat /tmp/install.log
+      echo >&2 "ERROR: Something went wrong with update-grub!"
+      exit 1
+   fi
+   cat /tmp/install.log
+fi
+   
+# ====== apt-file cache update ==============================================
 # Cache updates
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Updating caches ...\x1b[0m"
 if [ -e /usr/bin/apt-file ] ; then
@@ -42,6 +165,23 @@ if [ -e /usr/bin/apt-file ] ; then
 fi
 sudo updatedb
 
+# ====== Delete /etc/udev/rules.d/70-persistent-net.rules ===================
+if [ $KEEP_INTERFACE_MAPPINGS -eq 0 ] ; then
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Checking interface mapping ...\x1b[0m"
+   if ! ifconfig eth0 >/dev/null 2>&1 ; then
+      echo "eth0 does not exist => Deleting /etc/udev/rules.d/70-persistent-net.rules"
+      rm -f /etc/udev/rules.d/70-persistent-net.rules
+      echo "*** Interfaces should be remapping during next boot! ***"
+   fi
+fi
+
+# ====== Start AutoFS =======================================================
+if [ -e /etc/init.d/autofs ] ; then
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Starting AutoFS service ...\x1b[0m"
+   sudo service autofs start >/dev/null 2>&1 || true
+fi
+
+# ====== Show NorNet package versions =======================================
 if [ -e /usr/bin/apt-show-versions ] ; then
    echo "====== Installed NorNet Software ============================================="
    /usr/bin/apt-show-versions | grep "^nornet-"   

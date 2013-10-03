@@ -1,0 +1,40 @@
+#!/bin/bash -e
+#
+# Create SSH tunnel to bootstrap tunnelbox from PLC
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+if [ $# -lt 1 ] ; then
+   echo >&2 "Usage: $0 [Central_Site_tunnelbox]"
+   exit 1
+fi
+
+CENTRAL_SITE_TUNNELBOX="$1"
+
+echo "===================================================================="
+echo "SSH tunnel from 127.0.0.1:443 --> Central Site Tunnelbox --> PLC:443"
+echo "===================================================================="
+echo ""
+echo "NOTE: Set NorNetPLC_Address='127.0.0.1' in /etc/nornet/nornetapi-config!"
+echo ""
+
+sudo ssh "nornetpp@$CENTRAL_SITE_TUNNELBOX" -L 443:plc:443
+
+echo ""
+echo "NOTE: Do not forget to reset NorNetPLC_Address in /etc/nornet/nornetapi-config!"
+echo ""

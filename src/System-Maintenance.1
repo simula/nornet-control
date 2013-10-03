@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd January 30, 2013
+.Dd June 5, 2013
 .Dt System-Maintenance 1
 .Os System-Maintenance
 .\" ###### Name #############################################################
@@ -27,29 +27,50 @@
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
 .Nm System-Maintenance
-configuration_file
+.Op Fl interactive-kernel-removal|-k
+.Op Fl dont-touch-grub|-g
+.Op Fl keep-interface-mappings|-m
+.Op Fl upgrade-virtualbox|-v
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
 .Nm System-Maintenance
 runs some system maintenance tasks to keep the system clean and up to date.
 These tasks are:
 .Bl -tag -width indent
-.It Ensuring that all packages are configured (dpkg --configure -a).
-.It Updating the package repositories.
-.It Removing obsolete kernels.
-.It Installing all available package updates.
+.It Ensuring that all packages are configured (dpkg --configure -a),
+.It Updating the package repositories,
+.It Upgrading VirtualBox to NorNet stable variant (only on request by option!),
+.It Removing obsolete kernels,
+.It Installing all available package updates,
+.It Auto-removing unused packages,
+.It Ensuring that Grub (the bootloader) is installed and up-to-date,
+.It Delete network interface mapping (see below),
 .It Updating package and file search caches.
 .El
 .Pp
-.\" .\" ###### Arguments ########################################################
-.\" .Sh ARGUMENTS
-.\" The following options are available:
-.\" .Bl -tag -width indent
-.\" .It xxx
-.\" xxx
-.\" .El
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following options are available:
+.Bl -tag -width indent
+.It Fl interactive-kernel-removal|-k
+Remove obsolete kernels interactively.
+.It Fl dont-touch-grub|-g
+Do not update Grub installation.
+.It Fl keep-interface-mappings|-m
+Do not delete network interface mapping rules
+(/etc/udev/rules.d/70-persistent-net.rules), if eth0 does not exist. This is
+useful for cloned virtual machines, where the new machine gets net MAC
+addresses. By deleting the mappings, the interfaces should be renamed
+beginning from eth0 during the next boot. This option deactivates this
+functionality.
+.It Fl upgrade-virtualbox|-v
+If set, and if VirtualBox or its guest utilities are installed in the plain
+Ubuntu/Debian variant, it is tried to upgrade these packages to the
+corresponding nornet-stable variant.
+.El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
 .It System-Maintenance
+.It System-Maintenance -upgrade-virtualbox
 .El

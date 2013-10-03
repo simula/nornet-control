@@ -1,0 +1,76 @@
+.\" Start VSystem
+.\" Copyright (C) 2013 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd May 30, 2013
+.Dt Start-VSystem 1
+.Os Start-VSystem
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Start-VSystem
+.Nd Virtual System Start Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Start-VSystem
+VM_name
+start_delay
+num_cpus
+memory
+gethosttime_disabled
+vnc_port
+vnc_password
+options
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Start-VSystem
+starts the given virtual system with the given options. After starting, the
+given amount of seconds is waited to give the system time to boot.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+.Bl -tag -width indent
+.It VM_name
+The name of the virtual system (as used by VirtualBox).
+.It start_delay
+The time (in seconds) to wait after starting the virtual system. This can be
+used to let the system boot undisturbedly by other I/O activity.
+.It num_cpus
+Grants the virtual system the given number of CPUs/cores. For NorNet systems,
+it is in most cases recommended to use just 1, in order to minimise system
+latency!
+.It memory
+Grants the virtual system the given amount of memory in MiB.
+.It gethosttime_disabled
+Disables (1) or enables (0) the use of the host's system time within the
+virtual system. For NorNet systems, it should be disabled (set to 0).
+.It vnc_port
+Sets the VNC port. \-1 turns VNC off.
+.It vnc_password
+Sets the VNC password.
+.It options
+Adds the given options to the VBoxHeadless call. A setting of "default" uses
+the recommended default for NorNet systems, which is
+"\-\-audio none \-\-mouse ps2 \-\-keyboard ps2 \-\-usb off
+\-\-hpet on \-\-pae on \-\-hwvirtex on \-\-nestedpaging on
+\-\-largepages on \-\-hwvirtexexcl on \-\-vtxvpid on".
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It ./Start-VSystem NorNet-Tunnelbox-fornebu.simula.nornet 30 1 1024 1 5010 "A-Secret-Password" "default"
+.El

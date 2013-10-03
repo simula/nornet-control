@@ -1,11 +1,18 @@
-DISTRIBUTION=quantal
+DISTRIBUTION=precise
 COMPONENTS="main universe"
-MIRRORSITE=http://no.archive.ubuntu.com/ubuntu/
 
-# OTHERMIRROR="deb http://de.archive.ubuntu.com/ubuntu/ main restricted universe multiverse"
+MIRRORSITE=http://no.archive.ubuntu.com/ubuntu/
+OTHERMIRROR="deb http://ppa.launchpad.net/dreibh/ubuntu $DISTRIBUTION main"
+
+# OTHERMIRROR="deb http://no.archive.ubuntu.com/ubuntu/ main restricted universe multiverse"
 # OTHERMIRROR="deb http://ppa.launchpad.net/dreibh/ubuntu $DISTRIBUTION main"
 
-# NOTE: Upon changes, run "sudo pbuilder --override-config" to update repositories!
+
+# NOTE: To create the base installation, run:
+# sudo pbuilder create --debootstrapopts --variant=buildd --keyring /etc/apt/trusted.gpg
+
+# NOTE: Upon changes, run:
+# sudo pbuilder update --override-config
 
 
 # Turn OFF ccache! It will not work properly!
@@ -14,19 +21,19 @@ CCACHEDIR=
 
 # =================================================================
 
-# mkdir /var/cache/pbuilder/hook.d || true
-#
-# HOOKDIR="/var/cache/pbuilder/hook.d"
-#
-# cat >/var/cache/pbuilder/hook.d/C10shell <<EOF
-# #!/bin/sh
-# # invoke shell if build fails.
-#
-# apt-get install -y --force-yes vim less bash
-# cd /tmp/buildd/*/debian/..
-# /bin/bash < /dev/tty > /dev/tty 2> /dev/tty
-# EOF
-#
-# sudo chmod a+x /var/cache/pbuilder/hook.d/C10shell
+mkdir -p /var/cache/pbuilder/hook.d
+
+HOOKDIR="/var/cache/pbuilder/hook.d"
+
+cat >/var/cache/pbuilder/hook.d/C10shell <<EOF
+#!/bin/sh
+# invoke shell if build fails.
+
+apt-get install -y --force-yes vim less bash joe
+cd /tmp/buildd/*/debian/..
+/bin/bash < /dev/tty > /dev/tty 2> /dev/tty
+EOF
+
+sudo chmod a+x /var/cache/pbuilder/hook.d/C10shell
 
 # =================================================================

@@ -1,0 +1,50 @@
+Description: Fix FTBFS on sh4
+Author: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+Bug-Debian: http://bugs.debian.org/544974
+
+--- a/kBuild/env.sh
++++ b/kBuild/env.sh
+@@ -368,6 +368,9 @@ if test -z "$KBUILD_HOST_ARCH"; then
+         alpha)
+             KBUILD_HOST_ARCH='alpha'
+             ;;
++	sh2|sh2a|sh3|sh3|sh4|sh4a|sh4al|sh4al-dsp|shmedia)
++	    KBUILD_HOST_ARCH='sh'
++	    ;;
+ 
+         *)  echo "$0: unknown cpu/arch - $KBUILD_HOST_ARCH" 1>&${ERR_REDIR}
+             sleep 1
+--- a/kBuild/header.kmk
++++ b/kBuild/header.kmk
+@@ -189,9 +189,9 @@ KBUILD_BLD_TYPES := release profile debu
+ # build types. (PORTME)
+ #
+ KBUILD_OSES      := darwin dos dragonfly freebsd gnukfreebsd haiku l4 linux netbsd nt openbsd os2 solaris win os-agnostic
+-KBUILD_ARCHES    := x86 amd64 sparc32 sparc64 s390 s390x ppc32 ppc64 mips32 mips64 ia64 hppa32 hppa64 arm alpha
++KBUILD_ARCHES    := x86 amd64 sparc32 sparc64 s390 s390x ppc32 ppc64 mips32 mips64 ia64 hppa32 hppa64 arm alpha sh
+ KBUILD_ARCHES_64 := amd64 sparc64 s390x ppc64 mips64 ia64 hppa64 alpha
+-KBUILD_ARCHES_32 := x86 sparc32 s390 ppc32 mips32 hppa32 arm
++KBUILD_ARCHES_32 := x86 sparc32 s390 ppc32 mips32 hppa32 arm sh
+ 
+ 
+ #
+--- a/src/lib/k/kDefs.h
++++ b/src/lib/k/kDefs.h
+@@ -166,6 +166,8 @@
+ #define K_ARCH_SPARC_32         (17 | K_ARCH_BIT_32 | K_ARCH_END_BIG)
+ /** 64-bit SPARC. */
+ #define K_ARCH_SPARC_64         (18 | K_ARCH_BIT_64 | K_ARCH_END_BI)
++/** 32-bit SuperH. */
++#define K_ARCH_SH_32           ( 19 | K_ARCH_BIT_32 | K_ARCH_END_BI)
+ /** The end of the valid architecture values (exclusive). */
+ #define K_ARCH_MAX              (19)
+ /** @} */
+@@ -206,6 +208,8 @@
+ #  define K_ARCH    K_ARCH_S390_64
+ # elif defined(__s390__)
+ #  define K_ARCH    K_ARCH_S390_32
++# elif defined(__sh__) 
++#  define K_ARCH    K_ARCH_SH_32
+ # else
+ #  error "Port Me"
+ # endif

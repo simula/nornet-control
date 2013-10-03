@@ -1,10 +1,41 @@
 #!/bin/bash
+#
+# Make Research VM
+# Copyright (C) 2012-2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
 
-ISOs=`find . -name "*.iso"`
+
+VM_ISODIRECTORY="$HOME/ISOs"
+VM_MEMORY=3072     # MiB
+VM_DISKSPACE=200   # GiB
+
+if [ ! -d "$VM_ISODIRECTORY" ] ; then
+   echo >&2 "ERROR: ISO directory $VM_ISODIRECTORY does not exist!"
+   exit 1
+fi
+
+sudo echo "Looking for ISOs in $VM_ISODIRECTORY ..."
+ISOs=`find $VM_ISODIRECTORY -name "*.iso"`
+
 for iso in $ISOs ; do
-   vm=`echo $iso | sed -e "s/^.\///" -e "s/.iso$//"`
-   sudo -u nornetpp ./Make-Research-VM $vm $iso 3072 200
-   sudo cp 70-$vm /etc/nornet/vsystems/
+   vm=`basename $iso | sed -e "s/.iso$//"`
+   echo "- Creating machine $vm ..."
+   sudo -u nornetpp ./Make-Research-VM $vm $iso $VM_MEMORY $VM_DISKSPACE
+   sudo mv 70-$vm /etc/nornet/vsystems/
 done
 
 echo "Restarting nornet-server service ..."

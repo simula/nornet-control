@@ -1,0 +1,44 @@
+#!/bin/bash -e
+
+ACCOUNTS="accounts.txt"
+
+action=""
+if [ "$1" = "add" ] ; then
+   action="add"
+elif [ "$1" = "remove" ] ; then
+   action="remove"
+else
+   echo >&2 "Usage: $0 add|remove"
+   exit 1
+fi
+
+
+IFS=$'\t'
+(
+   while read number uname passwd gname fname a b c d e f ; do
+      if [[ "$number"  =~ ^[0-9]+$ ]] ; then
+       
+         if [ "$action" = "add" ] ; then
+            echo -e "\x1b[34mAdding $uname ($gname $fname) ...\x1b[0m"
+            
+            adduser $uname --gecos "$gname $fname" --disabled-password || true
+            echo "$uname:$passwd" | chpasswd
+            if [ ! -e /home/$uname/.ssh/id_rsa ] ; then
+               sudo -u $uname ssh-keygen -f /home/$uname/.ssh/id_rsa -N ""
+            fi
+            sudo cp /home/$uname/.ssh/id_rsa.pub $uname.pub
+            sudo cp /home/$uname/.ssh/id_rsa $uname.rsa
+            
+         elif [ "$1" = "remove" ] ; then
+            echo -e "\x1b[34mRemoving $uname ($gname $fname) ...\x1b[0m"
+            if [ "$uname" = "root" -o "$uname" = "nornetpp" -o "$uname" = "dreibh" ] ; then
+               echo >&2 "ERROR: Trying to remove protected user $uname!"
+               exit 1
+            fi
+            deluser $uname || true
+            rm -rf /home/$uname
+            rm $uname.pub $uname.rsa
+         fi
+      fi
+   done
+) <$ACCOUNTS

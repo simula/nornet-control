@@ -27,52 +27,19 @@ import base64;
 from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
+from NorNetTools         import *;
+from NorNetConfiguration import *;
+from NorNetAPI           import *;
 from NorNetProviderSetup import *;
-from NorNetNodeSetup import *;
-from NorNetTools import *;
+from NorNetNodeSetup     import *;
 
 
 
-# ###### Main program #######################################################
-if ((len(sys.argv) < 10) or (sys.argv[3] != '-site') or (sys.argv[5] != '-interface') or (sys.argv[7] != '-all-interfaces') or (sys.argv[9] != '-providers')):
-   error('Usage: ' + sys.argv[0] + ' FQDN node_index -site site_index -interface interface_name -all-interfaces "if1 if2 ..." -providers default_provider [provider2] ...')
-
-hostName      = getHostnameFromFQDN(sys.argv[1])
-domainName    = getDomainFromFQDN(sys.argv[1])
-nodeIndex  = int(sys.argv[2])
-if ((nodeIndex < 1) or (nodeIndex > 255)):
-   error('Bad node index!')
-siteIndex = int(sys.argv[4])
-if ((siteIndex < 1) or (siteIndex > 255)):
-   error('Bad site index!')
-interfaceName = sys.argv[6]
-allInterfaces = sys.argv[8].split(' ')
-
-defaultProvider = -1
-providerList    = []
-for i in range(10, len(sys.argv)):
-   providerName  = sys.argv[i]
-   providerIndex = -1
-   try:
-      providerIndex = int(providerName)
-   except:
-      for p in NorNet_ProviderList:
-         if NorNet_ProviderList[p][0] == providerName:
-            providerIndex = p
-            break
-   if ((providerIndex <= 0) or (providerIndex > 255)):
-      error("Bad provider " + providerName)
-   if i == 10:
-      defaultProvider = providerIndex
-   providerList.append(providerIndex)
-
-
-print('Node:           ' + hostName + ' . ' + domainName)
-print('Node Index:     ' + str(nodeIndex))
-print('Site Index:     ' + str(siteIndex))
-print('Interface:      ' + interfaceName)
-print('All Interfaces: ' + str(allInterfaces))
-print('Providers:      ' + str(providerList))
+# ###### Write hostname file ################################################
+def writeHostname(outputName, hostName, domainName):
+   outputFile = codecs.open(outputName, 'w', 'utf-8')
+   outputFile.write(hostName + '.' + domainName + '\n')
+   outputFile.close()
 
 
 # ###### Write hosts file ###################################################
@@ -86,93 +53,6 @@ def writeHosts(outputName, hostName, domainName):
    outputFile.write('ff00::0\tip6-mcastprefix\n')
    outputFile.write('ff02::1\tip6-allnodes\n')
    outputFile.write('ff02::2\tip6-allrouters\n')
-   outputFile.close()
-
-
-# ###### Write hostname file ################################################
-def writeHostname(outputName, hostName, domainName):
-   outputFile = codecs.open(outputName, 'w', 'utf-8')
-   outputFile.write(hostName + '.' + domainName + '\n')
-   outputFile.close()
-
-
-# ###### Write interfaces file ##############################################
-def writeInterfaces(outputName, hostName, domainName, nodeIndex, siteIndex, providerList, defaultProvider, interfaceName, allInterfaces):
-   outputFile = codecs.open(outputName, 'w', 'utf-8')
-   outputFile.write('# ====== Node configuration ======\n')
-
-   outputFile.write('# ====== Loopback ======\n')
-   outputFile.write('auto lo\n')
-   outputFile.write('iface lo inet loopback\n')
-
-   for onlyDefault in [ False, True  ]:   # NOTE: non-default providers first!
-      for providerIndex in providerList:
-         if ( ((onlyDefault == True)  and (providerIndex == defaultProvider)) or \
-              ((onlyDefault == False) and (providerIndex != defaultProvider)) ):
-            try:
-               providerName = NorNet_ProviderList[providerIndex][0]
-            except:
-               providerName = '???'
-            outputFile.write('\n# ====== ' + providerName + ' (' + str(providerIndex) + ') ======\n')
-
-            for version in [ 4, 6 ]:
-
-               if ((providerIndex != defaultProvider) and (version == 4)):
-                  outputFile.write('auto ' + interfaceName + ':' + str(providerIndex) + '\n')
-                  outputFile.write('iface ' + interfaceName + ':' + str(providerIndex) + ' inet static\n')
-               elif providerIndex == defaultProvider:
-                  v = ''
-                  if version == 4:
-                     outputFile.write('auto ' + interfaceName + '\n')
-                  else:
-                     v = '6'
-                     outputFile.write('\n')
-                  outputFile.write('iface ' + interfaceName + ' inet' + v + ' static\n')
-
-               address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  -1, version)
-               gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
-               metric = 10
-               if providerIndex == defaultProvider:
-                  metric = 0
-
-               # ====== Addressing =======================================
-               if ((version == 4) or (providerIndex == defaultProvider)):
-                  outputFile.write('   address   ' + str(address.ip) + '\n')
-                  if version == 4:
-                     outputFile.write('   netmask   ' + str(address.netmask) + '\n')
-                  else:
-                     outputFile.write('   netmask   ' + str(address.prefixlen) + '\n')
-                  outputFile.write('   gateway   ' + str(gateway.ip) + '\n')
-                  outputFile.write('   metric    ' + str(metric) + '\n')
-
-               elif ((version == 6) and (providerIndex != defaultProvider)):   # NOTE: Work-around for buggy Ubuntu ifupdown!
-                  outputFile.write('   up   /sbin/ip -' + str(version) + ' addr add ' + str(address) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' &&')
-                  outputFile.write(' /sbin/ip -' + str(version) + ' route add default via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
-                  outputFile.write('   down /sbin/ip -' + str(version) + ' addr del ' + str(address) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' &&')
-                  outputFile.write(' /sbin/ip -' + str(version) + ' route del default via ' + str(gateway.ip) + ' dev ' + interfaceName + ':' + str(providerIndex) + ' metric ' + str(metric) + ' || true\n')
-
-
-               # ====== Further parameters ===============================
-               if providerIndex == defaultProvider:
-                  # ====== IPv6 options ==================================
-                  if version == 6:
-                     outputFile.write('   # autoconf  0\n')
-                     outputFile.write('   # accept_ra 0\n')
-                     outputFile.write('   # privext   0\n')
-
-                  # ====== DNS ===========================================
-                  dnsAddress = gateway   # The tunnelbox is also the site's DNS server!
-                  outputFile.write('   dns-nameservers ' + str(dnsAddress.ip) + '\n')
-                  outputFile.write('   dns-search      ' + domainName + '\n')
-
-   # ====== Empty entries (up, but unconfigured -- to use in virtual machines) ======   
-   for interface in allInterfaces:
-      if ((interface != 'lo') and (interface != interfaceName)):
-         outputFile.write('\nauto ' + interface + '\n')
-         outputFile.write('iface ' + interface + ' inet static\n')
-         outputFile.write('\taddress 0.0.0.0\n')
-         outputFile.write('\tnetmask 0.0.0.0\n')
-
    outputFile.close()
 
 
@@ -195,22 +75,238 @@ def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider):
    outputFile.write('restrict ::1\n\n')
 
    outputFile.write('# ====== NTP server ======\n')
-   for version in [ 4, 6 ]:
-      ntpServer = makeNorNetIP(defaultProvider, siteIndex, NorNet_NodeIndex_Tunnelbox, -1, version)
+   for version in [ 6 ]:
+      ntpServer = makeNorNetIP(defaultProvider, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
       outputFile.write('server    ' + str(ntpServer.ip) + '\n')
       outputFile.write('restrict  ' + str(ntpServer.ip) + '\n')
 
    outputFile.close()
 
 
+# ###### Write interface configuration file #################################
+def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
+                                domainName, nodeIndex, siteIndex, providerList, defaultProvider):
+   # ====== Write Debian /etc/network/interfaces ============================
+   if variant == 'Debian':
+      outputFile = codecs.open('interfaces' + suffix, 'w', 'utf-8')
+
+      outputFile.write('# ====== Loopback ======\n')
+      outputFile.write('auto lo\n')
+      outputFile.write('iface lo inet loopback\n\n')
+
+      outputFile.write('# ====== NorNet-Internal Networks ======\n')
+      outputFile.write('auto ' + interfaceName + '\n')
+
+      logSuffix = " >>/var/log/nornet-ifupdown.log 2>&1"
+      for version in [ 4, 6 ]:
+         providerConfigs = []
+         for onlyDefault in [ True, False ]:
+            providerNumber  = 0
+            for providerIndex in providerList:
+               if ( ((onlyDefault == True)  and (providerIndex == defaultProvider)) or \
+                    ((onlyDefault == False) and (providerIndex != defaultProvider)) ):
+                  try:
+                     providerName = NorNet_ProviderList[providerIndex][0]
+                  except:
+                     providerName = '???'
+
+                  # ====== Addressing =======================================
+                  address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
+                  gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
+                  metric = NorNet_RoutingMetric_AdditionalProvider + providerNumber
+                  if providerIndex == defaultProvider:
+                     metric = NorNet_RoutingMetric_DefaultProvider
+                  addrOpts = ''
+                  if version == 4:
+                     addrOpts = 'broadcast ' + str(address.broadcast)
+
+                  if controlBoxMode == False:
+                     network = 'default'
+                  else:
+                     network = str(makeNorNetIP(0, 0, 0, version))
+
+                  # ====== Write configuration ==============================
+                  if providerIndex == defaultProvider:
+                     if version == 4:
+                        outputFile.write('iface ' + interfaceName + ' inet manual\n')
+                     else:
+                        outputFile.write('\niface ' + interfaceName + ' inet6 manual\n')
+
+                  # ====== Write DNS configuration ==========================
+                  if providerIndex == defaultProvider:
+                     outputFile.write('\tdns-nameservers ' + str(gateway.ip) + '\n')
+                     outputFile.write('\tdns-search      ' + domainName + '\n')
+
+                  providerConfigs.append([ str(address), network, str(gateway.ip), str(metric), addrOpts ])
+
+               providerNumber = providerNumber + 1
+
+         # ====== Write address and default route ===========================
+         outputFile.write('\tpre-up          /sbin/Interface-Setup ' + interfaceName + ' ' + \
+                           'pre-up    ipv' + str(version) + '\n')
+
+         for action in [ 'up  ', 'down' ]:
+            outputFile.write('\t' + action + '            /sbin/Interface-Setup ' + interfaceName + ' ' + \
+                              action + '      ipv' + str(version))
+            for providerConfig in providerConfigs:
+               outputFile.write('\t' + \
+                                providerConfig[0] + ' ' + \
+                                providerConfig[1] + ' ' + \
+                                providerConfig[2] + ' ' + \
+                                providerConfig[3] + ' ' + \
+                                '"' + providerConfig[4] + '"')
+            outputFile.write('\n')
+
+         for action in [ 'post-up  ', 'post-down' ]:
+            outputFile.write('\t' + action + '       /sbin/Interface-Setup ' + interfaceName + ' ' + \
+                              action + ' ipv' + str(version) + '\n')
+      outputFile.close()
+
+
+   # ====== Fedora /etc/sysconfig/network-scripts/ifcfg-* ===================
+   elif variant == 'Fedora':
+      outputFile = codecs.open('ifcfg' + suffix, 'w', 'utf-8')
+
+      outputFile.write('DEVICE=' + interfaceName + '\n')
+      outputFile.write('ONBOOT=yes\n')
+      outputFile.write('BOOTPROTO=static\n')
+
+      routesIPv4 = []
+      routesIPv6 = []
+      for version in [ 4, 6 ]:
+         secondariesIPv6 = []
+         addressNumber   = 0
+         for onlyDefault in [ True, False ]:
+            providerNumber  = 0
+            for providerIndex in providerList:
+               if ( ((onlyDefault == True)  and (providerIndex == defaultProvider)) or \
+                    ((onlyDefault == False) and (providerIndex != defaultProvider)) ):
+                  try:
+                     providerName = NorNet_ProviderList[providerIndex][0]
+                  except:
+                     providerName = '???'
+
+                  # ====== Addressing =======================================
+                  address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
+                  gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
+                  metric = NorNet_RoutingMetric_AdditionalProvider + providerNumber
+                  if providerIndex == defaultProvider:
+                     metric = NorNet_RoutingMetric_DefaultProvider
+
+                  if controlBoxMode == False:
+                     network = 'default'
+                  else:
+                     network = str(makeNorNetIP(0, 0, 0, version))
+
+                  if version == 4:
+                     outputFile.write('\nIPADDR'  + str(addressNumber) + '=' + str(address.ip)        + '\n')
+                     outputFile.write('NETMASK'   + str(addressNumber) + '=' + str(address.netmask)   + '\n')
+                     outputFile.write('BROADCAST' + str(addressNumber) + '=' + str(address.broadcast) + '\n')
+                     if providerIndex == defaultProvider:
+                        outputFile.write('DNS1=' + str(gateway.ip) + '\n')
+                     routesIPv4.append([ str(network), str(gateway.ip), str(metric) ])
+
+                  elif version == 6:
+                     if providerIndex == defaultProvider:
+                        outputFile.write('\nIPV6INIT=yes\n')
+                        outputFile.write('IPV6_AUTOCONF=no\n')
+                        outputFile.write('IPV6ADDR=' + str(address)    + '\n')
+                        outputFile.write('DNS2='     + str(gateway.ip) + '\n')
+
+                     else:
+                        secondariesIPv6.append(address)
+                     routesIPv6.append([ str(network), str(gateway.ip), str(metric) ])
+
+                  addressNumber = addressNumber + 1
+
+               providerNumber = providerNumber + 1
+
+      # ====== Write IPv6 secondaries ====================================
+      secondaries = ''
+      for secondaryIPv6 in secondariesIPv6:
+         if len(secondaries) > 0:
+            secondaries = secondaries + ' '
+         secondaries = secondaries + str(secondaryIPv6)
+      outputFile.write('IPV6ADDR_SECONDARIES="' + secondaries + '"\n')
+
+      outputFile.close()
+
+
+      # ====== Write routes files ===========================================
+      routesIPv4File = codecs.open('route' + suffix, 'w', 'utf-8')
+      for route in routesIPv4:
+         routesIPv4File.write(route[0] + ' via ' + route[1] + ' metric ' + route[2] + '\n')
+      routesIPv4File.close()
+
+      routesIPv6File = codecs.open('route6' + suffix, 'w', 'utf-8')
+      for route in routesIPv6:
+         routesIPv6File.write(route[0] + ' via ' + route[1] + ' metric ' + route[2] + '\n')
+      routesIPv6File.close()
+
+
+   # ====== Unknown variant =================================================
+   else:
+      error('Unknown distribution variant: ' + variant)
+
+
+
+# ###### Main program #######################################################
+if ((len(sys.argv) < 10) or (sys.argv[4] != '-site') or (sys.argv[6] != '-interface') or (sys.argv[8] != '-providers')):
+   error('Usage: ' + sys.argv[0] + ' variant FQDN node_index -site site_index -interface interface_name -providers default_provider[,provider2,...] [-controlbox]')
+
+variant    = sys.argv[1]
+hostName   = getHostnameFromFQDN(sys.argv[2])
+domainName = getDomainFromFQDN(sys.argv[2])
+nodeIndex  = int(sys.argv[3])
+if ((nodeIndex < 1) or (nodeIndex > 255)):
+   error('Bad node index!')
+siteIndex = int(sys.argv[5])
+if ((siteIndex < 1) or (siteIndex > 255)):
+   error('Bad site index!')
+interfaceName = sys.argv[7]
+controlBoxMode = False
+if len(sys.argv) > 10:
+    if sys.argv[10] == '-controlbox':
+       controlBoxMode = True
+    else:
+       error('Bad control box mode! Do you mean -controlbox?')
+
+loadNorNetConfiguration(False)
+
+defaultProvider = -1
+providerList    = []
+for providerName in sys.argv[9].split(','):
+   providerIndex = -1
+   try:
+      providerIndex = int(providerName)
+   except:
+      for p in NorNet_ProviderList:
+         if ((NorNet_ProviderList[p][0] == providerName) or
+             (NorNet_ProviderList[p][1] == providerName)):
+            providerIndex = p
+            break
+   if ((providerIndex <= 0) or (providerIndex > 255)):
+      error("Bad provider " + providerName)
+   if len(providerList) == 0:
+      defaultProvider = providerIndex
+   providerList.append(providerIndex)
+
+
+print('Node:       ' + hostName + ' . ' + domainName)
+print('Node Index: ' + str(nodeIndex))
+print('Site Index: ' + str(siteIndex))
+print('Interface:  ' + interfaceName)
+print('Providers:  ' + str(providerList))
+
+
 writeHostname('hostname.new', hostName, domainName)
 writeHosts('hosts.new', hostName, domainName)
-writeInterfaces('interfaces.new', hostName, domainName, nodeIndex, siteIndex,
-                providerList, defaultProvider, interfaceName, allInterfaces)
+writeInterfaceConfiguration('.new', variant, interfaceName, controlBoxMode,
+                            domainName, nodeIndex, siteIndex, providerList, defaultProvider)
 writeNTPConfiguration('ntp.new', nodeIndex, siteIndex, defaultProvider)
 
 # Create AutoFS configuration only if we are not on the file server itself!
 # (otherwise: just add empty AutoFS configuration)
 weAreOnFileServer = ((siteIndex == NorNet_SiteIndex_FileSrv) and
                      (nodeIndex == NorNet_NodeIndex_FileSrv))
-makeAutoFSConfiguration(weAreOnFileServer, True)
+makeAutoFSConfiguration(weAreOnFileServer, siteIndex, nodeIndex, True)

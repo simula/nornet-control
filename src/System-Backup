@@ -1,0 +1,172 @@
+#!/bin/bash -e
+#
+# System Backup
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+
+# ###### Backup a file ######################################################
+backup_file ()
+# $1 = Source
+# $2 = Destination
+{
+   if [ -e "$1" ] ; then
+      cp "$1" "$2"
+   #else
+   #   echo "Skipping $1"
+   fi
+}
+
+
+
+# ###### Main program #######################################################
+if [ $# -lt 3 ] ; then
+   echo >&2 "Usage: $0 target_directory target_subdirectory max_versions [max_delay]"
+   exit 1
+fi
+TARGET_DIRECTORY="$1"
+TARGET_SUBDIRECTORY="$2"
+MAX_VERSIONS=$3
+DELAY=0
+if [ $# -ge 4 ] ; then
+   DELAY=$4
+fi
+
+
+# ====== Wait (random time to decouple workloads) ===========================
+echo -en "\x1b[32m`date +%FT%H:%M:%S`: Making system backup in $TARGET_DIRECTORY ...\x1b[0m\n"
+if [ $DELAY -gt 0 ] ; then
+   Random-Sleep 0 $DELAY
+fi
+
+# ====== Prepare target directory ===========================================
+if [ ! -e "$TARGET_DIRECTORY" ] ; then
+   echo >&2 "ERROR: Target directory $TARGET_DIRECTORY is not available (NFS problem?)!"
+   exit 1
+fi
+cd "$TARGET_DIRECTORY"
+if [ "$TARGET_SUBDIRECTORY" != "" ] ; then
+   mkdir -p "$TARGET_SUBDIRECTORY"
+   cd "$TARGET_SUBDIRECTORY"
+fi
+
+
+# ====== Collect list of backups ============================================
+# Clean up first:
+find -maxdepth 1 -name "*.temp" -type d | xargs --no-run-if-empty rm -rf
+backupList="`find . -name "backup-*" -type d | sort`"
+backups=0 ; for backup in $backupList ; do
+   let backups=backups+1
+   # echo "   - #$backups: $backup"
+done
+
+# Write everything to temporary directory first.
+newBackupOriginal="backup-`date -u +%Y%m%d-%H%M%S`"
+newBackup="${newBackupOriginal}.temp"
+
+
+# ====== Create new backup ==================================================
+if [ -e $newBackupOriginal ] ; then
+   echo >&2 "ERROR: Backup $newBackupOriginal already exists. Skipping this backup run!"
+   exit 1
+fi
+mkdir $newBackup
+
+
+# ------ The backup -----------------------------------------------
+backup_file /etc/hostname    $newBackup
+backup_file /etc/hosts       $newBackup
+backup_file /etc/resolv.conf $newBackup
+backup_file /etc/ntp.conf    $newBackup
+backup_file /etc/auto.master $newBackup
+backup_file /etc/auto.nfs    $newBackup
+backup_file /etc/exports     $newBackup
+backup_file /etc/rc.local    $newBackup
+
+# ------ Network ------------------------
+mkdir -p $newBackup/network
+backup_file /etc/network/interfaces                   $newBackup/network
+backup_file /etc/udev/rules.d/70-persistent-net.rules $newBackup/network
+
+# ------ NorNet -------------------------
+mkdir -p $newBackup/nornet
+backup_file /etc/nornet/nornetapi-config  $newBackup/nornet
+backup_file /etc/nornet/Server-Setup.args $newBackup/nornet
+
+mkdir -p $newBackup/nornet
+backup_file /etc/nornet/nornetapi-config $newBackup/nornet
+backup_file /etc/nornet/watchdog-config  $newBackup/nornet
+
+if [ -d /etc/nornet/vsystems/ ] ; then
+   vSystems=`find /etc/nornet/vsystems/ -name "[0-9][0-9]-*[0-9a-zA-Z]"`
+   for vSystem in $vSystems ; do
+      mkdir -p $newBackup/nornet/vsystems
+      backup_file "$vSystem" $newBackup/nornet/vsystems
+   done
+fi
+
+# ------ DHCP ---------------------------
+if [ -d /etc/dhcp ] ; then
+   mkdir -p $newBackup/dhcp
+   backup_file /etc/dhcp/dhcpd.conf $newBackup/dhcp
+fi
+
+# ------ Bind ---------------------------
+if [ -d /etc/bind ] ; then
+   cp -r /etc/bind $newBackup/bind || true
+fi
+
+# ------ Some system information --------
+mkdir -p $newBackup/sysinfo
+if [ -e /usr/bin/apt-show-versions ] ; then
+   /usr/bin/apt-show-versions >$newBackup/sysinfo/packages.txt
+fi
+for type in addr route tunnel ; do
+   for version in 4 6 ; do
+      ip -$version $type show >$newBackup/sysinfo/ip-$type$version.txt
+   done
+done
+uname -a >$newBackup/sysinfo/uname.txt
+free >$newBackup/sysinfo/free.txt
+df >$newBackup/sysinfo/df.txt
+if [ -e /usr/sbin/smartctl ] ; then
+   /usr/sbin/smartctl -a /dev/sda >$newBackup/sysinfo/smart-sda.txt || true
+fi
+# -----------------------------------------------------------------
+
+
+mv $newBackup $newBackupOriginal
+if [ -L latest ] ; then
+   rm -f latest
+fi
+ln -s $newBackupOriginal latest
+
+
+# ====== Delete out-of-date backups =========================================
+let backupsToDelete=$backups-$MAX_VERSIONS+1
+for backup in $backupList ; do
+   if [ "$backup" != "$newBackup" ] ; then
+      if [ $backupsToDelete -gt 0 ] ; then
+         # echo "   - Removing out-of-date backup $backup ..."
+         rm -rf "$backup"
+         let backupsToDelete=$backupsToDelete-1 || true
+      fi
+   fi
+done
+
+echo -en "\x1b[32m`date +%FT%H:%M:%S`: Done!\x1b[0m\n"
