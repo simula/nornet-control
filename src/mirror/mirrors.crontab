@@ -1,1 +1,1 @@
-30 21 * * * mkdir -p /nfs/adm/mirror/fedora/releases/18/Everything/ && rsync --archive --compress --delete --delete-excluded --no-motd --exclude debug/ --exclude iso/ rsync://ftp.acc.umu.se/fedora/linux/releases/18/Everything/ /nfs/adm/mirror/fedora/releases/18/Everything/
+30 0,3,6,9,12,15,18,21 * * * mkdir -p /nfs/adm/mirror/fedora/releases/18/Everything/ && rsync --archive --compress --delete --delete-excluded --no-motd --exclude debug/ --exclude iso/ rsync://ftp.acc.umu.se/fedora/linux/releases/18/Everything/ /nfs/adm/mirror/fedora/releases/18/Everything/
