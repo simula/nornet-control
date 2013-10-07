@@ -17,16 +17,12 @@ function proxy_setup ()
       echo "export http_proxy=\"http://$proxyName:3128/\""
       echo "export ftp_proxy=\"http://$proxyName:3128/\""
       echo "export no_proxy=\"$domainName\""
-      echo "export HTTP_PROXY=\"http://$proxyName:3128/\""
-      echo "export FTP_PROXY=\"http://$proxyName:3128/\""
    ) >/etc/profile.d/proxy.sh
    . /etc/profile.d/proxy.sh
    (
       echo "setenv http_proxy \"http://$proxyName:3128/\""
       echo "setenv ftp_proxy \"http://$proxyName:3128/\""
       echo "setenv no_proxy \"$domainName\""
-      echo "setenv HTTP_PROXY \"http://$proxyName:3128/\""
-      echo "setenv FTP_PROXY \"http://$proxyName:3128/\""
    ) >/etc/profile.d/proxy.csh
 }
 
