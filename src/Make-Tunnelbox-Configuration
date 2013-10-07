@@ -315,11 +315,12 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
    usedNodes = { 'tunnelbox'     : 1,
                  'tunnelbox-ext' : 1,
                  'control-ext'   : 1,
+                 'monitor'       : 1,
+                 'nfs'           : 1,
                  'ns'            : 1,
                  'ntp'           : 1,
                  'plc'           : 1,
-                 'monitor'       : 1,
-                 'nfs'           : 1,
+                 'proxy'         : 1,
                  'tftp'          : 1 }   # Reserved names
 
    # ====== Get hostname in default provider's network ======================
@@ -342,6 +343,8 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
       writeRR(siteZoneFile, 'ns.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
    if hostName != 'ntp':
       writeRR(siteZoneFile, 'ntp.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
+   if hostName != 'proxy':
+      writeRR(siteZoneFile, 'proxy.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
 
    # ====== Prepare the list of hosts =======================================
    fullNodeList.append(makeNodeForDNS(hostName, localSite, NorNet_NodeIndex_Tunnelbox,
