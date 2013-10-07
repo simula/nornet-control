@@ -136,6 +136,7 @@ Depends: arpwatch,
          python (>= 2.7),
          radvd,
          snmpd,
+         squid3,
          traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
