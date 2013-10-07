@@ -22,6 +22,7 @@
 
 import sys;
 import re;
+import os;
 import hashlib;
 import datetime;
 
@@ -505,29 +506,33 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
          error('Unable to add "nornet_node_interface" tag to node ' + nodeHostName)
 
       # ====== Provide proxy configurations =================================
+      try:
+         os.mkdir('/var/www/html/PlanetLabConf/proxy/')
+      except:
+         pass
+      proxyName = 'proxy.' + siteNorNetDomain
       for shell in [ 'sh', 'csh' ]:
          proxyConfName = '/var/www/html/PlanetLabConf/proxy/proxy.' + shell + '.' + siteNorNetDomain
-         try:
-            proxyConf = codecs.open(proxyConfName, 'w', 'utf-8')
-            if shell == 'sh':
-               proxyConf.write('export http_proxy="http://' + proxyName  + ':3128/"\n')
-               proxyConf.write('export ftp_proxy="http://'  + proxyName  + ':3128/"\n')
-               proxyConf.write('export no_proxy="' + domainName + '"\n')
-            elif shell == 'csh':
-               proxyConf.write('setenv http_proxy "http://' + proxyName  + ':3128/"\n')
-               proxyConf.write('setenv ftp_proxy "http://'  + proxyName  + ':3128/"\n')
-               proxyConf.write('setenv no_proxy "' + domainName + '"\n')
-            proxyConf.close()
-         except:
-            print('WARNING: Unable to write ' + proxyConfName)
+         #try:
+         proxyConf = codecs.open(proxyConfName, 'w', 'utf-8')
+         if shell == 'sh':
+            proxyConf.write('export http_proxy="http://' + proxyName  + ':3128/"\n')
+            proxyConf.write('export ftp_proxy="http://'  + proxyName  + ':3128/"\n')
+            proxyConf.write('export no_proxy="' + siteNorNetDomain + '"\n')
+         elif shell == 'csh':
+            proxyConf.write('setenv http_proxy "http://' + proxyName  + ':3128/"\n')
+            proxyConf.write('setenv ftp_proxy "http://'  + proxyName  + ':3128/"\n')
+            proxyConf.write('setenv no_proxy "' + siteNorNetDomain + '"\n')
+         proxyConf.close()
+         #except:
+            #print('WARNING: Unable to write ' + proxyConfName)
 
          confFileID = _addOrUpdateConfFile({
             'file_owner'        : u'root',
             'postinstall_cmd'   : u'',
             'error_cmd'         : u'',
             'preinstall_cmd'    : u'',
-            'dest'              : '/etc/profile.d/' + proxy + '.' + shell
-            print '/etc/profile.d/' + proxy + '.' + shell
+            'dest'              : '/etc/profile.d/proxy.' + shell,
             'ignore_cmd_errors' : False,
             'enabled'           : True,
             'file_permissions'  : u'644',
@@ -535,7 +540,7 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
             'always_update'     : False,
             'file_group'        : u'root'})
          if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
-            error('Unable to add ' + proxy + '.' + shell + ' configuration file to node ' + nodeHostName)
+            error('Unable to add proxy.' + shell + ' configuration file to node ' + nodeHostName)
 
       # ====== Hack to handle openvswitch start/stop correctly ==============
       # See https://docs.google.com/a/simula.no/document/d/1WRZ7kN6KwZRaeNOi51-uNmintCVwdkzhM2W3To6uV_Y/edit?pli=1 .
