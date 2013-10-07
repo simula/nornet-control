@@ -504,6 +504,39 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       if _addOrUpdateNodeTag(nodeID, 'nornet_node_interface', norNetInterface) <= 0:
          error('Unable to add "nornet_node_interface" tag to node ' + nodeHostName)
 
+      # ====== Provide proxy configurations =================================
+      for shell in [ 'sh', 'csh' ]:
+         proxyConfName = '/var/www/html/PlanetLabConf/proxy/proxy.' + shell + '.' + siteNorNetDomain
+         try:
+            proxyConf = codecs.open(proxyConfName, 'w', 'utf-8')
+            if shell == 'sh':
+               proxyConf.write('export http_proxy="http://' + proxyName  + ':3128/"\n')
+               proxyConf.write('export ftp_proxy="http://'  + proxyName  + ':3128/"\n')
+               proxyConf.write('export no_proxy="' + domainName + '"\n')
+            elif shell == 'csh':
+               proxyConf.write('setenv http_proxy "http://' + proxyName  + ':3128/"\n')
+               proxyConf.write('setenv ftp_proxy "http://'  + proxyName  + ':3128/"\n')
+               proxyConf.write('setenv no_proxy "' + domainName + '"\n')
+            proxyConf.close()
+         except:
+            print('WARNING: Unable to write ' + proxyConfName)
+
+         confFileID = _addOrUpdateConfFile({
+            'file_owner'        : u'root',
+            'postinstall_cmd'   : u'',
+            'error_cmd'         : u'',
+            'preinstall_cmd'    : u'',
+            'dest'              : '/etc/profile.d/' + proxy + '.' + shell
+            print '/etc/profile.d/' + proxy + '.' + shell
+            'ignore_cmd_errors' : False,
+            'enabled'           : True,
+            'file_permissions'  : u'644',
+            'source'            : proxyConfName,
+            'always_update'     : False,
+            'file_group'        : u'root'})
+         if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
+            error('Unable to add ' + proxy + '.' + shell + ' configuration file to node ' + nodeHostName)
+
       # ====== Hack to handle openvswitch start/stop correctly ==============
       # See https://docs.google.com/a/simula.no/document/d/1WRZ7kN6KwZRaeNOi51-uNmintCVwdkzhM2W3To6uV_Y/edit?pli=1 .
       confFileID = _addOrUpdateConfFile({
