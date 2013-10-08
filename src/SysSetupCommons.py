@@ -81,7 +81,8 @@ def writeProxyConfiguration(suffix, siteDomain, variant, controlBoxMode):
 
 # ###### Write interface configuration file #################################
 def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
-                                domainName, nodeIndex, siteIndex, providerList, defaultProvider):
+                                domainName, nodeIndex, siteIndex,
+                                providerList, defaultProviderIndex):
    # ====== Write Debian /etc/network/interfaces ============================
    if variant == 'Debian':
       outputFile = codecs.open('interfaces' + suffix, 'w', 'utf-8')
@@ -99,8 +100,8 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
          for onlyDefault in [ True, False ]:
             providerNumber  = 0
             for providerIndex in providerList:
-               if ( ((onlyDefault == True)  and (providerIndex == defaultProvider)) or \
-                    ((onlyDefault == False) and (providerIndex != defaultProvider)) ):
+               if ( ((onlyDefault == True)  and (providerIndex == defaultProviderIndex)) or \
+                    ((onlyDefault == False) and (providerIndex != defaultProviderIndex)) ):
                   try:
                      providerName = NorNet_ProviderList[providerIndex][0]
                   except:
@@ -110,7 +111,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                   address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
                   gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
                   metric = NorNet_RoutingMetric_AdditionalProvider + providerNumber
-                  if providerIndex == defaultProvider:
+                  if providerIndex == defaultProviderIndex:
                      metric = NorNet_RoutingMetric_DefaultProvider
                   addrOpts = ''
                   if version == 4:
@@ -122,14 +123,14 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                      network = str(makeNorNetIP(0, 0, 0, version))
 
                   # ====== Write configuration ==============================
-                  if providerIndex == defaultProvider:
+                  if providerIndex == defaultProviderIndex:
                      if version == 4:
                         outputFile.write('iface ' + interfaceName + ' inet manual\n')
                      else:
                         outputFile.write('\niface ' + interfaceName + ' inet6 manual\n')
 
                   # ====== Write DNS configuration ==========================
-                  if providerIndex == defaultProvider:
+                  if providerIndex == defaultProviderIndex:
                      outputFile.write('\tdns-nameservers ' + str(gateway.ip) + '\n')
                      outputFile.write('\tdns-search      ' + domainName + '\n')
 
@@ -175,8 +176,8 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
          for onlyDefault in [ True, False ]:
             providerNumber  = 0
             for providerIndex in providerList:
-               if ( ((onlyDefault == True)  and (providerIndex == defaultProvider)) or \
-                    ((onlyDefault == False) and (providerIndex != defaultProvider)) ):
+               if ( ((onlyDefault == True)  and (providerIndex == defaultProviderIndex)) or \
+                    ((onlyDefault == False) and (providerIndex != defaultProviderIndex)) ):
                   try:
                      providerName = NorNet_ProviderList[providerIndex][0]
                   except:
@@ -186,7 +187,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                   address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
                   gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
                   metric = NorNet_RoutingMetric_AdditionalProvider + providerNumber
-                  if providerIndex == defaultProvider:
+                  if providerIndex == defaultProviderIndex:
                      metric = NorNet_RoutingMetric_DefaultProvider
 
                   if controlBoxMode == False:
@@ -198,12 +199,12 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                      outputFile.write('\nIPADDR'  + str(addressNumber) + '=' + str(address.ip)        + '\n')
                      outputFile.write('NETMASK'   + str(addressNumber) + '=' + str(address.netmask)   + '\n')
                      outputFile.write('BROADCAST' + str(addressNumber) + '=' + str(address.broadcast) + '\n')
-                     if providerIndex == defaultProvider:
+                     if providerIndex == defaultProviderIndex:
                         outputFile.write('DNS1=' + str(gateway.ip) + '\n')
                      routesIPv4.append([ str(network), str(gateway.ip), str(metric) ])
 
                   elif version == 6:
-                     if providerIndex == defaultProvider:
+                     if providerIndex == defaultProviderIndex:
                         outputFile.write('\nIPV6INIT=yes\n')
                         outputFile.write('IPV6_AUTOCONF=no\n')
                         outputFile.write('IPV6ADDR=' + str(address)    + '\n')

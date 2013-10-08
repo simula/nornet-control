@@ -365,12 +365,18 @@ if localNode == None:
 localSite = getNorNetSiteOfNode(fullSiteList, localNode)
 if localSite == None:
    error('Unable to find site of node ' + localNode['node_name'] + ' in database!')
+providerList = getNorNetProvidersForSite(localSite)
 fullUserList = fetchNorNetUserList()
 
 
 writeHostname('hostname-config', localNode['node_name'], localSite['site_domain'])
 writeHosts('hosts-config', localNode['node_name'], localSite['site_domain'])
-makeInterfaceConfiguration(fullSiteList, localNode, interfaceName, distribution)
+
+controlBoxMode = False
+writeInterfaceConfiguration('', distribution, interfaceName, controlBoxMode,
+                            localSite['site_domain'], localNode['node_index'], localSite['site_index'],
+                            providerList, localSite['site_default_provider_index'])
+writeProxyConfiguration('', localSite['site_domain'], distribution, controlBoxMode)
 
 makeNTPConfiguration(fullSiteList, localSite, localNode)
 makeSNMPConfiguration(fullSiteList, fullUserList, localSite, localNode['node_name'], 'Node')
