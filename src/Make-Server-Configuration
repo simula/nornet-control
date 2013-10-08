@@ -83,6 +83,30 @@ def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider):
    outputFile.close()
 
 
+# ###### Write proxy configuration file #####################################
+def writeProxyConfiguration(suffix, siteDomain, variant, controlBoxMode):
+   proxyName = 'proxy.' + siteDomain
+   for shell in [ 'sh', 'csh' ]:
+      proxyConf = codecs.open('proxy.' + shell + suffix, 'w', 'utf-8')
+      if controlBoxMode == False:
+         if shell == 'sh':
+            proxyConf.write('export http_proxy="http://' + proxyName  + ':3128/"\n')
+            proxyConf.write('export ftp_proxy="http://'  + proxyName  + ':3128/"\n')
+            proxyConf.write('export no_proxy="' + siteDomain + '"\n')
+         elif shell == 'csh':
+            proxyConf.write('setenv http_proxy "http://' + proxyName  + ':3128/"\n')
+            proxyConf.write('setenv ftp_proxy "http://'  + proxyName  + ':3128/"\n')
+            proxyConf.write('setenv no_proxy "' + siteDomain + '"\n')
+      proxyConf.close()
+
+   if variant == 'Debian':
+      proxyConf = codecs.open('apt-proxy' + suffix, 'w', 'utf-8')
+      if controlBoxMode == False:
+         proxyConf.write('Acquire::http::Proxy "http://' + proxyName + ':3128/";\n')
+         proxyConf.write('Acquire::ftp::Proxy "http://' + proxyName + ':3128/";\n')
+      proxyConf.close()
+
+
 # ###### Write interface configuration file #################################
 def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                                 domainName, nodeIndex, siteIndex, providerList, defaultProvider):
@@ -303,6 +327,7 @@ writeHostname('hostname.new', hostName, domainName)
 writeHosts('hosts.new', hostName, domainName)
 writeInterfaceConfiguration('.new', variant, interfaceName, controlBoxMode,
                             domainName, nodeIndex, siteIndex, providerList, defaultProvider)
+writeProxyConfiguration('.new', domainName, variant, controlBoxMode)
 writeNTPConfiguration('ntp.new', nodeIndex, siteIndex, defaultProvider)
 
 # Create AutoFS configuration only if we are not on the file server itself!
