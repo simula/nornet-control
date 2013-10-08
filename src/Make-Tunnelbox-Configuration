@@ -101,6 +101,22 @@ def getCentralSiteBlacklistString():
       return u''
 
 
+# ###### Get Squid memory cache #############################################
+def getSquidMemoryCacheSize():
+   try:
+      return int(NorNet_Configuration['NorNet_Squid_MemoryCache'])
+   except:
+      return 0
+
+
+# ###### Get Squid disk cache ###############################################
+def getSquidDiskCacheSize():
+   try:
+      return int(NorNet_Configuration['NorNet_Squid_DiskCache'])
+   except:
+      return 0
+
+
 # ###### Get tunnel configuration for default tunnel to central site ########
 def getDefaultTunnel(fullSiteList, localSite, version):
    localSiteProviders          = getNorNetProvidersForSite(localSite)
@@ -299,11 +315,12 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
    usedNodes = { 'tunnelbox'     : 1,
                  'tunnelbox-ext' : 1,
                  'control-ext'   : 1,
+                 'monitor'       : 1,
+                 'nfs'           : 1,
                  'ns'            : 1,
                  'ntp'           : 1,
                  'plc'           : 1,
-                 'monitor'       : 1,
-                 'nfs'           : 1,
+                 'proxy'         : 1,
                  'tftp'          : 1 }   # Reserved names
 
    # ====== Get hostname in default provider's network ======================
@@ -326,6 +343,8 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
       writeRR(siteZoneFile, 'ns.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
    if hostName != 'ntp':
       writeRR(siteZoneFile, 'ntp.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
+   if hostName != 'proxy':
+      writeRR(siteZoneFile, 'proxy.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
 
    # ====== Prepare the list of hosts =======================================
    fullNodeList.append(makeNodeForDNS(hostName, localSite, NorNet_NodeIndex_Tunnelbox,
@@ -748,6 +767,69 @@ def makeRADVDConfiguration(localSite):
                outputFile.write('\t};\n')
 
       outputFile.write('};\n')
+
+   outputFile.close()
+
+
+
+# ###########################################################################
+# #### Squid Configuration                                               ####
+# ###########################################################################
+
+
+# ###### Generate Squid daemon configuration ################################
+def makeSquidConfiguration(localSite):
+   outputFile = codecs.open('squid-config', 'w', 'utf-8')
+
+   outputFile.write('# ================== ACLs ==============================\n')
+   outputFile.write('acl manager proto cache_object\n')
+   outputFile.write('acl localhost src 127.0.0.1/32 ::1\n')
+   outputFile.write('acl to_localhost dst 127.0.0.0/8 0.0.0.0/32 ::1\n')
+   providerList = getNorNetProvidersForSite(localSite)
+   for providerIndex in providerList:
+      for version in [ 4, 6 ]:
+         localNetwork = makeNorNetIP(providerIndex, localSite['site_index'], 0, version)
+         outputFile.write('acl localnet src ' + str(localNetwork) + '\n')
+
+   outputFile.write('acl SSL_ports port 443\n')
+   outputFile.write('acl Safe_ports port 80          # http\n')
+   outputFile.write('acl Safe_ports port 21          # ftp\n')
+   outputFile.write('acl Safe_ports port 443         # https\n')
+   outputFile.write('acl Safe_ports port 70          # gopher\n')
+   outputFile.write('acl Safe_ports port 210         # wais\n')
+   outputFile.write('acl Safe_ports port 1025-65535  # unregistered ports\n')
+   outputFile.write('acl Safe_ports port 280         # http-mgmt\n')
+   outputFile.write('acl Safe_ports port 488         # gss-http\n')
+   outputFile.write('acl Safe_ports port 591         # filemaker\n')
+   outputFile.write('acl Safe_ports port 777         # multiling http\n')
+   outputFile.write('acl CONNECT method CONNECT\n\n')
+
+   outputFile.write('# ================== HTTP Access =======================\n')
+   outputFile.write('http_access allow manager localhost\n')
+   outputFile.write('http_access deny manager\n')
+   outputFile.write('http_access deny !Safe_ports\n')
+   outputFile.write('http_access deny CONNECT !SSL_ports\n')
+   outputFile.write('http_access allow localhost\n')
+   outputFile.write('http_access allow localnet\n')
+   outputFile.write('http_access deny all\n')
+   outputFile.write('http_port 3128\n\n')
+
+   outputFile.write('# ================== Caching ===========================\n')
+   outputFile.write('coredump_dir /var/spool/squid3\n')
+   diskCacheSize = getSquidDiskCacheSize()
+   if diskCacheSize > 0:
+      outputFile.write('cache_dir aufs /var/spool/squid3 ' + str(diskCacheSize) + ' 16 256\n')
+   memoryCacheSize = getSquidMemoryCacheSize()
+   if memoryCacheSize < 32:
+      memoryCacheSize = 32
+   outputFile.write('cache_mem ' + str(memoryCacheSize) + ' MB\n\n')
+
+   outputFile.write('# ================== Refresh Patterns ==================\n')
+   outputFile.write('refresh_pattern ^ftp:           1440    20%     10080\n')
+   outputFile.write('refresh_pattern ^gopher:        1440    0%      1440\n')
+   outputFile.write('refresh_pattern -i (/cgi-bin/|\?) 0     0%      0\n')
+   outputFile.write('refresh_pattern (Release|Packages(.gz)*)$      0       20%     2880\n')
+   outputFile.write('refresh_pattern .               0       20%     4320\n')
 
    outputFile.close()
 
@@ -1336,4 +1418,5 @@ for i in range(NorNet_MinNodeIndex + 1, NorNet_MaxNodeIndex + 1):
 
 makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
 makeRADVDConfiguration(localSite)
+makeSquidConfiguration(localSite)
 makeRegistrarConfiguration(localSite)

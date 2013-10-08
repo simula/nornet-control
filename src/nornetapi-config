@@ -80,6 +80,11 @@ NorNet_LocalSite_DHCPServer_Static202='"f0:de:f1:aa:bb:ee" "pxe-boot.img" "pxe-s
 # RADVD Configuration:
 NorNet_LocalSite_RADVDServer="on"
 
+# Squid Configuration:
+NorNet_Squid_MemoryCache=256
+NorNet_Squid_DiskCache=1024
+
+
 # ====== Central Site only! ===============================
 # NAT public address rnage:
 # NorNet_CentralSite_NAT_Range="<Address1> <AddressN>"
