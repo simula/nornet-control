@@ -26,7 +26,6 @@ Description: NorNet API
 Package: nornet-management
 Architecture: any
 Depends: apt-show-versions,
-         arping,
          autofs,
          colordiff,
          cron,
