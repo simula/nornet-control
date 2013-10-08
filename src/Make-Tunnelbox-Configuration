@@ -815,6 +815,7 @@ def makeSquidConfiguration(localSite):
    outputFile.write('http_port 3128\n\n')
 
    outputFile.write('# ================== Caching ===========================\n')
+   outputFile.write('logformat squid %{%Y-%m-%dT%H:%M:%S}tl.%03tu %6tr %>a %Ss/%03>Hs %<st %rm %ru %un %Sh/%<A %mt\n')
    outputFile.write('coredump_dir /var/spool/squid3\n')
    diskCacheSize = getSquidDiskCacheSize()
    if diskCacheSize > 0:
