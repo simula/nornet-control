@@ -109,6 +109,14 @@ def getSquidMemoryCacheSize():
       return 0
 
 
+# ###### Get Squid maximum object size ######################################
+def getSquidMaxObjectSize():
+   try:
+      return int(NorNet_Configuration['NorNet_Squid_MaxObjectSize'])
+   except:
+      return 0
+
+
 # ###### Get Squid disk cache ###############################################
 def getSquidDiskCacheSize():
    try:
@@ -822,7 +830,11 @@ def makeSquidConfiguration(localSite):
    memoryCacheSize = getSquidMemoryCacheSize()
    if memoryCacheSize < 32:
       memoryCacheSize = 32
-   outputFile.write('cache_mem ' + str(memoryCacheSize) + ' MB\n\n')
+   outputFile.write('cache_mem ' + str(memoryCacheSize) + ' MB\n')
+   maxObjectSize = getSquidMaxObjectSize()
+   if maxObjectSize == 0:
+      maxObjectSize = max(1, memoryCacheSize / 16)
+   outputFile.write('maximum_object_size ' + str(maxObjectSize) + ' MB\n\n')
 
    outputFile.write('# ================== Refresh Patterns ==================\n')
    outputFile.write('refresh_pattern ^ftp:           1440    20%     10080\n')
