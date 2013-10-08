@@ -83,6 +83,7 @@ NorNet_LocalSite_RADVDServer="on"
 # Squid Configuration:
 NorNet_Squid_MemoryCache=256
 NorNet_Squid_DiskCache=1024
+NorNet_Squid_MaxObjectSize=16
 
 
 # ====== Central Site only! ===============================
