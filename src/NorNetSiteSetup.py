@@ -130,11 +130,26 @@ def makeNorNetTagTypes():
 def removeNorNetSite(siteName):
    site = fetchNorNetSite(siteName, False)
    if site != None:
+
       if int(getTagValue(site['site_tags'], 'nornet_is_managed_site', '-1')) < 1:
          error('removeNorNetSite() will only remove NorNet sites!')
       log('Removing NorNet site ' + siteName + ' ...')
       siteID = site['site_id']
       getPLCServer().DeleteSite(getPLCAuthentication(), siteID)
+
+      plcSiteNTPConfName = '/var/www/html/PlanetLabConf/ntp/ntp.conf.' + site['site_domain']
+      try:
+         os.remove(plcSiteNTPConfName)
+      except:
+         pass
+
+      for shell in [ 'sh', 'csh' ]:
+         proxyConfName = '/var/www/html/PlanetLabConf/proxy/proxy.' + shell + '.' + site['site_domain']
+         try:
+            os.remove(proxyConfName)
+         except:
+            pass
+
    else:
       log('Site not found: ' + siteName)
 
@@ -513,19 +528,19 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       proxyName = 'proxy.' + siteNorNetDomain
       for shell in [ 'sh', 'csh' ]:
          proxyConfName = '/var/www/html/PlanetLabConf/proxy/proxy.' + shell + '.' + siteNorNetDomain
-         #try:
-         proxyConf = codecs.open(proxyConfName, 'w', 'utf-8')
-         if shell == 'sh':
-            proxyConf.write('export http_proxy="http://' + proxyName  + ':3128/"\n')
-            proxyConf.write('export ftp_proxy="http://'  + proxyName  + ':3128/"\n')
-            proxyConf.write('export no_proxy="' + siteNorNetDomain + '"\n')
-         elif shell == 'csh':
-            proxyConf.write('setenv http_proxy "http://' + proxyName  + ':3128/"\n')
-            proxyConf.write('setenv ftp_proxy "http://'  + proxyName  + ':3128/"\n')
-            proxyConf.write('setenv no_proxy "' + siteNorNetDomain + '"\n')
-         proxyConf.close()
-         #except:
-            #print('WARNING: Unable to write ' + proxyConfName)
+         try:
+            proxyConf = codecs.open(proxyConfName, 'w', 'utf-8')
+            if shell == 'sh':
+               proxyConf.write('export http_proxy="http://' + proxyName  + ':3128/"\n')
+               proxyConf.write('export ftp_proxy="http://'  + proxyName  + ':3128/"\n')
+               proxyConf.write('export no_proxy="' + siteNorNetDomain + '"\n')
+            elif shell == 'csh':
+               proxyConf.write('setenv http_proxy "http://' + proxyName  + ':3128/"\n')
+               proxyConf.write('setenv ftp_proxy "http://'  + proxyName  + ':3128/"\n')
+               proxyConf.write('setenv no_proxy "' + siteNorNetDomain + '"\n')
+            proxyConf.close()
+         except:
+            print('WARNING: Unable to write ' + proxyConfName)
 
          confFileID = _addOrUpdateConfFile({
             'file_owner'        : u'root',
@@ -536,7 +551,7 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
             'ignore_cmd_errors' : False,
             'enabled'           : True,
             'file_permissions'  : u'644',
-            'source'            : proxyConfName,
+            'source'            : u'PlanetLabConf/proxy/proxy.' + shell + '.' + siteNorNetDomain,
             'always_update'     : False,
             'file_group'        : u'root'})
          if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:

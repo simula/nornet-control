@@ -7,6 +7,7 @@
     <description>NorNet Management Extensions</description>
     <uservisible>true</uservisible>
     <packagelist>
+<packagereq type="mandatory">rpm-sign</packagereq>
 <packagereq type="mandatory">bind-utils</packagereq>
 <packagereq type="mandatory">colordiff</packagereq>
 <packagereq type="mandatory">ethtool</packagereq>

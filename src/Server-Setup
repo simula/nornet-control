@@ -161,6 +161,26 @@ echo "------ /etc/modules:"
 colordiff /etc/modules modules.new
 echo "------ /etc/default/rcS:"
 colordiff /etc/default/rcS rcS.new
+echo "------ /etc/profile.d/proxy.sh:"
+if [ -e /etc/profile.d/proxy.sh ] ; then
+   colordiff /etc/profile.d/proxy.sh proxy.sh.new
+else
+   cat proxy.sh.new
+fi
+echo "------ /etc/profile.d/proxy.csh:"
+if [ -e /etc/profile.d/proxy.csh ] ; then
+   colordiff /etc/profile.d/proxy.csh proxy.csh.new
+else
+   cat proxy.csh.new
+fi
+if [ "$Variant" = "Debian" ] ; then
+   echo "------ /etc/apt/apt.conf.d/10-proxy:"
+   if [ -e /etc/apt/apt.conf.d/10-proxy ] ; then
+      colordiff /etc/apt/apt.conf.d/10-proxy apt-proxy.new
+   else
+      cat apt-proxy.new
+   fi
+fi
 if [ -e interfaces.new -a  -e /etc/network/interfaces ] ; then
    echo "------ /etc/network/interfaces:"
    colordiff /etc/network/interfaces interfaces.new
@@ -207,9 +227,23 @@ else
    cp /etc/ntp.conf /etc/ntp.conf~
    cp ntp.new /etc/ntp.conf
 
+   if [ -e /etc/profile.d/proxy.sh ] ; then
+      cp /etc/profile.d/proxy.sh /etc/profile.d/proxy.sh~
+   fi
+   cp proxy.sh.new /etc/profile.d/proxy.sh
+   if [ -e /etc/profile.d/proxy.csh ] ; then
+      cp /etc/profile.d/proxy.csh /etc/profile.d/proxy.csh~
+   fi
+   cp proxy.csh.new /etc/profile.d/proxy.csh
+
    if [ "$Variant" = "Debian" ] ; then
       cp /etc/network/interfaces /etc/network/interfaces~
       cp interfaces.new /etc/network/interfaces
+
+      if [ -e /etc/apt/apt.conf.d/10-proxy ] ; then
+         cp /etc/apt/apt.conf.d/10-proxy /etc/apt/apt.conf.d/10-proxy~
+      fi
+      cp apt-proxy /etc/apt/apt.conf.d/10-proxy
    elif [ "$Variant" = "Fedora" ] ; then
       if [ -e /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ] ; then
          cp /etc/sysconfig/network-scripts/ifcfg-$InterfaceName /etc/sysconfig/network-scripts/ifcfg-$InterfaceName~
