@@ -25,33 +25,8 @@ import sys;
 from NorNetConfiguration import *;
 from NorNetAPI           import *;
 from NorNetNodeSetup     import *;
+from SysSetupCommons     import *;
 
-
-
-# ###### Generate hostname configuration ####################################
-def makeHostnameConfiguration(localSite, name):
-   outputFile = codecs.open('hostname-config', 'w', 'utf-8')
-   outputFile.write(name + '.' + localSite['site_domain'] + '\n')
-   outputFile.close()
-
-
-# ###### Generate hosts configuration #######################################
-def makeHostsConfiguration(localSite, name):
-   outputFile = codecs.open('hosts-config', 'w', 'utf-8')
-
-   writeAutoConfigInformation(outputFile)
-
-   outputFile.write('127.0.0.1\tlocalhost\n')
-   outputFile.write('127.0.0.1\t' + name + '\n')
-   outputFile.write('127.0.0.1\t' + name + '.' + localSite['site_domain'] + '\n\n')
-
-   outputFile.write('::1\tip6-localhost ip6-loopback\n')
-   outputFile.write('fe00::0\tip6-localnet\n')
-   outputFile.write('ff00::0\tip6-mcastprefix\n')
-   outputFile.write('ff02::1\tip6-allnodes\n')
-   outputFile.write('ff02::2\tip6-allrouters\n\n')
-
-   outputFile.close()
 
 
 # ###### Generate NTP configuration #########################################
@@ -392,9 +367,11 @@ if localSite == None:
    error('Unable to find site of node ' + localNode['node_name'] + ' in database!')
 fullUserList = fetchNorNetUserList()
 
+
+writeHostname('hostname-config', localNode['node_name'], localSite['site_domain'])
+writeHosts('hosts-config', localNode['node_name'], localSite['site_domain'])
 makeInterfaceConfiguration(fullSiteList, localNode, interfaceName, distribution)
-makeHostnameConfiguration(localSite, localNode['node_name'])
-makeHostsConfiguration(localSite, localNode['node_name'])
+
 makeNTPConfiguration(fullSiteList, localSite, localNode)
 makeSNMPConfiguration(fullSiteList, fullUserList, localSite, localNode['node_name'], 'Node')
 
