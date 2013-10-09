@@ -28,8 +28,8 @@ PROVINCE=""
 COUNTRY=""
 COUNTRYCODE=""
 FLAGS=""
-WARN="300.0,10%"
-CRITICAL="500.0,15%"
+WARN="700.0,15%"
+CRITICAL="1000.0,25%"
 CHECK_PING="/usr/lib/nagios/plugins/check_ping"
 
 
