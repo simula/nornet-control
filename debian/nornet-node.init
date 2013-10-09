@@ -152,13 +152,14 @@ check_and_configure ()
       cp auto.* /etc
       service autofs restart >/dev/null || true
    fi
+   cp proxy.sh proxy.csh /etc/profile.d/
+   cp apt-proxy /etc/apt/apt.conf.d/10-proxy
 
    # Permanently make important settings in sysctl configuration.
    sed -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.accept_redirects[ \t]*=.*$/net.ipv4.conf.all.accept_redirects=0/" \
        -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.secure_redirects[ \t]*=.*$/net.ipv4.conf.all.secure_redirects=0/" \
        -e "s/^[ \t]*[#]*[ \t]*net.ipv6.conf.all.accept_redirects[ \t]*=.*$/net.ipv6.conf.all.accept_redirects=0/" \
        </etc/sysctl.conf >/etc/nornet/sysctl-config && mv /etc/nornet/sysctl-config /etc/sysctl.conf && sudo sysctl -q -p
-
 }
 
 

@@ -39,4 +39,4 @@ setup(name='NorNet',
           'Topic :: Internet',
           'Topic :: Software Development :: Libraries',
           'Topic :: System :: Networking'],
-      py_modules=['NorNetTools', 'NorNetConfiguration', 'NorNetAPI', 'NorNetProviderSetup', 'NorNetSiteSetup', 'NorNetNodeSetup'])
+      py_modules=['NorNetTools', 'NorNetConfiguration', 'NorNetAPI', 'NorNetProviderSetup', 'NorNetSiteSetup', 'NorNetNodeSetup', 'SysSetupCommons'])

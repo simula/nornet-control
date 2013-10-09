@@ -109,7 +109,7 @@ check_and_configure ()
       if needs_update /etc/nornet/sysctl-network-security-config /etc/sysctl.d/10-network-security.conf $1 ; then
          mv /etc/nornet/sysctl-network-security-config /etc/sysctl.d/10-network-security.conf
          sysctl -q -p
-      fi    
+      fi
    fi
    if [ -e /etc/sysctl.d/10-ipv6-privacy.conf ] ; then
       sed -e "s/^[ \t]*net.ipv6.conf.all.use_tempaddr[ \t]*=.*$/net.ipv6.conf.all.use_tempaddr=0   # Set by nornet-tunnelbox's init script/" \
@@ -118,7 +118,7 @@ check_and_configure ()
       if needs_update /etc/nornet/sysctl-ipv6-privacy-config /etc/sysctl.d/10-ipv6-privacy.conf $1 ; then
          mv /etc/nornet/sysctl-ipv6-privacy-config /etc/sysctl.d/10-ipv6-privacy.conf
          sysctl -q -p
-      fi    
+      fi
    fi
 
    # ====== Get new configuration into temporary directory ==================
@@ -128,7 +128,7 @@ check_and_configure ()
    cd updated-tunnelbox-config
    if Make-Tunnelbox-Configuration ; then
       cd ..
-      
+
       # ====== Set up tunnels and routing ===================================
       rm -f tunnelbox*-config tunnelbox-bootstrap tunnelbox-providers *.interface? *.provider
       mv updated-tunnelbox-config/tunnelbox-config updated-tunnelbox-config/*.provider updated-tunnelbox-config/*.interface? .
@@ -151,7 +151,7 @@ check_and_configure ()
          echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Firewall configuration has been updated => restarting iptables-persistent service ...\x1b[0m"
          service iptables-persistent restart || true
       fi
-      
+
       # ====== Apply DNS update =============================================
       rm -f zones.conf *.db
       mv updated-tunnelbox-config/named.conf.options updated-tunnelbox-config/zones.conf updated-tunnelbox-config/*.db .
@@ -191,6 +191,15 @@ check_and_configure ()
          service radvd restart >/dev/null || true
       fi
 
+      # ====== Apply Squid server update ====================================
+      rm -f squid-config
+      mv updated-tunnelbox-config/squid-config .
+      if needs_update squid-config /etc/squid3/squid.conf $1 ; then
+         echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Squid server configuration has been updated => restarting Squid service ...\x1b[0m"
+         cp squid-config /etc/squid3/squid.conf
+         service squid3 reload >/dev/null || true
+      fi
+
       # ====== Apply registrar configuration update =========================
       rm -f registrar-config
       mv updated-tunnelbox-config/registrar-config .
@@ -201,7 +210,7 @@ check_and_configure ()
             service rsplib-registrar restart >/dev/null || true
          fi
       fi
-      
+
       # ====== Check for problems ===========================================
       if ! rmdir updated-tunnelbox-config ; then
          echo >&2 "ERROR: Something went wrong! updated-tunnelbox-config still contains unhandled configuration files!"
