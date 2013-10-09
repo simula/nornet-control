@@ -381,7 +381,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 88,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Hainan University',
    'site_short_name'   : 'HU',
    'site_url'          : 'http://www.hu.nornet',
@@ -396,10 +396,10 @@ norNetSetup = [
    'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Provider Eins', 'eth1', IPv4Network('2.2.2.2/24'),     IPv4Address('2.2.2.1'),
-                                 IPv6Network('::/0'),  IPv6Address('::') ],
-      [ 'Provider Zwei', 'eth2', IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
-                                 IPv6Network('::/0'),  IPv6Address('::') ]
+      [ 'China Education and Research Network', 'eth1', IPv4Network('210.37.45.149/26'), IPv4Address('210.37.45.190'),
+                                                        IPv6Network('::/0'), IPv6Address('::') ],
+      [ 'China Unicom',                         'eth2', IPv4Network('113.59.104.58/29'), IPv4Address('113.59.104.62'),
+                                                        IPv6Network('::/0'), IPv6Address('::') ]
    ],
    'site_nodes' : [
       #[ 100, 1, u'smörgåstårta' ],
