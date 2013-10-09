@@ -1307,8 +1307,10 @@ try:
    localSite = fullSiteList[getLocalSiteIndex()]
 except:
    error('Cannot find local site ' + str(getLocalSiteIndex()) + ' at PLC database!')
-siteNodeList  = fetchNorNetNodeListForSite(localSite)
 fullSliceList = fetchNorNetSliceList()
+siteNodeList  = fetchNorNetNodeListForSite(localSite)
+if siteNodeList == None:
+   siteNodeList = []
 
 # ====== Some checks ========================================================
 if getLocalSiteIndex() == None:
