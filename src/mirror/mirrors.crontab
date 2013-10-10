@@ -5,4 +5,4 @@
 
 # Ubuntu 12.04
 # Alternative: rsync://ftp.uninett.no/ubuntu/
-30 1,4,7,10,13,16,19,22 * * * mkdir -p /nfs/adm/mirror/ubuntu/ && rsync --archive --compress --delete --delete-excluded --no-motd rsync://se.archive.ubuntu.com/ubuntu/ /nfs/adm/mirror/ubuntu/
+30 5 * * * mkdir -p /nfs/adm/mirror/ubuntu/ && rsync --archive --compress --delete --delete-excluded --no-motd rsync://se.archive.ubuntu.com/ubuntu/ /nfs/adm/mirror/ubuntu/
