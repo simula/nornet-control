@@ -407,7 +407,7 @@ norNetSetup = [
       [ 102, 3, u'boao'      ],   # This is the permanent address of Boao forum for asia.
       [ 103, 4, u'wanqun'    ],   # Wan-ch'uan River，Wanquan River before and called the white river.
       [ 104, 5, u'nanshan'   ],   # Nanshan Buddhism Cultural Park is a display of traditional Chinese Buddhist culture
-      [ 105, 6, u'yalongnay' ]    # This place has beautiful beach and tropical forest park
+      [ 105, 6, u'yalongbay' ]    # This place has beautiful beach and tropical forest park
    ] },
 
  { 'site_index'        : 100,

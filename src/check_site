@@ -29,10 +29,10 @@ COUNTRY=""
 COUNTRYCODE=""
 FLAGS=""
 
-# Check the site by connecting to the Squid proxy's port 3128.
+# Check the site by connecting to the TCP port 22 (SSH).
 WARN="10"
 CRITICAL="20"
-TUNNELBOX_CHECK="/usr/lib/nagios/plugins/check_tcp -p 3128"
+TUNNELBOX_CHECK="/usr/lib/nagios/plugins/check_tcp -p 22"
 
 
 # ====== Handle arguments ===================================================
