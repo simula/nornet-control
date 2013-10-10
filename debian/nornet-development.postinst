@@ -5,7 +5,7 @@ set -e
 case "$1" in
    configure)
       if [ ! -e /var/cache/pbuilder/base.tgz ] ; then
-         sudo pbuilder create --debootstrapopts --variant=buildd --keyring /etc/apt/trusted.gpg
+         pbuilder create --debootstrapopts --variant=buildd --keyring /etc/apt/trusted.gpg
       fi
       update-grub
       ;;

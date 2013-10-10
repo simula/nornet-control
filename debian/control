@@ -26,7 +26,6 @@ Description: NorNet API
 Package: nornet-management
 Architecture: any
 Depends: apt-show-versions,
-         arping,
          autofs,
          colordiff,
          cron,
@@ -136,6 +135,7 @@ Depends: arpwatch,
          python (>= 2.7),
          radvd,
          snmpd,
+         squid3,
          traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
