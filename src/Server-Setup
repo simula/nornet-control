@@ -243,7 +243,7 @@ else
       if [ -e /etc/apt/apt.conf.d/10-proxy ] ; then
          cp /etc/apt/apt.conf.d/10-proxy /etc/apt/apt.conf.d/10-proxy~
       fi
-      cp apt-proxy /etc/apt/apt.conf.d/10-proxy
+      cp apt-proxy.new /etc/apt/apt.conf.d/10-proxy
    elif [ "$Variant" = "Fedora" ] ; then
       if [ -e /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ] ; then
          cp /etc/sysconfig/network-scripts/ifcfg-$InterfaceName /etc/sysconfig/network-scripts/ifcfg-$InterfaceName~
