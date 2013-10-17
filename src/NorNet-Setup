@@ -355,7 +355,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 30,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Karlstads Universitet',
    'site_short_name'   : 'KAU',
    'site_url'          : 'http://www.kau.nornet',
@@ -364,16 +364,16 @@ norNetSetup = [
    'site_province'     : 'Värmland',
    'site_country'      : 'Sverige',
    'site_country_code' : 'SE',
-   'site_latitude'     : 59.40396,
-   'site_longitude'    : 13.58201,
-   'site_altitude'     : 50,
+   'site_latitude'     : 59.404101,
+   'site_longitude'    : 13.58189,
+   'site_altitude'     : 60,
    'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Provider Eins', 'eth1', IPv4Network('2.2.2.2/24'),     IPv4Address('2.2.2.1'),
-                                 IPv6Network('::/0'),  IPv6Address('::') ],
-      [ 'Provider Zwei', 'eth2', IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
-                                 IPv6Network('::/0'),  IPv6Address('::') ]
+      [ 'SUNET', 'eth1', IPv4Network('193.10.227.84/29'), IPv4Address('193.10.227.80'),
+                         IPv6Network('::/0'),  IPv6Address('::') ]
+      #[ 'Provider Zwei', 'eth2', IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
+                                 #IPv6Network('::/0'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
       #[ 100, 1, u'smörgåstårta' ],
