@@ -234,7 +234,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
                   providerIndex = p
                   break
             if providerIndex <= 0:
-               error("Bad provider " + provider)
+               error("Unknown provider " + providerName)
             if providerName == defaultProvider:
                defaultProviderIndex = providerIndex
                if _addOrUpdateSiteTag(siteID, 'nornet_site_default_provider_index', str(providerIndex)) <= 0:
