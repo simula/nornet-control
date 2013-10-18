@@ -192,6 +192,18 @@ Description: NorNet Display
  .
  See http://www.nntb.no for details on NorNet!
 
+Package: nornet-gatekeeper
+Architecture: all
+Depends: nornet-node,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Gatekeeper
+ This package contains the packages to set up a gatekeeper station for the
+ project presentation. It is in fact just a node with a dependency on the
+ additional packages.
+ .
+ See http://www.nntb.no for details on NorNet!
+
 Package: nornet-websrv
 Architecture: all
 Depends: apache2,
