@@ -198,7 +198,7 @@ Depends: apache2,
          nornet-node,
          ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet Display
+Description: NorNet Web Server
  This package contains the packages to set up a web server station for the
  project presentation. It is in fact just a node with a dependency on the
  Apache packages.
@@ -207,11 +207,13 @@ Description: NorNet Display
 
 Package: nornet-wikisrv
 Architecture: all
-Depends: mediawiki, php5-intl,imagemagick,
+Depends: imagemagick,
+         mediawiki,
          nornet-node,
+         php5-intl,
          ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet Display
+Description: NorNet Wiki Server
  This package contains the packages to set up a wiki station for the
  user-contributed documentation. It is in fact just a node with a
  dependency on the MediaWiki packages.
