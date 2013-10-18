@@ -194,7 +194,8 @@ Description: NorNet Display
 
 Package: nornet-gatekeeper
 Architecture: all
-Depends: nornet-node,
+Depends: ipsec-tools,
+         nornet-node,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Gatekeeper
