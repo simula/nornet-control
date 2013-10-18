@@ -31,7 +31,7 @@ NorNet_Provider4='"Telenor"                                 "telenor"    "http:/
 NorNet_Provider5='"NetCom"                                  "netcom"     "http://www.netcom.no/"'
 NorNet_Provider6='"Tele2"                                   "tele2"      "http://www.tele2.no/"'
 NorNet_Provider7='"Network Norway"                          "netnorway"  "http://www.networknorway.no/"'
-# ------ Sweden- ----------------------------------------------------------------------------------
+# ------ Sweden -----------------------------------------------------------------------------------
 NorNet_Provider20='"SUNET"                                  "sunet"      "http://www.sunet.se/"'
 # ------ Germany ----------------------------------------------------------------------------------
 NorNet_Provider30='"Deutsches Forschungsnetz"               "dfn"        "http://www.dfn.de/"'
