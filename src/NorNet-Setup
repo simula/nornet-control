@@ -370,7 +370,7 @@ norNetSetup = [
    'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'SUNET', 'eth1', IPv4Network('193.10.227.84/29'), IPv4Address('193.10.227.81'),
+      [ 'SUNET', 'eth1', IPv4Network('193.10.227.85/29'), IPv4Address('193.10.227.81'),
                          IPv6Network('::/0'),  IPv6Address('::') ]
       #[ 'Provider Zwei', 'eth2', IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
                                  #IPv6Network('::/0'),  IPv6Address('::') ]
