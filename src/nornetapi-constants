@@ -40,6 +40,12 @@ NorNet_Provider32='"Deutsche Telekom"                       "dtag"       "http:/
 # ------ China ------------------------------------------------------------------------------------
 NorNet_Provider80='"China Education and Research Network"   "cernet"     "http://www.cernet.edu.cn/"'
 NorNet_Provider81='"China Unicom"                           "unicom"     "http://www.chinaunicom.com/"'
+# ------ U.S.A: -----------------------------------------------------------------------------------
+# NorNet_Provider100=
+# NorNet_Provider101=
+# ------ Brazil -----------------------------------------------------------------------------------
+NorNet_Provider110='"Rede Nacional de Ensino e Pesquisa"    "rnp"        "http://www.rnp.br"'
+NorNet_Provider111='"Academic Network at São Paulo"         "ansp"       "http://www.ansp.br"'
 # ------ Test -------------------------------------------------------------------------------------
 NorNet_Provider255='"Provider Eins"                         "p1"         "http://www.nntb.no/"'
 NorNet_Provider254='"Provider Zwei"                         "p2"         "http://www.nntb.no/"'
