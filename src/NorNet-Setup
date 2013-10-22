@@ -452,10 +452,10 @@ norNetSetup = [
    'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Provider Eins', 'eth1', IPv4Network('200.133.238.124/27'),   IPv4Address('200.133.238.97'),
-                                 IPv6Network('::/0'),  IPv6Address('::') ],
-      [ 'Provider Zwei', 'eth2', IPv4Network('186.219.95.214/24'),    IPv4Address('186.219.95.1'),
-                                 IPv6Network('::/0'),  IPv6Address('::') ]
+      [ 'Rede Nacional de Ensino e Pesquisa', 'eth1', IPv4Network('200.133.238.124/27'),   IPv4Address('200.133.238.97'),
+                                                      IPv6Network('::/0'),  IPv6Address('::') ],
+      [ 'Academic Network at São Paulo', 'eth2',      IPv4Network('186.219.95.214/24'),    IPv4Address('186.219.95.1'),
+                                                      IPv6Network('::/0'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
       #[ 100, 1, u'smörgåstårta' ],
