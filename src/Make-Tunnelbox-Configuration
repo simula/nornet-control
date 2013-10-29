@@ -125,6 +125,14 @@ def getSquidDiskCacheSize():
       return 0
 
 
+# ###### Get Squid parent cache #############################################
+def getSquidParentCache():
+   try:
+      return NorNet_Configuration['NorNet_Squid_ParentCache']
+   except:
+      return ''
+
+
 # ###### Get tunnel configuration for default tunnel to central site ########
 def getDefaultTunnel(fullSiteList, localSite, version):
    localSiteProviders          = getNorNetProvidersForSite(localSite)
@@ -825,6 +833,11 @@ def makeSquidConfiguration(localSite):
    outputFile.write('# ================== Caching ===========================\n')
    outputFile.write('logformat squid %{%Y-%m-%dT%H:%M:%S}tl.%03tu %6tr %>a %Ss/%03>Hs %<st %rm %ru %un %Sh/%<A %mt\n')
    outputFile.write('coredump_dir /var/spool/squid3\n')
+   parentCache = getSquidParentCache()
+   if parentCache != '':
+      outputFile.write('cache_peer ' + parentCache + ' parent 3128 0 no-query default\n')
+      outputFile.write('never_direct allow all\n')
+      outputFile.write('nonhierarchical_direct off\n')
    diskCacheSize = getSquidDiskCacheSize()
    if diskCacheSize > 0:
       outputFile.write('cache_dir aufs /var/spool/squid3 ' + str(diskCacheSize) + ' 16 256\n')
