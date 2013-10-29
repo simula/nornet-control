@@ -175,7 +175,6 @@ def _deleteSiteTag(siteID, tagName):
    }
    tags = getPLCServer().GetSiteTags(getPLCAuthentication(), filter, ['site_tag_id'])
    if len(tags) != 0:
-      print 'DEL: ' + tagName
       return getPLCServer().DeleteSiteTag(getPLCAuthentication(), tags[0]['site_tag_id'])
 
 
@@ -355,6 +354,17 @@ def _addOrUpdateInterfaceTag(interfaceID, tagName, tagValue):
       return getPLCServer().UpdateInterfaceTag(getPLCAuthentication(), tags[0]['interface_tag_id'], tagValue)
 
 
+# ###### Delete interface tag ####################################################
+def _deleteInterfaceTag(interfaceID, tagName):
+   filter = {
+      'tagname'      : tagName,
+      'interface_id' : interfaceID
+   }
+   tags = getPLCServer().GetInterfaceTags(getPLCAuthentication(), filter, ['interface_tag_id'])
+   if len(tags) != 0:
+      return getPLCServer().DeleteInterfaceTag(getPLCAuthentication(), tags[0]['interface_tag_id'])
+
+
 # ###### Update interfaces of a node ########################################
 def updateNorNetInterfaces(node, site, norNetInterface):
    providerList         = getNorNetProvidersForSite(site)
@@ -427,15 +437,22 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                      error('Unable to add "ipaddr' + str(ipv4SecondaryIndex) + '" tag to interface ' + str(ifIPv4.ip))
                   if _addOrUpdateInterfaceTag(primaryInterfaceID, 'netmask' + str(ipv4SecondaryIndex), str(ifIPv4.netmask)) <= 0:
                      error('Unable to add "netmask' + str(ipv4SecondaryIndex) + '" tag to interface ' + str(ifIPv4.ip))
+                  ipv4SecondaryIndex = ipv4SecondaryIndex + 1
 
 
+      # Remove deleted ISPs
+      while ipv4SecondaryIndex < NorNet_MaxProviders:
+         for prefix in [ 'ipaddr', 'netmask' ]:
+            _deleteInterfaceTag(primaryInterfaceID, prefix + str(ipv4SecondaryIndex))
+         ipv4SecondaryIndex = ipv4SecondaryIndex + 1
+
+      # Add IPv6 configuration
       if _addOrUpdateInterfaceTag(primaryInterfaceID, 'ipv6addr', str(ipv6Primary)) <= 0:
          error('Unable to add "ipv6addr" tag to interface ' + str(ipv6Primary))
       if _addOrUpdateInterfaceTag(primaryInterfaceID, 'ipv6_autoconf', 'no') <= 0:
          error('Unable to add "ipv6_autoconf" tag to interface ' + str(ipv6Primary))
       if _addOrUpdateInterfaceTag(primaryInterfaceID, 'ipv6_defaultgw', str(ipv6Gateway)) <= 0:
          error('Unable to add "ipv6_defaultgw" tag to interface ' + str(ipv6Gateway))
-
       secondaries = ""
       for secondaryAddress in ipv6Secondaries:
          if len(secondaries) > 0:
