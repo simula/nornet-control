@@ -357,22 +357,6 @@ def _addOrUpdateInterfaceTag(interfaceID, tagName, tagValue):
 
 # ###### Update interfaces of a node ########################################
 def updateNorNetInterfaces(node, site, norNetInterface):
-   # ====== Current interface settings ======================================
-   currentAddressList     = [ ]
-   currentInterfaceIDList = [ ]
-   interfaceList = getPLCServer().GetInterfaces(getPLCAuthentication(),
-                                                { 'node_id' : node['node_id'] })
-   for interface in interfaceList:
-      interfaceID      = interface['interface_id']
-      interfaceTagList = getPLCServer().GetInterfaceTags(getPLCAuthentication(),
-                                                         { 'interface_id' : interfaceID })
-      if int(getTagValue(interfaceTagList, 'nornet_is_managed_interface', 0)) > 0:
-         currentAddressList.append(IPAddress(interface['ip']))
-         currentInterfaceIDList.append(interfaceID)
-
-
-   # ====== Current interface settings ======================================
-   newAddressList = [ ]
    providerList         = getNorNetProvidersForSite(site)
    siteIndex            = int(site['site_index'])
    siteDomain           = site['site_domain']
@@ -380,20 +364,8 @@ def updateNorNetInterfaces(node, site, norNetInterface):
    nodeID               = int(node['node_id'])
    nodeIndex            = int(node['node_index'])
    nodeName             = node['node_name']
-   for providerIndex in providerList:
-      ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4)
-      newAddressList.append(IPv4Address(ifIPv4.ip))
-
-
-   # ====== Update interfaces ===============================================
-   if currentAddressList == newAddressList:
-      return(0)   # Nothing has changed -> nothing to do!
 
    try:
-      for interface in interfaceList:
-         interfaceID      = interface['interface_id']
-         interfaceTagList = getPLCServer().DeleteInterface(getPLCAuthentication(), interfaceID)
-
       primaryInterfaceID = None
       ipv6Primary        = None
       ipv6Gateway        = None
@@ -410,6 +382,7 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                   ifHostName = nodeName.split('.')[0] + '.' + str.lower(siteDomain)
                else:
                   ifHostName = nodeName.split('.')[0] + '.' + str.lower(providerName) + '.' + str.lower(siteDomain)
+
                ifIPv4        = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4)
                ifIPv6        = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6)
                ifGatewayIPv4 = makeNorNetIP(providerIndex, siteIndex, 1, 4)
@@ -432,15 +405,20 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                   ipv6Gateway             = ifGatewayIPv6.ip
                   interface['dns2']       = str(ifGatewayIPv6.ip)   # The tunnelbox is also the DNS server
 
-                  primaryInterfaceID = getPLCServer().AddInterface(getPLCAuthentication(), nodeID, interface)
+                  primaryInterfaceID = lookupPrimaryInterfaceID(node)
+                  if primaryInterfaceID == 0:
+                     primaryInterfaceID = getPLCServer().AddInterface(getPLCAuthentication(), nodeID, interface)
+                  else:
+                     if getPLCServer().UpdateInterface(getPLCAuthentication(), primaryInterfaceID, interface) != 1:
+                        primaryInterfaceID = 0
                   if primaryInterfaceID <= 0:
-                     error('Unable to add interface ' + str(ifIPv4.ip))
+                     error('Unable to add/update interface ' + norNetInterface)
 
-                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, "ovs_bridge", 'public0') <= 0:
+                  if _addOrUpdateInterfaceTag(primaryInterfaceID, "ovs_bridge", 'public0') <= 0:
                      error('Unable to add "ovs_bridge" tag to interface ' + str(ifIPv4.ip))
-                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'nornet_is_managed_interface', '1') <= 0:
+                  if _addOrUpdateInterfaceTag(primaryInterfaceID, 'nornet_is_managed_interface', '1') <= 0:
                      error('Unable to add "nornet_is_managed_interface" tag to interface ' + str(ifIPv4.ip))
-                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'nornet_ifprovider_index', str(providerIndex)) <= 0:
+                  if _addOrUpdateInterfaceTag(primaryInterfaceID, 'nornet_ifprovider_index', str(providerIndex)) <= 0:
                      error('Unable to add "nornet_ifprovider_index" tag to interface ' + str(ifIPv4.ip))
 
                else:
@@ -451,11 +429,11 @@ def updateNorNetInterfaces(node, site, norNetInterface):
                      error('Unable to add "netmask' + str(ipv4SecondaryIndex) + '" tag to interface ' + str(ifIPv4.ip))
 
 
-      if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'ipv6addr', str(ipv6Primary)) <= 0:
+      if _addOrUpdateInterfaceTag(primaryInterfaceID, 'ipv6addr', str(ipv6Primary)) <= 0:
          error('Unable to add "ipv6addr" tag to interface ' + str(ipv6Primary))
-      if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'ipv6_autoconf', 'no') <= 0:
+      if _addOrUpdateInterfaceTag(primaryInterfaceID, 'ipv6_autoconf', 'no') <= 0:
          error('Unable to add "ipv6_autoconf" tag to interface ' + str(ipv6Primary))
-      if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'ipv6_defaultgw', str(ipv6Gateway)) <= 0:
+      if _addOrUpdateInterfaceTag(primaryInterfaceID, 'ipv6_defaultgw', str(ipv6Gateway)) <= 0:
          error('Unable to add "ipv6_defaultgw" tag to interface ' + str(ipv6Gateway))
 
       secondaries = ""
@@ -463,7 +441,7 @@ def updateNorNetInterfaces(node, site, norNetInterface):
          if len(secondaries) > 0:
             secondaries = secondaries + ' '
          secondaries = secondaries + str(secondaryAddress)
-      if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, "ipv6addr_secondaries", secondaries) <= 0:
+      if _addOrUpdateInterfaceTag(primaryInterfaceID, "ipv6addr_secondaries", secondaries) <= 0:
          error('Unable to add "ipv6addr_secondaries" tag to interface ' + secondaries)
 
       return(1)
@@ -524,11 +502,15 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       node['hostname']   = nodeHostName
       node['model']      = model
       node['boot_state'] = bootState
-      nodeID = lookupNodeID(nodeHostName)
-      if nodeID == 0:
+
+      existingNode = fetchNorNetNode(nodeHostName)
+      if existingNode == None:
          node['boot_state'] = 'reinstall'   # New nodes need reinstall ...
          nodeID = getPLCServer().AddNode(getPLCAuthentication(), site['site_id'], node)
       else:
+         nodeID = existingNode['node_id']
+         if existingNode['node_state'] == 'reinstall':
+            node['boot_state'] = 'reinstall'   # Updated node still needs a reinstall ...
          if getPLCServer().UpdateNode(getPLCAuthentication(), nodeID, node) != 1:
             nodeID = 0
       if nodeID <= 0:

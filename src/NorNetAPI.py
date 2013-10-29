@@ -267,6 +267,20 @@ def lookupNodeID(nodeName):
       return(0)
 
 
+# ###### Find interface ID ##################################################
+def lookupPrimaryInterfaceID(node):
+   try:
+      interface = plc_server.GetInterfaces(plc_authentication,
+                                           { 'node_id'     : node['node_id'],
+                                             'is_primary'  : True },
+                                           ['interface_id'])
+      interfaceID = int(interface[0]['interface_id'])
+      return(interfaceID)
+
+   except:
+      return(0)
+
+
 # ###### Fetch list of NorNet nodes #########################################
 def fetchNorNetNode(nodeNameToFind = None, site = None):
    global plc_server
