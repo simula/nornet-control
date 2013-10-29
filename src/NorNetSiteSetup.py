@@ -167,6 +167,18 @@ def _addOrUpdateSiteTag(siteID, tagName, tagValue):
       return getPLCServer().UpdateSiteTag(getPLCAuthentication(), tags[0]['site_tag_id'], tagValue)
 
 
+# ###### Delete site tag ####################################################
+def _deleteSiteTag(siteID, tagName):
+   filter = {
+      'tagname' : tagName,
+      'site_id' : siteID
+   }
+   tags = getPLCServer().GetSiteTags(getPLCAuthentication(), filter, ['site_tag_id'])
+   if len(tags) != 0:
+      print 'DEL: ' + tagName
+      return getPLCServer().DeleteSiteTag(getPLCAuthentication(), tags[0]['site_tag_id'])
+
+
 # ###### Create NorNet site #################################################
 def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl, siteNorNetDomain,
                    siteNorNetIndex, siteCity, siteProvince, cityCountry, siteCountryCode,
@@ -262,6 +274,12 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
 
          i = i + 1
 
+      # Remove previously-used (but now deleted) providers:
+      while i < NorNet_MaxProviders:
+         for suffix in [ '_index', '_interface',  '_address_ipv4', '_address_ipv6', '_gateway_ipv4', '_gateway_ipv6' ]:
+            _deleteSiteTag(siteID, 'nornet_site_tbp' + str(i) + suffix)
+         i = i + 1
+
       if gotDefaultProvider == False:
          error('Site ' + siteName + ' is not connected to default provider ' + defaultProvider)
 
@@ -324,6 +342,19 @@ def makeNorNetPCU(site, hostName, siteNorNetDomain, publicIPv4Address,
       error('Adding PCU ' + pcuHostName + ' to site ' + site['site_long_name'] + ' has failed: ' + str(e))
 
 
+# ###### Add or update interface tag ########################################
+def _addOrUpdateInterfaceTag(interfaceID, tagName, tagValue):
+   filter = {
+      'tagname'      : tagName,
+      'interface_id' : interfaceID
+   }
+   tags = getPLCServer().GetInterfaceTags(getPLCAuthentication(), filter, ['interface_tag_id'])
+   if len(tags) == 0:
+      return getPLCServer().AddInterfaceTag(getPLCAuthentication(), interfaceID, tagName, tagValue)
+   else:
+      return getPLCServer().UpdateInterfaceTag(getPLCAuthentication(), tags[0]['interface_tag_id'], tagValue)
+
+
 # ###### Update interfaces of a node ########################################
 def updateNorNetInterfaces(node, site, norNetInterface):
    # ====== Current interface settings ======================================
@@ -370,7 +401,6 @@ def updateNorNetInterfaces(node, site, norNetInterface):
       ipv4SecondaryIndex = 1
       for onlyDefault in [ True, False ]:
          for providerIndex in providerList:
-
             if ( ((onlyDefault == True)  and (providerIndex == siteDefProviderIndex)) or \
                  ((onlyDefault == False) and (providerIndex != siteDefProviderIndex)) ):
                providerName = getNorNetProviderInfo(providerIndex)[1]
@@ -415,10 +445,9 @@ def updateNorNetInterfaces(node, site, norNetInterface):
 
                else:
                   ipv6Secondaries.append(ifIPv6)
-
-                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'ipaddr' + str(ipv4SecondaryIndex), str(ifIPv4.ip)) <= 0:
+                  if _addOrUpdateInterfaceTag(primaryInterfaceID, 'ipaddr' + str(ipv4SecondaryIndex), str(ifIPv4.ip)) <= 0:
                      error('Unable to add "ipaddr' + str(ipv4SecondaryIndex) + '" tag to interface ' + str(ifIPv4.ip))
-                  if getPLCServer().AddInterfaceTag(getPLCAuthentication(), primaryInterfaceID, 'netmask' + str(ipv4SecondaryIndex), str(ifIPv4.netmask)) <= 0:
+                  if _addOrUpdateInterfaceTag(primaryInterfaceID, 'netmask' + str(ipv4SecondaryIndex), str(ifIPv4.netmask)) <= 0:
                      error('Unable to add "netmask' + str(ipv4SecondaryIndex) + '" tag to interface ' + str(ifIPv4.ip))
 
 
