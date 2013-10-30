@@ -112,6 +112,37 @@ norNetSetup = [
    'site_nodes' : [
       [ 100, 1, u'weißbier' ],
       [ 101, 2, u'kölsch'   ]
+   ] },
+
+ { 'site_index'        : 64,
+   'site_enabled'      : False,
+   'site_long_name'    : u'Delta Site',
+   'site_short_name'   : 'DS',
+   'site_url'          : 'http://www.delta.test',
+   'site_domain'       : 'delta.test',
+   'site_city'         : 'Gembrook',
+   'site_province'     : 'Victoria',
+   'site_country'      : 'Australia',
+   'site_country_code' : 'AU',
+   'site_latitude'     : -37.951706,
+   'site_longitude'    : 145.549149,
+   'site_altitude'     : 200,
+   'site_pcu'          : [ IPv4Address('172.16.1.204'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ 'Provider Eins', 'eth1', IPv4Network('172.16.4.2/24'),     IPv4Address('172.16.4.1'),
+                                 IPv6Network('fd00:16:4::2/64'),   IPv6Address('fd00:16:4::1') ]
+      #,
+      #[ 'Provider Zwei', 'eth2', IPv4Network('172.17.4.2/24'),     IPv4Address('172.17.4.1'),
+                                 ## IPv6Network('fd00:17:4::2/64'),   IPv6Address('fd00:17:4::1') ]
+                                 #IPv6Network('::/0'),  IPv6Address('::') ]
+      #,
+      #[ 'Provider Drei', 'eth3', IPv4Network('172.18.4.2/24'),     IPv4Address('172.18.4.1'),
+                                 #IPv6Network('fd00:18:4::2/64'),   IPv6Address('fd00:18:4::1') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, u'kangaroo' ],
+      [ 101, 2, u'wombat'   ]
    ] }
 
 ]
