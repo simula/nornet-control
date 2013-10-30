@@ -198,8 +198,8 @@ norNetSetup = [
    'site_pcu'          : [ IPv4Address('158.37.6.194'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Uninett', 'eth1', IPv4Network('158.37.6.195/26'), IPv4Address('158.37.6.193'),
-                           IPv6Network('::/0'),            IPv6Address('::') ]
+      [ 'Uninett', 'eth1', IPv4Network('158.37.6.195/26'),           IPv4Address('158.37.6.193'),
+                           IPv6Network('2001:700:201:F002::195/64'), IPv6Address('2001:700:201:F002::1') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'fløibanen'        ],
