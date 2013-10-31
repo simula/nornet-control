@@ -25,7 +25,8 @@ Description: NorNet API
 
 Package: nornet-management
 Architecture: any
-Depends: apt-show-versions,
+Depends: apt-file,
+         apt-show-versions,
          autofs,
          colordiff,
          cron,
@@ -76,8 +77,7 @@ Description: NorNet Management Tools
 
 Package: nornet-development
 Architecture: any
-Depends: apt-file,
-         autoconf,
+Depends: autoconf,
          automake,
          debhelper,
          devscripts,
@@ -226,8 +226,10 @@ Package: nornet-wikisrv
 Architecture: all
 Depends: imagemagick,
          mediawiki,
+         mediawiki-extensions,
          nornet-node,
          php5-intl,
+         postfix,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Wiki Server
