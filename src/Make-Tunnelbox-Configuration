@@ -836,6 +836,8 @@ def makeSquidConfiguration(localSite):
    outputFile.write('http_access deny all\n')
    outputFile.write('http_port 3128\n')
    outputFile.write('extension_methods REPORT MERGE MKACTIVITY CHECKOUT PROPFIND\n\n')
+   outputFile.write('request_header_access User-Agent deny all\n')
+   outputFile.write('request_header_replace User-Agent Mozilla/5.0\n\n')
 
    outputFile.write('# ================== Caching ===========================\n')
    outputFile.write('logformat squid %{%Y-%m-%dT%H:%M:%S}tl.%03tu %6tr %>a %Ss/%03>Hs %<st %rm %ru %un %Sh/%<A %mt\n')
