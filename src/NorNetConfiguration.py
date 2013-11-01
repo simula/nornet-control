@@ -74,6 +74,7 @@ NorNet_Configuration = {
    'NorNet_LocalNode_Hostname'                 : 'localhost.localdomain',
    'NorNet_LocalNode_NorNetUser'               : 'nornetpp',
    'NorNet_LocalNode_NorNetInterface'          : None,
+   'NorNet_LocalNode_ControlBox'               : False,
 
    'NorNet_Slice_NodeIndexRange'               : None,
 
@@ -284,6 +285,14 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
          if ((NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] < NorNet_MinProviderIndex) or
                (NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] > NorNet_MaxProviderIndex)):
             error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex must be in [' + str(NorNet_MinProviderIndex) + '-' + str(NorNet_MaxProviderIndex) + ']!')
+
+      if isinstance(NorNet_Configuration['NorNet_LocalNode_ControlBox'], unicode):
+         if NorNet_Configuration['NorNet_LocalNode_ControlBox'] == 'yes':
+            NorNet_Configuration['NorNet_LocalNode_ControlBox'] = True
+         elif NorNet_Configuration['NorNet_LocalNode_ControlBox'] == 'no':
+            NorNet_Configuration['NorNet_LocalNode_ControlBox'] = False
+      if not isinstance(NorNet_Configuration['NorNet_LocalNode_ControlBox'], bool):
+            error('NorNet_IPv4Prefix NorNet_LocalNode_ControlBox must be "yes" or "no"!')
 
       if NorNet_Configuration['NorNet_LocalNode_Index'] != None:
          try:
