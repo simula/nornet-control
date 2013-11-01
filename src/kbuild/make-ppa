@@ -3,6 +3,6 @@
 ./clean-deb
 svn update
 ./renew-debian-changelog $@
-./make-deb precise quantal raring saucy
+./make-deb precise quantal raring saucy trusty
 
 dput ppa *.changes
