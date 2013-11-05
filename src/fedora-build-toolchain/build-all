@@ -1,0 +1,57 @@
+#!/bin/bash -e
+
+SOURCES="/nfs/pub/src"
+ALL_PACKAGES="subnetcalc"
+
+# ====== SubNetCalc =======================================
+subnetcalc_DIR="$SOURCES/misc-trunk/subnetcalc"
+
+# ====== NetPerfMeter =====================================
+netperfmeter_DIR="$SOURCES/misc-trunk/netperfmeter"
+
+
+
+# ###### Main program #######################################################
+
+# ====== Handle arguments ===================================================
+WORKDIR=`pwd`
+UPDATE=0
+while [ "$1" != "" ] ; do
+   if [ "$1" = "-update" ] ; then
+      UPDATE=1
+   else
+      echo >&2 "Usage: $0 [-update]"
+      exit 1
+   fi
+   shift
+done
+
+# ====== Packaging loop =====================================================
+for package in $ALL_PACKAGES ; do
+   echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Packaging $package ...\x1b[0m"
+   eval "package_dir=\$${package}_DIR"
+   cd "$package_dir"
+
+   # ====== Update ==========================================================
+   if [ $UPDATE -eq 1 ] ; then
+      echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: Updating package $package ...\x1b[0m"
+      if svn info >/dev/null 2>&1 ; then
+         svn update
+      else
+         git pull
+      fi
+   fi
+
+   # ====== Upstream sources ================================================
+   eval "package_dir=\$${package}_DIR"
+   echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: Creating upstream sources for $package ...\x1b[0m"
+   if [ -e "debian.conf" ] ; then
+      . ./debian.conf
+      $MAKE_DIST
+   else
+      echo "HOW TO GET UPSTREAM SOURCES?"
+      exit 1
+   fi
+done
+
+echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Successfully completed package creation!\x1b[0m"
