@@ -3,8 +3,8 @@
 SOURCES="/nfs/pub/src"
 REPOSITORIES="/tmp/repos"
 DISTRIBUTIONS="fedora-18-x86_64 fedora-18-i386"
-# PACKAGES="bibtexconv fractgen2 netperfmeter rsplib2 subnetcalc"
-PACKAGES="netperfmeter"
+PACKAGES="bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
+# PACKAGES="netperfmeter"
 
 
 # ====== BibTeXConv =======================================
@@ -21,6 +21,9 @@ rsplib_DIR="$SOURCES/sctp-trunk/rsplib2"
 
 # ====== SubNetCalc =======================================
 subnetcalc_DIR="$SOURCES/misc-trunk/subnetcalc"
+
+# ====== TSCTP =======================================
+tsctp_DIR="$SOURCES/misc-trunk/tsctp"
 
 
 
@@ -52,7 +55,12 @@ done
 # ====== Packaging loop =====================================================
 for package in $PACKAGES ; do
    echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Packaging $package ...\x1b[0m"
+   package_dir=""
    eval "package_dir=\$${package}_DIR"
+   if [ "$package_dir" == "" ] ; then
+      echo >&2 "ERROR: Invalid directory given in ${package}_DIR!"
+      exit 1
+   fi
    cd "$package_dir"
 
    # ====== Update ==========================================================
