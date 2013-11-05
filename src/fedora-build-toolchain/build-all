@@ -48,7 +48,7 @@ echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Preparing repositories in $REPOSITORIES 
 DISTRIBUTION_DIRECTORIES=`echo "$DISTRIBUTIONS" | sed -e "s/-/\//g"`
 echo "D=$DISTRIBUTION_DIRECTORIES"
 for directory in $DISTRIBUTION_DIRECTORIES ; do
-   mkdir -p "$REPOSITORIES/$directory"
+   mkdir -p "$REPOSITORIES/$directory/Packages"
 done
 
 
@@ -86,7 +86,7 @@ for package in $PACKAGES ; do
          exit 1
       fi
       directory=`echo "$distribution" | sed -e "s/-/\//g"`
-      cp $rpms "$REPOSITORIES/$directory"
+      cp $rpms "$REPOSITORIES/$directory/Packages"
    done
 
 done
