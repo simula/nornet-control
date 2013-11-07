@@ -24,6 +24,9 @@ import sys;
 import pwd;
 import codecs;
 
+import ConfigParser;
+import StringIO;
+
 
 # XML-RPC
 if sys.version_info < (3,0,0):
@@ -71,6 +74,7 @@ NorNet_Configuration = {
    'NorNet_LocalNode_Hostname'                 : 'localhost.localdomain',
    'NorNet_LocalNode_NorNetUser'               : 'nornetpp',
    'NorNet_LocalNode_NorNetInterface'          : None,
+   'NorNet_LocalNode_ControlBox'               : False,
 
    'NorNet_Slice_NodeIndexRange'               : None,
 
@@ -137,6 +141,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
    sys.stdout = codecs.getwriter('utf8')(sys.stdout)
    sys.stderr = codecs.getwriter('utf8')(sys.stderr)
    sys.stdin  = codecs.getreader('utf8')(sys.stdin)
+   iniString  = u'[root]\n'
 
    # ====== Open constants file =============================================
    if quietMode == False:
@@ -148,9 +153,11 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
          if quietMode == False:
             log('###### Cannot open ' + NorNetPLC_ConstantsFile + ', trying fallback file ' + NorNetPLC_FallbackConstantsFile + ' ... ######')
          constantsFile = codecs.open(NorNetPLC_FallbackConstantsFile, 'r', 'utf-8')
-
       except Exception as e:
          error('Constantsuration file ' + NorNetPLC_FallbackConstantsFile + ' cannot be read: ' + str(e))
+
+   iniString = iniString + constantsFile.read()
+
 
    # ====== Open configuration file =========================================
    if includeAPIConfiguration == True:
@@ -163,28 +170,26 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
             if quietMode == False:
                log('###### Cannot open ' + NorNetPLC_ConfigFile + ', trying fallback file ' + NorNetPLC_FallbackConfigFile + ' ... ######')
             configFile = codecs.open(NorNetPLC_FallbackConfigFile, 'r', 'utf-8')
-
          except Exception as e:
             error('Configuration file ' + NorNetPLC_FallbackConfigFile + ' cannot be read: ' + str(e))
-      lines = tuple(constantsFile) + tuple(configFile)
-   else:
-       lines = tuple(constantsFile)
+
+      iniString  = iniString + configFile.read()
 
 
    # ====== Build the configuration table ===================================
-   lineNumber = 0
-   for line in lines:
-      lineNumber = lineNumber + 1
-      if re.match('^[ \t]*[#\n]', line):
-         continue
-      elif re.match('^[a-zA-Z0-9_]*[ \t]*=', line):
-         s = re.split('=',line,1)
-         parameterName = s[0]
-         parameterValue = unquote(removeComment(s[1].rstrip('\n')))
-         NorNet_Configuration[parameterName] = parameterValue
-         # print '<' + parameterName + '> = <' + parameterValue + '>'
+   parsedConfigFile = ConfigParser.RawConfigParser()
+   parsedConfigFile.optionxform = str   # Make it case-sensitive!
+   parsedConfigFile.readfp(StringIO.StringIO(iniString))
+   for parameterName in parsedConfigFile.options('root'):
+      parameterValue = parsedConfigFile.get('root', parameterName)
+      if parameterValue.find('\n'):
+         parameterValue = unicode.strip(unquote(removeComment(unicode.replace(parameterValue, '\n', ' '))))
       else:
-         error('Bad configuration in line ' + str(lineNumber) + ': ' + line)
+         parameterValue = removeComment(parameterValue.rstrip('\n'))
+      # print '<' + parameterName + '> = <' + parameterValue + '>'
+      NorNet_Configuration[parameterName] = parameterValue
+
+   # print NorNet_Configuration
 
 
    # ====== Build provider table ============================================
@@ -280,6 +285,14 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
          if ((NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] < NorNet_MinProviderIndex) or
                (NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] > NorNet_MaxProviderIndex)):
             error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex must be in [' + str(NorNet_MinProviderIndex) + '-' + str(NorNet_MaxProviderIndex) + ']!')
+
+      if isinstance(NorNet_Configuration['NorNet_LocalNode_ControlBox'], unicode):
+         if NorNet_Configuration['NorNet_LocalNode_ControlBox'] == 'yes':
+            NorNet_Configuration['NorNet_LocalNode_ControlBox'] = True
+         elif NorNet_Configuration['NorNet_LocalNode_ControlBox'] == 'no':
+            NorNet_Configuration['NorNet_LocalNode_ControlBox'] = False
+      if not isinstance(NorNet_Configuration['NorNet_LocalNode_ControlBox'], bool):
+            error('NorNet_IPv4Prefix NorNet_LocalNode_ControlBox must be "yes" or "no"!')
 
       if NorNet_Configuration['NorNet_LocalNode_Index'] != None:
          try:

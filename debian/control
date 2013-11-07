@@ -25,7 +25,8 @@ Description: NorNet API
 
 Package: nornet-management
 Architecture: any
-Depends: apt-show-versions,
+Depends: apt-file,
+         apt-show-versions,
          autofs,
          colordiff,
          cron,
@@ -58,6 +59,7 @@ Depends: apt-show-versions,
          tftp,
          tracebox,
          traceroute,
+         tree,
          tshark,
          update-motd,
          virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental | virtualbox-guest-utils,
@@ -76,16 +78,19 @@ Description: NorNet Management Tools
 
 Package: nornet-development
 Architecture: any
-Depends: apt-file,
-         autoconf,
+Depends: autoconf,
          automake,
          debhelper,
          devscripts,
          imagemagick,
          kbuild,
+         libbz2-dev,
          libglib2.0-dev,
+         liblua5.2-dev,
+         libpcap-dev,
          libsctp-dev,
          libtool,
+         lua5.2,
          pbuilder,
          pkg-config,
          r-base,
@@ -189,6 +194,49 @@ Description: NorNet Display
  This package contains the packages to set up a display station for the
  results of the monitoring station. It is in fact just a node with a web
  browser and the necessary GUI.
+ .
+ See http://www.nntb.no for details on NorNet!
+
+Package: nornet-gatekeeper
+Architecture: all
+Depends: ipsec-tools,
+         nornet-node,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Gatekeeper
+ This package contains the packages to set up a gatekeeper station for the
+ project presentation. It is in fact just a node with a dependency on the
+ additional packages.
+ .
+ See http://www.nntb.no for details on NorNet!
+
+Package: nornet-websrv
+Architecture: all
+Depends: apache2,
+         nornet-node,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Web Server
+ This package contains the packages to set up a web server station for the
+ project presentation. It is in fact just a node with a dependency on the
+ Apache packages.
+ .
+ See http://www.nntb.no for details on NorNet!
+
+Package: nornet-wikisrv
+Architecture: all
+Depends: imagemagick,
+         mediawiki,
+         mediawiki-extensions,
+         nornet-node,
+         php5-intl,
+         postfix,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Wiki Server
+ This package contains the packages to set up a wiki station for the
+ user-contributed documentation. It is in fact just a node with a
+ dependency on the MediaWiki packages.
  .
  See http://www.nntb.no for details on NorNet!
 

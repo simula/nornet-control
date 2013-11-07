@@ -113,6 +113,15 @@ echo "Kernel Type:         $kernelType"
 echo "Kernel Boot Version: $kernelBootVersion"
 echo "Kernel Disk Version: $kernelDiskVersion"
 
+# Newer Ubuntu releases have an additional linux-image-extra package."
+extrasOptions=""
+if [ "`apt-show-versions | grep linux-image-extra-$kernelBootVersion-$kernelType`" != "" ] ; then
+   extrasOptions="$extrasOptions linux-image-extra-$kernelBootVersion-$kernelType+"
+fi
+if [ "`apt-show-versions | grep linux-image-extra-$kernelDiskVersion-$kernelType`" != "" ] ; then
+   extrasOptions="$extrasOptions linux-image-extra-$kernelDiskVersion-$kernelType+"
+fi
+
 if [ $INTERACTIVE_KERNEL_REMOVAL -eq 0 ] ; then
    sudo DEBIAN_FRONTEND=noninteractive nohup apt-get remove -y -qq --purge \
       'linux-(headers|image)-.*' \
@@ -121,6 +130,7 @@ if [ $INTERACTIVE_KERNEL_REMOVAL -eq 0 ] ; then
       linux-headers-$kernelDiskVersion-$kernelType+ \
       linux-headers-$kernelDiskVersion+ \
       linux-headers-$kernelType+ \
+      $extrasOptions \
       linux-image-$kernelBootVersion-$kernelType+ \
       linux-image-$kernelDiskVersion-$kernelType+ \
       linux-image-$kernelType+ \
@@ -136,6 +146,7 @@ else
       linux-headers-$kernelDiskVersion-$kernelType+ \
       linux-headers-$kernelDiskVersion+ \
       linux-headers-$kernelType+ \
+      $extrasOptions \
       linux-image-$kernelBootVersion-$kernelType+ \
       linux-image-$kernelDiskVersion-$kernelType+ \
       linux-image-$kernelType+ \

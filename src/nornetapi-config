@@ -29,6 +29,12 @@ NorNet_LocalNode_Hostname='fornebu.simula.nornet'
 # networks) of the node:
 NorNet_LocalNode_NorNetInterface='eth0'
 
+# Defines whether the node is a Control Box (i.e. using non-NorNet gateway):
+# yes -> set only route to NorNet network via tunnelbox
+# no  -> set the default route via tunnelbox
+NorNet_LocalNode_ControlBox='no'
+
+
 # ###### NorNet system user #################################################
 # The NorNet user on this system. By default, it is 'nornetpp'.
 # NorNet_LocalNode_NorNetUser='nornetpp'
@@ -84,6 +90,7 @@ NorNet_LocalSite_RADVDServer="on"
 NorNet_Squid_MemoryCache=256
 NorNet_Squid_DiskCache=1024
 NorNet_Squid_MaxObjectSize=16
+#NorNet_Squid_ParentCache="proxy.simula.nornet"
 
 
 # ====== Central Site only! ===============================

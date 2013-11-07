@@ -198,8 +198,8 @@ norNetSetup = [
    'site_pcu'          : [ IPv4Address('158.37.6.194'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Uninett', 'eth1', IPv4Network('158.37.6.195/26'), IPv4Address('158.37.6.193'),
-                           IPv6Network('::/0'),            IPv6Address('::') ]
+      [ 'Uninett', 'eth1', IPv4Network('158.37.6.195/26'),           IPv4Address('158.37.6.193'),
+                           IPv6Network('2001:700:201:F002::195/64'), IPv6Address('2001:700:201:F002::1') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'fløibanen'        ],
@@ -355,7 +355,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 30,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Karlstads Universitet',
    'site_short_name'   : 'KAU',
    'site_url'          : 'http://www.kau.nornet',
@@ -364,16 +364,16 @@ norNetSetup = [
    'site_province'     : 'Värmland',
    'site_country'      : 'Sverige',
    'site_country_code' : 'SE',
-   'site_latitude'     : 59.40396,
-   'site_longitude'    : 13.58201,
-   'site_altitude'     : 50,
+   'site_latitude'     : 59.404101,
+   'site_longitude'    : 13.58189,
+   'site_altitude'     : 60,
    'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ 'Provider Eins', 'eth1', IPv4Network('2.2.2.2/24'),     IPv4Address('2.2.2.1'),
-                                 IPv6Network('::/0'),  IPv6Address('::') ],
-      [ 'Provider Zwei', 'eth2', IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
-                                 IPv6Network('::/0'),  IPv6Address('::') ]
+      [ 'SUNET', 'eth1', IPv4Network('193.10.227.85/29'), IPv4Address('193.10.227.81'),
+                         IPv6Network('::/0'),  IPv6Address('::') ]
+      #[ 'Provider Zwei', 'eth2', IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
+                                 #IPv6Network('::/0'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
       #[ 100, 1, u'smörgåstårta' ],
@@ -430,6 +430,32 @@ norNetSetup = [
                                  IPv6Network('::/0'),  IPv6Address('::') ],
       [ 'Provider Zwei', 'eth2', IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
                                  IPv6Network('::/0'),  IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      #[ 100, 1, u'smörgåstårta' ],
+      #[ 101, 2, u'knäckebröd'   ]
+   ] },
+
+ { 'site_index'        : 120,
+   'site_enabled'      : False,
+   'site_long_name'    : u'Universidade Federal de São Carlos',
+   'site_short_name'   : 'UFSCAR',
+   'site_url'          : 'http://www.ufscar.nornet',
+   'site_domain'       : 'ufscar.nornet',
+   'site_city'         : 'São Paulo',
+   'site_province'     : 'São Paulo',
+   'site_country'      : 'Brazil',
+   'site_country_code' : 'BR',
+   'site_latitude'     : -21.980956,
+   'site_longitude'    : -47.883528,
+   'site_altitude'     : 50,
+   'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ 'Rede Nacional de Ensino e Pesquisa', 'eth1', IPv4Network('200.133.238.124/27'),   IPv4Address('200.133.238.97'),
+                                                      IPv6Network('::/0'),  IPv6Address('::') ],
+      [ 'Academic Network at São Paulo', 'eth2',      IPv4Network('186.219.95.214/24'),    IPv4Address('186.219.95.1'),
+                                                      IPv6Network('::/0'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
       #[ 100, 1, u'smörgåstårta' ],

@@ -1,0 +1,104 @@
+#!/bin/bash -e
+
+SOURCES="/nfs/pub/src"
+REPOSITORIES="/tmp/repos"
+DISTRIBUTIONS="fedora-18-x86_64 fedora-18-i386"
+PACKAGES="bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
+# PACKAGES="netperfmeter"
+
+
+# ====== BibTeXConv =======================================
+bibtexconv_DIR="$SOURCES/misc-trunk/bibtexconv"
+
+# ====== Fractal Generator ================================
+fractgen_DIR="$SOURCES/misc-trunk/fractgen2"
+
+# ====== NetPerfMeter =====================================
+netperfmeter_DIR="$SOURCES/misc-trunk/netperfmeter"
+
+# ====== rsplib ===========================================
+rsplib_DIR="$SOURCES/sctp-trunk/rsplib2"
+
+# ====== SubNetCalc =======================================
+subnetcalc_DIR="$SOURCES/misc-trunk/subnetcalc"
+
+# ====== TSCTP =======================================
+tsctp_DIR="$SOURCES/misc-trunk/tsctp"
+
+
+
+# ###### Main program #######################################################
+
+# ====== Handle arguments ===================================================
+WORKDIR=`pwd`
+UPDATE=0
+while [ "$1" != "" ] ; do
+   if [ "$1" = "-update" ] ; then
+      UPDATE=1
+   else
+      echo >&2 "Usage: $0 [-update]"
+      exit 1
+   fi
+   shift
+done
+
+
+# ====== Prepare output directories =========================================
+echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Preparing repositories in $REPOSITORIES ...\x1b[0m"
+DISTRIBUTION_DIRECTORIES=`echo "$DISTRIBUTIONS" | sed -e "s/-/\//g"`
+echo "D=$DISTRIBUTION_DIRECTORIES"
+for directory in $DISTRIBUTION_DIRECTORIES ; do
+   mkdir -p "$REPOSITORIES/$directory/Packages"
+done
+
+
+# ====== Packaging loop =====================================================
+for package in $PACKAGES ; do
+   echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Packaging $package ...\x1b[0m"
+   package_dir=""
+   eval "package_dir=\$${package}_DIR"
+   if [ "$package_dir" == "" ] ; then
+      echo >&2 "ERROR: Invalid directory given in ${package}_DIR!"
+      exit 1
+   fi
+   cd "$package_dir"
+
+   # ====== Update ==========================================================
+   if [ $UPDATE -eq 1 ] ; then
+      echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: Updating package $package ...\x1b[0m"
+      if svn info >/dev/null 2>&1 ; then
+         svn update
+      else
+         git pull
+      fi
+   fi
+
+   # ====== Upstream sources ================================================
+   eval "package_dir=\$${package}_DIR"
+   echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: Creating RPMs for $package ...\x1b[0m"
+
+   ./make-rpm $DISTRIBUTIONS
+
+   for distribution in $DISTRIBUTIONS ; do
+      rpms=`find /var/lib/mock/$distribution/result -name "$package*.rpm" || true`
+      if [ "$rpms" == "" ] ; then
+         echo >&2 "ERROR: Cannot find RPMs for package $package in /var/lib/mock/$distribution/result!"
+         exit 1
+      fi
+      directory=`echo "$distribution" | sed -e "s/-/\//g"`
+      cp $rpms "$REPOSITORIES/$directory/Packages"
+   done
+
+done
+
+
+# ====== Update repository management files =================================
+echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Updating repositories ...\x1b[0m"
+for directory in $DISTRIBUTION_DIRECTORIES ; do
+   $(repomanage --keep=2 --old "$REPOSITORIES/$directory") | xargs --no-run-if-empty rm -f
+   createrepo "$REPOSITORIES/$directory" --update
+done
+tree $REPOSITORIES/
+
+
+echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Successfully completed package creation!\x1b[0m"

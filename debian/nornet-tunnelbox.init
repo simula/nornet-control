@@ -103,8 +103,8 @@ check_and_configure ()
       sysctl -q -p
    fi
    if [ -e /etc/sysctl.d/10-network-security.conf ] ; then
-      sed -e "s/^[ \t]*net.ipv4.conf.default.rp_filter[ \t]*=[1-9].*$/net.ipv4.conf.default.rp_filter=0   # Set by nornet-tunnelbox's init script/" \
-          -e "s/^[ \t]*net.ipv4.conf.all.rp_filter[ \t]*=[1-9].*$/net.ipv4.conf.all.rp_filter=0   # Set by nornet-tunnelbox's init script/" \
+      sed -e "s/^[ \t]*net.ipv4.conf.default.rp_filter[ \t]*=[0-9].*$/# net.ipv4.conf.default.rp_filter=0   # Set by nornet-tunnelbox's init script/" \
+          -e "s/^[ \t]*net.ipv4.conf.all.rp_filter[ \t]*=[0-9].*$/# net.ipv4.conf.all.rp_filter=0   # Set by nornet-tunnelbox's init script/" \
           </etc/sysctl.d/10-network-security.conf >/etc/nornet/sysctl-network-security-config
       if needs_update /etc/nornet/sysctl-network-security-config /etc/sysctl.d/10-network-security.conf $1 ; then
          mv /etc/nornet/sysctl-network-security-config /etc/sysctl.d/10-network-security.conf
@@ -197,7 +197,7 @@ check_and_configure ()
       if needs_update squid-config /etc/squid3/squid.conf $1 ; then
          echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Squid server configuration has been updated => restarting Squid service ...\x1b[0m"
          cp squid-config /etc/squid3/squid.conf
-         service squid3 reload >/dev/null || true
+         service squid3 restart >/dev/null || true
       fi
 
       # ====== Apply registrar configuration update =========================

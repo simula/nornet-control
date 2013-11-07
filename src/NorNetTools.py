@@ -228,9 +228,26 @@ def makeNameFromUnicode(name, isDNSName = True):
          asciiName = asciiName + 'ss'
       elif (unicodeName[i] == u'å'):
          asciiName = asciiName + 'aa'
+      elif (unicodeName[i] == u'ã'):
+         asciiName = asciiName + 'a'
+      elif (unicodeName[i] == u'ô'):
+         asciiName = asciiName + 'o'
+      elif (unicodeName[i] == u'ñ'):
+         asciiName = asciiName + 'n'
+      elif (unicodeName[i] == u'ž'):
+         asciiName = asciiName + 'z'
+      elif (unicodeName[i] == u'š'):
+         asciiName = asciiName + 's'
+      elif (unicodeName[i] == u'ū'):
+         asciiName = asciiName + 'u'
+      elif ( (unicodeName[i] == u'č') or (unicodeName[i] == u'ć') or (unicodeName[i] == u'ç')):
+         asciiName = asciiName + 'c'
+      elif ( (unicodeName[i] == u'é') or (unicodeName[i] == u'è') or \
+             (unicodeName[i] == u'ê') or (unicodeName[i] == u'ë')) :
+         asciiName = asciiName + 'e'
       else:
          error('Unhandled character "' + unicodeName[i] + '" in name ' + unicodeName)
-         
+
    dnsName = {
       'utf8'     : unicodeName,
       'ascii'    : str(asciiName),
@@ -259,7 +276,7 @@ def changeDir(path):
 
 # ###### Create, or update existing, symlink ################################
 def makeSymlink(linkName, newLinkTarget):
-   existingLinkTarget = None            
+   existingLinkTarget = None
    try:
       existingLinkTarget = os.readlink(linkName)
    except:
