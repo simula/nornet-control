@@ -6,4 +6,12 @@ if [ "$PREFIX" = "" ] ; then
    exit 1
 fi
 
-openssl req -x509 -nodes -newkey rsa:8192 -sha512 -keyout "$PREFIX.key" -out "$PREFIX.crt"
+KEYLEN=8192
+
+# Create key and certificate (CRT)
+openssl req -config nntb.config -x509 -nodes -days 380 -newkey rsa:$KEYLEN -sha512 -keyout "$PREFIX.key" -out "$PREFIX.crt"
+openssl x509 -noout -text -in "$PREFIX.crt"
+
+# Create certificate signing request (CSR)
+openssl req -config nntb.config -new -key "$PREFIX.key" -out "$PREFIX.csr"
+openssl req -noout -text -in "$PREFIX.csr"
