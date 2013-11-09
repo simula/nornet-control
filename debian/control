@@ -79,7 +79,8 @@ Description: NorNet Management Tools
 Package: nornet-development
 Architecture: any
 Depends: autoconf,
-         automake,
+         automake
+python-pythonmagick,
          debhelper,
          devscripts,
          imagemagick,
@@ -94,7 +95,7 @@ Depends: autoconf,
          pbuilder,
          pkg-config,
          r-base,
-         ${misc:Depends},
+         ${misc: Depends},
          ${shlibs:Depends}
 Description: NorNet Development Tools
  This metapackage contains basic software nor NorNet development. The
