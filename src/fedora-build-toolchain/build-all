@@ -3,8 +3,8 @@
 SOURCES="/nfs/pub/src"
 REPOSITORIES="/tmp/repos"
 DISTRIBUTIONS="fedora-18-x86_64 fedora-18-i386"
-PACKAGES="bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
-# PACKAGES="netperfmeter"
+PACKAGES="bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp kernel"
+#PACKAGES="netperfmeter"
 
 
 # ====== BibTeXConv =======================================
@@ -22,8 +22,11 @@ rsplib_DIR="$SOURCES/sctp-trunk/rsplib2"
 # ====== SubNetCalc =======================================
 subnetcalc_DIR="$SOURCES/misc-trunk/subnetcalc"
 
-# ====== TSCTP =======================================
+# ====== TSCTP ============================================
 tsctp_DIR="$SOURCES/misc-trunk/tsctp"
+
+# ====== MPTCP Kernel =====================================
+kernel_DIR="$SOURCES/misc-trunk/mptcp-kernel"
 
 
 
