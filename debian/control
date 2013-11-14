@@ -55,6 +55,7 @@ Depends: apt-file,
          rsplib-tools,
          smartmontools,
          snmp,
+         sslscan,
          subnetcalc,
          tftp,
          tracebox,
@@ -79,8 +80,7 @@ Description: NorNet Management Tools
 Package: nornet-development
 Architecture: any
 Depends: autoconf,
-         automake
-python-pythonmagick,
+         automake,
          debhelper,
          devscripts,
          imagemagick,
@@ -94,8 +94,9 @@ python-pythonmagick,
          lua5.2,
          pbuilder,
          pkg-config,
+         python-pythonmagick,
          r-base,
-         ${misc: Depends},
+         ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Development Tools
  This metapackage contains basic software nor NorNet development. The
@@ -215,6 +216,7 @@ Package: nornet-websrv
 Architecture: all
 Depends: apache2,
          nornet-node,
+         wdg-html-validator,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Web Server
@@ -229,7 +231,7 @@ Architecture: all
 Depends: imagemagick,
          mediawiki,
          mediawiki-extensions,
-         nornet-node,
+         nornet-websrv,
          php5-intl,
          postfix,
          ${misc:Depends},
