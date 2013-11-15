@@ -215,6 +215,11 @@ Description: NorNet Gatekeeper
 Package: nornet-websrv
 Architecture: all
 Depends: apache2,
+         awstats,
+         geoip-database-contrib,
+         libgeo-ip-perl,
+         libnet-dns-perl,
+         libnet-ip-perl,
          nornet-node,
          wdg-html-validator,
          ${misc:Depends},

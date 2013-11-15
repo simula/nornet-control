@@ -100,6 +100,8 @@ cp src/Monitor/*.cfg $PACKAGE-$UPSTREAM_VERSION/Monitor/
 mkdir $PACKAGE-$UPSTREAM_VERSION/WebServer
 cp src/WebServer/000-default $PACKAGE-$UPSTREAM_VERSION/WebServer/
 cp src/WebServer/make-certificate $PACKAGE-$UPSTREAM_VERSION/WebServer/
+cp src/WebServer/make-cipher-suites $PACKAGE-$UPSTREAM_VERSION/WebServer/
+cp src/WebServer/favicon.ico $PACKAGE-$UPSTREAM_VERSION/WebServer/
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics
