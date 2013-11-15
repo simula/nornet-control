@@ -1,7 +1,7 @@
-NameVirtualHost *:80
+# NameVirtualHost *:80
 
 <VirtualHost *:80>
-	ServerName www.nntb.no
+	ServerName nntb.no
 	ServerAlias www.nntb.no
 	Redirect permanent / https://www.nntb.no/
 </VirtualHost>
@@ -14,11 +14,7 @@ NameVirtualHost *:80
 	SSLOptions +StrictRequire
 	SSLProtocol all -SSLv2 -SSLv3 +TLSv1
 	SSLHonorCipherOrder on
-
-        # Ciphers: TLS 1.2 only:
-	# SSLCipherSuite ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:ECDH-RSA-AES256-SHA384:ECDH-RSA-AES256-GCM-SHA384:ECDH-ECDSA-AES256-SHA384:ECDH-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:DH-RSA-AES256-GCM-SHA384:AES256-GCM-SHA384
-	# Ciphers: TLS 1.2 + compatibility:
-	SSLCipherSuite ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:ECDH-RSA-AES256-SHA384:ECDH-RSA-AES256-GCM-SHA384:ECDH-ECDSA-AES256-SHA384:ECDH-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:DH-RSA-AES256-GCM-SHA384:AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:ECDH-RSA-AES256-SHA:ECDH-ECDSA-AES256-SHA:DHE-RSA-AES256-SHA:DH-RSA-AES256-SHA:AES256-SHA
+	SSLCipherSuite ECDHE-ECDSA-AES256-GCM-SHA384:ECDH-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDH-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDH-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDH-RSA-AES256-SHA384:DHE-RSA-AES256-GCM-SHA384:DHE-DSS-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-SHA:ECDH-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:ECDH-RSA-AES256-SHA:DHE-RSA-AES256-SHA:DHE-DSS-AES256-SHA:AES256-SHA
 
 	SSLCertificateFile /etc/ssl/nntb-signed.crt
 	SSLCertificateKeyFile /etc/ssl/nntb.key
@@ -54,4 +50,17 @@ NameVirtualHost *:80
 	LogLevel warn
 
 	CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+	# AWStats
+	Alias /awstatsclasses "/usr/share/awstats/lib/"
+	Alias /awstats-icon "/usr/share/awstats/icon/"
+	Alias /awstatscss "/usr/share/doc/awstats/examples/css"
+	ScriptAlias /awstats/ /usr/lib/cgi-bin/
+	<Location /awstats/>
+		AuthType Basic
+		AuthName "AWStats Access Control"
+		AuthUserFile /etc/apache2/htpasswd
+		Require valid-user
+	</Location>
+
 </VirtualHost>
