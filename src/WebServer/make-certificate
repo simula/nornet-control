@@ -1,17 +1,45 @@
-#!/bin/bash
+#!/bin/bash -e
 
+if [ $# -lt 2 ] ; then
+   echo >&2 "Usage: $0 file_name_prefix rsa|dsa|ec|keyexchange"
+   exit 1
+fi
 PREFIX="$1"
-if [ "$PREFIX" = "" ] ; then
-   echo >&2 "Usage: $0 file_name_prefix"
+TYPE="$2"
+
+KEYLEN=8192
+EKEYLEN=4096
+CURVE="sect571k1"
+DAYS=380
+HASH_PARAM="-sha512"
+
+
+# Create key
+if [ "$TYPE" = "rsa" ] ; then
+   openssl genrsa -out $PREFIX.key $KEYLEN
+elif [ "$TYPE" = "dsa" ] ; then
+   openssl dsaparam -genkey $KEYLEN -out $PREFIX.key
+   HASH_PARAM="-sha256"
+elif [ "$TYPE" = "ec" ] ; then
+   openssl ecparam -name $CURVE -genkey -out $PREFIX.key
+elif [ "$TYPE" = "keyexchange" ] ; then
+   # Key exchange parameters
+   openssl dhparam -2 $EKEYLEN -out $PREFIX.dhparam
+   openssl ecparam -name $CURVE -out $PREFIX.ecparam
+   exit 0
+else
+   echo >&2 "ERROR: Bad type $TYPE!"
    exit 1
 fi
 
-KEYLEN=8192
-
-# Create key and certificate (CRT)
-openssl req -config nntb.config -x509 -nodes -days 380 -newkey rsa:$KEYLEN -sha512 -keyout "$PREFIX.key" -out "$PREFIX.crt"
-openssl x509 -noout -text -in "$PREFIX.crt"
 
 # Create certificate signing request (CSR)
-openssl req -config nntb.config -new -key "$PREFIX.key" -out "$PREFIX.csr"
+openssl req -config nntb.config -new -utf8 $HASH_PARAM \
+            -key "$PREFIX.key" -out "$PREFIX.csr"
 openssl req -noout -text -in "$PREFIX.csr"
+
+# Create certificate (CRT)
+openssl req -config nntb.config -new -utf8 $HASH_PARAM -x509 -days $DAYS \
+            -in "$PREFIX.csr" \
+            -key "$PREFIX.key" -out "$PREFIX.crt"
+openssl x509 -noout -text -in "$PREFIX.crt"
