@@ -34,7 +34,7 @@ fi
 
 
 # Create certificate signing request (CSR)
-openssl req -config nntb.config -new -utf8 $HASH_PARAM \
+openssl req -config nntb.config -new -utf8 $HASH_PARAM -outform PEM \
             -key "$PREFIX.key" -out "$PREFIX.csr"
 openssl req -noout -text -in "$PREFIX.csr"
 
