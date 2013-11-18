@@ -4,8 +4,7 @@ SOURCES="/nfs/pub/src"
 REPOSITORIES="$HOME/repos"
 DISTRIBUTIONS="fedora-18-x86_64"   # fedora-18-i386"
 
-#PACKAGES="kernel bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
-PACKAGES="transforward ipfwroot"
+PACKAGES="kernel bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
 
 
 # ====== BibTeXConv =======================================
@@ -29,11 +28,11 @@ tsctp_DIR="$SOURCES/misc-trunk/tsctp"
 # ====== MPTCP Kernel =====================================
 kernel_DIR="$SOURCES/misc-trunk/mptcp-kernel"
 
-# ====== transforward =====================================
-transforward_DIR="`pwd`/transforward"
-
-# ====== ipfwroot =========================================
-ipfwroot_DIR="`pwd`/ipfwroot"
+# # ====== transforward =====================================
+# transforward_DIR="`pwd`/transforward"
+# 
+# # ====== ipfwroot =========================================
+# ipfwroot_DIR="`pwd`/ipfwroot"
 
 
 
