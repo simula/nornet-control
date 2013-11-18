@@ -1,0 +1,6 @@
+#!/bin/bash -e
+
+SOURCES="/nfs/pub/src"
+REPOSITORIES="$HOME/repos"
+DISTRIBUTIONS="fedora-18-x86_64"   # fedora-18-i386"
+
