@@ -31,6 +31,13 @@ AES256-SHA
 
 EOF
 
-echo -en "\tSSLCipherSuite "
+echo -en "SSLCipherSuite "
 cat ciphers.txt | sed -e "/^#/d" -e "/^[ \t]*$/d" | tr '\n' ':' | sed -e "s/:$//g"
 echo ""
+echo ""
+
+cat ciphers.txt | sed -e "/^#/d" -e "/^[ \t]*$/d" | (
+   while read x ; do
+      openssl ciphers -v "$x" || echo "BAD!"
+   done
+)
