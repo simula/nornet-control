@@ -13,9 +13,11 @@ ECDH-ECDSA-AES256-SHA384
 ECDHE-RSA-AES256-SHA384
 ECDH-RSA-AES256-SHA384
 
-DHE-RSA-AES256-GCM-SHA384
-DHE-DSS-AES256-GCM-SHA384
+# Need DH parameter to increase key size (Apache 2.4.7+)!
+# DHE-RSA-AES256-GCM-SHA384
+# DHE-DSS-AES256-GCM-SHA384
 
+# No forward security!
 # AES256-GCM-SHA384
 
 # ------ TLS 1.0 ------------------------------------------
@@ -24,9 +26,11 @@ ECDH-ECDSA-AES256-SHA
 ECDHE-RSA-AES256-SHA
 ECDH-RSA-AES256-SHA
 
-DHE-RSA-AES256-SHA
-DHE-DSS-AES256-SHA
+# Need DH parameter to increase key size (Apache 2.4.7+)!
+# DHE-RSA-AES256-SHA
+# DHE-DSS-AES256-SHA
 
+# No forward security! FALLBACK for old browsers!
 AES256-SHA
 
 EOF
