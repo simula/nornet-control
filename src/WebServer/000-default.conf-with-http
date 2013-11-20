@@ -3,6 +3,9 @@
 SSLUseStapling on
 SSLStaplingCache "shmcb:logs/stapling_cache(128000)"
 
+
+# !!! MacOS X does not like secure RSA keys.
+# !!! Do not redirect everything to HTTPS.
 #<VirtualHost *:80>
 #	ServerSignature off
 #	ServerName nntb.no
@@ -17,6 +20,14 @@ SSLStaplingCache "shmcb:logs/stapling_cache(128000)"
 	ServerAlias www.nntb.no
 
 	DocumentRoot /var/www
+
+
+	# !!! Redirect only non-Mac-OS traffic to HTTPS.
+	RewriteEngine on
+	RewriteCond %{HTTP_USER_AGENT}  !(^(.*)Mac.OS.X(.*)$)   [NC]
+	RewriteRule  ^/(.*)$       https://www.nntb.no/$1	[L,R=301]
+	RewriteRule  ^-$           https://www.nntb.no/-	[L,R=301]
+
 
 	<Directory />
 		Options FollowSymLinks Indexes MultiViews
