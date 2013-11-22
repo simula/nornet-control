@@ -27,4 +27,7 @@ fi
 LOG_FILE="$1"
 
 # Show errors
-grep "^Real URL" "$LOG_FILE" | sed -e "s/^Real URL[ \t]*//g" | sort -u
+(
+ grep "^Real URL"  "$LOG_FILE" | sed -e "s/^Real URL[ \t]*//g"  | sort -u
+ grep "^webcheck:" "$LOG_FILE" | sed -e "s/^webcheck:[ \t]*//g" | sort -u
+) | grep "^http"
