@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 #
 # Link-Checker
 # Copyright (C) 2013 by Thomas Dreibholz
