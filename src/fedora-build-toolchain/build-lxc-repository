@@ -1,6 +1,66 @@
 #!/bin/bash -e
+#
+# Build LXC Repository
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
 
-SOURCES="/nfs/pub/src"
-REPOSITORIES="$HOME/repos"
-DISTRIBUTIONS="fedora-18-x86_64"   # fedora-18-i386"
+SOURCES="$HOME/src/build"
+REPOSITORIES="$HOME/repos/lxc"
+DISTRIBUTIONS="fedora/18/x86_64"
 
+CLEAN=0
+if [ "$1" = "-clean" ] ; then
+   CLEAN=1
+elif [ "$1" = "-noclean" ] ; then
+   CLEAN=0
+else
+   echo >&2 "Usage: $0 -clean|-noclean [make_option ...]"
+   exit 1
+fi
+shift
+
+
+# ====== Build packages =====================================================
+echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Building packages ...\x1b[0m"
+mkdir -p "$REPOSITORIES/$DISTRIBUTIONS/RPMS"
+mkdir -p "$REPOSITORIES/$DISTRIBUTIONS/SRPMS"
+
+cd "$SOURCES"
+if [ $CLEAN -eq 1 ] ; then
+   sudo PLDISTRO=lxc make distclean || true
+   sudo make PLDISTRO=lxc stage1=true
+fi
+sudo PLDISTRO=lxc make -j12 $@
+
+
+# ====== Update repository's files ==========================================
+echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Copying packages to repository ...\x1b[0m"
+
+pwd
+cp -r RPMS/x86_64/* $REPOSITORIES/$DISTRIBUTIONS/RPMS/
+cp -r RPMS/noarch/* $REPOSITORIES/$DISTRIBUTIONS/RPMS/
+cp -r SRPMS/* $REPOSITORIES/$DISTRIBUTIONS/SRPMS/
+
+
+# ====== Update repository management files =================================
+echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Updating repository ...\x1b[0m"
+$(repomanage --keep=2 --old "$REPOSITORIES/$DISTRIBUTIONS") | xargs --no-run-if-empty rm -f
+createrepo "$REPOSITORIES/$DISTRIBUTIONS" --update
+tree $REPOSITORIES/
+
+echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Successfully completed package creation!\x1b[0m"
