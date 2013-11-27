@@ -376,8 +376,10 @@ norNetSetup = [
                                  #IPv6Network('::/0'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
-      #[ 100, 1, u'smörgåstårta' ],
-      #[ 101, 2, u'knäckebröd'   ]
+      [ 100, 1, u'vänern'           ],
+      [ 101, 2, u'mariebergsskogen' ],
+      [ 102, 3, u'klarälven'        ],
+      [ 103, 4, u'stenbron'         ]
    ] },
 
  { 'site_index'        : 88,
@@ -432,10 +434,8 @@ norNetSetup = [
                                  IPv6Network('::/0'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'vänern'           ],
-      [ 101, 2, u'mariebergsskogen' ],
-      [ 102, 3, u'klarälven'        ],
-      [ 103, 4, u'stenbron'         ]
+      #[ 100, 1, u'smörgåstårta' ],
+      #[ 101, 2, u'knäckebröd'   ]
    ] },
 
  { 'site_index'        : 120,
