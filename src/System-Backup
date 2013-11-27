@@ -131,6 +131,20 @@ if [ -d /etc/bind ] ; then
    cp -r /etc/bind $newBackup/bind || true
 fi
 
+# ------ WWW/Wiki -----------------------
+if [ -d /etc/apache2 ] ; then
+   cp -r /etc/apache2 $newBackup/apache2 || true
+fi
+if [ -e /etc/php5/cli/php.ini ] ; then
+   mkdir $newBackup/php5 || true
+   cp /etc/php5/cli/php.ini $newBackup/php5 || true
+fi
+if [ -d /etc/mediawiki ] ; then
+   mkdir $newBackup/mediawiki || true
+   cp /etc/mediawiki/*.conf $newBackup/mediawiki/ || true
+   cp /etc/mediawiki/*.php  $newBackup/mediawiki/ || true
+fi
+
 # ------ Some system information --------
 mkdir -p $newBackup/sysinfo
 if [ -e /usr/bin/apt-show-versions ] ; then
