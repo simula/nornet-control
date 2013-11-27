@@ -1314,6 +1314,36 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
    tunnelboxFile.write('"\n')
    tunnelboxFile.close()
 
+# ###### Generate collectd configuration ###################################
+
+def makeCollectdPingConfig(collectdPingConfigFileName='collectd-TunnelBox-ping-config'):
+   log('Making collectd tunnelbox ping configuration for ' + localSite['site_long_name'] + ' ...')
+   localSiteIndex = localSite['site_index']
+   localProviderList = getNorNetProvidersForSite(localSite)
+   collectdPingConfigFile = codecs.open(collectdPingConfigFileName, 'w', 'utf-8')
+   collectdPingConfigFile.write("LoadPlugin ping\n")
+   for localProviderIndex in localProviderList:
+      localProvider = localProviderList[localProviderIndex]
+      for version in [ 4 ]:
+      #for version in [ 4, 6 ]:
+         collectdPingConfigFile.write("<Plugin ping>\n")
+         localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
+         tunnelboxAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
+         collectdPingConfigFile.write('SourceAddress "' + str(tunnelboxAddress.ip) + '"\n')
+         for remoteSiteIndex in fullSiteList:
+            remoteSite = fullSiteList[remoteSiteIndex]
+            if remoteSite['site_enabled'] == False:
+               continue 
+            if remoteSiteIndex == localSiteIndex:
+               continue
+            remoteProviderList = getNorNetProvidersForSite(remoteSite)
+            for remoteProviderIndex in remoteProviderList:
+              remoteProvider = remoteProviderList[remoteProviderIndex]
+              remoteProviderList = getNorNetProvidersForSite(remoteSite)
+              address = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
+              collectdPingConfigFile.write('Host "' + str(address.ip) + '"\n')
+         collectdPingConfigFile.write("</Plugin>\n")
+   collectdPingConfigFile.close()
 
 
 # ###########################################################################
@@ -1457,3 +1487,12 @@ makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
 makeRADVDConfiguration(localSite)
 makeSquidConfiguration(localSite)
 makeRegistrarConfiguration(localSite)
+
+# ====== Collectd configration ==========================================
+log('Making collectd general configuration for ' + localSite['site_long_name'] + ' ...')
+makeCollectdGeneralConfig()   
+
+log('Making collectd network configuration for ' + localSite['site_long_name'] + ' ...')
+makeCollectdNetworkConfig(NorNet_Configuration['collectd_server_name'])   
+
+makeCollectdPingConfig()
