@@ -239,7 +239,7 @@ check_and_configure ()
 
       # ===== Apply Collectd network configuration update ====================
       NCF="collectd-TunnelBox-ping-config"
-      CF="/etc/collectd.d/ping.conf"
+      CF="/etc/collectd.d/Tunnelbox-ping.conf"
       rm -f ${NCF}
       mv updated-tunnelbox-config/${NCF} .
       if needs_update ${NCF} ${CF} $1 ; then
