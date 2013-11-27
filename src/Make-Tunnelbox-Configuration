@@ -1324,8 +1324,7 @@ def makeCollectdPingConfig(collectdPingConfigFileName='collectd-TunnelBox-ping-c
    collectdPingConfigFile.write("LoadPlugin ping\n")
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
-      for version in [ 4 ]:
-      #for version in [ 4, 6 ]:
+      for version in [ 4, 6 ]:
          collectdPingConfigFile.write("<Plugin ping>\n")
          localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
          tunnelboxAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
