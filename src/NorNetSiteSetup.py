@@ -238,7 +238,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
       i = 0
       for provider in providerList:
          if i <= NorNet_MaxProviders:
-            providerName = str(provider[0])
+            providerName = unicode(provider[0])
             providerIndex = -1
             for p in NorNet_ProviderList:
                if NorNet_ProviderList[p][0] == providerName:
