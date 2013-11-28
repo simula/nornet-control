@@ -96,6 +96,7 @@ Depends: autoconf,
          pkg-config,
          python-pythonmagick,
          r-base,
+         subversion,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Development Tools

@@ -199,7 +199,10 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ 'Uninett', 'eth1', IPv4Network('158.37.6.195/26'),           IPv4Address('158.37.6.193'),
-                           IPv6Network('2001:700:201:F002::195/64'), IPv6Address('2001:700:201:F002::1') ]
+                           IPv6Network('2001:700:201:F002::195/64'), IPv6Address('2001:700:201:F002::1') ],
+      [ 'Bergenshalvøens Kommunale Kraftselskap',
+                   'eth2', IPv4Network('62.97.202.70/30'),           IPv4Address('62.97.202.69'),
+                           IPv6Network('2A00:14D8:1001:556::2/126'), IPv6Address('2A00:14D8:1001:556::1') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'fløibanen'        ],
