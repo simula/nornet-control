@@ -1,7 +1,14 @@
+cfengine3 (3.5.2-1+nmu1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * New upstream release
+
+ -- Cfengine Debian Team <debian-team@cfengine.com>  Mon, 14 Oct 2013 12:41:51 -0700
+
 cfengine3 (3.2.4-2+nmu1) unstable; urgency=medium
 
   * Non-maintainer upload.
-  * Include full text of the Frontier Artistic License (closes: #701864). 
+  * Include full text of the Frontier Artistic License (closes: #701864).
 
  -- Michael Gilbert <mgilbert@debian.org>  Sun, 03 Mar 2013 08:53:27 +0000
 
@@ -56,7 +63,7 @@ cfengine3 (3.1.5~b1-1) unstable; urgency=low
     + fhs-compliance: patch from Andreas Larsson to include a missing line to
       be fully compliant with FHS (Closes: 619580)
     + remove-man-errors: s/sucessfully/successfully/g
-  * debian/watch: removed the repack for copyright issues, the pdf is not 
+  * debian/watch: removed the repack for copyright issues, the pdf is not
     shipped anymore by upstream
   * debian/copyright:
     + removing any reference to repack.sh and its licenses
@@ -139,19 +146,19 @@ cfengine3 (3.0.4+dfsg-1) unstable; urgency=low
 
 cfengine3 (3.0.2+dfsg-2) unstable; urgency=low
 
-  * debian/control: 
+  * debian/control:
     + adding missing full stops (Closes: 550108)
     + updating my mail to antonio@debian.org
     + adding a B-D to libpcre3-dev (Closes: 552520)
     + cfengine2 no longer in Conflicts (Closes: 555479)
   * debian/rules: do not compress .cf files
   * debian/patches:
-    + fix-example-paths added, to adapt examples to our FHS 
+    + fix-example-paths added, to adapt examples to our FHS
       compliant paths (Closes: 552144)
     + remove-man-errors: fix for some minor typos (Closes: 552473)
     + rename-doesnt-fail: prevent failures if rename fails (Closes: 555932)
     + fix-error-typos: to fix a small typo in cf-agent, so lintian is happy
-  * debian/README.Debian: 
+  * debian/README.Debian:
     + warn people to modify site.cf before starting the daemons
 
  -- Antonio Radici <antonio@debian.org>  Tue, 08 Dec 2009 16:19:24 +0000
