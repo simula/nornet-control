@@ -2,17 +2,27 @@ Source: cfengine3
 Section: admin
 Priority: optional
 Maintainer: Antonio Radici <antonio@debian.org>
-Build-Depends: debhelper (>= 7.0.50), autotools-dev, libssl-dev,
- flex, bison, libpcre3-dev, dh-autoreconf,  libtokyocabinet-dev, libvirt-dev, libacl1-dev,
-  libmysqlclient-dev, libpq-dev, libxml2-dev, quilt
-Standards-Version: 3.9.3
+Build-Depends: autotools-dev,
+               bison,
+               debhelper (>= 7.0.50),
+               dh-autoreconf,
+               flex,
+               libacl1-dev,
+               libmysqlclient-dev,
+               libpcre3-dev,
+               libpq-dev,
+               libssl-dev,
+               libtokyocabinet-dev,
+               libvirt-dev,
+               libxml2-dev,
+               quilt
+Standards-Version: 3.9.4
 Homepage: http://www.cfengine.org/
-Vcs-Browser: http://git.debian.org/?p=collab-maint/cfengine3.git
-Vcs-Git: git://git.debian.org/git/collab-maint/cfengine3.git
 
 Package: cfengine3
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
 Description: tool for configuring and maintaining network machines
  Cfengine is a suite of programs for integrated autonomic management
  of either individual or networked computers.
@@ -28,7 +38,9 @@ Package: cfengine3-dbg
 Architecture: any
 Section: debug
 Priority: extra
-Depends: cfengine3 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Depends: cfengine3 (= ${binary:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends}
 Description: debugging symbols for cfengine3
  The main purpose of cfengine is to allow the system administrator
  to create a single central file which will define how every host
