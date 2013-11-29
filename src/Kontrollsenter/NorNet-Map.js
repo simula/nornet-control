@@ -48,6 +48,12 @@ function makeMap(latitude, longitude, zoomLevel)
    window.maplayers     = new Array();   // All layers
    window.mapbaselayers = new Array();   // Only base layers
 
+   // ====== Create layers for markers and vectors ==========================
+   window.mapmarkers = new OpenLayers.Layer.Markers("NorNet Sites");
+   window.maplayers.push(window.mapmarkers);
+   window.mapvectors = new OpenLayers.Layer.Vector("NorNet Connections");
+   window.maplayers.push(window.mapvectors);
+
    // ====== Create OSM map =================================================
    window.mapnik = new OpenLayers.Layer.OSM.Mapnik("Open Street Map");
    window.mapnik.setOpacity(1.0);
@@ -117,12 +123,6 @@ function makeMap(latitude, longitude, zoomLevel)
                                                     { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
    window.wsnow.setVisibility(false);
    window.maplayers.push(wsnow);
-
-   // ====== Create layers for markers and vectors ==========================
-   window.mapvectors = new OpenLayers.Layer.Vector("Connections");
-   window.maplayers.push(window.mapvectors);
-   window.mapmarkers = new OpenLayers.Layer.Markers("Sites");
-   window.maplayers.push(window.mapmarkers);
 
    // ====== Create the map =================================================
    window.maplayers.reverse();
