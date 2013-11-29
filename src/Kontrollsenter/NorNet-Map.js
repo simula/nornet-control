@@ -79,26 +79,44 @@ function makeMap(latitude, longitude, zoomLevel)
    window.maplayers.push(window.bingmap2);
    window.mapbaselayers.push(window.bingmap2);
 
-   // ====== ... ============================================================
-//    window.wmsmap1 = new OpenLayers.Layer.WMS( "OpenLayers WMS",
-//                                               "http://vmap0.tiles.osgeo.org/wms/vmap0", {layers: 'basic'} );
-//    window.maplayers.push(window.wmsmap1);
-//    window.mapbaselayers.push(window.wmsmap1);
-
    // ====== OpenWeather overlay ============================================
-   // window.wstations = new OpenLayers.Layer.Vector.OWMClusterStations("Stations");
-   // window.maplayers.push(wstations);
-
    window.wcity = new OpenLayers.Layer.Vector.OWMWeather("Weather");
    window.maplayers.push(wcity);
+   
+   window.wstations = new OpenLayers.Layer.Vector.OWMStations("Stations");
+   window.wstations.setVisibility(false);
+   window.maplayers.push(wstations);
 
-   window.wpercipitation = new OpenLayers.Layer.OWMComposite('PR', "Precipitation forecasts",  { opacity: 0.2 } );
-   window.wpercipitation.setVisibility(false);
-   window.maplayers.push(wpercipitation);
 
-   window.wclouds = new OpenLayers.Layer.OWMComposite('NT', "Clouds forecasts",  { opacity: 0.2 } );
+   window.wclouds = new OpenLayers.Layer.XYZ("Clouds", "http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png",
+                                             { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
    window.wclouds.setVisibility(false);
    window.maplayers.push(wclouds);
+
+   window.wpressure = new OpenLayers.Layer.XYZ("Pressure", "http://${s}.tile.openweathermap.org/map/pressure_cntr/${z}/${x}/${y}.png",
+                                               { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
+   window.wpressure.setVisibility(false);
+   window.maplayers.push(wpressure);
+
+   window.wwind = new OpenLayers.Layer.XYZ("Wind", "http://${s}.tile.openweathermap.org/map/wind/${z}/${x}/${y}.png",
+                                               { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
+   window.wwind.setVisibility(false);
+   window.maplayers.push(wwind);
+
+   window.wtemperature = new OpenLayers.Layer.XYZ("Temperature", "http://${s}.tile.openweathermap.org/map/temp/${z}/${x}/${y}.png",
+                                                    { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
+   window.wtemperature.setVisibility(false);
+   window.maplayers.push(wtemperature);
+
+   window.wrain = new OpenLayers.Layer.XYZ("Rain", "http://${s}.tile.openweathermap.org/map/rain/${z}/${x}/${y}.png",
+                                                    { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
+   window.wrain.setVisibility(false);
+   window.maplayers.push(wrain);
+
+   window.wsnow = new OpenLayers.Layer.XYZ("Snow", "http://${s}.tile.openweathermap.org/map/snow/${z}/${x}/${y}.png",
+                                                    { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
+   window.wsnow.setVisibility(false);
+   window.maplayers.push(wsnow);
 
    // ====== Create layers for markers and vectors ==========================
    window.mapvectors = new OpenLayers.Layer.Vector("Connections");
