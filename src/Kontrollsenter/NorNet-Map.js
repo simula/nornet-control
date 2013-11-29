@@ -107,6 +107,7 @@ function makeMap(latitude, longitude, zoomLevel)
    window.maplayers.push(window.mapmarkers);
 
    // ====== Create the map =================================================
+   window.maplayers.reverse();
    window.map = new OpenLayers.Map({
       div:               "map_canvas",
       units:             "m",
