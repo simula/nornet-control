@@ -48,11 +48,19 @@ function makeMap(latitude, longitude, zoomLevel)
    window.maplayers     = new Array();   // All layers
    window.mapbaselayers = new Array();   // Only base layers
 
-   // ====== Create OSM map (Mapnik tiles) ==================================
-   window.mapnik    = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+   // ====== Create OSM map =================================================
+   window.mapnik = new OpenLayers.Layer.OSM.Mapnik("Open Street Map");
    window.mapnik.setOpacity(1.0);
    window.maplayers.push(window.mapnik);
    window.mapbaselayers.push(window.googlemap2);
+
+   window.cyclemap = new OpenLayers.Layer.OSM.CycleMap("Open Cycle Map");
+   window.cyclemap.setOpacity(1.0);
+   window.maplayers.push(window.cyclemap);
+
+   window.transportmap = new OpenLayers.Layer.OSM.TransportMap("Open Transport Map");
+   window.transportmap.setOpacity(1.0);
+   window.maplayers.push(window.transportmap);
 
    // ====== Create Google map ==============================================
    window.googlemap1 = new OpenLayers.Layer.Google("Google Satellite", { type: google.maps.MapTypeId.HYBRID });
