@@ -1,0 +1,43 @@
+#!/bin/bash -e
+
+add-group ()
+{
+   FILE="$1"
+   NAME="$2"
+   ID="$3"
+   shift ; shift ; shift
+   if [ -e "$1" ] ; then
+      yum-group-manager --merge "$FILE" "--name=$NAME" "--id=$ID" $@
+   else
+      yum-group-manager --save  "$FILE" "--name=$NAME" "--id=$ID" $@
+   fi
+}
+
+
+rm -f groups.xml
+
+add-group groups.xml "extensionNorNetManagement" "extensionnornetmanagement" \
+   rpm-sign \
+   bind-utils \
+   colordiff \
+   ethtool \
+   git \
+   htop \
+   idn \
+   joe \
+   kernel-modules-extra \
+   lksctp-tools \
+   net-snmp-utils \
+   nfs-utils \
+   nmap \
+   nuttcp \
+   tcpdump \
+   tftp \
+   whois \
+   xauth \
+   yum-plugin-fastestmirror
+
+add-group groups.xml "extensionNorNetNode" "extensionnornetnode" \
+   openssh-server \
+   open-vm-tools \
+   smartmontools
