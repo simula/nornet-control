@@ -6,10 +6,10 @@ add-group ()
    NAME="$2"
    ID="$3"
    shift ; shift ; shift
-   if [ -e "$1" ] ; then
-      yum-group-manager --merge "$FILE" "--name=$NAME" "--id=$ID" $@
+   if [ -e "$FILE" ] ; then
+      yum-groups-manager --merge "$FILE" "--name=$NAME" "--id=$ID" $@
    else
-      yum-group-manager --save  "$FILE" "--name=$NAME" "--id=$ID" $@
+      yum-groups-manager --save  "$FILE" "--name=$NAME" "--id=$ID" $@
    fi
 }
 
@@ -27,10 +27,14 @@ add-group groups.xml "extensionNorNetManagement" "extensionnornetmanagement" \
    joe \
    kernel-modules-extra \
    lksctp-tools \
+   netperfmeter \
    net-snmp-utils \
    nfs-utils \
    nmap \
    nuttcp \
+   rsplib-tools \
+   rsplib-services \
+   subnetcalc \
    tcpdump \
    tftp \
    whois \
