@@ -217,7 +217,6 @@
     <description>Node PlanetLab Root</description>
     <uservisible>true</uservisible>
     <packagelist>
-<packagereq type="mandatory">sliceimage-system-lxc-f18-x86_64</packagereq><packagereq type="mandatory">sliceimage-lxc-f18-x86_64</packagereq>
 <packagereq type="mandatory">NodeUpdate</packagereq>
 <packagereq type="mandatory">PyXML</packagereq>
 <packagereq type="mandatory">at</packagereq>
@@ -231,6 +230,7 @@
 <packagereq type="mandatory">btrfs-progs</packagereq>
 <packagereq type="mandatory">bzip2</packagereq>
 <packagereq type="mandatory">codemux</packagereq>
+<packagereq type="mandatory">comgt</packagereq>
 <packagereq type="mandatory">coreutils</packagereq>
 <packagereq type="mandatory">cpio</packagereq>
 <packagereq type="mandatory">cronie</packagereq>
@@ -267,13 +267,13 @@
 <packagereq type="mandatory">lsof</packagereq>
 <packagereq type="mandatory">lvm2</packagereq>
 <packagereq type="mandatory">lxc-sliceimage</packagereq>
-<packagereq type="mandatory">lxcsu</packagereq>
-<packagereq type="mandatory">lxctools</packagereq>
+<packagereq type="mandatory">lxc-userspace</packagereq>
 <packagereq type="mandatory">mailcap</packagereq>
 <packagereq type="mandatory">monitor-client</packagereq>
 <packagereq type="mandatory">monitor-runlevelagent</packagereq>
 <packagereq type="mandatory">nano</packagereq>
 <packagereq type="mandatory">nc</packagereq>
+<packagereq type="mandatory">net-tools</packagereq>
 <packagereq type="mandatory">nfs-utils</packagereq>
 <packagereq type="mandatory">nodemanager-lxc</packagereq>
 <packagereq type="mandatory">ntp</packagereq>
@@ -285,6 +285,8 @@
 <packagereq type="mandatory">pciutils</packagereq>
 <packagereq type="mandatory">perl</packagereq>
 <packagereq type="mandatory">pl_sshd</packagereq>
+<packagereq type="mandatory">planetlab-umts-tools-backend</packagereq>
+<packagereq type="mandatory">ppp</packagereq>
 <packagereq type="mandatory">procprotect</packagereq>
 <packagereq type="mandatory">procps</packagereq>
 <packagereq type="mandatory">psacct</packagereq>
@@ -301,6 +303,8 @@
 <packagereq type="mandatory">setserial</packagereq>
 <packagereq type="mandatory">setup</packagereq>
 <packagereq type="mandatory">shadow-utils</packagereq>
+<packagereq type="mandatory">sliceimage-lxc-f18-x86_64</packagereq>
+<packagereq type="mandatory">sliceimage-system-lxc-f18-x86_64</packagereq>
 <packagereq type="mandatory">sudo</packagereq>
 <packagereq type="mandatory">tar</packagereq>
 <packagereq type="mandatory">tcpdump</packagereq>
@@ -330,6 +334,15 @@
     </packagelist>
   </group>
   <group>
+    <id>rvm-ruby</id>
+    <name>rvm-ruby</name>
+    <description>a and as deploying easily for gem omf-rc pre-installed ruby rvm</description>
+    <uservisible>true</uservisible>
+    <packagelist>
+<packagereq type="mandatory">rvm-ruby</packagereq>
+    </packagelist>
+  </group>
+  <group>
     <id>planetflowreference</id>
     <name>PlanetFlowReference</name>
     <description>Image PlanetFlow Reference</description>
@@ -345,7 +358,6 @@
     <description>Image PlanetLab Reference Slice</description>
     <uservisible>true</uservisible>
     <packagelist>
-<packagereq type="mandatory">joe</packagereq>
 <packagereq type="mandatory">bash</packagereq>
 <packagereq type="mandatory">bind_public</packagereq>
 <packagereq type="mandatory">bzip2</packagereq>
@@ -358,8 +370,11 @@
 <packagereq type="mandatory">filesystem</packagereq>
 <packagereq type="mandatory">findutils</packagereq>
 <packagereq type="mandatory">gzip</packagereq>
+<packagereq type="mandatory">ipfwslice</packagereq>
 <packagereq type="mandatory">iputils</packagereq>
 <packagereq type="mandatory">logrotate</packagereq>
+<packagereq type="mandatory">nc</packagereq>
+<packagereq type="mandatory">net-tools</packagereq>
 <packagereq type="mandatory">openssh-clients</packagereq>
 <packagereq type="mandatory">openssh-server</packagereq>
 <packagereq type="mandatory">passwd</packagereq>
@@ -368,12 +383,14 @@
 <packagereq type="mandatory">python-devel</packagereq>
 <packagereq type="mandatory">rsh</packagereq>
 <packagereq type="mandatory">rsync</packagereq>
+<packagereq type="mandatory">sliver-openvswitch</packagereq>
 <packagereq type="mandatory">sudo</packagereq>
 <packagereq type="mandatory">tar</packagereq>
 <packagereq type="mandatory">tcpdump</packagereq>
 <packagereq type="mandatory">telnet</packagereq>
 <packagereq type="mandatory">time</packagereq>
 <packagereq type="mandatory">traceroute</packagereq>
+<packagereq type="mandatory">vsys-wrapper</packagereq>
 <packagereq type="mandatory">vsyssh</packagereq>
 <packagereq type="mandatory">wget</packagereq>
 <packagereq type="mandatory">which</packagereq>
