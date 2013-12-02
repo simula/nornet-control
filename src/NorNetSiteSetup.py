@@ -483,7 +483,7 @@ def _addOrUpdateNodeTag(nodeID, tagName, tagValue):
 # ###### Add or update configuration file ###################################
 def _addOrUpdateConfFile(configuration):
    filter = {
-      'dest' : configuration['dest']
+      'source' : configuration['source']
    }
    confFiles = getPLCServer().GetConfFiles(getPLCAuthentication(), filter, [ 'conf_file_id' ])
    if len(confFiles) == 0:
@@ -548,6 +548,13 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       if _addOrUpdateNodeTag(nodeID, 'nornet_node_interface', norNetInterface) <= 0:
          error('Unable to add "nornet_node_interface" tag to node ' + nodeHostName)
 
+      # ====== Remove old configuration files ===============================
+      #files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids','source','dest'])
+      #for file in files:
+         #if nodeID in file['node_ids']:
+            #print file['conf_file_id'], file['dest'],file['source']
+            #getPLCServer().DeleteConfFile(getPLCAuthentication(), file['conf_file_id'])
+
       # ====== Provide proxy configurations =================================
       try:
          os.mkdir('/var/www/html/PlanetLabConf/proxy/')
@@ -570,16 +577,18 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
          except:
             print('WARNING: Unable to write ' + proxyConfName)
 
+         fileSource      = 'PlanetLabConf/proxy/proxy.' + shell + '.' + siteNorNetDomain
+         fileDestination = '/etc/profile.d/proxy.' + shell
          confFileID = _addOrUpdateConfFile({
             'file_owner'        : u'root',
             'postinstall_cmd'   : u'',
             'error_cmd'         : u'',
             'preinstall_cmd'    : u'',
-            'dest'              : '/etc/profile.d/proxy.' + shell,
+            'dest'              : fileDestination,
             'ignore_cmd_errors' : False,
             'enabled'           : True,
             'file_permissions'  : u'644',
-            'source'            : u'PlanetLabConf/proxy/proxy.' + shell + '.' + siteNorNetDomain,
+            'source'            : fileSource,
             'always_update'     : False,
             'file_group'        : u'root'})
          if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
