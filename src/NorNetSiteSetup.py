@@ -556,7 +556,6 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
             #getPLCServer().DeleteConfFile(getPLCAuthentication(), file['conf_file_id'])
 
       # ====== Add yum repositories =========================================
-      print "x1"
       yumRepoSourceFile = codecs.open('nornet.repo', 'r', 'utf-8')
       yumRepoSource = yumRepoSourceFile.read()
       yumRepoSourceFile.close()
@@ -565,7 +564,6 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       yumKeySource = yumKeySourceFile.read()
       yumKeySourceFile.close()
 
-      print "x1"
       yumRepoName = '/var/www/html/PlanetLabConf/nornet.repo'
       try:
          yumRepo = codecs.open(yumRepoName, 'w', 'utf-8')
@@ -582,7 +580,6 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       except:
          print('WARNING: Unable to write ' + yumRepoName)
 
-      print "x3"
       fileSource      = yumRepoName
       fileDestination = '/etc/yum.repos.d/nornet.repo'
       confFileID = _addOrUpdateConfFile({
@@ -600,6 +597,22 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
          error('Unable to add repository configuration file to node ' + nodeHostName)
 
+      fileSource      = yumKeyName
+      fileDestination = '/etc/pki/rpm-gpg/nornet.key'
+      confFileID = _addOrUpdateConfFile({
+         'file_owner'        : u'root',
+         'postinstall_cmd'   : u'',
+         'error_cmd'         : u'',
+         'preinstall_cmd'    : u'',
+         'dest'              : fileDestination,
+         'ignore_cmd_errors' : False,
+         'enabled'           : True,
+         'file_permissions'  : u'644',
+         'source'            : fileSource,
+         'always_update'     : False,
+         'file_group'        : u'root'})
+      if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
+         error('Unable to add repository configuration file to node ' + nodeHostName)
 
       # ====== Provide proxy configurations =================================
       try:
