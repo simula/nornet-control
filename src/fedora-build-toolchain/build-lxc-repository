@@ -59,7 +59,11 @@ cp -r SRPMS/* $REPOSITORIES/$DISTRIBUTIONS/SRPMS/
 
 # ====== Update repository management files =================================
 echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Updating repository ...\x1b[0m"
-$(repomanage --keep=2 --old "$REPOSITORIES/$DISTRIBUTIONS") | xargs --no-run-if-empty rm -f
+oldPackages=`repomanage --keep=2 --old "$REPOSITORIES/$DISTRIBUTIONS"`
+for oldPackage in $oldPackages ; do
+   echo "Removing $oldPackage"
+   rm -rf "$oldPackage"
+done
 createrepo "$REPOSITORIES/$DISTRIBUTIONS" --update
 tree $REPOSITORIES/
 

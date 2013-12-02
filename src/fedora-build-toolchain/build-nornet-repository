@@ -75,7 +75,6 @@ done
 # ====== Prepare output directories =========================================
 echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Preparing repositories in $REPOSITORIES ...\x1b[0m"
 DISTRIBUTION_DIRECTORIES=`echo "$DISTRIBUTIONS" | sed -e "s/-/\//g"`
-echo "D=$DISTRIBUTION_DIRECTORIES"
 for directory in $DISTRIBUTION_DIRECTORIES ; do
    mkdir -p "$REPOSITORIES/$directory/RPMS"
    mkdir -p "$REPOSITORIES/$directory/SRPMS"
@@ -131,14 +130,18 @@ done
 
 
 # ====== Make groups ========================================================
-./make-groups
-cp groups.xml "$REPOSITORIES/$directory"
+./make-nornet-groups
+cp nornet-groups.xml "$REPOSITORIES/$directory"
 
 # ====== Update repository management files =================================
 echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Updating repositories ...\x1b[0m"
 for directory in $DISTRIBUTION_DIRECTORIES ; do
-   $(repomanage --keep=2 --old "$REPOSITORIES/$directory") | xargs --no-run-if-empty rm -f
-   createrepo "$REPOSITORIES/$directory" --update -g "$REPOSITORIES/$directory/groups.xml"
+   oldPackages=`repomanage --keep=2 --old "$REPOSITORIES/$directory"`
+   for oldPackage in $oldPackages ; do
+      echo "Removing $oldPackage"
+      rm -rf "$oldPackage"
+   done
+   createrepo "$REPOSITORIES/$directory" --update -g "$REPOSITORIES/$directory/nornet-groups.xml"
 done
 tree $REPOSITORIES/
 
