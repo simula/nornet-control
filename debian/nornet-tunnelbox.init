@@ -211,44 +211,6 @@ check_and_configure ()
          fi
       fi
 
-      # ===== Apply Collectd general configuration update ====================
-      NCF="collectd-general-config"
-      CF="/etc/collectd/collectd.conf"
-      rm -f ${NCF}
-      mv updated-tunnelbox-config/${NCF} .
-      if needs_update ${NCF} ${CF} $1 ; then
-            echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ${CF} has been updated => restarting collectd service ...\x1b[0m" 
-            cp ${NCF} ${CF}
-            service collectd restart >/dev/null || true
-            # This directory should exist
-            if [[ ! -d /etc/collectd.d ]] ; then
-               mkdir /etc/collectd.d
-            fi
-      fi
-
-      # ===== Apply Collectd network configuration update ====================
-      NCF="collectd-network-config"
-      CF="/etc/collectd.d/network.conf"
-      rm -f ${NCF}
-      mv updated-tunnelbox-config/${NCF} .
-      if needs_update ${NCF} ${CF} $1 ; then
-            echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ${CF} has been updated => restarting collectd service ...\x1b[0m" 
-            cp ${NCF} ${CF}
-            chmod 600 ${CF}
-            service collectd restart >/dev/null || true
-      fi
-
-      # ===== Apply Collectd network configuration update ====================
-      NCF="collectd-TunnelBox-ping-config"
-      CF="/etc/collectd.d/Tunnelbox-ping.conf"
-      rm -f ${NCF}
-      mv updated-tunnelbox-config/${NCF} .
-      if needs_update ${NCF} ${CF} $1 ; then
-            echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ${CF} has been updated => restarting collectd service ...\x1b[0m" 
-            cp ${NCF} ${CF}
-            service collectd restart >/dev/null || true
-      fi
-
       # ====== Check for problems ===========================================
       if ! rmdir updated-tunnelbox-config ; then
          echo >&2 "ERROR: Something went wrong! updated-tunnelbox-config still contains unhandled configuration files!"
