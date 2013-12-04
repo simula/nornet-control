@@ -1314,20 +1314,40 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
    tunnelboxFile.write('"\n')
    tunnelboxFile.close()
 
-# ###### Generate collectd configuration ###################################
+# ###### Generate collectd ping configuration ###############################
 
-def makeCollectdPingConfig(collectdPingConfigFileName='collectd-TunnelBox-ping-config'):
+def makeCollectdPingConfig():
    log('Making collectd tunnelbox ping configuration for ' + localSite['site_long_name'] + ' ...')
    localSiteIndex = localSite['site_index']
    localProviderList = getNorNetProvidersForSite(localSite)
-   collectdPingConfigFile = codecs.open(collectdPingConfigFileName, 'w', 'utf-8')
-   collectdPingConfigFile.write("LoadPlugin ping\n")
+   collectdPingGeneralConfigFileName = "collectd-tb-ping-general-config"
+   collectdPingGeneralConfigFile = codecs.open(collectdPingGeneralConfigFileName, 'w', 'utf-8')
+   collectdPingGeneralConfigFile.write("""LoadPlugin syslog
+LoadPlugin network
+LoadPlugin ping
+Interval 60
+<Plugin syslog>
+LogLevel info
+</Plugin>
+<Plugin network>
+<Server "10.1.1.57" "25826">
+SecurityLevel "Encrypt"
+Username "nnc"
+Password "NorN3t"
+</Server>
+</Plugin>
+""")
+   collectdPingGeneralConfigFile.close()
+   os.chmod(collectdPingGeneralConfigFileName, 0600)
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
       for version in [ 4, 6 ]:
-         collectdPingConfigFile.write("<Plugin ping>\n")
          localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
          tunnelboxAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
+         collectdPingConfigFileName = "collectd-tb-ping-src-" + str(tunnelboxAddress.ip)
+         collectdPingConfigFile = codecs.open(collectdPingConfigFileName, 'w', 'utf-8')
+         collectdPingConfigFile.write('Include "' + collectdPingGeneralConfigFileName + "\"\n")
+         collectdPingConfigFile.write("<Plugin ping>\n")
          collectdPingConfigFile.write('SourceAddress "' + str(tunnelboxAddress.ip) + '"\n')
          for remoteSiteIndex in fullSiteList:
             remoteSite = fullSiteList[remoteSiteIndex]
@@ -1342,8 +1362,7 @@ def makeCollectdPingConfig(collectdPingConfigFileName='collectd-TunnelBox-ping-c
               address = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
               collectdPingConfigFile.write('Host "' + str(address.ip) + '"\n')
          collectdPingConfigFile.write("</Plugin>\n")
-   collectdPingConfigFile.close()
-
+         collectdPingConfigFile.close()
 
 # ###########################################################################
 # #### Main program                                                      ####
@@ -1488,10 +1507,5 @@ makeSquidConfiguration(localSite)
 makeRegistrarConfiguration(localSite)
 
 # ====== Collectd configration ==========================================
-log('Making collectd general configuration for ' + localSite['site_long_name'] + ' ...')
-makeCollectdGeneralConfig()   
-
-log('Making collectd network configuration for ' + localSite['site_long_name'] + ' ...')
-makeCollectdNetworkConfig(NorNet_Configuration['collectd_server_name'])   
 
 makeCollectdPingConfig()
