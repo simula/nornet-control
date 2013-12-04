@@ -63,10 +63,7 @@ def getLocalSiteDHCPServerStaticConfigurationString(nodeIndex):
 
 # ###### Get DHCPD node configuration string ################################
 def getLocalSiteRADVDConfigurationString():
-   try:
-      return unicode(NorNet_Configuration['NorNet_LocalSite_RADVDServer'])
-   except:
-      return u''
+   return checkParameter('NorNet_LocalSite_RADVDServer', [ 'on', 'off'])
 
 
 # ###### Get NAT range ######################################################
@@ -131,6 +128,11 @@ def getSquidParentCache():
       return NorNet_Configuration['NorNet_Squid_ParentCache']
    except:
       return ''
+
+
+# ###### Get Squid parent cache #############################################
+def getSquidTransparentProxy():
+   return checkParameter('NorNet_Squid_TransparentProxy', [ 'on', 'off'])
 
 
 # ###### Get tunnel configuration for default tunnel to central site ########
@@ -834,7 +836,10 @@ def makeSquidConfiguration(localSite):
    outputFile.write('http_access allow localhost\n')
    outputFile.write('http_access allow localnet\n')
    outputFile.write('http_access deny all\n')
-   outputFile.write('http_port 3128\n')
+   if getSquidTransparentProxy() == 'on':
+      outputFile.write('http_port 3128 transparent\n')
+   else:
+      outputFile.write('http_port 3128\n')
    outputFile.write('extension_methods REPORT MERGE MKACTIVITY CHECKOUT PROPFIND\n\n')
    outputFile.write('request_header_access User-Agent deny all\n')
    outputFile.write('request_header_replace User-Agent Mozilla/5.0\n\n')
@@ -1050,6 +1055,9 @@ def makeFirewallConfiguration(fullSiteList, localSite):
       for interfaceName in externalInterfaces:
          v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4Prefix'])       + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
          v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
+
+   if getSquidTransparentProxy() == 'on':
+      v4File.write('-A PREROUTING -i "' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '" -p tcp --dport 80 -j REDIRECT --to-port 3128' + "\n")
 
    if len(dnatOptions) > 0:
       for dnatOption in dnatOptions:
@@ -1314,25 +1322,45 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
    tunnelboxFile.write('"\n')
    tunnelboxFile.close()
 
-# ###### Generate collectd configuration ###################################
+# ###### Generate collectd ping configuration ###############################
 
-def makeCollectdPingConfig(collectdPingConfigFileName='collectd-TunnelBox-ping-config'):
+def makeCollectdPingConfig():
    log('Making collectd tunnelbox ping configuration for ' + localSite['site_long_name'] + ' ...')
    localSiteIndex = localSite['site_index']
    localProviderList = getNorNetProvidersForSite(localSite)
-   collectdPingConfigFile = codecs.open(collectdPingConfigFileName, 'w', 'utf-8')
-   collectdPingConfigFile.write("LoadPlugin ping\n")
+   collectdPingGeneralConfigFileName = "collectd-tb-ping-general-config"
+   collectdPingGeneralConfigFile = codecs.open(collectdPingGeneralConfigFileName, 'w', 'utf-8')
+   collectdPingGeneralConfigFile.write("""LoadPlugin syslog
+LoadPlugin network
+LoadPlugin ping
+Interval 60
+<Plugin syslog>
+LogLevel info
+</Plugin>
+<Plugin network>
+<Server "10.1.1.57" "25826">
+SecurityLevel "Encrypt"
+Username "nnc"
+Password "NorN3t"
+</Server>
+</Plugin>
+""")
+   collectdPingGeneralConfigFile.close()
+   os.chmod(collectdPingGeneralConfigFileName, 0600)
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
       for version in [ 4, 6 ]:
-         collectdPingConfigFile.write("<Plugin ping>\n")
          localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
          tunnelboxAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
+         collectdPingConfigFileName = "collectd-tb-ping-src-" + str(tunnelboxAddress.ip)
+         collectdPingConfigFile = codecs.open(collectdPingConfigFileName, 'w', 'utf-8')
+         collectdPingConfigFile.write('Include "' + collectdPingGeneralConfigFileName + "\"\n")
+         collectdPingConfigFile.write("<Plugin ping>\n")
          collectdPingConfigFile.write('SourceAddress "' + str(tunnelboxAddress.ip) + '"\n')
          for remoteSiteIndex in fullSiteList:
             remoteSite = fullSiteList[remoteSiteIndex]
             if remoteSite['site_enabled'] == False:
-               continue 
+               continue
             if remoteSiteIndex == localSiteIndex:
                continue
             remoteProviderList = getNorNetProvidersForSite(remoteSite)
@@ -1342,8 +1370,7 @@ def makeCollectdPingConfig(collectdPingConfigFileName='collectd-TunnelBox-ping-c
               address = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
               collectdPingConfigFile.write('Host "' + str(address.ip) + '"\n')
          collectdPingConfigFile.write("</Plugin>\n")
-   collectdPingConfigFile.close()
-
+         collectdPingConfigFile.close()
 
 # ###########################################################################
 # #### Main program                                                      ####
@@ -1488,10 +1515,5 @@ makeSquidConfiguration(localSite)
 makeRegistrarConfiguration(localSite)
 
 # ====== Collectd configration ==========================================
-log('Making collectd general configuration for ' + localSite['site_long_name'] + ' ...')
-makeCollectdGeneralConfig()   
-
-log('Making collectd network configuration for ' + localSite['site_long_name'] + ' ...')
-makeCollectdNetworkConfig(NorNet_Configuration['collectd_server_name'])   
 
 makeCollectdPingConfig()

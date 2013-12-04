@@ -135,6 +135,17 @@ NorNet_RoutingMetric_AdditionalProvider = 10   # for the first one; next is +1, 
 # ===========================================================================
 
 
+# ###### Check whether parameter is one of given valid choices ##############
+def checkParameter(parameter, choices):
+   try:
+      value = NorNet_Configuration[parameter]
+   except:
+       return u''
+   for choice in choices:
+      if value == choice:
+         return value
+   error('Parameter ' + parameter + ' has invalid value: ' + value)
+
 
 # ###### Read configuration file ############################################
 def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):

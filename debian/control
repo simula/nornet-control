@@ -81,6 +81,7 @@ Package: nornet-development
 Architecture: any
 Depends: autoconf,
          automake,
+         createrepo,
          debhelper,
          devscripts,
          imagemagick,
@@ -96,6 +97,7 @@ Depends: autoconf,
          pkg-config,
          python-pythonmagick,
          r-base,
+         rpm,
          subversion,
          ${misc:Depends},
          ${shlibs:Depends}

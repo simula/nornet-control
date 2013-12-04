@@ -1,7 +1,7 @@
 Source: cfengine3
 Section: admin
 Priority: optional
-Maintainer: Antonio Radici <antonio@debian.org>
+Maintainer: Thomas Dreibholz <dreibh@iem.uni-due.de>
 Build-Depends: autotools-dev,
                bison,
                debhelper (>= 7.0.50),

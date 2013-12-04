@@ -40,6 +40,12 @@ if [ "$PACKAGES" != "" ] ; then
    echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Signning packages ...\x1b[0m"
    rpmsign --key-id=$KEY_ID --resign $PACKAGES
 
+   echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Updating repositories ...\x1b[0m"
+   REPOS=`find "$TEMPDIR" -name "repodata" | sed -e "s/\/repodata$//g"`
+   for repo in $REPOS ; do
+      createrepo --update "$repo"
+   done
+
    echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Publishing packages to $DESTINATION ...\x1b[0m"
    rsync -rlptoD --delete "$TEMPDIR" "$DESTINATION"
 else
