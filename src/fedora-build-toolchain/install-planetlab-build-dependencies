@@ -19,4 +19,4 @@
 # Contact: dreibh@simula.no
 #
 
-sudo yum install -y libxml2-devel readline-devel ncurses-devel inotify-tools-devel php-devel PyXML check popt-static docbook-utils-pdf texlive python-setuptools python-dateutil python-lxml m2crypto rpm-sign
+sudo yum install -y libxml2-devel readline-devel ncurses-devel inotify-tools-devel php-devel PyXML check popt-static docbook-utils-pdf texlive python-setuptools python-dateutil python-lxml m2crypto rpm-sign rpm-devel

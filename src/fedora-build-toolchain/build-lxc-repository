@@ -20,8 +20,11 @@
 #
 
 SOURCES="$HOME/src/build"
-REPOSITORIES="$HOME/repos/lxc"
-DISTRIBUTIONS="fedora/18/x86_64"
+DISTRIBUTION="fedora/18/x86_64"
+
+REPOSITORIES="$HOME/repos/lxc"             # Destination
+KERNEL_RPMS_SOURCE_REPOSITORY="$HOME/repos/nornet"   # Source of Kernel RPMs
+KERNEL_VERSION=`uname -r`
 
 CLEAN=0
 if [ "$1" = "-clean" ] ; then
@@ -35,36 +38,61 @@ fi
 shift
 
 
-# ====== Build packages =====================================================
-echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Building packages ...\x1b[0m"
-mkdir -p "$REPOSITORIES/$DISTRIBUTIONS/RPMS"
-mkdir -p "$REPOSITORIES/$DISTRIBUTIONS/SRPMS"
+# ====== Prepare sources ====================================================
+echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Preparing sources ...\x1b[0m"
+mkdir -p "$REPOSITORIES/$DISTRIBUTION/RPMS"
+mkdir -p "$REPOSITORIES/$DISTRIBUTION/SRPMS"
 
 cd "$SOURCES"
 if [ $CLEAN -eq 1 ] ; then
-   sudo PLDISTRO=lxc make distclean || true
-   sudo make PLDISTRO=lxc stage1=true
+   echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: make stage1=true distclean ...\x1b[0m"
+   sudo env LANG=C make PLDISTRO=lxc stage1=true distclean || true
+   echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: make stage1=true ...\x1b[0m"
+   env LANG=C make PLDISTRO=lxc stage1=true || env LANG=C make PLDISTRO=lxc stage1=true
 fi
-sudo PLDISTRO=lxc make -j12 $@
+
+
+echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: Applying fixes ...\x1b[0m"
+
+# Some checks do not work in the build environment!
+sed -e "s/^\(make check\)/true   # \$1/g" <SPECS/libvirt.spec >libvirt.spec.new
+# colordiff libvirt.spec.new SPECS/libvirt.spec
+sudo mv libvirt.spec.new SPECS/libvirt.spec
+
+
+# ====== Copy kernel packages ===============================================
+echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Copying kernel packages ...\x1b[0m"
+KERNEL_RPMS=`find "$KERNEL_RPMS_SOURCE_REPOSITORY/$DISTRIBUTION" -name "kernel*$KERNEL_VERSION*.rpm"`
+if [ "$KERNEL_RPMS" = "" ] ; then
+   echo >&2 "ERROR: There seem to be no kernel RPMs in $KERNEL_RPMS_SOURCE_REPOSITORY/$DISTRIBUTION!"
+   exit 1
+fi
+mkdir -p "$SOURCES/RPMS/"
+cp $KERNEL_RPMS "$SOURCES/RPMS/"
+
+
+# ====== Build packages =====================================================
+echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Building packages ...\x1b[0m"
+sudo env LANG=C make PLDISTRO=lxc $@
 
 
 # ====== Update repository's files ==========================================
 echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Copying packages to repository ...\x1b[0m"
 
 pwd
-cp -r RPMS/x86_64/* $REPOSITORIES/$DISTRIBUTIONS/RPMS/
-cp -r RPMS/noarch/* $REPOSITORIES/$DISTRIBUTIONS/RPMS/
-cp -r SRPMS/* $REPOSITORIES/$DISTRIBUTIONS/SRPMS/
+cp -r RPMS/x86_64/* $REPOSITORIES/$DISTRIBUTION/RPMS/
+cp -r RPMS/noarch/* $REPOSITORIES/$DISTRIBUTION/RPMS/
+cp -r SRPMS/* $REPOSITORIES/$DISTRIBUTION/SRPMS/
 
 
 # ====== Update repository management files =================================
 echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Updating repository ...\x1b[0m"
-oldPackages=`repomanage --keep=2 --old "$REPOSITORIES/$DISTRIBUTIONS"`
+oldPackages=`repomanage --keep=2 --old "$REPOSITORIES/$DISTRIBUTION"`
 for oldPackage in $oldPackages ; do
    echo "Removing $oldPackage"
    rm -rf "$oldPackage"
 done
-createrepo "$REPOSITORIES/$DISTRIBUTIONS" --update
+createrepo "$REPOSITORIES/$DISTRIBUTION" --update
 tree $REPOSITORIES/
 
 echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Successfully completed package creation!\x1b[0m"
