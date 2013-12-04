@@ -1322,8 +1322,8 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
    tunnelboxFile.write('"\n')
    tunnelboxFile.close()
 
-# ###### Generate collectd ping configuration ###############################
 
+# ###### Generate collectd ping configuration ###############################
 def makeCollectdPingConfig():
    log('Making collectd tunnelbox ping configuration for ' + localSite['site_long_name'] + ' ...')
    localSiteIndex = localSite['site_index']
@@ -1371,6 +1371,8 @@ Password "NorN3t"
               collectdPingConfigFile.write('Host "' + str(address.ip) + '"\n')
          collectdPingConfigFile.write("</Plugin>\n")
          collectdPingConfigFile.close()
+
+
 
 # ###########################################################################
 # #### Main program                                                      ####
@@ -1515,5 +1517,4 @@ makeSquidConfiguration(localSite)
 makeRegistrarConfiguration(localSite)
 
 # ====== Collectd configration ==========================================
-
 makeCollectdPingConfig()
