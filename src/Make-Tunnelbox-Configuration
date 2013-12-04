@@ -63,10 +63,7 @@ def getLocalSiteDHCPServerStaticConfigurationString(nodeIndex):
 
 # ###### Get DHCPD node configuration string ################################
 def getLocalSiteRADVDConfigurationString():
-   try:
-      return unicode(NorNet_Configuration['NorNet_LocalSite_RADVDServer'])
-   except:
-      return u''
+   return checkParameter('NorNet_LocalSite_RADVDServer', [ 'on', 'off'])
 
 
 # ###### Get NAT range ######################################################
@@ -131,6 +128,11 @@ def getSquidParentCache():
       return NorNet_Configuration['NorNet_Squid_ParentCache']
    except:
       return ''
+
+
+# ###### Get Squid parent cache #############################################
+def getSquidTransparentProxy():
+   return checkParameter('NorNet_Squid_TransparentProxy', [ 'on', 'off'])
 
 
 # ###### Get tunnel configuration for default tunnel to central site ########
@@ -834,7 +836,10 @@ def makeSquidConfiguration(localSite):
    outputFile.write('http_access allow localhost\n')
    outputFile.write('http_access allow localnet\n')
    outputFile.write('http_access deny all\n')
-   outputFile.write('http_port 3128\n')
+   if getSquidTransparentProxy() == 'on':
+      outputFile.write('http_port 3128 transparent\n')
+   else:
+      outputFile.write('http_port 3128\n')
    outputFile.write('extension_methods REPORT MERGE MKACTIVITY CHECKOUT PROPFIND\n\n')
    outputFile.write('request_header_access User-Agent deny all\n')
    outputFile.write('request_header_replace User-Agent Mozilla/5.0\n\n')
@@ -1050,6 +1055,9 @@ def makeFirewallConfiguration(fullSiteList, localSite):
       for interfaceName in externalInterfaces:
          v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4Prefix'])       + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
          v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
+
+   if getSquidTransparentProxy() == 'on':
+      v4File.write('-A PREROUTING -i "' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '" -p tcp --dport 80 -j REDIRECT --to-port 3128' + "\n")
 
    if len(dnatOptions) > 0:
       for dnatOption in dnatOptions:
@@ -1352,7 +1360,7 @@ Password "NorN3t"
          for remoteSiteIndex in fullSiteList:
             remoteSite = fullSiteList[remoteSiteIndex]
             if remoteSite['site_enabled'] == False:
-               continue 
+               continue
             if remoteSiteIndex == localSiteIndex:
                continue
             remoteProviderList = getNorNetProvidersForSite(remoteSite)
