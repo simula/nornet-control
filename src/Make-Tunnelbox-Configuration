@@ -1329,24 +1329,6 @@ def makeCollectdPingConfig():
    localSiteIndex = localSite['site_index']
    localProviderList = getNorNetProvidersForSite(localSite)
    collectdPingGeneralConfigFileName = "collectd-tb-ping-general-config"
-   collectdPingGeneralConfigFile = codecs.open(collectdPingGeneralConfigFileName, 'w', 'utf-8')
-   collectdPingGeneralConfigFile.write("""LoadPlugin syslog
-LoadPlugin network
-LoadPlugin ping
-Interval 60
-<Plugin syslog>
-LogLevel info
-</Plugin>
-<Plugin network>
-<Server "10.1.1.57" "25826">
-SecurityLevel "Encrypt"
-Username "nnc"
-Password "NorN3t"
-</Server>
-</Plugin>
-""")
-   collectdPingGeneralConfigFile.close()
-   os.chmod(collectdPingGeneralConfigFileName, 0600)
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
       for version in [ 4, 6 ]:
