@@ -28,6 +28,7 @@ Architecture: any
 Depends: apt-file,
          apt-show-versions,
          autofs,
+         cfengine3,
          colordiff,
          cron,
          cron-apt,

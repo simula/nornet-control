@@ -796,8 +796,12 @@ def makeRADVDConfiguration(localSite):
 
 
 # ###### Generate Squid daemon configuration ################################
-def makeSquidConfiguration(localSite):
+def makeSquidConfiguration(nodeName, localSite):
    outputFile = codecs.open('squid-config', 'w', 'utf-8')
+
+   outputFile.write('# ================== Proxy =============================\n')
+   outputFile.write('visible_hostname ' + nodeName + '\n\n')
+   outputFile.write('via on\n')
 
    outputFile.write('# ================== ACLs ==============================\n')
    outputFile.write('acl manager proto cache_object\n')
@@ -841,8 +845,11 @@ def makeSquidConfiguration(localSite):
    else:
       outputFile.write('http_port 3128\n')
    outputFile.write('extension_methods REPORT MERGE MKACTIVITY CHECKOUT PROPFIND\n\n')
+
+   outputFile.write('# Improve privacy:\n')
    outputFile.write('request_header_access User-Agent deny all\n')
-   outputFile.write('request_header_replace User-Agent Mozilla/5.0\n\n')
+   outputFile.write('request_header_replace User-Agent Mozilla/5.0\n')
+   outputFile.write('forwarded_for off\n\n')
 
    outputFile.write('# ================== Caching ===========================\n')
    outputFile.write('logformat squid %{%Y-%m-%dT%H:%M:%S}tl.%03tu %6tr %>a %Ss/%03>Hs %<st %rm %ru %un %Sh/%<A %mt\n')
@@ -1323,31 +1330,13 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
    tunnelboxFile.write('"\n')
    tunnelboxFile.close()
 
-# ###### Generate collectd ping configuration ###############################
 
+# ###### Generate collectd ping configuration ###############################
 def makeCollectdPingConfig():
    log('Making collectd tunnelbox ping configuration for ' + localSite['site_long_name'] + ' ...')
    localSiteIndex = localSite['site_index']
    localProviderList = getNorNetProvidersForSite(localSite)
    collectdPingGeneralConfigFileName = "collectd-tb-ping-general-config"
-   collectdPingGeneralConfigFile = codecs.open(collectdPingGeneralConfigFileName, 'w', 'utf-8')
-   collectdPingGeneralConfigFile.write("""LoadPlugin syslog
-LoadPlugin network
-LoadPlugin ping
-Interval 60
-<Plugin syslog>
-LogLevel info
-</Plugin>
-<Plugin network>
-<Server "10.1.1.57" "25826">
-SecurityLevel "Encrypt"
-Username "nnc"
-Password "NorN3t"
-</Server>
-</Plugin>
-""")
-   collectdPingGeneralConfigFile.close()
-   os.chmod(collectdPingGeneralConfigFileName, 0600)
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
       for version in [ 4, 6 ]:
@@ -1372,6 +1361,8 @@ Password "NorN3t"
               collectdPingConfigFile.write('Host "' + str(address.ip) + '"\n')
          collectdPingConfigFile.write("</Plugin>\n")
          collectdPingConfigFile.close()
+
+
 
 # ###########################################################################
 # #### Main program                                                      ####
@@ -1512,9 +1503,8 @@ for i in range(NorNet_MinNodeIndex + 1, NorNet_MaxNodeIndex + 1):
 
 makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
 makeRADVDConfiguration(localSite)
-makeSquidConfiguration(localSite)
+makeSquidConfiguration(getLocalNodeHostname(), localSite)
 makeRegistrarConfiguration(localSite)
 
 # ====== Collectd configration ==========================================
-
 makeCollectdPingConfig()
