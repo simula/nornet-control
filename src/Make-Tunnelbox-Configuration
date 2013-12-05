@@ -1056,8 +1056,9 @@ def makeFirewallConfiguration(fullSiteList, localSite):
          v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4Prefix'])       + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
          v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
 
-   if getSquidTransparentProxy() == 'on':
-      v4File.write('-A PREROUTING -i "' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '" -p tcp --dport 80 -j REDIRECT --to-port 3128' + "\n")
+   if getSquidTransparentProxy() == 'on':      
+      v4File.write('-A PREROUTING -i "' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '" -p tcp' + \
+                   ' ! -d ' + str(makeNorNetIP(0, 0, 0, 4)) + ' --dport 80 -j REDIRECT --to-port 3128' + "\n")
 
    if len(dnatOptions) > 0:
       for dnatOption in dnatOptions:
