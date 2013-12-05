@@ -800,8 +800,8 @@ def makeSquidConfiguration(nodeName, localSite):
    outputFile = codecs.open('squid-config', 'w', 'utf-8')
 
    outputFile.write('# ================== Proxy =============================\n')
-   outputFile.write('visible_hostname ' + nodeName + '\n\n')
-   outputFile.write('via on\n')
+   outputFile.write('visible_hostname ' + nodeName + '\n')
+   outputFile.write('via on\n\n')
 
    outputFile.write('# ================== ACLs ==============================\n')
    outputFile.write('acl manager proto cache_object\n')
