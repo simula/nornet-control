@@ -213,7 +213,7 @@ check_and_configure ()
 
       # ====== Collectd ping configuration ==================================
       rm collectd-tb-ping-*
-      mv updated-tunnelbox-config/collectd-tb-ping .
+      mv updated-tunnelbox-config/collectd-tb-ping* .
 
       # ====== Check for problems ===========================================
       if ! rmdir updated-tunnelbox-config ; then
