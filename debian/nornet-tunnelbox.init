@@ -212,7 +212,7 @@ check_and_configure ()
       fi
 
       # ====== Collectd ping configuration ==================================
-      rm collectd-tb-ping-*
+      find . -maxdepth 1 -name "collectd-tb-ping-*"|xargs --no-run-if-empty rm -f
       mv updated-tunnelbox-config/collectd-tb-ping* .
 
       # ====== Check for problems ===========================================
