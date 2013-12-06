@@ -1360,6 +1360,24 @@ def makeCollectdPingConfig():
               address = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
               collectdPingConfigFile.write('Host "' + str(address.ip) + '"\n')
          collectdPingConfigFile.write("</Plugin>\n")
+         collectdPingConfigFile.write("""
+PreCacheChain "ping_rewrite"
+LoadPlugin match_regex
+LoadPlugin target_set
+
+<Chain "ping_rewrite">
+  <Rule "set_plugin_instance">
+    <Match "regex">
+      Plugin "ping"
+    </Match>
+    <Target "set">
+""")
+         collectdPingConfigFile.write('      PluginInstance "src.' + str(tunnelboxAddress.ip) + '"\n')
+         collectdPingConfigFile.write("""    </Target>
+    Target "write"
+  </Rule>
+</Chain>
+""")
          collectdPingConfigFile.close()
 
 
