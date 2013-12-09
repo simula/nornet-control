@@ -840,10 +840,9 @@ def makeSquidConfiguration(nodeName, localSite):
    outputFile.write('http_access allow localhost\n')
    outputFile.write('http_access allow localnet\n')
    outputFile.write('http_access deny all\n')
+   outputFile.write('http_port 3128\n')
    if getSquidTransparentProxy() == 'on':
-      outputFile.write('http_port 3128 transparent\n')
-   else:
-      outputFile.write('http_port 3128\n')
+      outputFile.write('http_port 3129 transparent\n')
    outputFile.write('extension_methods REPORT MERGE MKACTIVITY CHECKOUT PROPFIND\n\n')
 
    outputFile.write('# Improve privacy:\n')
@@ -1065,7 +1064,7 @@ def makeFirewallConfiguration(fullSiteList, localSite):
 
    if getSquidTransparentProxy() == 'on':      
       v4File.write('-A PREROUTING -i "' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '" -p tcp' + \
-                   ' ! -d ' + str(makeNorNetIP(0, 0, 0, 4)) + ' --dport 80 -j REDIRECT --to-port 3128' + "\n")
+                   ' ! -d ' + str(makeNorNetIP(0, 0, 0, 4)) + ' --dport 80 -j REDIRECT --to-port 3129' + "\n")
 
    if len(dnatOptions) > 0:
       for dnatOption in dnatOptions:
