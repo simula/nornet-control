@@ -570,11 +570,11 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
          error('Unable to add "nornet_node_interface" tag to node ' + nodeHostName)
 
       # ====== Remove old configuration files ===============================
-      files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids','source','dest'])
-      for file in files:
-         if nodeID in file['node_ids']:
-            print file['conf_file_id'], file['dest'],file['source']
-            getPLCServer().DeleteConfFile(getPLCAuthentication(), file['conf_file_id'])
+      #files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids','source','dest'])
+      #for file in files:
+      #   if nodeID in file['node_ids']:
+      #      print file['conf_file_id'], file['dest'],file['source']
+      #      getPLCServer().DeleteConfFile(getPLCAuthentication(), file['conf_file_id'])
 
       # ====== Add yum repositories =========================================
       yumRepoSourceFile = codecs.open('nornet.repo', 'r', 'utf-8')
@@ -704,6 +704,12 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       if newNode == None:
          error('Unable to find new node ' + nodeHostName)
       updateNorNetInterfaces(newNode, site, norNetInterface)
+
+      # ====== Print configuration files of the node ========================
+      files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids','source','dest'])
+      for file in files:
+         if nodeID in file['node_ids']:
+            print "Config file " + str(file['conf_file_id']) + ": " + file['source'] + ' -> ' + file['dest']
 
       return newNode
 
