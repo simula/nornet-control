@@ -141,7 +141,10 @@ for directory in $DISTRIBUTION_DIRECTORIES ; do
       echo "Removing $oldPackage"
       rm -rf "$oldPackage"
    done
-   createrepo "$REPOSITORIES/$directory" --update -g "$REPOSITORIES/$directory/nornet-groups.xml"
+   if [ -e "$REPOSITORIES/$directory/repodata/" ] ; then
+      rm -rf "$REPOSITORIES/$directory/repodata/"
+   fi
+   createrepo -g "$REPOSITORIES/$directory/nornet-groups.xml" "$REPOSITORIES/$directory"
 done
 tree $REPOSITORIES/
 
