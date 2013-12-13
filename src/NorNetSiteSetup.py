@@ -600,7 +600,6 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
          error('Unable to add repository configuration file to node ' + nodeHostName)
 
       fileSource      = yumKeyName.replace('/var/www/html/', '')
-      print 'S='+fileSource+'\n'
       fileDestination = '/etc/pki/rpm-gpg/nornet.key'
       confFileID = _addOrUpdateConfFile({
          'file_owner'        : u'root',
