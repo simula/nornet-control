@@ -17,6 +17,7 @@ add-group ()
 rm -f nornet-groups.xml
 
 add-group nornet-groups.xml "extensionNorNetManagement" "NorNet Management Extensions" \
+   --mandatory \
    rpm-sign \
    bind-utils \
    colordiff \
@@ -42,6 +43,7 @@ add-group nornet-groups.xml "extensionNorNetManagement" "NorNet Management Exten
    yum-plugin-fastestmirror
 
 add-group nornet-groups.xml "extensionNorNetNode" "NorNet Node Extensions" \
+   --mandatory \
    openssh-server \
    open-vm-tools \
    smartmontools
