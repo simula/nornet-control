@@ -4,19 +4,19 @@ add-group ()
 {
    FILE="$1"
    NAME="$2"
-   ID="$3"
+   DESCRIPTION="$3"
    shift ; shift ; shift
    if [ -e "$FILE" ] ; then
-      yum-groups-manager --merge "$FILE" "--name=$NAME" "--id=$ID" $@
+      yum-groups-manager --merge "$FILE" "--name=$NAME" "--description=$DESCRIPTION" $@
    else
-      yum-groups-manager --save  "$FILE" "--name=$NAME" "--id=$ID" $@
+      yum-groups-manager --save  "$FILE" "--name=$NAME" "--description=$DESCRIPTION" $@
    fi
 }
 
 
 rm -f groups.xml
 
-add-group nornet-groups.xml "extensionNorNetManagement" "extensionnornetmanagement" \
+add-group nornet-groups.xml "extensionNorNetManagement" "NorNet Management Extensions" \
    rpm-sign \
    bind-utils \
    colordiff \
@@ -41,7 +41,7 @@ add-group nornet-groups.xml "extensionNorNetManagement" "extensionnornetmanageme
    xauth \
    yum-plugin-fastestmirror
 
-add-group nornet-groups.xml "extensionNorNetNode" "extensionnornetnode" \
+add-group nornet-groups.xml "extensionNorNetNode" "NorNet Node Extensions" \
    openssh-server \
    open-vm-tools \
    smartmontools
