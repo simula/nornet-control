@@ -14,7 +14,7 @@ add-group ()
 }
 
 
-rm -f groups.xml
+rm -f nornet-groups.xml
 
 add-group nornet-groups.xml "extensionNorNetManagement" "NorNet Management Extensions" \
    rpm-sign \

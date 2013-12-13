@@ -483,6 +483,8 @@ def _addOrUpdateNodeTag(nodeID, tagName, tagValue):
 # ###### Add or update configuration file ###################################
 def _addOrUpdateConfFile(configuration):
    filter = {
+      # Selection must be based on source, because there may be node-specific
+      # sources for the same destination file!
       'source' : configuration['source']
    }
    confFiles = getPLCServer().GetConfFiles(getPLCAuthentication(), filter, [ 'conf_file_id' ])
@@ -581,7 +583,7 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
          print('WARNING: Unable to write ' + yumRepoName)
 
       fileSource      = yumRepoName.replace('/var/www/html/', '')
-      fileDestination = '/etc/yum.repos.d/nornet.repo'
+      fileDestination = '/etc/yum.myplc.d/nornet.repo'
       confFileID = _addOrUpdateConfFile({
          'file_owner'        : u'root',
          'postinstall_cmd'   : u'',
@@ -598,7 +600,6 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
          error('Unable to add repository configuration file to node ' + nodeHostName)
 
       fileSource      = yumKeyName.replace('/var/www/html/', '')
-      print 'S='+fileSource+'\n'
       fileDestination = '/etc/pki/rpm-gpg/nornet.key'
       confFileID = _addOrUpdateConfFile({
          'file_owner'        : u'root',
