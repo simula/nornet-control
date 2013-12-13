@@ -29,8 +29,7 @@ DESTINATION="/nfs/adm/packages/"
 # ====== Fetch packages =====================================================
 echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Fetching packages from $SOURCE ...\x1b[0m"
 TEMPDIR="$HOME/tmp/repos/"
-rm -rf "$TEMPDIR"
-mkdir -m 755 "$TEMPDIR"
+mkdir -p -m 755 "$TEMPDIR"
 rsync -av --delete "$SOURCE" "$TEMPDIR"
 
 
@@ -43,12 +42,18 @@ if [ "$PACKAGES" != "" ] ; then
    echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Updating repositories ...\x1b[0m"
    REPOS=`find "$TEMPDIR" -name "repodata" | sed -e "s/\/repodata$//g"`
    for repo in $REPOS ; do
-      groupsFile=`find $REPOS -maxdepth 1 -name "*groups.xml"`
+      groupsFile=`find $repo -maxdepth 1 -name "*groups.xml"`
+      if [ -e "$repo/repodata" ] ; then
+         rm -rf "$repo/repodata"
+      fi
       if [ "$groupsFile" ] ; then
+         # NOTE: The groups file may not be inside the repo directory.
+         # Otherwise, createrepo seems to silently ignores it!
          echo "Using groups file $groupsFile!"
-         createrepo --update -g "$groupsFile" "$repo"
+         cp "$groupsFile" ~/groups.xml
+         createrepo -g ~/groups.xml "$repo"
       else
-         createrepo --update "$repo"
+         createrepo "$repo"
       fi
    done
 
