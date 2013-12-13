@@ -59,6 +59,22 @@ def makeTagType(category, description, tagName):
       getPLCServer().AddTagType(getPLCAuthentication(), tagType)
 
 
+# ###### Replace string in init script by code to create file ###############
+def replaceInInitScript(initScriptCode, label, localFileName, remoteFileName):
+   localFile = codecs.open(localFileName, 'r', 'utf-8')
+   localFileContents = localFile.read()
+   localFile.close()
+
+   replaceString = 'cat >' + remoteFileName + ' <<\'END-OF-FILE-MARKER\'\n' + \
+                   localFileContents + '\n' + \
+                   'END-OF-FILE-MARKER\n'
+
+   newCode = initScriptCode.replace(label, replaceString)
+   if newCode == initScriptCode:
+      error('Something is wrong with the init script: ' + label + ' not found!')
+   return newCode
+
+
 # ###### Create NorNet tag types ############################################
 def makeNorNetTagTypes():
    # ====== Create tags =====================================================
@@ -117,6 +133,9 @@ def makeNorNetTagTypes():
       initScriptFile.close()
    except:
       error('Cannot read nornet-slice-initscript')
+
+   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FILE', 'nornet.repo', '/etc/yum.repos.d/nornet.repo')
+   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-KEY-FILE',  'nornet.key',  '/etc/pki/rpm-gpg/nornet.key')
 
    initScript = {}
    initScript['name']    = 'nornet_slice_initscript'
