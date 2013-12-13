@@ -549,11 +549,11 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
          error('Unable to add "nornet_node_interface" tag to node ' + nodeHostName)
 
       # ====== Remove old configuration files ===============================
-      #files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids','source','dest'])
-      #for file in files:
-         #if nodeID in file['node_ids']:
-            #print file['conf_file_id'], file['dest'],file['source']
-            #getPLCServer().DeleteConfFile(getPLCAuthentication(), file['conf_file_id'])
+      files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids','source','dest'])
+      for file in files:
+         if nodeID in file['node_ids']:
+            print file['conf_file_id'], file['dest'],file['source']
+            getPLCServer().DeleteConfFile(getPLCAuthentication(), file['conf_file_id'])
 
       # ====== Add yum repositories =========================================
       yumRepoSourceFile = codecs.open('nornet.repo', 'r', 'utf-8')
@@ -580,7 +580,7 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       except:
          print('WARNING: Unable to write ' + yumRepoName)
 
-      fileSource      = yumRepoName
+      fileSource      = yumRepoName.replace('/var/www/html/', '')
       fileDestination = '/etc/yum.repos.d/nornet.repo'
       confFileID = _addOrUpdateConfFile({
          'file_owner'        : u'root',
@@ -597,7 +597,8 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
          error('Unable to add repository configuration file to node ' + nodeHostName)
 
-      fileSource      = yumKeyName
+      fileSource      = yumKeyName.replace('/var/www/html/', '')
+      print 'S='+fileSource+'\n'
       fileDestination = '/etc/pki/rpm-gpg/nornet.key'
       confFileID = _addOrUpdateConfFile({
          'file_owner'        : u'root',
