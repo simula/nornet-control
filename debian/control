@@ -100,6 +100,7 @@ Depends: autoconf,
          r-base,
          rpm,
          subversion,
+         yum-utils,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Development Tools
