@@ -23,8 +23,8 @@ SOURCES="/nfs/pub/src"
 REPOSITORIES="$HOME/repos/nornet"
 DISTRIBUTIONS="fedora-18-x86_64"   # fedora-18-i386"
 
-#PACKAGES="kernel bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
-PACKAGES=""
+PACKAGES="kernel bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
+# PACKAGES=""
 
 
 # ====== BibTeXConv =======================================
@@ -128,10 +128,13 @@ for package in $PACKAGES ; do
 
 done
 
+cd "$WORKDIR"
+
 
 # ====== Make groups ========================================================
 ./make-nornet-groups
 cp nornet-groups.xml "$REPOSITORIES/$directory"
+
 
 # ====== Update repository management files =================================
 echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Updating repositories ...\x1b[0m"

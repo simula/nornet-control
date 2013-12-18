@@ -22,9 +22,11 @@
 SOURCES="$HOME/src/build"
 DISTRIBUTION="fedora/18/x86_64"
 
-REPOSITORIES="$HOME/repos/lxc"             # Destination
+REPOSITORIES="$HOME/repos/lxc"                       # Destination
 KERNEL_RPMS_SOURCE_REPOSITORY="$HOME/repos/nornet"   # Source of Kernel RPMs
-KERNEL_VERSION=`uname -r`
+KERNEL_VERSION=`uname -r`                            # Kernel to use
+REPO_BASE_URL="http://fedora.uib.no/"                # Fedora repository URL base
+
 
 CLEAN=0
 if [ "$1" = "-clean" ] ; then
@@ -52,12 +54,37 @@ if [ $CLEAN -eq 1 ] ; then
 fi
 
 
-echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: Applying fixes ...\x1b[0m"
+# ====== NorNet-specific patches ============================================
+echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: Applying patches ...\x1b[0m"
 
+# ------ libvirt ------------------------------------------
 # Some checks do not work in the build environment!
 sed -e "s/^\(make check\)/true   # \$1/g" <SPECS/libvirt.spec >libvirt.spec.new
 # colordiff libvirt.spec.new SPECS/libvirt.spec
 sudo mv libvirt.spec.new SPECS/libvirt.spec
+
+# ------ sysctl.conf --------------------------------------
+colordiff sysctl.conf $SOURCES/MODULES/nodeconfig/PlanetLabConf/sysctl.conf  || true
+cp sysctl.conf $SOURCES/MODULES/nodeconfig/PlanetLabConf/sysctl.conf
+
+# ------ Repositories -------------------------------------
+
+# Avoids using mirror list. This is very ineffective, since the mirrors are
+# randomly distributed all over the world. Squid caching will then be quite
+# useless. Just use one good server, then Squid can cache its files.
+
+REPOS=`find $SOURCES/MODULES -name "*.repo.in"`
+ESCAPED_REPO_BASE_URL=`echo "$REPO_BASE_URL" | sed -e 's/\//\\\\\//g'`
+for repo in $REPOS ; do
+   echo "Processing $repo ..."
+   sed -e "s/^\#baseurl=/baseurl=/g" \
+       -e "s/^mirrorlist/#mirrorlist/g" \
+       -e "s/http:\/\/download\.fedora\.redhat\.com\/pub\//$ESCAPED_REPO_BASE_URL/g" \
+       <$repo >$repo.new
+done
+for repo in $REPOS ; do
+   mv $repo.new $repo
+done
 
 
 # ====== Copy kernel packages ===============================================
