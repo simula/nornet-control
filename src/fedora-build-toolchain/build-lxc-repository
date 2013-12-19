@@ -25,7 +25,9 @@ DISTRIBUTION="fedora/18/x86_64"
 REPOSITORIES="$HOME/repos/lxc"                       # Destination
 KERNEL_RPMS_SOURCE_REPOSITORY="$HOME/repos/nornet"   # Source of Kernel RPMs
 KERNEL_VERSION=`uname -r`                            # Kernel to use
-REPO_BASE_URL="http://fedora.uib.no/"                # Fedora repository URL base
+# Fedora repository URL base:
+REPO_BASE_URL="http://www.nic.funet.fi/pub/mirrors/fedora.redhat.com/pub/fedora/linux/"
+# REPO_BASE_URL="http://fedora.uib.no/"
 
 
 CLEAN=0
