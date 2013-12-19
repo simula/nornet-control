@@ -83,8 +83,12 @@ function start () {
       # ---------------------------------------------------------------------
       # The following two lines will be automatically replaced by code to
       # inline the corresponding files!
-      INLINE-REPO-FILE
-      INLINE-KEY-FILE
+      INLINE-REPO-FC-FILE
+      INLINE-REPO-FU-FILE
+      INLINE-REPO-FT-FILE
+
+      INLINE-REPO-NN-FILE
+      INLINE-KEY-NN-FILE
       # ---------------------------------------------------------------------
 
       proxy_setup

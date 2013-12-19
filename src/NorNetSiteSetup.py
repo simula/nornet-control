@@ -134,8 +134,12 @@ def makeNorNetTagTypes():
    except:
       error('Cannot read nornet-slice-initscript')
 
-   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FILE', 'nornet.repo', '/etc/yum.repos.d/nornet.repo')
-   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-KEY-FILE',  'nornet.key',  '/etc/pki/rpm-gpg/nornet.key')
+   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FC-FILE', 'fedora.repo', '/etc/yum.repos.d/fedora.repo')
+   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FU-FILE', 'fedora-updates.repo', '/etc/yum.repos.d/fedora-updates.repo')
+   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FT-FILE', 'fedora-updates-testing.repo', '/etc/yum.repos.d/fedora-updates-testing.repo')
+
+   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-NN-FILE', 'nornet.repo', '/etc/yum.repos.d/nornet.repo')
+   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-KEY-NN-FILE',  'nornet.key',  '/etc/pki/rpm-gpg/nornet.key')
 
    initScript = {}
    initScript['name']    = 'nornet_slice_initscript'
@@ -706,7 +710,7 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       updateNorNetInterfaces(newNode, site, norNetInterface)
 
       # ====== Print configuration files of the node ========================
-      files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids','source','dest'])
+      files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids', 'source', 'dest'])
       for file in files:
          if nodeID in file['node_ids']:
             print "Config file " + str(file['conf_file_id']) + ": " + file['source'] + ' -> ' + file['dest']
