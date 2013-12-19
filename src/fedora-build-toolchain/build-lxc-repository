@@ -45,6 +45,7 @@ echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Preparing sources ...\x1b[0m"
 mkdir -p "$REPOSITORIES/$DISTRIBUTION/RPMS"
 mkdir -p "$REPOSITORIES/$DISTRIBUTION/SRPMS"
 
+WORKDIR=`pwd`
 cd "$SOURCES"
 if [ $CLEAN -eq 1 ] ; then
    echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: make stage1=true distclean ...\x1b[0m"
@@ -64,8 +65,8 @@ sed -e "s/^\(make check\)/true   # \$1/g" <SPECS/libvirt.spec >libvirt.spec.new
 sudo mv libvirt.spec.new SPECS/libvirt.spec
 
 # ------ sysctl.conf --------------------------------------
-colordiff sysctl.conf $SOURCES/MODULES/nodeconfig/PlanetLabConf/sysctl.conf  || true
-cp sysctl.conf $SOURCES/MODULES/nodeconfig/PlanetLabConf/sysctl.conf
+colordiff $WORKDIR/sysctl.conf MODULES/nodeconfig/PlanetLabConf/sysctl.conf  || true
+cp $WORKDIR/sysctl.conf MODULES/nodeconfig/PlanetLabConf/sysctl.conf
 
 # ------ Repositories -------------------------------------
 
