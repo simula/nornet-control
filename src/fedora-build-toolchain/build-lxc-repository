@@ -54,11 +54,22 @@ if [ $CLEAN -eq 1 ] ; then
    sudo env LANG=C make PLDISTRO=lxc stage1=true distclean || true
    echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: make stage1=true ...\x1b[0m"
    env LANG=C make PLDISTRO=lxc stage1=true || env LANG=C make PLDISTRO=lxc stage1=true
+else
+   sudo chown -R nornetpp:nornetpp "$SOURCES"
 fi
 
 
 # ====== NorNet-specific patches ============================================
 echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: Applying patches ...\x1b[0m"
+
+
+# ------ Fixes --------------------------------------------
+# NOTE: These fixes should be reported to upstream!!!
+for source in $SOURCES/SOURCES/bootmanager-5.2/source/steps/InstallPartitionDisks.py $SOURCES/MODULES/bootmanager/source/steps/InstallPartitionDisks.py ; do
+   sed -e "s/mkfs.btrfs %s/mkfs.btrfs -f %s/g" <$source >$source.new
+   mv $source.new $source
+done
+
 
 # ------ libvirt ------------------------------------------
 # Some checks do not work in the build environment!
