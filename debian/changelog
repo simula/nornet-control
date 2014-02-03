@@ -1,6 +1,6 @@
-nornet (0.1.0~alpha1.243-1ubuntu1) precise; urgency=high
+nornet (0.1.0~alpha1.244-1ubuntu1) precise; urgency=high
 
   * Initial Debian release (Closes: #xxxxxx).
   * Initial Ubuntu release (LP: #xxxxxx).
 
- -- Thomas Dreibholz <dreibh@simula.no>  Thu, 12 Dec 2013 14:14:14 +0100
+ -- Thomas Dreibholz <dreibh@simula.no>  Mon, 03 Feb 2014 11:11:11 +0100
