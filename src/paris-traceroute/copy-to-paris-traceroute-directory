@@ -34,4 +34,4 @@ fi
 
 cp make-deb clean-deb build-deb debian.conf filter-empty-entries renew-debian-changelog make-ppa "$PARIS_TRACEROUTE_DIRECTORY"
 #rm -rf "$PARIS_TRACEROUTE_DIRECTORY/debian"
-cp -r debian "$PARIS_TRACEROUTE_DIRECTORY/debian"
+#cp -r debian "$PARIS_TRACEROUTE_DIRECTORY/debian"

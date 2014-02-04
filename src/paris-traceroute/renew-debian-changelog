@@ -25,7 +25,6 @@
 BUILD_SUFFIX="$1"   # e.g. rc1.0, beta1, ...
 BUILD_VERSION_IDENTIFIER="~${BUILD_SUFFIX}"
 
-SUPER_VERSION=2
 PACKAGE="paris-traceroute"
 PACKAGE_DISTRIBUTION="precise"
 
@@ -35,6 +34,14 @@ git checkout configure.ac
 v=`grep "^AC_INIT" configure.ac | sed -e "s/^AC_INIT[ \t]*([ \t]*//g" -e "s/[ \t]*)[ \t]*$//g"`
 PLAIN_VERSION=`echo "$v" | sed -e "s/\[\([^]]*\)\][ \t]*,[ \t]*\[\([^]]*\)\][ \t]*,[ \t]\[\([^]]*\)\][ \t]*/\2/g"`
 EMAIL=`echo "$v" | sed -e "s/\[\([^]]*\)\][ \t]*,[ \t]*\[\([^]]*\)\][ \t]*,[ \t]\[\([^]]*\)\][ \t]*/\3/g"`
+
+# Increment existing version to differentiate from old paris-traceroute
+m=`echo "$PLAIN_VERSION" | sed -e "s/\..*$//g"`
+echo "m=$m"
+let m=$m+1
+echo "mn=$m"
+PLAIN_VERSION=`echo "$PLAIN_VERSION" | sed -e "s/^[0-9]*\./$m./g"`
+
 PACKAGE_VERISON="${PLAIN_VERSION}${BUILD_VERSION_IDENTIFIER}"
 
 
@@ -47,7 +54,7 @@ echo -e "\x1b[34m###############################################################
 
 # ====== Create debian/changelog ============================================
 (
-   echo "${PACKAGE} (${SUPER_VERSION}:${PACKAGE_VERISON}-1ubuntu1) ${PACKAGE_DISTRIBUTION}; urgency=medium"
+   echo "${PACKAGE} (${PACKAGE_VERISON}-1ubuntu1) ${PACKAGE_DISTRIBUTION}; urgency=medium"
    echo ""
    echo "  * New Debian package from SVN revision ${SVN_VERSION}."
    echo ""
