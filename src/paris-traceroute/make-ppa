@@ -1,0 +1,5 @@
+#!/bin/bash
+
+./clean-deb && \
+./make-deb precise quantal raring saucy trusty && \
+dput ppa *.changes
