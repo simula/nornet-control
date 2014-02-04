@@ -444,16 +444,18 @@ norNetSetup = [
    'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ u'Provider Eins', 'eth1',
-           IPv4Network('2.2.2.2/24'),     IPv4Address('2.2.2.1'),
-           IPv6Network('::/0'),  IPv6Address('::') ],
-      [ u'Provider Zwei', 'eth2',
-           IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
+      [ u'Kansas Research and Education Network', 'eth1',
+           IPv4Network('198.248.245.202/21'), IPv4Address('198.248.240.254'),
            IPv6Network('::/0'),  IPv6Address('::') ]
+      #[ u'Provider Zwei', 'eth2',
+           #IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
+           #IPv6Network('::/0'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
-      #[ 100, 1, u'smörgåstårta' ],
-      #[ 101, 2, u'knäckebröd'   ]
+      [ 100, 1, u'watson'  ],
+      [ 101, 2, u'clinton' ]
+      [ 102, 3, u'williamstown' ]
+      [ 103, 4, u'stull' ]
    ] },
 
  { 'site_index'        : 120,
