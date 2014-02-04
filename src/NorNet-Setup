@@ -429,7 +429,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 100,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'University of Kansas',
    'site_short_name'   : 'KU',
    'site_url'          : 'http://www.ku.nornet',
@@ -453,8 +453,8 @@ norNetSetup = [
    ],
    'site_nodes' : [
       [ 100, 1, u'watson'  ],
-      [ 101, 2, u'clinton' ]
-      [ 102, 3, u'williamstown' ]
+      [ 101, 2, u'clinton' ],
+      [ 102, 3, u'williamstown' ],
       [ 103, 4, u'stull' ]
    ] },
 
