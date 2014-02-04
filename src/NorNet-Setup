@@ -90,7 +90,10 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Network('129.240.66.74/29'),       IPv4Address('129.240.66.73'),
-           IPv6Network('2001:700:100:279::4/64'), IPv6Address('2001:700:100:279::1') ]
+           IPv6Network('2001:700:100:279::4/64'), IPv6Address('2001:700:100:279::1') ],
+      [ u'Powertech information systems', 'eth3',
+           IPv4Network('195.159.158.198/30'),     IPv4Address('195.159.158.197'),
+           IPv6Network('2001:840:4abd::4/64'),    IPv6Address('2001:840:4abd::1') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'bjørvika' ],
