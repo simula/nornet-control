@@ -1,0 +1,66 @@
+#!/bin/bash -e
+#
+# Debian Packaging Scripts
+# Copyright (C) 2002-2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@iem.uni-due.de
+
+. ./debian.conf
+
+
+# ====== Get build suffix ===================================================
+BUILD_SUFFIX="$1"   # e.g. rc1.0, beta1, ...
+BUILD_VERSION_IDENTIFIER="~${BUILD_SUFFIX}"
+
+SUPER_VERSION=2
+PACKAGE="paris-traceroute"
+PACKAGE_DISTRIBUTION="precise"
+
+git checkout configure.ac
+
+# ====== Update changelog header from Config.kmk version ====================
+v=`grep "^AC_INIT" configure.ac | sed -e "s/^AC_INIT[ \t]*([ \t]*//g" -e "s/[ \t]*)[ \t]*$//g"`
+PLAIN_VERSION=`echo "$v" | sed -e "s/\[\([^]]*\)\][ \t]*,[ \t]*\[\([^]]*\)\][ \t]*,[ \t]\[\([^]]*\)\][ \t]*/\2/g"`
+EMAIL=`echo "$v" | sed -e "s/\[\([^]]*\)\][ \t]*,[ \t]*\[\([^]]*\)\][ \t]*,[ \t]\[\([^]]*\)\][ \t]*/\3/g"`
+PACKAGE_VERISON="${PLAIN_VERSION}${BUILD_VERSION_IDENTIFIER}"
+
+
+echo -e "\x1b[34m######################################################################\x1b[0m"
+echo -e "\x1b[34mPACKAGE:         $PACKAGE\x1b[0m"
+echo -e "\x1b[34mPLAIN_VERSION:   $PLAIN_VERSION\x1b[0m"
+echo -e "\x1b[34mPACKAGE_VERISON: $PACKAGE_VERISON\x1b[0m"
+echo -e "\x1b[34m######################################################################\x1b[0m"
+
+
+# ====== Create debian/changelog ============================================
+(
+   echo "${PACKAGE} (${SUPER_VERSION}:${PACKAGE_VERISON}-1ubuntu1) ${PACKAGE_DISTRIBUTION}; urgency=medium"
+   echo ""
+   echo "  * New Debian package from SVN revision ${SVN_VERSION}."
+   echo ""
+   echo " -- $MAINTAINER  `env LANG=en date +"%a, %02d %b %Y %H:%M:%S %z"`"
+) >debian/changelog.new
+
+
+# ------ Change configure.ac ------------------------------------------------
+sed -e "s/^AC_INIT.*$/AC_INIT([$PACKAGE],[$PACKAGE_VERISON],[$EMAIL])/g" <configure.ac >configure.ac.new
+
+
+# ====== Apply changes ======================================================
+for updatedFile in changelog ; do
+   mv "debian/${updatedFile}.new" "debian/${updatedFile}"
+done
+mv configure.ac.new configure.ac
