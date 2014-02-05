@@ -299,7 +299,10 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Network('129.241.200.128/24'),        IPv4Address('129.241.200.1'),
-           IPv6Network('2001:700:300:2211::128/64'), IPv6Address('2001:700:300:2211::1') ]
+           IPv6Network('2001:700:300:2211::128/64'), IPv6Address('2001:700:300:2211::1') ],
+      [ u'PowerTech', 'eth2',
+           IPv4Network('195.159.158.134/30'),        IPv4Address('195.159.158.133'),
+           IPv6Network('2001:840:490e::134/64'),     IPv6Address('2001:840:490e::1') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'bybro'      ],
