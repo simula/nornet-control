@@ -2,7 +2,7 @@ Source: nornet
 Section: net
 Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
-Homepage: http://www.nntb.no/
+Homepage: https://www.nntb.no/
 Build-Depends: debhelper (>= 9),
                imagemagick,
                libfile-fcntllock-perl,
@@ -21,7 +21,7 @@ Description: NorNet API
  This package contains the NorNet Python API library. It contains functions
  to communicate with the central server (MyPLC), based on XMLRPC.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-management
 Architecture: any
@@ -52,6 +52,7 @@ Depends: apt-file,
          nttcp,
          open-vm-tools,
          openssh-server,
+         paris-traceroute,
          python-software-properties,
          rsplib-tools,
          smartmontools,
@@ -61,7 +62,6 @@ Depends: apt-file,
          tftp,
          tracebox,
          traceroute,
-         paris-traceroute,
          tree,
          tshark,
          update-motd,
@@ -77,7 +77,7 @@ Description: NorNet Management Tools
  This metapackage contains basic software nor NorNet node management. The
  software installed provides a common working environment.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-development
 Architecture: any
@@ -108,7 +108,7 @@ Description: NorNet Development Tools
  This metapackage contains basic software nor NorNet development. The
  software installed provides a common working environment.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-node
 Architecture: any
@@ -126,7 +126,7 @@ Description: NorNet Node Control
  This package contains the scripts to configure a generic node on a NorNet
  site.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-tunnelbox
 Architecture: any
@@ -157,7 +157,7 @@ Description: NorNet Tunnelbox Control
  This package contains the scripts to configure the tunnelboxes of NorNet
  sites.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-filesrv
 Architecture: all
@@ -172,7 +172,7 @@ Description: NorNet File Server
  This package contains the scripts to configure a file server
  on a NorNet central site.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-monitor
 Architecture: all
@@ -190,7 +190,7 @@ Description: NorNet Monitor
  This package contains the scripts to configure a generic monitoring station
  on a NorNet central site.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-display
 Architecture: all
@@ -204,7 +204,7 @@ Description: NorNet Display
  results of the monitoring station. It is in fact just a node with a web
  browser and the necessary GUI.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-gatekeeper
 Architecture: all
@@ -217,7 +217,7 @@ Description: NorNet Gatekeeper
  project presentation. It is in fact just a node with a dependency on the
  additional packages.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-websrv
 Architecture: all
@@ -236,7 +236,7 @@ Description: NorNet Web Server
  project presentation. It is in fact just a node with a dependency on the
  Apache packages.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-wikisrv
 Architecture: all
@@ -253,7 +253,20 @@ Description: NorNet Wiki Server
  user-contributed documentation. It is in fact just a node with a
  dependency on the MediaWiki packages.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
+
+Package: nornet-database
+Architecture: all
+Depends: apache2,
+         postgresql,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Database
+ This package contains the packages to set up a database station for
+ experiment results collection. It is in fact just a node with a
+ dependency on the Postgres packages.
+ .
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-server
 Architecture: all
@@ -273,4 +286,4 @@ Description: NorNet Server
  This package contains the scripts to configure a generic server system
  to host NorNet virtual machines.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
