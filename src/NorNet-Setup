@@ -180,7 +180,10 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Network('152.94.120.6/24'), IPv4Address('152.94.120.1'),
-           IPv6Network('::/0'),            IPv6Address('::') ]
+           IPv6Network('::/0'),            IPv6Address('::') ],
+      [ u'PowerTech', 'eth2',
+           IPv4Network('195.159.158.210/30'),     IPv4Address('195.159.158.209'),
+           IPv6Network('2001:840:4908::210/64'),  IPv6Address('2001:840:4908::1') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'mosterøy'  ],
