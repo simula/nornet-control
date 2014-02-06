@@ -246,6 +246,7 @@ Depends: imagemagick,
          mediawiki-extensions,
          nornet-websrv,
          php5-intl,
+         libapache2-mod-php5,
          postfix,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -259,7 +260,7 @@ Description: NorNet Wiki Server
 Package: nornet-database
 Architecture: all
 Depends: apache2,
-         postgresql,
+         postgresql,postgresql-contrib,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Database
