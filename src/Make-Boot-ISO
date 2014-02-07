@@ -42,6 +42,11 @@ def getBootISO(node, isoDirectory):
       try:
          isoBase64 = getPLCServer().GetBootMedium(getPLCAuthentication(), nodeID, 'node-iso' , '', [])
          iso       = base64.b64decode(isoBase64)
+
+         # In any case, this node now needs a reinstall!
+         getPLCServer().UpdateNode(getPLCAuthentication(), nodeID,
+            { 'boot_state' : 'reinstall' })
+
          outputFile = open(isoName, 'w')
          outputFile.write(iso)
          outputFile.close()
