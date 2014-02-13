@@ -108,15 +108,46 @@ NodeIndex="$2"
 SiteIndex="$4"
 InterfaceName="$6"
 ProviderList="$8"
-ControlBoxMode="$9"
-if [ "$ControlBoxMode" != "" -a "$ControlBoxMode" != "-controlbox" ] ; then
-   echo >&2 "ERROR: Bad control box mode! Do you mean -controlbox?"
-   exit 1
+ControlBoxMode=""
+MakeServerConfigurationPath=""
+shift ; shift ; shift ; shift ; shift ; shift ; shift ; shift
+while [ $# -gt 0 ] ; do
+   if [ "$1" = "-controlbox" ] ; then
+      ControlBoxMode="-controlbox"
+   elif [ "$1" = "-from-current-dir" ] ; then
+      MakeServerConfigurationPath="`pwd`/"
+      echo "NOTE: Running Make-Server-Configuration from $MakeServerConfigurationPath!"
+   else
+      echo >&2 "ERROR: Bad option $1!"
+      exit 1
+   fi
+   shift
+done
+
+# ====== Check for /etc/nornet and /etc/nornet/nornetapi-constants ==========
+if [ ! -d /etc/nornet/ -o ! -e /etc/nornet/nornetapi-constants ] ; then
+   if [ "$MakeServerConfigurationPath" != "" ] ; then
+      echo "x1"
+      if [ -e nornetapi-constants ] ; then
+      echo "x2"
+         echo -en "\x1b[33mInstall /etc/nornet/nornetapi-constants? [yes/no]?\x1b[0m "
+         read -er applyChanges
+         if [ "$applyChanges" == "yes" -o "$applyChanges" == "y" ] ; then
+            mkdir /etc/nornet
+            cp nornetapi-constants /etc/nornet/nornetapi-constants
+         fi
+      fi
+   fi
+   if [ ! -d /etc/nornet/ -o ! -e /etc/nornet/nornetapi-constants ] ; then
+      echo >&2 "ERROR: /etc/nornet/ or /etc/nornet/nornetapi-constants do not exist!"
+      exit 1
+   fi
 fi
-cd /root   # Ensure that configurations a written in /root!
 
 # ====== Create network configuration =======================================
-Make-Server-Configuration "$Variant" "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers "$ProviderList" $ControlBoxMode || exit 1
+cd /root   # Ensure that configurations a written in /root!
+
+${MakeServerConfigurationPath}Make-Server-Configuration "$Variant" "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers "$ProviderList" $ControlBoxMode || exit 1
 AllEthernetInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | grep "^eth" | sed -e "s/:$//" | xargs`
 for interface in $AllEthernetInterfaces ; do
    if [ "$interface" != "lo" -a "$interface" != "$InterfaceName" ] ; then
@@ -284,7 +315,12 @@ read -er applyChanges
 if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
    echo "Skipped!"
 else
-   dpkg-reconfigure keyboard-configuration
+   if [ "$Variant" = "Debian" ] ; then
+      dpkg-reconfigure keyboard-configuration
+   elif [ "$Variant" = "Fedora" ] ; then
+      rpm -q system-config-keyboard || yum install -y system-config-keyboard
+      system-config-keyboard
+   fi   
 fi
 
 
@@ -294,5 +330,5 @@ read -er applyChanges
 if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
    echo "Skipped!"
 else
-   System-Maintenance
+   ${MakeServerConfigurationPath}System-Maintenance
 fi
