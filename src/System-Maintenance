@@ -38,6 +38,17 @@ while [ $# -gt 0 ] ; do
    shift
 done
 
+# ====== Find distribution variant ==========================================
+Variant=""
+if [ -e /etc/network/interfaces ] ; then
+   Variant="Debian"
+elif [ -e /etc/sysconfig/network ] ; then
+   Variant="Fedora"
+else
+   echo >&2 "ERROR: Unknown/unsupported operating system? Cannot determine how to configure network!"
+   exit 1
+fi
+
 # ====== Stop AutoFS ========================================================
 if [ -e /etc/init.d/autofs ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Stopping AutoFS service ...\x1b[0m"
@@ -45,116 +56,139 @@ if [ -e /etc/init.d/autofs ] ; then
 fi
 
 # ====== dpkg package fixes =================================================
-echo -e "\x1b[34m`date +%FT%H:%M:%S`: Applying package fixes, if necessary ...\x1b[0m"
-sudo DEBIAN_FRONTEND=noninteractive dpkg --configure -a  >/tmp/install.log 2>&1 &
-wait
-cat /tmp/install.log
+if [ "$Variant" = "Debian" ] ; then
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Applying package fixes, if necessary ...\x1b[0m"
+   sudo DEBIAN_FRONTEND=noninteractive dpkg --configure -a  >/tmp/install.log 2>&1 &
+   wait
+   cat /tmp/install.log
+fi
 
 # ====== Update package repositories ========================================
-echo -e "\x1b[34m`date +%FT%H:%M:%S`: Updating package repositories ...\x1b[0m"
-sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq
-
+if [ "$Variant" = "Debian" ] ; then
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Updating package repositories ...\x1b[0m"
+   sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq
+fi
+   
 # ====== apt-get package fixes ==============================================
-echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing missing dependencies, if necessary ...\x1b[0m"
-sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -f -y -q  >/tmp/install.log 2>&1 &
-wait
-cat /tmp/install.log
+if [ "$Variant" = "Debian" ] ; then
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing missing dependencies, if necessary ...\x1b[0m"
+   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -f -y -q  >/tmp/install.log 2>&1 &
+   wait
+   cat /tmp/install.log
+fi
 
 # ====== System update ======================================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing updates ...\x1b[0m"
-sudo DEBIAN_FRONTEND=noninteractive nohup apt-get dist-upgrade -y -q >/tmp/install.log 2>&1 &
-wait
-cat /tmp/install.log
+if [ "$Variant" = "Debian" ] ; then
+   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get dist-upgrade -y -q >/tmp/install.log 2>&1 &
+   wait
+   cat /tmp/install.log
+elif [ "$Variant" = "Fedora" ] ; then
+   ( sudo yum clean all && sudo yum upgrade -y ) >/tmp/install.log 2>&1 &
+   wait
+   cat /tmp/install.log
+fi
 
 # ====== Check for VirtualBox upgrade =======================================
-if [ $UPGRADE_VIRTUALBOX -eq 1 ] ; then
-   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Checking for VirtualBox upgrade possibility ...\x1b[0m"
-   PackageVersionsFile=`mktemp`
-   apt-show-versions >$PackageVersionsFile
-   if grep "^virtualbox-guest-utils-nornet-" $PackageVersionsFile >/dev/null ; then
-      echo "VirtualBox guest utilities are already installed from NorNet package. Great!"
-   fi
-   if grep "^virtualbox-guest-utils[/ ]" $PackageVersionsFile >/dev/null ; then
-      echo "VirtualBox guest utilities will be upgraded to NorNet package!"
-      sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -y -q virtualbox-guest-utils-nornet-stable >/tmp/install.log 2>&1 &
-      wait      
-      cat /tmp/install.log
-   fi
-   if grep "^virtualbox-nornet-" $PackageVersionsFile >/dev/null ; then
-      echo "VirtualBox is already installed from NorNet package. Great!"
-   fi
-   if grep "^virtualbox[/ ]" $PackageVersionsFile >/dev/null ; then
-      echo "VirtualBox will be upgraded to NorNet package!"
-      if [ -e /etc/init.d/nornet-server ] ; then
-         service /etc/init.d/nornet-server stop || true
+if [ "$Variant" = "Debian" ] ; then
+   if [ $UPGRADE_VIRTUALBOX -eq 1 ] ; then
+      echo -e "\x1b[34m`date +%FT%H:%M:%S`: Checking for VirtualBox upgrade possibility ...\x1b[0m"
+      PackageVersionsFile=`mktemp`
+      apt-show-versions >$PackageVersionsFile
+      if grep "^virtualbox-guest-utils-nornet-" $PackageVersionsFile >/dev/null ; then
+         echo "VirtualBox guest utilities are already installed from NorNet package. Great!"
       fi
-      sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -y -q virtualbox-nornet-stable >/tmp/install.log 2>&1 &
-      wait      
-      cat /tmp/install.log
+      if grep "^virtualbox-guest-utils[/ ]" $PackageVersionsFile >/dev/null ; then
+         echo "VirtualBox guest utilities will be upgraded to NorNet package!"
+         sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -y -q virtualbox-guest-utils-nornet-stable >/tmp/install.log 2>&1 &
+         wait      
+         cat /tmp/install.log
+      fi
+      if grep "^virtualbox-nornet-" $PackageVersionsFile >/dev/null ; then
+         echo "VirtualBox is already installed from NorNet package. Great!"
+      fi
+      if grep "^virtualbox[/ ]" $PackageVersionsFile >/dev/null ; then
+         echo "VirtualBox will be upgraded to NorNet package!"
+         if [ -e /etc/init.d/nornet-server ] ; then
+            service /etc/init.d/nornet-server stop || true
+         fi
+         sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -y -q virtualbox-nornet-stable >/tmp/install.log 2>&1 &
+         wait      
+         cat /tmp/install.log
+      fi
+      rm -f $PackageVersionsFile
    fi
-   rm -f $PackageVersionsFile
 fi
 
 # ====== Auto-remove ========================================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Cleaning up ...\x1b[0m"
-sudo DEBIAN_FRONTEND=noninteractive nohup apt-get autoremove -y -q >/tmp/install.log 2>&1 &
-wait
-cat /tmp/install.log
-sudo DEBIAN_FRONTEND=noninteractive apt-get clean
-
-# ====== Remove obsolete kernel packages ====================================
-echo -e "\x1b[34m`date +%FT%H:%M:%S`: Removing obsolete kernels ...\x1b[0m"
-
-kernelType=$(uname -r | sed 's/.*-\(generic\|i386\|server\|common\|rt\|xen\|ec2\)/\1/')
-kernelBootVersion=$(uname -r | sed s/-$kernelType//)
-kernelDiskVersion=$(ls -t /boot/vmlinuz-*-$kernelType | head -n1 | sed -e "s/\/boot\/vmlinuz-//" -e "s/-$kernelType//")
-
-echo "Kernel Type:         $kernelType"
-echo "Kernel Boot Version: $kernelBootVersion"
-echo "Kernel Disk Version: $kernelDiskVersion"
-
-# Newer Ubuntu releases have an additional linux-image-extra package."
-extrasOptions=""
-if [ "`apt-show-versions | grep linux-image-extra-$kernelBootVersion-$kernelType`" != "" ] ; then
-   extrasOptions="$extrasOptions linux-image-extra-$kernelBootVersion-$kernelType+"
-fi
-if [ "`apt-show-versions | grep linux-image-extra-$kernelDiskVersion-$kernelType`" != "" ] ; then
-   extrasOptions="$extrasOptions linux-image-extra-$kernelDiskVersion-$kernelType+"
-fi
-
-if [ $INTERACTIVE_KERNEL_REMOVAL -eq 0 ] ; then
-   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get remove -y -qq --purge \
-      'linux-(headers|image)-.*' \
-      linux-headers-$kernelBootVersion-$kernelType+ \
-      linux-headers-$kernelBootVersion+ \
-      linux-headers-$kernelDiskVersion-$kernelType+ \
-      linux-headers-$kernelDiskVersion+ \
-      linux-headers-$kernelType+ \
-      $extrasOptions \
-      linux-image-$kernelBootVersion-$kernelType+ \
-      linux-image-$kernelDiskVersion-$kernelType+ \
-      linux-image-$kernelType+ \
-      linux-$kernelType+ \
-         >/tmp/install.log 2>&1 &
+if [ "$Variant" = "Debian" ] ; then
+   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get autoremove -y -q >/tmp/install.log 2>&1 &
    wait
    cat /tmp/install.log
-else
-   sudo apt-get remove --purge \
-      'linux-(headers|image)-.*' \
-      linux-headers-$kernelBootVersion-$kernelType+ \
-      linux-headers-$kernelBootVersion+ \
-      linux-headers-$kernelDiskVersion-$kernelType+ \
-      linux-headers-$kernelDiskVersion+ \
-      linux-headers-$kernelType+ \
-      $extrasOptions \
-      linux-image-$kernelBootVersion-$kernelType+ \
-      linux-image-$kernelDiskVersion-$kernelType+ \
-      linux-image-$kernelType+ \
-      linux-$kernelType+
+   sudo DEBIAN_FRONTEND=noninteractive apt-get clean
+elif [ "$Variant" = "Fedora" ] ; then
+   sudo DEBIAN_FRONTEND=noninteractive nohup yum autoremove -y >/tmp/install.log 2>&1 &
+   wait
+   cat /tmp/install.log
+   sudo yum clean all
 fi
-      
-# Possibly for newer versions, add:
-# linux-image-extra-$(uname -r)+
+
+# ====== Remove obsolete kernel packages ====================================
+if [ "$Variant" = "Debian" ] ; then
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Removing obsolete kernels ...\x1b[0m"
+
+   kernelType=$(uname -r | sed 's/.*-\(generic\|i386\|server\|common\|rt\|xen\|ec2\)/\1/')
+   kernelBootVersion=$(uname -r | sed s/-$kernelType//)
+   kernelDiskVersion=$(ls -t /boot/vmlinuz-*-$kernelType | head -n1 | sed -e "s/\/boot\/vmlinuz-//" -e "s/-$kernelType//")
+
+   echo "Kernel Type:         $kernelType"
+   echo "Kernel Boot Version: $kernelBootVersion"
+   echo "Kernel Disk Version: $kernelDiskVersion"
+
+   # Newer Ubuntu releases have an additional linux-image-extra package."
+   extrasOptions=""
+   if [ "`apt-show-versions | grep linux-image-extra-$kernelBootVersion-$kernelType`" != "" ] ; then
+      extrasOptions="$extrasOptions linux-image-extra-$kernelBootVersion-$kernelType+"
+   fi
+   if [ "`apt-show-versions | grep linux-image-extra-$kernelDiskVersion-$kernelType`" != "" ] ; then
+      extrasOptions="$extrasOptions linux-image-extra-$kernelDiskVersion-$kernelType+"
+   fi
+
+   if [ $INTERACTIVE_KERNEL_REMOVAL -eq 0 ] ; then
+      sudo DEBIAN_FRONTEND=noninteractive nohup apt-get remove -y -qq --purge \
+         'linux-(headers|image)-.*' \
+         linux-headers-$kernelBootVersion-$kernelType+ \
+         linux-headers-$kernelBootVersion+ \
+         linux-headers-$kernelDiskVersion-$kernelType+ \
+         linux-headers-$kernelDiskVersion+ \
+         linux-headers-$kernelType+ \
+         $extrasOptions \
+         linux-image-$kernelBootVersion-$kernelType+ \
+         linux-image-$kernelDiskVersion-$kernelType+ \
+         linux-image-$kernelType+ \
+         linux-$kernelType+ \
+            >/tmp/install.log 2>&1 &
+      wait
+      cat /tmp/install.log
+   else
+      sudo apt-get remove --purge \
+         'linux-(headers|image)-.*' \
+         linux-headers-$kernelBootVersion-$kernelType+ \
+         linux-headers-$kernelBootVersion+ \
+         linux-headers-$kernelDiskVersion-$kernelType+ \
+         linux-headers-$kernelDiskVersion+ \
+         linux-headers-$kernelType+ \
+         $extrasOptions \
+         linux-image-$kernelBootVersion-$kernelType+ \
+         linux-image-$kernelDiskVersion-$kernelType+ \
+         linux-image-$kernelType+ \
+         linux-$kernelType+
+   fi
+         
+   # Possibly for newer versions, add:
+   # linux-image-extra-$(uname -r)+
+fi
 
 # ====== Fix bootloader =====================================================
 if [ $DONT_TOUCH_GRUB -eq 0 ] ; then
@@ -171,18 +205,22 @@ fi
 # ====== apt-file cache update ==============================================
 # Cache updates
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Updating caches ...\x1b[0m"
-if [ -e /usr/bin/apt-file ] ; then
-   sudo /usr/bin/apt-file update >/dev/null
+if [ "$Variant" = "Debian" ] ; then
+   if [ -e /usr/bin/apt-file ] ; then
+      sudo /usr/bin/apt-file update >/dev/null
+   fi
 fi
 sudo updatedb
 
 # ====== Delete /etc/udev/rules.d/70-persistent-net.rules ===================
-if [ $KEEP_INTERFACE_MAPPINGS -eq 0 ] ; then
-   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Checking interface mapping ...\x1b[0m"
-   if ! ifconfig eth0 >/dev/null 2>&1 ; then
-      echo "eth0 does not exist => Deleting /etc/udev/rules.d/70-persistent-net.rules"
-      rm -f /etc/udev/rules.d/70-persistent-net.rules
-      echo "*** Interfaces should be remapping during next boot! ***"
+if [ "$Variant" = "Debian" ] ; then
+   if [ $KEEP_INTERFACE_MAPPINGS -eq 0 ] ; then
+      echo -e "\x1b[34m`date +%FT%H:%M:%S`: Checking interface mapping ...\x1b[0m"
+      if ! ifconfig eth0 >/dev/null 2>&1 ; then
+         echo "eth0 does not exist => Deleting /etc/udev/rules.d/70-persistent-net.rules"
+         rm -f /etc/udev/rules.d/70-persistent-net.rules
+         echo "*** Interfaces should be remapping during next boot! ***"
+      fi
    fi
 fi
 
@@ -193,8 +231,10 @@ if [ -e /etc/init.d/autofs ] ; then
 fi
 
 # ====== Show NorNet package versions =======================================
-if [ -e /usr/bin/apt-show-versions ] ; then
-   echo "====== Installed NorNet Software ============================================="
-   /usr/bin/apt-show-versions | grep "^nornet-"   
-   echo "=============================================================================="
+if [ "$Variant" = "Debian" ] ; then
+   if [ -e /usr/bin/apt-show-versions ] ; then
+      echo "====== Installed NorNet Software ============================================="
+      /usr/bin/apt-show-versions | grep "^nornet-"   
+      echo "=============================================================================="
+   fi
 fi
