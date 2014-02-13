@@ -334,8 +334,14 @@ else
    fi
    systemctl enable autofs.service
    service autofs restart >/dev/null 2>&1
+   
+   if [ "$Variant" = "Fedora" ] ; then
+      rpm -q openssh-server  >/dev/null || yum install -y openssh-server
+      systemctl enable sshd.service
+      systemctl start sshd.service
+   fi
 fi
-rm -f hostname.new hosts.new ntp.new modules.new rcS.new interfaces.new ifcfg.new route.new route6.new auto.master auto.nfs
+rm -f hostname.new hosts.new ntp.new modules.new rcS.new sysctl.new interfaces.new ifcfg.new route.new route6.new auto.master auto.nfs
 
 # Store parameters for later re-run.
 echo "$AllParameters" >$LAST_PARAMETERS_FILE
