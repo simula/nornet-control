@@ -320,7 +320,7 @@ else
    elif [ "$Variant" = "Fedora" ] ; then
       rpm -q system-config-keyboard || yum install -y system-config-keyboard
       system-config-keyboard
-   fi   
+   fi
 fi
 
 

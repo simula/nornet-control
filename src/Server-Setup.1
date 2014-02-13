@@ -33,6 +33,7 @@ node_index
 \-interface interface_name
 \-providers default_provider[,provider2,...]
 .Op \-controlbox
+.Op \-from-current-dir
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
 .Nm Server-Setup
@@ -64,9 +65,14 @@ index.
 If set, the node is a Control Box. That is, the default routes are not via
 the NorNet network. In this case, static routes for just the NorNet address
 range are configured instead of using default routes.
+.It \-from-current-dir
+If set, System-Setup looks for scripts in the current directory rather than
+in the system installation paths. This is useful for using System-Setup
+without installing it or for using a different version.
 .El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
-.It Server-Setup isbjoen.unis.nornet 254 \-site 8 \-interface eth0 \-providers Uninett Hafslund
+.It Server-Setup isbjoen.unis.nornet 254 \-site 8 \-interface eth0 \-providers uninett,telenor
+.It Server-Setup queenstown.simula.nornet 230 \-site 1 \-interface eth0 \-providers uninett,hafslund,telenor
 .El
