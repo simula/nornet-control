@@ -58,9 +58,12 @@ def writeHosts(outputName, hostName, domainName):
 # ###### Write sysctl.conf file #############################################
 def writeSysctlConfiguration(outputName, interfaceName):
    outputFile = codecs.open(outputName, 'w', 'utf-8')
+   outputFile.write('# Disable IPv6 auto-config on NorNet interface:\n')
    outputFile.write('net.ipv6.conf.' + interfaceName + '.use_tempaddr=0\n')
    outputFile.write('net.ipv6.conf.' + interfaceName + '.autoconf=0\n')
    outputFile.write('net.ipv6.conf.' + interfaceName + '.accept_ra=0\n')
+   outputFile.write('# Enable TCP ECN:\n')
+   outputFile.write('net.ipv4.tcp_ecn=1\n')
    outputFile.close()
 
 
