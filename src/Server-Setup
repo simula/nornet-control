@@ -187,11 +187,21 @@ colordiff /etc/hostname hostname.new
 echo "------ /etc/hosts:"
 colordiff /etc/hosts hosts.new
 echo "------ /etc/ntp.conf:"
-colordiff /etc/ntp.conf ntp.new
+if [ -e /etc/ntp.conf ] ; then
+   colordiff /etc/ntp.conf ntp.new
+else
+   cat ntp.new
+fi
 echo "------ /etc/modules:"
 colordiff /etc/modules modules.new
 echo "------ /etc/default/rcS:"
 colordiff /etc/default/rcS rcS.new
+echo "------ /etc/profile.d/proxy.sh:"
+if [ -e /etc/sysctl.d/90-nornet.conf ] ; then
+   colordiff /etc/sysctl.d/90-nornet.conf sysctl.new
+else
+   cat sysctl.new
+fi
 echo "------ /etc/profile.d/proxy.sh:"
 if [ -e /etc/profile.d/proxy.sh ] ; then
    colordiff /etc/profile.d/proxy.sh proxy.sh.new
@@ -229,7 +239,11 @@ if [ -e route6.new -a  -e /etc/sysconfig/network-scripts/route6-$InterfaceName ]
    colordiff /etc/sysconfig/network-scripts/route6-$InterfaceName route6.new
 fi
 echo "------ /etc/auto.master:"
-colordiff /etc/auto.master auto.master
+if [ -e /etc/auto.master ] ; then
+   colordiff /etc/auto.master auto.master
+else
+   cat auto.master
+fi
 echo "------ /etc/auto.nfs:"
 if [ -e /etc/auto.nfs ] ; then
    colordiff /etc/auto.nfs auto.nfs
@@ -254,6 +268,7 @@ else
 
    cp modules.new /etc/modules
    cp rcS.new /etc/default/rcS
+   cp sysctl.new /etc/sysctl.d/90-nornet.conf
 
    cp /etc/ntp.conf /etc/ntp.conf~
    cp ntp.new /etc/ntp.conf
@@ -299,8 +314,25 @@ else
    cp auto.master /etc/auto.master
    cp auto.nfs /etc/auto.nfs
 
+   sysctl -f
+   if [ "$Variant" = "Fedora" ] ; then
+      chkconfig network on
+      systemctl start network.service
+   fi
    service networking restart >/dev/null 2>&1
-   service ntp restart >/dev/null 2>&1
+
+   if [ "$Variant" = "Debian" ] ; then
+      service ntp restart >/dev/null 2>&1
+   elif [ "$Variant" = "Fedora" ] ; then
+      rpm -q ntp >/dev/null || yum install -y ntp
+      systemctl enable ntpd.service
+      systemctl start ntpd.service
+   fi
+
+   if [ "$Variant" = "Fedora" ] ; then
+      rpm -q autofs  >/dev/null || yum install -y autofs
+   fi
+   systemctl enable autofs.service
    service autofs restart >/dev/null 2>&1
 fi
 rm -f hostname.new hosts.new ntp.new modules.new rcS.new interfaces.new ifcfg.new route.new route6.new auto.master auto.nfs
