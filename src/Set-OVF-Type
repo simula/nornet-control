@@ -1,0 +1,42 @@
+#!/bin/bash -e
+#
+# Interchange VirtualBox/ and MWare OVFs
+# Copyright (C) 2014 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+if [ $# -ne 2 ] ; then
+   echo >&2 "Usage: $0 OVF_file -vbox|-vmware"
+   exit 1
+fi
+
+NAME="$1"
+TYPE="$2"
+
+NEW_TYPE=""
+if [ "$TYPE" = "-vbox" ] ; then
+   NEW_TYPE="virtualbox-2.2"
+elif [ "$TYPE" = "-vmware" ] ; then
+   NEW_TYPE="vmx-7"
+else
+   echo >&2 "ERROR: Bad type $TYPE!"
+   exit 1
+fi
+
+sed -e "s/<vssd:VirtualSystemType>[a-zA-Z0-9-]*<\/vssd:VirtualSystemType>/<vssd:VirtualSystemType>$NEW_TYPE<\/vssd:VirtualSystemType>/g" \
+   <"$NAME" >"$NAME.newtype" && \
+mv "$NAME.newtype" "$NAME"
