@@ -1,0 +1,56 @@
+.\" Interchange VirtualBox/ and MWare OVFs
+.\" Copyright (C) 2014 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd Feburary 18, 2014
+.Dt Set-OVF-Type 1
+.Os Set-OVF-Type
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Set-OVF-Type
+.Nd NorNet Server Virtual Machine Interchange Helper
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Set-OVF-Type
+OVF_name
+\-vbox|\-vmware
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Set-OVF-Type
+converts an OVF file between VirtualBox and VMware. It simply does this by
+exchanging the vssd:VirtualSystemType XML tag, it does *not* convert any
+virtual hardware! For images to be interoperable, compatible hardware
+(particularly: SCSI controller for the disks instead of SATA, SAS, etc.) is
+required.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+.Bl -tag -width indent
+.It OVF_name
+The name of the OVF file.
+.It -vbox
+Sets VirtualBox as type.
+.It -vmware
+Sets VMware as type.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Set-OVF-Type PlanetLabBuildSystem-build1-benlomond.simula.nornet.ovf -vbox
+.It Set-OVF-Type PlanetLabBuildSystem-testmaster-earnslaw.simula.nornet.ovf -vmware
+.El

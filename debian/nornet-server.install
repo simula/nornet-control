@@ -10,6 +10,7 @@ Make-VSystem-Template             /usr/bin
 Reset-VSystem                     /usr/bin
 Server-Setup                      /usr/bin
 Server-Watchdog                   /usr/bin
+Set-OVF-Type                      /usr/bin
 Show-VSystems                     /usr/bin
 Start-VSystem                     /usr/bin
 Stop-VSystem                      /usr/bin
