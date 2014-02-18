@@ -37,6 +37,10 @@ else
    exit 1
 fi
 
-sed -e "s/<vssd:VirtualSystemType>[a-zA-Z0-9-]*<\/vssd:VirtualSystemType>/<vssd:VirtualSystemType>$NEW_TYPE<\/vssd:VirtualSystemType>/g" \
+sed -e "s/<vssd:VirtualSystemType>[a-zA-Z0-9\.-]*<\/vssd:VirtualSystemType>/<vssd:VirtualSystemType>$NEW_TYPE<\/vssd:VirtualSystemType>/g" \
    <"$NAME" >"$NAME.newtype" && \
+echo "Changes:" && \
+colordiff "$NAME.newtype" "$NAME" || true && \
+echo "Result:" && \
+grep "vssd:VirtualSystemType" "$NAME" || true && \
 mv "$NAME.newtype" "$NAME"
