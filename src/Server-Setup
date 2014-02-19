@@ -127,9 +127,7 @@ done
 # ====== Check for /etc/nornet and /etc/nornet/nornetapi-constants ==========
 if [ ! -d /etc/nornet/ -o ! -e /etc/nornet/nornetapi-constants ] ; then
    if [ "$MakeServerConfigurationPath" != "" ] ; then
-      echo "x1"
       if [ -e nornetapi-constants ] ; then
-      echo "x2"
          echo -en "\x1b[33mInstall /etc/nornet/nornetapi-constants? [yes/no]?\x1b[0m "
          read -er applyChanges
          if [ "$applyChanges" == "yes" -o "$applyChanges" == "y" ] ; then
@@ -270,7 +268,9 @@ else
    cp rcS.new /etc/default/rcS
    cp sysctl.new /etc/sysctl.d/90-nornet.conf
 
-   cp /etc/ntp.conf /etc/ntp.conf~
+   if [ -e /etc/ntp.conf ] ; then
+      cp /etc/ntp.conf /etc/ntp.conf~
+   fi
    cp ntp.new /etc/ntp.conf
 
    if [ -e /etc/profile.d/proxy.sh ] ; then
