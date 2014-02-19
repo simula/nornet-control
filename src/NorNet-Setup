@@ -72,7 +72,9 @@ norNetSetup = [
       [ 108,  9, u'skøyen'      ],
       [ 109, 10, u'vækerø'      ],
       [ 110, 11, u'akerselva'   ],
-      [ 111, 12, u'ullern'      ]
+      [ 111, 12, u'ullern'      ],
+
+      [ 119, 19, u'test'        ]
    ] },
 
  { 'site_index'        : 2,
@@ -477,35 +479,35 @@ norNetSetup = [
       [ 101, 2, u'clinton' ],
       [ 102, 3, u'williamstown' ],
       [ 103, 4, u'stull' ]
-   ] },
-
- { 'site_index'        : 120,
-   'site_enabled'      : False,
-   'site_long_name'    : u'Universidade Federal de São Carlos',
-   'site_short_name'   : 'UFSCAR',
-   'site_url'          : 'http://www.ufscar.nornet',
-   'site_domain'       : 'ufscar.nornet',
-   'site_city'         : 'São Paulo',
-   'site_province'     : 'São Paulo',
-   'site_country'      : 'Brazil',
-   'site_country_code' : 'BR',
-   'site_latitude'     : -21.980956,
-   'site_longitude'    : -47.883528,
-   'site_altitude'     : 50,
-   'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ u'Rede Nacional de Ensino e Pesquisa', 'eth1',
-           IPv4Network('200.133.238.124/27'), IPv4Address('200.133.238.97'),
-           IPv6Network('::/0'),               IPv6Address('::') ],
-      [ u'Academic Network at São Paulo', 'eth2',
-           IPv4Network('186.219.95.214/24'), IPv4Address('186.219.95.1'),
-           IPv6Network('::/0'),              IPv6Address('::') ]
-   ],
-   'site_nodes' : [
-      #[ 100, 1, u'smörgåstårta' ],
-      #[ 101, 2, u'knäckebröd'   ]
    ] }
+
+ #{ 'site_index'        : 120,
+   #'site_enabled'      : False,
+   #'site_long_name'    : u'Universidade Federal de São Carlos',
+   #'site_short_name'   : 'UFSCAR',
+   #'site_url'          : 'http://www.ufscar.nornet',
+   #'site_domain'       : 'ufscar.nornet',
+   #'site_city'         : 'São Paulo',
+   #'site_province'     : 'São Paulo',
+   #'site_country'      : 'Brazil',
+   #'site_country_code' : 'BR',
+   #'site_latitude'     : -21.980956,
+   #'site_longitude'    : -47.883528,
+   #'site_altitude'     : 50,
+   #'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'Rede Nacional de Ensino e Pesquisa', 'eth1',
+           #IPv4Network('200.133.238.124/27'), IPv4Address('200.133.238.97'),
+           #IPv6Network('::/0'),               IPv6Address('::') ],
+      #[ u'Academic Network at São Paulo', 'eth2',
+           #IPv4Network('186.219.95.214/24'), IPv4Address('186.219.95.1'),
+           #IPv6Network('::/0'),              IPv6Address('::') ]
+   #],
+   #'site_nodes' : [
+      ##[ 100, 1, u'smörgåstårta' ],
+      ##[ 101, 2, u'knäckebröd'   ]
+   #] }
 
       #[ 100, 1, u'lutefisk'     ],
       #[ 101, 2, u'pinnekjøtt'   ],
