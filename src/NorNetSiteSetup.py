@@ -581,63 +581,63 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       #      getPLCServer().DeleteConfFile(getPLCAuthentication(), file['conf_file_id'])
 
       # ====== Add yum repositories =========================================
-      #yumRepoSourceFile = codecs.open('nornet.repo', 'r', 'utf-8')
-      #yumRepoSource = yumRepoSourceFile.read()
-      #yumRepoSourceFile.close()
+      yumRepoSourceFile = codecs.open('nornet.repo', 'r', 'utf-8')
+      yumRepoSource = yumRepoSourceFile.read()
+      yumRepoSourceFile.close()
 
-      #yumKeySourceFile = codecs.open('nornet.key', 'r', 'utf-8')
-      #yumKeySource = yumKeySourceFile.read()
-      #yumKeySourceFile.close()
+      yumKeySourceFile = codecs.open('nornet.key', 'r', 'utf-8')
+      yumKeySource = yumKeySourceFile.read()
+      yumKeySourceFile.close()
 
-      #yumRepoName = '/var/www/html/PlanetLabConf/nornet.repo'
-      #try:
-         #yumRepo = codecs.open(yumRepoName, 'w', 'utf-8')
-         #yumRepo.write(yumRepoSource)
-         #yumRepo.close()
-      #except:
-         #print('WARNING: Unable to write ' + yumRepoName)
+      yumRepoName = '/var/www/html/PlanetLabConf/nornet.repo'
+      try:
+         yumRepo = codecs.open(yumRepoName, 'w', 'utf-8')
+         yumRepo.write(yumRepoSource)
+         yumRepo.close()
+      except:
+         print('WARNING: Unable to write ' + yumRepoName)
 
-      #yumKeyName = '/var/www/html/PlanetLabConf/nornet.key'
-      #try:
-         #yumKey = codecs.open(yumKeyName, 'w', 'utf-8')
-         #yumKey.write(yumKeySource)
-         #yumKey.close()
-      #except:
-         #print('WARNING: Unable to write ' + yumRepoName)
+      yumKeyName = '/var/www/html/PlanetLabConf/nornet.key'
+      try:
+         yumKey = codecs.open(yumKeyName, 'w', 'utf-8')
+         yumKey.write(yumKeySource)
+         yumKey.close()
+      except:
+         print('WARNING: Unable to write ' + yumRepoName)
 
-      #fileSource      = yumRepoName.replace('/var/www/html/', '')
-      #fileDestination = '/etc/yum.myplc.d/nornet.repo'
-      #confFileID = _addOrUpdateConfFile({
-         #'file_owner'        : u'root',
-         #'postinstall_cmd'   : u'',
-         #'error_cmd'         : u'',
-         #'preinstall_cmd'    : u'',
-         #'dest'              : fileDestination,
-         #'ignore_cmd_errors' : False,
-         #'enabled'           : True,
-         #'file_permissions'  : u'644',
-         #'source'            : fileSource,
-         #'always_update'     : False,
-         #'file_group'        : u'root'})
-      #if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
-         #error('Unable to add repository configuration file to node ' + nodeHostName)
+      fileSource      = yumRepoName.replace('/var/www/html/', '')
+      fileDestination = '/etc/yum.myplc.d/nornet.repo'
+      confFileID = _addOrUpdateConfFile({
+         'file_owner'        : u'root',
+         'postinstall_cmd'   : u'',
+         'error_cmd'         : u'',
+         'preinstall_cmd'    : u'',
+         'dest'              : fileDestination,
+         'ignore_cmd_errors' : False,
+         'enabled'           : True,
+         'file_permissions'  : u'644',
+         'source'            : fileSource,
+         'always_update'     : False,
+         'file_group'        : u'root'})
+      if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
+         error('Unable to add repository configuration file to node ' + nodeHostName)
 
-      #fileSource      = yumKeyName.replace('/var/www/html/', '')
-      #fileDestination = '/etc/pki/rpm-gpg/nornet.key'
-      #confFileID = _addOrUpdateConfFile({
-         #'file_owner'        : u'root',
-         #'postinstall_cmd'   : u'',
-         #'error_cmd'         : u'',
-         #'preinstall_cmd'    : u'',
-         #'dest'              : fileDestination,
-         #'ignore_cmd_errors' : False,
-         #'enabled'           : True,
-         #'file_permissions'  : u'644',
-         #'source'            : fileSource,
-         #'always_update'     : False,
-         #'file_group'        : u'root'})
-      #if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
-         #error('Unable to add repository configuration file to node ' + nodeHostName)
+      fileSource      = yumKeyName.replace('/var/www/html/', '')
+      fileDestination = '/etc/pki/rpm-gpg/nornet.key'
+      confFileID = _addOrUpdateConfFile({
+         'file_owner'        : u'root',
+         'postinstall_cmd'   : u'',
+         'error_cmd'         : u'',
+         'preinstall_cmd'    : u'',
+         'dest'              : fileDestination,
+         'ignore_cmd_errors' : False,
+         'enabled'           : True,
+         'file_permissions'  : u'644',
+         'source'            : fileSource,
+         'always_update'     : False,
+         'file_group'        : u'root'})
+      if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
+         error('Unable to add repository configuration file to node ' + nodeHostName)
 
       # ====== Provide proxy configurations =================================
       try:
