@@ -331,10 +331,10 @@ else
 
    if [ "$Variant" = "Fedora" ] ; then
       rpm -q autofs  >/dev/null || yum install -y autofs
+      systemctl enable autofs.service
    fi
-   systemctl enable autofs.service
    service autofs restart >/dev/null 2>&1
-   
+
    if [ "$Variant" = "Fedora" ] ; then
       rpm -q openssh-server  >/dev/null || yum install -y openssh-server
       systemctl enable sshd.service
