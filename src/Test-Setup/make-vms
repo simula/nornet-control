@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 ISO_DIRECTORY="$HOME/Downloads"
 ISOs=`find $ISO_DIRECTORY -name *test.iso`
@@ -12,5 +12,10 @@ for iso in $ISOs ;do
 
    name=`echo "$iso" | sed -e "s/.*\///g" -e "s/.iso$//g"`
 
+   site=`echo "$name" | sed -e "s/\.test$//g" -e "s/^.*\.//g" -e "s/\b\(.\)/\u\1/g"`
+   net="TestNetwork-${site}"
+   echo "$net"
+
    ../Make-Research-VM $name $iso $VM_MEMORY $VM_DISK $VM_DISK_TYPE
+   VBoxManage modifyvm $name --nic1 intnet --intnet1 "$net"
 done
