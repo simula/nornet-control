@@ -25,6 +25,7 @@ import re;
 import os;
 import hashlib;
 import datetime;
+import time;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
@@ -580,6 +581,26 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       #      print file['conf_file_id'], file['dest'],file['source']
       #      getPLCServer().DeleteConfFile(getPLCAuthentication(), file['conf_file_id'])
 
+      # ====== nodemanager ==================================================
+      # !!! FIXME: This should not be necessary, but currently the nm.service
+      # assumes the existence of this file!
+      nmConfigName    = '/var/www/html/PlanetLabConf/nodemanager'
+      fileSource      = nmConfigName.replace('/var/www/html/', '')
+      fileDestination = '/etc/sysconfig/nodemanager'
+      confFileID = _addOrUpdateConfFile({
+         'postinstall_cmd' : u'service nm restart',
+         'dest'            : fileDestination,
+         'source'          : fileSource})
+      if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
+         error('Unable to add nodemanager configuration file to node ' + nodeHostName)
+
+      try:
+         nmConfig = codecs.open(nmConfigName, 'w', 'utf-8')
+         nmConfig.write('OPTIONS=""\n')
+         nmConfig.close()
+      except:
+         print('WARNING: Unable to write ' + nmConfigName)
+
       # ====== Add yum repositories =========================================
       yumRepoSourceFile = codecs.open('nornet.repo', 'r', 'utf-8')
       yumRepoSource = yumRepoSourceFile.read()
@@ -804,7 +825,7 @@ def _addOrUpdateSliceTag(sliceID, node, tagName, tagValue):
 
 
 # ###### Create NorNet slice ################################################
-def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScript):
+def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScript, expirationTime):
    try:
       # ====== Add slice =====================================================
       log('Adding slice ' + sliceName + ' ...')
@@ -826,6 +847,10 @@ def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScrip
       slice['description'] = sliceDescription
       slice['url']         = sliceUrl
       slice['initscript']  = initScript
+      if expirationTime == 0:
+         slice['expires'] = int(time.mktime(time.strptime('2038-01-18@23:59:59', '%Y-%m-%d@%H:%M:%S')))
+      else:
+         slice['expires'] = expirationTime
 
       if getPLCServer().UpdateSlice(getPLCAuthentication(), sliceID, slice) != 1:
         sliceID = 0
