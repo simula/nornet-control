@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # NorNet Site Setup
-# Copyright (C) 2012-2013 by Thomas Dreibholz
+# Copyright (C) 2012-2014 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -850,7 +850,7 @@ def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScrip
       if expirationTime == 0:
          slice['expires'] = int(time.mktime(time.strptime('2038-01-18@23:59:59', '%Y-%m-%d@%H:%M:%S')))
       else:
-         slice['expires'] = expirationTime
+         slice['expires'] = int(expirationTime)
 
       if getPLCServer().UpdateSlice(getPLCAuthentication(), sliceID, slice) != 1:
         sliceID = 0
