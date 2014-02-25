@@ -580,6 +580,26 @@ def makeNorNetNode(site, nodeNiceName, nodeNorNetIndex,
       #      print file['conf_file_id'], file['dest'],file['source']
       #      getPLCServer().DeleteConfFile(getPLCAuthentication(), file['conf_file_id'])
 
+      # ====== nodemanager ==================================================
+      # !!! FIXME: This should not be necessary, but currently the nm.service
+      # assumes the existence of this file!
+      nmConfigName    = '/var/www/html/PlanetLabConf/nodemanager'
+      fileSource      = nmConfigName.replace('/var/www/html/', '')
+      fileDestination = '/etc/sysconfig/nodemanager'
+      confFileID = _addOrUpdateConfFile({
+         'postinstall_cmd' : u'service nm restart',
+         'dest'            : fileDestination,
+         'source'          : fileSource})
+      if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
+         error('Unable to add nodemanager configuration file to node ' + nodeHostName)
+
+      try:
+         nmConfig = codecs.open(nmConfigName, 'w', 'utf-8')
+         nmConfig.write('OPTIONS=""\n')
+         nmConfig.close()
+      except:
+         print('WARNING: Unable to write ' + nmConfigName)
+
       # ====== Add yum repositories =========================================
       yumRepoSourceFile = codecs.open('nornet.repo', 'r', 'utf-8')
       yumRepoSource = yumRepoSourceFile.read()
