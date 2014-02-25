@@ -25,6 +25,7 @@ import re;
 import os;
 import hashlib;
 import datetime;
+import time;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
@@ -824,7 +825,7 @@ def _addOrUpdateSliceTag(sliceID, node, tagName, tagValue):
 
 
 # ###### Create NorNet slice ################################################
-def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScript):
+def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScript, expirationTime):
    try:
       # ====== Add slice =====================================================
       log('Adding slice ' + sliceName + ' ...')
@@ -846,6 +847,10 @@ def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScrip
       slice['description'] = sliceDescription
       slice['url']         = sliceUrl
       slice['initscript']  = initScript
+      if expirationTime == 0:
+         slice['expires'] = int(time.mktime(time.strptime('2038-01-18@23:59:59', '%Y-%m-%d@%H:%M:%S')))
+      else:
+         slice['expires'] = expirationTime
 
       if getPLCServer().UpdateSlice(getPLCAuthentication(), sliceID, slice) != 1:
         sliceID = 0

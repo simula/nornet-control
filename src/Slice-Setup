@@ -21,7 +21,7 @@
 
 import re;
 import os;
-import base64;
+import time;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
@@ -43,7 +43,7 @@ if len(sys.argv) > 2:
    elif sys.argv[1] == 'remove':
       action = 'remove'
 if action == '':
-   error('Usage: ' + sys.argv[0] + ' add|renew|remove [--name=Name] [--own-addresses] [--description=Description] [--url=URL] [--user=User] ...')
+   error('Usage: ' + sys.argv[0] + ' add|renew|remove [--name=Name] [--own-addresses] [--permanent] [--description=Description] [--url=URL] [--user=User] ...')
 
 
 sliceName        = None
@@ -52,6 +52,7 @@ sliceUsers       = []
 ownAddresses     = False
 sliceDescription = "PROVIDE A DESCRIPTION HERE!"
 sliceUrl         = "PROVIDE A PROJECT URL HERE!"
+expiration       = time.time() + (8 * 7 * 24 * 60 * 60)
 
 i = 2
 while i < len(sys.argv):
@@ -70,6 +71,8 @@ while i < len(sys.argv):
    else:
      if sys.argv[i] == '--own-addresses':
         ownAddresses = True
+     elif sys.argv[i] == '--permanent':
+        expiration = 0
      else:
         error('Invalid option: ' + sys.argv[i])
 
@@ -97,7 +100,7 @@ if ((action == 'remove') or (action == 'renew')):
       removeNorNetSlice(sliceName)
 
 if ((action == 'add') or (action == 'renew')):
-   slice = makeNorNetSlice(sliceName, ownAddresses, sliceDescription, sliceUrl, 'nornet_slice_initscript')
+   slice = makeNorNetSlice(sliceName, ownAddresses, sliceDescription, sliceUrl, 'nornet_slice_initscript', expiration)
 
    log('Adding slice to all nodes ...')
    addNorNetSliceToNorNetNodes(fullSiteList, fullNodeList, fullSliceList, slice, fullNodeList)
