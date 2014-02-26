@@ -15,6 +15,7 @@ while [ "$1" != "" ] ; do
    echo "Current MD5:  $isoMD5"
    
    if [ "$originalMD5" != "$isoMD5" ] ; then
-      echo "Files differ!"
+      echo "##### WARNING: Files differ! #####"
+      rm "$ISO"
    fi
 done
