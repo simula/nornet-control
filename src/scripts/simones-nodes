@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NODES="julenisse.uia.nornet reinsvoll.hig.nornet nordlys.unis.nornet altenessen.ude.nornet amundsen.uit.nornet wanqun.hu.nornet"
+NODES="altenessen.dfn.ude.nornet wanqun.cernet.hu.nornet nordlys.uninett.unis.nornet julenisse.uninett.uia.nornet reinsvoll.uninett.hig.nornet amundsen.uninett.uit.nornet"
 
 ACTION="$1"
 
@@ -11,7 +11,8 @@ for node in $NODES ; do
    elif [ "$ACTION" = "nm" ] ; then
       sudo ssh -i /etc/planetlab/root_ssh_key.rsa root@$node -- service nm restart &
    elif [ "$ACTION" = "sliver" ] ; then
-      sudo ssh -i /etc/planetlab/root_ssh_key.rsa srl_mptcp@$node -- netstat -tan
+      ip=`dig +short $node a @fornebu.nntb.no`
+      ssh srl_mptcp@$ip -- uname -a
    else
       echo >&2 "ERROR: Bad action $1."
       exit 1
