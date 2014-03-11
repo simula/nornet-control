@@ -1,0 +1,20 @@
+#!/bin/sh
+
+NODES="julenisse.uia.nornet reinsvoll.hig.nornet nordlys.unis.nornet altenessen.ude.nornet amundsen.uit.nornet wanqun.hu.nornet"
+
+ACTION="$1"
+
+for node in $NODES ; do
+   echo  "Node $node:"
+   if [ "$ACTION" = "reboot" ] ; then
+      sudo ssh -i /etc/planetlab/root_ssh_key.rsa root@$node -- sudo reboot &
+   elif [ "$ACTION" = "nm" ] ; then
+      sudo ssh -i /etc/planetlab/root_ssh_key.rsa root@$node -- service nm restart &
+   elif [ "$ACTION" = "sliver" ] ; then
+      sudo ssh -i /etc/planetlab/root_ssh_key.rsa srl_mptcp@$node -- netstat -tan
+   else
+      echo >&2 "ERROR: Bad action $1."
+      exit 1
+   fi
+done
+wait
