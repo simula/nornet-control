@@ -1,5 +1,6 @@
 #!/bin/bash
 
+SLICE=srl-mptcp
 NODES="altenessen.dfn.ude.nornet wanqun.cernet.hu.nornet nordlys.uninett.unis.nornet julenisse.uninett.uia.nornet reinsvoll.uninett.hig.nornet amundsen.uninett.uit.nornet"
 LEVELS=10
 
@@ -8,7 +9,7 @@ START=15999
 
 i=$START
 for node in $NODES ; do
-   ip=`dig +short $node a @fornebu.nntb.no`
+   ip=`dig +short $SLICE.$node a @fornebu.nntb.no`
 
    #echo  "Node $node -> $ip"
 

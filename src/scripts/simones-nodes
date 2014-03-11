@@ -12,7 +12,7 @@ for node in $NODES ; do
       sudo ssh -i /etc/planetlab/root_ssh_key.rsa root@$node -- service nm restart &
    elif [ "$ACTION" = "sliver" ] ; then
       ip=`dig +short $node a @fornebu.nntb.no`
-      ssh srl_mptcp@$ip -- uname -a
+      ssh srl_mptcp@$ip -- "uname -a && ip -4 addr show 2>&1 | grep inet | grep eth0"
    else
       echo >&2 "ERROR: Bad action $1."
       exit 1
