@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NODES="julenisse.uia.nornet reinsvoll.hig.nornet nordlys.unis.nornet altenessen.ude.nornet amundsen.uit.nornet wanqun.hu.nornet"
+NODES="julenisse.uia.nornet reinsvoll.hig.nornet nordlys.unis.nornet altenessen.ude.nornet amundsen.uit.nornet wanqun.hu.nornet mariebergsskogen.kau.nornet"
 
 ACTION="$1"
 
