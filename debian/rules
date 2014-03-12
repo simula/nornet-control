@@ -22,4 +22,4 @@ override_dh_installchangelogs:
 
 # Do not compress example files
 override_dh_compress:
-	dh_compress -Xnornet-config
+	dh_compress -Xnornetapi-config -Xnornetapi-constants
