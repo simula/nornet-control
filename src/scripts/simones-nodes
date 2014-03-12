@@ -4,6 +4,7 @@ NODES="julenisse.uia.nornet reinsvoll.hig.nornet nordlys.unis.nornet altenessen.
 
 ACTION="$1"
 
+sudo date
 for node in $NODES ; do
    echo  "Node $node:"
    if [ "$ACTION" = "reboot" ] ; then
