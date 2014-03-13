@@ -1,9 +1,10 @@
 #!/bin/sh
 
-NODES="altenessen.dfn.ude.nornet wanqun.cernet.hu.nornet nordlys.uninett.unis.nornet julenisse.uninett.uia.nornet reinsvoll.uninett.hig.nornet amundsen.uninett.uit.nornet"
+NODES="altenessen.dfn.ude.nornet wanqun.cernet.hu.nornet nordlys.uninett.unis.nornet julenisse.uninett.uia.nornet reinsvoll.uninett.hig.nornet amundsen.uninett.uit.nornet mariebergsskogen.sunet.kau.nornet"
 
 ACTION="$1"
 
+sudo date
 for node in $NODES ; do
    echo  "Node $node:"
    if [ "$ACTION" = "reboot" ] ; then

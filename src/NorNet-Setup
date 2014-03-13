@@ -368,6 +368,41 @@ norNetSetup = [
       [ 105, 6, u'fagernesfjellet'   ]
    ] },
 
+ { 'site_index'        : 11,
+   'site_enabled'      : True,
+   'site_long_name'    : u'Høgskolen i Oslo og Akershus',
+   'site_short_name'   : 'HiOA',
+   'site_url'          : 'http://www.hioa.nornet',
+   'site_domain'       : 'hioa.nornet',
+   'site_city'         : 'Oslo',
+   'site_province'     : 'Oslo',
+   'site_country'      : 'Norge',
+   'site_country_code' : 'NO',
+   'site_latitude'     : 59.921732,
+   'site_longitude'    : 10.735502,
+   'site_altitude'     : 20,
+   'site_pcu'          : [ IPv4Address('128.39.120.63'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Uninett', 'eth1',
+           IPv4Network('128.39.120.60/23'),       IPv4Address('128.39.120.1'),
+           IPv6Network('2001:700:700:22::60/64'), IPv6Address('2001:700:700:22::') ]
+      #[ u'Provider Zwei', 'eth2',
+           #IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
+           #IPv6Network('::/0'),  IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, u'hovedøya'    ],
+      [ 101, 2, u'lindøya'     ],
+      [ 102, 3, u'nakholmen'   ],
+      [ 103, 4, u'gressholmen' ],
+      [ 104, 5, u'bleikøya'    ],
+      [ 105, 6, u'langøyene'   ],
+      [ 106, 7, u'heggholmen'  ],
+      [ 107, 8, u'rambergøya'  ],
+      [ 108, 9, u'vippetangen' ]
+   ] },
+
  { 'site_index'        : 42,
    'site_enabled'      : True,
    'site_long_name'    : u'Universität Duisburg-Essen',

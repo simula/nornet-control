@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SLICE=srl-mptcp
-NODES="altenessen.dfn.ude.nornet wanqun.cernet.hu.nornet nordlys.uninett.unis.nornet julenisse.uninett.uia.nornet reinsvoll.uninett.hig.nornet amundsen.uninett.uit.nornet"
+NODES="altenessen.dfn.ude.nornet wanqun.cernet.hu.nornet nordlys.uninett.unis.nornet julenisse.uninett.uia.nornet reinsvoll.uninett.hig.nornet amundsen.uninett.uit.nornet mariebergsskogen.sunet.kau.nornet"
 LEVELS=10
 
 RANGE=3
