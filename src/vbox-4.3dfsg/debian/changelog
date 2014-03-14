@@ -1,26 +1,79 @@
-virtualbox (4.2.14-dfsg-1~saucy1) saucy; urgency=low
+virtualbox (4.3.6-dfsg-2) unstable; urgency=medium
 
-  * Build for saucy.
+  * Disable bindnow in hardening-wrapper. This fixes loading the x11 driver.
+    (LP: #1280292)
+
+ -- Felix Geyer <fgeyer@debian.org>  Sat, 15 Feb 2014 11:02:21 +0100
+
+virtualbox (4.3.6-dfsg-1) unstable; urgency=medium
+
+  * New upstream release. (Closes: #733263)
+    - Fixes build against Linux 3.13. (Closes: #734340)
+    - Fixes several vulnerabilities. (Closes: #735410)
+      CVE-2013-5892, CVE-2014-0407, CVE-2014-0406, CVE-2014-0404
+  * Drop compatibility with old X11 server packages.
+  * Enable hardened build flags using hardening-wrapper. The upstream build
+    system ignores the *FLAGS env variables. (Closes: #736459)
+  * Refresh 16-no-update.patch.
+
+ -- Felix Geyer <fgeyer@debian.org>  Mon, 10 Feb 2014 21:41:40 +0100
+
+virtualbox (4.3.2-dfsg-1) unstable; urgency=low
+
+  [ Ritesh Raj Sarraf ]
+  * [a4d35eb] Drop patch 30-usb-warning-filters.patch
+  * [84b99a4] Refresh patch 27-hide-host-cache-warning.patch
+  * [55f29e6] Add virtualbox-guest-x11.postrm and call ldconfig in postrm
+  * [9bbe020] Don't ship .debug files, when we already are stripping dwarf
+    symbols from its libraries
+  * Fix VBox network interface error on Linux 3.11
+    - Add 38-linux-3.11-vboxnet.patch 
+  * [8e73a12] Imported Upstream version 4.3.2-dfsg
+  * [9b2bc93] Fix VBox network interface error on Linux 3.11
+  * [516aa9a] Refresh patches and drop patch 37 and 38 for linux 3.11
+  * [ab699e4] bump versioned build-dep on kbuild to r2695
+  * [5913c87] Add myself to Uploaders
+  * [8e53496] Add libvpx-dev to build-deps
+  * [caeed37] Add patch 02-gsoap-build-fix.patch to fix build
+    incompatibilities with gsoap > 2.8.13
+
+ -- Ritesh Raj Sarraf <rrs@debian.org>  Tue, 10 Dec 2013 10:15:34 -0500
+
+virtualbox (4.2.16-dfsg-3) unstable; urgency=low
+
+  [ Ritesh Raj Sarraf ]
+  * Fix VBox network interface error on Linux 3.11. (Closes: #721786)
+    - Extend 37-linux-3.11.patch
+
+ -- Felix Geyer <fgeyer@debian.org>  Thu, 19 Sep 2013 21:52:12 +0200
+
+virtualbox (4.2.16-dfsg-2) unstable; urgency=low
+
+  [ Whoopie ]
+  * Add VNC plugin module.
+    - debian/patches/36-fix-vnc-version-string.patch: fix version string.
+
+  [ Felix Geyer ]
+  * Fix compilation of guest additions with linux 3.11.
+    - Add 37-linux-3.11.patch.
+
+ -- Felix Geyer <fgeyer@debian.org>  Wed, 28 Aug 2013 22:15:25 +0200
+
+virtualbox (4.2.16-dfsg-1) unstable; urgency=high
+
+  [ Felix Geyer ]
   * New upstream release.
-  * Removed 38-allow-gcc-4.8.patch, applied upstream.
+    - Fixes CVE-2013-3792: virtio-net host DoS vulnerability. (Closes: #715327)
+  * Drop 36-python-multiarch.patch and 37-wheezy-kernel-drm.patch,
+    fixed upstream.
+  * Explicity load the vboxguest and vboxsf kernel modules in the
+    virtualbox-guest-utils init script.
+    This makes sure that shared folders can be mounted. (Closes: #712438)
 
- -- Gianfranco Costamagna <costamagnagianfranco@yahoo.it>  Tue, 25 Jun 2013 12:39:01 +0200
+  [ Gianfranco Costamagna ]
+  * Patch refresh.
 
-virtualbox (4.2.12-dfsg-1) unstable; urgency=low
-
-  * New upstream release.
-  * Bumped compat to 9.
-  * Disabled 36-python-multiarch.patch
-    and 37-wheezy-kernel-drm.patch, addressed upstream.
-
- -- Gianfranco Costamagna <costamagnagianfranco@yahoo.it>  Tue, 11 Jun 2013 19:18:17 +0200
-
-virtualbox (4.2.10-dfsg-2) UNRELEASED; urgency=low
-
-  * Allow building virtualbox with gcc 4.8.
-    - Add 38-allow-gcc-4.8.patch, cherry-picked from upstream
-
- -- Felix Geyer <fgeyer@debian.org>  Wed, 22 May 2013 21:10:36 +0200
+ -- Felix Geyer <fgeyer@debian.org>  Sun, 21 Jul 2013 23:25:44 +0200
 
 virtualbox (4.2.10-dfsg-1) unstable; urgency=low
 

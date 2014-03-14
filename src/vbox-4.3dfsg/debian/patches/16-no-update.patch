@@ -3,9 +3,11 @@ Bug-Ubuntu: https://bugs.launchpad.net/bugs/272212
 Author: Daniel Hahler <ubuntu@thequod.de>, Felix Geyer <fgeyer@debian.org>
 
 diff a/src/VBox/Frontends/VirtualBox/src/net/UIUpdateManager.cpp b/src/VBox/Frontends/VirtualBox/src/net/UIUpdateManager.cpp
---- a/src/VBox/Frontends/VirtualBox/src/net/UIUpdateManager.cpp
-+++ b/src/VBox/Frontends/VirtualBox/src/net/UIUpdateManager.cpp
-@@ -475,6 +475,8 @@ void UIUpdateManager::shutdown()
+Index: virtualbox/src/VBox/Frontends/VirtualBox/src/net/UIUpdateManager.cpp
+===================================================================
+--- virtualbox.orig/src/VBox/Frontends/VirtualBox/src/net/UIUpdateManager.cpp	2013-11-19 03:42:12.725479132 -0500
++++ virtualbox/src/VBox/Frontends/VirtualBox/src/net/UIUpdateManager.cpp	2013-11-19 03:42:12.721479132 -0500
+@@ -475,6 +475,8 @@
  
  void UIUpdateManager::sltForceCheck()
  {
@@ -14,29 +16,35 @@ diff a/src/VBox/Frontends/VirtualBox/src/net/UIUpdateManager.cpp b/src/VBox/Fron
      /* Force call for new version check: */
      sltCheckIfUpdateIsNecessary(true /* force call */);
  }
---- a/src/VBox/Frontends/VirtualBox/src/globals/UIActionPool.cpp
-+++ b/src/VBox/Frontends/VirtualBox/src/globals/UIActionPool.cpp
-@@ -650,7 +650,6 @@ void UIActionPool::createActions()
-     m_pool[UIActionIndex_Simple_WebSite] = new UIActionSimpleWebSite(this);
+Index: virtualbox/src/VBox/Frontends/VirtualBox/src/globals/UIActionPool.cpp
+===================================================================
+--- virtualbox.orig/src/VBox/Frontends/VirtualBox/src/globals/UIActionPool.cpp	2013-11-19 03:42:12.725479132 -0500
++++ virtualbox/src/VBox/Frontends/VirtualBox/src/globals/UIActionPool.cpp	2013-11-19 03:42:12.721479132 -0500
+@@ -650,7 +650,6 @@
      m_pool[UIActionIndex_Simple_ResetWarnings] = new UIActionSimpleResetWarnings(this);
+ #ifdef VBOX_GUI_WITH_NETWORK_MANAGER
      m_pool[UIActionIndex_Simple_NetworkAccessManager] = new UIActionSimpleNetworkAccessManager(this);
 -    m_pool[UIActionIndex_Simple_CheckForUpdates] = new UIActionSimpleCheckForUpdates(this);
+ #endif /* VBOX_GUI_WITH_NETWORK_MANAGER */
      m_pool[UIActionIndex_Simple_About] = new UIActionSimpleAbout(this);
  }
- 
---- a/src/VBox/Frontends/VirtualBox/src/globals/UIActionPool.h
-+++ b/src/VBox/Frontends/VirtualBox/src/globals/UIActionPool.h
-@@ -58,7 +58,6 @@ enum UIActionIndex
-     UIActionIndex_Simple_WebSite,
+Index: virtualbox/src/VBox/Frontends/VirtualBox/src/globals/UIActionPool.h
+===================================================================
+--- virtualbox.orig/src/VBox/Frontends/VirtualBox/src/globals/UIActionPool.h	2013-11-19 03:42:12.725479132 -0500
++++ virtualbox/src/VBox/Frontends/VirtualBox/src/globals/UIActionPool.h	2013-11-19 03:42:12.721479132 -0500
+@@ -58,7 +58,6 @@
      UIActionIndex_Simple_ResetWarnings,
+ #ifdef VBOX_GUI_WITH_NETWORK_MANAGER
      UIActionIndex_Simple_NetworkAccessManager,
 -    UIActionIndex_Simple_CheckForUpdates,
+ #endif /* VBOX_GUI_WITH_NETWORK_MANAGER */
      UIActionIndex_Simple_About,
  
-     /* Maximum index: */
---- a/src/VBox/Frontends/VirtualBox/src/selector/UISelectorWindow.cpp
-+++ b/src/VBox/Frontends/VirtualBox/src/selector/UISelectorWindow.cpp
-@@ -1324,12 +1324,6 @@ void UISelectorWindow::prepareMenuHelp(Q
+Index: virtualbox/src/VBox/Frontends/VirtualBox/src/selector/UISelectorWindow.cpp
+===================================================================
+--- virtualbox.orig/src/VBox/Frontends/VirtualBox/src/selector/UISelectorWindow.cpp	2013-11-19 03:42:12.725479132 -0500
++++ virtualbox/src/VBox/Frontends/VirtualBox/src/selector/UISelectorWindow.cpp	2013-11-19 04:34:19.701624365 -0500
+@@ -1324,12 +1324,6 @@
      pMenu->addSeparator();
      m_pNetworkAccessManager = gActionPool->action(UIActionIndex_Simple_NetworkAccessManager);
      pMenu->addAction(m_pNetworkAccessManager);
@@ -46,21 +54,22 @@ diff a/src/VBox/Frontends/VirtualBox/src/net/UIUpdateManager.cpp b/src/VBox/Fron
 -        pMenu->addAction(m_pUpdateAction);
 -    else
 -        m_pUpdateAction->setEnabled(false);
+ #endif /* VBOX_GUI_WITH_NETWORK_MANAGER */
  #ifndef Q_WS_MAC
      pMenu->addSeparator();
- #endif /* !Q_WS_MAC */
-@@ -1462,7 +1456,6 @@ void UISelectorWindow::prepareConnection
-     connect(m_pWebAction, SIGNAL(triggered()), &msgCenter(), SLOT(sltShowHelpWebDialog()));
+@@ -1462,7 +1456,6 @@
      connect(m_pResetWarningsAction, SIGNAL(triggered()), &msgCenter(), SLOT(sltResetSuppressedMessages()));
+ #ifdef VBOX_GUI_WITH_NETWORK_MANAGER
      connect(m_pNetworkAccessManager, SIGNAL(triggered()), gNetworkManager, SLOT(show()));
 -    connect(m_pUpdateAction, SIGNAL(triggered()), gUpdateManager, SLOT(sltForceCheck()));
+ #endif /* VBOX_GUI_WITH_NETWORK_MANAGER */
      connect(m_pAboutAction, SIGNAL(triggered()), &msgCenter(), SLOT(sltShowHelpAboutDialog()));
  
-     /* Status-bar connections: */
-diff a/src/VBox/Frontends/VirtualBox/src/settings/UISettingsDialogSpecific.cpp b/src/VBox/Frontends/VirtualBox/src/settings/UISettingsDialogSpecific.cpp
---- a/src/VBox/Frontends/VirtualBox/src/settings/UISettingsDialogSpecific.cpp
-+++ b/src/VBox/Frontends/VirtualBox/src/settings/UISettingsDialogSpecific.cpp
-@@ -533,6 +533,10 @@ bool UISettingsDialogGlobal::isPageAvailable(int iPageId)
+Index: virtualbox/src/VBox/Frontends/VirtualBox/src/settings/UISettingsDialogSpecific.cpp
+===================================================================
+--- virtualbox.orig/src/VBox/Frontends/VirtualBox/src/settings/UISettingsDialogSpecific.cpp	2013-11-19 03:42:12.725479132 -0500
++++ virtualbox/src/VBox/Frontends/VirtualBox/src/settings/UISettingsDialogSpecific.cpp	2013-11-19 03:42:12.725479132 -0500
+@@ -533,6 +533,10 @@
  #endif /* !VBOX_WITH_NETFLT */
              break;
          }

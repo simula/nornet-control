@@ -3,10 +3,9 @@ Section: contrib/misc
 Priority: optional
 Maintainer: Debian Virtualbox Team <pkg-virtualbox-devel@lists.alioth.debian.org>
 Uploaders: Michael Meskes <meskes@debian.org>,
-           Felix Geyer <fgeyer@debian.org>
-Build-Depends: autotools-dev,
-               bzip2,
-               debhelper (>= 9),
+           Felix Geyer <fgeyer@debian.org>, Ritesh Raj Sarraf <rrs@debian.org>
+Build-Depends: bzip2,
+               debhelper (>= 7.2.7~),
                default-jdk,
                dkms (>= 2.1.1.1),
                docbook-xml,
@@ -15,15 +14,15 @@ Build-Depends: autotools-dev,
                g++-multilib [amd64],
                genisoimage,
                gsoap,
+               hardening-wrapper,
                iasl,
                imagemagick,
-               kbuild (>= 1:0.1.9998svn2577),
+               kbuild (>= 1:0.1.9998svn2695),
                libasound2-dev,
                libcap-dev,
                libcurl4-openssl-dev,
                libdevmapper-dev,
                libdrm-dev,
-               libfile-fcntllock-perl,
                libgl1-mesa-dev,
                libglu1-mesa-dev,
                libidl-dev,
@@ -32,6 +31,7 @@ Build-Depends: autotools-dev,
                libpng-dev,
                libpulse-dev,
                libqt4-dev (>= 4.4.0),
+               libqt4-network (>= 4.4.0),
                libqt4-opengl-dev (>= 4.4.0),
                libsdl1.2-dev,
                libssl-dev,
@@ -44,10 +44,12 @@ Build-Depends: autotools-dev,
                libxext-dev,
                libxi-dev,
                libxinerama-dev,
+               libxml2-dev,
                libxmu-dev,
                libxrandr-dev,
                libxrender-dev,
                libxslt1-dev,
+               libxt-dev,
                lsb-release,
                lynx-cur,
                makeself,
@@ -96,7 +98,7 @@ Recommends: virtualbox-dkms (= ${source:Version}) | virtualbox-source (= ${sourc
             ${shlibs:Recommends}
 Suggests: virtualbox-guest-additions-iso,
           vde2
-Conflicts: virtualbox-2.0, virtualbox-2.1, virtualbox-2.2, virtualbox-3.0
+Conflicts: virtualbox-2.0, virtualbox-2.1, virtualbox-2.2, virtualbox-3.0, virtualbox-4.2
 Description: x86 virtualization solution - base binaries
  VirtualBox is a free x86 virtualization solution allowing a wide range
  of x86 operating systems such as Windows, DOS, BSD or Linux to run on a
@@ -140,7 +142,7 @@ Section: contrib/kernel
 Architecture: all
 Depends: ${misc:Depends},
          build-essential,
-         debhelper (>= 9),
+         debhelper (>= 5),
          bzip2,
          kbuild
 Recommends: module-assistant
@@ -174,7 +176,7 @@ Section: contrib/kernel
 Architecture: all
 Depends: ${misc:Depends}, 
          build-essential,
-         debhelper (>= 9),
+         debhelper (>= 5),
          bzip2,
          kbuild
 Recommends: module-assistant
@@ -196,7 +198,7 @@ Depends: ${shlibs:Depends},
          ${misc:Depends},
          ${xserver:Depends},
          virtualbox-guest-utils (= ${binary:Version})
-Provides: ${xviddriver:Provides}
+Provides: xorg-driver-video
 Description: x86 virtualization solution - X11 guest utilities
  VirtualBox is a free x86 virtualization solution allowing a wide range
  of x86 operating systems such as Windows, DOS, BSD or Linux to run on a
