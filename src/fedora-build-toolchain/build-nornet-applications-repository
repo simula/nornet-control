@@ -20,7 +20,7 @@
 #
 
 SOURCES="/nfs/pub/src"
-REPOSITORIES="$HOME/repos/nornet"
+REPOSITORIES="/home/nornetpp/repos/nornet-applications"
 DISTRIBUTIONS="fedora-20-x86_64 fedora-18-x86_64 fedora-20-i386 fedora-18-i386"
 
 PACKAGES="bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp libvirt"
