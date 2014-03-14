@@ -21,9 +21,10 @@
 
 SOURCES="/nfs/pub/src"
 REPOSITORIES="$HOME/repos/nornet"
-DISTRIBUTIONS="fedora-18-x86_64"   # fedora-18-i386"
+DISTRIBUTIONS="fedora-20-x86_64"   # fedora-18-i386"
 
-PACKAGES="kernel bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
+PACKAGES="libvirt"
+# kernel bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
 # PACKAGES=""
 
 
@@ -47,6 +48,12 @@ tsctp_DIR="$SOURCES/misc-trunk/tsctp"
 
 # ====== MPTCP Kernel =====================================
 kernel_DIR="$SOURCES/misc-trunk/mptcp-kernel"
+
+# ====== libvirt ==========================================
+libvirt_DIR="`pwd`/libvirt"
+
+# ====== cfengine ==========================================
+cfengine_DIR="`pwd`/cfengine"
 
 # # ====== transforward =====================================
 # transforward_DIR="`pwd`/transforward"

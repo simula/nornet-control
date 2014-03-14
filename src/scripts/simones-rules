@@ -1,0 +1,28 @@
+#!/bin/bash
+
+SLICE=srl-mptcp
+NODES="altenessen.dfn.ude.nornet wanqun.cernet.hu.nornet nordlys.uninett.unis.nornet julenisse.uninett.uia.nornet reinsvoll.uninett.hig.nornet amundsen.uninett.uit.nornet mariebergsskogen.sunet.kau.nornet"
+LEVELS=10
+
+RANGE=3
+START=15999
+
+i=$START
+for node in $NODES ; do
+   ip=`dig +short $SLICE.$node a @fornebu.nntb.no`
+
+   #echo  "Node $node -> $ip"
+
+   level=0
+   while [ $level -lt $LEVELS ] ; do
+      let rangeStart=$level*1000+$i
+      let rangeEnd=$rangeStart+$RANGE-1
+      
+      # echo "$rangeStart -- $rangeEnd"
+      echo "\"eth1 tcp $rangeStart:$rangeEnd $ip\"   \"eth1 udp $rangeStart:$rangeEnd $ip\""
+
+      let level=$level+1
+   done
+   
+   let i=$i+$RANGE   
+done
