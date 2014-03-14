@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
-# Build NorNet Repository
-# Copyright (C) 2013 by Thomas Dreibholz
+# Build NorNet Applications Repository
+# Copyright (C) 2013-2014 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,10 +21,10 @@
 
 SOURCES="/nfs/pub/src"
 REPOSITORIES="$HOME/repos/nornet"
-DISTRIBUTIONS="fedora-20-x86_64"   # fedora-18-i386"
+DISTRIBUTIONS="fedora-20-x86_64 fedora-18-x86_64 fedora-20-i386 fedora-18-i386"
 
-PACKAGES="libvirt"
-# kernel bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
+PACKAGES="bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp libvirt"
+# kernel
 # PACKAGES=""
 
 
