@@ -1,20 +1,25 @@
-   # ====== Directory index options ========================================
+    # ====== Directory index options ========================================
     IndexOptions +FancyIndexing
     IndexOptions +HTMLTable
     IndexOptions +XHTML
-    IndexOptions +VersionSort
+    IndexOptions +TrackModified
+    IndexOptions +VersionSort  
+    IndexOptions +SuppressDescription
     IndexOptions +IconsAreLinks
-    IndexOptions +NameWidth=*
+    IndexOptions +NameWidth=*  
 
+    IndexOrderDefault Descending Name
     IndexStyleSheet "http://www.exp-math.uni-essen.de/~dreibh/essen.css"
     #HeaderName /include/Header.html
-    ReadmeName /include/Footer.html
+    ReadmeName /include/Footer.html 
 
     IndexIgnore graphics include
 
+    DefaultIcon /graphics/mimetypes/unknown.png
     AddIcon /graphics/emotes/face-smile.png                  .pass
-    AddIcon /graphics/actions/edit-bomb.png                  .ko
-    AddIcon /graphics/mimetypes/text-plain.png               .txt .log run trace myplc-release
+    AddIcon /graphics/actions/edit-bomb.png                  .ko  
+    AddIcon /graphics/mimetypes/text-plain.png               .txt .log run trace
+    AddIcon /graphics/categories/preferences-system.png      myplc-release
     AddIcon /graphics/mimetypes/text-xml.png                 .xml
     AddIcon /graphics/mimetypes/application-x-rpm.png        .rpm
     AddIcon /graphics/mimetypes/application-x-compress.png   .gz .bz2
