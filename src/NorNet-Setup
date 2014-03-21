@@ -358,6 +358,9 @@ norNetSetup = [
       [ u'PowerTech', 'eth2',
            IPv4Network('195.159.158.174/30'),       IPv4Address('195.159.158.173'),
            IPv6Network('2001:840:490d::174/64'),    IPv6Address('2001:840:490d::1') ]
+      [ u'Broadnet', 'eth3',
+           IPv4Network('85.252.123.242/30'),        IPv4Address('85.252.123.242'),
+           IPv6Network('::/0'),                     IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'storsteinsfjellet' ],
