@@ -230,6 +230,7 @@ Depends: apache2,
          libnet-dns-perl,
          libnet-ip-perl,
          nornet-node,
+         oxygen-icon-theme,
          wdg-html-validator,
          ${misc:Depends},
          ${shlibs:Depends}
