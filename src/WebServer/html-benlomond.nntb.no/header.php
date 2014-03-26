@@ -1,7 +1,7 @@
 <?php
 define('BASE_URL', dirname($_SERVER['SCRIPT_NAME']));
 function get_path() {
-   return str_replace('\\', '/', dirname($_SERVER['REQUEST_URI'] . '/.'));
+   return str_replace('\\', '/', dirname($_SERVER['REQUEST_URI']));
 }
 ?>
 
