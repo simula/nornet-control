@@ -23,7 +23,7 @@ SOURCES="/nfs/pub/src"
 REPOSITORIES="/home/nornetpp/repos/nornet-applications"
 DISTRIBUTIONS="fedora-20-x86_64 fedora-18-x86_64 fedora-20-i386 fedora-18-i386"
 
-PACKAGES="bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
+PACKAGES="libvirt bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
 # tracebox
 # kernel
 # PACKAGES=""
@@ -47,19 +47,16 @@ subnetcalc_DIR="$SOURCES/misc-trunk/subnetcalc"
 # ====== TSCTP ============================================
 tsctp_DIR="$SOURCES/misc-trunk/tsctp"
 
+# ====== libvirt ==========================================
+libvirt_DIR="`pwd`/libvirt"
+
 # ====== Tracebox =========================================
 tracebox_DIR="$SOURCES/tracebox"
 
 # ====== MPTCP Kernel =====================================
 kernel_DIR="$SOURCES/misc-trunk/mptcp-kernel"
 
-# ====== cfengine ==========================================
-cfengine_DIR="`pwd`/cfengine"
 
-
-# # ====== libvirt ==========================================
-# libvirt_DIR="`pwd`/libvirt"
-#
 # # ====== cfengine ==========================================
 # cfengine_DIR="`pwd`/cfengine"
 #
