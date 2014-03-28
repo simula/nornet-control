@@ -21,7 +21,7 @@
 
 # ---------------------------------------------------------
 KEY_ID="dreibh@simula.no"
-SOURCE="nornetpp@10.1.1.41:repos/"
+SOURCE="nornetpp@10.1.1.206:repos/"
 DESTINATION="/nfs/adm/packages/"
 # ---------------------------------------------------------
 

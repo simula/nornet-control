@@ -23,7 +23,8 @@ SOURCES="/nfs/pub/src"
 REPOSITORIES="/home/nornetpp/repos/nornet-applications"
 DISTRIBUTIONS="fedora-20-x86_64 fedora-18-x86_64 fedora-20-i386 fedora-18-i386"
 
-PACKAGES="bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp libvirt"
+PACKAGES="libvirt bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
+# tracebox
 # kernel
 # PACKAGES=""
 
@@ -46,15 +47,19 @@ subnetcalc_DIR="$SOURCES/misc-trunk/subnetcalc"
 # ====== TSCTP ============================================
 tsctp_DIR="$SOURCES/misc-trunk/tsctp"
 
-# ====== MPTCP Kernel =====================================
-kernel_DIR="$SOURCES/misc-trunk/mptcp-kernel"
-
 # ====== libvirt ==========================================
 libvirt_DIR="`pwd`/libvirt"
 
-# ====== cfengine ==========================================
-cfengine_DIR="`pwd`/cfengine"
+# ====== Tracebox =========================================
+tracebox_DIR="$SOURCES/tracebox"
 
+# ====== MPTCP Kernel =====================================
+kernel_DIR="$SOURCES/misc-trunk/mptcp-kernel"
+
+
+# # ====== cfengine ==========================================
+# cfengine_DIR="`pwd`/cfengine"
+#
 # # ====== transforward =====================================
 # transforward_DIR="`pwd`/transforward"
 #
@@ -113,7 +118,7 @@ for package in $PACKAGES ; do
    eval "package_dir=\$${package}_DIR"
    echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: Creating RPMs for $package ...\x1b[0m"
 
-  ./make-rpm $DISTRIBUTIONS
+   ./make-rpm $DISTRIBUTIONS
 
    for distribution in $DISTRIBUTIONS ; do
       rpms=`find /var/lib/mock/$distribution/result -name "$package*.rpm" || true`
@@ -140,12 +145,13 @@ cd "$WORKDIR"
 
 # ====== Make groups ========================================================
 ./make-nornet-groups
-cp nornet-groups.xml "$REPOSITORIES/$directory"
 
 
 # ====== Update repository management files =================================
 echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Updating repositories ...\x1b[0m"
 for directory in $DISTRIBUTION_DIRECTORIES ; do
+   cp nornet-groups.xml "$REPOSITORIES/$directory"
+   
    oldPackages=`repomanage --keep=2 --old "$REPOSITORIES/$directory"`
    for oldPackage in $oldPackages ; do
       echo "Removing $oldPackage"
