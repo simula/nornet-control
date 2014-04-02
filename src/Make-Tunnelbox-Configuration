@@ -713,7 +713,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
                
             except Exception as e:
                error('Bad configuration "' + dnsForwarders[i] + '" for NorNet_LocalSite_DNS_Forwarders: ' + str(e))
-         optionsConfFile.write(" }\n")
+         optionsConfFile.write(" };\n")
          optionsConfFile.write("\tforward            only;\n")
 
    optionsConfFile.write("};\n")
