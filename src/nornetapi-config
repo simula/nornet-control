@@ -86,6 +86,9 @@ NorNet_LocalSite_DHCPServer_Static202='"f0:de:f1:aa:bb:ee" "pxe-boot.img" "pxe-s
 # RADVD Configuration:
 NorNet_LocalSite_RADVDServer="on"
 
+# DNS Configuration:
+# NorNet_LocalSite_DNS_Forwarders='"2001:700:4100:101::1"'
+
 # Squid Configuration:
 NorNet_Squid_MemoryCache=256
 NorNet_Squid_DiskCache=1024
