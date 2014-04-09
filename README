@@ -1,0 +1,37 @@
+/=========================================================================\
+=             #     #                 #     #                             =
+=             ##    #   ####   #####  ##    #  ######   #####             =
+=             # #   #  #    #  #    # # #   #  #          #               =
+=             #  #  #  #    #  #    # #  #  #  #####      #               =
+=             #   # #  #    #  #####  #   # #  #          #               =
+=             #    ##  #    #  #   #  #    ##  #          #               =
+=             #     #   ####   #    # #     #  ######     #               =
+=                                                                         =
+=             A Real-World, Large-Scale Multi-Homing Testbed              =
+=                          https://www.nntb.no/                           =
+=                                                                         =
+= Contact: Thomas Dreibholz                                               =
+=          dreibh@simula.no, https://www.simula.no/people/dreibh          =
+\=========================================================================/
+
+
+What is NorNet?
+
+NorNet is a research testbed for multi-homed systems. Its aim is to provide a research possibility on systems that are connected to multiple ISPs simultaneously, both with IPv4 and IPv6. Researchers therefore get the possibility to run their experiments on nodes distributed over a large geographical area, with real-world Internet connections. There are two parts of the testbed: NorNet Core is the wired part, using a virtualisation software similar to PlanetLab/OneLab. That is, researchers get their own, Linux-based virtual machines on the research nodes, having their own IP addresses in the provider networks. NorNet Edge is the wireless part. Here, researchers get exclusive access to embedded Linux-based systems that are distributed all over the country of Norway, with up to five different mobile broadband connections.
+
+
+Further Information:
+
+* Website: https://www.nntb.no.
+
+* Gran, Ernst Gunnar; Dreibholz, Thomas and Kvalbein, Amund: «NorNet Core – A Multi-Homed Research Testbed» (PDF, 1458 KiB, in English), in Computer Networks, Special Issue on Future Internet Testbeds, DOI 10.1016/j.bjp.2013.12.035, ISSN 1389-1286, January 3, 2014.
+URL: https://simula.no/publications/Simula.simula.2236/simula_pdf_file
+BibTeX: https://www.nntb.no/pub/nornet-publications/bibtex/ComNets2013-Core.bib
+
+* Dreibholz, Thomas and Gran, Ernst Gunnar: «Design and Implementation of the NorNet Core Research Testbed for Multi-Homed Systems» (PDF, 20082 KiB, in English), in Proceedings of the 3nd International Workshop on Protocols and Applications with Multi-Homing Support (PAMS), pp. 1094–1100, DOI 10.1109/WAINA.2013.71, ISBN 978-0-7695-4952-1, Barcelona, Catalonia/Spain, March 27, 2013.
+URL: https://simula.no/publications/threfereedinproceedingsreference.2012-12-20.7643198512/simula_pdf_file
+BibTeX: https://www.nntb.no/pub/nornet-publications/bibtex/PAMS2013-NorNet.bib
+
+* Kvalbein, Amund; Baltrūnas, Džiugas; Evensen, Kristian Riktor; Xiang, Jie; Elmokashfi, Ahmed and Ferlin-Oliveira, Simone: «The NorNet Edge Platform for Mobile Broadband Measurements» (PDF, 2742 KiB, in English), in Computer Networks, Special Issue on Future Internet Testbeds, DOI 10.1016/j.bjp.2013.12.036, ISSN 1389-1286, January 3, 2014.
+URL: https://simula.no/publications/Simula.simula.2434/simula_pdf_file
+BibTeX: https://www.nntb.no/pub/nornet-publications/bibtex/ComNets2013-Edge.bib

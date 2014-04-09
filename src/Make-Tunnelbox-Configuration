@@ -90,6 +90,14 @@ def getLocalSiteDNATOptionsString():
       return u''
 
 
+# ###### Get Squid memory cache #############################################
+def getLocalSiteDNSForwardersString():
+   try:
+      return unicode(NorNet_Configuration['NorNet_LocalSite_DNS_Forwarders'])
+   except:
+      return u''
+
+
 # ###### Get blacklist ######################################################
 def getCentralSiteBlacklistString():
    try:
@@ -691,6 +699,23 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
    optionsConfFile.write("\tauth-nxdomain      no;   # conform to RFC1035\n")
    optionsConfFile.write("\tempty-zones-enable yes;\n")
    optionsConfFile.write("\tlisten-on-v6       { any; };\n")
+   
+   dnsForwardersString = getLocalSiteDNSForwardersString()
+   if ((dnsForwardersString != None) and (dnsForwardersString != u'')):      
+      dnsForwarders = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', getLocalSiteDNSForwardersString())
+      if len(dnsForwarders) > 0:
+         optionsConfFile.write("\tforwarders         {")
+         for i in range(0, len(dnsForwarders)):
+            try:
+               address = unquote(dnsForwarders[i])
+               dnsForwarder = IPAddress(address)
+               optionsConfFile.write(' ' + str(dnsForwarder) + ';')
+               
+            except Exception as e:
+               error('Bad configuration "' + dnsForwarders[i] + '" for NorNet_LocalSite_DNS_Forwarders: ' + str(e))
+         optionsConfFile.write(" };\n")
+         optionsConfFile.write("\tforward            only;\n")
+
    optionsConfFile.write("};\n")
 
    optionsConfFile.close()
