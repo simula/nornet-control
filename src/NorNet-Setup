@@ -496,37 +496,37 @@ norNetSetup = [
       [ 103, 4, u'wanqun'    ],   # Wan-ch'uan River，Wanquan River before and called the white river.
       [ 104, 5, u'nanshan'   ],   # Nanshan Buddhism Cultural Park is a display of traditional Chinese Buddhist culture
       [ 105, 6, u'yalongbay' ]    # This place has beautiful beach and tropical forest park
-   ] }
+   ] },
 
- #{ 'site_index'        : 100,
-   #'site_enabled'      : True,
-   #'site_long_name'    : u'University of Kansas',
-   #'site_short_name'   : 'KU',
-   #'site_url'          : 'http://www.ku.nornet',
-   #'site_domain'       : 'ku.nornet',
-   #'site_city'         : 'Lawrence',
-   #'site_province'     : 'Kansas',
-   #'site_country'      : 'U.S.A.',
-   #'site_country_code' : 'US',
-   #'site_latitude'     : 38.952,
-   #'site_longitude'    : -95.264,
-   #'site_altitude'     : 300,
-   #'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
-   #'site_nornet_if'    : 'eth0',
-   #'site_providers' : [
-      #[ u'Kansas Research and Education Network', 'eth1',
-           #IPv4Network('198.248.245.202/21'), IPv4Address('198.248.240.254'),
+ { 'site_index'        : 100,
+   'site_enabled'      : True,
+   'site_long_name'    : u'University of Kansas',
+   'site_short_name'   : 'KU',
+   'site_url'          : 'http://www.ku.nornet',
+   'site_domain'       : 'ku.nornet',
+   'site_city'         : 'Lawrence',
+   'site_province'     : 'Kansas',
+   'site_country'      : 'U.S.A.',
+   'site_country_code' : 'US',
+   'site_latitude'     : 38.952,
+   'site_longitude'    : -95.264,
+   'site_altitude'     : 300,
+   'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Kansas Research and Education Network', 'eth1',
+           IPv4Network('198.248.245.202/21'), IPv4Address('198.248.240.254'),
+           IPv6Network('::/0'),  IPv6Address('::') ]
+      #[ u'Provider Zwei', 'eth2',
+           #IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
            #IPv6Network('::/0'),  IPv6Address('::') ]
-      ##[ u'Provider Zwei', 'eth2',
-           ##IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
-           ##IPv6Network('::/0'),  IPv6Address('::') ]
-   #],
-   #'site_nodes' : [
-      #[ 100, 1, u'watson'  ],
-      #[ 101, 2, u'clinton' ],
-      #[ 102, 3, u'williamstown' ],
-      #[ 103, 4, u'stull' ]
-   #] }
+   ],
+   'site_nodes' : [
+      [ 100, 1, u'watson'  ],
+      [ 101, 2, u'clinton' ],
+      [ 102, 3, u'williamstown' ],
+      [ 103, 4, u'stull' ]
+   ] },
 
  #{ 'site_index'        : 120,
    #'site_enabled'      : False,
