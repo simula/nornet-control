@@ -42,7 +42,7 @@ Depends: apt-file,
          language-pack-de-base,
          language-pack-en-base,
          language-pack-nb-base,
-         libc6-i386,
+         libc6-i386 [amd64],
          libfile-fcntllock-perl,
          lksctp-tools,
          lsb-base (>= 3.2-14),
@@ -277,7 +277,6 @@ Package: nornet-server
 Architecture: all
 Conflicts: nornet-node
 Depends: grub2,
-         libicu48,
          linux-image-generic,
          linux-source,
          nornet-management,
