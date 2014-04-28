@@ -146,48 +146,54 @@ if [ "$Variant" = "Debian" ] ; then
    echo "Kernel Boot Version: $kernelBootVersion"
    echo "Kernel Disk Version: $kernelDiskVersion"
 
-   # Newer Ubuntu releases have an additional linux-image-extra package."
-   extrasOptions=""
-   if [ "`apt-show-versions | grep linux-image-extra-$kernelBootVersion-$kernelType`" != "" ] ; then
-      extrasOptions="$extrasOptions linux-image-extra-$kernelBootVersion-$kernelType+"
+   toBeRemoved=`apt-show-versions | sed -e "s/:.*$//g" -e "s/\/.*$//g" | ( 
+      while read line ; do
+         if [[ $line =~ ^(linux-image-|linux-headers-).*$ ]] ; then
+            if [[ $line =~ ^(linux-image-${kernelBootVersion}-${kernelType}|linux-image-extra-${kernelBootVersion}-${kernelType}|linux-headers-${kernelBootVersion}-${kernelType}|linux-headers-${kernelBootVersion}).*$ ]] ; then
+               #echo >&2 "boot kernel: $line"
+               true
+            elif [[ $line =~ ^(linux-image-${kernelDiskVersion}-${kernelType}|linux-image-extra-${kernelDiskVersion}-${kernelType}|linux-headers-${kernelDiskVersion}-${kernelType}|linux-headers-${kernelDiskVersion}).*$ ]] ; then
+               #echo >&2 "disk kernel: $line"
+               true
+            elif [[ $line =~ ^(linux-image-${kernelType}|linux-image-extra-${kernelType}|linux-headers-${kernelType})$ ]] ; then
+               #echo >&2 "meta: $line"
+               true
+            elif [[ $line =~ ^(linux-image-${kernelType}-lts-|linux-image-extra-${kernelType}-lts-|linux-headers-${kernelType}-lts-).*$ ]] ; then
+               #echo >&2 "LTS meta: $line"
+               true
+            else
+               echo -n "${line} "
+            fi
+         elif [[ $line =~ ^nornet-.*$ ]] ; then
+            echo -n "${line}+ "   # Ensure that this package is KEPT!
+         fi
+      done
+   )`
+
+   ltsImage=`apt-show-versions | grep "^linux-image-.*-lts-.*" | sed -e "s/:.*$//g" -e "s/\/.*$//g" | sort | tail -n1`
+   ltsImageExtra=`apt-show-versions | grep "^linux-image-extra-.*-lts-.*" | sed -e "s/:.*$//g" -e "s/\/.*$//g" | sort | tail -n1`
+   ltsHeaders=`apt-show-versions | grep "^linux-headers-.*-lts-.*" | sed -e "s/:.*$//g" -e "s/\/.*$//g" | sort | tail -n1`
+   if [ "$ltsImage" != "" ] ; then
+      toBeRemoved="${toBeRemoved} ${ltsImage}+"
    fi
-   if [ "`apt-show-versions | grep linux-image-extra-$kernelDiskVersion-$kernelType`" != "" ] ; then
-      extrasOptions="$extrasOptions linux-image-extra-$kernelDiskVersion-$kernelType+"
+   if [ "$ltsImageExtra" != "" ] ; then
+      toBeRemoved="${toBeRemoved} ${ltsImageExtra}+"
+   fi
+   if [ "$ltsHeaders" != "" ] ; then
+      toBeRemoved="${toBeRemoved} ${ltsHeaders}+"
    fi
 
+   echo -e "To be removed:\x1b[31m"
+   echo "$toBeRemoved" | xargs -n1 | grep -v ".*+$" | sort
+   echo -en "\x1b[0m"
+
    if [ $INTERACTIVE_KERNEL_REMOVAL -eq 0 ] ; then
-      sudo DEBIAN_FRONTEND=noninteractive nohup apt-get remove -y -qq --purge \
-         'linux-(headers|image)-.*' \
-         linux-headers-$kernelBootVersion-$kernelType+ \
-         linux-headers-$kernelBootVersion+ \
-         linux-headers-$kernelDiskVersion-$kernelType+ \
-         linux-headers-$kernelDiskVersion+ \
-         linux-headers-$kernelType+ \
-         $extrasOptions \
-         linux-image-$kernelBootVersion-$kernelType+ \
-         linux-image-$kernelDiskVersion-$kernelType+ \
-         linux-image-$kernelType+ \
-         linux-$kernelType+ \
-            >/tmp/install.log 2>&1 &
+      sudo DEBIAN_FRONTEND=noninteractive nohup apt-get remove -y -qq --purge $toBeRemoved >/tmp/install.log 2>&1 &
       wait
       cat /tmp/install.log
    else
-      sudo apt-get remove --purge \
-         'linux-(headers|image)-.*' \
-         linux-headers-$kernelBootVersion-$kernelType+ \
-         linux-headers-$kernelBootVersion+ \
-         linux-headers-$kernelDiskVersion-$kernelType+ \
-         linux-headers-$kernelDiskVersion+ \
-         linux-headers-$kernelType+ \
-         $extrasOptions \
-         linux-image-$kernelBootVersion-$kernelType+ \
-         linux-image-$kernelDiskVersion-$kernelType+ \
-         linux-image-$kernelType+ \
-         linux-$kernelType+
+      sudo apt-get remove --purge $toBeRemoved
    fi
-         
-   # Possibly for newer versions, add:
-   # linux-image-extra-$(uname -r)+
 fi
 
 # ====== Fix bootloader =====================================================
