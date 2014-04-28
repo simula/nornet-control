@@ -277,7 +277,7 @@ Package: nornet-server
 Architecture: all
 Conflicts: nornet-node
 Depends: grub2,
-         linux-image-generic,
+         linux-image-generic | linux-image-generic-lts-trusty,
          linux-source,
          nornet-management,
          ntp,
