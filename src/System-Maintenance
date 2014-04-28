@@ -146,7 +146,7 @@ if [ "$Variant" = "Debian" ] ; then
    echo "Kernel Boot Version: $kernelBootVersion"
    echo "Kernel Disk Version: $kernelDiskVersion"
 
-   toBeRemoved=`apt-show-versions | sed -e "s/:.*$//g" -e "s/\/.*$//g" | ( 
+   toBeRemoved=`apt-show-versions | awk '{ print $1 }' | sed -e "s/:.*$//g" -e "s/\/.*$//g" | ( 
       while read line ; do
          if [[ $line =~ ^(linux-image-|linux-headers-).*$ ]] ; then
             if [[ $line =~ ^(linux-image-${kernelBootVersion}-${kernelType}|linux-image-extra-${kernelBootVersion}-${kernelType}|linux-headers-${kernelBootVersion}-${kernelType}|linux-headers-${kernelBootVersion}).*$ ]] ; then
@@ -170,9 +170,9 @@ if [ "$Variant" = "Debian" ] ; then
       done
    )`
 
-   ltsImage=`apt-show-versions | grep "^linux-image-.*-lts-.*" | sed -e "s/:.*$//g" -e "s/\/.*$//g" | sort | tail -n1`
-   ltsImageExtra=`apt-show-versions | grep "^linux-image-extra-.*-lts-.*" | sed -e "s/:.*$//g" -e "s/\/.*$//g" | sort | tail -n1`
-   ltsHeaders=`apt-show-versions | grep "^linux-headers-.*-lts-.*" | sed -e "s/:.*$//g" -e "s/\/.*$//g" | sort | tail -n1`
+   ltsImage=`apt-show-versions | grep "^linux-image-.*-lts-.*" | awk '{ print $1 }' | sed -e "s/:.*$//g" -e "s/\/.*$//g" | sort | tail -n1`
+   ltsImageExtra=`apt-show-versions | grep "^linux-image-extra-.*-lts-.*" | awk '{ print $1 }' | sed -e "s/:.*$//g" -e "s/\/.*$//g" | sort | tail -n1`
+   ltsHeaders=`apt-show-versions | grep "^linux-headers-.*-lts-.*" | awk '{ print $1 }' | sed -e "s/:.*$//g" -e "s/\/.*$//g" | sort | tail -n1`
    if [ "$ltsImage" != "" ] ; then
       toBeRemoved="${toBeRemoved} ${ltsImage}+"
    fi
