@@ -51,7 +51,7 @@ for nodeTag in nodeTagsList:
       if nodeTag['value'] == distribution:
          needsUpdate = False
 
-if nodeTag['value'] != distribution:
+if oldDistribution != distribution:
    print 'Update ' + nodeName + ': ' + oldDistribution + ' -> ' + distribution
    addOrUpdateNodeTag(node['node_id'], 'pldistro', distribution)
    getPLCServer().UpdateNode(getPLCAuthentication(),
