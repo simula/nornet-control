@@ -24,8 +24,9 @@ import os;
 import base64;
 
 # NorNet
-from NorNetTools import *;
-from NorNetAPI   import *;
+from NorNetSiteSetup import *;
+from NorNetTools     import *;
+from NorNetAPI       import *;
 
 
 if len(sys.argv) < 3:
@@ -37,19 +38,24 @@ distribution = sys.argv[2]
 # ###### Main program #######################################################
 loginToPLC()
 
-nodeList = getPLCServer().GetNodes(getPLCAuthentication(), 
-              { 'hostname' : nodeName },
-              [ 'hostname', 'boot_state', 'run_level' ])
-
-if nodeList == None:
+node = fetchNorNetNode(nodeName)
+if node == None:
    sys.stderr.write('ERROR: Node ' + nodeName + ' not found!')
-node = nodeList[0]
+   sys.exit(1)
 
-print node
-if node['pldistro'] != distribution:
-   print 'Update: ' + node['pldistro'] + ' -> ' + distribution
+oldDistribution = ''
+nodeTagsList = fetchNodeTagsList(node['node_id'])
+for nodeTag in nodeTagsList:
+   if nodeTag['tagname'] == 'pldistro':
+      oldDistribution = nodeTag['value']
+      if nodeTag['value'] == distribution:
+         needsUpdate = False
+
+if nodeTag['value'] != distribution:
+   print 'Update ' + nodeName + ': ' + oldDistribution + ' -> ' + distribution
+   addOrUpdateNodeTag(node['node_id'], 'pldistro', distribution)
    getPLCServer().UpdateNode(getPLCAuthentication(),
-      node['hostname'],
-      { 'pldistro'   : 'distribution',
-        'boot_state' : 'reinstall'
-      })
+      node['node_id'],
+      { 'boot_state' : 'reinstall' })
+else:
+   print 'Keeping ' + nodeName + ': ' + oldDistribution
