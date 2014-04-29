@@ -1,0 +1,55 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Find Nodes with Problems
+# Copyright (C) 2012 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+import re;
+import os;
+import base64;
+
+# NorNet
+from NorNetTools import *;
+from NorNetAPI   import *;
+
+
+if len(sys.argv) < 3:
+   error('Usage: ' + sys.argv[0] + ' node distribution')
+nodeName     = sys.argv[1]
+distribution = sys.argv[2]
+
+
+# ###### Main program #######################################################
+loginToPLC()
+
+nodeList = getPLCServer().GetNodes(getPLCAuthentication(), 
+              { 'hostname' : nodeName },
+              [ 'hostname', 'boot_state', 'run_level' ])
+
+if nodeList == None:
+   sys.stderr.write('ERROR: Node ' + nodeName + ' not found!')
+node = nodeList[0]
+
+print node
+if node['pldistro'] != distribution:
+   print 'Update: ' + node['pldistro'] + ' -> ' + distribution
+   getPLCServer().UpdateNode(getPLCAuthentication(),
+      node['hostname'],
+      { 'pldistro'   : 'distribution',
+        'boot_state' : 'reinstall'
+      })
