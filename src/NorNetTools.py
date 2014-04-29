@@ -48,6 +48,16 @@ def error(logstring):
    sys.exit(1)
 
 
+# ###### Fill string up with spaces up to given number of characters ########
+def fill(string, characters):
+   result = string
+   i      = len(string)
+   while i < characters:
+      result = result + ' '
+      i      = i + 1
+   return result
+
+
 # ###### Unquote a string ###################################################
 def unquote(string):
    m = re.match(r'''^"(.*)"$''', string)
