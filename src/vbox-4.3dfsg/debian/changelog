@@ -1,3 +1,29 @@
+virtualbox (4.3.12-dfsg-1) unstable; urgency=medium
+
+  [ Gianfranco Costamagna ]
+  * New upstream release.
+
+ -- Ritesh Raj Sarraf <rrs@debian.org>  Wed, 04 Jun 2014 09:43:11 -0400
+
+virtualbox (4.3.10-dfsg-1) unstable; urgency=high
+
+  * New upstream release.
+    - Fixes multiple memory corruption vulnerabilities in the 3D acceleration
+      code. (Closes: #741602)
+      CVE-2014-0981, CVE-2014-0983
+
+  [ Gianfranco Costamagna ]
+  * Patch refresh.
+  * d/control, enforcing gsoap min required version.
+  * Add module-assistant as dependency, fixing broken symlink
+  * disabled some old unused lintian overrides.
+
+  [ Felix Geyer ]
+  * Override embedded-library nspr lintian warning, it's a locally modified
+    version.
+
+ -- Felix Geyer <fgeyer@debian.org>  Sun, 06 Apr 2014 15:31:09 +0200
+
 virtualbox (4.3.6-dfsg-2) unstable; urgency=medium
 
   * Disable bindnow in hardening-wrapper. This fixes loading the x11 driver.
