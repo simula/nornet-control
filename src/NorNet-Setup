@@ -499,7 +499,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 100,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'University of Kansas',
    'site_short_name'   : 'KU',
    'site_url'          : 'http://www.ku.nornet',
@@ -515,7 +515,7 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Kansas Research and Education Network', 'eth1',
-           IPv4Network('198.248.245.202/21'), IPv4Address('198.248.240.254'),
+           IPv4Network('198.248.245.205/21'), IPv4Address('198.248.240.254'),
            IPv6Network('::/0'),  IPv6Address('::') ]
       #[ u'Provider Zwei', 'eth2',
            #IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
