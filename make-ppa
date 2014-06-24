@@ -1,5 +1,5 @@
 #!/bin/bash
 
 ./clean-deb && \
-./make-deb precise quantal raring saucy trusty && \
+./make-deb precise quantal raring saucy trusty utopic && \
 dput ppa *.changes
