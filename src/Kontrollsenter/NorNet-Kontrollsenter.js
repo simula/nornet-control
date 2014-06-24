@@ -130,10 +130,10 @@ titleLabel['NO'] = "Velkommen til NorNet-Kontrollsenter på Simula Research Labo
 titleLabel['CN'] = "欢迎访问挪威福尼布Simula研究所的NorNet控制中心";
 
 footerLabel = new Array()
-footerLabel['UK'] = 'For further information on the NorNet Project, see <a href="http://www.nntb.no">http://www.nntb.no</a>!';
-footerLabel['DE'] = 'Für weitere Informationen zum NorNet-Prosjekt siehe <a href="http://www.nntb.no">http://www.nntb.no</a>!';
-footerLabel['NO'] = 'For mer informasjon om NorNet-prosjektet, se <a href="http://www.nntb.no">http://www.nntb.no</a>!';
-footerLabel['CN'] = '关于NorNet项目的更多信息,请访问 <a href="http://www.nntb.no">http://www.nntb.no</a>!';
+footerLabel['UK'] = 'For further information on the NorNet Project, see <a href="https://www.nntb.no">https://www.nntb.no</a>!';
+footerLabel['DE'] = 'Für weitere Informationen zum NorNet-Prosjekt siehe <a href="https://www.nntb.no">https://www.nntb.no</a>!';
+footerLabel['NO'] = 'For mer informasjon om NorNet-prosjektet, se <a href="https://www.nntb.no">https://www.nntb.no</a>!';
+footerLabel['CN'] = '关于NorNet项目的更多信息,请访问 <a href="https://www.nntb.no">https://www.nntb.no</a>!';
 
 updatingLabel = new Array()
 updatingLabel['UK'] = "Updating ...";

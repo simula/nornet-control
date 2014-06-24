@@ -11,7 +11,7 @@ DOMAIN="simula.nornet"
 SLICENAME="srl_tutorial"
 
 SLICEDESC="A test slice for the NorNet tutorial sessions."
-SLICEURL="http://www.nntb.no"
+SLICEURL="https://www.nntb.no"
 
 action=""
 if [ "$1" = "add" ] ; then

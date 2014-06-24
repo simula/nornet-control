@@ -28,7 +28,7 @@ setup(name='NorNet',
       version='1.0.0',
       author='Thomas Dreibholz',
       author_email='dreibh@simula.no',
-      url='http://www.nntb.no/',
+      url='https://www.nntb.no/',
       license='GPL, Version 3.0',
       classifiers=[
           'Development Status :: 5 - Production/Stable',

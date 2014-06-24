@@ -1,2 +1,2 @@
 version=3
-http://www.nntb.no/core/index.html	download/nornet-(.*)\.tar\.gz
+https://www.nntb.no/core/index.html	download/nornet-(.*)\.tar\.gz
