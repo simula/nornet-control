@@ -142,6 +142,7 @@ echo -e "\x1b[34m###############################################################
 BUILD_PACKAGES=`grep "^Package: " debian/control.orig | sed -e "s/Package: //g"`
 cd debian
 echo "" >package-names.sed.tmp
+echo "" >package-names.sed.tmp2
 for buildPackage in $BUILD_PACKAGES ; do
    buildPackageFiles=`find . -maxdepth 1 -name "${buildPackage}.*" -printf '%f\\n'`
    echo "P=${buildPackage}" 
@@ -168,12 +169,40 @@ for buildPackage in $BUILD_PACKAGES ; do
          fi
       fi
    done
-   
-   echo "s/^\(Conflicts: ${buildPackage}[^,]*\)\(,\|\)[ \t]*$/Replaces: ${conflicts}\n\1, ${conflicts}\2/g" >>package-names.sed.tmp
+
+   pwd
+   existingConflicts=0
+   (
+      inSection=0
+      while read line ; do
+#          echo "L=$line"
+         if [[ "$line" =~ ^(Package: ${buildPackage}) ]] ; then
+            inSection=1
+            echo "Found:  ${buildPackage} -> $line"
+         elif [ $inSection -eq 1 ] ; then
+            if [[ "$line" =~ ^$ ]] ; then
+               inSection=0
+            elif [[ "$line" =~ ^Conflicts: ]] ; then
+               existingConflicts=1
+               echo "${buildPackage} => $line   SXXXXX"
+#                break
+            fi
+         fi
+      done
+   ) <control.orig
+     
    echo "s/${buildPackage}$/${buildPackage}${PACKAGE_SUFFIX}/g" >>package-names.sed.tmp
    echo "s/${buildPackage}[ \t]/${buildPackage}${PACKAGE_SUFFIX} /g" >>package-names.sed.tmp
+   
+   if [ $existingConflicts -eq 1 ] ; then
+      echo "s/^\(Conflicts: ${buildPackage}[^,]*\)\(,\|\)[ \t]*$/Replaces: ${conflicts}\n\1, ${conflicts}\2/g" >>package-names.sed.tmp
+   else
+      echo "s/^\(Package: ${buildPackage}${PACKAGE_SUFFIX}\)$/\1\nReplaces: ${conflicts}\nConflicts: ${conflicts}/g" >>package-names.sed.tmp2
+   fi
+
 done
 sort <package-names.sed.tmp >package-names.sed
+cat package-names.sed.tmp2 >>package-names.sed
 rm -f package-names.sed.tmp
 cd ..
 
