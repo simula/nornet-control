@@ -888,7 +888,7 @@ def _findPossibleSliceNodeIndex(fullSiteList, fullNodeList, fullSliceList, thisS
       if site['site_id'] != thisSite['site_id']:
          continue
 
-      log('-> Node ' + node['node_name'])
+      # log('-> Node ' + node['node_name'])
       for slice in fullSliceList:
          if ((slice['slice_id'] == thisSlice['slice_id']) and
              (node['node_id'] == thisNode['node_id'])):
@@ -913,86 +913,153 @@ def _findPossibleSliceNodeIndex(fullSiteList, fullNodeList, fullSliceList, thisS
    return 0
 
 
+# ###### Select some nodes ##################################################
+def _selectNodes(slice, siteNodeList, maxNodesPerSite):
+   # ====== Distinguish odd and even nodes ==================================
+   selectedNodes = []
+   evenNodes     = []
+   oddNodes      = []
+   for node in siteNodeList:
+      if (node['node_id'] % 2) == 1:
+         oddNodes.append(node)
+      else:
+         evenNodes.append(node)
+
+
+   # ====== Preselect nodes that are already allocated to this slice ========
+   sliceTags = slice['slice_tags']
+   for sliceTag in sliceTags:
+      if sliceTag['tagname'] == 'nornet_slice_node_index':
+         for node in siteNodeList:
+            if node['node_id'] == sliceTag['node_id']:
+               if len(selectedNodes) < maxNodesPerSite:
+                  selectedNodes.append(node)
+
+
+   # ====== Select random nodes =============================================
+   updated = True
+   while ((len(selectedNodes) < maxNodesPerSite) and (updated == True)):
+      updated = False
+      if len(oddNodes) > 0:
+         r = int(round(random.uniform(0, len(oddNodes) - 1)))
+         if not oddNodes[r] in selectedNodes:
+            selectedNodes.append(oddNodes[r])
+         oddNodes.remove(oddNodes[r])
+         updated = True
+      if ((len(selectedNodes) < maxNodesPerSite) and (len(evenNodes) > 0)):
+         r = int(round(random.uniform(0, len(evenNodes) - 1)))
+         if not evenNodes[r] in selectedNodes:
+            selectedNodes.append(evenNodes[r])
+         evenNodes.remove(evenNodes[r])
+         updated = True
+
+   #for node in selectedNodes:
+      #print 'S=',node['node_name']
+
+   return(selectedNodes)
+
+
 # ###### Add NorNet slice to NorNet nodes  ##################################
-def addNorNetSliceToNorNetNodes(fullSiteList, fullNodeList, fullSliceList, slice, nodesList):
+def addNorNetSliceToNorNetNodes(fullSiteList, fullNodeList, fullSliceList, slice, nodesList, maxNodesPerSite):
+   addedNodeIDs = []
    nodeIDs = []
-   for node in nodesList:
-      nodeIndex = node['node_index']
+   for siteIndex in fullSiteList:
+      site         = fullSiteList[siteIndex]
+      siteNodeList = []
+      for node in nodesList:
+         if node['node_site_id'] != site['site_id']:
+            continue
+         siteNodeList.append(node)
 
-      # ====== Add slice to node ============================================
-      getPLCServer().AddSliceToNodes(getPLCAuthentication(),
-                                     slice['slice_id'], [ node['node_id'] ])
+      selectedNodeList = _selectNodes(slice, siteNodeList, maxNodesPerSite)
+      for node in selectedNodeList:
+         nodeIndex = node['node_index']
 
-      # ====== Give slice its own addresses, if requested ===================
-      sliceOwnAddresses = slice['slice_own_addresses']
-      if sliceOwnAddresses != 0:
-         # ====== Get slice node index ======================================
-         sliceNodeIndex = _findPossibleSliceNodeIndex(fullSiteList, fullNodeList, fullSliceList, slice, node)
-         if sliceNodeIndex == 0:
-            error('No possible slice node index available!')
+         # ====== Add slice to node =========================================
+         getPLCServer().AddSliceToNodes(getPLCAuthentication(),
+                                        slice['slice_id'], [ node['node_id'] ])
 
-         # ====== Create configuration ======================================
-         site = getNorNetSiteOfNode(fullSiteList, node)
-         if site == None:
-            error('Site not found?!')
-         siteIndex = site['site_index']
+         # ====== Give slice its own addresses, if requested ================
+         sliceOwnAddresses = slice['slice_own_addresses']
+         if sliceOwnAddresses != 0:
+            # ====== Get slice node index ===================================
+            sliceNodeIndex = _findPossibleSliceNodeIndex(fullSiteList, fullNodeList, fullSliceList, slice, node)
+            if sliceNodeIndex == 0:
+               print('WARNING: No possible slice node index available!\n')
+               continue
 
-         bridgeInterfaceConfig = {}
-         bridgeInterfaceConfig['bridge']        = 'public0'
-         bridgeInterfaceConfig['BOOTPROTO']     = 'static'
-         bridgeInterfaceConfig['DEVICE']        = 'eth0'
-         bridgeInterfaceConfig['ONBOOT']        = 'yes'
-         bridgeInterfaceConfig['PRIMARY']       = 'yes'
-         bridgeInterfaceConfig['IPV6INIT']      = 'yes'
-         bridgeInterfaceConfig['IPV6_AUTOCONF'] = 'no'
+            addedNodeIDs.append(node['node_id'])
 
-         addresses       = 0
-         secondariesIPv6 = []
-         providerList = getNorNetProvidersForSite(site)
-         for onlyDefault in [ True, False ]:
-            for providerIndex in providerList:
-               if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
-                    ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+            # ====== Create configuration ===================================
+            site = getNorNetSiteOfNode(fullSiteList, node)
+            if site == None:
+               error('Site not found?!')
+            siteIndex = site['site_index']
 
-                  ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4, sliceNodeIndex)
-                  ifIPv6 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6, sliceNodeIndex)
+            bridgeInterfaceConfig = {}
+            bridgeInterfaceConfig['bridge']        = 'public0'
+            bridgeInterfaceConfig['BOOTPROTO']     = 'static'
+            bridgeInterfaceConfig['DEVICE']        = 'eth0'
+            bridgeInterfaceConfig['ONBOOT']        = 'yes'
+            bridgeInterfaceConfig['PRIMARY']       = 'yes'
+            bridgeInterfaceConfig['IPV6INIT']      = 'yes'
+            bridgeInterfaceConfig['IPV6_AUTOCONF'] = 'no'
 
-                  if addresses == 0:
-                     bridgeInterfaceConfig['IPADDR']  = str(ifIPv4.ip)
-                     bridgeInterfaceConfig['NETMASK'] = str(ifIPv4.netmask)
-                  else:
-                     bridgeInterfaceConfig['IPADDR'  + str(addresses)] = str(ifIPv4.ip)
-                     bridgeInterfaceConfig['NETMASK' + str(addresses)] = str(ifIPv4.netmask)
+            addresses       = 0
+            secondariesIPv6 = []
+            providerList = getNorNetProvidersForSite(site)
+            for onlyDefault in [ True, False ]:
+               for providerIndex in providerList:
+                  if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+                       ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
 
-                  if addresses == 0:
-                     ifGatewayIPv4 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 4)
-                     bridgeInterfaceConfig['GATEWAY'] = str(ifGatewayIPv4.ip)
-                     bridgeInterfaceConfig['DNS1']    = str(ifGatewayIPv4.ip)
+                     ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4, sliceNodeIndex)
+                     ifIPv6 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6, sliceNodeIndex)
 
-                     ifGatewayIPv6 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 6)
-                     bridgeInterfaceConfig['IPV6ADDR']       = str(ifIPv6)
-                     bridgeInterfaceConfig['IPV6_DEFAULTGW'] = str(ifGatewayIPv6.ip)
-                     bridgeInterfaceConfig['DNS2']           = str(ifGatewayIPv6.ip)
-                  else:
-                     secondariesIPv6.append(ifIPv6)
+                     if addresses == 0:
+                        bridgeInterfaceConfig['IPADDR']  = str(ifIPv4.ip)
+                        bridgeInterfaceConfig['NETMASK'] = str(ifIPv4.netmask)
+                     else:
+                        bridgeInterfaceConfig['IPADDR'  + str(addresses)] = str(ifIPv4.ip)
+                        bridgeInterfaceConfig['NETMASK' + str(addresses)] = str(ifIPv4.netmask)
 
-                  addresses = addresses + 1
+                     if addresses == 0:
+                        ifGatewayIPv4 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 4)
+                        bridgeInterfaceConfig['GATEWAY'] = str(ifGatewayIPv4.ip)
+                        bridgeInterfaceConfig['DNS1']    = str(ifGatewayIPv4.ip)
 
-         if addresses > 1:
-            secondaries = ''
-            for secondaryIPv6 in secondariesIPv6:
-               if len(secondaries) > 0:
-                  secondaries = secondaries + ' '
-               secondaries = secondaries + str(secondaryIPv6)
-            bridgeInterfaceConfig['IPV6ADDR_SECONDARIES'] = secondaries
+                        ifGatewayIPv6 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 6)
+                        bridgeInterfaceConfig['IPV6ADDR']       = str(ifIPv6)
+                        bridgeInterfaceConfig['IPV6_DEFAULTGW'] = str(ifGatewayIPv6.ip)
+                        bridgeInterfaceConfig['DNS2']           = str(ifGatewayIPv6.ip)
+                     else:
+                        secondariesIPv6.append(ifIPv6)
 
-         if addOrUpdateSliceTag(slice['slice_id'], node, 'nornet_slice_node_index', str(sliceNodeIndex)) <= 0:
-            error('Unable to add "nornet_slice_node_index" tag to slice ' + sliceName)
-         if addOrUpdateSliceTag(slice['slice_id'], node, 'interface', str(bridgeInterfaceConfig)) <= 0:
-            error('Unable to add "interface" tag to slice ' + sliceName)
+                     addresses = addresses + 1
 
-         # Now, the slice list needs to be reloaded in order to update the allocation!
-         fullSliceList = fetchNorNetSliceList()
+            if addresses > 1:
+               secondaries = ''
+               for secondaryIPv6 in secondariesIPv6:
+                  if len(secondaries) > 0:
+                     secondaries = secondaries + ' '
+                  secondaries = secondaries + str(secondaryIPv6)
+               bridgeInterfaceConfig['IPV6ADDR_SECONDARIES'] = secondaries
+
+            if addOrUpdateSliceTag(slice['slice_id'], node, 'nornet_slice_node_index', str(sliceNodeIndex)) <= 0:
+               error('Unable to add "nornet_slice_node_index" tag to slice ' + sliceName)
+            if addOrUpdateSliceTag(slice['slice_id'], node, 'interface', str(bridgeInterfaceConfig)) <= 0:
+               error('Unable to add "interface" tag to slice ' + sliceName)
+
+            # Now, the slice list needs to be reloaded in order to update the allocation!
+            fullSliceList = fetchNorNetSliceList()
+
+
+   # Remove not selected nodes from slice
+   for node in fullNodeList:
+      if not node['node_id'] in addedNodeIDs:
+         #print 'REM ' + node['node_name']
+         getPLCServer().DeleteSliceFromNodes(getPLCAuthentication(),
+                                             slice['slice_id'], [ node['node_id'] ])
 
 
 # ###### Add users to NorNet slice  #########################################

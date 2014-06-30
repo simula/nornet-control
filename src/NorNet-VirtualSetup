@@ -142,7 +142,11 @@ norNetSetup = [
    ],
    'site_nodes' : [
       [ 100, 1, u'kangaroo' ],
-      [ 101, 2, u'wombat'   ]
+      [ 101, 2, u'wombat'   ],
+      [ 103, 3, u'wallaby'  ],
+      [ 104, 4, u'koala'    ],
+      [ 105, 5, u'redback'  ],
+      [ 106, 6, u'quokka'   ]
    ] }
 
 ]
