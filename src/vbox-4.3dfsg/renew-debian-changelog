@@ -169,40 +169,19 @@ for buildPackage in $BUILD_PACKAGES ; do
          fi
       fi
    done
-
-   pwd
-   existingConflicts=0
-   (
-      inSection=0
-      while read line ; do
-#          echo "L=$line"
-         if [[ "$line" =~ ^(Package: ${buildPackage}) ]] ; then
-            inSection=1
-            echo "Found:  ${buildPackage} -> $line"
-         elif [ $inSection -eq 1 ] ; then
-            if [[ "$line" =~ ^$ ]] ; then
-               inSection=0
-            elif [[ "$line" =~ ^Conflicts: ]] ; then
-               existingConflicts=1
-               echo "${buildPackage} => $line   SXXXXX"
-#                break
-            fi
-         fi
-      done
-   ) <control.orig
-     
-   echo "s/${buildPackage}$/${buildPackage}${PACKAGE_SUFFIX}/g" >>package-names.sed.tmp
-   echo "s/${buildPackage}[ \t]/${buildPackage}${PACKAGE_SUFFIX} /g" >>package-names.sed.tmp
-   
-   if [ $existingConflicts -eq 1 ] ; then
-      echo "s/^\(Conflicts: ${buildPackage}[^,]*\)\(,\|\)[ \t]*$/Replaces: ${conflicts}\n\1, ${conflicts}\2/g" >>package-names.sed.tmp
-   else
-      echo "s/^\(Package: ${buildPackage}${PACKAGE_SUFFIX}\)$/\1\nReplaces: ${conflicts}\nConflicts: ${conflicts}/g" >>package-names.sed.tmp2
+   if [ "${buildPackage}" = "virtualbox" ] ; then
+      conflicts="${conflicts}, virtualbox-2.0, virtualbox-2.1, virtualbox-2.2, virtualbox-3.0, virtualbox-4.2"
    fi
 
+   echo "s/${buildPackage}$/${buildPackage}${PACKAGE_SUFFIX}/g" >>package-names.sed.tmp
+   echo "s/${buildPackage}[ \t]/${buildPackage}${PACKAGE_SUFFIX} /g" >>package-names.sed.tmp
+   echo "s/^\(Package: ${buildPackage}${PACKAGE_SUFFIX}\)$/\1\nReplaces: ${conflicts}\nConflicts: ${conflicts}/g" >>package-names.sed.tmp2
+
 done
-sort <package-names.sed.tmp >package-names.sed
-cat package-names.sed.tmp2 >>package-names.sed
+echo "/^Conflicts:/d"        >package-names.sed
+echo "/^Replaces:/d"        >>package-names.sed
+sort <package-names.sed.tmp >>package-names.sed
+cat package-names.sed.tmp2  >>package-names.sed
 rm -f package-names.sed.tmp
 cd ..
 
@@ -218,11 +197,11 @@ for controlFile in $CONTROL_FILES ; do
          -e "s/: Oracle VM /: Open Source /g" | \
       if [ "${PACKAGE_SUFFIX}" != "" ] ; then
          sed -e "s/^Package: ${PACKAGE}${PACKAGE_SUFFIX}$/Package: ${PACKAGE}${PACKAGE_SUFFIX}\nProvides: ${PACKAGE}/g" \
-             -e "s/^Package: ${PACKAGE}-guest-utils${PACKAGE_SUFFIX}$/Package: ${PACKAGE}-guest-utils${PACKAGE_SUFFIX}\nProvides: ${PACKAGE}-guest-utils\nConflicts: ${PACKAGE}-guest-utils\nReplaces: ${PACKAGE}-guest-utils/g"
+             -e "s/^Package: ${PACKAGE}-guest-utils${PACKAGE_SUFFIX}$/Package: ${PACKAGE}-guest-utils${PACKAGE_SUFFIX}\nProvides: ${PACKAGE}-guest-utils/g"
       else
          cat
       fi
-         
+
    ) >debian/${controlFile}.new
 done
 
