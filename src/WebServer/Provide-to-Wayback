@@ -18,11 +18,11 @@
 #
 # Contact: dreibh@simula.no
 
-BROWSER="/usr/bin/firefox-trunk"
+BROWSER="/usr/lib/firefox-trunk/firefox-trunk"
 BROWSERARGS="-new-instance"
 PREFIX="http://web.archive.org/save/"
 
-MAXTABS=100
+MAXTABS=250
 RESTARTDELAY=60
 
 if [ $# -lt 1 ] ; then
