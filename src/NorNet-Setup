@@ -200,7 +200,10 @@ norNetSetup = [
            IPv6Network('::/0'),            IPv6Address('::') ],
       [ u'PowerTech', 'eth2',
            IPv4Network('195.159.158.210/30'),     IPv4Address('195.159.158.209'),
-           IPv6Network('2001:840:4908::210/64'),  IPv6Address('2001:840:4908::1') ]
+           IPv6Network('2001:840:4908::210/64'),  IPv6Address('2001:840:4908::1') ],
+      [ u'PowerTech', 'eth2',
+           IPv4Network('79.161.4.42/30'),  IPv4Address('79.161.4.41'),
+           IPv6Network('::/64'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'mosterøy'  ],
