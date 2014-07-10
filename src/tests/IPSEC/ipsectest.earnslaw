@@ -1,0 +1,20 @@
+#!/sbin/setkey -f
+flush;
+spdflush;
+
+# AH
+add 10.1.1.200 10.1.1.201 ah 15700 -A hmac-sha512 "1234567890123456123456789012345612345678901234561234567890123456";
+add 10.1.1.201 10.1.1.200 ah 24500 -A hmac-sha512 "1234567890123456123456789012345612345678901234561234567890123456";
+
+# ESP
+add 10.1.1.200 10.1.1.201 esp 15701 -E camellia-cbc "12345678901234561234567890123456";
+add 10.1.1.201 10.1.1.200 esp 24501 -E camellia-cbc "12345678901234561234567890123456";
+
+
+spdadd 10.1.1.201 10.1.1.200 any -P out ipsec
+           esp/transport//require
+           ah/transport//require;
+
+spdadd 10.1.1.200 10.1.1.201 any -P in ipsec
+           esp/transport//require
+           ah/transport//require;
