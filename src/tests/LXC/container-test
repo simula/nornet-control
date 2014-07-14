@@ -3,7 +3,7 @@
 NAME="Test-$RANDOM"
 UUID=`uuidgen`
 
-echo "NAME=$1"
+echo "NAME=$NAME"
 cat /etc/libvirt/lxc/inri_sl1.xml | sed -e "s/inri_sl1/$NAME/g" -e "s/<uuid>.*<\/uuid>/<uuid>$UUID<\/uuid>/g" >/tmp/$NAME.xml
 cd /vservers
 
