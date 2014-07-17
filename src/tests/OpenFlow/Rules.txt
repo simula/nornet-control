@@ -1,0 +1,8 @@
+# IPv6 Router Solicitation / Router Advertisement
+ovs-ofctl add-flow public0 "priority=100,icmp6,icmp_type=133,idle_timeout=0,hard_timeout=0,actions=drop"
+ovs-ofctl add-flow public0 "priority=100,icmp6,icmp_type=134,idle_timeout=0,hard_timeout=0,actions=drop"
+# DHCP
+ovs-ofctl add-flow public0 "priority=101,udp,nw_src=0.0.0.0,nw_dst=255.255.255.255,tp_src=68,tp_dst=67,idle_timeout=0,hard_timeout=0,actions=drop"
+ovs-ofctl add-flow public0 "priority=101,udp,tp_src=67,tp_dst=68,idle_timeout=0,hard_timeout=0,actions=drop"
+
+ovs-ofctl dump-flows public0
