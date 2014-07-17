@@ -410,7 +410,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 40,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Universität Kaiserslautern',
    'site_short_name'   : 'TUKL',
    'site_url'          : 'http://www.informatik.uni-kl.de/',
