@@ -545,8 +545,8 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Kansas Research and Education Network', 'eth1',
-           IPv4Network('164.113.202.17/28'), IPv4Address('164.113.202.30'),
-           IPv6Network('::/0'),  IPv6Address('::') ]
+           IPv4Network('164.113.202.17/28'),        IPv4Address('164.113.202.30'),
+           IPv6Network('2001:49d0:3c00:6::17/64'),  IPv6Address('2001:49d0:3c00:6::1') ]
       #[ u'Provider Zwei', 'eth2',
            #IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
            #IPv6Network('::/0'),  IPv6Address('::') ]
