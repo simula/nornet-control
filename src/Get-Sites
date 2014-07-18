@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Get all nodes
+# Get all sites
 # Copyright (C) 2012-2014 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
@@ -33,20 +33,12 @@ from NorNetAPI       import *;
 # ###### Main program #######################################################
 loginToPLC(quietMode = True)
 
-nodeList = fetchNorNetNode(None)
-for node in nodeList:
-   #print node
-   nodeIndex = node['node_index']
-   nodeName  = node['node_name']
-   nodeState = node['node_state']
+siteList = fetchNorNetSite(None)
+for siteIndex in siteList:
+   site = siteList[siteIndex]
+   #print site
+   siteIndex = site['site_index']
+   siteName  = site['site_utf8']
 
-   nodeFC = 'NA'
-   nodePL = 'NA'
-   nodeTagsList = fetchNodeTagsList(node['node_id'])
-   for nodeTag in nodeTagsList:
-      if nodeTag['tagname'] == 'fcdistro':
-         nodeFC = nodeTag['value']
-      if nodeTag['tagname'] == 'pldistro':
-         nodePL = nodeTag['value']
-
-   print(str(nodeIndex) + ' ' + fill(nodeName,32) + ' ' + fill(nodeState,10) + ' ' + fill(nodeFC,4) + ' ' + fill(nodePL,6))
+   print(str(siteIndex) + ' ' + \
+         fill(siteName, 32))
