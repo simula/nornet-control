@@ -430,10 +430,9 @@ norNetSetup = [
            IPv6Network('2001:638:208:ef2d::120/64'), IPv6Address('2001:638:208:ef2d:0:ff:fe00:ffd') ],
    ],
    'site_nodes' : [
-      [ 100, 1, u'betzenberg'   ],
-      [ 101, 2, u'kaiserberg'   ],
-      [ 102, 3, u'lämmchesberg' ],
-      [ 103, 4, u'dansenberg'   ]
+      [ 100, 1, u'betzenberg' ],
+      [ 101, 2, u'kaiserberg' ]
+      #[ 102, 3, u'dansenberg' ],
    ] },
 
  { 'site_index'        : 42,
