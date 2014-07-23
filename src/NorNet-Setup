@@ -552,9 +552,9 @@ norNetSetup = [
    ],
    'site_nodes' : [
       [ 100, 1, u'watson'  ],
-      [ 101, 2, u'clinton' ],
-      [ 102, 3, u'williamstown' ],
-      [ 103, 4, u'stull' ]
+      [ 101, 2, u'clinton' ]
+      #[ 102, 3, u'williamstown' ],
+      #[ 103, 4, u'stull' ]
    ] },
 
  #{ 'site_index'        : 120,
