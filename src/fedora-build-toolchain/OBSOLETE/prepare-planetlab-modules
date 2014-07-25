@@ -1,7 +1,0 @@
-#!/bin/sh
-
-git clone http://git.onelab.eu/transforward.git transforward
-cp -r transforward-build/* transforward/
-
-git clone git://git.onelab.eu/ipfw-sourceforge.git ipfwroot
-cp -r ipfwroot-build/* ipfwroot/

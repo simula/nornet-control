@@ -132,6 +132,7 @@
 %define with_libssh2       0%{!?_without_libssh2:0}
 %define with_wireshark     0%{!?_without_wireshark:0}
 %define with_systemd_daemon 0%{!?_without_systemd_daemon:0}
+%define with_pm_utils      1
 
 # Non-server/HV driver defaults which are always enabled
 %define with_sasl          0%{!?_without_sasl:1}
@@ -182,6 +183,7 @@
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
     %define with_systemd 1
     %define with_systemd_daemon 1
+    %define with_pm_utils 0
 %endif
 
 # Fedora 18 / RHEL-7 are first where firewalld support is enabled
@@ -260,16 +262,11 @@
 %endif
 
 # Enable sanlock library for lock management with QEMU
-# Sanlock is available only on i686 x86_64 for RHEL
+# Sanlock is available only on x86_64 for RHEL
 %if 0%{?fedora} >= 16
     %define with_sanlock 0%{!?_without_sanlock:%{server_drivers}}
 %endif
-%if 0%{?rhel} == 6
-    %ifarch %{ix86} x86_64
-        %define with_sanlock 0%{!?_without_sanlock:%{server_drivers}}
-    %endif
-%endif
-%if 0%{?rhel} >= 7
+%if 0%{?rhel} >= 6
     %ifarch x86_64
         %define with_sanlock 0%{!?_without_sanlock:%{server_drivers}}
     %endif
@@ -387,7 +384,7 @@
 
 Summary: Library providing a simple virtualization API
 Name: libvirt
-Version: 1.2.2
+Version: 1.2.6
 Release: 1%{?dist}%{?extra_release}
 License: LGPLv2+
 Group: Development/Libraries
@@ -1138,8 +1135,10 @@ Requires: nc
 Requires: gettext
 # Needed by virt-pki-validate script.
 Requires: gnutls-utils
+%if %{with_pm_utils}
 # Needed for probing the power management features of the host.
 Requires: pm-utils
+%endif
 %if %{with_sasl}
 Requires: cyrus-sasl
 # Not technically required, but makes 'out-of-box' config
@@ -1395,6 +1394,10 @@ driver
     %define _without_systemd_daemon --without-systemd-daemon
 %endif
 
+%if ! %{with_pm_utils}
+    %define _without_pm_utils --without-pm-utils
+%endif
+
 %define when  %(date +"%%F-%%T")
 %define where %(hostname)
 %define who   %{?packager}%{!?packager:Unknown}
@@ -1421,6 +1424,7 @@ driver
  autoreconf -if
 %endif
 
+rm -f po/stamp-po
 %configure %{?_without_xen} \
            %{?_without_qemu} \
            %{?_without_openvz} \
@@ -1470,6 +1474,7 @@ driver
            %{?_with_firewalld} \
            %{?_without_wireshark} \
            %{?_without_systemd_daemon} \
+           %{?_without_pm_utils} \
            %{with_packager} \
            %{with_packager_version} \
            --with-qemu-user=%{qemu_user} \
@@ -1488,7 +1493,7 @@ rm -fr %{buildroot}
 # on RHEL 5, thus we need to expand it here.
 make install DESTDIR=%{?buildroot} SYSTEMD_UNIT_DIR=%{_unitdir}
 
-for i in object-events dominfo domsuspend hellolibvirt openauth xml/nwfilter systemtap
+for i in object-events dominfo domsuspend hellolibvirt openauth xml/nwfilter systemtap dommigrate
 do
   (cd examples/$i ; make clean ; rm -rf .deps .libs Makefile Makefile.in)
 done
@@ -1837,10 +1842,6 @@ exit 0
 
 %dir %attr(0700, root, root) %{_sysconfdir}/libvirt/
 
-    %if %{with_nwfilter}
-%dir %attr(0700, root, root) %{_sysconfdir}/libvirt/nwfilter/
-    %endif
-
     %if %{with_systemd}
 %{_unitdir}/libvirtd.service
 %{_unitdir}/virtlockd.service
@@ -1877,7 +1878,9 @@ exit 0
 %{_datadir}/augeas/lenses/virtlockd.aug
 %{_datadir}/augeas/lenses/tests/test_virtlockd.aug
 %{_datadir}/augeas/lenses/libvirt_lockd.aug
+    %if %{with_qemu}
 %{_datadir}/augeas/lenses/tests/test_libvirt_lockd.aug
+    %endif
 
     %if %{with_polkit}
         %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
@@ -1903,15 +1906,21 @@ exit 0
 %{_mandir}/man8/virtlockd.8*
 
     %if ! %{with_driver_modules}
-        %if %{with_network}
+        %if %{with_network} || %{with_qemu}
 %dir %attr(0700, root, root) %{_sysconfdir}/libvirt/qemu/
+        %endif
+        %if %{with_network} || %{with_nwfilter}
+%ghost %dir %{_localstatedir}/run/libvirt/network/
+        %endif
+        %if %{with_network}
 %dir %attr(0700, root, root) %{_sysconfdir}/libvirt/qemu/networks/
 %dir %attr(0700, root, root) %{_sysconfdir}/libvirt/qemu/networks/autostart
-%dir %{_datadir}/libvirt/networks/
-%{_datadir}/libvirt/networks/default.xml
-%ghost %dir %{_localstatedir}/run/libvirt/network/
 %dir %attr(0700, root, root) %{_localstatedir}/lib/libvirt/network/
 %dir %attr(0755, root, root) %{_localstatedir}/lib/libvirt/dnsmasq/
+%attr(0755, root, root) %{_libexecdir}/libvirt_leaseshelper
+        %endif
+        %if %{with_nwfilter}
+%dir %attr(0700, root, root) %{_sysconfdir}/libvirt/nwfilter/
         %endif
         %if %{with_storage_disk}
 %attr(0755, root, root) %{_libexecdir}/libvirt_parthelper
@@ -1958,6 +1967,8 @@ exit 0
     %if %{with_network}
 %files daemon-config-network
 %defattr(-, root, root)
+%dir %{_datadir}/libvirt/networks/
+%{_datadir}/libvirt/networks/default.xml
     %endif
 
     %if %{with_nwfilter}
@@ -1979,11 +1990,10 @@ exit 0
 %dir %attr(0700, root, root) %{_sysconfdir}/libvirt/qemu/
 %dir %attr(0700, root, root) %{_sysconfdir}/libvirt/qemu/networks/
 %dir %attr(0700, root, root) %{_sysconfdir}/libvirt/qemu/networks/autostart
-%dir %{_datadir}/libvirt/networks/
-%{_datadir}/libvirt/networks/default.xml
 %ghost %dir %{_localstatedir}/run/libvirt/network/
 %dir %attr(0700, root, root) %{_localstatedir}/lib/libvirt/network/
 %dir %attr(0755, root, root) %{_localstatedir}/lib/libvirt/dnsmasq/
+%attr(0755, root, root) %{_libexecdir}/libvirt_leaseshelper
 %{_libdir}/%{name}/connection-driver/libvirt_driver_network.so
         %endif
 
@@ -1996,6 +2006,8 @@ exit 0
         %if %{with_nwfilter}
 %files daemon-driver-nwfilter
 %defattr(-, root, root)
+%dir %attr(0700, root, root) %{_sysconfdir}/libvirt/nwfilter/
+%ghost %dir %{_localstatedir}/run/libvirt/network/
 %{_libdir}/%{name}/connection-driver/libvirt_driver_nwfilter.so
         %endif
 
@@ -2015,6 +2027,7 @@ exit 0
         %if %{with_qemu}
 %files daemon-driver-qemu
 %defattr(-, root, root)
+%dir %attr(0700, root, root) %{_sysconfdir}/libvirt/qemu/
 %dir %attr(0700, root, root) %{_localstatedir}/log/libvirt/qemu/
 %config(noreplace) %{_sysconfdir}/libvirt/qemu.conf
 %config(noreplace) %{_sysconfdir}/libvirt/qemu-lockd.conf
@@ -2135,7 +2148,9 @@ exit 0
 %{_bindir}/virt-xml-validate
 %{_bindir}/virt-pki-validate
 %{_bindir}/virt-host-validate
-%{_libdir}/lib*.so.*
+%{_libdir}/libvirt.so.*
+%{_libdir}/libvirt-qemu.so.*
+%{_libdir}/libvirt-lxc.so.*
 
 %if %{with_dtrace}
 %{_datadir}/systemtap/tapset/libvirt_probes*.stp
@@ -2157,8 +2172,7 @@ exit 0
 %{_datadir}/libvirt/schemas/nodedev.rng
 %{_datadir}/libvirt/schemas/nwfilter.rng
 %{_datadir}/libvirt/schemas/secret.rng
-%{_datadir}/libvirt/schemas/storageencryption.rng
-%{_datadir}/libvirt/schemas/storagefilefeatures.rng
+%{_datadir}/libvirt/schemas/storagecommon.rng
 %{_datadir}/libvirt/schemas/storagepool.rng
 %{_datadir}/libvirt/schemas/storagevol.rng
 
@@ -2193,10 +2207,17 @@ exit 0
 %files devel
 %defattr(-, root, root)
 
-%{_libdir}/lib*.so
+%{_libdir}/libvirt.so
+%{_libdir}/libvirt-qemu.so
+%{_libdir}/libvirt-lxc.so
 %dir %{_includedir}/libvirt
-%{_includedir}/libvirt/*.h
+%{_includedir}/libvirt/virterror.h
+%{_includedir}/libvirt/libvirt.h
+%{_includedir}/libvirt/libvirt-qemu.h
+%{_includedir}/libvirt/libvirt-lxc.h
 %{_libdir}/pkgconfig/libvirt.pc
+%{_libdir}/pkgconfig/libvirt-qemu.pc
+%{_libdir}/pkgconfig/libvirt-lxc.pc
 
 %dir %{_datadir}/libvirt/api/
 %{_datadir}/libvirt/api/libvirt-api.xml
@@ -2209,38 +2230,60 @@ exit 0
 %doc examples/object-events
 %doc examples/dominfo
 %doc examples/domsuspend
+%doc examples/dommigrate
 %doc examples/openauth
 %doc examples/xml
 %doc examples/systemtap
 
 %changelog
-* Mon Mar  3 2014 Daniel P. Berrange <berrange@redhat.com> - 1.2.2-1
-- Update to 1.2.2 release
-- Add wireshark plugin sub-RPM
-- Add missing sub-RPMs deps for config packages
+* Wed Jul  2 2014 Daniel Veillard <veillard@redhat.com> - 1.2.6-1
+- libxl: add migration support and fixes
+- various improvements and fixes for NUMA
+- many improvements and bug fixes
 
-* Mon Jan 27 2014 Cole Robinson <crobinso@redhat.com> - 1.2.1-2
-- Rebuild for openwsman soname bump
+* Mon Jun  2 2014 Daniel Veillard <veillard@redhat.com> - 1.2.5-1
+- LSN-2014-0003: Don't expand entities when parsing XML (security)
+- Introduce virDomain{Get,Set}Time APIs
+- Introduce virDomainFSFreeze() and virDomainFSThaw() public API
+- various improvements and bug fixes
 
-* Tue Jan 21 2014 Daniel P. Berrange <berrange@redhat.com> - 1.2.1-1
-- Update to 1.2.1 release
+* Sun May  4 2014 Daniel Veillard <veillard@redhat.com> - 1.2.4-1
+- various improvements and bug fixes
+- lot of internal code refactoring
 
-* Mon Dec  2 2013 Daniel P. Berrange <berrange@redhat.com> - 1.2.0-1
-- Update to 1.2.0 release with python in a separate srpm
+* Tue Apr  1 2014 Daniel Veillard <veillard@redhat.com> - 1.2.3-1
+- add new virDomainCoreDumpWithFormat API
+- conf: Introduce virDomainDeviceGetInfo API
+- more features and fixes on bhyve driver
+- lot of cleanups and improvement on the Xen driver
+- a lot of various improvements and bug fixes
 
-* Tue Nov 12 2013 Cole Robinson <crobinso@redhat.com> - 1.1.4-2
-- virsh nodedev-detach fails if device has no driver (bz #1028629)
+* Sun Mar  2 2014 Daniel Veillard <veillard@redhat.com> - 1.2.2-1
+- add LXC from native conversion tool
+- vbox: add support for v4.2.20+ and v4.3.4+
+- Introduce Libvirt Wireshark dissector
+- Fix CVE-2013-6456: Avoid unsafe use of /proc/$PID/root in LXC
+- a lot of various improvements and bug fixes
+
+* Thu Jan 16 2014 Daniel Veillard <veillard@redhat.com> - 1.2.1-1
+- Fix s CVE-2014-0028 event: filter global events by domain:getattr ACL
+- Fix CVE-2014-1447 Don't crash if a connection closes early
+- Fix CVE-2013-6458-1 qemu: Do not access stale data in virDomainBlockStats
+- Fix CVE-2013-6457 libxl: avoid crashing if calling `virsh numatune' on inactive domain
+- Fix CVE-2013-6436: fix crash in lxcDomainGetMemoryParameters
+- many doc and bug fixes and improvements
+
+* Mon Dec  2 2013 Daniel Veillard <veillard@redhat.com> - 1.2.0-1
+- Separation of python binding as libvirt-python srpm
+- Add support for gluster pool
+- vbox: add support for 4.3 APIs
+- a number of doc, bug fixes and various improvements
 
 * Mon Nov  4 2013 Daniel Veillard <veillard@redhat.com> - 1.1.4-1
-- upstream release of 1.1.4
 - Add support for AArch64 architecture
 - Various improvements on test code and test driver
+- 4 security bug fixes
 - a lot of bug fixes and various improvements
-
-* Sun Oct 06 2013 Cole Robinson <crobinso@redhat.com> - 1.1.3-2
-- Allow QoS change with update-device (bz #1014200)
-- Fix nwfilter crash during firewalld install (bz #1014762)
-- Fix crash with nographics (bz #1014088)
 
 * Tue Oct  1 2013 Daniel Veillard <veillard@redhat.com> - 1.1.3-1
 - VMware: Initial VMware Fusion support and various improvements
@@ -2248,48 +2291,24 @@ exit 0
 - various libxl driver improvements
 - LXC many container driver improvement
 - ARM cpu improvements
+- 3 security bug fixes
 - a lot of bug and leak fixes and various improvements
 
-* Tue Sep 24 2013 Cole Robinson <crobinso@redhat.com> - 1.1.2-4
-- Fix snapshot restore when VM has disabled usb support (bz #1011520)
+* Mon Sep  2 2013 Daniel Veillard <veillard@redhat.com> - 1.1.2-1
+- various improvements to libxl driver
+- systemd integration improvements
+- Add flag to BaselineCPU API to return detailed CPU features
+- Introduce a virt-login-shell binary
+- conf: add startupPolicy attribute for harddisk
+- various bug fixes and improvements including localizations
 
-* Mon Sep 23 2013 Cole Robinson <crobinso@redhat.com> - 1.1.2-3
-- Sync with v1.1.2-maint
-- Rebuild for libswan soname bump (bz #1009701)
-- CVE-2013-4311: Insecure polkit usage (bz #1009539, bz #1005332)
-- CVE-2013-4296: Invalid free memory stats (bz #1006173, bz #1009667)
-- CVE-2013-4297: Invalid free in NBDDeviceAssociate (bz #1006505, bz #1006511)
-- Fix virsh block-commit abort (bz #1010056)
-
-* Wed Sep 18 2013 Daniel P. Berrange <berrange@redhat.com> - 1.1.2-2
-- Rebuild for soname break in openswman package
-
-* Mon Sep  2 2013 Daniel P. Berrange <berrange@redhat.com> - 1.1.2-1
-- Update to 1.1.2 release
-
-* Tue Aug 20 2013 Cole Robinson <crobinso@redhat.com> - 1.1.1-3
-- Fix launching ARM guests on x86 (patches posted upstream, F20 feature)
-
-* Wed Aug 14 2013 Cole Robinson <crobinso@redhat.com> - 1.1.1-2
-- CVE-2013-4239: xen: memory corruption in legacy driver (bz #996241, bz
-  #996244)
-
-* Tue Jul 30 2013 Daniel P. Berrange <berrange@redhat.com> - 1.1.1-1
-- Update to 1.1.1 release
-
-* Sun Jul 28 2013 Dennis Gilmore <dennis@ausil.us> - 1.1.0-5
-- fix doc path in libvirt-python
-
-* Thu Jul 25 2013 Cole Robinson <crobinso@redhat.com> - 1.1.0-4
-- CVE-2013-4153: Fix double free of returned JSON (bz #986408, bz #986383)
-- CVE-2013-4154: Crash of libvirtd if guest agent not configured (bz #986386,
-  bz #986406)
-
-* Wed Jul 17 2013 Daniel P. Berrange <berrange@redhat.com> - 1.1.0-3
-- Rebuild for change in Xen library ABI/soname
-
-* Thu Jul 11 2013 Cole Robinson <crobinso@redhat.com> - 1.1.0-2
-- CVE-2013-2230 libvirt: multiple registered events crash
+* Tue Jul 30 2013 Daniel Veillard <veillard@redhat.com> - 1.1.1-1
+- Adding device removal or deletion events
+- Introduce new domain create APIs to pass pre-opened FDs to LXC
+- Add interface versions for Xen 4.3
+- Add new public API virDomainSetMemoryStatsPeriod
+- Various LXC improvements
+- various bug fixes and improvements including localizations
 
 * Mon Jul  1 2013 Daniel Veillard <veillard@redhat.com> - 1.1.0-1
 - CVE-2013-2218: Fix crash listing network interfaces with filters
@@ -2299,28 +2318,15 @@ exit 0
 - agent based vCPU hotplug support
 - various bug fixes and improvements including localizations
 
-* Fri Jun 14 2013 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.6-3
-- Enable KVM support on ARM
-
-* Sat Jun 08 2013 Cole Robinson <crobinso@redhat.com> - 1.0.6-2
-- Drop bogus dep on vbox
-
-* Mon Jun  3 2013 Daniel P. Berrange <berrange@redhat.com> - 1.0.6-1
-- Update to 1.0.6 release
-
-* Sun May 19 2013 Cole Robinson <crobinso@redhat.com> - 1.0.5.1-1
-- Rebased to version 1.0.5.1
-- Follow updated packaging guidelines for user alloc (bz #924501)
-- CVE-2013-1962 Open files DoS (bz #963789, bz #953107)
-
-* Tue May 14 2013 Cole Robinson <crobinso@redhat.com> - 1.0.5-3
-- Fix stream operations like screenshot (bz #960879)
-
-* Fri May  3 2013 Richard W.M. Jones <rjones@redhat.com> - 1.0.5-2
-- Fix network driver when using qemu:///session (bz #958907).
+* Mon Jun  3 2013 Daniel Veillard <veillard@redhat.com> - 1.0.6-1
+- Move VirtualBox driver into libvirtd
+- Support for static routes on a virtual bridge
+- Various improvement for hostdev SCSI support
+- Switch to VIR_STRDUP and VIR_STRNDUP
+- Various cleanups and improvement in Xen and LXC drivers
+- various bug fixes and improvements including localizations
 
 * Thu May  2 2013 Daniel Veillard <veillard@redhat.com> - 1.0.5-1
-- Update to 1.0.5 release
 - add support for NVRAM device
 - Add XML config for resource partitions
 - Add support for TPM
@@ -2328,72 +2334,39 @@ exit 0
 - various bug fixes and improvements including localizations
 
 * Mon Apr  1 2013 Daniel Veillard <veillard@redhat.com> - 1.0.4-1
-- Update to 1.0.4 release
+- qemu: support passthrough for iscsi disks
+- various S390 improvements
+- various LXC bugs fixes and improvements
+- Add API for thread cancellation
+- various bug fixes and improvements
 
-* Tue Mar  5 2013 Daniel P. Berrange <berrange@redhat.com> - 1.0.3-1
-- Update to 1.0.3 release
+* Tue Mar  5 2013 Daniel Veillard <veillard@redhat.com> - 1.0.3-1
+- Introduce virDomainMigrate*CompressionCache APIs
+- Introduce virDomainGetJobStats API
+- Add basic support for VDI images
+- Introduce API virNodeDeviceLookupSCSIHostByWWN
+- Various locking improvements
+- a lot of bug fixes and overall improvements
 
-* Thu Feb 28 2013 Richard W.M. Jones <rjones@redhat.com> - 1.0.2-4
-- Backport "qemu: check backing chains even when cgroup is omitted"
-  (RHBZ#896685).
-- Disable virnettlscontexttest which apparently fails because of
-  a broken gnutls3.  Note since this patch touches Makefile.am, I
-  have enabled autoreconf (enable_autotools).
+* Wed Jan 30 2013 Daniel Veillard <veillard@redhat.com> - 1.0.2-1
+- LXC improvements
+- S390 architecture improvement
+- Power architecture improvement
+- large Coverity report cleanups and associated bug fixes
+- virTypedParams* APIs to helps with those data structures
+- a lot of bug fixes and overall improvements
 
-* Tue Feb  5 2013 Daniel P. Berrange <berrange@redhat.com> - 1.0.2-2
-- Fix missing python binding constants
-
-* Fri Feb  1 2013 Daniel P. Berrange <berrange@redhat.com> - 1.0.2-1
-- Update to 1.0.2 release
-
-* Tue Jan 29 2013 Cole Robinson <crobinso@redhat.com> - 1.0.1-6
-- Fix network persistence after define (bz #890492)
-
-* Mon Jan 28 2013 Cole Robinson <crobinso@redhat.com> - 1.0.1-5
-- CVE-2013-0170 libvirt: use-after-free in virNetMessageFree() (bz #893450, bz
-  #905173)
-
-* Sun Jan 20 2013 Richard W.M. Jones <rjones@redhat.com> - 1.0.1-4
-- Rebuild for libnl soname breakage (RHBZ#901569).
-
-* Fri Jan 18 2013 Daniel P. Berrange <berrange@redhat.com> - 1.0.1-3
-- Rebuild for libnl3 soname change
-- Deal with broken kernel headers
-
-* Mon Dec 17 2012 Cole Robinson <crobinso@redhat.com> - 1.0.1-2
-- Fix scriplet warning when uninstalling libvirt-client (bz #888071)
-
-* Mon Dec 17 2012 Daniel Veillard <veillard@redhat.com> - 1.0.1-1
-- Update to 1.0.1 release
-
-* Thu Nov  8 2012 Daniel P. Berrange <berrange@redhat.com> - 1.0.0-1
-- Update to 1.0.0 release
-
-* Tue Oct 30 2012 Cole Robinson <crobinso@redhat.com> - 0.10.2.1-2
-- Disable libxl on F18 too
-
-* Sat Oct 27 2012 Cole Robinson <crobinso@redhat.com> - 0.10.2.1-1
-- Rebased to version 0.10.2.1
-- Fix lvm volume creation when alloc=0 (bz #866481)
-- Clarify virsh send-keys man page example (bz #860004)
-- Fix occasional deadlock via virDomainDestroy (bz #859009)
-- Fix LXC deadlock from ctrl-c (bz #848119)
-- Fix occasional selinux denials with macvtap (bz #798605)
-- Fix multilib conflict with systemtap files (bz #831425)
-- Don't trigger keytab warning in system logs (bz #745203)
-- Fix qemu domxml-2-native NIC model out (bz #636832)
-- Fix error message if not enough space for lvm vol (bz #609104)
-
-* Thu Oct 25 2012 Cole Robinson <crobinso@redhat.com> - 0.10.2-4
-- Disable libxl driver, since it doesn't build with xen 4.2 in rawhide
-
-* Mon Sep 24 2012 Richard W.M. Jones <rjones@redhat.com> - 0.10.2-3
-- Re-add Use-qemu-system-i386-as-binary-instead-of-qemu.patch
-  NB: This patch is Fedora-specific and not upstream.
-- Add upstream patches: don't duplicate environment variables (RHBZ#859596).
+* Fri Nov  2 2012 Daniel Veillard <veillard@redhat.com> - 1.0.0-1
+- virNodeGetCPUMap: Define public API
+- Add systemd journal support
+- Add a qemu capabilities cache manager
+- USB migration support
+- various improvement and fixes when using QMP QEmu interface
+- Support for Xen 4.2
+- Lot of localization enhancements
+- a lot of bug fixes, improvements and portability work
 
 * Mon Sep 24 2012 Daniel Veillard <veillard@redhat.com> - 0.10.2-1
-- Upstream release 0.10.2
 - network: define new API virNetworkUpdate
 - add support for QEmu sandbox support
 - blockjob: add virDomainBlockCommit
@@ -2411,26 +2384,10 @@ exit 0
 - qemu: Support for Block Device IO Limits
 - a lot of bug fixes, improvements and portability work
 
-* Fri Sep 21 2012 Richard W.M. Jones <rjones@redhat.com> - 0.10.1-5
-- Add (upstream) patches to label sockets for SELinux (RHBZ#853393).
-
-* Thu Sep 13 2012 Richard W.M. Jones <rjones@redhat.com> - 0.10.1-4
-- Fix for 32 bit qemu renamed to qemu-system-i386 (RHBZ#857026).
-
-* Wed Sep 12 2012 Cole Robinson <crobinso@redhat.com> - 0.10.1-3
-- Fix libvirtd segfault with old netcf-libs (bz 853381)
-- Drop unneeded dnsmasq --filterwin2k
-- Fix unwanted connection closing, needed for boxes
-
-* Wed Sep  5 2012 Daniel P. Berrange <berrange@redhat.com> - 0.10.1-2
-- Remove dep on ceph RPM (rhbz #854360)
-
 * Fri Aug 31 2012 Daniel Veillard <veillard@redhat.com> - 0.10.1-1
-- upstream release of 0.10.1
-- many fixes from 0.10.0
+- bugfixes and a brown paper bag
 
 * Wed Aug 29 2012 Daniel Veillard <veillard@redhat.com> - 0.10.0-1
-- upstream release of 0.10.0
 - agent: add qemuAgentArbitraryCommand() for general qemu agent command
 - Introduce virDomainPinEmulator and virDomainGetEmulatorPinInfo functions
 - network: use firewalld instead of iptables, when available
@@ -2440,25 +2397,6 @@ exit 0
 - Various LXC improvements
 - Add virDomainGetHostname
 - a lot of bug fixes, improvements and portability work
-
-* Thu Aug 23 2012 Daniel Veillard <veillard@redhat.com> - 0.10.0-0rc1
-- release candidate 1 of 0.10.0
-
-* Tue Aug 14 2012 Daniel P. Berrange <berrange@redhat.com> - 0.10.0-0rc0.2
-- Enable autotools to make previous patch work
-
-* Tue Aug 14 2012 Daniel Veillard <veillard@redhat.com> - 0.10.0-0rc0.1
-- fix security driver missing from the daemon
-
-* Wed Aug  8 2012 Daniel Veillard <veillard@redhat.com> - 0.10.0-0rc0
-- snapshot before 0.10.0 in a few weeks
-- adds the parallel driver support
-
-* Mon Jul 23 2012 Richard W.M. Jones <rjones@redhat.com> - 0.9.13-3
-- Add upstream patch to fix RHBZ#842114.
-
-* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.13-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Mon Jul  2 2012 Daniel Veillard <veillard@redhat.com> - 0.9.13-1
 - S390: support for s390(x)
@@ -2477,29 +2415,30 @@ exit 0
 - blockjob: add new APIs
 - a lot of bug fixes, improvements and portability work
 
-* Thu Apr 26 2012 Cole Robinson <crobinso@redhat.com> - 0.9.11.3-1
-- Rebased to version 0.9.11.3
-- Abide URI username when connecting to hypervisor (bz 811397)
-- Fix managed USB mode (bz 814866)
-- Fix crash connecting to ESX host (bz 811891)
+* Tue Apr  3 2012 Daniel Veillard <veillard@redhat.com> - 0.9.11-1
+- Add support for the suspend event
+- Add support for event tray moved of removable disks
+- qemu: Support numad
+- cpustats: API, improvements and qemu support
+- qemu: support type='hostdev' network devices at domain start
+- Introduce virDomainPMWakeup API
+- network: support Open vSwitch
+- a number of snapshot improvements
+- many improvements and bug fixes
 
-* Wed Apr  4 2012 Daniel P. Berrange <berrange@redhat.com> - 0.9.11-1
-- Update to 0.9.11 release
-
-* Tue Apr  3 2012 Daniel P. Berrange <berrange@redhat.com> - 0.9.10-4
-- Revert previous change
-
-* Sat Mar 31 2012 Daniel P. Berrange <berrange@redhat.com> - 0.9.10-3
-- Refactor RPM spec to allow install without default configs
-
-* Thu Mar 15 2012 Daniel P. Berrange <berrange@redhat.com> - 0.9.10-2
-- Rebuild for libparted soname break
-
-* Mon Feb 13 2012 Daniel P. Berrange <berrange@redhat.com> - 0.9.10-1
-- Update to 0.9.10
-
-* Thu Jan 12 2012 Daniel P. Berrange <berrange@redhat.com> - 0.9.9-2
-- Fix LXC I/O handling
+* Mon Feb 13 2012 Daniel Veillard <veillard@redhat.com> - 0.9.10-1
+- Add support for sVirt in the LXC driver
+- block rebase: add new API virDomainBlockRebase
+- API: Add api to set and get domain metadata
+- virDomainGetDiskErrors public API
+- conf: add rawio attribute to disk element of domain XML
+- Add new public API virDomainGetCPUStats()
+- Introduce virDomainPMSuspendForDuration API
+- resize: add virStorageVolResize() API
+- Add a virt-host-validate command to sanity check HV config
+- Add new virDomainShutdownFlags API
+- QEMU guest agent support
+- many improvements and bug fixes
 
 * Sat Jan  7 2012 Daniel Veillard <veillard@redhat.com> - 0.9.9-1
 - Add API virDomain{S,G}etInterfaceParameters
@@ -2507,9 +2446,6 @@ exit 0
 - Add support for ppc64 qemu
 - Support Xen domctl v8
 - many improvements and bug fixes
-
-* Thu Dec  8 2011 Daniel P. Berrange <berrange@redhat.com> - 0.9.8-2
-- Fix install of libvirt-guests.service & libvirtd.service
 
 * Thu Dec  8 2011 Daniel Veillard <veillard@redhat.com> - 0.9.8-1
 - Add support for QEMU 1.0
@@ -2522,21 +2458,14 @@ exit 0
 - Add support for STP and VLAN filtering
 - many improvements and bug fixes
 
-* Mon Nov 14 2011 Justin M. Forbes <jforbes@redhat.com> - 0.9.7-3
-- Remove versioned buildreq for yajl as 2.0.x features are not required.
-
-* Thu Nov 10 2011 Daniel P. Berrange <berrange@redhat.com> - 0.9.7-2
-- Rebuild for yajl 2.0.1
-
-* Tue Nov  8 2011 Daniel P. Berrange <berrange@redhat.com> - 0.9.7-1
-- Update to 0.9.7 release
-
-* Tue Oct 11 2011 Dan Horák <dan[at]danny.cz> - 0.9.6-3
-- xenlight available only on Xen arches (#745020)
-
-* Mon Oct  3 2011 Laine Stump <laine@redhat.com> - 0.9.6-2
-- Make PCI multifunction support more manual - Bug 742836
-- F15 build still uses cgconfig - Bug 738725
+* Tue Nov  8 2011 Daniel Veillard <veillard@redhat.com> - 0.9.7-1
+- esx: support vSphere 5.x
+- vbox: support for VirtualBox 4.1
+- Introduce the virDomainOpenGraphics API
+- Add AHCI support to qemu driver
+- snapshot: many improvements and 2 new APIs
+- api: Add public api for 'reset'
+- many improvements and bug fixes
 
 * Thu Sep 22 2011 Daniel Veillard <veillard@redhat.com> - 0.9.6-1
 - Fix the qemu reboot bug and a few others bug fixes
@@ -2562,12 +2491,6 @@ exit 0
 - various missing python binding
 - many improvements and bug fixes
 
-* Sat Jul 30 2011 Dan Hor?k <dan[at]danny.cz> - 0.9.3-3
-- xenlight available only on Xen arches
-
-* Wed Jul  6 2011 Peter Robinson <pbrobinson@gmail.com> - 0.9.3-2
-- Add ARM to NUMA platform excludes
-
 * Mon Jul  4 2011 Daniel Veillard <veillard@redhat.com> - 0.9.3-1
 - new API virDomainGetVcpupinInfo
 - Add TXT record support for virtual DNS service
@@ -2581,15 +2504,6 @@ exit 0
 - lxc: various improvements
 - many improvements and bug fixes
 
-* Wed Jun 29 2011 Richard W.M. Jones <rjones@redhat.com> - 0.9.2-3
-- Rebuild because of libparted soname bump (libparted.so.0 -> libparted.so.1).
-
-* Tue Jun 21 2011 Laine Stump <laine@redhat.com> - 0.9.2-2
-- add rule to require netcf-0.1.8 during build so that new transactional
-  network change APIs are included.
-- document that CVE-2011-2178 has been fixed (by virtue of rebase
-  to 0.9.2 - see https://bugzilla.redhat.com/show_bug.cgi?id=709777)
-
 * Mon Jun  6 2011 Daniel Veillard <veillard@redhat.com> - 0.9.2-1
 - Framework for lock manager plugins
 - API for network config change transactions
@@ -2601,14 +2515,6 @@ exit 0
 - public API for NMI injection
 - Various improvements and bug fixes
 
-* Wed May 25 2011 Richard W.M. Jones <rjones@redhat.com> - 0.9.1-3
-- Add upstream patches:
-    0001-json-Avoid-passing-large-positive-64-bit-integers-to.patch
-    0001-qemudDomainMemoryPeek-change-ownership-selinux-label.patch
-    0002-remote-remove-bogus-virDomainFree.patch
-  so that users can try out virt-dmesg.
-- Change /var/cache mode to 0711.
-
 * Thu May  5 2011 Daniel Veillard <veillard@redhat.com> - 0.9.1-1
 - support various persistent domain updates
 - improvements on memory APIs
@@ -2617,7 +2523,7 @@ exit 0
 - Spice: support audio, images and stream compression
 - Various improvements and bug fixes
 
-* Thu Apr  7 2011 Daniel Veillard <veillard@redhat.com> - 0.9.0-1
+* Mon Apr  4 2011 Daniel Veillard <veillard@redhat.com> - 0.9.0-1
 - Support cputune cpu usage tuning
 - Add public APIs for storage volume upload/download
 - Add public API for setting migration speed on the fly
@@ -2630,13 +2536,6 @@ exit 0
 - Audit support
 - Various improvements and bug fixes
 
-* Mon Mar 14 2011 Daniel Veillard <veillard@redhat.com> - 0.8.8-3
-- fix a lack of API check on read-only connections
-- CVE-2011-1146
-
-* Mon Feb 21 2011 Daniel P. Berrange <berrange@redhat.com> - 0.8.8-2
-- Fix kernel boot with latest QEMU
-
 * Thu Feb 17 2011 Daniel Veillard <veillard@redhat.com> - 0.8.8-1
 - expose new API for sysinfo extraction
 - cgroup blkio weight support
@@ -2644,16 +2543,14 @@ exit 0
 - qemu: Support per-device boot ordering
 - Various improvements and bug fixes
 
-* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.7-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Thu Jan  6 2011 Daniel Veillard <veillard@redhat.com> - 0.8.7-1
+* Tue Jan  4 2011 Daniel Veillard <veillard@redhat.com> - 0.8.7-1
 - Preliminary support for VirtualBox 4.0
 - IPv6 support
 - Add VMware Workstation and Player driver driver
 - Add network disk support
 - Various improvements and bug fixes
-- from 0.8.6:
+
+* Tue Nov 30 2010 Daniel Veillard <veillard@redhat.com> - 0.8.6-1
 - Add support for iSCSI target auto-discovery
 - QED: Basic support for QED images
 - remote console support
@@ -2672,34 +2569,17 @@ exit 0
 - Memory parameter controls
 - various improvements and bug fixes
 
-* Wed Sep 29 2010 jkeating - 0.8.4-3
-- Rebuilt for gcc bug 634757
+* Fri Sep 10 2010 Daniel Veillard <veillard@redhat.com> - 0.8.4-1
+- big improvements to UML driver
+- various improvements and bug fixes
 
-* Thu Sep 16 2010 Dan Horák <dan[at]danny.cz> - 0.8.4-2
-- disable the nwfilterxml2xmltest also on s390(x)
-
-* Mon Sep 13 2010 Daniel Veillard <veillard@redhat.com> - 0.8.4-1
-- Upstream release 0.8.4
-
-* Mon Aug 23 2010 Daniel P. Berrange <berrange@redhat.com> - 0.8.3-2
-- Fix potential overflow in boot menu code
-
-* Mon Aug 23 2010 Daniel P. Berrange <berrange@redhat.com> - 0.8.3-1
-- Upstream release 0.8.3
-
-* Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 0.8.2-3
-- Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
-
-* Mon Jul 12 2010 Daniel P. Berrange <berrange@redhat.com> - 0.8.2-2
-- CVE-2010-2237 ignoring defined main disk format when looking up disk backing stores
-- CVE-2010-2238 ignoring defined disk backing store format when recursing into disk
-  image backing stores
-- CVE-2010-2239 not setting user defined backing store format when creating new image
-- CVE-2010-2242 libvirt: improperly mapped source privileged ports may allow for
-  obtaining privileged resources on the host
+* Wed Aug  4 2010 Daniel Veillard <veillard@redhat.com> - 0.8.3-1
+- esx: Support vSphere 4.1
+- Qemu arbitrary monitor commands
+- Qemu Monitor API entry point
+- various improvements and bug fixes
 
 * Mon Jul  5 2010 Daniel Veillard <veillard@redhat.com> - 0.8.2-1
-- Upstream release 0.8.2
 - phyp: adding support for IVM
 - libvirt: introduce domainCreateWithFlags API
 - add 802.1Qbh and 802.1Qbg switches handling
@@ -2708,13 +2588,11 @@ exit 0
 - qemu: live migration with non-shared storage for kvm
 
 * Fri Apr 30 2010 Daniel Veillard <veillard@redhat.com> - 0.8.1-1
-- Upstream release 0.8.1
 - Starts dnsmasq from libvirtd with --dhcp-hostsfile
 - Add virDomainGetBlockInfo API to query disk sizing
 - a lot of bug fixes and cleanups
 
 * Mon Apr 12 2010 Daniel Veillard <veillard@redhat.com> - 0.8.0-1
-- Upstream release 0.8.0
 - Snapshotting support (QEmu/VBox/ESX)
 - Network filtering API
 - XenAPI driver
@@ -2728,13 +2606,6 @@ exit 0
 - volume wiping API
 - and many bug fixes
 
-* Tue Mar 30 2010 Richard W.M. Jones <rjones@redhat.com> - 0.7.7-3.fc14
-- No change, just rebuild against new libparted with bumped soname.
-
-* Mon Mar 22 2010 Cole Robinson <crobinso@redhat.com> - 0.7.7-2.fc14
-- Fix USB devices by product with security enabled (bz 574136)
-- Set kernel/initrd in security driver, fixes some URL installs (bz 566425)
-
 * Fri Mar  5 2010 Daniel Veillard <veillard@redhat.com> - 0.7.7-1
 - macvtap support
 - async job handling
@@ -2743,23 +2614,7 @@ exit 0
 - virDomain{Attach,Detach}DeviceFlags
 - assorted bug fixes and lots of cleanups
 
-* Tue Feb 16 2010 Adam Jackson <ajax@redhat.com> 0.7.6-2
-- libvirt-0.7.6-add-needed.patch: Fix FTBFS from --no-add-needed
-- Add BuildRequires: xmlrpc-c-client for libxmlrpc_client.so
-
 * Wed Feb  3 2010 Daniel Veillard <veillard@redhat.com> - 0.7.6-1
-- upstream release of 0.7.6
-- Use QEmu new device adressing when possible
-- Implement CPU topology support for QEMU driver
-- Implement SCSI controller hotplug/unplug for QEMU
-- Implement support for multi IQN
-- a lot of fixes and improvements
-
-* Thu Jan 14 2010 Chris Weyl <cweyl@alumni.drew.edu> 0.7.5-3
-- bump for libssh2 rebuild
-
-* Tue Jan 12 2010 Daniel P. Berrange <berrange@redhat.com> - 0.7.5-2
-- Rebuild for libparted soname change
 
 * Wed Dec 23 2009 Daniel Veillard <veillard@redhat.com> - 0.7.5-1
 - Add new API virDomainMemoryStats
@@ -2768,8 +2623,7 @@ exit 0
 - Support QEMU's virtual FAT block device driver
 - a lot of fixes
 
-* Fri Nov 20 2009 Daniel Veillard <veillard@redhat.com> - 0.7.4-1
-- upstream release of 0.7.4
+* Fri Nov 20 2009 Daniel Veillard <veillard@redhat.com> - 0.7.3-1
 - udev node device backend
 - API to check object properties
 - better QEmu monitor processing
@@ -2777,69 +2631,7 @@ exit 0
 - support IPv6 and multiple addresses per interfaces
 - a lot of fixes
 
-* Thu Nov 19 2009 Daniel P. Berrange <berrange@redhat.com> - 0.7.2-6
-- Really fix restore file labelling this time
-
-* Wed Nov 11 2009 Daniel P. Berrange <berrange@redhat.com> - 0.7.2-5
-- Disable numactl on s390[x]. Again.
-
-* Wed Nov 11 2009 Daniel P. Berrange <berrange@redhat.com> - 0.7.2-4
-- Fix QEMU save/restore permissions / labelling
-
-* Thu Oct 29 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.2-3
-- Avoid compressing small log files (#531030)
-
-* Thu Oct 29 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.2-2
-- Make libvirt-devel require libvirt-client, not libvirt
-- Fix qemu machine types handling
-
-* Wed Oct 14 2009 Daniel Veillard <veillard@redhat.com> - 0.7.2-1
-- Upstream release of 0.7.2
-- Allow to define ESX domains
-- Allows suspend and resulme of LXC domains
-- API for data streams
-- many bug fixes
-
-* Tue Oct 13 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.1-12
-- Fix restore of qemu guest using raw save format (#523158)
-
-* Fri Oct  9 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.1-11
-- Fix libvirtd memory leak during error reply sending (#528162)
-- Add several PCI hot-unplug typo fixes from upstream
-
-* Tue Oct  6 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.1-10
-- Create /var/log/libvirt/{lxc,uml} dirs for logrotate
-- Make libvirt-python dependon on libvirt-client
-- Sync misc minor changes from upstream spec
-
-* Tue Oct  6 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.1-9
-- Change logrotate config to weekly (#526769)
-
-* Thu Oct  1 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.1-8
-- Disable sound backend, even when selinux is disabled (#524499)
-- Re-label qcow2 backing files (#497131)
-
-* Wed Sep 30 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.1-7
-- Fix USB device passthrough (#522683)
-
-* Mon Sep 21 2009 Chris Weyl <cweyl@alumni.drew.edu> - 0.7.1-6
-- rebuild for libssh2 1.2
-
-* Mon Sep 21 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.1-5
-- Don't set a bogus error in virDrvSupportsFeature()
-- Fix raw save format
-
-* Thu Sep 17 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.1-4
-- A couple of hot-unplug memory handling fixes (#523953)
-
-* Thu Sep 17 2009 Daniel Veillard <veillard@redhat.com> - 0.7.1-3
-- disable numactl on s390[x]
-
-* Thu Sep 17 2009 Daniel Veillard <veillard@redhat.com> - 0.7.1-2
-- revamp of spec file for modularity and RHELs
-
 * Tue Sep 15 2009 Daniel Veillard <veillard@redhat.com> - 0.7.1-1
-- Upstream release of 0.7.1
 - ESX, VBox driver updates
 - mutipath support
 - support for encrypted (qcow) volume
@@ -2847,40 +2639,6 @@ exit 0
 - QEmu host PCI device hotplug support
 - configuration of huge pages in guests
 - a lot of fixes
-
-* Mon Sep 14 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.1-0.2.gitfac3f4c
-- Update to newer snapshot of 0.7.1
-- Stop libvirt using untrusted 'info vcpus' PID data (#520864)
-- Support relabelling of USB and PCI devices
-- Enable multipath storage support
-- Restart libvirtd upon RPM upgrade
-
-* Sun Sep  6 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.1-0.1.gitg3ef2e05
-- Update to pre-release git snapshot of 0.7.1
-- Drop upstreamed patches
-
-* Wed Aug 19 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.0-6
-- Fix migration completion with newer versions of qemu (#516187)
-
-* Wed Aug 19 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.0-5
-- Add PCI host device hotplug support
-- Allow PCI bus reset to reset other devices (#499678)
-- Fix stupid PCI reset error message (bug #499678)
-- Allow PM reset on multi-function PCI devices (bug #515689)
-- Re-attach PCI host devices after guest shuts down (bug #499561)
-- Fix list corruption after disk hot-unplug
-- Fix minor 'virsh nodedev-list --tree' annoyance
-
-* Thu Aug 13 2009 Daniel P. Berrange <berrange@redhat.com> - 0.7.0-4
-- Rewrite policykit support (rhbz #499970)
-- Log and ignore NUMA topology problems (rhbz #506590)
-
-* Mon Aug 10 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.0-3
-- Don't fail to start network if ipv6 modules is not loaded (#516497)
-
-* Thu Aug  6 2009 Mark McLoughlin <markmc@redhat.com> - 0.7.0-2
-- Make sure qemu can access kernel/initrd (bug #516034)
-- Set perms on /var/lib/libvirt/boot to 0711 (bug #516034)
 
 * Wed Aug  5 2009 Daniel Veillard <veillard@redhat.com> - 0.7.0-1
 - ESX, VBox3, Power Hypervisor drivers
@@ -3044,7 +2802,7 @@ exit 0
 - it's pkgconfig not pgkconfig !
 
 * Mon Nov  6 2006 Daniel Veillard <veillard@redhat.com> 0.1.8-2
-- fixing spec file, added %dist, -devel requires pkgconfig and xen-devel
+- fixing spec file, added %%dist, -devel requires pkgconfig and xen-devel
 - Resolves: rhbz#202320
 
 * Mon Oct 16 2006 Daniel Veillard <veillard@redhat.com> 0.1.8-1
