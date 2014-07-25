@@ -113,6 +113,18 @@ def makeNorNetTagTypes():
    makeTagType('slice/nornet',     'NorNet Slice Node Index',         'nornet_slice_node_index')
    makeTagType('slice/nornet',     'NorNet Slice Own Addresses',      'nornet_slice_own_addresses')
 
+   # SysCtls
+   nornetSysCtls = [
+      'net.ipv4.tcp_ecn',
+      'net.ipv4.tcp_rmem',
+      'net.ipv4.tcp_wmem',
+      'net.ipv4.tcp_congestion_control',
+      'net.sctp.sctp_rmem',
+      'net.sctp.sctp_wmem'      
+   ]
+   for nornetSysCtl in nornetSysCtls: 
+      makeTagType('slice/sysctl', 'SysCtl ' + nornetSysCtl, 'vsys_sysctl.' + nornetSysCtl)
+
    # ====== Missing tags for plnet ==========================================
    makeTagType('interface/config', 'IPv6 Auto-Configuration',          'ipv6_autoconf')
    for i in range(1,10):

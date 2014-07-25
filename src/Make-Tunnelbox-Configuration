@@ -212,15 +212,22 @@ def addProviderToName(hostName, providerName, domainName):
    return(newHostName)
 
 
+# ###### Compute a serial number ############################################
+def getSerial():
+   value = datetime.datetime.utcnow() - datetime.datetime(2014,7,15)
+   serial = value.days * (24 * 60 * 60) + value.seconds
+   return serial
+
+
 # ###### Write SOA ##########################################################
 def writeSOA(outputFile, nsHostNameFQDN, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaves):
    outputFile.write('$TTL ' + str(defaultTTL) + '\n\n')
    outputFile.write('@\tIN\tSOA\t' + nsHostNameFQDN + ' root.' + siteFQDN+ ' (\n')
-   outputFile.write('\t' + datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S") + '   ; Serial\n')
-   outputFile.write('\t{0:14d}   ; Refresh time: interval for secondary DNS to check for updates (default: 3600)\n'.format(refreshTime))
-   outputFile.write('\t{0:14d}   ; Retry time: time for retrying failed zone transfer (default: 600)\n'.format(retryTime))
-   outputFile.write('\t{0:14d}   ; Expire time: when to expire a zone in case of failed zone transfer (default: 84600)\n'.format(expireTime))
-   outputFile.write('\t{0:14d} ) ; Minimum TTL: minimum time-to-live (default: 3600)\n\n'.format(minTTL))
+   outputFile.write('\t{0:9d}   ; Serial\n'.format(getSerial()))
+   outputFile.write('\t{0:9d}   ; Refresh time: interval for secondary DNS to check for updates (default: 3600)\n'.format(refreshTime))
+   outputFile.write('\t{0:9d}   ; Retry time: time for retrying failed zone transfer (default: 600)\n'.format(retryTime))
+   outputFile.write('\t{0:9d}   ; Expire time: when to expire a zone in case of failed zone transfer (default: 84600)\n'.format(expireTime))
+   outputFile.write('\t{0:9d} ) ; Minimum TTL: minimum time-to-live (default: 3600)\n\n'.format(minTTL))
    outputFile.write('@\tIN\tNS\t' + nsHostNameFQDN + '\n')
    for slave in slaves:
       outputFile.write('@\tIN\tNS\t' + slave + '\n')

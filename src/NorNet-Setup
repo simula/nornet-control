@@ -409,6 +409,32 @@ norNetSetup = [
       [ 108, 9, u'vippetangen' ]
    ] },
 
+ { 'site_index'        : 40,
+   'site_enabled'      : True,
+   'site_long_name'    : u'Universität Kaiserslautern',
+   'site_short_name'   : 'TUKL',
+   'site_url'          : 'http://www.informatik.uni-kl.de/',
+   'site_domain'       : 'tukl.nornet',
+   'site_city'         : 'Kaiserslautern',
+   'site_province'     : 'Rheinland-Pfalz',
+   'site_country'      : 'Germany',
+   'site_country_code' : 'DE',
+   'site_latitude'     :  49.4237695,
+   'site_longitude'    : 7.7551096,
+   'site_altitude'     : 50,
+   'site_pcu'          : [ IPv4Address('131.246.112.121'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Deutsches Forschungsnetz', 'eth1',
+           IPv4Network('131.246.112.120/24'),        IPv4Address('131.246.112.254'),
+           IPv6Network('2001:638:208:ef2d::120/64'), IPv6Address('2001:638:208:ef2d:0:ff:fe00:ffd') ],
+   ],
+   'site_nodes' : [
+      [ 100, 1, u'betzenberg' ],
+      [ 101, 2, u'kaiserberg' ]
+      #[ 102, 3, u'dansenberg' ],
+   ] },
+
  { 'site_index'        : 42,
    'site_enabled'      : True,
    'site_long_name'    : u'Universität Duisburg-Essen',
@@ -502,7 +528,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 100,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'University of Kansas',
    'site_short_name'   : 'KU',
    'site_url'          : 'http://www.ku.nornet',
@@ -518,17 +544,17 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Kansas Research and Education Network', 'eth1',
-           IPv4Network('198.248.245.205/21'), IPv4Address('198.248.240.254'),
-           IPv6Network('::/0'),  IPv6Address('::') ]
+           IPv4Network('164.113.202.17/28'),        IPv4Address('164.113.202.30'),
+           IPv6Network('2001:49d0:3c00:6::17/64'),  IPv6Address('2001:49d0:3c00:6::1') ]
       #[ u'Provider Zwei', 'eth2',
            #IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
            #IPv6Network('::/0'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'watson'  ],
-      [ 101, 2, u'clinton' ],
-      [ 102, 3, u'williamstown' ],
-      [ 103, 4, u'stull' ]
+      [ 101, 2, u'clinton' ]
+      #[ 102, 3, u'williamstown' ],
+      #[ 103, 4, u'stull' ]
    ] },
 
  #{ 'site_index'        : 120,
