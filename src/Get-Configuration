@@ -29,22 +29,85 @@ from NorNetTools     import *;
 from NorNetAPI       import *;
 
 
+# ###### Get NorNet node object for sliver ##################################
+def makePseudoNode(nodeName, site, nodeIndex, model):
+   dnsName = makeNameFromUnicode(nodeName)
+   norNetNode = {
+      'node_site_id'          : site['site_id'],
+      'node_index'            : int(nodeIndex),
+      'node_name'             : dnsName['ascii'] + '.' + site['site_domain'],
+      'node_utf8'             : dnsName['utf8']  + '.' + site['site_domain'],
+      'node_nornet_interface' : None,
+      'node_model'            : model,
+      'node_state'            : 'SLIVER',
+      'node_tags'             : []
+   }
+   return norNetNode
+
+
+# ###### Reserve address ####################################################
+addressList = []
+def reserve(address):
+   if address in addressList:
+      error('Address ' + str(address) + ' is already reserved!')
+   addressList.append(address)
+
+
 # ###### Main program #######################################################
 loginToPLC(quietMode = True)
 
-siteList = fetchNorNetSite(None)
-nodeList = fetchNorNetNode(None)
+siteList  = fetchNorNetSite(None)
+nodeList  = fetchNorNetNode(None)
+sliceList = fetchNorNetSlice(None)
+
+# ====== Handle slices ======================================================
+if sliceList == None:
+   print 'ERROR: Slice list is empty?! Missing NorNet patch?'
+   sys.exit(1)
+
+sliverNodeList = []
+for slice in sliceList:
+   for node in nodeList:
+      if node['node_id'] in slice['slice_node_ids']:
+         sliceDNSName   = str.replace(slice['slice_name'], '_', '-')
+         sliceHostname  = sliceDNSName + '.' + getHostnameFromFQDN(node['node_utf8'])
+         sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
+         sliceNode = makePseudoNode(sliceHostname,
+                                    getNorNetSiteOfNode(siteList, node),
+                                    node['node_index'],
+                                    node['node_model'])
+         # Add a pseudo entry to create a slice address later
+         sliceNode['pseudo_slice_node_index'] = getSliceNodeIndexOfNorNetSlice(slice, node)
+         sliverNodeList.append(sliceNode)
+
+
+nodeList       = sorted(nodeList, key = lambda x: x['node_index'])
+sliverNodeList = sorted(sliverNodeList, key = lambda x: x['node_index'])
 
 for siteIndex in siteList:
    site = siteList[siteIndex]
    #print site
-   siteIndex    = site['site_index']
-   siteName     = site['site_utf8']
-   providerList = getNorNetProvidersForSite(site)
+   siteIndex       = site['site_index']
+   siteName        = site['site_utf8']
+   providerList    = getNorNetProvidersForSite(site)
+   siteTagsList    = site['site_tags']
+   siteCountryCode = ''
+   siteCountry     = ''
+   siteProvince    = ''
+   siteCity        = ''
+
+   for siteTag in siteTagsList:
+      if siteTag['tagname'] == 'nornet_site_country_code':
+         siteCountryCode = siteTag['value']
+      elif siteTag['tagname'] == 'nornet_site_country':
+         siteCountry = siteTag['value']
+      elif siteTag['tagname'] == 'nornet_site_province':
+         siteProvince = siteTag['value']
+      elif siteTag['tagname'] == 'nornet_site_city':
+         siteCity = siteTag['value']
 
    print(str(siteIndex) + ' ' + \
-         fill(siteName, 32))
-
+         fill(siteName, 32) + ' ' + siteCountryCode+ ' ' + siteCountry+ ' ' + siteProvince+ ' ' + siteCity)
 
 
    for node in nodeList:
@@ -57,7 +120,7 @@ for siteIndex in siteList:
 
          nodeFC = 'NA'
          nodePL = 'NA'
-         nodeTagsList = fetchNodeTagsList(node['node_id'])
+         nodeTagsList = node['node_tags']
          for nodeTag in nodeTagsList:
             if nodeTag['tagname'] == 'fcdistro':
                nodeFC = nodeTag['value']
@@ -67,7 +130,8 @@ for siteIndex in siteList:
          print(str(nodeIndex) + ' ' + fill(nodeUTF8,32) + ' ' + fill(nodeName,32) + ' ' + fill(nodeState,10) + ' ' + fill(nodeFC,4) + ' ' + fill(nodePL,6))
 
 
-         sliceNodeIndex = 0
+         # ====== Obtain the address ==================================
+         print '   ROOT:'
          for onlyDefault in [ True, False ]:
             for providerIndex in providerList:
                if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
@@ -76,7 +140,31 @@ for siteIndex in siteList:
                   provider = providerList[providerIndex]
                   #print provider
 
-                  ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4, sliceNodeIndex)
-                  ifIPv6 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6, sliceNodeIndex)
+                  ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4, 0).ip
+                  ifIPv6 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6, 0).ip
+                  reserve(ifIPv4)
+                  reserve(ifIPv6)
 
                   print '\t' + provider['provider_long_name'] + '\t' + str(ifIPv4) + ' ' + str(ifIPv6)
+
+
+         print '   SLIVERS:'
+         sliversOfNode = []
+         for sliverNode in sliverNodeList:
+            if ((sliverNode['node_site_id'] == site['site_id']) and
+                (sliverNode['node_index'] == nodeIndex)):
+               print '\t' + sliverNode['node_name'] + '\t' + str(sliverNode['pseudo_slice_node_index'])
+
+               sliceNodeIndex = sliverNode['pseudo_slice_node_index']
+               for onlyDefault in [ True, False ]:
+                  for providerIndex in providerList:
+                     if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+                           ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+                        provider = providerList[providerIndex]
+
+                        ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4, sliceNodeIndex).ip
+                        ifIPv6 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6, sliceNodeIndex).ip
+                        reserve(ifIPv4)
+                        reserve(ifIPv6)
+
+                        print '\t' + provider['provider_long_name'] + '\t' + str(ifIPv4) + ' ' + str(ifIPv6)
