@@ -37,6 +37,7 @@ class TableOutput:
       sys.stdout.write('<title>This is NorNet Core</title>\n')
       sys.stdout.write('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n')
       sys.stdout.write('<link rel="stylesheet" href="http://www.iem.uni-due.de/~dreibh/stylesheet.css" type="text/css" />\n')
+      sys.stdout.write('<link rel="shortcut icon" href="https://www.nntb.no/favicon.ico" />\n')
       sys.stdout.write('<style type="text/css">\n')
       sys.stdout.write('td {\n')
       sys.stdout.write(' text-align: center;\n')
@@ -162,16 +163,27 @@ def extractIPs(providerIndex, siteIndex, nodeIndex, sliceNodeIndex = 0):
 
 
 # ###### Main program #######################################################
+siteImageURL  = 'http://monitor.simula.nornet/Kontrollsenter/Graphics/Sites'
+siteFlagURL   = 'http://monitor.simula.nornet/Kontrollsenter/Graphics/Flags'
+
+showAddresses = True
+showSlivers   = True
+i = 1
+while i < len(sys.argv):
+   if sys.argv[i] == '-noaddresses':
+      showAddresses = False
+   elif sys.argv[i] == '-noslivers':
+      showSlivers = False
+   else:
+      error('Usage: ' + sys.argv[0] + '[-noaddresses] [-noslivers]')
+   i = i + 1
+
 loginToPLC(quietMode = True)
 
 siteList  = fetchNorNetSite(None)
 nodeList  = fetchNorNetNode(None)
 sliceList = fetchNorNetSlice(None)
 
-siteImageURL  = 'http://monitor.simula.nornet/Kontrollsenter/Graphics/Sites'
-siteFlagURL   = 'http://monitor.simula.nornet/Kontrollsenter/Graphics/Flags'
-showAddresses = True
-showSlivers   = True
 
 # ====== Handle slices ======================================================
 if sliceList == None:
@@ -275,7 +287,7 @@ for siteIndex in sorted(siteIndexList):
 
    output.beginRow()
    imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
-   output.cell(output.makeImage(imageURL, 'height: 12em;'), nodePlusSliverCells, 1 + len(siteInfoTable), 12)
+   output.cell(output.makeImage(imageURL, 'height: 11em;'), nodePlusSliverCells, 1 + len(siteInfoTable), 12)
    output.cell('Site Information', 2 * len(providerList))
    output.endRow()
 
