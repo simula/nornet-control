@@ -19,14 +19,78 @@
 #
 # Contact: dreibh@simula.no
 
-import re;
-import os;
-import base64;
+import os, sys
+import base64
 
 # NorNet
 from NorNetSiteSetup import *;
 from NorNetTools     import *;
 from NorNetAPI       import *;
+
+
+class TableOutput:
+   def __init__(self):
+      sys.stdout.write('<?xml version="1.0" encoding="utf-8" ?>\n')
+      sys.stdout.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n')
+      sys.stdout.write('<html>\n')
+      sys.stdout.write('<head>\n')
+      sys.stdout.write('<title>Testbed Overview</title>\n')
+      sys.stdout.write('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n')
+      sys.stdout.write('<link rel="stylesheet" href="http://www.iem.uni-due.de/~dreibh/stylesheet.css" type="text/css" />\n')
+      sys.stdout.write('<style type="text/css">\n')
+      sys.stdout.write('td {\n')
+      sys.stdout.write('text-align: center;\n')
+      sys.stdout.write('  vertical-align: middle;\n')
+      sys.stdout.write('}\n')
+      sys.stdout.write('</style>\n')
+      sys.stdout.write('</head>\n')
+      sys.stdout.write('<body>\n')
+      self.indent = 0
+
+   def __del__(self):
+      sys.stdout.write('</body>\n</html>\n')
+
+   def beginTable(self, columns=2):
+      self.doIndentation(True)
+      sys.stdout.write('<table border="1">\n')
+      self.indent = self.indent + 1
+
+   def endTable(self):
+      self.indent = self.indent - 1
+      sys.stdout.write('</table>\n')
+
+   def beginRow(self):
+      self.doIndentation(False)
+      sys.stdout.write('<tr>')
+
+   def endRow(self):
+      sys.stdout.write('</tr>\n')
+
+   def beginCell(self, colspan = -1, rowspan = -1, width = -1):
+      opts=''
+      if colspan >= 0:
+         opts = opts + ' colspan="' + str(colspan) + '"'
+      if rowspan >= 0:
+         opts = opts + ' rowspan="' + str(rowspan) + '"'
+      if width >= 0:
+         opts = opts + ' style="width: ' + str(width) + 'em;"'
+      sys.stdout.write('<td' + opts + '>')
+
+   def endCell(self):
+      sys.stdout.write('</td>')
+
+   def cell(self, cell = '', colspan = -1, rowspan = -1, width = -1):
+      self.beginCell(colspan, rowspan, width)
+      sys.stdout.write(cell)
+      self.endCell()
+
+   def doIndentation(self, newline = False):
+      if newline == True:
+         sys.stdout.write('\n')
+      i = self.indent
+      while i > 0:
+         sys.stdout.write(' ')
+         i = i - 1
 
 
 # ###### Get NorNet node object for sliver ##################################
@@ -84,7 +148,17 @@ for slice in sliceList:
 nodeList       = sorted(nodeList, key = lambda x: x['node_index'])
 sliverNodeList = sorted(sliverNodeList, key = lambda x: x['node_index'])
 
+output = TableOutput()
+output.beginTable()
+
+output.beginRow()
+output.cell('Site')
+output.cell('Site Details')
+output.endRow()
+
 for siteIndex in siteList:
+   output.beginRow()
+
    site = siteList[siteIndex]
    #print site
    siteIndex       = site['site_index']
@@ -106,9 +180,45 @@ for siteIndex in siteList:
       elif siteTag['tagname'] == 'nornet_site_city':
          siteCity = siteTag['value']
 
-   print(str(siteIndex) + ' ' + \
-         fill(siteName, 32) + ' ' + siteCountryCode+ ' ' + siteCountry+ ' ' + siteProvince+ ' ' + siteCity)
+   siteLabel = siteName
+   if siteCity:
+      siteLabel = siteLabel + ', ' + siteCity 
+   if siteProvince:
+      siteLabel = siteLabel + ', ' + siteProvince 
+   if siteCountry:
+      siteLabel = siteLabel + '/' + siteCountry 
 
+
+   output.cell(str(siteIndex))
+   
+   output.beginCell()
+   
+   output.beginTable()
+   
+   output.beginRow()
+   output.cell(siteLabel, 4 + 2 * len(providerList), -1, 100)
+   output.endRow()
+
+   output.beginRow()
+   output.cell('Node', 2, 2, 4)
+   output.cell('Sliver', 2, 2, 8)
+   isp = 0
+   for onlyDefault in [ True, False ]:
+      for providerIndex in providerList:
+         if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+            provider = providerList[providerIndex]
+            output.cell(provider['provider_long_name'] + ' (' + str(provider['provider_index']) + ')', 2)
+            isp = isp + 1
+   output.endRow()
+
+   output.beginRow()
+   i = 0
+   while i < isp:
+      output.cell('IPv4', -1, -1, 8)
+      output.cell('IPv6', -1, -1, 16)
+      i = i + 1
+   output.endRow()
 
    for node in nodeList:
       if node['node_site_id'] == site['site_id']:
@@ -127,11 +237,25 @@ for siteIndex in siteList:
             if nodeTag['tagname'] == 'pldistro':
                nodePL = nodeTag['value']
 
-         print(str(nodeIndex) + ' ' + fill(nodeUTF8,32) + ' ' + fill(nodeName,32) + ' ' + fill(nodeState,10) + ' ' + fill(nodeFC,4) + ' ' + fill(nodePL,6))
+         #print(str(nodeIndex) + ' ' + fill(nodeUTF8,32) + ' ' + fill(nodeName,32) + ' ' + fill(nodeState,10) + ' ' + fill(nodeFC,4) + ' ' + fill(nodePL,6))
+
+         
+         # ====== Get slivers of node =======================================
+         #print '   SLIVERS:'
+         sliversOfNode = []
+         for sliverNode in sliverNodeList:
+            if ((sliverNode['node_site_id'] == site['site_id']) and
+                (sliverNode['node_index'] == nodeIndex)):
+               #print '\t' + sliverNode['node_name'] + '\t' + str(sliverNode['pseudo_slice_node_index'])
+               sliversOfNode.append(sliverNode)
 
 
-         # ====== Obtain the address ==================================
-         print '   ROOT:'
+         # ====== Root context ==============================================
+         output.beginRow()
+         output.cell(str(nodeIndex), -1, 1 + len(sliversOfNode))
+         output.cell(nodeName, -1, 1 + len(sliversOfNode))
+         output.cell('Root Context', 2)
+
          for onlyDefault in [ True, False ]:
             for providerIndex in providerList:
                if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
@@ -145,26 +269,45 @@ for siteIndex in siteList:
                   reserve(ifIPv4)
                   reserve(ifIPv6)
 
-                  print '\t' + provider['provider_long_name'] + '\t' + str(ifIPv4) + ' ' + str(ifIPv6)
+                  output.cell(str(ifIPv4))
+                  output.cell(str(ifIPv6))
+
+                  #print '\t' + provider['provider_long_name'] + '\t' + str(ifIPv4) + ' ' + str(ifIPv6)
+
+         output.endRow()
 
 
-         print '   SLIVERS:'
-         sliversOfNode = []
-         for sliverNode in sliverNodeList:
-            if ((sliverNode['node_site_id'] == site['site_id']) and
-                (sliverNode['node_index'] == nodeIndex)):
-               print '\t' + sliverNode['node_name'] + '\t' + str(sliverNode['pseudo_slice_node_index'])
+         # ====== Sliver context ============================================
+         for sliverNode in sliversOfNode:
+            output.beginRow()
+            #output.cell()
+            #output.cell()
+            output.cell(str(sliverNode['pseudo_slice_node_index']))
+            output.cell(sliverNode['node_utf8'])
 
-               sliceNodeIndex = sliverNode['pseudo_slice_node_index']
-               for onlyDefault in [ True, False ]:
-                  for providerIndex in providerList:
-                     if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
-                           ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
-                        provider = providerList[providerIndex]
+            sliceNodeIndex = sliverNode['pseudo_slice_node_index']
+            for onlyDefault in [ True, False ]:
+               for providerIndex in providerList:
+                  if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+                        ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+                     provider = providerList[providerIndex]
 
-                        ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4, sliceNodeIndex).ip
-                        ifIPv6 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6, sliceNodeIndex).ip
-                        reserve(ifIPv4)
-                        reserve(ifIPv6)
+                     ifIPv4 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4, sliceNodeIndex).ip
+                     ifIPv6 = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6, sliceNodeIndex).ip
+                     reserve(ifIPv4)
+                     reserve(ifIPv6)
 
-                        print '\t' + provider['provider_long_name'] + '\t' + str(ifIPv4) + ' ' + str(ifIPv6)
+                     output.cell(str(ifIPv4))
+                     output.cell(str(ifIPv6))
+
+                     #print '\t' + provider['provider_long_name'] + '\t' + str(ifIPv4) + ' ' + str(ifIPv6)
+
+            output.endRow()
+
+
+   output.endTable()
+
+   output.endCell()
+   output.endRow()
+
+output.endTable()
