@@ -51,6 +51,9 @@ class TableOutput:
    def __del__(self):
       sys.stdout.write('</body>\n</html>\n')
 
+   def comment(self, text):
+      sys.stdout.write('<!-- ' + text + ' -->\n')
+
    def header(self, level, label, text):
       sys.stdout.write('<h' + str(level) + ' id="' + label + '">' + text + '</h' + str(level) + '>\n')
 
@@ -215,7 +218,8 @@ for siteIndex in siteList:
 
 
 # ====== Make index =========================================================
-output.header(1, 'Index', 'Index')
+output.comment('BEGIN-OF-SITES-BLOCK')
+output.header(2, 'Index', 'Site Index')
 sys.stdout.write('<ol>\n')
 for siteIndex in sorted(siteIndexList):
    site = siteList[siteIndex]
@@ -265,7 +269,7 @@ for siteIndex in sorted(siteIndexList):
    sitePosition = sitePosition + ' / ' + str(site['site_altitude']) + 'm'
 
 
-   output.header(1, site['site_short_name'], siteName + ' (' + str(siteIndex) + ')')
+   output.header(2, site['site_short_name'], siteName + ' (' + str(siteIndex) + ')')
 
    output.beginTable()
    if showSlivers == True:
@@ -410,3 +414,5 @@ for siteIndex in sorted(siteIndexList):
 
 
    output.endTable()
+
+output.comment('END-OF-SITES-BLOCK')
