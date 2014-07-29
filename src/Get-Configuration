@@ -219,7 +219,7 @@ output.header(1, 'Index', 'Index')
 sys.stdout.write('<ol>\n')
 for siteIndex in sorted(siteIndexList):
    site = siteList[siteIndex]
-   sys.stdout.write(' <li><a href="#' + site['site_short_name'] + '">' + site['site_long_name'] + '</a></li>\n')
+   sys.stdout.write(' <li><a href="#' + site['site_short_name'] + '">' + site['site_utf8'] + '</a></li>\n')
 sys.stdout.write('</ol>\n')
 
 
