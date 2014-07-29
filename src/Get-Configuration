@@ -34,7 +34,7 @@ class TableOutput:
       sys.stdout.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n')
       sys.stdout.write('<html>\n')
       sys.stdout.write('<head>\n')
-      sys.stdout.write('<title>This is NorNet Core</title>\n')
+      sys.stdout.write('<title>The NorNet Core Site List</title>\n')
       sys.stdout.write('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n')
       sys.stdout.write('<link rel="stylesheet" href="http://www.iem.uni-due.de/~dreibh/stylesheet.css" type="text/css" />\n')
       sys.stdout.write('<link rel="shortcut icon" href="https://www.nntb.no/favicon.ico" />\n')
