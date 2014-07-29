@@ -24,8 +24,8 @@ NorNet_CentralSite_BootstrapProviderIndex=1
 
 # The provider list
 # ------ Norway -----------------------------------------------------------------------------------
-NorNet_Provider1='"Uninett"                                 "uninett"    "http://www.uninett.no/"'
-NorNet_Provider2='"Hafslund"                                "hafslund"   "http://www.hafslund.no/"'
+NorNet_Provider1='"Uninett"                                 "uninett"    "https://www.uninett.no/"'
+NorNet_Provider2='"Hafslund"                                "hafslund"   "http://kvantel.no/"'
 NorNet_Provider3='"ICE"                                     "ice"        "http://www.ice.no/"'
 NorNet_Provider4='"Telenor"                                 "telenor"    "http://www.telenor.no/"'
 NorNet_Provider5='"NetCom"                                  "netcom"     "http://www.netcom.no/"'
@@ -33,9 +33,9 @@ NorNet_Provider6='"Tele2"                                   "tele2"      "http:/
 NorNet_Provider7='"Network Norway"                          "netnorway"  "http://www.networknorway.no/"'
 NorNet_Provider8='"Bergenshalvøens Kommunale Kraftselskap"  "bkk"        "http://bkk.no/"'
 NorNet_Provider9='"PowerTech"                               "powertech"  "http://www.powertech.no/"'
-NorNet_Provider10='"Broadnet"                               "broadnet"   "http://www.broadnet.no/"'
-NorNet_Provider11='"Altibox"                                "altibox"    "http://www.altibox.no/"'
-NorNet_Provider12='"Eidsiva"                                "eidsiva"    "http://www.eidsiva.net/"'
+NorNet_Provider10='"Broadnet"                               "broadnet"   "https://www.broadnet.no/"'
+NorNet_Provider11='"Altibox"                                "altibox"    "https://www.altibox.no/"'
+NorNet_Provider12='"Eidsiva"                                "eidsiva"    "https://www.eidsiva.net/"'
 # ------ Sweden -----------------------------------------------------------------------------------
 NorNet_Provider20='"SUNET"                                  "sunet"      "http://www.sunet.se/"'
 # ------ Germany ----------------------------------------------------------------------------------
