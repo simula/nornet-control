@@ -66,8 +66,8 @@ class TableOutput:
    def endRow(self):
       sys.stdout.write('</tr>\n')
 
-   def makeURL(self, url):
-      return '<a href="' + url + '">' + url + '</a>'
+   def makeURL(self, url, label):
+      return '<a href="' + url + '">' + label + '</a>'
 
    def beginCell(self, colspan = -1, rowspan = -1, width = -1):
       opts=''
@@ -149,7 +149,6 @@ for slice in sliceList:
          sliceNode['pseudo_slice_node_index'] = getSliceNodeIndexOfNorNetSlice(slice, node)
          sliverNodeList.append(sliceNode)
 
-
 nodeList       = sorted(nodeList, key = lambda x: x['node_index'])
 sliverNodeList = sorted(sliverNodeList, key = lambda x: x['node_index'])
 
@@ -161,11 +160,14 @@ output.cell('Site')
 output.cell('Site Details')
 output.endRow()
 
+siteIndexList = []
 for siteIndex in siteList:
+   siteIndexList.append(siteIndex)
+for siteIndex in sorted(siteIndexList):
    output.beginRow()
 
+   # ====== Get site information ============================================
    site = siteList[siteIndex]
-   #print site
    siteIndex       = site['site_index']
    siteName        = site['site_utf8']
    providerList    = getNorNetProvidersForSite(site)
@@ -190,7 +192,16 @@ for siteIndex in siteList:
       siteLocation = siteLocation + ', ' + siteProvince 
    siteLocation = siteLocation + '/' + siteCountry 
    
-   sitePosition = str(site['site_longitude']) + ', ' + str(site['site_latitude'])
+   sitePosition = unicode(abs(site['site_longitude']))
+   if site['site_longitude'] >= 0:
+      sitePosition = sitePosition + u'°E'
+   else:
+      sitePosition = sitePosition + u'°W'
+   sitePosition = sitePosition + u', ' + unicode(abs(site['site_latitude']))
+   if site['site_latitude'] >= 0:
+      sitePosition = sitePosition + u'°N'
+   else:
+      sitePosition = sitePosition + u'°S'
 
 
    output.cell(str(siteIndex))
@@ -198,42 +209,24 @@ for siteIndex in siteList:
    output.beginCell()
    
    output.beginTable()
-   
+
    output.beginRow()
    output.cell(siteName, 4 + 2 * len(providerList), -1, 100)
    output.endRow()
 
-   output.beginRow()
-   output.cell('Node', 2, 2, 4)
-   output.cell('Sliver', 2, 2, 8)
-   isp = 0
-   for onlyDefault in [ True, False ]:
-      for providerIndex in providerList:
-         if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
-               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
-            provider = providerList[providerIndex]
-            output.cell(provider['provider_long_name'] + ' (' + str(provider['provider_index']) + ')', 2)
-            isp = isp + 1
-   output.endRow()
 
-   output.beginRow()
-   i = 0
-   while i < isp:
-      output.cell('IPv4', -1, -1, 8)
-      output.cell('IPv6', -1, -1, 16)
-      i = i + 1
-   output.endRow()
-
-
-   # ====== Get site information ======================================
+   # ====== Display site information ========================================
    siteInfoTable = [
-      [ 'Location',     siteLocation ],
+      [ 'City',         siteCity     ],
+      [ 'Province',     siteProvince ],
+      [ 'Country',      siteCountry  ],
       [ u'GPS/ГЛОНАСС', sitePosition ],
-      [ 'URL',          output.makeURL(site['site_url']) ]
+      [ 'Domain',       site['site_domain'] ],
+      [ 'URL',          output.makeURL(site['site_url'], site['site_url']) ]
    ]
 
    output.beginRow()
-   imageURL = siteImageURL + '/' + site['site_long_name'] + '.jpeg'
+   imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
    output.cell('<img src="' + imageURL + '" style="height: 10em;" alt="" />', 4, 1 + len(siteInfoTable))
    output.cell('Site Information', 2 * len(providerList))
    output.endRow()
@@ -244,6 +237,33 @@ for siteIndex in siteList:
       output.cell(siteInfo[1], 2 * len(providerList) - 1)
       output.endRow()
 
+
+   # ====== Get node information ============================================
+   output.beginRow()
+   output.cell('Node', 2, 2, 4)
+   output.cell('Sliver', 2, 2, 8)
+   isp = 0
+   for onlyDefault in [ True, False ]:
+      for providerIndex in providerList:
+         if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+            provider = providerList[providerIndex]
+            providerURL = ''
+            try:
+               providerURL = NorNet_ProviderList[providerIndex][2]
+            except:
+               pass
+            output.cell(output.makeURL(providerURL, provider['provider_long_name']) + ' (' + str(provider['provider_index']) + ')', 2)
+            isp = isp + 1
+   output.endRow()
+
+   output.beginRow()
+   i = 0
+   while i < isp:
+      output.cell('IPv4', -1, -1, 8)
+      output.cell('IPv6', -1, -1, 16)
+      i = i + 1
+   output.endRow()
 
    for node in nodeList:
       # ====== Obtain site information ======================================
