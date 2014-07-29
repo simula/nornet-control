@@ -66,6 +66,9 @@ class TableOutput:
    def endRow(self):
       sys.stdout.write('</tr>\n')
 
+   def makeURL(self, url):
+      return '<a href="' + url + '">' + url + '</a>'
+
    def beginCell(self, colspan = -1, rowspan = -1, width = -1):
       opts=''
       if colspan >= 0:
@@ -124,6 +127,8 @@ siteList  = fetchNorNetSite(None)
 nodeList  = fetchNorNetNode(None)
 sliceList = fetchNorNetSlice(None)
 
+siteImageURL = 'http://monitor.simula.nornet/Kontrollsenter/Graphics/Sites'
+
 # ====== Handle slices ======================================================
 if sliceList == None:
    print 'ERROR: Slice list is empty?! Missing NorNet patch?'
@@ -180,13 +185,12 @@ for siteIndex in siteList:
       elif siteTag['tagname'] == 'nornet_site_city':
          siteCity = siteTag['value']
 
-   siteLabel = siteName
-   if siteCity:
-      siteLabel = siteLabel + ', ' + siteCity 
-   if siteProvince:
-      siteLabel = siteLabel + ', ' + siteProvince 
-   if siteCountry:
-      siteLabel = siteLabel + '/' + siteCountry 
+   siteLocation = siteCity
+   if siteProvince != '':
+      siteLocation = siteLocation + ', ' + siteProvince 
+   siteLocation = siteLocation + '/' + siteCountry 
+   
+   sitePosition = str(site['site_longitude']) + ', ' + str(site['site_latitude'])
 
 
    output.cell(str(siteIndex))
@@ -196,7 +200,7 @@ for siteIndex in siteList:
    output.beginTable()
    
    output.beginRow()
-   output.cell(siteLabel, 4 + 2 * len(providerList), -1, 100)
+   output.cell(siteName, 4 + 2 * len(providerList), -1, 100)
    output.endRow()
 
    output.beginRow()
@@ -220,7 +224,29 @@ for siteIndex in siteList:
       i = i + 1
    output.endRow()
 
+
+   # ====== Get site information ======================================
+   siteInfoTable = [
+      [ 'Location',     siteLocation ],
+      [ u'GPS/ГЛОНАСС', sitePosition ],
+      [ 'URL',          output.makeURL(site['site_url']) ]
+   ]
+
+   output.beginRow()
+   imageURL = siteImageURL + '/' + site['site_long_name'] + '.jpeg'
+   output.cell('<img src="' + imageURL + '" style="height: 10em;" alt="" />', 4, 1 + len(siteInfoTable))
+   output.cell('Site Information', 2 * len(providerList))
+   output.endRow()
+   
+   for siteInfo in siteInfoTable:
+      output.beginRow()
+      output.cell(siteInfo[0])
+      output.cell(siteInfo[1], 2 * len(providerList) - 1)
+      output.endRow()
+
+
    for node in nodeList:
+      # ====== Obtain site information ======================================
       if node['node_site_id'] == site['site_id']:
          #print node
          nodeIndex = node['node_index']
@@ -237,16 +263,13 @@ for siteIndex in siteList:
             if nodeTag['tagname'] == 'pldistro':
                nodePL = nodeTag['value']
 
-         #print(str(nodeIndex) + ' ' + fill(nodeUTF8,32) + ' ' + fill(nodeName,32) + ' ' + fill(nodeState,10) + ' ' + fill(nodeFC,4) + ' ' + fill(nodePL,6))
 
-         
          # ====== Get slivers of node =======================================
          #print '   SLIVERS:'
          sliversOfNode = []
          for sliverNode in sliverNodeList:
             if ((sliverNode['node_site_id'] == site['site_id']) and
                 (sliverNode['node_index'] == nodeIndex)):
-               #print '\t' + sliverNode['node_name'] + '\t' + str(sliverNode['pseudo_slice_node_index'])
                sliversOfNode.append(sliverNode)
 
 
