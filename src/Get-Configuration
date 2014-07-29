@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Get all sites
-# Copyright (C) 2012-2014 by Thomas Dreibholz
+# Get testbed configuration
+# Copyright (C) 2014 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,13 +34,13 @@ class TableOutput:
       sys.stdout.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n')
       sys.stdout.write('<html>\n')
       sys.stdout.write('<head>\n')
-      sys.stdout.write('<title>Testbed Overview</title>\n')
+      sys.stdout.write('<title>This is NorNet Core</title>\n')
       sys.stdout.write('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n')
       sys.stdout.write('<link rel="stylesheet" href="http://www.iem.uni-due.de/~dreibh/stylesheet.css" type="text/css" />\n')
       sys.stdout.write('<style type="text/css">\n')
       sys.stdout.write('td {\n')
-      sys.stdout.write('text-align: center;\n')
-      sys.stdout.write('  vertical-align: middle;\n')
+      sys.stdout.write(' text-align: center;\n')
+      sys.stdout.write(' vertical-align: middle;\n')
       sys.stdout.write('}\n')
       sys.stdout.write('</style>\n')
       sys.stdout.write('</head>\n')
@@ -49,6 +49,9 @@ class TableOutput:
 
    def __del__(self):
       sys.stdout.write('</body>\n</html>\n')
+
+   def header(self, level, label, text):
+      sys.stdout.write('<h' + str(level) + ' id="' + label + '">' + text + '</h' + str(level) + '>\n')
 
    def beginTable(self, columns=2):
       self.doIndentation(True)
@@ -69,7 +72,13 @@ class TableOutput:
    def makeURL(self, url, label):
       return '<a href="' + url + '">' + label + '</a>'
 
-   def beginCell(self, colspan = -1, rowspan = -1, width = -1):
+   def makeImage(self, url, style):
+      opts=''
+      if style != '':
+         opts = opts + ' style="' + style + '"'
+      return '<img src="' + url + '"' + opts + ' alt="" />'
+
+   def beginCell(self, colspan = -1, rowspan = -1, width = -1, style = ''):
       opts=''
       if colspan >= 0:
          opts = opts + ' colspan="' + str(colspan) + '"'
@@ -77,13 +86,15 @@ class TableOutput:
          opts = opts + ' rowspan="' + str(rowspan) + '"'
       if width >= 0:
          opts = opts + ' style="width: ' + str(width) + 'em;"'
+      if style != '':
+         opts = opts + ' style="' + style + '"'
       sys.stdout.write('<td' + opts + '>')
 
    def endCell(self):
       sys.stdout.write('</td>')
 
-   def cell(self, cell = '', colspan = -1, rowspan = -1, width = -1):
-      self.beginCell(colspan, rowspan, width)
+   def cell(self, cell = '', colspan = -1, rowspan = -1, width = -1, style = ''):
+      self.beginCell(colspan, rowspan, width, style)
       sys.stdout.write(cell)
       self.endCell()
 
@@ -158,6 +169,7 @@ nodeList  = fetchNorNetNode(None)
 sliceList = fetchNorNetSlice(None)
 
 siteImageURL  = 'http://monitor.simula.nornet/Kontrollsenter/Graphics/Sites'
+siteFlagURL   = 'http://monitor.simula.nornet/Kontrollsenter/Graphics/Flags'
 showAddresses = True
 showSlivers   = True
 
@@ -185,18 +197,22 @@ nodeList       = sorted(nodeList, key = lambda x: x['node_index'])
 sliverNodeList = sorted(sliverNodeList, key = lambda x: x['pseudo_slice_node_index'])
 
 output = TableOutput()
-output.beginTable()
-
-output.beginRow()
-output.cell('Site')
-output.cell('Site Details')
-output.endRow()
-
 siteIndexList = []
 for siteIndex in siteList:
    siteIndexList.append(siteIndex)
+
+
+# ====== Make index =========================================================
+output.header(1, 'Index', 'Index')
+sys.stdout.write('<ol>\n')
 for siteIndex in sorted(siteIndexList):
-   output.beginRow()
+   site = siteList[siteIndex]
+   sys.stdout.write(' <li><a href="#' + site['site_short_name'] + '">' + site['site_long_name'] + '</a></li>\n')
+sys.stdout.write('</ol>\n')
+
+
+# ====== Get site information tables ========================================
+for siteIndex in sorted(siteIndexList):
 
    # ====== Get site information ============================================
    site = siteList[siteIndex]
@@ -223,54 +239,50 @@ for siteIndex in sorted(siteIndexList):
    if siteProvince != '':
       siteLocation = siteLocation + ', ' + siteProvince 
    siteLocation = siteLocation + '/' + siteCountry 
-   
+
    sitePosition = unicode(abs(site['site_longitude']))
    if site['site_longitude'] >= 0:
       sitePosition = sitePosition + u'°E'
    else:
       sitePosition = sitePosition + u'°W'
-   sitePosition = sitePosition + u', ' + unicode(abs(site['site_latitude']))
+   sitePosition = sitePosition + u' / ' + unicode(abs(site['site_latitude']))
    if site['site_latitude'] >= 0:
       sitePosition = sitePosition + u'°N'
    else:
       sitePosition = sitePosition + u'°S'
+   sitePosition = sitePosition + ' / ' + str(site['site_altitude']) + 'm'
 
 
-   output.cell(str(siteIndex))
-
-   output.beginCell()
+   output.header(1, site['site_short_name'], siteName + ' (' + str(siteIndex) + ')')
 
    output.beginTable()
-
-   output.beginRow()
    if showSlivers == True:
       nodePlusSliverCells = 4
    else:
       nodePlusSliverCells = 2
-   output.cell(siteName, nodePlusSliverCells + 2 * len(providerList), -1, 100)
-   output.endRow()
 
 
    # ====== Display site information ========================================
    siteInfoTable = [
       [ 'City',         siteCity     ],
-      [ 'Province',     siteProvince ],
-      [ 'Country',      siteCountry  ],
+      [ 'Province',     output.makeImage(siteFlagURL + '/' + siteCountryCode + '-' + siteProvince + '.svg', 'height: 0.8em;') + siteProvince ],
+      [ 'Country',      output.makeImage(siteFlagURL + '/Flag-' + siteCountryCode + '.svg', 'height: 0.8em;') + siteCountry  ],
       [ u'GPS/ГЛОНАСС', sitePosition ],
+      [ 'Short Name',   site['site_short_name'] ],
       [ 'Domain',       site['site_domain'] ],
       [ 'URL',          output.makeURL(site['site_url'], site['site_url']) ]
    ]
 
    output.beginRow()
    imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
-   output.cell('<img src="' + imageURL + '" style="height: 10em;" alt="" />', nodePlusSliverCells, 1 + len(siteInfoTable), 12)
+   output.cell(output.makeImage(imageURL, 'height: 12em;'), nodePlusSliverCells, 1 + len(siteInfoTable), 12)
    output.cell('Site Information', 2 * len(providerList))
    output.endRow()
 
    for siteInfo in siteInfoTable:
       output.beginRow()
       output.cell(siteInfo[0])
-      output.cell(siteInfo[1], 2 * len(providerList) - 1)
+      output.cell(siteInfo[1], 2 * len(providerList) - 1, -1, -1, 'text-align: left;')
       output.endRow()
 
 
@@ -364,7 +376,7 @@ for siteIndex in sorted(siteIndexList):
          # ====== Root context ==============================================
          output.beginRow()
          output.cell(str(nodeIndex), -1, 1 + len(sliversOfNode))
-         output.cell(nodeName, -1, 1 + len(sliversOfNode))
+         output.cell(nodeName, -1, 1 + len(sliversOfNode), -1, 'text-align: left;')
          if showSlivers == True:
             output.cell('Root Context', 2)
 
@@ -377,7 +389,7 @@ for siteIndex in sorted(siteIndexList):
          for sliverNode in sliversOfNode:
             output.beginRow()
             output.cell(str(sliverNode['pseudo_slice_node_index']))
-            output.cell(sliverNode['node_utf8'])
+            output.cell(sliverNode['node_name'], -1, -1, -1, 'text-align: left;')
 
             sliceNodeIndex = sliverNode['pseudo_slice_node_index']
             extractIPs(providerIndex, siteIndex, nodeIndex, sliceNodeIndex)
@@ -386,8 +398,3 @@ for siteIndex in sorted(siteIndexList):
 
 
    output.endTable()
-
-   output.endCell()
-   output.endRow()
-
-output.endTable()
