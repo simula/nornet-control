@@ -296,6 +296,9 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Network('158.39.149.132/25'), IPv4Address('158.39.149.129'),
+           IPv6Network('::/0'),              IPv6Address('::') ],
+      [ u'Telenor', 'eth2',
+           IPv4Network('193.213.19.83/20'), IPv4Address('193.213.16.1'),
            IPv6Network('::/0'),              IPv6Address('::') ]
    ],
    'site_nodes' : [
