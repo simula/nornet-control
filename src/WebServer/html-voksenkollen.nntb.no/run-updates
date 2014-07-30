@@ -6,7 +6,7 @@ Get-NorNet-Configuration -noaddresses -noslivers >config.html.tmp
 validate NorNetCore-Sites.html.new
 rm -f config.html.tmp config.tmp
 
-if ! diff NorNetCore-Sites.html.new NorNetCore-Sites.html >/dev/null 2>&1 ; then
-   echo "Update ..."
-   mv NorNetCore-Sites.html.new NorNetCore-Sites.html
-fi
+# if ! diff NorNetCore-Sites.html.new NorNetCore-Sites.html >/dev/null 2>&1 ; then
+#    echo "Update ..."
+mv NorNetCore-Sites.html.new NorNetCore-Sites.html
+# fi
