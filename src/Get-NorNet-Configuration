@@ -166,8 +166,8 @@ def extractIPs(providerIndex, siteIndex, nodeIndex, sliceNodeIndex = 0):
 
 
 # ###### Main program #######################################################
-siteImageURL  = 'http://monitor.simula.nornet/Kontrollsenter/Graphics/Sites'
-siteFlagURL   = 'http://monitor.simula.nornet/Kontrollsenter/Graphics/Flags'
+siteImageURL  = 'http://www.nntb.no/Kontrollsenter/Graphics/Sites'
+siteFlagURL   = 'http://www.nntb.no/Kontrollsenter/Graphics/Flags'
 
 showAddresses = True
 showSlivers   = True
