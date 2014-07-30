@@ -1,12 +1,5 @@
 Kontrollsenter/Clock/*.svg                /var/www/Kontrollsenter/Clock/
 Kontrollsenter/Forward-*.html             /var/www/Kontrollsenter
-Kontrollsenter/Graphics/Backgrounds/*.png /var/www/Kontrollsenter/Graphics/Backgrounds/
-Kontrollsenter/Graphics/Control/*.png     /var/www/Kontrollsenter/Graphics/Control/
-Kontrollsenter/Graphics/Flags/*.png       /var/www/Kontrollsenter/Graphics/Flags/
-Kontrollsenter/Graphics/Flags/*.svg       /var/www/Kontrollsenter/Graphics/Flags/
-Kontrollsenter/Graphics/Icons/*.png       /var/www/Kontrollsenter/Graphics/Icons/
-Kontrollsenter/Graphics/Markers/*.svg     /var/www/Kontrollsenter/Graphics/Markers/
-Kontrollsenter/Graphics/Sites/*.jpeg      /var/www/Kontrollsenter/Graphics/Sites/
 Kontrollsenter/NorNet-*                   /var/www/Kontrollsenter
 Make-Monitor-Configuration                /usr/bin
 Monitor/nornet-commands.cfg               /etc/nagios3

@@ -176,6 +176,16 @@ Description: NorNet File Server
  .
  See https://www.nntb.no for details on NorNet!
 
+Package: nornet-artwork
+Architecture: all
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Artwork
+ This package contains some images for the monitor server
+ on a NorNet central site.
+ .
+ See https://www.nntb.no for details on NorNet!
+
 Package: nornet-monitor
 Architecture: all
 Conflicts: tntnet
@@ -183,6 +193,7 @@ Depends: apache2,
          libapache2-mod-php5,
          nagios3,
          nagios3-doc,
+         nornet-artwork,
          nornet-node,
          postfix,
          python (>= 2.7),
