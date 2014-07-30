@@ -203,7 +203,7 @@ norNetSetup = [
            IPv6Network('2001:840:4908::210/64'),  IPv6Address('2001:840:4908::1') ],
       [ u'Altibox', 'eth3',
            IPv4Network('79.161.4.42/30'),  IPv4Address('79.161.4.41'),
-           IPv6Network('::/64'),  IPv6Address('::') ]
+           IPv6Network('2a01:798:1:9::1/127'),  IPv6Address('2a01:798:1:9::') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'mosterøy'  ],
