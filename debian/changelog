@@ -1,3 +1,10 @@
+nornet (0.9.1~rc1-1ubuntu1) precise; urgency=high
+
+  * Initial Debian release (Closes: #xxxxxx).
+  * Initial Ubuntu release (LP: #xxxxxx).
+
+ -- Thomas Dreibholz <dreibh@simula.no>  Wed, 30 Jul 2014 08:08:08 +0800
+
 nornet (0.9.0-1ubuntu1) precise; urgency=high
 
   * Initial Debian release (Closes: #xxxxxx).
