@@ -74,7 +74,10 @@ norNetSetup = [
       [ 110, 11, u'akerselva'   ],
       [ 111, 12, u'ullern'      ],
 
-      [ 119, 19, u'test'        ]
+      # --- Test only! ---
+      [ 117, 18, u'vmtest1'     ],
+      [ 118, 19, u'vmtest2'     ],
+      [ 119, 20, u'test'        ]
    ] },
 
  { 'site_index'        : 2,
