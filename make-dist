@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 . ./debian.conf
 
@@ -112,6 +112,7 @@ cp src/WebServer/nntb.config $PACKAGE-$UPSTREAM_VERSION/WebServer/
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock
 cp -r src/Kontrollsenter/Clock/station-clock.svg $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock/
 cp -r src/Kontrollsenter/Clock/License.pdf $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock/
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Backgrounds
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Control
@@ -119,17 +120,25 @@ mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Flags
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Icons
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Markers
 
-mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Sites
-mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Sites/Original
-cp -r src/Artwork/Graphics/Sites/Original/*.jpeg $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Sites/Original/
-mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Sites/Big
-ls $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Sites/Original/*.jpeg | (
-   while read inputFile ; do
-      outputFileBig=`echo "$inputFile" | sed -e "s/\/Original\//Big/g"`
-      echo "Converting $inputFile to $outputFile ..."
-      convert "$inputFile" -resize 1600x -interlace line -quality 92.5 "$outputFile"
-   done   
-)
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Original
+cp -r src/Artwork/Sites/Original/*.jpeg $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Original/
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Small
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Large
+inputFiles=`find $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Original/ -name "*.jpeg" -printf '%p\n'`
+OIFS=$IFS
+IFS='
+'
+for inputFile in $inputFiles ; do
+   outputFileSmall="`echo "$inputFile" | sed -e "s/\/Original\//\/Small\//g"`"
+   outputFileLarge="`echo "$inputFile" | sed -e "s/\/Original\//\/Large\//g"`"
+   echo "Converting $inputFile ..."
+   convert "$inputFile" -resize 512x  -interlace line -quality 92.5 "$outputFileSmall" &
+   convert "$inputFile" -resize 2048x -interlace line -quality 92.5 "$outputFileLarge" &
+   wait
+done
+IFS=$OIFS
+exit 1
 
 cp -r src/Artwork/Graphics/Backgrounds/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Backgrounds/
 cp -r src/Artwork/Graphics/Control/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Control/
