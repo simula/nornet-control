@@ -166,8 +166,8 @@ def extractIPs(providerIndex, siteIndex, nodeIndex, sliceNodeIndex = 0):
 
 
 # ###### Main program #######################################################
-siteImageURL  = 'https://www.nntb.no/Kontrollsenter/Graphics/Sites'
-siteFlagURL   = 'https://www.nntb.no/Kontrollsenter/Graphics/Flags'
+siteImageURL  = 'https://www.nntb.no/Artwork/Sites/Small'
+siteFlagURL   = 'https://www.nntb.no/Artwork/Graphics/Flags'
 
 showAddresses = True
 showSlivers   = True
