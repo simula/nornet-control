@@ -37,7 +37,7 @@ foreach ($status as $hostName => $hostEntry) {
       // ====== Get location ================================================
       $status[$hostName]['site_number'] = $sites;
       $location = $status[$hostName][""]["city"] . ', ' . $status[$hostName][""]["province"] . '/' . $status[$hostName][""]["country"];
-      $image    = '/Artwork/Graphics/Sites/' . $hostName . '.jpeg';
+      $image    = '/Artwork/Sites/Large/' . $hostName . '.jpeg';
 
       echo "   var siteLocation = '" . $status[$hostName][""]["location"] . "';\n";
       echo "   var locationArray = siteLocation.split(',');" . "\n";
