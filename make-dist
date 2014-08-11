@@ -138,7 +138,6 @@ for inputFile in $inputFiles ; do
    wait
 done
 IFS=$OIFS
-exit 1
 
 cp -r src/Artwork/Graphics/Backgrounds/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Backgrounds/
 cp -r src/Artwork/Graphics/Control/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Control/
