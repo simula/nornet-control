@@ -174,7 +174,7 @@ function zoomToSite(site)
 
    var label = ""
    if(site['country_code'] != "") {
-      label = label + '<img class="footerflag" src="Graphics/Flags/Flag-' + site['country_code'] + '.svg" alt="" />&nbsp;';
+      label = label + '<img class="footerflag" src="/Artwork/Graphics/Flags/Flag-' + site['country_code'] + '.svg" alt="" />&nbsp;';
    }
    label = label + site['name'];
    if(site['city'] != "") {
@@ -193,7 +193,7 @@ function zoomToSite(site)
       label = label + site['country'];
    }
    if(site['province'] != "") {
-      label = label + '&nbsp;<img class="footerflag" src="Graphics/Flags/' + site['country_code'] + '-' + site['province'] + '.svg" alt="" />';
+      label = label + '&nbsp;<img class="footerflag" src="/Artwork/Graphics/Flags/' + site['country_code'] + '-' + site['province'] + '.svg" alt="" />';
    }
    document.getElementById("footer.title").innerHTML = label;
 }

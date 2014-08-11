@@ -110,22 +110,22 @@ cp src/WebServer/favicon.ico $PACKAGE-$UPSTREAM_VERSION/WebServer/
 cp src/WebServer/nntb.config $PACKAGE-$UPSTREAM_VERSION/WebServer/
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock
-mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics
-mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Backgrounds
-mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Control
-mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Flags
-mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Icons
-mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Markers
-mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Sites
-cp -r src/Kontrollsenter/Graphics/Backgrounds/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Backgrounds/
-cp -r src/Kontrollsenter/Graphics/Control/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Control/
-cp -r src/Kontrollsenter/Graphics/Flags/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Flags/
-cp -r src/Kontrollsenter/Graphics/Flags/*.svg $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Flags/
-cp -r src/Kontrollsenter/Graphics/Icons/*.png $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Icons/
-cp -r src/Kontrollsenter/Graphics/Markers/*.svg $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Markers/
-cp -r src/Kontrollsenter/Graphics/Sites/*.jpeg $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Graphics/Sites/
 cp -r src/Kontrollsenter/Clock/station-clock.svg $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock/
 cp -r src/Kontrollsenter/Clock/License.pdf $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock/
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Backgrounds
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Control
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Flags
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Icons
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Markers
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Sites
+cp -r src/Artwork/Graphics/Backgrounds/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Backgrounds/
+cp -r src/Artwork/Graphics/Control/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Control/
+cp -r src/Artwork/Graphics/Flags/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Flags/
+cp -r src/Artwork/Graphics/Flags/*.svg $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Flags/
+cp -r src/Artwork/Graphics/Icons/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Icons/
+cp -r src/Artwork/Graphics/Markers/*.svg $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Markers/
+cp -r src/Artwork/Graphics/Sites/*.jpeg $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Sites/
 # ---------------------------------------------------------
 
 
