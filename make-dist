@@ -118,14 +118,25 @@ mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Control
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Flags
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Icons
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Markers
+
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Sites
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Sites/Original
+cp -r src/Artwork/Graphics/Sites/Original/*.jpeg $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Sites/Original/
+mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Sites/Big
+ls $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Sites/Original/*.jpeg | (
+   while read inputFile ; do
+      outputFileBig=`echo "$inputFile" | sed -e "s/\/Original\//Big/g"`
+      echo "Converting $inputFile to $outputFile ..."
+      convert "$inputFile" -resize 1600x -interlace line -quality 92.5 "$outputFile"
+   done   
+)
+
 cp -r src/Artwork/Graphics/Backgrounds/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Backgrounds/
 cp -r src/Artwork/Graphics/Control/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Control/
 cp -r src/Artwork/Graphics/Flags/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Flags/
 cp -r src/Artwork/Graphics/Flags/*.svg $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Flags/
 cp -r src/Artwork/Graphics/Icons/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Icons/
 cp -r src/Artwork/Graphics/Markers/*.svg $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Markers/
-cp -r src/Artwork/Graphics/Sites/*.jpeg $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Sites/
 # ---------------------------------------------------------
 
 
