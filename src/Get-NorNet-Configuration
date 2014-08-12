@@ -57,9 +57,12 @@ class TableOutput:
    def header(self, level, label, text):
       sys.stdout.write('<h' + str(level) + ' id="' + label + '">' + text + '</h' + str(level) + '>\n')
 
-   def beginTable(self, columns=2):
+   def beginTable(self, columns=2, textColor=None):
       self.doIndentation(True)
-      sys.stdout.write('<table border="1">\n')
+      options = 'border="1"'
+      if textColor != None:
+         options = options + ' style="color: ' + textColor + ';"'
+      sys.stdout.write('<table ' + options + '>\n')
       self.indent = self.indent + 1
 
    def endTable(self):
@@ -183,7 +186,7 @@ while i < len(sys.argv):
 
 loginToPLC(quietMode = True)
 
-siteList  = fetchNorNetSite(None)
+siteList  = fetchNorNetSite(None, False)
 nodeList  = fetchNorNetNode(None)
 sliceList = fetchNorNetSlice(None)
 
@@ -236,6 +239,7 @@ for siteIndex in sorted(siteIndexList):
    siteName        = site['site_utf8']
    providerList    = getNorNetProvidersForSite(site)
    siteTagsList    = site['site_tags']
+   siteEnabled     = site['site_enabled']
    siteCountryCode = ''
    siteCountry     = ''
    siteProvince    = ''
@@ -271,7 +275,11 @@ for siteIndex in sorted(siteIndexList):
 
    output.header(2, site['site_short_name'], siteName + ' (' + str(siteIndex) + ')')
 
-   output.beginTable()
+   if siteEnabled:
+      output.beginTable()
+   else:
+      output.beginTable(2, 'grey')
+
    if showSlivers == True:
       nodePlusSliverCells = 4
    else:
