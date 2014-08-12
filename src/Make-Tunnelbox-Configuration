@@ -880,7 +880,7 @@ def makeSquidConfiguration(nodeName, localSite):
 
    outputFile.write('# Improve privacy:\n')
    outputFile.write('request_header_access User-Agent deny all\n')
-   outputFile.write('request_header_replace User-Agent Mozilla/5.0\n')
+   outputFile.write('request_header_replace User-Agent Mozilla/5.0 (compatible)\n')
    outputFile.write('forwarded_for off\n\n')
 
    outputFile.write('# ================== Caching ===========================\n')
