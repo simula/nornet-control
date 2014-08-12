@@ -219,7 +219,7 @@ function updateDisplay()
          supportedDisplayLanguages[i] + '\');"><img id="languages.' +
          supportedDisplayLanguages[i] + '" class="' +
          ((supportedDisplayLanguages[i] == displayLanguage) ? "selected" : "normal") +
-         '" src="Graphics/Flags/Flag-' +
+         '" src="/Artwork/Graphics/Flags/Flag-' +
          supportedDisplayLanguages[i] + '.png" alt="' +
          supportedDisplayLanguages[i] + '"" width="32" /></a> ';
    }
