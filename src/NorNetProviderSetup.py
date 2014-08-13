@@ -163,7 +163,7 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
       m = hashlib.md5()
       m.update('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' + str(address))
       s = m.hexdigest()
-      value   = int(s[0:8], 16) & 0xffffffff
+      value   = int(s[0:8], 16) & 0xfffffffe
       mask    = ~int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4TunnelPrefix'].netmask) & 0xffffffff
       prefix  = int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4TunnelPrefix'])
       address = prefix | ((value & mask) | side)
