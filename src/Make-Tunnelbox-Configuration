@@ -921,25 +921,25 @@ def makeSquidConfiguration(nodeName, localSite):
 
 # ###### Generate RSerPool Registrar configuration ##########################
 def makeRegistrarConfiguration(localSite):
-   siteIndex          = localSite['site_index']
-   providerList       = getNorNetProvidersForSite(localSite)
-   tunnelboxAddresses = []
-   for onlyDefault in [ True, False ]:
-      for providerIndex in providerList:
-         if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
-              ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
-            for version in [ 6, 4 ]:
-               tunnelboxAddresses.append(makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version))
-
+   localSiteIndex = localSite['site_index']
    outputFile = codecs.open('registrar-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
 
-   asapAnnounce = '239.0.0.1:3863'
-   enrpAnnounce = '239.0.0.1:9901'
-   asap         = ''
-   enrp         = ''
-   firstAddress = True
-   for address in tunnelboxAddresses:
+   # ====== ASAP and ENRP endpoitns =========================================
+   asapAnnounce      = '239.0.0.1:3863'
+   enrpAnnounce      = '239.0.0.1:9901'
+   asap              = ''
+   enrp              = ''
+   firstAddress      = True
+   localProviderList = getNorNetProvidersForSite(localSite)
+   localAddresses    = []
+   for onlyDefault in [ True, False ]:
+      for providerIndex in localProviderList:
+         if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
+              ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
+            for version in [ 6, 4 ]:
+               localAddresses.append(makeNorNetIP(providerIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version))
+   for address in localAddresses:
       if firstAddress:
          asap         = '[' + str(address.ip) + ']:3863'
          enrp         = '[' + str(address.ip) + ']:9901'
@@ -948,11 +948,33 @@ def makeRegistrarConfiguration(localSite):
          asap = asap + ',[' + str(address.ip) + ']'
          enrp = enrp + ',[' + str(address.ip) + ']'
 
+   # ====== ENRP peers ======================================================
+   options=''
+   if localSiteIndex != NorNet_SiteIndex_Central:
+      options              = options + ' -peer='
+      firstAddress         = True
+      centralSite          = fullSiteList[NorNet_SiteIndex_Central]
+      centralSiteProviders = getNorNetProvidersForSite(centralSite)
+      for onlyDefault in [ True, False ]:
+         for providerIndex in localProviderList:
+            for version in [ 6, 4 ]:
+               address = makeNorNetIP(providerIndex,
+                                      NorNet_SiteIndex_Central,
+                                      NorNet_NodeIndex_Tunnelbox,
+                                      version)
+               if firstAddress:
+                  options = options + '[' + str(address.ip) + ']:9901'
+                  firstAddress = False
+               else:
+                  options = options + ',[' + str(address.ip) + ']'
+
+   # ====== Registrar options ===============================================
    outputFile.write('DAEMON_ARGS="$DAEMON_ARGS' + \
                     ' -asapannounce=' + asapAnnounce + \
                     ' -enrpannounce=' + enrpAnnounce + \
                     ' -asap=' + asap + \
                     ' -enrp=' + enrp + \
+                    options + \
                     ' -logcolor=off"\n')
 
    outputFile.close()
