@@ -273,7 +273,10 @@ norNetSetup = [
            IPv6Network('2001:700:1500:c064::2/64'), IPv6Address('2001:700:1500:c064::1') ],
       [ u'PowerTech', 'eth2',
            IPv4Network('195.159.203.50/30'),        IPv4Address('195.159.203.49'),
-           IPv6Network('2001:840:490a::50/64'), IPv6Address('2001:840:490a::1') ]
+           IPv6Network('2001:840:490a::50/64'),     IPv6Address('2001:840:490a::1') ]
+      #[ u'Broadnet', 'eth3',
+           #IPv4Network('193.69.209.10'),            IPv4Address('193.69.209.9'),
+           #IPv6Network('::/0'),                     IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'julenisse'    ],

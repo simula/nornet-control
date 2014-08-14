@@ -921,18 +921,22 @@ def makeSquidConfiguration(nodeName, localSite):
 
 # ###### Generate RSerPool Registrar configuration ##########################
 def makeRegistrarConfiguration(localSite):
-   localSiteIndex = localSite['site_index']
+   localSiteIndex       = localSite['site_index']
+   localProviderList    = getNorNetProvidersForSite(localSite)
+   localAddresses       = []
+   centralSite          = fullSiteList[NorNet_SiteIndex_Central]
+   centralSiteProviders = getNorNetProvidersForSite(centralSite)
+
    outputFile = codecs.open('registrar-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
 
    # ====== ASAP and ENRP endpoitns =========================================
+   options           = ''
    asapAnnounce      = '239.0.0.1:3863'
    enrpAnnounce      = '239.0.0.1:9901'
    asap              = ''
    enrp              = ''
    firstAddress      = True
-   localProviderList = getNorNetProvidersForSite(localSite)
-   localAddresses    = []
    for onlyDefault in [ True, False ]:
       for providerIndex in localProviderList:
          if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
@@ -949,12 +953,9 @@ def makeRegistrarConfiguration(localSite):
          enrp = enrp + ',[' + str(address.ip) + ']'
 
    # ====== ENRP peers ======================================================
-   options=''
    if localSiteIndex != NorNet_SiteIndex_Central:
       options              = options + ' -peer='
       firstAddress         = True
-      centralSite          = fullSiteList[NorNet_SiteIndex_Central]
-      centralSiteProviders = getNorNetProvidersForSite(centralSite)
       for onlyDefault in [ True, False ]:
          for providerIndex in localProviderList:
             for version in [ 6, 4 ]:
@@ -968,12 +969,19 @@ def makeRegistrarConfiguration(localSite):
                else:
                   options = options + ',[' + str(address.ip) + ']'
 
+   # ====== CSP monitor =====================================================
+   cspMonitor = makeNorNetIP(centralSite['site_default_provider_index'],
+                             NorNet_SiteIndex_Central,
+                             NorNet_NodeIndex_Monitor, 6)
+
    # ====== Registrar options ===============================================
    outputFile.write('DAEMON_ARGS="$DAEMON_ARGS' + \
                     ' -asapannounce=' + asapAnnounce + \
                     ' -enrpannounce=' + enrpAnnounce + \
                     ' -asap=' + asap + \
                     ' -enrp=' + enrp + \
+                    ' -cspmonitor=[' + str(cspMonitor.ip) + ']:2960' + \
+                    ' -cspinterval=5000' + \
                     options + \
                     ' -logcolor=off"\n')
 
