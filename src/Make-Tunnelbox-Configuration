@@ -980,7 +980,7 @@ def makeRegistrarConfiguration(localSite):
                     ' -enrpannounce=' + enrpAnnounce + \
                     ' -asap=' + asap + \
                     ' -enrp=' + enrp + \
-                    ' -cspmonitor=[' + str(cspMonitor.ip) + ']:2960' + \
+                    ' -cspserver=[' + str(cspMonitor.ip) + ']:2960' + \
                     ' -cspinterval=10000' + \
                     options + \
                     ' -logcolor=off"\n')
