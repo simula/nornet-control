@@ -923,7 +923,7 @@ def makeSquidConfiguration(nodeName, localSite):
 def makeRegistrarConfiguration(localSite):
    localSiteIndex       = localSite['site_index']
    localProviderList    = getNorNetProvidersForSite(localSite)
-   localAddresses       = []
+   localAddresses       = [ IPv6Network('::1/128'), IPv4Network('127.0.0.1/32') ]
    centralSite          = fullSiteList[NorNet_SiteIndex_Central]
    centralSiteProviders = getNorNetProvidersForSite(centralSite)
 
@@ -981,7 +981,7 @@ def makeRegistrarConfiguration(localSite):
                     ' -asap=' + asap + \
                     ' -enrp=' + enrp + \
                     ' -cspmonitor=[' + str(cspMonitor.ip) + ']:2960' + \
-                    ' -cspinterval=5000' + \
+                    ' -cspinterval=10000' + \
                     options + \
                     ' -logcolor=off"\n')
 
