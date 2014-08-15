@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 ISO_DIRECTORY="$HOME/Downloads"
 ISOs=`find $ISO_DIRECTORY -name *test.iso`
