@@ -250,7 +250,7 @@ output.beginRow()
 output.cell('No.')
 output.cell('Site', -1, -1, 20)
 for i in range(1, maxISPs + 1):
-   output.cell('ISP ' + str(maxISPs), -1, -1, 16)
+   output.cell('ISP ' + str(i), -1, -1, 16)
 output.endRow()
 
 siteNumber = 1

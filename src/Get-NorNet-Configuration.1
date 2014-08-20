@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd July 30, 2014
+.Dd August 23, 2014
 .Dt Get-Configuration 1
 .Os Get-Configuration
 .\" ###### Name #############################################################
@@ -27,6 +27,8 @@
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
 .Nm Get-Configuration
+.Op Fl nohyperlinks
+.Op Fl noidsinoverview
 .Op Fl noaddresses
 .Op Fl noslivers
 .\" ###### Description ######################################################
@@ -37,6 +39,10 @@ export the testbed configuration from the PLC.
 .\" ###### Arguments ########################################################
 .Sh ARGUMENTS
 .Bl -tag -width indent
+.It Fl nohyperlinks
+Do not generate hyperlinks.
+.It Fl noidsinoverview
+Hide site and provider indices in overview table.
 .It Fl noaddresses
 Hide addresses.
 .It Fl noslivers
@@ -48,4 +54,5 @@ Hide sliver information.
 .It Get-Configuration
 .It Get-Configuration \-noaddresses
 .It Get-Configuration \-noaddresses \-noslivers
+.It Get-Configuration \-noaddresses \-noslivers \-noidsinoverview \-nohyperlinks
 .El
