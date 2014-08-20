@@ -132,10 +132,13 @@ IFS='
 for inputFile in $inputFiles ; do
    outputFileSmall="`echo "$inputFile" | sed -e "s/\/Original\//\/Small\//g"`"
    outputFileLarge="`echo "$inputFile" | sed -e "s/\/Original\//\/Large\//g"`"
+   inputFileTMP="$inputFile.tmp.png"
    echo "Converting $inputFile ..."
-   convert "$inputFile" -resize 512x  -interlace line -quality 92.5 "$outputFileSmall" &
-   convert "$inputFile" -resize 2048x -interlace line -quality 92.5 "$outputFileLarge" &
+   src/image-resize-with-cropping "$inputFile" "$inputFileTMP" 1.333333
+   convert "$inputFileTMP" -resize 512x  -interlace line -quality 92.5 "$outputFileSmall" &
+   convert "$inputFileTMP" -resize 2048x -interlace line -quality 92.5 "$outputFileLarge" &
    wait
+   rm -f "$inputFileTMP"
 done
 IFS=$OIFS
 
