@@ -20,7 +20,7 @@
 # Contact: dreibh@simula.no
 
 import os, sys
-import base64
+import math
 
 # NorNet
 from NorNetSiteSetup import *;
@@ -298,12 +298,35 @@ for siteIndex in sorted(siteIndexList):
 output.endTable()
 
 
+# ====== Make index =========================================================
+output.header(2, 'Images', 'Site Images')
+output.beginTable()
+siteNumber = 0
+inRow     = False
+
+columns = math.ceil(math.sqrt(len(siteIndexList)))
+for siteIndex in sorted(siteIndexList):
+   site = siteList[siteIndex]
+   if (siteNumber % columns) == 0:
+      if inRow == True:
+         output.endRow()
+      output.beginRow()
+      inRow = True
+   imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
+   siteNumber = siteNumber + 1
+   output.cell(output.makeXref(site['site_short_name'], output.makeImage(imageURL, 'height: 15em; height: 10em; overflow: hidden;')))
+
+if inRow == True:
+   output.endRow()
+
+output.endTable()
+
+
 # ====== Get site information tables ========================================
 for siteIndex in sorted(siteIndexList):
 
    # ====== Get site information ============================================
    site = siteList[siteIndex]
-   siteIndex       = site['site_index']
    siteName        = site['site_utf8']
    providerList    = getNorNetProvidersForSite(site)
    siteTagsList    = site['site_tags']
