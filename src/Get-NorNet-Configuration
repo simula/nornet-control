@@ -227,12 +227,6 @@ for siteIndex in siteList:
 output.comment('BEGIN-OF-SITES-BLOCK')
 output.header(2, 'Index', 'Site Index')
 
-#sys.stdout.write('<ol>\n')
-#for siteIndex in sorted(siteIndexList):
-   #site = siteList[siteIndex]
-   #sys.stdout.write(' <li>' + output.makeXref(site['site_short_name'], site['site_utf8']) + '</li>\n')
-#sys.stdout.write('</ol>\n')
-
 maxISPs = 0
 for siteIndex in sorted(siteIndexList):
    providerList = getNorNetProvidersForSite(siteList[siteIndex])
