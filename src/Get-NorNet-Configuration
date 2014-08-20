@@ -76,6 +76,9 @@ class TableOutput:
    def endRow(self):
       sys.stdout.write('</tr>\n')
 
+   def makeXref(self, xref, label):
+      return '<a href="#' + xref + '">' + label + '</a>'
+
    def makeURL(self, url, label):
       return '<a href="' + url + '">' + label + '</a>'
 
@@ -223,11 +226,63 @@ for siteIndex in siteList:
 # ====== Make index =========================================================
 output.comment('BEGIN-OF-SITES-BLOCK')
 output.header(2, 'Index', 'Site Index')
-sys.stdout.write('<ol>\n')
+
+#sys.stdout.write('<ol>\n')
+#for siteIndex in sorted(siteIndexList):
+   #site = siteList[siteIndex]
+   #sys.stdout.write(' <li>' + output.makeXref(site['site_short_name'], site['site_utf8']) + '</li>\n')
+#sys.stdout.write('</ol>\n')
+
+maxISPs = 0
 for siteIndex in sorted(siteIndexList):
-   site = siteList[siteIndex]
-   sys.stdout.write(' <li><a href="#' + site['site_short_name'] + '">' + site['site_utf8'] + '</a></li>\n')
-sys.stdout.write('</ol>\n')
+   providerList = getNorNetProvidersForSite(siteList[siteIndex])
+   maxISPs = max(maxISPs, len(providerList))
+
+output.beginTable()
+output.beginRow()
+output.cell('No.')
+output.cell('Site')
+for i in range(1, maxISPs + 1):
+   output.cell('ISP ' + str(maxISPs), -1, -1, 16)
+output.endRow()
+
+siteNumber = 1
+for siteIndex in sorted(siteIndexList):
+   site         = siteList[siteIndex]
+   siteIndex    = site['site_index']
+   siteName     = site['site_utf8']
+   providerList = getNorNetProvidersForSite(site)
+
+   output.beginRow()
+   output.cell(str(siteNumber))
+   output.cell(output.makeXref(site['site_short_name'], site['site_utf8'] + ' (' + str(siteIndex) + ')'), -1, -1, -1, 'text-align: left;')
+   isp = 0
+   for onlyDefault in [ True, False ]:
+      for providerIndex in providerList:
+         if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+            provider = providerList[providerIndex]
+            providerURL = ''
+            try:
+               providerURL = NorNet_ProviderList[providerIndex][2]
+            except:
+               pass
+            cellContent = output.makeURL(providerURL, provider['provider_long_name'] + ' (' + str(providerIndex) + ')')
+
+            #externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
+            externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
+            if externalNetworkIPv6 == IPv6Address('::'):
+               cellContent = cellContent + ' <small>(IPv4 only)</small>'
+
+            output.cell(cellContent)
+            isp = isp + 1
+   for i in range(isp + 1, maxISPs + 1):
+      output.cell('–')
+
+   output.endRow()
+   siteNumber = siteNumber + 1
+
+output.endTable()
 
 
 # ====== Get site information tables ========================================
