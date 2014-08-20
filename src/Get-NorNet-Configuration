@@ -29,7 +29,7 @@ from NorNetAPI       import *;
 
 
 class TableOutput:
-   def __init__(self):
+   def __init__(self, useHyperlinks):
       sys.stdout.write('<?xml version="1.0" encoding="utf-8" ?>\n')
       sys.stdout.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n')
       sys.stdout.write('<html>\n')
@@ -46,7 +46,8 @@ class TableOutput:
       sys.stdout.write('</style>\n')
       sys.stdout.write('</head>\n')
       sys.stdout.write('<body>\n')
-      self.indent = 0
+      self.indent        = 0
+      self.useHpyerlinks = useHpyerlinks
 
    def __del__(self):
       sys.stdout.write('</body>\n</html>\n')
@@ -77,10 +78,16 @@ class TableOutput:
       sys.stdout.write('</tr>\n')
 
    def makeXref(self, xref, label):
-      return '<a href="#' + xref + '">' + label + '</a>'
+      if self.useHpyerlinks == True:
+         return '<a href="#' + xref + '">' + label + '</a>'
+      else:
+         return label
 
    def makeURL(self, url, label):
-      return '<a href="' + url + '">' + label + '</a>'
+      if self.useHpyerlinks == True:
+         return '<a href="' + url + '">' + label + '</a>'
+      else:
+         return label
 
    def makeImage(self, url, style):
       opts=''
@@ -175,16 +182,22 @@ def extractIPs(providerIndex, siteIndex, nodeIndex, sliceNodeIndex = 0):
 siteImageURL  = 'https://www.nntb.no/Artwork/Sites/Small'
 siteFlagURL   = 'https://www.nntb.no/Artwork/Graphics/Flags'
 
-showAddresses = True
-showSlivers   = True
+showAddresses     = True
+showSlivers       = True
+useHpyerlinks     = True
+showIDsInOverview = True
 i = 1
 while i < len(sys.argv):
    if sys.argv[i] == '-noaddresses':
       showAddresses = False
    elif sys.argv[i] == '-noslivers':
       showSlivers = False
+   elif sys.argv[i] == '-nohyperlinks':
+      useHpyerlinks = False
+   elif sys.argv[i] == '-noidsinoverview':
+      showIDsInOverview = False
    else:
-      error('Usage: ' + sys.argv[0] + '[-noaddresses] [-noslivers]')
+      error('Usage: ' + sys.argv[0] + '[-noaddresses] [-noslivers] [-noidsinoverview] [-nohyperlinks]')
    i = i + 1
 
 loginToPLC(quietMode = True)
@@ -217,7 +230,7 @@ for slice in sliceList:
 nodeList       = sorted(nodeList, key = lambda x: x['node_index'])
 sliverNodeList = sorted(sliverNodeList, key = lambda x: x['pseudo_slice_node_index'])
 
-output = TableOutput()
+output = TableOutput(useHpyerlinks)
 siteIndexList = []
 for siteIndex in siteList:
    siteIndexList.append(siteIndex)
@@ -235,7 +248,7 @@ for siteIndex in sorted(siteIndexList):
 output.beginTable()
 output.beginRow()
 output.cell('No.')
-output.cell('Site')
+output.cell('Site', -1, -1, 20)
 for i in range(1, maxISPs + 1):
    output.cell('ISP ' + str(maxISPs), -1, -1, 16)
 output.endRow()
@@ -249,7 +262,10 @@ for siteIndex in sorted(siteIndexList):
 
    output.beginRow()
    output.cell(str(siteNumber))
-   output.cell(output.makeXref(site['site_short_name'], site['site_utf8'] + ' (' + str(siteIndex) + ')'), -1, -1, -1, 'text-align: left;')
+   cellContent = site['site_utf8']
+   if showIDsInOverview == True:
+      cellContent = cellContent + ' (' + str(siteIndex) + ')'
+   output.cell(output.makeXref(site['site_short_name'], cellContent), -1, -1, -1, 'text-align: left;')
    isp = 0
    for onlyDefault in [ True, False ]:
       for providerIndex in providerList:
@@ -261,17 +277,20 @@ for siteIndex in sorted(siteIndexList):
                providerURL = NorNet_ProviderList[providerIndex][2]
             except:
                pass
-            cellContent = output.makeURL(providerURL, provider['provider_long_name'] + ' (' + str(providerIndex) + ')')
+            cellContent = provider['provider_long_name']
+            if showIDsInOverview == True:
+               cellContent = cellContent + ' (' + str(providerIndex) + ')'
+            cellContent = output.makeURL(providerURL, cellContent)
 
-            #externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
             externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
             if externalNetworkIPv6 == IPv6Address('::'):
                cellContent = cellContent + ' <small>(IPv4 only)</small>'
 
             output.cell(cellContent)
             isp = isp + 1
+
    for i in range(isp + 1, maxISPs + 1):
-      output.cell('–')
+      output.cell(u'–')
 
    output.endRow()
    siteNumber = siteNumber + 1
