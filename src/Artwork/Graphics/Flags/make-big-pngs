@@ -1,0 +1,13 @@
+#!/bin/sh
+
+mkdir big
+ls *.svg | (
+   while read input ; do
+      output=`echo $input | sed -e "s/.svg$/.png/g"`
+
+      echo "Converting $input to $output ..."
+      convert -quiet "$input" -sample 512 "big/$output-tmp.png"
+      ./image-resize-with-cropping "big/$output-tmp.png" "big/$output.png" 1.5
+      rm -f "big/$output-tmp.png"
+   done
+)
