@@ -31,52 +31,52 @@ from NorNetAPI       import *;
 
 class TableOutput:
    def __init__(self, useHyperlinks):
-      sys.stdout.write('<?xml version="1.0" encoding="utf-8" ?>\n')
-      sys.stdout.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n')
-      sys.stdout.write('<html>\n')
-      sys.stdout.write('<head>\n')
-      sys.stdout.write('<title>The NorNet Core Site List</title>\n')
-      sys.stdout.write('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n')
-      sys.stdout.write('<link rel="stylesheet" href="essen.css" type="text/css" />\n')
-      sys.stdout.write('<link rel="shortcut icon" href="https://www.nntb.no/favicon.ico" />\n')
-      sys.stdout.write('<style type="text/css">\n')
-      sys.stdout.write('td {\n')
-      sys.stdout.write(' text-align: center;\n')
-      sys.stdout.write(' vertical-align: middle;\n')
-      sys.stdout.write('}\n')
-      sys.stdout.write('</style>\n')
-      sys.stdout.write('</head>\n')
-      sys.stdout.write('<body>\n')
+      self.write('<?xml version="1.0" encoding="utf-8" ?>\n')
+      self.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n')
+      self.write('<html>\n')
+      self.write('<head>\n')
+      self.write('<title>The NorNet Core Site List</title>\n')
+      self.write('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n')
+      self.write('<link rel="stylesheet" href="essen.css" type="text/css" />\n')
+      self.write('<link rel="shortcut icon" href="https://www.nntb.no/favicon.ico" />\n')
+      self.write('<style type="text/css">\n')
+      self.write('td {\n')
+      self.write(' text-align: center;\n')
+      self.write(' vertical-align: middle;\n')
+      self.write('}\n')
+      self.write('</style>\n')
+      self.write('</head>\n')
+      self.write('<body>\n')
       self.indent        = 0
       self.useHpyerlinks = useHpyerlinks
 
    def __del__(self):
-      sys.stdout.write('</body>\n</html>\n')
+      self.write('</body>\n</html>\n')
 
    def write(self, text):
       sys.stdout.write(text)
 
    def comment(self, text):
-      sys.stdout.write('<!-- ' + text + ' -->\n')
+      self.write('<!-- ' + text + ' -->\n')
 
    def header(self, level, label, text):
-      sys.stdout.write('<h' + str(level) + ' id="' + label + '">' + text + '</h' + str(level) + '>\n')
+      self.write('<h' + str(level) + ' id="' + label + '">' + text + '</h' + str(level) + '>\n')
 
    def beginList(self):
-      sys.stdout.write('<ul>\n')
+      self.write('<ul>\n')
 
    def endList(self):
-      sys.stdout.write('</ul>\n')
+      self.write('</ul>\n')
 
    def beginItem(self):
-      sys.stdout.write(' <li>')
+      self.write(' <li>')
 
    def endItem(self):
-      sys.stdout.write('</li>\n')
+      self.write('</li>\n')
 
    def makeItem(self, item):
       self.beginItem()
-      sys.stdout.write(item)
+      self.write(item)
       self.endItem()
 
    def beginTable(self, columns=2, textColor=None):
@@ -84,19 +84,19 @@ class TableOutput:
       options = 'border="1"'
       if textColor != None:
          options = options + ' style="color: ' + textColor + ';"'
-      sys.stdout.write('<table ' + options + '>\n')
+      self.write('<table ' + options + '>\n')
       self.indent = self.indent + 1
 
    def endTable(self):
       self.indent = self.indent - 1
-      sys.stdout.write('</table>\n')
+      self.write('</table>\n')
 
    def beginRow(self):
       self.doIndentation(False)
-      sys.stdout.write('<tr>')
+      self.write('<tr>')
 
    def endRow(self):
-      sys.stdout.write('</tr>\n')
+      self.write('</tr>\n')
 
    def makeXref(self, xref, label):
       if self.useHpyerlinks == True:
@@ -126,22 +126,22 @@ class TableOutput:
          opts = opts + ' style="width: ' + str(width) + 'em;"'
       if style != '':
          opts = opts + ' style="' + style + '"'
-      sys.stdout.write('<td' + opts + '>')
+      self.write('<td' + opts + '>')
 
    def endCell(self):
-      sys.stdout.write('</td>')
+      self.write('</td>')
 
    def cell(self, cell = '', colspan = -1, rowspan = -1, width = -1, style = ''):
       self.beginCell(colspan, rowspan, width, style)
-      sys.stdout.write(cell)
+      self.write(cell)
       self.endCell()
 
    def doIndentation(self, newline = False):
       if newline == True:
-         sys.stdout.write('\n')
+         self.write('\n')
       i = self.indent
       while i > 0:
-         sys.stdout.write(' ')
+         self.write(' ')
          i = i - 1
 
 
@@ -291,21 +291,28 @@ for i in range(1, maxISPs + 1):
    output.cell('ISP ' + str(i), -1, -1, 16)
 output.endRow()
 
-numInterfacesIPv4 = 0
-numInterfacesIPv6 = 0
-allISPs           = Set([])
-allCountries      = Set([])
-siteNumber        = 1
+activeSites          = 0
+numInterfacesIPv4    = 0
+numInterfacesIPv6    = 0
+activeSitesISPs      = Set([])
+activeSitesCountries = Set([])
+siteNumber           = 1
 for siteIndex in sorted(siteIndexList):
    site         = siteList[siteIndex]
    siteTagsList = site['site_tags']
    siteName     = site['site_utf8']
+   siteEnabled  = site['site_enabled']
    providerList = getNorNetProvidersForSite(site)
 
-   for siteTag in siteTagsList:
-      if siteTag['tagname'] == 'nornet_site_country_code':
-         allCountries.add(siteTag['value'])
+   # ------ Statistics ------------------------------------------------------
+   if siteEnabled == True:
+      activeSites = activeSites + 1
+      for siteTag in siteTagsList:
+         if siteTag['tagname'] == 'nornet_site_country_code':
+            activeSitesCountries.add(siteTag['value'])
 
+
+   # ------ Get interface information ---------------------------------------
    output.beginRow()
    output.cell(str(siteNumber))
    cellContent = site['site_utf8']
@@ -317,7 +324,6 @@ for siteIndex in sorted(siteIndexList):
       for providerIndex in providerList:
          if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
                ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
-            allISPs.add(providerIndex)
             provider = providerList[providerIndex]
             providerURL = ''
             try:
@@ -329,15 +335,21 @@ for siteIndex in sorted(siteIndexList):
                cellContent = cellContent + ' (' + str(providerIndex) + ')'
             cellContent = output.makeURL(providerURL, cellContent)
 
-            externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
-            if externalNetworkIPv4 != IPv4Address('0.0.0.0'):
-               numInterfacesIPv4 = numInterfacesIPv4 + 1
-
             externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
-            if externalNetworkIPv6 != IPv6Address('::'):
-               numInterfacesIPv6 = numInterfacesIPv6 + 1
-            else:
+            if externalNetworkIPv6 == IPv6Address('::'):
                cellContent = cellContent + ' <small>(IPv4 only)</small>'
+
+            # ------ Statistics ---------------------------------------------
+            if siteEnabled == True:
+               if siteEnabled == True:
+                  activeSitesISPs.add(providerIndex)
+
+               externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
+               if externalNetworkIPv4 != IPv4Address('0.0.0.0'):
+                  numInterfacesIPv4 = numInterfacesIPv4 + 1
+
+               if externalNetworkIPv6 != IPv6Address('::'):
+                  numInterfacesIPv6 = numInterfacesIPv6 + 1
 
             output.cell(cellContent)
             isp = isp + 1
@@ -351,7 +363,7 @@ for siteIndex in sorted(siteIndexList):
 output.endTable()
 
 
-# ====== Make index =========================================================
+# ====== Get site images ====================================================
 output.header(2, 'Images', 'Site Images')
 output.beginTable()
 siteNumber = 0
@@ -375,23 +387,23 @@ if inRow == True:
 output.endTable()
 
 
-# ====== Statistics =========================================================
+# ====== Get site statistics ================================================
 output.header(2, 'Statistics', 'Site Statistics')
 output.beginTable()
 
 output.beginRow()
-output.cell('Sites', -1, -1, -1, 'text-align: left; width: 12em;')
-output.cell(str(siteNumber))
+output.cell('Active Sites', -1, -1, -1, 'text-align: left; width: 20em;')
+output.cell(str(activeSites), -1, -1, -1, 'width: 6em;')
 output.endRow()
 
 output.beginRow()
-output.cell('Distinct ISPs', -1, -1, -1, 'text-align: left;')
-output.cell(str(len(allISPs)))
+output.cell('Distinct ISPs of Active Sites', -1, -1, -1, 'text-align: left;')
+output.cell(str(len(activeSitesISPs)))
 output.endRow()
 
 output.beginRow()
-output.cell('Distinct Countries', -1, -1, -1, 'text-align: left;')
-output.cell(str(len(allCountries)))
+output.cell('Distinct Countries of Active Sites', -1, -1, -1, 'text-align: left;')
+output.cell(str(len(activeSitesCountries)))
 output.endRow()
 
 output.beginRow()
@@ -412,6 +424,11 @@ output.endRow()
 output.beginRow()
 output.cell('Total IPv6 Tunnels', -1, -1, -1, 'text-align: left;')
 output.cell(str(numInterfacesIPv6 * (numInterfacesIPv6 - 1) / 2))
+output.endRow()
+
+output.beginRow()
+output.cell('Inactive Sites', -1, -1, -1, 'text-align: left;')
+output.cell(str(siteNumber - activeSites))
 output.endRow()
 
 output.endTable()
