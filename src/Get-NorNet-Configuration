@@ -21,6 +21,7 @@
 
 import os, sys
 import math
+from sets import Set
 
 # NorNet
 from NorNetSiteSetup import *;
@@ -52,11 +53,31 @@ class TableOutput:
    def __del__(self):
       sys.stdout.write('</body>\n</html>\n')
 
+   def write(self, text):
+      sys.stdout.write(text)
+
    def comment(self, text):
       sys.stdout.write('<!-- ' + text + ' -->\n')
 
    def header(self, level, label, text):
       sys.stdout.write('<h' + str(level) + ' id="' + label + '">' + text + '</h' + str(level) + '>\n')
+
+   def beginList(self):
+      sys.stdout.write('<ul>\n')
+
+   def endList(self):
+      sys.stdout.write('</ul>\n')
+
+   def beginItem(self):
+      sys.stdout.write(' <li>')
+
+   def endItem(self):
+      sys.stdout.write('</li>\n')
+
+   def makeItem(self, item):
+      self.beginItem()
+      sys.stdout.write(item)
+      self.endItem()
 
    def beginTable(self, columns=2, textColor=None):
       self.doIndentation(True)
@@ -238,7 +259,24 @@ for siteIndex in siteList:
 
 # ====== Make index =========================================================
 output.comment('BEGIN-OF-SITES-BLOCK')
-output.header(2, 'Index', 'Site Index')
+output.header(2, 'Index', 'Index')
+output.beginList()
+output.makeItem(output.makeXref('Sites',      'Site Table'))
+output.makeItem(output.makeXref('Images',     'Site Images'))
+output.makeItem(output.makeXref('Statistics', 'Site Statistics'))
+output.beginItem()
+output.write(output.makeXref('Details', 'Site Details'))
+output.beginList()
+for siteIndex in sorted(siteIndexList):
+   site = siteList[siteIndex]
+   output.makeItem(output.makeXref(site['site_short_name'], site['site_utf8']))
+output.endList()
+output.endItem()
+output.endList()
+
+
+# ====== Get site table =====================================================
+output.header(2, 'Sites', 'Site Table')
 
 maxISPs = 0
 for siteIndex in sorted(siteIndexList):
@@ -253,12 +291,20 @@ for i in range(1, maxISPs + 1):
    output.cell('ISP ' + str(i), -1, -1, 16)
 output.endRow()
 
-siteNumber = 1
+numInterfacesIPv4 = 0
+numInterfacesIPv6 = 0
+allISPs           = Set([])
+allCountries      = Set([])
+siteNumber        = 1
 for siteIndex in sorted(siteIndexList):
    site         = siteList[siteIndex]
-   siteIndex    = site['site_index']
+   siteTagsList = site['site_tags']
    siteName     = site['site_utf8']
    providerList = getNorNetProvidersForSite(site)
+
+   for siteTag in siteTagsList:
+      if siteTag['tagname'] == 'nornet_site_country_code':
+         allCountries.add(siteTag['value'])
 
    output.beginRow()
    output.cell(str(siteNumber))
@@ -271,6 +317,7 @@ for siteIndex in sorted(siteIndexList):
       for providerIndex in providerList:
          if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
                ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+            allISPs.add(providerIndex)
             provider = providerList[providerIndex]
             providerURL = ''
             try:
@@ -282,8 +329,14 @@ for siteIndex in sorted(siteIndexList):
                cellContent = cellContent + ' (' + str(providerIndex) + ')'
             cellContent = output.makeURL(providerURL, cellContent)
 
+            externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
+            if externalNetworkIPv4 != IPv4Address('0.0.0.0'):
+               numInterfacesIPv4 = numInterfacesIPv4 + 1
+
             externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
-            if externalNetworkIPv6 == IPv6Address('::'):
+            if externalNetworkIPv6 != IPv6Address('::'):
+               numInterfacesIPv6 = numInterfacesIPv6 + 1
+            else:
                cellContent = cellContent + ' <small>(IPv4 only)</small>'
 
             output.cell(cellContent)
@@ -322,7 +375,50 @@ if inRow == True:
 output.endTable()
 
 
-# ====== Get site information tables ========================================
+# ====== Statistics =========================================================
+output.header(2, 'Statistics', 'Site Statistics')
+output.beginTable()
+
+output.beginRow()
+output.cell('Sites', -1, -1, -1, 'text-align: left; width: 12em;')
+output.cell(str(siteNumber))
+output.endRow()
+
+output.beginRow()
+output.cell('Distinct ISPs', -1, -1, -1, 'text-align: left;')
+output.cell(str(len(allISPs)))
+output.endRow()
+
+output.beginRow()
+output.cell('Distinct Countries', -1, -1, -1, 'text-align: left;')
+output.cell(str(len(allCountries)))
+output.endRow()
+
+output.beginRow()
+output.cell('Total IPv4 Interfaces', -1, -1, -1, 'text-align: left;')
+output.cell(str(numInterfacesIPv4))
+output.endRow()
+
+output.beginRow()
+output.cell('Total IPv4 Tunnels', -1, -1, -1, 'text-align: left;')
+output.cell(str(numInterfacesIPv4 * (numInterfacesIPv4 -1) / 2))
+output.endRow()
+
+output.beginRow()
+output.cell('Total IPv6 Interfaces', -1, -1, -1, 'text-align: left;')
+output.cell(str(numInterfacesIPv6))
+output.endRow()
+
+output.beginRow()
+output.cell('Total IPv6 Tunnels', -1, -1, -1, 'text-align: left;')
+output.cell(str(numInterfacesIPv6 * (numInterfacesIPv6 - 1) / 2))
+output.endRow()
+
+output.endTable()
+
+
+# ====== Get site details ===================================================
+output.header(2, 'Details', 'Site Details')
 for siteIndex in sorted(siteIndexList):
 
    # ====== Get site information ============================================
@@ -364,7 +460,7 @@ for siteIndex in sorted(siteIndexList):
    sitePosition = sitePosition + ' / ' + str(site['site_altitude']) + 'm'
 
 
-   output.header(2, site['site_short_name'], siteName + ' (' + str(siteIndex) + ')')
+   output.header(3, site['site_short_name'], siteName + ' (' + str(siteIndex) + ')')
 
    if siteEnabled:
       output.beginTable()
