@@ -37,26 +37,25 @@ else:
    outputAspect = float(argv[3])
 
 image       = Image(inputFileName)
-inputWidth  = image.size().width()
-inputHeight = image.size().height()
-
-inputAspect = inputWidth / inputHeight
+inputWidth  = 0.0 + image.size().width()    # Use float!
+inputHeight = 0.0 + image.size().height()   # Use float!
+inputAspect = inputWidth / inputHeight      # => result is also float!
 if inputAspect < 1.0:
    outputAspect = 1 / outputAspect   # Portrait
 
 
-print 'Input:  ' + inputFileName + ' ' + str(inputWidth) + '*' + str(inputHeight) + ' (' + str(inputAspect) + ':1)'
+#print 'Input:  ' + inputFileName + ' ' + str(inputWidth) + '*' + str(inputHeight) + ' (' + str(inputAspect) + ':1)'
 if inputAspect < outputAspect:
-   newWidth  = inputWidth
-   newHeight = int(floor(newWidth / outputAspect))
+   newWidth  = int(inputWidth)
+   newHeight = int(round(newWidth / outputAspect))
 else:
-   newHeight = inputHeight
-   newWidth  = int(floor(inputHeight * outputAspect))
+   newHeight = int(inputHeight)
+   newWidth  = int(round(inputHeight * outputAspect))
 
-cropWidth  = inputWidth - newWidth
-cropHeight = inputHeight - newHeight
-print ' -> crop: w=' + str(cropWidth) + ' h=' + str(cropHeight)
+cropWidth  = int(inputWidth - newWidth)
+cropHeight = int(inputHeight - newHeight)
+#print ' -> crop: w=' + str(cropWidth) + ' h=' + str(cropHeight)
 
-print 'Output: ' + outputFileName + ' ' + str(newWidth) + '*' + str(newHeight) + ' (' + str(outputAspect) + ':1)'
+#print 'Output: ' + outputFileName + ' ' + str(newWidth) + '*' + str(newHeight) + ' (' + str(outputAspect) + ':1)'
 image.crop(str(newWidth) + 'x' + str(newHeight) + '+' + str(cropWidth / 2) + '+' + str(cropHeight / 2))
 image.write(outputFileName)
