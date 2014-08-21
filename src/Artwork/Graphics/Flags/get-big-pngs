@@ -1,0 +1,12 @@
+#!/bin/sh
+
+while [ "$1" != "" ] ; do
+   input="$1"
+   output=`echo $1 | sed -e "s/.svg$/.png/g"`
+
+   echo "Converting $input to $output ..."
+   convert -quiet "$input" -sample 1024x "$output-1024.png"
+   ./image-resize-with-cropping "$output-1024.png" "$output-1.5:1.png" 1.5
+   rm -f "$output-1024.png"
+   shift
+done
