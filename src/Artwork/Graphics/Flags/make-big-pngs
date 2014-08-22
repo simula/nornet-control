@@ -7,6 +7,7 @@ ls Flag-*.svg | (
       output=`echo $input | sed -e "s/.svg$/.png/g"`
 
       echo "Converting $input to $output ..."
-      convert -quiet "$input" -resize x168 "big/$output.png"
+      convert -quiet "$input" -resize x168 "big/$output" &
    done
+   wait
 )
