@@ -55,11 +55,11 @@ for controller in 0 1 2 3 ; do
                newImage="$CONFIG_DIR/$MACHINE_NAME-DH$port-$controller.$variant.$IMAGE_FORMAT"
                if [ "$oldImage" != "$newImage" ] ; then
                   if [ ! -e "$newImage" ] ; then
-                     
+
                      # ====== Apply the conversion =============================
                      echo -e "\x1b[34m`date +%FT%H:%M:%S`: Cloning $oldImage to $newImage ...\x1b[0m"
                      VBoxManage clonehd "$oldImage" "$newImage" --format "$IMAGE_FORMAT" --variant "$IMAGE_VARIANT"
-                     
+
                      echo -e "\x1b[34m`date +%FT%H:%M:%S`: Attaching $newImage ...\x1b[0m"
                      VBoxManage -q storageattach "$MACHINE_NAME" --storagectl "$controllerName" --port $port --device $controller --type hdd --medium "$newImage"
 
@@ -68,7 +68,7 @@ for controller in 0 1 2 3 ; do
                      HDD_STATUS_FILE=`mktemp`
                      VBoxManage list hdds >$HDD_STATUS_FILE
 
-                     diskInfo=`cat $HDD_STATUS_FILE | grep -A6 "^UUID:        $uuid" || echo ""`
+                     diskInfo=`cat $HDD_STATUS_FILE | grep -A6 "^UUID:[ ]*$uuid" || echo ""`
                      if [ "$diskInfo" != "" ] ; then
                         usage=`echo "$diskInfo" | grep "^Usage:" || echo ""`
                         if [ "$usage" = "" ] ; then 
