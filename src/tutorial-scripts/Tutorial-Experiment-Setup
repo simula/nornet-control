@@ -2,15 +2,15 @@
 
 ACCOUNTS="accounts.txt"
 
-#SITE="Alpha Site"
-#DOMAIN="alpha.test"
-#SLICENAME="as_tutorial"
+SITE="Alpha Site"
+DOMAIN="alpha.test"
+SLICENAME="as_tutorial"
 
-SITE="Simula Research Laboratory"
-DOMAIN="simula.nornet"
-SLICENAME="srl_tutorial"
+# SITE="Simula Research Laboratory"
+# DOMAIN="simula.nornet"
+# SLICENAME="srl_tutorial"
 
-SLICEDESC="A test slice for the NorNet tutorial sessions."
+SLICEDESC="This is a test slice for the NorNet tutorial sessions at the NNUW."
 SLICEURL="https://www.nntb.no"
 
 action=""
@@ -31,7 +31,7 @@ IFS=$'\t'
       if [[ "$number"  =~ ^[0-9]+$ ]] ; then
          keyName="$uname.pub"
          uname="$uname@$DOMAIN"
-       
+
          if [ "$action" = "add" ] ; then
             echo -e "\x1b[34mAdding $uname ($gname $fname) ...\x1b[0m"
             publicKeyArg=""
@@ -57,5 +57,5 @@ IFS=$'\t'
       echo -e "\x1b[34mRemoving slice $SLICENAME ...\x1b[0m"
       ../Slice-Setup remove "--name=$SLICENAME"
    fi
- 
+
 ) <$ACCOUNTS

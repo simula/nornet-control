@@ -15,17 +15,20 @@ echo "Converting $USERS_CSVFILE to $ACCOUNTS ..."
 
 IFS=$'\t'
 (
-   while read number gname fname uname a b c d e f ; do
-      if [[ "$number"  =~ ^[0-9]+$ ]] ; then
-         uname=`echo "$uname" | sed -e "s/ø/oe/g" -e "s/Ø/OE/g" -e "s/æ/ae/g" -e "s/Æ/AE/g"  -e "s/å/AA/g" -e "s/Å/AA/g" | iconv -f utf-8 -t ascii//translit | tr "A-Z" "a-z" | tr -d " "`
+   number=1
+   while read timeStamp fname gname organisation address city country uname url phone fax ; do
+      if [[ "$timeStamp"  =~ ^[0-9]+\/[0-9]+/[0-9]+[[:space:]][0-9]+:[0-9]+:[0-9]+$ ]] ; then
+         uname=`echo "$gname" | sed -e "s/ø/oe/g" -e "s/Ø/OE/g" -e "s/æ/ae/g" -e "s/Æ/AE/g"  -e "s/å/AA/g" -e "s/Å/AA/g" | iconv -f utf-8 -t ascii//translit | tr "A-Z" "a-z" | tr -d " "`
          hash=`echo $uname | md5sum | sed -e "s/[^a-f0-9].*$//g"`
          eval "let number_$hash=\$number_$hash+1"
-         
+
          number_name="\$number_$hash"
          eval "n=$number_name"
-         
+
          passwd=`< /dev/urandom tr -dc _A-Z-a-z-0-9%.$ | head -c$PWDLEN`
          echo -e "$number\t$uname$n\t$passwd\t$gname\t$fname"
+
+         let number=$number+1
       fi
    done
 ) <$USERS_CSVFILE >$ACCOUNTS
