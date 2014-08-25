@@ -18,7 +18,7 @@ IFS=$'\t'
    number=1
    while read timeStamp fname gname organisation address city country uname url phone fax ; do
       if [[ "$timeStamp"  =~ ^[0-9]+\/[0-9]+/[0-9]+[[:space:]][0-9]+:[0-9]+:[0-9]+$ ]] ; then
-         uname=`echo "$gname" | sed -e "s/ø/oe/g" -e "s/Ø/OE/g" -e "s/æ/ae/g" -e "s/Æ/AE/g"  -e "s/å/AA/g" -e "s/Å/AA/g" | iconv -f utf-8 -t ascii//translit | tr "A-Z" "a-z" | tr -d " "`
+         uname=`echo "$gname" | sed -e "s/ø/oe/g" -e "s/Ø/OE/g" -e "s/æ/ae/g" -e "s/Æ/AE/g"  -e "s/å/AA/g" -e "s/Å/AA/g" | iconv -f utf-8 -t ascii//translit | tr "A-Z" "a-z" | tr -d " .'"`
          hash=`echo $uname | md5sum | sed -e "s/[^a-f0-9].*$//g"`
          eval "let number_$hash=\$number_$hash+1"
 
