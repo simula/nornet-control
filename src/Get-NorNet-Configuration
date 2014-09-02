@@ -597,7 +597,7 @@ for siteIndex in sorted(siteIndexList):
          if showSlivers == True:
             for sliverNode in sliverNodeList:
                if ((sliverNode['node_site_id'] == site['site_id']) and
-                  (sliverNode['node_index'] == nodeIndex)):
+                   (sliverNode['node_index'] == nodeIndex)):
                   sliversOfNode.append(sliverNode)
 
 
