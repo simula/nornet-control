@@ -228,7 +228,7 @@ check_and_configure ()
 # ###### Main program #######################################################
 case "$ACTION" in
   start|stop|restart)
-   echo -n "Starting $DESC: "
+   echo -n "Performing $ACTION of $DESC: "
    Tunnelbox-Setup "$ACTION" -providers "@ALL" -event "init script action: $ACTION" $@ >>$LOGFILE 2>&1 && \
    echo "$NAME."
    ;;

@@ -932,8 +932,8 @@ def makeRegistrarConfiguration(localSite):
 
    # ====== ASAP and ENRP endpoitns =========================================
    options           = ''
-   asapAnnounce      = '239.0.0.1:3863'
-   enrpAnnounce      = '239.0.0.1:9901'
+   asapAnnounce      = 'off'
+   enrpAnnounce      = 'off'
    asap              = ''
    enrp              = ''
    firstAddress      = True
