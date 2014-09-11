@@ -1,0 +1,153 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Get all nodes
+# Copyright (C) 2012-2014 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+import subprocess;
+import time;
+
+# NorNet
+from NorNetSiteSetup import *;
+from NorNetTools     import *;
+from NorNetAPI       import *;
+
+
+SliceName = 'srl_mptcp'
+ExperimentNodeNames = [
+   #"akerbrygge.simula.nornet",
+   #"storsteinsfjellet.hin.nornet",
+   "mariebergsskogen.kau.nornet",
+   "nakholmen.hioa.nornet"
+]
+
+
+# ###### Invoke SSH #########################################################
+def doSSH(localNode, slice, cmdLine):
+   sshCall = 'ssh ' + slice['slice_name'] + '@' + localNode['node_name'] + ' ' + cmdLine
+   print sshCall
+   result = subprocess.call(sshCall, shell=True)
+   if result != 0:
+      print '========== WARNING: result=' + str(result) + ' =========='
+
+
+def getAddress(site, node, provider, version, slice):
+   if provider != None:
+      port = 9000 + 10 * provider['provider_index']
+      sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
+      address   = makeNorNetIP(provider['provider_index'], site['site_index'], node['node_index'],
+                                    version, sliceNodeIndex).ip
+   else:
+      port = 9000
+      if version == 4:
+         address = IPv4Address('0.0.0.0')
+      else:
+         address = IPv6Address('::')
+
+   return address
+
+
+def getPort(site, node, provider, version, slice):
+   if provider != None:
+      port = 9000 + 10 * provider['provider_index']
+   else:
+      port = 9000
+
+   return port
+
+
+# ###### Initialise passive side ############################################
+def preparePassiveSide(localSite, localNode, localProvider, version, slice):
+   localAddress = getAddress(localSite, localNode, localProvider, version, slice)
+   localPort    = getPort(localSite, localNode, localProvider, version, slice)
+
+   cmdLine = 'nohup netperfmeter ' + str(localPort) + ' -local=[' + str(localAddress) + ']  -verbosity=1 >netperfmeter.log 2>&1 &'
+   doSSH(localNode, slice, cmdLine)
+   time.sleep(2)
+
+
+# ###### Clean up passive side ##############################################
+def cleanUpPassiveSide(localSite, localNode, localProvider, version, slice):
+   cmdLine = 'killall netperfmeter && cat netperfmeter.log'
+   doSSH(localNode, slice, cmdLine)
+
+
+# ###### Run the measurement ################################################
+def runMeasurement(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, slice):
+   localAddress  = getAddress(localSite, localNode, localProvider, version, slice)
+   remoteAddress = getAddress(remoteSite, remoteNode, remoteProvider, version, slice)
+   remotePort    = getPort(remoteSite, remoteNode, remoteProvider, version, slice)
+
+   cmdLine = 'netperfmeter [' + str(remoteAddress) + ']:' + str(remotePort) + ' ' + \
+             '-local=[' + str(localAddress) + '] -verbosity=1 ' + \
+             '-tcp const10:const1400:const0:const0 -runtime=10'
+   doSSH(localNode, slice, cmdLine)
+
+
+
+# ###########################################################################
+# #### Main program                                                      ####
+# ###########################################################################
+
+
+# ====== Get configuration ==================================================
+loginToPLC()
+fullSiteList = fetchNorNetSiteList()
+fillNodeList = fetchNorNetNodeList()
+
+ExperimentNodes = []
+for experimentNodeName in ExperimentNodeNames:
+   experimentNode = fetchNorNetNode(experimentNodeName)
+   if experimentNode == None:
+      error('Node not found: ' + experimentNodeName)
+   ExperimentNodes.append(experimentNode)
+
+Slice = fetchNorNetSlice(SliceName)
+if Slice == None:
+   error('Slice not found: ' + SliceName)
+
+
+# ====== Create runs ========================================================
+for localNode in ExperimentNodes:
+   for remoteNode in ExperimentNodes:
+      if localNode == remoteNode:
+         continue
+      localSite          = getNorNetSiteOfNode(fullSiteList, localNode)
+      localProviderList  = getNorNetProvidersForSite(localSite)
+      remoteSite         = getNorNetSiteOfNode(fullSiteList, remoteNode)
+      remoteProviderList = getNorNetProvidersForSite(remoteSite)
+      for localProviderIndex in localProviderList:
+         localProvider = localProviderList[localProviderIndex]
+         for remoteProviderIndex in remoteProviderList:
+            remoteProvider = remoteProviderList[remoteProviderIndex]
+            for version in [6]:
+               if ((version == 6) and
+                   ( (localProvider['provider_tunnelbox_ipv6'].ip == IPv6Address('::')) or
+                     (remoteProvider['provider_tunnelbox_ipv6'].ip == IPv6Address('::')) )):
+                  print 'IPv6-over-IPv4!'
+                  #continue
+
+               print localNode['node_name'] + '/' + localProvider['provider_short_name'] + ' -> ' + \
+                     remoteNode['node_name'] + '/' + remoteProvider['provider_short_name'] + \
+                     ' with IPv' + str(version)
+
+               preparePassiveSide(remoteSite, remoteNode, remoteProvider, version, Slice)
+               runMeasurement(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, Slice)
+               cleanUpPassiveSide(remoteSite, remoteNode, remoteProvider, version, Slice)
+
+               print ''
