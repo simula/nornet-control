@@ -30,10 +30,8 @@ from NorNetAPI       import *;
 
 SliceName = 'srl_mptcp'
 ExperimentNodeNames = [
-   #"akerbrygge.simula.nornet",
-   #"storsteinsfjellet.hin.nornet",
    "mariebergsskogen.kau.nornet",
-   "nakholmen.hioa.nornet"
+   "watson.ku.nornet"
 ]
 
 
@@ -76,9 +74,9 @@ def preparePassiveSide(localSite, localNode, localProvider, version, slice):
    localAddress = getAddress(localSite, localNode, localProvider, version, slice)
    localPort    = getPort(localSite, localNode, localProvider, version, slice)
 
-   cmdLine = 'nohup netperfmeter ' + str(localPort) + ' -local=[' + str(localAddress) + ']  -verbosity=1 >netperfmeter.log 2>&1 &'
+   cmdLine = 'nohup netperfmeter ' + str(localPort) + ' -local=[' + str(localAddress) + ']  -verbosity=5 >netperfmeter.log 2>&1 &'
    doSSH(localNode, slice, cmdLine)
-   time.sleep(2)
+   time.sleep(5)
 
 
 # ###### Clean up passive side ##############################################
