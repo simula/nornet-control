@@ -109,16 +109,19 @@ def cleanUpPassiveSide(localSite, localNode, localProvider, version, slice):
    doSSH(localNode, slice, cmdLine)
 
 
-def getVariables():
-   return 'FromNode FromNodeIndex ToNode ToNodeIndex ' + \
-          'FromSite FromSiteIndex ToSite ToSiteIndex ' + \
-          'FromProvider FromProviderIndex ToProvider ToProviderIndex ' + \
-          'CC PathMgr NDiffPorts ' + \
+# ###### Get variable names #################################################
+def getVariableNames():
+   return 'TimeStamp ' + \
+          'FromNodeIndex FromNode ToNodeIndex ToNode ' + \
+          'FromSiteIndex FromSite ToSiteIndex ToSite ' + \
+          'FromProviderIndex FromProvider ToProviderIndex ToProvider ' + \
+          'CC CMT PathMgr NDiffPorts ' + \
           'IPVersion'
 
-
-def makeVariables(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, pathMgr, nDiffPorts):
-   return unicode(str(localNode['node_index']))  + ' '  + \
+# ###### Get variable settings ##############################################
+def getVariableSettings(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, now):
+   return unicode(str(now))                      + ' '  + \
+          unicode(str(localNode['node_index']))  + ' '  + \
           u'"' + localNode['node_name']          + '" '  + \
           unicode(str(remoteNode['node_index'])) + ' '  + \
           u'"' + remoteNode['node_name']         + '" '  + \
@@ -131,31 +134,33 @@ def makeVariables(localSite, localNode, localProvider, remoteSite, remoteNode, r
           u'"' + remoteProvider['provider_short_name']          + '" ' + \
           u'"' + unicode(str(remoteProvider['provider_index'])) + '" ' + \
           u'"' + unicode(cc)       + '" ' + \
+          u'"' + unicode(cmt)      + '" ' + \
           u'"' + unicode(pathMgr)  + '" ' + \
           unicode(str(nDiffPorts)) + ' '  + \
           unicode(str(version))
 
 
-def makeScalarName(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, pathMgr, nDiffPorts):
+# ###### Get scalar file name ###############################################
+def getScalarName(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, now):
    return MeasurementName + '/' + \
       str(int(now)) + '-' + \
       localNode['node_name'] + '-' + \
       localProvider['provider_short_name'] + '-' + \
       remoteNode['node_name'] + '-' + \
       remoteProvider['provider_short_name'] + '-' + \
-      cc + '-' + pathMgr + '-' + str(nDiffPorts) + '-' + \
+      cc + '-' + cmt + '-' + pathMgr + '-' + str(nDiffPorts) + '-' + \
       'ipv' + str(version) + '-' + \
       '.sca.bz2'
 
 
 # ###### Run the measurement ################################################
-def runMeasurement(summaryFile, localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, pathMgr, nDiffPorts, slice, now):
+def runMeasurement(summaryFile, localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, slice, now):
    localAddress  = getAddress(localSite, localNode, localProvider, version, slice)
    remoteAddress = getAddress(remoteSite, remoteNode, remoteProvider, version, slice)
    remotePort    = getPort(remoteSite, remoteNode, remoteProvider, version, slice)
 
-   variables      = makeVariables(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, pathMgr, nDiffPorts)
-   scalarFileName = makeScalarName(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, pathMgr, nDiffPorts)
+   variables      = getVariableSettings(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, now)
+   scalarFileName = getScalarName(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, now)
 
    cmdLine = 'mkdir -p ' + MeasurementName + ' && ' + \
              'netperfmeter [' + str(remoteAddress) + ']:' + str(remotePort) + ' ' + \
@@ -165,8 +170,11 @@ def runMeasurement(summaryFile, localSite, localNode, localProvider, remoteSite,
              '-tcp const10:const1400:const0:const0 -runtime=10'
    doSSH(localNode, slice, cmdLine)
 
+   activeScalarFileName  = scalarFileName.replace('.sca.bz2', '-active.sca.bz2')
    passiveScalarFileName = scalarFileName.replace('.sca.bz2', '-passive.sca.bz2')
 
+   summaryFile.write('--values="' + variables + '"\n')
+   summaryFile.write('--input=' + activeScalarFileName + '\n')
    summaryFile.write('--values="' + variables + '"\n')
    summaryFile.write('--input=' + passiveScalarFileName + '\n')
 
@@ -206,7 +214,7 @@ try:
 except:
    pass
 summaryFile = codecs.open(summaryFileName, 'w+', 'utf-8')
-summaryFile.write('--varnames=' + getVariables() + '\n')
+summaryFile.write('--varnames=' + getVariableNames() + '\n')
 for node in ExperimentNodes:
    doSSH(node, Slice, 'rm -rf ' + MeasurementName)
 
@@ -237,14 +245,15 @@ for localNode in ExperimentNodes:
                      remoteNode['node_name'] + '/' + remoteProvider['provider_short_name'] + \
                      ' with IPv' + str(version)
 
-               cc = 'default'
-               pathMgr = 'default'
+               cc         = 'default'
+               cmt        = 'off'
+               pathMgr    = 'default'
                nDiffPorts = 16
 
                preparePassiveSide(remoteSite, remoteNode, remoteProvider, version, Slice)
                runMeasurement(summaryFile,
                               localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version,
-                              cc, pathMgr, nDiffPorts,
+                              cc, cmt, pathMgr, nDiffPorts,
                               Slice, now)
                cleanUpPassiveSide(remoteSite, remoteNode, remoteProvider, version, Slice)
 
@@ -255,4 +264,4 @@ for localNode in ExperimentNodes:
 summaryFile.close()
 for node in ExperimentNodes:
    doRSync(node, Slice, MeasurementName)
-doLocal('( if [ -e ' + fullSummaryFileName + ' ] ; then grep -v ^--varnames= ' + fullSummaryFileName + ' ; fi ; cat ' + summaryFileName + ' ) >' + fullSummaryFileName + '.updated && mv ' + fullSummaryFileName + '.updated ' + fullSummaryFileName)
+doLocal('( cat ' + summaryFileName + ' && if [ -e ' + fullSummaryFileName + ' ] ; then grep -v ^--varnames= ' + fullSummaryFileName + ' ; fi ) >' + fullSummaryFileName + '.updated && mv ' + fullSummaryFileName + '.updated ' + fullSummaryFileName)
