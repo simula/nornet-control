@@ -232,10 +232,7 @@ if Slice == None:
 if len(sys.argv) != 1:
    print 'Installing nodes!'
    for localNode in ExperimentNodes:
-      print localNode
-
       cmdLine = 'mkdir -p ~/src && cd ~/src && if [ -e netperfmeter ] ; then cd netperfmeter && git pull ; else git clone https://github.com/dreibh/netperfmeter.git && cd netperfmeter ; fi && ./bootstrap && ./configure --prefix=/usr && make && sudo make install && sudo yum install -y psmisc'
-
       doSSH(localNode, Slice, cmdLine)
 
    sys.exit(0)
