@@ -22,10 +22,22 @@
    while read name ; do
       fullName=`echo "$name" | sed -e "s/\./.all./"`
       echo "Removing keys of $name ($fullName) ..."
-      A="`dig $fullName a +short` `dig $fullName aaaa +short`"
-      for a in $A ; do
-         echo "ssh-keygen -q -R $a"
-         ssh-keygen -q -R "$a" >/dev/null 2>&1
+      ipv4Addresses=`dig $fullName a +short`
+      ipv6Addresses=`dig $fullName aaaa +short`
+
+      hostList="$name $fullName"
+      for a in $ipv4Addresses $ipv6Addresses ; do
+         hostList="$hostList $a"
+      done
+
+      for a in $ipv4Addresses ; do
+         dnsName=`dig -x $a ptr +short`
+         hostList="$hostList $a `echo "$dnsName" | sed -e "s/\.$//g"`"
+      done
+
+      for host in $hostList ; do
+         echo "ssh-keygen -q -R $host"
+         ssh-keygen -q -R "$host" >/dev/null 2>&1
       done
    done
 )
