@@ -32,9 +32,9 @@ from NorNetAPI       import *;
 MeasurementName = 'One'
 SliceName = 'srl_mptcp'
 ExperimentNodeNames = [
-   "mariebergsskogen.kau.nornet",
-   "watson.ku.nornet"
-   #"floeibanen.uib.nornet"
+   #"mariebergsskogen.kau.nornet",
+   "watson.ku.nornet",
+   "floeibanen.uib.nornet"
 ]
 
 
@@ -91,9 +91,13 @@ def getPort(site, node, provider, version, slice):
 
 
 # ###### Initialise passive side ############################################
-def preparePassiveSide(localSite, localNode, localProvider, version, slice):
-   localAddress = getAddress(localSite, localNode, localProvider, version, slice)
-   localPort    = getPort(localSite, localNode, localProvider, version, slice)
+def preparePassiveSide(localSite, localNode, localProvider, version, cmt, slice):
+   if cmt != 'off':
+      localAddress = getAddress(localSite, localNode, None, version, slice)
+      localPort    = getPort(localSite, localNode, None, version, slice)
+   else:
+      localAddress = getAddress(localSite, localNode, localProvider, version, slice)
+      localPort    = getPort(localSite, localNode, localProvider, version, slice)
 
    cmdLine = 'nohup netperfmeter ' + str(localPort) + ' ' + \
              '-local=[' + str(localAddress) + '] ' + \
@@ -155,9 +159,13 @@ def getScalarName(localSite, localNode, localProvider, remoteSite, remoteNode, r
 
 # ###### Run the measurement ################################################
 def runMeasurement(summaryFile, localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, slice, now):
-   localAddress  = getAddress(localSite, localNode, localProvider, version, slice)
    remoteAddress = getAddress(remoteSite, remoteNode, remoteProvider, version, slice)
-   remotePort    = getPort(remoteSite, remoteNode, remoteProvider, version, slice)
+   if cmt != 'off':
+      remotePort   = getPort(remoteSite, remoteNode, None, version, slice)
+      localAddress = getAddress(localSite, localNode, None, version, slice)
+   else:
+      remotePort   = getPort(remoteSite, remoteNode, remoteProvider, version, slice)
+      localAddress = getAddress(localSite, localNode, localProvider, version, slice)
 
    variables      = getVariableSettings(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, now)
    scalarFileName = getScalarName(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, now)
@@ -167,7 +175,8 @@ def runMeasurement(summaryFile, localSite, localNode, localProvider, remoteSite,
              '-local=[' + str(localAddress) + '] ' + \
              '-scalar=' + scalarFileName + ' ' + \
              '-verbosity=1 ' + \
-             '-tcp const10:const1400:const0:const0 -runtime=10'
+             '-tcp const0:const1400:const0:const0:sndbuf=16000000:rcvbuf=16000000:cc=' + cc + ':pathmgr=' + pathMgr + ':ndiffports=' + str(nDiffPorts) + ':cmt=' + cmt + ' ' + \
+             '-runtime=30'
    doSSH(localNode, slice, cmdLine)
 
    activeScalarFileName  = scalarFileName.replace('.sca.bz2', '-active.sca.bz2')
@@ -245,19 +254,20 @@ for localNode in ExperimentNodes:
                      remoteNode['node_name'] + '/' + remoteProvider['provider_short_name'] + \
                      ' with IPv' + str(version)
 
-               cc         = 'default'
-               cmt        = 'off'
-               pathMgr    = 'default'
-               nDiffPorts = 16
+               for cmt in [ 'off', 'mptcp' ]:
 
-               preparePassiveSide(remoteSite, remoteNode, remoteProvider, version, Slice)
-               runMeasurement(summaryFile,
-                              localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version,
-                              cc, cmt, pathMgr, nDiffPorts,
-                              Slice, now)
-               cleanUpPassiveSide(remoteSite, remoteNode, remoteProvider, version, Slice)
+                  cc         = 'default'
+                  pathMgr    = 'default'
+                  nDiffPorts = 16
 
-               print ''
+                  preparePassiveSide(remoteSite, remoteNode, remoteProvider, version, cmt, Slice)
+                  runMeasurement(summaryFile,
+                                 localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version,
+                                 cc, cmt, pathMgr, nDiffPorts,
+                                 Slice, now)
+                  cleanUpPassiveSide(remoteSite, remoteNode, remoteProvider, version, Slice)
+
+                  print ''
 
 
 # ====== Get results ========================================================
