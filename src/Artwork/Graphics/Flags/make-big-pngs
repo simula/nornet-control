@@ -1,0 +1,13 @@
+#!/bin/sh
+
+rm -rf big
+mkdir big
+ls Flag-*.svg | (
+   while read input ; do
+      output=`echo $input | sed -e "s/.svg$/.png/g"`
+
+      echo "Converting $input to $output ..."
+      convert -quiet "$input" -resize x168 "big/$output" &
+   done
+   wait
+)

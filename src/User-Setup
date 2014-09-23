@@ -54,7 +54,7 @@ title     = ''
 firstName = 'Ola'
 lastName  = 'Nordmann'
 phone     = ''
-url       = 'http://www.nntb.no'
+url       = 'https://www.nntb.no'
 roles     = [ ]
 
 i = 2

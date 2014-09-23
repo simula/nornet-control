@@ -36,8 +36,8 @@ foreach ($status as $hostName => $hostEntry) {
    if (isset($status[$hostName][""]["location"])) {
       // ====== Get location ================================================
       $status[$hostName]['site_number'] = $sites;
-      $location = $status[$hostName][""]["city"] . ',' . $status[$hostName][""]["province"] . '/' . $status[$hostName][""]["country"];
-      $image    = 'Graphics/Sites/' . $hostName . '.jpeg';
+      $location = $status[$hostName][""]["city"] . ', ' . $status[$hostName][""]["province"] . '/' . $status[$hostName][""]["country"];
+      $image    = '/Artwork/Sites/Large/' . $hostName . '.jpeg';
 
       echo "   var siteLocation = '" . $status[$hostName][""]["location"] . "';\n";
       echo "   var locationArray = siteLocation.split(',');" . "\n";
@@ -63,16 +63,16 @@ foreach ($status as $hostName => $hostEntry) {
       // ====== Create marker ===============================================
       $site       = $hostName;
       $siteStatus = $status[$site][""]["last_hard_state"];
-      $icon       = "Graphics/Markers/Marker-Black.svg";
+      $icon       = "/Artwork/Graphics/Markers/Marker-Black.svg";
       if (!isset($status[$site][""]['is_disabled_site'])) {
          if ($siteStatus == 0) {
-            $icon = "Graphics/Markers/Marker-Green.svg";
+            $icon = "/Artwork/Graphics/Markers/Marker-Green.svg";
          }
          elseif ($siteStatus == 1) {
-            $icon = "Graphics/Markers/Marker-Orange.svg";
+            $icon = "/Artwork/Graphics/Markers/Marker-Orange.svg";
          }
          elseif ($siteStatus == 2) {
-            $icon = "Graphics/Markers/Marker-Red.svg";
+            $icon = "/Artwork/Graphics/Markers/Marker-Red.svg";
          }
       }
 
@@ -164,7 +164,7 @@ foreach (array('critical', 'warning', 'ok', 'unknown') as $severity) {
       if (isset($status[$hostName][""]["location"])) {
          $site       = $hostName;
          $siteStatus = $status[$hostName][""]["last_hard_state"];
-         $flag       = 'Graphics/Flags/Flag-' . $status[$hostName][""]["country_code"] . '.png';
+         $flag       = '/Artwork/Graphics/Flags/Flag-' . $status[$hostName][""]["country_code"] . '.png';
 
          if (isset($status[$hostName][""]['is_disabled_site'])) {
             $siteStatus = 3;

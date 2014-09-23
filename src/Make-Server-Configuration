@@ -118,6 +118,7 @@ writeInterfaceConfiguration('.new', variant, interfaceName, controlBoxMode,
                             domainName, nodeIndex, siteIndex, providerList, defaultProvider)
 writeProxyConfiguration('.new', domainName, variant, controlBoxMode)
 writeNTPConfiguration('ntp.new', nodeIndex, siteIndex, defaultProvider)
+writeSysctlConfiguration('sysctl.new', interfaceName)
 
 # Create AutoFS configuration only if we are not on the file server itself!
 # (otherwise: just add empty AutoFS configuration)

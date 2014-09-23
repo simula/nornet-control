@@ -3,9 +3,6 @@
 # Include the GRUB helper library for grub-mkconfig.
 . /usr/lib/grub/grub-mkconfig_lib
 
-# We want to work in /boot/grub/ only.
-test -d /boot/grub; cd /boot/grub
-
 # ====== NorNet theme =======================================================
 echo >&2 "Using NorNet Tunnelbox theme!"
 

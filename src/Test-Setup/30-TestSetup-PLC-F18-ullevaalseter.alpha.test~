@@ -1,7 +1,0 @@
-NAME="TestSetup-PLC-F18-ullevaalseter.alpha.test"
-STARTDELAY=10
-STOPDELAY=30
-NUMCPUS=1
-MEMORY=1536
-OPTIONS="default"
-# AUTO_UPDATE_BOOTCD="default"

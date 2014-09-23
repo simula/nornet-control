@@ -1,0 +1,65 @@
+#!/bin/bash -e
+#
+# Install PlanetLab build dependencies
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
+
+# ---------------------------------------------------------
+KEY_ID="dreibh@simula.no"
+SOURCE="nornetpp@cromwell.simula.nornet:repos/"
+DESTINATION="/nfs/adm/packages/"
+# ---------------------------------------------------------
+
+
+# ====== Fetch packages =====================================================
+echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Fetching packages from $SOURCE ...\x1b[0m"
+TEMPDIR="$HOME/tmp/repos/"
+mkdir -p -m 755 "$TEMPDIR"
+rsync -av --delete "$SOURCE" "$TEMPDIR"
+
+
+# ====== Sign packages ======================================================
+PACKAGES=`find "$TEMPDIR" -name "*.rpm"`
+if [ "$PACKAGES" != "" ] ; then
+   echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Signning packages ...\x1b[0m"
+   rpmsign --key-id=$KEY_ID --resign $PACKAGES
+
+   echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Updating repositories ...\x1b[0m"
+   REPOS=`find "$TEMPDIR" -name "repodata" | sed -e "s/\/repodata$//g"`
+   for repo in $REPOS ; do
+      groupsFile=`find $repo -maxdepth 1 -name "*groups.xml"`
+      if [ -e "$repo/repodata" ] ; then
+         rm -rf "$repo/repodata"
+      fi
+      if [ "$groupsFile" ] ; then
+         # NOTE: The groups file may not be inside the repo directory.
+         # Otherwise, createrepo seems to silently ignores it!
+         echo "Using groups file $groupsFile!"
+         cp "$groupsFile" ~/groups.xml
+         createrepo -g ~/groups.xml "$repo"
+      else
+         createrepo "$repo"
+      fi
+   done
+
+   echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Publishing packages to $DESTINATION ...\x1b[0m"
+   rsync -rlptoD --delete "$TEMPDIR" "$DESTINATION"
+else
+   echo >&2 "ERROR: There are no packages?!"
+   exit 1
+fi

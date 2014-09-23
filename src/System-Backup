@@ -105,12 +105,10 @@ backup_file /etc/udev/rules.d/70-persistent-net.rules $newBackup/network
 
 # ------ NorNet -------------------------
 mkdir -p $newBackup/nornet
-backup_file /etc/nornet/nornetapi-config  $newBackup/nornet
-backup_file /etc/nornet/Server-Setup.args $newBackup/nornet
-
-mkdir -p $newBackup/nornet
-backup_file /etc/nornet/nornetapi-config $newBackup/nornet
-backup_file /etc/nornet/watchdog-config  $newBackup/nornet
+backup_file /etc/nornet/nornetapi-config    $newBackup/nornet
+backup_file /etc/nornet/nornetapi-constants $newBackup/nornet
+backup_file /etc/nornet/watchdog-config     $newBackup/nornet
+backup_file /etc/nornet/Server-Setup.args   $newBackup/nornet
 
 if [ -d /etc/nornet/vsystems/ ] ; then
    vSystems=`find /etc/nornet/vsystems/ -name "[0-9][0-9]-*[0-9a-zA-Z]"`
@@ -129,6 +127,20 @@ fi
 # ------ Bind ---------------------------
 if [ -d /etc/bind ] ; then
    cp -r /etc/bind $newBackup/bind || true
+fi
+
+# ------ WWW/Wiki -----------------------
+if [ -d /etc/apache2 ] ; then
+   cp -r /etc/apache2 $newBackup/apache2 || true
+fi
+if [ -e /etc/php5/cli/php.ini ] ; then
+   mkdir $newBackup/php5 || true
+   cp /etc/php5/cli/php.ini $newBackup/php5 || true
+fi
+if [ -d /etc/mediawiki ] ; then
+   mkdir $newBackup/mediawiki || true
+   cp /etc/mediawiki/*.conf $newBackup/mediawiki/ || true
+   cp /etc/mediawiki/*.php  $newBackup/mediawiki/ || true
 fi
 
 # ------ Some system information --------

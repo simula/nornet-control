@@ -39,7 +39,7 @@ NorNet_Provider32='"Deutsche Telekom"                       "dtag"       "http:/
 NorNet_Provider80='"China Education and Research Network"   "cernet"     "http://www.cernet.edu.cn/"'
 NorNet_Provider81='"China Unicom"                           "unicom"     "http://www.chinaunicom.com/"'
 # ------ Test -------------------------------------------------------------------------------------
-NorNet_Provider255='"Provider Eins"                         "p1"         "http://www.nntb.no/"'
-NorNet_Provider254='"Provider Zwei"                         "p2"         "http://www.nntb.no/"'
-NorNet_Provider253='"Provider Drei"                         "p3"         "http://www.nntb.no/"'
-NorNet_Provider252='"Provider Vier"                         "p4"         "http://www.nntb.no/"'
+NorNet_Provider255='"Provider Eins"                         "p1"         "https://www.nntb.no/"'
+NorNet_Provider254='"Provider Zwei"                         "p2"         "https://www.nntb.no/"'
+NorNet_Provider253='"Provider Drei"                         "p3"         "https://www.nntb.no/"'
+NorNet_Provider252='"Provider Vier"                         "p4"         "https://www.nntb.no/"'

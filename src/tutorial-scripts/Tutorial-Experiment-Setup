@@ -10,8 +10,8 @@ SITE="Simula Research Laboratory"
 DOMAIN="simula.nornet"
 SLICENAME="srl_tutorial"
 
-SLICEDESC="A test slice for the NorNet tutorial sessions."
-SLICEURL="http://www.nntb.no"
+SLICEDESC="This is a test slice for the NorNet tutorial sessions at the NNUW."
+SLICEURL="https://www.nntb.no"
 
 action=""
 if [ "$1" = "add" ] ; then
@@ -31,7 +31,7 @@ IFS=$'\t'
       if [[ "$number"  =~ ^[0-9]+$ ]] ; then
          keyName="$uname.pub"
          uname="$uname@$DOMAIN"
-       
+
          if [ "$action" = "add" ] ; then
             echo -e "\x1b[34mAdding $uname ($gname $fname) ...\x1b[0m"
             publicKeyArg=""
@@ -52,10 +52,10 @@ IFS=$'\t'
 
    if [ "$action" = "add" ] ; then
       echo -e "\x1b[34mAdding slice $SLICENAME ...\x1b[0m"
-      echo $userArgs | xargs ../Slice-Setup add "--name=$SLICENAME" --own-addresses "--description=$SLICEDESC"
+      echo $userArgs | xargs ../Slice-Setup add "--name=$SLICENAME" --own-addresses "--description=$SLICEDESC" --maxnodespersite=999999
    elif [ "$1" = "remove" ] ; then
       echo -e "\x1b[34mRemoving slice $SLICENAME ...\x1b[0m"
       ../Slice-Setup remove "--name=$SLICENAME"
    fi
- 
+
 ) <$ACCOUNTS

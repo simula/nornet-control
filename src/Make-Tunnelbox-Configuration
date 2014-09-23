@@ -63,10 +63,7 @@ def getLocalSiteDHCPServerStaticConfigurationString(nodeIndex):
 
 # ###### Get DHCPD node configuration string ################################
 def getLocalSiteRADVDConfigurationString():
-   try:
-      return unicode(NorNet_Configuration['NorNet_LocalSite_RADVDServer'])
-   except:
-      return u''
+   return checkParameter('NorNet_LocalSite_RADVDServer', [ 'on', 'off'])
 
 
 # ###### Get NAT range ######################################################
@@ -89,6 +86,14 @@ def getCentralSiteAdditionalExtInterface():
 def getLocalSiteDNATOptionsString():
    try:
       return unicode(NorNet_Configuration['NorNet_LocalSite_DNAT_Options'])
+   except:
+      return u''
+
+
+# ###### Get Squid memory cache #############################################
+def getLocalSiteDNSForwardersString():
+   try:
+      return unicode(NorNet_Configuration['NorNet_LocalSite_DNS_Forwarders'])
    except:
       return u''
 
@@ -123,6 +128,19 @@ def getSquidDiskCacheSize():
       return int(NorNet_Configuration['NorNet_Squid_DiskCache'])
    except:
       return 0
+
+
+# ###### Get Squid parent cache #############################################
+def getSquidParentCache():
+   try:
+      return NorNet_Configuration['NorNet_Squid_ParentCache']
+   except:
+      return ''
+
+
+# ###### Get Squid parent cache #############################################
+def getSquidTransparentProxy():
+   return checkParameter('NorNet_Squid_TransparentProxy', [ 'on', 'off'])
 
 
 # ###### Get tunnel configuration for default tunnel to central site ########
@@ -194,15 +212,22 @@ def addProviderToName(hostName, providerName, domainName):
    return(newHostName)
 
 
+# ###### Compute a serial number ############################################
+def getSerial():
+   value = datetime.datetime.utcnow() - datetime.datetime(2014,7,15)
+   serial = value.days * (24 * 60 * 60) + value.seconds
+   return serial
+
+
 # ###### Write SOA ##########################################################
 def writeSOA(outputFile, nsHostNameFQDN, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaves):
    outputFile.write('$TTL ' + str(defaultTTL) + '\n\n')
    outputFile.write('@\tIN\tSOA\t' + nsHostNameFQDN + ' root.' + siteFQDN+ ' (\n')
-   outputFile.write('\t' + datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S") + '   ; Serial\n')
-   outputFile.write('\t{0:14d}   ; Refresh time: interval for secondary DNS to check for updates (default: 3600)\n'.format(refreshTime))
-   outputFile.write('\t{0:14d}   ; Retry time: time for retrying failed zone transfer (default: 600)\n'.format(retryTime))
-   outputFile.write('\t{0:14d}   ; Expire time: when to expire a zone in case of failed zone transfer (default: 84600)\n'.format(expireTime))
-   outputFile.write('\t{0:14d} ) ; Minimum TTL: minimum time-to-live (default: 3600)\n\n'.format(minTTL))
+   outputFile.write('\t{0:9d}   ; Serial\n'.format(getSerial()))
+   outputFile.write('\t{0:9d}   ; Refresh time: interval for secondary DNS to check for updates (default: 3600)\n'.format(refreshTime))
+   outputFile.write('\t{0:9d}   ; Retry time: time for retrying failed zone transfer (default: 600)\n'.format(retryTime))
+   outputFile.write('\t{0:9d}   ; Expire time: when to expire a zone in case of failed zone transfer (default: 84600)\n'.format(expireTime))
+   outputFile.write('\t{0:9d} ) ; Minimum TTL: minimum time-to-live (default: 3600)\n\n'.format(minTTL))
    outputFile.write('@\tIN\tNS\t' + nsHostNameFQDN + '\n')
    for slave in slaves:
       outputFile.write('@\tIN\tNS\t' + slave + '\n')
@@ -266,7 +291,7 @@ def makeNodeForDNS(nodeName, site, nodeIndex, model, type, options):
       elif option == 'def-v6only':
          v6Only = 2
    norNetNode = {
-      'node_site_id'          : site['site_index'],
+      'node_site_id'          : site['site_id'],
       'node_index'            : nodeIndex,
       'node_name'             : dnsName['ascii'] + '.' + site['site_domain'],
       'node_utf8'             : dnsName['utf8']  + '.' + site['site_domain'],
@@ -681,6 +706,23 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
    optionsConfFile.write("\tauth-nxdomain      no;   # conform to RFC1035\n")
    optionsConfFile.write("\tempty-zones-enable yes;\n")
    optionsConfFile.write("\tlisten-on-v6       { any; };\n")
+   
+   dnsForwardersString = getLocalSiteDNSForwardersString()
+   if ((dnsForwardersString != None) and (dnsForwardersString != u'')):      
+      dnsForwarders = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', getLocalSiteDNSForwardersString())
+      if len(dnsForwarders) > 0:
+         optionsConfFile.write("\tforwarders         {")
+         for i in range(0, len(dnsForwarders)):
+            try:
+               address = unquote(dnsForwarders[i])
+               dnsForwarder = IPAddress(address)
+               optionsConfFile.write(' ' + str(dnsForwarder) + ';')
+               
+            except Exception as e:
+               error('Bad configuration "' + dnsForwarders[i] + '" for NorNet_LocalSite_DNS_Forwarders: ' + str(e))
+         optionsConfFile.write(" };\n")
+         optionsConfFile.write("\tforward            only;\n")
+
    optionsConfFile.write("};\n")
 
    optionsConfFile.close()
@@ -786,18 +828,29 @@ def makeRADVDConfiguration(localSite):
 
 
 # ###### Generate Squid daemon configuration ################################
-def makeSquidConfiguration(localSite):
+def makeSquidConfiguration(nodeName, localSite):
    outputFile = codecs.open('squid-config', 'w', 'utf-8')
+
+   outputFile.write('# ================== Proxy =============================\n')
+   outputFile.write('visible_hostname ' + nodeName + '\n')
+   outputFile.write('via on\n')
+   outputFile.write('# debug_options ALL,2\n\n')
 
    outputFile.write('# ================== ACLs ==============================\n')
    outputFile.write('acl manager proto cache_object\n')
    outputFile.write('acl localhost src 127.0.0.1/32 ::1\n')
    outputFile.write('acl to_localhost dst 127.0.0.0/8 0.0.0.0/32 ::1\n')
+   outputFile.write('# ' + localSite['site_long_name'] + ' site:\n')
    providerList = getNorNetProvidersForSite(localSite)
    for providerIndex in providerList:
       for version in [ 4, 6 ]:
          localNetwork = makeNorNetIP(providerIndex, localSite['site_index'], 0, version)
          outputFile.write('acl localnet src ' + str(localNetwork) + '\n')
+   # Non-Central site tunnelboxes may forward requests to Central Site tunnelbox:
+   if localSite['site_index'] == NorNet_SiteIndex_Central:
+      outputFile.write('# Remote tunnelboxes:\n')
+      for version in [ 4, 6 ]:
+         outputFile.write('acl localnet src ' + str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '\n')
 
    outputFile.write('acl SSL_ports port 443\n')
    outputFile.write('acl Safe_ports port 80          # http\n')
@@ -820,11 +873,24 @@ def makeSquidConfiguration(localSite):
    outputFile.write('http_access allow localhost\n')
    outputFile.write('http_access allow localnet\n')
    outputFile.write('http_access deny all\n')
-   outputFile.write('http_port 3128\n\n')
+   outputFile.write('http_port 3128\n')
+   if getSquidTransparentProxy() == 'on':
+      outputFile.write('http_port 3129 transparent\n')
+   outputFile.write('extension_methods REPORT MERGE MKACTIVITY CHECKOUT PROPFIND\n\n')
+
+   outputFile.write('# Improve privacy:\n')
+   outputFile.write('request_header_access User-Agent deny all\n')
+   outputFile.write('request_header_replace User-Agent Mozilla/5.0 (compatible)\n')
+   outputFile.write('forwarded_for off\n\n')
 
    outputFile.write('# ================== Caching ===========================\n')
    outputFile.write('logformat squid %{%Y-%m-%dT%H:%M:%S}tl.%03tu %6tr %>a %Ss/%03>Hs %<st %rm %ru %un %Sh/%<A %mt\n')
    outputFile.write('coredump_dir /var/spool/squid3\n')
+   parentCache = getSquidParentCache()
+   if parentCache != '':
+      outputFile.write('cache_peer ' + parentCache + ' parent 3128 0 no-query default\n')
+      outputFile.write('never_direct allow all\n')
+      outputFile.write('nonhierarchical_direct off\n')
    diskCacheSize = getSquidDiskCacheSize()
    if diskCacheSize > 0:
       outputFile.write('cache_dir aufs /var/spool/squid3 ' + str(diskCacheSize) + ' 16 256\n')
@@ -855,25 +921,29 @@ def makeSquidConfiguration(localSite):
 
 # ###### Generate RSerPool Registrar configuration ##########################
 def makeRegistrarConfiguration(localSite):
-   siteIndex          = localSite['site_index']
-   providerList       = getNorNetProvidersForSite(localSite)
-   tunnelboxAddresses = []
-   for onlyDefault in [ True, False ]:
-      for providerIndex in providerList:
-         if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
-              ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
-            for version in [ 6, 4 ]:
-               tunnelboxAddresses.append(makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version))
+   localSiteIndex       = localSite['site_index']
+   localProviderList    = getNorNetProvidersForSite(localSite)
+   localAddresses       = [ IPv6Network('::1/128'), IPv4Network('127.0.0.1/32') ]
+   centralSite          = fullSiteList[NorNet_SiteIndex_Central]
+   centralSiteProviders = getNorNetProvidersForSite(centralSite)
 
    outputFile = codecs.open('registrar-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
 
-   asapAnnounce = '239.0.0.1:3863'
-   enrpAnnounce = '239.0.0.1:9901'
-   asap         = ''
-   enrp         = ''
-   firstAddress = True
-   for address in tunnelboxAddresses:
+   # ====== ASAP and ENRP endpoitns =========================================
+   options           = ''
+   asapAnnounce      = 'off'
+   enrpAnnounce      = 'off'
+   asap              = ''
+   enrp              = ''
+   firstAddress      = True
+   for onlyDefault in [ True, False ]:
+      for providerIndex in localProviderList:
+         if ( ((onlyDefault == True)  and (providerIndex == localSite['site_default_provider_index'])) or \
+              ((onlyDefault == False) and (providerIndex != localSite['site_default_provider_index'])) ):
+            for version in [ 6, 4 ]:
+               localAddresses.append(makeNorNetIP(providerIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version))
+   for address in localAddresses:
       if firstAddress:
          asap         = '[' + str(address.ip) + ']:3863'
          enrp         = '[' + str(address.ip) + ']:9901'
@@ -882,11 +952,37 @@ def makeRegistrarConfiguration(localSite):
          asap = asap + ',[' + str(address.ip) + ']'
          enrp = enrp + ',[' + str(address.ip) + ']'
 
+   # ====== ENRP peers ======================================================
+   if localSiteIndex != NorNet_SiteIndex_Central:
+      options              = options + ' -peer='
+      firstAddress         = True
+      for onlyDefault in [ True, False ]:
+         for providerIndex in localProviderList:
+            for version in [ 6, 4 ]:
+               address = makeNorNetIP(providerIndex,
+                                      NorNet_SiteIndex_Central,
+                                      NorNet_NodeIndex_Tunnelbox,
+                                      version)
+               if firstAddress:
+                  options = options + '[' + str(address.ip) + ']:9901'
+                  firstAddress = False
+               else:
+                  options = options + ',[' + str(address.ip) + ']'
+
+   # ====== CSP monitor =====================================================
+   cspMonitor = makeNorNetIP(centralSite['site_default_provider_index'],
+                             NorNet_SiteIndex_Central,
+                             NorNet_NodeIndex_Monitor, 6)
+
+   # ====== Registrar options ===============================================
    outputFile.write('DAEMON_ARGS="$DAEMON_ARGS' + \
                     ' -asapannounce=' + asapAnnounce + \
                     ' -enrpannounce=' + enrpAnnounce + \
                     ' -asap=' + asap + \
                     ' -enrp=' + enrp + \
+                    ' -cspserver=[' + str(cspMonitor.ip) + ']:2960' + \
+                    ' -cspinterval=10000' + \
+                    options + \
                     ' -logcolor=off"\n')
 
    outputFile.close()
@@ -1028,6 +1124,10 @@ def makeFirewallConfiguration(fullSiteList, localSite):
       for interfaceName in externalInterfaces:
          v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4Prefix'])       + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
          v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
+
+   if getSquidTransparentProxy() == 'on':      
+      v4File.write('-A PREROUTING -i "' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '" -p tcp' + \
+                   ' ! -d ' + str(makeNorNetIP(0, 0, 0, 4)) + ' --dport 80 -j REDIRECT --to-port 3129' + "\n")
 
    if len(dnatOptions) > 0:
       for dnatOption in dnatOptions:
@@ -1293,6 +1393,56 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
    tunnelboxFile.close()
 
 
+# ###### Generate collectd ping configuration ###############################
+def makeCollectdPingConfig():
+   log('Making collectd tunnelbox ping configuration for ' + localSite['site_long_name'] + ' ...')
+   localSiteIndex = localSite['site_index']
+   localProviderList = getNorNetProvidersForSite(localSite)
+   collectdPingGeneralConfigFileName = "collectd-tb-ping-general-config"
+   for localProviderIndex in localProviderList:
+      localProvider = localProviderList[localProviderIndex]
+      for version in [ 4, 6 ]:
+         localProviderNetwork = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
+         tunnelboxAddress = makeNorNetIP(localProviderIndex, localSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
+         collectdPingConfigFileName = "collectd-tb-ping-src-" + str(tunnelboxAddress.ip)
+         collectdPingConfigFile = codecs.open(collectdPingConfigFileName, 'w', 'utf-8')
+         collectdPingConfigFile.write('Include "' + collectdPingGeneralConfigFileName + "\"\n")
+         collectdPingConfigFile.write("<Plugin ping>\n")
+         collectdPingConfigFile.write('SourceAddress "' + str(tunnelboxAddress.ip) + '"\n')
+         for remoteSiteIndex in fullSiteList:
+            remoteSite = fullSiteList[remoteSiteIndex]
+            if remoteSite['site_enabled'] == False:
+               continue
+            if remoteSiteIndex == localSiteIndex:
+               continue
+            remoteProviderList = getNorNetProvidersForSite(remoteSite)
+            for remoteProviderIndex in remoteProviderList:
+              remoteProvider = remoteProviderList[remoteProviderIndex]
+              remoteProviderList = getNorNetProvidersForSite(remoteSite)
+              address = makeNorNetIP(remoteProviderIndex, remoteSiteIndex, NorNet_NodeIndex_Tunnelbox, version)
+              collectdPingConfigFile.write('Host "' + str(address.ip) + '"\n')
+         collectdPingConfigFile.write("</Plugin>\n")
+         collectdPingConfigFile.write("""
+PreCacheChain "ping_rewrite"
+LoadPlugin match_regex
+LoadPlugin target_set
+
+<Chain "ping_rewrite">
+  <Rule "set_plugin_instance">
+    <Match "regex">
+      Plugin "ping"
+    </Match>
+    <Target "set">
+""")
+         collectdPingConfigFile.write('      PluginInstance "src.' + str(tunnelboxAddress.ip) + '"\n')
+         collectdPingConfigFile.write("""    </Target>
+    Target "write"
+  </Rule>
+</Chain>
+""")
+         collectdPingConfigFile.close()
+
+
 
 # ###########################################################################
 # #### Main program                                                      ####
@@ -1433,5 +1583,8 @@ for i in range(NorNet_MinNodeIndex + 1, NorNet_MaxNodeIndex + 1):
 
 makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
 makeRADVDConfiguration(localSite)
-makeSquidConfiguration(localSite)
+makeSquidConfiguration(getLocalNodeHostname(), localSite)
 makeRegistrarConfiguration(localSite)
+
+# ====== Collectd configration ==========================================
+makeCollectdPingConfig()

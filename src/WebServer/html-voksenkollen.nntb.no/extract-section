@@ -1,0 +1,48 @@
+#!/bin/bash -e
+#
+# Thomas Dreibholz's Website Toolchain
+# Copyright (C) 2012-2013 by Thomas Dreibholz, dreibh@iem.uni-due.de
+#
+# $Id: extract-section 3319 2013-05-01 13:54:22Z dreibh $
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNES6S FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+# Contact: dreibh@iem.uni-due.de
+#
+
+
+if [ $# -ne 4 ] ; then
+    echo >&2 "Usage: $0 input output begin_tag end_tag"
+    exit 1
+fi
+
+INPUT="$1"
+OUTPUT="$2"
+BEGIN="$3"
+END="$4"
+
+lineStart=$(cat $INPUT | grep -n "$BEGIN" | grep -o '^[0-9]*')
+lineEnd=$(cat $INPUT | grep -n "$END" | grep -o '^[0-9]*')
+
+if [ "$lineStart" = "" ] ; then
+   echo >&2 "ERROR: No start line given!"
+   exit 1
+fi
+if [ "$lineEnd" = "" ] ; then
+   echo >&2 "ERROR: No end line given!"
+   exit 1
+fi
+
+cat $INPUT | sed -e "${lineEnd},\$ d" -e "1,${lineStart} d" >$OUTPUT

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+TB=`Show-VSystems | head -n1`
+echo "Tunnelbox=$TB"
+
+sudo modprobe vboxdrv
+vboxmanage modifyvm $TB --nic3 bridged --nictype3 virtio --bridgeadapter3 eth3
+vboxmanage modifyvm $TB --nic4 bridged --nictype4 virtio --bridgeadapter4 eth4
+VBoxManage createhd --filename $HOME/VirtualBox\ VMs/$TB/$TB-DH1-0.fixed.vdi --size 60000 --format vdi --variant Fixed
+VBoxManage storageattach $TB --storagectl "SATA Controller" --port 2 --device 0 --type hdd --medium $HOME/VirtualBox\ VMs/$TB/$TB-DH1-0.fixed.vdi

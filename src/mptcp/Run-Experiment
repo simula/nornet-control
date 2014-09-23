@@ -1,0 +1,304 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# MPTCP Example Experiment
+# Copyright (C) 2012-2014 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+import sys;
+import subprocess;
+import time;
+import datetime;
+
+# NorNet
+from NorNetSiteSetup import *;
+from NorNetTools     import *;
+from NorNetAPI       import *;
+
+
+MeasurementName = 'One'
+SliceName = 'srl_mptcp'
+ExperimentNodeNames = [
+   "skoeyen.simula.nornet",
+   "ekeberg.uio.nornet",
+   "kapp.hig.nornet",
+   "aunegaarden.uit.nornet",
+   "sokn.uis.nornet",
+   "floeibanen.uib.nornet",
+   "fjoesnisse.uia.nornet",
+   "midnattssol.unis.nornet",
+   "bybro.ntnu.nornet",
+   "beisfjordtoetta.hin.nornet",
+   "nakholmen.hioa.nornet",
+
+   "mariebergsskogen.kau.nornet",
+   "kaiserberg.tukl.nornet",
+   "borbeck.ude.nornet",
+   "yalongbay.hu.nornet",
+   "watson.ku.nornet"
+]
+
+
+# ###### Invoke local command ###############################################
+def doLocal(cmdLine):
+   print cmdLine
+   result = subprocess.call(cmdLine, shell=True)
+   if result != 0:
+      print '========== WARNING: result=' + str(result) + ' =========='
+
+
+# ###### Invoke SSH #########################################################
+def doSSH(localNode, slice, cmdLine):
+   sshCall = 'ssh ' + slice['slice_name'] + '@' + localNode['node_name'] + ' -oStrictHostKeyChecking=no -oConnectTimeout=30 ' + \
+             '\'' + cmdLine + '\''
+   print sshCall
+   result = subprocess.call(sshCall, shell=True)
+   if result != 0:
+      print '========== WARNING: result=' + str(result) + ' =========='
+
+
+# ###### Run RSync ##########################################################
+def doRSync(localNode, slice, directory):
+   sshCall = 'rsync -e ssh -av -q ' + slice['slice_name'] + '@' + localNode['node_name'] + ':' + directory + '/ ' + directory + '/'
+   print sshCall
+   result = subprocess.call(sshCall, shell=True)
+   if result != 0:
+      print '========== WARNING: result=' + str(result) + ' =========='
+
+
+# ###### Make address #######################################################
+def getAddress(site, node, provider, version, slice):
+   if provider != None:
+      port = 9000 + 10 * provider['provider_index']
+      sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
+      address   = makeNorNetIP(provider['provider_index'], site['site_index'], node['node_index'],
+                                    version, sliceNodeIndex).ip
+   else:
+      port = 9000
+      if version == 4:
+         address = IPv4Address('0.0.0.0')
+      else:
+         address = IPv6Address('::')
+
+   return address
+
+
+# ###### Make port ##########################################################
+def getPort(site, node, provider, version, slice):
+   if provider != None:
+      port = 9000 + 10 * provider['provider_index']
+   else:
+      port = 9000
+
+   return port
+
+
+# ###### Initialise passive side ############################################
+def preparePassiveSide(localSite, localNode, localProvider, version, cmt, slice):
+   if cmt != 'off':
+      localAddress = getAddress(localSite, localNode, None, version, slice)
+      localPort    = getPort(localSite, localNode, None, version, slice)
+   else:
+      localAddress = getAddress(localSite, localNode, localProvider, version, slice)
+      localPort    = getPort(localSite, localNode, localProvider, version, slice)
+
+   cmdLine = 'nohup netperfmeter ' + str(localPort) + ' ' + \
+             '-local=[' + str(localAddress) + '] ' + \
+             '-verbosity=0 ' + \
+             '>netperfmeter.log 2>&1 &'
+   doSSH(localNode, slice, cmdLine)
+   time.sleep(5)
+
+
+# ###### Clean up passive side ##############################################
+def cleanUpPassiveSide(localSite, localNode, localProvider, version, slice):
+   cmdLine = 'killall netperfmeter && cat netperfmeter.log'
+   doSSH(localNode, slice, cmdLine)
+
+
+# ###### Get variable names #################################################
+def getVariableNames():
+   return 'TimeStamp ' + \
+          'FromNodeIndex FromNode ToNodeIndex ToNode ' + \
+          'FromSiteIndex FromSite ToSiteIndex ToSite ' + \
+          'FromProviderIndex FromProvider ToProviderIndex ToProvider ' + \
+          'CC CMT PathMgr NDiffPorts ' + \
+          'IPVersion'
+
+# ###### Get variable settings ##############################################
+def getVariableSettings(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, now):
+   return unicode(str(now))                      + ' '  + \
+          unicode(str(localNode['node_index']))  + ' '  + \
+          u'"' + localNode['node_name']          + '" '  + \
+          unicode(str(remoteNode['node_index'])) + ' '  + \
+          u'"' + remoteNode['node_name']         + '" '  + \
+          u'"' + localSite['site_utf8']          + '" '  + \
+          unicode(str(localSite['site_index']))  + ' '  + \
+          u'"' + remoteSite['site_utf8']         + '" '  + \
+          unicode(str(remoteSite['site_index'])) + ' '  + \
+          u'"' + localProvider['provider_short_name']           + '" ' + \
+          u'"' + unicode(str(localProvider['provider_index']))  + '" ' + \
+          u'"' + remoteProvider['provider_short_name']          + '" ' + \
+          u'"' + unicode(str(remoteProvider['provider_index'])) + '" ' + \
+          u'"' + unicode(cc)       + '" ' + \
+          u'"' + unicode(cmt)      + '" ' + \
+          u'"' + unicode(pathMgr)  + '" ' + \
+          unicode(str(nDiffPorts)) + ' '  + \
+          unicode(str(version))
+
+
+# ###### Get scalar file name ###############################################
+def getScalarName(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, now):
+   return MeasurementName + '/' + \
+      str(int(now)) + '-' + \
+      localNode['node_name'] + '-' + \
+      localProvider['provider_short_name'] + '-' + \
+      remoteNode['node_name'] + '-' + \
+      remoteProvider['provider_short_name'] + '-' + \
+      cc + '-' + cmt + '-' + pathMgr + '-' + str(nDiffPorts) + '-' + \
+      'ipv' + str(version) + '-' + \
+      '.sca.bz2'
+
+
+# ###### Run the measurement ################################################
+def runMeasurement(summaryFile, localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, slice, now):
+   remoteAddress = getAddress(remoteSite, remoteNode, remoteProvider, version, slice)
+   if cmt != 'off':
+      remotePort   = getPort(remoteSite, remoteNode, None, version, slice)
+      localAddress = getAddress(localSite, localNode, None, version, slice)
+   else:
+      remotePort   = getPort(remoteSite, remoteNode, remoteProvider, version, slice)
+      localAddress = getAddress(localSite, localNode, localProvider, version, slice)
+
+   variables      = getVariableSettings(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, now)
+   scalarFileName = getScalarName(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, now)
+
+   cmdLine = 'mkdir -p ' + MeasurementName + ' && ' + \
+             'netperfmeter [' + str(remoteAddress) + ']:' + str(remotePort) + ' ' + \
+             '-local=[' + str(localAddress) + '] ' + \
+             '-scalar=' + scalarFileName + ' ' + \
+             '-verbosity=1 ' + \
+             '-tcp const0:const1400:const0:const0:sndbuf=16000000:rcvbuf=16000000:cc=' + cc + ':pathmgr=' + pathMgr + ':ndiffports=' + str(nDiffPorts) + ':cmt=' + cmt + ' ' + \
+             '-runtime=30'
+   doSSH(localNode, slice, cmdLine)
+
+   activeScalarFileName  = scalarFileName.replace('.sca.bz2', '-active.sca.bz2')
+   passiveScalarFileName = scalarFileName.replace('.sca.bz2', '-passive.sca.bz2')
+
+   summaryFile.write('--values="' + variables + '"\n')
+   summaryFile.write('--input=' + activeScalarFileName + '\n')
+   summaryFile.write('--values="' + variables + '"\n')
+   summaryFile.write('--input=' + passiveScalarFileName + '\n')
+
+
+
+# ###########################################################################
+# #### Main program                                                      ####
+# ###########################################################################
+
+
+# ====== Get configuration ==================================================
+loginToPLC()
+fullSiteList = fetchNorNetSiteList()
+fillNodeList = fetchNorNetNodeList()
+
+ExperimentNodes = []
+for experimentNodeName in ExperimentNodeNames:
+   experimentNode = fetchNorNetNode(experimentNodeName)
+   if experimentNode == None:
+      error('Node not found: ' + experimentNodeName)
+   ExperimentNodes.append(experimentNode)
+
+Slice = fetchNorNetSlice(SliceName)
+if Slice == None:
+   error('Slice not found: ' + SliceName)
+
+
+# ====== Install ============================================================
+if len(sys.argv) != 1:
+   print 'Installing nodes!'
+   for localNode in ExperimentNodes:
+      cmdLine = 'mkdir -p ~/src && cd ~/src && if [ -e netperfmeter ] ; then cd netperfmeter && git pull ; else git clone https://github.com/dreibh/netperfmeter.git && cd netperfmeter ; fi && ./bootstrap && ./configure --prefix=/usr && make && sudo make install && sudo yum install -y psmisc'
+      doSSH(localNode, Slice, cmdLine)
+
+   sys.exit(0)
+
+
+# ====== Prepare ============================================================
+try:
+   os.mkdir(MeasurementName)
+except:
+   pass
+fullSummaryFileName = MeasurementName + '/results.summary'
+summaryFileName     = MeasurementName + '/results.summary.new'
+try:
+   os.remove(summaryFileName)
+except:
+   pass
+summaryFile = codecs.open(summaryFileName, 'w+', 'utf-8')
+summaryFile.write('--varnames=' + getVariableNames() + '\n')
+for node in ExperimentNodes:
+   doSSH(node, Slice, 'rm -rf ' + MeasurementName)
+
+
+
+# ====== Create runs ========================================================
+now = int(time.time())
+for localNode in ExperimentNodes:
+   for remoteNode in ExperimentNodes:
+      if localNode == remoteNode:
+         continue
+      localSite          = getNorNetSiteOfNode(fullSiteList, localNode)
+      localProviderList  = getNorNetProvidersForSite(localSite)
+      remoteSite         = getNorNetSiteOfNode(fullSiteList, remoteNode)
+      remoteProviderList = getNorNetProvidersForSite(remoteSite)
+      for localProviderIndex in localProviderList:
+         localProvider = localProviderList[localProviderIndex]
+         for remoteProviderIndex in remoteProviderList:
+            remoteProvider = remoteProviderList[remoteProviderIndex]
+            for version in [ 4 ]:
+               if ((version == 6) and
+                   ( (localProvider['provider_tunnelbox_ipv6'].ip == IPv6Address('::')) or
+                     (remoteProvider['provider_tunnelbox_ipv6'].ip == IPv6Address('::')) )):
+                  print 'IPv6-over-IPv4!'
+                  #continue
+
+               print localNode['node_name'] + '/' + localProvider['provider_short_name'] + ' -> ' + \
+                     remoteNode['node_name'] + '/' + remoteProvider['provider_short_name'] + \
+                     ' with IPv' + str(version)
+
+               for cmt in [ 'off', 'mptcp' ]:
+
+                  cc         = 'default'
+                  pathMgr    = 'default'
+                  nDiffPorts = 16
+
+                  preparePassiveSide(remoteSite, remoteNode, remoteProvider, version, cmt, Slice)
+                  runMeasurement(summaryFile,
+                                 localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version,
+                                 cc, cmt, pathMgr, nDiffPorts,
+                                 Slice, now)
+                  cleanUpPassiveSide(remoteSite, remoteNode, remoteProvider, version, Slice)
+
+                  print ''
+
+
+# ====== Get results ========================================================
+summaryFile.close()
+for node in ExperimentNodes:
+   doRSync(node, Slice, MeasurementName)
+doLocal('( cat ' + summaryFileName + ' && if [ -e ' + fullSummaryFileName + ' ] ; then grep -v ^--varnames= ' + fullSummaryFileName + ' ; fi ) >' + fullSummaryFileName + '.updated && mv ' + fullSummaryFileName + '.updated ' + fullSummaryFileName)

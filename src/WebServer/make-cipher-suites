@@ -1,0 +1,47 @@
+#!/bin/bash
+
+cat >ciphers.txt <<EOF
+
+# ------ TLS 1.2 ------------------------------------------
+ECDHE-ECDSA-AES256-GCM-SHA384
+ECDH-ECDSA-AES256-GCM-SHA384
+ECDHE-RSA-AES256-GCM-SHA384
+ECDH-RSA-AES256-GCM-SHA384
+
+ECDHE-ECDSA-AES256-SHA384
+ECDH-ECDSA-AES256-SHA384
+ECDHE-RSA-AES256-SHA384
+ECDH-RSA-AES256-SHA384
+
+# Need DH parameter to increase key size (Apache 2.4.7+)!
+# DHE-RSA-AES256-GCM-SHA384
+# DHE-DSS-AES256-GCM-SHA384
+
+# No forward security!
+# AES256-GCM-SHA384
+
+# ------ TLS 1.0 ------------------------------------------
+ECDHE-ECDSA-AES256-SHA
+ECDH-ECDSA-AES256-SHA
+ECDHE-RSA-AES256-SHA
+ECDH-RSA-AES256-SHA
+
+# Need DH parameter to increase key size (Apache 2.4.7+)!
+# DHE-RSA-AES256-SHA
+# DHE-DSS-AES256-SHA
+
+# No forward security! FALLBACK for old browsers!
+AES256-SHA
+
+EOF
+
+echo -en "SSLCipherSuite "
+cat ciphers.txt | sed -e "/^#/d" -e "/^[ \t]*$/d" | tr '\n' ':' | sed -e "s/:$//g"
+echo ""
+echo ""
+
+cat ciphers.txt | sed -e "/^#/d" -e "/^[ \t]*$/d" | (
+   while read x ; do
+      openssl ciphers -v "$x" || echo "BAD!"
+   done
+)

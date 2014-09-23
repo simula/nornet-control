@@ -65,3 +65,22 @@ def makeAutoFSConfiguration(weAreOnFileServer, siteIndex, nodeIndex, addHeader):
       outputFile.write('sys\t-fstype=nfs,' + nfsOptions + ',rw\t' + fileServer + ':/filesrv/sys\n')
       outputFile.write('node\t-fstype=nfs,' + nfsOptions + ',rw\t' + fileServer + ':/filesrv/sys/' + str(siteIndex) + '/' + str(nodeIndex) + '\n')
    outputFile.close()
+
+# ##### Make collectd skeleton configuration
+def makeCollectdNetworkConfig(serverName,collectdNetworkConfigFileName='collectd-network-config'):
+   collectdNetworkConfigFile = codecs.open(collectdNetworkConfigFileName, 'w', 'utf-8')
+   collectdNetworkConfigFile.write('LoadPlugin network\n')
+   collectdNetworkConfigFile.write('<Plugin network>\n')
+   collectdNetworkConfigFile.write('<Server "' + serverName + '" "25826">\n')
+   collectdNetworkConfigFile.write('SecurityLevel "Encrypt"\n')
+   collectdNetworkConfigFile.write('Username "nnc"\n')
+   collectdNetworkConfigFile.write('Password "NorN3t"\n')
+   collectdNetworkConfigFile.write('</Server>"\n')
+   collectdNetworkConfigFile.write('</Plugin>\n')
+
+def makeCollectdGeneralConfig(collectdGeneralConfigFileName='collectd-general-config'):
+   dot_d_dir = '/etc/collectd.d/'
+   collectdNetworkConfigFile = codecs.open(collectdGeneralConfigFileName, 'w', 'utf-8')
+   collectdNetworkConfigFile.write('LoadPlugin syslog\n')
+   collectdNetworkConfigFile.write('<Plugin syslog>\nLogLevel info\n</Plugin>\nInclude "' + dot_d_dir + '*.conf"\n')
+   collectdNetworkConfigFile.close()

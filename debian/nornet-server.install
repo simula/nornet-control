@@ -10,6 +10,7 @@ Make-VSystem-Template             /usr/bin
 Reset-VSystem                     /usr/bin
 Server-Setup                      /usr/bin
 Server-Watchdog                   /usr/bin
+Set-OVF-Type                      /usr/bin
 Show-VSystems                     /usr/bin
 Start-VSystem                     /usr/bin
 Stop-VSystem                      /usr/bin
@@ -17,4 +18,4 @@ grub/??_nornet_server_theme       /etc/grub.d
 grub/Splash-Server1-1024x768.jpeg /boot
 grub/grub-defaults                /etc/nornet
 vsystems/EXAMPLE-99-VirtualServer /etc/nornet/vsystems
-watchdog-config.example           /usr/share/nornet
+watchdog-config.example           /usr/share/nornet-server

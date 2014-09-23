@@ -18,6 +18,9 @@
 // Contact: dreibh@simula.no
 //
 
+// Translations:
+// Chinese translations by Fu Fa <fufa@hainu.edu.cn>
+
 
 var displayLanguage = "NO";
 var weekdayNames    = Array();
@@ -25,7 +28,7 @@ var monthNames      = Array();
 
 
 // ###### Supported languages ###############################################
-supportedDisplayLanguages = [ 'NO', 'UK', 'DE' ];
+supportedDisplayLanguages = [ 'NO', 'UK', 'DE', 'CN' ];
 
 
 // ###### String translations ###############################################
@@ -96,45 +99,77 @@ monthNames['NO'][9]  = "oktober";
 monthNames['NO'][10] = "november";
 monthNames['NO'][11] = "desember";
 
+weekdayNames['CN'] = new Array(7);
+weekdayNames['CN'][0] = "星期日";
+weekdayNames['CN'][1] = "星期一";
+weekdayNames['CN'][2] = "星期二";
+weekdayNames['CN'][3] = "星期三";
+weekdayNames['CN'][4] = "星期四";
+weekdayNames['CN'][5] = "星期五";
+weekdayNames['CN'][6] = "星期六";
+
+monthNames['CN'] = new Array(12);
+monthNames['CN'][0]  = "一月";
+monthNames['CN'][1]  = "二月";
+monthNames['CN'][2]  = "三月";
+monthNames['CN'][3]  = "四月";
+monthNames['CN'][4]  = "五月";
+monthNames['CN'][5]  = "六月";
+monthNames['CN'][6]  = "七月";
+monthNames['CN'][7]  = "八月";
+monthNames['CN'][8]  = "九月";
+monthNames['CN'][9]  = "十月";
+monthNames['CN'][10] = "十一月";
+monthNames['CN'][11] = "十二月";
+
+
 titleLabel = new Array()
 titleLabel['UK'] = "Welcome to the NorNet Control Center at Simula Research Laboratory, Fornebu";
 titleLabel['DE'] = "Willkommen im NorNet-Kontrollzentrum des Simula Research Laboratory, Fornebu";
 titleLabel['NO'] = "Velkommen til NorNet-Kontrollsenter på Simula Research Laboratory, Fornebu";
+titleLabel['CN'] = "欢迎访问挪威福尼布Simula研究所的NorNet控制中心";
 
 footerLabel = new Array()
-footerLabel['UK'] = 'For further information on the NorNet Project, see <a href="http://www.nntb.no">http://www.nntb.no</a>!';
-footerLabel['DE'] = 'Für weitere Informationen zum NorNet-Prosjekt siehe <a href="http://www.nntb.no">http://www.nntb.no</a>!';
-footerLabel['NO'] = 'For mer informasjon om NorNet-prosjektet, se <a href="http://www.nntb.no">http://www.nntb.no</a>!';
+footerLabel['UK'] = 'For further information on the NorNet Project, see <a href="https://www.nntb.no">https://www.nntb.no</a>!';
+footerLabel['DE'] = 'Für weitere Informationen zum NorNet-Prosjekt siehe <a href="https://www.nntb.no">https://www.nntb.no</a>!';
+footerLabel['NO'] = 'For mer informasjon om NorNet-prosjektet, se <a href="https://www.nntb.no">https://www.nntb.no</a>!';
+footerLabel['CN'] = '关于NorNet项目的更多信息,请访问 <a href="https://www.nntb.no">https://www.nntb.no</a>!';
 
 updatingLabel = new Array()
 updatingLabel['UK'] = "Updating ...";
 updatingLabel['DE'] = "Aktualisiere ...";
 updatingLabel['NO'] = "Oppdatering ...";
+updatingLabel['CN'] = "更新...";
 
 clockLabel = new Array()
 clockLabel['UK'] = "Time";
 clockLabel['DE'] = "Zeit";
 clockLabel['NO'] = "Klokka";
+clockLabel['CN'] = "时间";
 
 problemsLabel = new Array()
 problemsLabel['UK'] = "Problems:";
 problemsLabel['DE'] = "Probleme:";
 problemsLabel['NO'] = "Problemer:";
+problemsLabel['CN'] = "故障:";
 
 okayLabel = new Array()
 okayLabel['UK'] = "Okay:";
 okayLabel['DE'] = "In Ordnung:";
 okayLabel['NO'] = "I orden:";
+okayLabel['CN'] = "正常:";
 
 noProblemLabel = new Array()
 noProblemLabel['UK'] = "&#128515; No problem! &#128515;";
 noProblemLabel['DE'] = "&#128515; Kein Problem! &#128515;";
 noProblemLabel['NO'] = "&#128515; Ingen problem! &#128515;";
+noProblemLabel['CN'] = "&#128515; 一切正常！ &#128515;";
 
 sitesLabel = new Array()
 sitesLabel['UK'] = "Sites";
 sitesLabel['DE'] = "Standorte";
 sitesLabel['NO'] = "Lokasjon";
+sitesLabel['CN'] = "站点";
 
 
 // Dummy functions, to be replaced by dynamically-generated ones!
@@ -184,7 +219,7 @@ function updateDisplay()
          supportedDisplayLanguages[i] + '\');"><img id="languages.' +
          supportedDisplayLanguages[i] + '" class="' +
          ((supportedDisplayLanguages[i] == displayLanguage) ? "selected" : "normal") +
-         '" src="Graphics/Flags/Flag-' +
+         '" src="/Artwork/Graphics/Flags/Flag-' +
          supportedDisplayLanguages[i] + '.png" alt="' +
          supportedDisplayLanguages[i] + '"" width="32" /></a> ';
    }

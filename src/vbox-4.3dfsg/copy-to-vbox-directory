@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ $# -ne 1 ] ; then
+   echo >&2 "Usage: $0 [VirtualBox source directory]"
+   exit 1
+fi
+VBOX_DIRECTORY="$1"
+if [ ! -e "$VBOX_DIRECTORY" ] ; then
+   echo >&2 "ERROR: Directory $VBOX_DIRECTORY does not exist!"
+   exit 1
+fi
+
+cp make-deb clean-deb build-deb debian.conf filter-empty-entries renew-debian-changelog make-ppa "$VBOX_DIRECTORY"
+rm -rf "$VBOX_DIRECTORY/debian"
+cp -r debian "$VBOX_DIRECTORY/debian"

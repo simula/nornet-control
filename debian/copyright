@@ -2,11 +2,11 @@ This package was debianized by Thomas Dreibholz <dreibh@simula.no>
 on Fri, 20 Jul 2012 05:05:55 +0200.
 
 The original source can be found at:
-http://www.nntb.no/
+https://www.nntb.no/
 
 NorNet Control is
 
-  Copyright (C) 2012-2013 Thomas Dreibholz
+  Copyright (C) 2012-2014 Thomas Dreibholz
 
 License:
 
@@ -28,7 +28,7 @@ License:
  Licensed under the creative common license.
 
 
-Graphics/* is
+Artwork/Graphics/* is
 
  Wikimedia Commons
 
@@ -37,9 +37,18 @@ License:
  Licensed under the creative common license.
 
 
+Artwork/Sites/* is
+
+ See EXIF information!
+
+License:
+
+ Licensed under the creative common license.
+
+
 The Debian/Ubuntu packaging is
 
-  Copyright (C) 2012 Thomas Dreibholz
+  Copyright (C) 2012-2014 Thomas Dreibholz
 
 License:
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Print system information
-# Copyright (C) 2013 by Thomas Dreibholz
+# Copyright (C) 2013-2014 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -98,6 +98,9 @@ echo "================================================================="
 echo -e "\x1b[0m"
 
 echo -en "\x1b[33m"
+if [ -e /etc/slicename -a /etc/slicefamily ] ; then
+   echo -e "Slice:            `cat /etc/slicename` (`cat /etc/slicefamily`)"
+fi
 echo "Host:             ${hostnameResult}"
 echo "Uptime:           ${uptime}"
 echo "CPU:              $cores × ${cpu}; ${processes} processes; ${users} users"
@@ -108,24 +111,42 @@ echo "Used Swap:        ${swapUsed} MiB of ${swapTotal} MiB (${swapFree} MiB fre
 echo "Used Diskspace:   ${diskRoot} on /, ${diskHome} on /home"
 echo "Network:"
 
-echo -en "\x1b[34m"
-allInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//" | sort`
+allInterfaces=`ip link show 2>/dev/null | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//" | sort`
 for interface in $allInterfaces ; do
-   if [[ $interface =~ ^eth ]] ; then
-      echo -n "   `printf "%-8s" "${interface}:"` "
-      addressListIPv4=`ip -4 addr show dev $interface | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+)\/([0-9]+) / { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
-      addressListIPv6=`ip -6 addr show dev $interface | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
-      if [ "$addressListIPv4" != "" ] ; then
-         for address in $addressListIPv4 ; do
-            echo -n "$address   "
-         done
-      else
-           echo -n "(No IPv4)"
+   # ====== Only show non-tunnel interfaces =================================
+   if [ "`ip tunnel show $interface 2>/dev/null`" == "" -a \
+        "`ip -6 tunnel show $interface 2>/dev/null`" == "" ] ; then
+      # ====== Only show non-loopback interfaces ============================
+      if [ "`ip link show dev $interface | head -n1 | grep "^.*<.*LOOPBACK.*>"`" == "" ] ; then
+
+         # ====== Get addresses =============================================
+         addressListIPv4=`ip -4 addr show dev $interface 2>/dev/null | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+)\/([0-9]+) / { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
+         addressListIPv6=`ip -6 addr show dev $interface 2>/dev/null | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
+         if [ "$addressListIPv4" != "" -o "$addressListIPv6" != "" ] ; then
+
+            # ====== Get interface status ===================================
+            if [ "`ip link show dev $interface | head -n1 | grep "^.*<.*UP.*>"`" != "" ] ; then
+               echo -en "\x1b[34m"   # up
+            else
+               echo -en "\x1b[37m"   # down
+            fi
+
+            # ====== Print addresses ========================================
+            echo -n "   `printf "%-8s" "${interface}:"` "
+            if [ "$addressListIPv4" != "" ] ; then
+               for address in $addressListIPv4 ; do
+                  echo -n "$address   "
+               done
+            else
+               echo -n "(No IPv4)"
+            fi
+            for address in $addressListIPv6 ; do
+               echo -en "\n            $address "
+            done
+
+            echo ""
+         fi
       fi
-      for address in $addressListIPv6 ; do
-         echo -en "\n            $address "
-      done
-      echo ""
    fi
 done
 

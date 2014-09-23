@@ -2,14 +2,14 @@ Source: nornet
 Section: net
 Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
-Homepage: http://www.nntb.no/
+Homepage: https://www.nntb.no/
 Build-Depends: debhelper (>= 9),
                imagemagick,
                libfile-fcntllock-perl,
                python (>= 2.7),
                python-ipaddr,
                python-support
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 
 Package: nornet-api
 Architecture: any
@@ -21,25 +21,28 @@ Description: NorNet API
  This package contains the NorNet Python API library. It contains functions
  to communicate with the central server (MyPLC), based on XMLRPC.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-management
 Architecture: any
-Depends: apt-show-versions,
+Depends: apt-file,
+         apt-show-versions,
          autofs,
+         cfengine3,
          colordiff,
          cron,
          cron-apt,
          ethtool,
          git,
          gpm,
+         hping3,
          htop,
          idn,
          joe,
          language-pack-de-base,
          language-pack-en-base,
          language-pack-nb-base,
-         libc6-i386,
+         libc6-i386 [amd64],
          libfile-fcntllock-perl,
          lksctp-tools,
          lsb-base (>= 3.2-14),
@@ -50,14 +53,17 @@ Depends: apt-show-versions,
          nttcp,
          open-vm-tools,
          openssh-server,
+         paris-traceroute,
          python-software-properties,
          rsplib-tools,
          smartmontools,
          snmp,
+         sslscan,
          subnetcalc,
          tftp,
          tracebox,
          traceroute,
+         tree,
          tshark,
          update-motd,
          virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental | virtualbox-guest-utils,
@@ -72,35 +78,43 @@ Description: NorNet Management Tools
  This metapackage contains basic software nor NorNet node management. The
  software installed provides a common working environment.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-development
 Architecture: any
-Depends: apt-file,
-         autoconf,
+Depends: autoconf,
          automake,
+         createrepo,
          debhelper,
          devscripts,
          imagemagick,
          kbuild,
+         libbz2-dev,
          libglib2.0-dev,
+         liblua5.2-dev,
+         libpcap-dev,
          libsctp-dev,
          libtool,
+         lua5.2,
          pbuilder,
          pkg-config,
+         python-pythonmagick,
          r-base,
+         rpm,
+         subversion,
+         yum-utils,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Development Tools
  This metapackage contains basic software nor NorNet development. The
  software installed provides a common working environment.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-node
 Architecture: any
 Conflicts: miredo
-Depends: grub2-common,
+Depends: grub2,
          nornet-api,
          nornet-management,
          ntp,
@@ -113,7 +127,7 @@ Description: NorNet Node Control
  This package contains the scripts to configure a generic node on a NorNet
  site.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-tunnelbox
 Architecture: any
@@ -121,6 +135,7 @@ Replaces: nornet-routing
 Conflicts: nornet-routing
 Depends: arpwatch,
          bind9,
+         collectd,
          conntrack,
          ifupdown,
          iptables-persistent,
@@ -131,6 +146,7 @@ Depends: arpwatch,
          nornet-api,
          nornet-management,
          nornet-node,
+         nornet-trace-service,
          ntp,
          python (>= 2.7),
          radvd,
@@ -143,7 +159,7 @@ Description: NorNet Tunnelbox Control
  This package contains the scripts to configure the tunnelboxes of NorNet
  sites.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-filesrv
 Architecture: all
@@ -158,7 +174,17 @@ Description: NorNet File Server
  This package contains the scripts to configure a file server
  on a NorNet central site.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
+
+Package: nornet-artwork
+Architecture: all
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Artwork
+ This package contains some images for the monitor server
+ on a NorNet central site.
+ .
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-monitor
 Architecture: all
@@ -167,6 +193,7 @@ Depends: apache2,
          libapache2-mod-php5,
          nagios3,
          nagios3-doc,
+         nornet-artwork,
          nornet-node,
          postfix,
          python (>= 2.7),
@@ -176,11 +203,12 @@ Description: NorNet Monitor
  This package contains the scripts to configure a generic monitoring station
  on a NorNet central site.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-display
 Architecture: all
 Depends: firefox,
+         kdm,
          kubuntu-desktop,
          nornet-node,
          ${misc:Depends},
@@ -190,14 +218,79 @@ Description: NorNet Display
  results of the monitoring station. It is in fact just a node with a web
  browser and the necessary GUI.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!
+
+Package: nornet-gatekeeper
+Architecture: all
+Depends: ipsec-tools,
+         nornet-node,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Gatekeeper
+ This package contains the packages to set up a gatekeeper station for the
+ project presentation. It is in fact just a node with a dependency on the
+ additional packages.
+ .
+ See https://www.nntb.no for details on NorNet!
+
+Package: nornet-websrv
+Architecture: all
+Depends: apache2,
+         awstats,
+         geoip-database-contrib,
+         libgeo-ip-perl,
+         libnet-dns-perl,
+         libnet-ip-perl,
+         nornet-node,
+         oxygen-icon-theme,
+         wdg-html-validator,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Web Server
+ This package contains the packages to set up a web server station for the
+ project presentation. It is in fact just a node with a dependency on the
+ Apache packages.
+ .
+ See https://www.nntb.no for details on NorNet!
+
+Package: nornet-wikisrv
+Architecture: all
+Depends: imagemagick,
+         libapache2-mod-php5,
+         mediawiki,
+         mediawiki-extensions,
+         nornet-websrv,
+         php5-intl,
+         postfix,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Wiki Server
+ This package contains the packages to set up a wiki station for the
+ user-contributed documentation. It is in fact just a node with a
+ dependency on the MediaWiki packages.
+ .
+ See https://www.nntb.no for details on NorNet!
+
+Package: nornet-database
+Architecture: all
+Depends: apache2,
+         postgresql,
+         postgresql-contrib,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Database
+ This package contains the packages to set up a database station for
+ experiment results collection. It is in fact just a node with a
+ dependency on the Postgres packages.
+ .
+ See https://www.nntb.no for details on NorNet!
 
 Package: nornet-server
 Architecture: all
 Conflicts: nornet-node
 Depends: grub2,
-         libicu48,
-         linux-image-generic,
+         linux-headers-generic | linux-headers-generic-lts-quantal | linux-headers-generic-lts-raring | linux-headers-generic-lts-saucy | linux-headers-generic-lts-trusty,
+         linux-image-generic | linux-image-generic-lts-quantal | linux-image-generic-lts-raring | linux-image-generic-lts-saucy | linux-image-generic-lts-trusty,
          linux-source,
          nornet-management,
          ntp,
@@ -210,4 +303,4 @@ Description: NorNet Server
  This package contains the scripts to configure a generic server system
  to host NorNet virtual machines.
  .
- See http://www.nntb.no for details on NorNet!
+ See https://www.nntb.no for details on NorNet!

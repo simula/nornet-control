@@ -32,7 +32,7 @@ html {
 }
 
 body {
-   background-image: url(Graphics/Backgrounds/Background-Essen.png);
+   background-image: url(/Artwork/Graphics/Backgrounds/Background-Essen.png);
    height:           100%;
    font-family:      sans;
    margin:           0px;

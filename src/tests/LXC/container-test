@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+NAME="Test-$RANDOM"
+UUID=`uuidgen`
+
+echo "NAME=$NAME"
+cat /etc/libvirt/lxc/inri_sl1.xml | sed -e "s/inri_sl1/$NAME/g" -e "s/<uuid>.*<\/uuid>/<uuid>$UUID<\/uuid>/g" >/tmp/$NAME.xml
+cd /vservers
+
+btrfs subvolume snapshot .lvref/nornet-f??-x86_64 $NAME
+
+virsh define /tmp/$NAME.xml
+virsh start $NAME
+
+echo "#### STARTED ####"
+
+sleep 10
+
+echo "#### STOP ####"
+
+
+virsh destroy $NAME
+virsh undefine $NAME
+btrfs subvolume delete $NAME
+
+echo "#### OKAY! ####"

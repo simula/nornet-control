@@ -1,0 +1,630 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Get testbed configuration
+# Copyright (C) 2014 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+import os, sys
+import math
+from sets import Set
+
+# NorNet
+from NorNetSiteSetup import *;
+from NorNetTools     import *;
+from NorNetAPI       import *;
+
+
+class TableOutput:
+   def __init__(self, useHyperlinks):
+      self.write('<?xml version="1.0" encoding="utf-8" ?>\n')
+      self.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n')
+      self.write('<html>\n')
+      self.write('<head>\n')
+      self.write('<title>The NorNet Core Site List</title>\n')
+      self.write('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n')
+      self.write('<link rel="stylesheet" href="essen.css" type="text/css" />\n')
+      self.write('<link rel="shortcut icon" href="https://www.nntb.no/favicon.ico" />\n')
+      self.write('<style type="text/css">\n')
+      self.write('td {\n')
+      self.write(' text-align: center;\n')
+      self.write(' vertical-align: middle;\n')
+      self.write('}\n')
+      self.write('</style>\n')
+      self.write('</head>\n')
+      self.write('<body>\n')
+      self.indent        = 0
+      self.useHpyerlinks = useHpyerlinks
+
+   def __del__(self):
+      self.write('</body>\n</html>\n')
+
+   def write(self, text):
+      sys.stdout.write(text)
+
+   def comment(self, text):
+      self.write('<!-- ' + text + ' -->\n')
+
+   def header(self, level, label, text):
+      self.write('<h' + str(level) + ' id="' + label + '">' + text + '</h' + str(level) + '>\n')
+
+   def beginList(self):
+      self.write('<ul>\n')
+
+   def endList(self):
+      self.write('</ul>\n')
+
+   def beginItem(self):
+      self.write(' <li>')
+
+   def endItem(self):
+      self.write('</li>\n')
+
+   def makeItem(self, item):
+      self.beginItem()
+      self.write(item)
+      self.endItem()
+
+   def beginTable(self, columns=2, textColor=None):
+      self.doIndentation(True)
+      options = 'border="1"'
+      if textColor != None:
+         options = options + ' style="color: ' + textColor + ';"'
+      self.write('<table ' + options + '>\n')
+      self.indent = self.indent + 1
+
+   def endTable(self):
+      self.indent = self.indent - 1
+      self.write('</table>\n')
+
+   def beginRow(self):
+      self.doIndentation(False)
+      self.write('<tr>')
+
+   def endRow(self):
+      self.write('</tr>\n')
+
+   def makeXref(self, xref, label):
+      if self.useHpyerlinks == True:
+         return '<a href="#' + xref + '">' + label + '</a>'
+      else:
+         return label
+
+   def makeURL(self, url, label):
+      if self.useHpyerlinks == True:
+         return '<a href="' + url + '">' + label + '</a>'
+      else:
+         return label
+
+   def makeImage(self, url, style):
+      opts=''
+      if style != '':
+         opts = opts + ' style="' + style + '"'
+      return '<img src="' + url + '"' + opts + ' alt="" />'
+
+   def beginCell(self, colspan = -1, rowspan = -1, width = -1, style = ''):
+      opts=''
+      if colspan >= 0:
+         opts = opts + ' colspan="' + str(colspan) + '"'
+      if rowspan >= 0:
+         opts = opts + ' rowspan="' + str(rowspan) + '"'
+      if width >= 0:
+         opts = opts + ' style="width: ' + str(width) + 'em;"'
+      if style != '':
+         opts = opts + ' style="' + style + '"'
+      self.write('<td' + opts + '>')
+
+   def endCell(self):
+      self.write('</td>')
+
+   def cell(self, cell = '', colspan = -1, rowspan = -1, width = -1, style = ''):
+      self.beginCell(colspan, rowspan, width, style)
+      self.write(cell)
+      self.endCell()
+
+   def doIndentation(self, newline = False):
+      if newline == True:
+         self.write('\n')
+      i = self.indent
+      while i > 0:
+         self.write(' ')
+         i = i - 1
+
+
+# ###### Get NorNet node object for sliver ##################################
+def makePseudoNode(nodeName, site, nodeIndex, model):
+   dnsName = makeNameFromUnicode(nodeName)
+   norNetNode = {
+      'node_site_id'          : site['site_id'],
+      'node_index'            : int(nodeIndex),
+      'node_name'             : dnsName['ascii'] + '.' + site['site_domain'],
+      'node_utf8'             : dnsName['utf8']  + '.' + site['site_domain'],
+      'node_nornet_interface' : None,
+      'node_model'            : model,
+      'node_state'            : 'SLIVER',
+      'node_tags'             : []
+   }
+   return norNetNode
+
+
+# ###### Reserve address ####################################################
+addressList = []
+def reserve(address):
+   if address in addressList:
+      error('Address ' + str(address) + ' is already reserved!')
+   addressList.append(address)
+
+
+# ###### Extract IPs of a node or sliver ####################################
+def extractIPs(providerIndex, siteIndex, nodeIndex, sliceNodeIndex = 0):
+   for onlyDefault in [ True, False ]:
+      for providerIndex in providerList:
+         if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+
+            provider = providerList[providerIndex]
+            ifIPv4   = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 4, sliceNodeIndex).ip
+            ifIPv6   = makeNorNetIP(providerIndex, siteIndex, nodeIndex, 6, sliceNodeIndex).ip
+            reserve(ifIPv4)
+            reserve(ifIPv6)
+
+            if showAddresses == True:
+               output.cell(str(ifIPv4))
+               output.cell(str(ifIPv6))
+            else:
+               externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
+               if externalNetworkIPv4 != IPv4Address('0.0.0.0'):
+                  output.cell('native')
+               else:
+                  output.cell('tunnelled')
+               externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
+               if externalNetworkIPv6 != IPv6Address('::'):
+                  output.cell('native')
+               else:
+                  output.cell('tunnelled')
+
+
+
+# ###### Main program #######################################################
+siteImageURL  = 'https://www.nntb.no/Artwork/Sites/Small'
+siteFlagURL   = 'https://www.nntb.no/Artwork/Graphics/Flags'
+
+showAddresses     = True
+showSlivers       = True
+useHpyerlinks     = True
+showIDsInOverview = True
+i = 1
+while i < len(sys.argv):
+   if sys.argv[i] == '-noaddresses':
+      showAddresses = False
+   elif sys.argv[i] == '-noslivers':
+      showSlivers = False
+   elif sys.argv[i] == '-nohyperlinks':
+      useHpyerlinks = False
+   elif sys.argv[i] == '-noidsinoverview':
+      showIDsInOverview = False
+   else:
+      error('Usage: ' + sys.argv[0] + '[-noaddresses] [-noslivers] [-noidsinoverview] [-nohyperlinks]')
+   i = i + 1
+
+loginToPLC(quietMode = True)
+
+siteList  = fetchNorNetSite(None, False)
+nodeList  = fetchNorNetNode(None)
+sliceList = fetchNorNetSlice(None)
+
+
+# ====== Handle slices ======================================================
+if sliceList == None:
+   print 'ERROR: Slice list is empty?! Missing NorNet patch?'
+   sys.exit(1)
+
+sliverNodeList = []
+for slice in sliceList:
+   for node in nodeList:
+      if node['node_id'] in slice['slice_node_ids']:
+         sliceDNSName   = str.replace(slice['slice_name'], '_', '-')
+         sliceHostname  = sliceDNSName + '.' + getHostnameFromFQDN(node['node_utf8'])
+         sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
+         sliceNode = makePseudoNode(sliceHostname,
+                                    getNorNetSiteOfNode(siteList, node),
+                                    node['node_index'],
+                                    node['node_model'])
+         # Add a pseudo entry to create a slice address later
+         sliceNode['pseudo_slice_node_index'] = getSliceNodeIndexOfNorNetSlice(slice, node)
+         sliverNodeList.append(sliceNode)
+
+nodeList       = sorted(nodeList, key = lambda x: x['node_index'])
+sliverNodeList = sorted(sliverNodeList, key = lambda x: x['pseudo_slice_node_index'])
+
+output = TableOutput(useHpyerlinks)
+siteIndexList = []
+for siteIndex in siteList:
+   siteIndexList.append(siteIndex)
+
+
+# ====== Make index =========================================================
+output.comment('BEGIN-OF-SITES-BLOCK')
+output.header(2, 'Index', 'Index')
+output.beginList()
+output.makeItem(output.makeXref('Sites',      'Site Table'))
+output.makeItem(output.makeXref('Images',     'Site Images'))
+output.makeItem(output.makeXref('Statistics', 'Site Statistics'))
+output.beginItem()
+output.write(output.makeXref('Details', 'Site Details'))
+output.beginList()
+for siteIndex in sorted(siteIndexList):
+   site = siteList[siteIndex]
+   output.makeItem(output.makeXref(site['site_short_name'], site['site_utf8']))
+output.endList()
+output.endItem()
+output.endList()
+
+
+# ====== Get site table =====================================================
+output.header(2, 'Sites', 'Site Table')
+
+maxISPs = 0
+for siteIndex in sorted(siteIndexList):
+   providerList = getNorNetProvidersForSite(siteList[siteIndex])
+   maxISPs = max(maxISPs, len(providerList))
+
+output.beginTable()
+output.beginRow()
+output.cell('No.')
+output.cell('Site', -1, -1, 20)
+for i in range(1, maxISPs + 1):
+   output.cell('ISP ' + str(i), -1, -1, 16)
+output.endRow()
+
+activeSites          = 0
+numInterfacesIPv4    = 0
+numInterfacesIPv6    = 0
+activeSitesISPs      = Set([])
+activeSitesCountries = Set([])
+siteNumber           = 1
+for siteIndex in sorted(siteIndexList):
+   site         = siteList[siteIndex]
+   siteTagsList = site['site_tags']
+   siteName     = site['site_utf8']
+   siteEnabled  = site['site_enabled']
+   providerList = getNorNetProvidersForSite(site)
+
+   # ------ Statistics ------------------------------------------------------
+   if siteEnabled == True:
+      activeSites = activeSites + 1
+      for siteTag in siteTagsList:
+         if siteTag['tagname'] == 'nornet_site_country_code':
+            activeSitesCountries.add(siteTag['value'])
+
+
+   # ------ Get interface information ---------------------------------------
+   output.beginRow()
+   output.cell(str(siteNumber))
+   cellContent = site['site_utf8']
+   if showIDsInOverview == True:
+      cellContent = cellContent + ' (' + str(siteIndex) + ')'
+   output.cell(output.makeXref(site['site_short_name'], cellContent), -1, -1, -1, 'text-align: left;')
+   isp = 0
+   for onlyDefault in [ True, False ]:
+      for providerIndex in providerList:
+         if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+            provider = providerList[providerIndex]
+            providerURL = ''
+            try:
+               providerURL = NorNet_ProviderList[providerIndex][2]
+            except:
+               pass
+            cellContent = provider['provider_long_name']
+            if showIDsInOverview == True:
+               cellContent = cellContent + ' (' + str(providerIndex) + ')'
+            cellContent = output.makeURL(providerURL, cellContent)
+
+            externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
+            if externalNetworkIPv6 == IPv6Address('::'):
+               cellContent = cellContent + ' <small>(IPv4 only)</small>'
+
+            # ------ Statistics ---------------------------------------------
+            if siteEnabled == True:
+               if siteEnabled == True:
+                  activeSitesISPs.add(providerIndex)
+
+               externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
+               if externalNetworkIPv4 != IPv4Address('0.0.0.0'):
+                  numInterfacesIPv4 = numInterfacesIPv4 + 1
+
+               if externalNetworkIPv6 != IPv6Address('::'):
+                  numInterfacesIPv6 = numInterfacesIPv6 + 1
+
+            output.cell(cellContent)
+            isp = isp + 1
+
+   for i in range(isp + 1, maxISPs + 1):
+      output.cell(u'–')
+
+   output.endRow()
+   siteNumber = siteNumber + 1
+
+output.endTable()
+
+
+# ====== Get site images ====================================================
+output.header(2, 'Images', 'Site Images')
+output.beginTable()
+siteNumber = 0
+inRow     = False
+
+columns = math.ceil(math.sqrt(len(siteIndexList)))
+for siteIndex in sorted(siteIndexList):
+   site = siteList[siteIndex]
+   if (siteNumber % columns) == 0:
+      if inRow == True:
+         output.endRow()
+      output.beginRow()
+      inRow = True
+   imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
+   siteNumber = siteNumber + 1
+   output.cell(output.makeXref(site['site_short_name'], output.makeImage(imageURL, 'height: 15em; height: 10em; overflow: hidden;')))
+
+if inRow == True:
+   output.endRow()
+
+output.endTable()
+
+
+# ====== Get site statistics ================================================
+output.header(2, 'Statistics', 'Site Statistics')
+output.beginTable()
+
+output.beginRow()
+output.cell('Active Sites', -1, -1, -1, 'text-align: left; width: 20em;')
+output.cell(str(activeSites), -1, -1, -1, 'width: 6em;')
+output.endRow()
+
+output.beginRow()
+output.cell('Distinct ISPs of Active Sites', -1, -1, -1, 'text-align: left;')
+output.cell(str(len(activeSitesISPs)))
+output.endRow()
+
+output.beginRow()
+output.cell('Distinct Countries of Active Sites', -1, -1, -1, 'text-align: left;')
+output.cell(str(len(activeSitesCountries)))
+output.endRow()
+
+output.beginRow()
+output.cell('Total IPv4 Interfaces', -1, -1, -1, 'text-align: left;')
+output.cell(str(numInterfacesIPv4))
+output.endRow()
+
+output.beginRow()
+output.cell('Total IPv4 Tunnels', -1, -1, -1, 'text-align: left;')
+output.cell(str(numInterfacesIPv4 * (numInterfacesIPv4 -1) / 2))
+output.endRow()
+
+output.beginRow()
+output.cell('Total IPv6 Interfaces', -1, -1, -1, 'text-align: left;')
+output.cell(str(numInterfacesIPv6))
+output.endRow()
+
+output.beginRow()
+output.cell('Total IPv6 Tunnels', -1, -1, -1, 'text-align: left;')
+output.cell(str(numInterfacesIPv6 * (numInterfacesIPv6 - 1) / 2))
+output.endRow()
+
+output.beginRow()
+output.cell('Inactive Sites', -1, -1, -1, 'text-align: left;')
+output.cell(str(siteNumber - activeSites))
+output.endRow()
+
+output.endTable()
+
+
+# ====== Get site details ===================================================
+output.header(2, 'Details', 'Site Details')
+for siteIndex in sorted(siteIndexList):
+
+   # ====== Get site information ============================================
+   site = siteList[siteIndex]
+   siteName        = site['site_utf8']
+   providerList    = getNorNetProvidersForSite(site)
+   siteTagsList    = site['site_tags']
+   siteEnabled     = site['site_enabled']
+   siteCountryCode = ''
+   siteCountry     = ''
+   siteProvince    = ''
+   siteCity        = ''
+
+   for siteTag in siteTagsList:
+      if siteTag['tagname'] == 'nornet_site_country_code':
+         siteCountryCode = siteTag['value']
+      elif siteTag['tagname'] == 'nornet_site_country':
+         siteCountry = siteTag['value']
+      elif siteTag['tagname'] == 'nornet_site_province':
+         siteProvince = siteTag['value']
+      elif siteTag['tagname'] == 'nornet_site_city':
+         siteCity = siteTag['value']
+
+   siteLocation = siteCity
+   if siteProvince != '':
+      siteLocation = siteLocation + ', ' + siteProvince 
+   siteLocation = siteLocation + '/' + siteCountry 
+
+   sitePosition = unicode(abs(site['site_longitude']))
+   if site['site_longitude'] >= 0:
+      sitePosition = sitePosition + u'°E'
+   else:
+      sitePosition = sitePosition + u'°W'
+   sitePosition = sitePosition + u' / ' + unicode(abs(site['site_latitude']))
+   if site['site_latitude'] >= 0:
+      sitePosition = sitePosition + u'°N'
+   else:
+      sitePosition = sitePosition + u'°S'
+   sitePosition = sitePosition + ' / ' + str(site['site_altitude']) + 'm'
+
+
+   output.header(3, site['site_short_name'], siteName + ' (' + str(siteIndex) + ')')
+
+   if siteEnabled:
+      output.beginTable()
+   else:
+      output.beginTable(2, 'grey')
+
+   if showSlivers == True:
+      nodePlusSliverCells = 4
+   else:
+      nodePlusSliverCells = 2
+
+
+   # ====== Display site information ========================================
+   siteInfoTable = [
+      [ 'City',         siteCity     ],
+      [ 'Province',     output.makeImage(siteFlagURL + '/' + siteCountryCode + '-' + siteProvince + '.svg', 'height: 0.8em;') + siteProvince ],
+      [ 'Country',      output.makeImage(siteFlagURL + '/Flag-' + siteCountryCode + '.svg', 'height: 0.8em;') + siteCountry  ],
+      [ u'GPS/ГЛОНАСС', sitePosition ],
+      [ 'Short Name',   site['site_short_name'] ],
+      [ 'Domain',       site['site_domain'] ],
+      [ 'URL',          output.makeURL(site['site_url'], site['site_url']) ]
+   ]
+
+   output.beginRow()
+   imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
+   output.cell(output.makeImage(imageURL, 'height: 11em;'), nodePlusSliverCells, 1 + len(siteInfoTable), 12)
+   output.cell('Site Information', 2 * len(providerList))
+   output.endRow()
+
+   for siteInfo in siteInfoTable:
+      output.beginRow()
+      output.cell(siteInfo[0])
+      output.cell(siteInfo[1], 2 * len(providerList) - 1, -1, -1, 'text-align: left;')
+      output.endRow()
+
+
+   # ====== Get node information ============================================
+   output.beginRow()
+   output.cell('Node', 2, 2, 4)
+   if showSlivers == True:
+      output.cell('Sliver', 2, 2, 8)
+   isp = 0
+   for onlyDefault in [ True, False ]:
+      for providerIndex in providerList:
+         if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+            provider = providerList[providerIndex]
+            providerURL = ''
+            try:
+               providerURL = NorNet_ProviderList[providerIndex][2]
+            except:
+               pass
+            output.cell(output.makeURL(providerURL, provider['provider_long_name']) + ' (' + str(provider['provider_index']) + ')', 2)
+            isp = isp + 1
+   output.endRow()
+
+   output.beginRow()
+   i = 0
+   while i < isp:
+      output.cell('IPv4', -1, -1, 8)
+      output.cell('IPv6', -1, -1, 16)
+      i = i + 1
+   output.endRow()
+
+
+   # ===== Tunnelbox ========================================================
+   output.beginRow()
+   output.cell('1', -1, 2)
+   output.cell('tunnelbox.' + site['site_domain'], nodePlusSliverCells - 1, 2)
+
+   for onlyDefault in [ True, False ]:
+      for providerIndex in providerList:
+         if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+            provider = providerList[providerIndex]
+
+            externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
+            externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
+            if showAddresses == True:
+               output.cell(str(externalNetworkIPv4))
+            else:
+                output.cell(u'☺')
+            if externalNetworkIPv6 != IPv6Address('::'):
+               if showAddresses == True:
+                  output.cell(str(externalNetworkIPv6))
+               else:
+                  output.cell(u'☺')
+            else:
+               output.cell(u'☹')
+   output.endRow()
+   output.beginRow()
+   extractIPs(providerIndex, siteIndex, 1)
+   output.endRow()
+
+
+   for node in nodeList:
+      # ====== Obtain site information ======================================
+      if node['node_site_id'] == site['site_id']:
+         #print node
+         nodeIndex = node['node_index']
+         nodeName  = node['node_name']
+         nodeUTF8  = node['node_utf8']
+         nodeState = node['node_state']
+
+         nodeFC = 'NA'
+         nodePL = 'NA'
+         nodeTagsList = node['node_tags']
+         for nodeTag in nodeTagsList:
+            if nodeTag['tagname'] == 'fcdistro':
+               nodeFC = nodeTag['value']
+            if nodeTag['tagname'] == 'pldistro':
+               nodePL = nodeTag['value']
+
+
+         # ====== Get slivers of node =======================================
+         sliversOfNode = []
+         if showSlivers == True:
+            for sliverNode in sliverNodeList:
+               if ((sliverNode['node_site_id'] == site['site_id']) and
+                   (sliverNode['node_index'] == nodeIndex)):
+                  sliversOfNode.append(sliverNode)
+
+
+         # ====== Root context ==============================================
+         output.beginRow()
+         output.cell(str(nodeIndex), -1, 1 + len(sliversOfNode))
+         output.cell(nodeName, -1, 1 + len(sliversOfNode), -1, 'text-align: left;')
+         if showSlivers == True:
+            output.cell('Root Context', 2)
+
+         extractIPs(providerIndex, siteIndex, nodeIndex)
+
+         output.endRow()
+
+
+         # ====== Sliver context ============================================
+         for sliverNode in sliversOfNode:
+            output.beginRow()
+            output.cell(str(sliverNode['pseudo_slice_node_index']))
+            output.cell(sliverNode['node_name'], -1, -1, -1, 'text-align: left;')
+
+            sliceNodeIndex = sliverNode['pseudo_slice_node_index']
+            extractIPs(providerIndex, siteIndex, nodeIndex, sliceNodeIndex)
+
+            output.endRow()
+
+
+   output.endTable()
+
+output.comment('END-OF-SITES-BLOCK')

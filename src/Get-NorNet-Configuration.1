@@ -1,0 +1,58 @@
+.\" Get Configuration
+.\" Copyright (C) 2014 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd August 23, 2014
+.Dt Get-Configuration 1
+.Os Get-Configuration
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Get-Configuration
+.Nd Export the testbed configuration.
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Get-Configuration
+.Op Fl nohyperlinks
+.Op Fl noidsinoverview
+.Op Fl noaddresses
+.Op Fl noslivers
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Get-Configuration
+export the testbed configuration from the PLC.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+.Bl -tag -width indent
+.It Fl nohyperlinks
+Do not generate hyperlinks.
+.It Fl noidsinoverview
+Hide site and provider indices in overview table.
+.It Fl noaddresses
+Hide addresses.
+.It Fl noslivers
+Hide sliver information.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Get-Configuration
+.It Get-Configuration \-noaddresses
+.It Get-Configuration \-noaddresses \-noslivers
+.It Get-Configuration \-noaddresses \-noslivers \-noidsinoverview \-nohyperlinks
+.El

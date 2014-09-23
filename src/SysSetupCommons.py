@@ -55,6 +55,18 @@ def writeHosts(outputName, hostName, domainName):
    outputFile.close()
 
 
+# ###### Write sysctl.conf file #############################################
+def writeSysctlConfiguration(outputName, interfaceName):
+   outputFile = codecs.open(outputName, 'w', 'utf-8')
+   outputFile.write('# Disable IPv6 auto-config on NorNet interface:\n')
+   outputFile.write('net.ipv6.conf.' + interfaceName + '.use_tempaddr=0\n')
+   outputFile.write('net.ipv6.conf.' + interfaceName + '.autoconf=0\n')
+   outputFile.write('net.ipv6.conf.' + interfaceName + '.accept_ra=0\n')
+   outputFile.write('# Enable TCP ECN:\n')
+   outputFile.write('net.ipv4.tcp_ecn=1\n')
+   outputFile.close()
+
+
 # ###### Write proxy configuration file #####################################
 def writeProxyConfiguration(suffix, siteDomain, variant, controlBoxMode):
    proxyName = 'proxy.' + siteDomain
@@ -167,6 +179,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
       outputFile.write('DEVICE=' + interfaceName + '\n')
       outputFile.write('ONBOOT=yes\n')
       outputFile.write('BOOTPROTO=static\n')
+      outputFile.write('NM_CONTROLLED=no\n')
 
       routesIPv4 = []
       routesIPv6 = []

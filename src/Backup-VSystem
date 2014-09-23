@@ -63,8 +63,8 @@ rm -f "$EXPORT_FILE" "$TEMP_FILE"
 result=1
 sudo -u $NorNet_LocalNode_NorNetUser \
    VBoxManage export "$MACHINE_NAME" --output "$TEMP_FILE" --manifest --vsys 0 \
-      --product "The NorNet Project" --producturl "http://www.nntb.no" \
-      --vendor "Simula Research Laboratory" --vendorurl "http://www.simula.no" \
+      --product "The NorNet Project" --producturl "https://www.nntb.no" \
+      --vendor "Simula Research Laboratory" --vendorurl "https://www.simula.no" \
       --version "1.0" && \
 result=0 || true
 

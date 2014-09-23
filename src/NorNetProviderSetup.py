@@ -141,13 +141,13 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
          return NorNetConfiguration.NorNet_Configuration['NorNet_IPv6TunnelPrefix']
 
    if incomingSite < outgoingSite:
-      side  = 1
+      side  = 0
       sLow  = incomingSite
       pLow  = incomingProvider
       sHigh = outgoingSite
       pHigh = outgoingProvider
    else:
-      side  = 2
+      side  = 1
       sLow  = outgoingSite
       pLow  = outgoingProvider
       sHigh = incomingSite
@@ -158,16 +158,18 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
    destination = str.replace(hex((sLow << 8)  | pLow), '0x', '')
    address     = IPv6Address(int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv6TunnelPrefix'].ip) | int(IPv6Address('0:0:0:0:0:' + source + ':' + destination + ':0')))
    if version == 4:
-      # The space is to small in IPv4 addresses. Use MD5 to create most likely
+      # The space is too small in IPv4 addresses. Use MD5 to create most likely
       # unique addresses.
       m = hashlib.md5()
-      m.update(str(address))
+      m.update('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' + str(address))
       s = m.hexdigest()
-      address = (int(s[0:4], 16) & 0xfffc) | side
-      address = int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4TunnelPrefix']) | address
-      return IPv4Network(str(IPv4Address(address)) + '/30')
+      value   = int(s[0:8], 16) & 0xfffffffe
+      mask    = ~int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4TunnelPrefix'].netmask) & 0xffffffff
+      prefix  = int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4TunnelPrefix'])
+      address = prefix | ((value & mask) | side)
+      return IPv4Network(str(IPv4Address(address)) + '/31')
    else:
-      address = IPv6Address(int(address) | side)
+      address = IPv6Address(int(address) | (side + 1))
       return IPv6Network(str(address) + '/112')
 
 

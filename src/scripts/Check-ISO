@@ -1,0 +1,21 @@
+#!/bin/bash
+
+SUMFILE="/nfs/adm/ISOs/md5.txt"
+
+while [ "$1" != "" ] ; do
+   ISO="$1"
+   shift
+
+   echo "Checking $ISO ..."
+   
+   originalMD5=`grep "$ISO" "$SUMFILE"`
+   isoMD5=`md5sum "$ISO"`
+   
+   echo "Original MD5: $originalMD5 (from $SUMFILE)"
+   echo "Current MD5:  $isoMD5"
+   
+   if [ "$originalMD5" != "$isoMD5" ] ; then
+      echo "##### WARNING: Files differ! #####"
+      rm "$ISO"
+   fi
+done

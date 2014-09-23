@@ -1,0 +1,50 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Update slice expiration time
+# Copyright (C) 2014 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+import time;
+
+# NorNet
+from NorNetAPI           import *;
+
+
+# ###### Main program #######################################################
+if len(sys.argv) != 3:
+   error('Usage: ' + sys.argv[0] + ' [slice] [days_until_expiration]')
+
+sliceName           = sys.argv[1]
+daysUntilExpiration = int(sys.argv[2])
+if ((daysUntilExpiration > 0) and (daysUntilExpiration < 7)):
+   error('Days until expiration should be at least 7 days!')
+
+loginToPLC()
+
+sliceID = lookupSliceID(sliceName)
+if sliceID == 0:
+   error('Slice ' + sliceName + ' does not exist!\n')
+ 
+slice = {}
+if daysUntilExpiration == 0:
+   slice['expires'] = int(time.mktime(time.strptime('2038-01-18@23:59:59', '%Y-%m-%d@%H:%M:%S')))
+else:
+   slice['expires'] = int(time.time() + daysUntilExpiration * (24 * 60 * 60))
+
+if getPLCServer().UpdateSlice(getPLCAuthentication(), sliceID, slice) != 1:
+   error('Unable to update slice ' + sliceName + '!\n')

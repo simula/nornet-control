@@ -113,7 +113,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList):
                         outputFile.write('   use                 generic-service\n')
                         outputFile.write('   service_description Internal ' + localProvider['provider_long_name']  + ' ' + str(internalAddress.ip) + '\n')
                         outputFile.write('   host_name           ' + localSite['site_utf8'] + '\n')
-                        outputFile.write('   check_command       MyPingCheck!' + str(internalAddress.ip) + '\n')
+                        outputFile.write('   check_command       MyNodeCheck!' + str(internalAddress.ip) + '\n')
                         outputFile.write('}\n')
 
                         if externalAddress != IPv6Address('::'):
@@ -121,7 +121,7 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList):
                            outputFile.write('   use                 generic-service\n')
                            outputFile.write('   service_description External ' + localProvider['provider_long_name']  + ' ' + str(externalAddress) + '\n')
                            outputFile.write('   host_name           ' + localSite['site_utf8'] + '\n')
-                           outputFile.write('   check_command       MyPingCheck!' + str(externalAddress) + '\n')
+                           outputFile.write('   check_command       MyNodeCheck!' + str(externalAddress) + '\n')
                            outputFile.write('}\n')
 
                      outputFile.write('\n')
