@@ -32,22 +32,23 @@ from NorNetAPI       import *;
 
 MeasurementName = 'One'
 SliceName = 'srl_mptcp'
+Runtime = 30
 ExperimentNodeNames = [
    "skoeyen.simula.nornet",
    "ekeberg.uio.nornet",
    "kapp.hig.nornet",
    "aunegaarden.uit.nornet",
-   "sokn.uis.nornet",
+   #"sokn.uis.nornet",
    "floeibanen.uib.nornet",
-   "fjoesnisse.uia.nornet",
+   #"fjoesnisse.uia.nornet",
    "midnattssol.unis.nornet",
    "bybro.ntnu.nornet",
    "beisfjordtoetta.hin.nornet",
    "nakholmen.hioa.nornet",
 
    "mariebergsskogen.kau.nornet",
-   "kaiserberg.tukl.nornet",
-   "borbeck.ude.nornet",
+   "betzenberg.tukl.nornet",
+   "baldeneysee.ude.nornet",
    "yalongbay.hu.nornet",
    "watson.ku.nornet"
 ]
@@ -62,13 +63,16 @@ def doLocal(cmdLine):
 
 
 # ###### Invoke SSH #########################################################
-def doSSH(localNode, slice, cmdLine):
-   sshCall = 'ssh ' + slice['slice_name'] + '@' + localNode['node_name'] + ' -oStrictHostKeyChecking=no -oConnectTimeout=30 ' + \
-             '\'' + cmdLine + '\''
+def doSSH(localNode, slice, cmdLine, async = False):
+   sshCall = [ '/usr/bin/ssh' , slice['slice_name'] + '@' + localNode['node_name'] , '-oStrictHostKeyChecking=no', '-oConnectTimeout=30', '-oBatchMode=yes', cmdLine ]
    print sshCall
-   result = subprocess.call(sshCall, shell=True)
-   if result != 0:
-      print '========== WARNING: result=' + str(result) + ' =========='
+   if async == False:
+      result = subprocess.call(sshCall, shell=False)
+      if result != 0:
+         print '========== WARNING: result=' + str(result) + ' =========='
+   else:      
+      newProcess = subprocess.Popen(sshCall)
+      return newProcess
 
 
 # ###### Run RSync ##########################################################
@@ -116,18 +120,17 @@ def preparePassiveSide(localSite, localNode, localProvider, version, cmt, slice)
       localAddress = getAddress(localSite, localNode, localProvider, version, slice)
       localPort    = getPort(localSite, localNode, localProvider, version, slice)
 
-   cmdLine = 'nohup netperfmeter ' + str(localPort) + ' ' + \
+   cmdLine = 'killall netperfmeter ; nohup netperfmeter ' + str(localPort) + ' ' + \
              '-local=[' + str(localAddress) + '] ' + \
              '-verbosity=0 ' + \
              '>netperfmeter.log 2>&1 &'
-   doSSH(localNode, slice, cmdLine)
-   time.sleep(5)
+   return doSSH(localNode, slice, cmdLine, True)
 
 
 # ###### Clean up passive side ##############################################
 def cleanUpPassiveSide(localSite, localNode, localProvider, version, slice):
    cmdLine = 'killall netperfmeter && cat netperfmeter.log'
-   doSSH(localNode, slice, cmdLine)
+   return doSSH(localNode, slice, cmdLine, True)
 
 
 # ###### Get variable names #################################################
@@ -187,15 +190,6 @@ def runMeasurement(summaryFile, localSite, localNode, localProvider, remoteSite,
    variables      = getVariableSettings(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, now)
    scalarFileName = getScalarName(localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version, cc, cmt, pathMgr, nDiffPorts, now)
 
-   cmdLine = 'mkdir -p ' + MeasurementName + ' && ' + \
-             'netperfmeter [' + str(remoteAddress) + ']:' + str(remotePort) + ' ' + \
-             '-local=[' + str(localAddress) + '] ' + \
-             '-scalar=' + scalarFileName + ' ' + \
-             '-verbosity=1 ' + \
-             '-tcp const0:const1400:const0:const0:sndbuf=16000000:rcvbuf=16000000:cc=' + cc + ':pathmgr=' + pathMgr + ':ndiffports=' + str(nDiffPorts) + ':cmt=' + cmt + ' ' + \
-             '-runtime=30'
-   doSSH(localNode, slice, cmdLine)
-
    activeScalarFileName  = scalarFileName.replace('.sca.bz2', '-active.sca.bz2')
    passiveScalarFileName = scalarFileName.replace('.sca.bz2', '-passive.sca.bz2')
 
@@ -203,6 +197,15 @@ def runMeasurement(summaryFile, localSite, localNode, localProvider, remoteSite,
    summaryFile.write('--input=' + activeScalarFileName + '\n')
    summaryFile.write('--values="' + variables + '"\n')
    summaryFile.write('--input=' + passiveScalarFileName + '\n')
+
+   cmdLine = 'mkdir -p ' + MeasurementName + ' && ' + \
+             'netperfmeter [' + str(remoteAddress) + ']:' + str(remotePort) + ' ' + \
+             '-local=[' + str(localAddress) + '] ' + \
+             '-scalar=' + scalarFileName + ' ' + \
+             '-verbosity=1 ' + \
+             '-tcp const0:const1400:const0:const0:sndbuf=16000000:rcvbuf=16000000:cc=' + cc + ':pathmgr=' + pathMgr + ':ndiffports=' + str(nDiffPorts) + ':cmt=' + cmt + ' ' + \
+             '-runtime=' + str(Runtime)
+   return doSSH(localNode, slice, cmdLine, True)
 
 
 
@@ -231,9 +234,15 @@ if Slice == None:
 # ====== Install ============================================================
 if len(sys.argv) != 1:
    print 'Installing nodes!'
+
+   processes = []
    for localNode in ExperimentNodes:
       cmdLine = 'mkdir -p ~/src && cd ~/src && if [ -e netperfmeter ] ; then cd netperfmeter && git pull ; else git clone https://github.com/dreibh/netperfmeter.git && cd netperfmeter ; fi && ./bootstrap && ./configure --prefix=/usr && make && sudo make install && sudo yum install -y psmisc'
-      doSSH(localNode, Slice, cmdLine)
+      newProcess = doSSH(localNode, Slice, cmdLine, True)
+      if newProcess != None:
+         processes.append(newProcess)
+   for process in processes:
+      process.wait()
 
    sys.exit(0)
 
@@ -251,13 +260,18 @@ except:
    pass
 summaryFile = codecs.open(summaryFileName, 'w+', 'utf-8')
 summaryFile.write('--varnames=' + getVariableNames() + '\n')
+processes = []
 for node in ExperimentNodes:
-   doSSH(node, Slice, 'rm -rf ' + MeasurementName)
-
+   newProcess = doSSH(node, Slice, 'rm -rf ' + MeasurementName + ' ; killall netperfmeter', True)
+   if newProcess != None:
+      processes.append(newProcess)
+for process in processes:
+   process.wait()
 
 
 # ====== Create runs ========================================================
-now = int(time.time())
+allRuns = []
+now     = int(time.time())
 for localNode in ExperimentNodes:
    for remoteNode in ExperimentNodes:
       if localNode == remoteNode:
@@ -287,14 +301,72 @@ for localNode in ExperimentNodes:
                   pathMgr    = 'default'
                   nDiffPorts = 16
 
-                  preparePassiveSide(remoteSite, remoteNode, remoteProvider, version, cmt, Slice)
-                  runMeasurement(summaryFile,
-                                 localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version,
-                                 cc, cmt, pathMgr, nDiffPorts,
-                                 Slice, now)
-                  cleanUpPassiveSide(remoteSite, remoteNode, remoteProvider, version, Slice)
+                  allRuns.append([localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version,
+                                 cc, cmt, pathMgr, nDiffPorts, now])
 
-                  print ''
+
+runNumber = 0
+while len(allRuns) > 0:
+   parallelRuns   = []
+   allocatedNodes = []
+   for run in allRuns:
+      if not ((run[1]['node_name'] in allocatedNodes) or (run[4]['node_name'] in allocatedNodes)):
+         allocatedNodes.append(run[1]['node_name'])
+         allocatedNodes.append(run[4]['node_name'])
+         parallelRuns.append(run)
+   #print 'A=',allocatedNodes
+
+   print '###### PARALLEL ######'
+   processes = []
+   for stage in [1, 2, 3, 4]:
+      for run in parallelRuns:
+
+         localSite      = run[0]
+         localNode      = run[1]
+         localProvider  = run[2]
+         remoteSite     = run[3]
+         remoteNode     = run[4]
+         remoteProvider = run[5]
+         version        = run[6]
+         cc             = run[7]
+         cmt            = run[8]
+         pathMgr        = run[9]
+         nDiffPorts     = run[10]
+         now            = run[11]
+
+         if stage == 1:
+            runNumber = runNumber + 1
+            print '====== Run ' + str(runNumber) + ' of ' + str(len(allRuns)) + ' ======'
+            newProcess = preparePassiveSide(remoteSite, remoteNode, remoteProvider, version, cmt, Slice)
+            if newProcess != None:
+               processes.append(newProcess)
+
+         elif stage == 2:
+            if run == parallelRuns[0]:
+               time.sleep(5)
+
+            newProcess = runMeasurement(
+                            summaryFile,
+                            localSite, localNode, localProvider, remoteSite, remoteNode, remoteProvider, version,
+                            cc, cmt, pathMgr, nDiffPorts,
+                            Slice, now)
+            if newProcess != None:
+               processes.append(newProcess)
+
+         elif stage == 3:
+            for process in processes:
+               process.wait()
+            processes = []
+
+         elif stage == 4:
+            newProcess = cleanUpPassiveSide(remoteSite, remoteNode, remoteProvider, version, Slice)
+            if newProcess != None:
+               processes.append(newProcess)
+            for process in processes:
+               process.wait()
+            processes = []
+
+            allRuns.remove(run)
 
 
 # ====== Get results ========================================================
