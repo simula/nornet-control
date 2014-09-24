@@ -541,7 +541,7 @@ norNetSetup = [
 
  { 'site_index'        : 100,
    'site_enabled'      : True,
-   'site_long_name'    : u'University of Kansas',
+   'site_long_name'    : u'The University of Kansas',
    'site_short_name'   : 'KU',
    'site_url'          : 'http://www.ittc.ku.edu',
    'site_domain'       : 'ku.nornet',
