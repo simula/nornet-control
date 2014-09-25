@@ -34,17 +34,17 @@ MeasurementName = 'One'
 SliceName = 'srl_mptcp'
 Runtime = 30
 ExperimentNodeNames = [
-   #"skoeyen.simula.nornet",
-   #"ekeberg.uio.nornet",
-   #"kapp.hig.nornet",
-   #"aunegaarden.uit.nornet",
-   #"floeibanen.uib.nornet",
-   #"midnattssol.unis.nornet",
-   #"bybro.ntnu.nornet",
-   #"beisfjordtoetta.hin.nornet",
-   #"nakholmen.hioa.nornet",
+   "skoeyen.simula.nornet",
+   "ekeberg.uio.nornet",
+   "kapp.hig.nornet",
+   "aunegaarden.uit.nornet",
+   "floeibanen.uib.nornet",
+   "midnattssol.unis.nornet",
+   "bybro.ntnu.nornet",
+   "beisfjordtoetta.hin.nornet",
+   "nakholmen.hioa.nornet",
    "mariebergsskogen.kau.nornet",
-   #"baldeneysee.ude.nornet",
+   "baldeneysee.ude.nornet",
    "yalongbay.hu.nornet",
    "watson.ku.nornet",
 
