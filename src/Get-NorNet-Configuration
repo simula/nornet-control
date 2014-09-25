@@ -31,6 +31,9 @@ from NorNetAPI       import *;
 
 class TableOutput:
    def __init__(self, useHyperlinks):
+      self.indent        = 0
+      self.useHpyerlinks = useHpyerlinks
+
       self.write('<?xml version="1.0" encoding="utf-8" ?>\n')
       self.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n')
       self.write('<html>\n')
@@ -47,8 +50,6 @@ class TableOutput:
       self.write('</style>\n')
       self.write('</head>\n')
       self.write('<body>\n')
-      self.indent        = 0
-      self.useHpyerlinks = useHpyerlinks
 
    def __del__(self):
       self.write('</body>\n</html>\n')
@@ -98,24 +99,6 @@ class TableOutput:
    def endRow(self):
       self.write('</tr>\n')
 
-   def makeXref(self, xref, label):
-      if self.useHpyerlinks == True:
-         return '<a href="#' + xref + '">' + label + '</a>'
-      else:
-         return label
-
-   def makeURL(self, url, label):
-      if self.useHpyerlinks == True:
-         return '<a href="' + url + '">' + label + '</a>'
-      else:
-         return label
-
-   def makeImage(self, url, style):
-      opts=''
-      if style != '':
-         opts = opts + ' style="' + style + '"'
-      return '<img src="' + url + '"' + opts + ' alt="" />'
-
    def beginCell(self, colspan = -1, rowspan = -1, width = -1, style = ''):
       opts=''
       if colspan >= 0:
@@ -136,6 +119,30 @@ class TableOutput:
       self.write(cell)
       self.endCell()
 
+   def makeXref(self, xref, label):
+      if self.useHpyerlinks == True:
+         return '<a href="#' + xref + '">' + label + '</a>'
+      else:
+         return label
+
+   def makeURL(self, url, label):
+      if self.useHpyerlinks == True:
+         return '<a href="' + url + '">' + label + '</a>'
+      else:
+         return label
+
+   def makeImage(self, url, style):
+      opts=''
+      if style != '':
+         opts = opts + ' style="' + style + '"'
+      return '<img src="' + url + '"' + opts + ' alt="" />'
+
+   def makeSmiley(self, positive = True):
+      if positive == True:
+         return u'☺'
+      else:
+         return u'☹'
+
    def doIndentation(self, newline = False):
       if newline == True:
          self.write('\n')
@@ -143,6 +150,107 @@ class TableOutput:
       while i > 0:
          self.write(' ')
          i = i - 1
+
+
+class LaTeXTableOutput(TableOutput):
+   def __init__(self, useHyperlinks):
+      self.indent        = 0
+      self.useHpyerlinks = useHpyerlinks
+      self.write('\\documentclass[10pt,a4paper,landscape]{article}\n')
+      self.write('\\usepackage[T2A]{fontenc}\n')
+      self.write('\\usepackage[utf8]{inputenc}\n')
+      self.write('\\usepackage{multirow}\n')
+      self.write('\\usepackage{textcomp}\n')
+      self.write('\\usepackage{wasysym}\n')
+      self.write('\\usepackage{url}\n')
+      self.write('\\urlstyle{rm}\n')
+      self.write('\\usepackage[draft=false,pdfpagemode=UseOutlines,plainpages=false,hypertexnames=true,pdfpagelabels=true,hyperindex=true,colorlinks=true]{hyperref}\n')
+      self.write('\\hypersetup{colorlinks}\n')
+      self.write('\\begin{document}\n')
+
+   def __del__(self):
+      self.write('\\end{document}\n')
+
+   def comment(self, text):
+      self.write('% ' + text + '\n')
+
+   def header(self, level, label, text):
+      if level == 1:
+         self.write('\\chapter{' + text + '}\n')
+      elif level == 2:
+         self.write('\\section{' + text + '}\n')
+      elif level == 3:
+         self.write('\\subsection{' + text + '}\n')
+      else:
+         self.write('\\subsubsection{' + text + '}\n')
+      self.write('\\label{' + label + '}\n')
+
+   def beginList(self):
+      self.write('\\begin{itemize}\n')
+
+   def endList(self):
+      self.write('\\end{itemize}\n')
+
+   def beginItem(self):
+      self.write(' \item ')
+
+   def endItem(self):
+      self.write('\n')
+
+   def beginTable(self, columns=2, textColor=None):
+      self.write('{\small{\center{\\begin{tabular}{|' + 'l|' * columns + '}\n\\hline\n')
+      self.doIndentation(True)
+      self.indent = self.indent + 1
+
+   def endTable(self):
+      self.indent = self.indent - 1
+      self.write('\\end{tabular}}}\n')
+
+   def beginRow(self):
+      self.doIndentation(False)
+      self.cellNumber = 0
+
+   def endRow(self):
+      self.write(' \\\\ \\hline\n')
+
+   def beginCell(self, colspan = -1, rowspan = -1, width = -1, style = ''):
+      self.cellNumber = self.cellNumber + 1
+      if self.cellNumber > 1:
+         self.write(' & ')
+      self.colspan = colspan
+      self.rowspan = rowspan
+      if self.colspan > 0:
+         self.write('\\multicolumn{' + str(self.colspan) + '}{c}{')
+      if self.rowspan > 0:
+         self.write('\\multirow{' + str(self.rowspan) + '}{*}{')
+
+   def endCell(self):
+      if self.rowspan > 0:
+         self.write('}')
+      if self.colspan > 0:
+         self.write('}')
+
+   def makeXref(self, xref, label):
+      if self.useHpyerlinks == True:
+         return label + ' (\\ref{' + xref + '})'
+      else:
+         return label
+
+   def makeURL(self, url, label):
+      if self.useHpyerlinks == True:
+         return '\href{' + url + '}{' + label + '}'
+      else:
+         return label
+
+   def makeImage(self, url, style):
+      return '(image)'
+
+   def makeSmiley(self, positive = True):
+      if positive == True:
+         return '\\smiley{}'
+      else:
+         return '\\frownie{}'
+
 
 
 # ###### Get NorNet node object for sliver ##################################
@@ -251,7 +359,7 @@ for slice in sliceList:
 nodeList       = sorted(nodeList, key = lambda x: x['node_index'])
 sliverNodeList = sorted(sliverNodeList, key = lambda x: x['pseudo_slice_node_index'])
 
-output = TableOutput(useHpyerlinks)
+output = LaTeXTableOutput(useHpyerlinks)
 siteIndexList = []
 for siteIndex in siteList:
    siteIndexList.append(siteIndex)
@@ -283,7 +391,7 @@ for siteIndex in sorted(siteIndexList):
    providerList = getNorNetProvidersForSite(siteList[siteIndex])
    maxISPs = max(maxISPs, len(providerList))
 
-output.beginTable()
+output.beginTable(4)
 output.beginRow()
 output.cell('No.')
 output.cell('Site', -1, -1, 20)
@@ -365,11 +473,12 @@ output.endTable()
 
 # ====== Get site images ====================================================
 output.header(2, 'Images', 'Site Images')
-output.beginTable()
+
+columns = int(math.ceil(math.sqrt(len(siteIndexList))))
+output.beginTable(columns)
 siteNumber = 0
 inRow     = False
 
-columns = math.ceil(math.sqrt(len(siteIndexList)))
 for siteIndex in sorted(siteIndexList):
    site = siteList[siteIndex]
    if (siteNumber % columns) == 0:
@@ -382,6 +491,11 @@ for siteIndex in sorted(siteIndexList):
    output.cell(output.makeXref(site['site_short_name'], output.makeImage(imageURL, 'height: 15em; height: 10em; overflow: hidden;')))
 
 if inRow == True:
+   i = len(siteIndexList)
+   while (i % columns) != 0:
+      i = i + 1
+      output.cell()
+
    output.endRow()
 
 output.endTable()
@@ -479,15 +593,15 @@ for siteIndex in sorted(siteIndexList):
 
    output.header(3, site['site_short_name'], siteName + ' (' + str(siteIndex) + ')')
 
-   if siteEnabled:
-      output.beginTable()
-   else:
-      output.beginTable(2, 'grey')
-
    if showSlivers == True:
       nodePlusSliverCells = 4
    else:
       nodePlusSliverCells = 2
+
+   if siteEnabled:
+      output.beginTable(nodePlusSliverCells + 2 * len(providerList))
+   else:
+      output.beginTable(nodePlusSliverCells + 2 * len(providerList), 'grey')
 
 
    # ====== Display site information ========================================
@@ -559,14 +673,14 @@ for siteIndex in sorted(siteIndexList):
             if showAddresses == True:
                output.cell(str(externalNetworkIPv4))
             else:
-                output.cell(u'☺')
+               output.cell(output.makeSmiley(True))
             if externalNetworkIPv6 != IPv6Address('::'):
                if showAddresses == True:
                   output.cell(str(externalNetworkIPv6))
                else:
-                  output.cell(u'☺')
+                  output.cell(output.makeSmiley(True))
             else:
-               output.cell(u'☹')
+               output.cell(output.makeSmiley(False))
    output.endRow()
    output.beginRow()
    extractIPs(providerIndex, siteIndex, 1)
