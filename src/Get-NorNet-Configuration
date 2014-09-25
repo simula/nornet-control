@@ -220,7 +220,7 @@ class LaTeXTableOutput(TableOutput):
       self.colspan = colspan
       self.rowspan = rowspan
       if self.colspan > 0:
-         self.write('\\multicolumn{' + str(self.colspan) + '}{c}{')
+         self.write('\\multicolumn{' + str(self.colspan) + '}{|l|}{')
       if self.rowspan > 0:
          self.write('\\multirow{' + str(self.rowspan) + '}{*}{')
 
@@ -359,7 +359,7 @@ for slice in sliceList:
 nodeList       = sorted(nodeList, key = lambda x: x['node_index'])
 sliverNodeList = sorted(sliverNodeList, key = lambda x: x['pseudo_slice_node_index'])
 
-output = LaTeXTableOutput(useHpyerlinks)
+output = TableOutput(useHpyerlinks)
 siteIndexList = []
 for siteIndex in siteList:
    siteIndexList.append(siteIndex)
