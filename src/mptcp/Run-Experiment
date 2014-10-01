@@ -153,8 +153,8 @@ def cleanUpPassiveSide(localNode, slice):
 def getVariableNames():
    return 'TimeStamp ' + \
           'FromNodeIndex FromNode ToNodeIndex ToNode ' + \
-          'FromSiteIndex FromSite ToSiteIndex ToSite ' + \
-          'FromProviderIndex FromProvider ToProviderIndex ToProvider ' + \
+          'FromSite FromSiteIndex ToSite ToSiteIndex ' + \
+          'FromProvider FromProviderIndex ToProvider ToProviderIndex ' + \
           'CC CMT PathMgr NDiffPorts ' + \
           'IPVersion'
 
