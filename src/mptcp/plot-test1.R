@@ -23,15 +23,37 @@ getColor <- function(originalGain, minPercent, maxPercent)
 
 
 filter <- (data$IPVersion == 4)
-
 d <- subset(data, filter)
 
 xTitle <- "Source Endpoint"
 xSet   <- factor(d$FromProviderIndex * 256 + d$FromSiteIndex)
 yTitle <- "Destination Endpoint"
 ySet   <- factor(d$ToProviderIndex * 256 + d$ToSiteIndex)
-
 zTitle <- "Multi-Path Transport Gain Factor [1]"
+
+
+cat("X-Legend:\n")
+xLevel <- 1
+for(xValue in levels(xSet)) {
+   filter <- (xSet == xValue)
+   r <- subset(d, filter)
+   provider = levels(factor(r$FromProvider))[1]
+   site     = unlist(levels(factor(r$FromSite))[1])
+   cat(sep="\t", xLevel, provider, site, "\n")
+   xLevel <- xLevel + 1
+}
+
+cat("Y-Legend:\n")
+yLevel <- 1
+for(yValue in levels(ySet)) {
+   filter <- (ySet == yValue)
+   r <- subset(d, filter)
+   provider = levels(factor(r$ToProvider))[1]
+   site     = unlist(levels(factor(r$ToSite))[1])
+   cat(sep="\t", yLevel, provider, site, "\n")
+   yLevel <- yLevel + 1
+}
+
 
 x <- c()
 y <- c()
@@ -42,19 +64,20 @@ for(ipVersion in levels(factor(d$IPVersion))) {
    for(xValue in levels(xSet)) {
       yLevel <- 1
       for(yValue in levels(ySet)) {
-         mptcp <- subset(d, (xSet == xValue) & (ySet == yValue) & (d$CMT == "mptcp") & (d$IPVersion == ipVersion))
-         tcp   <- subset(d, (xSet == xValue) & (ySet == yValue) & (d$CMT == "off") & (d$IPVersion == ipVersion))
+         filter <- (xSet == xValue) & (ySet == yValue) & (d$IPVersion == ipVersion)
+         mptcp <- subset(d, filter & (d$CMT == "mptcp"))
+         tcp   <- subset(d, filter & (d$CMT == "off"))
 
          mptcpMean <- mean(mptcp$passive.flow.ReceivedBytes)
          tcpMean   <- mean(tcp$passive.flow.ReceivedBytes)
          zValue <- (mptcpMean - tcpMean) / tcpMean
          
          if(!is.na(zValue)) {
-            if(zValue < 0.8) {
+            if(zValue < 0.80) {
                fValue <- "gray"
             }
             else {
-               fValue <- getColor(100.0 * zValue, -200.0, 300.0)
+               fValue <- getColor(100.0 * zValue, -200.0, 20000.0)
             }
             
             x <- append(x, xLevel)
