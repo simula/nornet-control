@@ -71,8 +71,13 @@ for(ipVersion in levels(factor(d$IPVersion))) {
          mptcpMean <- mean(mptcp$passive.flow.ReceivedBytes)
          tcpMean   <- mean(tcp$passive.flow.ReceivedBytes)
          zValue <- (mptcpMean - tcpMean) / tcpMean
-         
+                  
          if(!is.na(zValue)) {
+         
+#             if(zValue > 10) {
+#                zValue <- 10
+#             }
+         
             if(zValue < 0.80) {
                fValue <- "gray"
             }
