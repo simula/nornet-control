@@ -1,4 +1,6 @@
+library(scatterplot3d)
 source("plotter.R")
+
 
 data <- loadResults("passive.flow-ReceivedBytes.data.bz2")
 
@@ -71,20 +73,20 @@ for(ipVersion in levels(factor(d$IPVersion))) {
          mptcpMean <- mean(mptcp$passive.flow.ReceivedBytes)
          tcpMean   <- mean(tcp$passive.flow.ReceivedBytes)
          zValue <- (mptcpMean - tcpMean) / tcpMean
-                  
+
          if(!is.na(zValue)) {
-         
+
 #             if(zValue > 10) {
 #                zValue <- 10
 #             }
-         
+
             if(zValue < 0.80) {
                fValue <- "gray"
             }
             else {
                fValue <- getColor(100.0 * zValue, -200.0, 20000.0)
             }
-            
+
             x <- append(x, xLevel)
             y <- append(y, yLevel)
             z <- append(z, zValue)

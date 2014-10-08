@@ -33,6 +33,7 @@ from NorNetAPI       import *;
 MeasurementName = 'One'
 SliceName = 'srl_mptcp'
 Runtime = 30
+PortBase = 7000
 ExperimentNodeNames = [
    "skoeyen.simula.nornet",
    "ekeberg.uio.nornet",
@@ -47,11 +48,10 @@ ExperimentNodeNames = [
    "baldeneysee.ude.nornet",
    "yalongbay.hu.nornet",
    "watson.ku.nornet",
+   "betzenberg.tukl.nornet"
 
-
+   # -- problems -- "fjoesnisse.uia.nornet",
    #"sokn.uis.nornet",
-   #"betzenberg.tukl.nornet",
-   #"fjoesnisse.uia.nornet",
 ]
 
 
@@ -103,9 +103,9 @@ def makeAddress(site, node, provider, version, slice):
 # ###### Make port ##########################################################
 def makePort(site, node, provider, version, slice):
    if provider != None:
-      port = 5000 + 10 * provider['provider_index']
+      port = PortBase + 10 * provider['provider_index']
    else:
-      port = 5000
+      port = PortBase
 
    if version != 4:
       port = port + 500
@@ -118,7 +118,7 @@ def preparePassiveSide(localNode, slice):
    localSite          = getNorNetSiteOfNode(fullSiteList, localNode)
    localProviderList  = getNorNetProvidersForSite(localSite)
 
-   cmdLine = 'killall -q netperfmeter ; rm -rf ' + MeasurementName + ' ; mkdir ' + MeasurementName
+   cmdLine = 'pkill netperfmeter ; rm -rf ' + MeasurementName + ' ; mkdir ' + MeasurementName
 
    for version in [ 4, 6 ]:
       localAddress = makeAddress(localSite, localNode, None, version, slice)
@@ -145,7 +145,7 @@ def preparePassiveSide(localNode, slice):
 
 # ###### Clean up passive side ##############################################
 def cleanUpPassiveSide(localNode, slice):
-   cmdLine = 'killall netperfmeter && hostname && cat ' + MeasurementName + '/NetPerfMeter-' + localNode['node_name'] + '.log'
+   cmdLine = 'pkill netperfmeter && hostname && cat ' + MeasurementName + '/NetPerfMeter-' + localNode['node_name'] + '.log'
    return doSSH(localNode, slice, cmdLine, True)
 
 
@@ -253,7 +253,7 @@ if len(sys.argv) != 1:
 
    processes = []
    for localNode in ExperimentNodes:
-      cmdLine = 'sudo yum install -y psmisc autoconf automake libtool gcc-c++ make glib2-devel bzip2-devel lksctp-tools-devel valgrind-devel ; sudo yum upgrade -y ; sudo -u ' + SliceName + ' mkdir -p ~/src && cd ~/src && if [ -e netperfmeter ] ; then cd netperfmeter && git pull ; else git clone https://github.com/dreibh/netperfmeter.git && cd netperfmeter ; fi && ./bootstrap && ./configure --prefix=/usr && make && sudo make install'
+      cmdLine = 'sudo yum install -y autoconf automake libtool gcc-c++ make glib2-devel bzip2-devel lksctp-tools-devel valgrind-devel ; sudo yum upgrade -y ; sudo -u ' + SliceName + ' mkdir -p ~/src && cd ~/src && if [ -e netperfmeter ] ; then cd netperfmeter && git pull ; else git clone https://github.com/dreibh/netperfmeter.git && cd netperfmeter ; fi && ./bootstrap && ./configure --prefix=/usr && make && sudo make install'
       newProcess = doSSH(localNode, Slice, cmdLine, True)
       if newProcess != None:
          processes.append(newProcess)
