@@ -17,23 +17,24 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd August 23, 2014
-.Dt Get-Configuration 1
-.Os Get-Configuration
+.Dd October 9, 2014
+.Dt Get-NorNet-Configuration 1
+.Os Get-NorNet-Configuration
 .\" ###### Name #############################################################
 .Sh NAME
-.Nm Get-Configuration
+.Nm Get-NorNet-Configuration
 .Nd Export the testbed configuration.
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
-.Nm Get-Configuration
+.Nm Get-NorNet-Configuration
 .Op Fl nohyperlinks
 .Op Fl noidsinoverview
 .Op Fl noaddresses
 .Op Fl noslivers
+.Op Fl html|\-latex
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
-.Nm Get-Configuration
+.Nm Get-NorNet-Configuration
 export the testbed configuration from the PLC.
 .Pp
 .\" ###### Arguments ########################################################
@@ -47,12 +48,17 @@ Hide site and provider indices in overview table.
 Hide addresses.
 .It Fl noslivers
 Hide sliver information.
+.It Fl html
+Generate HTML output (default).
+.It Fl latex
+Generate LaTeX output.
 .El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
-.It Get-Configuration
-.It Get-Configuration \-noaddresses
-.It Get-Configuration \-noaddresses \-noslivers
-.It Get-Configuration \-noaddresses \-noslivers \-noidsinoverview \-nohyperlinks
+.It Get-NorNet-Configuration
+.It Get-NorNet-Configuration \-noaddresses
+.It Get-NorNet-Configuration \-noaddresses \-noslivers
+.It Get-NorNet-Configuration \-noaddresses \-noslivers \-noidsinoverview \-nohyperlinks
+.It Get-NorNet-Configuration \-noaddresses \-latex >NorNet.tex
 .El

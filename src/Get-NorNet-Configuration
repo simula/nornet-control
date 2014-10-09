@@ -22,6 +22,7 @@
 import os, sys
 import math
 import urllib2
+import subprocess
 from sets import Set
 
 # NorNet
@@ -41,6 +42,11 @@ def findTag(style, tagName):
       except:
          pass
    return None
+
+
+def rreplace(s, old, new, count):
+   return (s[::-1].replace(old[::-1], new[::-1], count))[::-1]
+
 
 
 class TableOutput:
@@ -174,6 +180,8 @@ class LaTeXTableOutput(TableOutput):
       self.indent        = 0
       self.useHpyerlinks = useHpyerlinks
       self.write('\\documentclass[10pt,a4paper,landscape]{article}\n')
+      self.write('\\usepackage{geometry}\n')
+      self.write('\\geometry{verbose,a4paper,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}\n')
       self.write('\\usepackage[T2A]{fontenc}\n')
       self.write('\\usepackage[utf8]{inputenc}\n')
       self.write('\\usepackage{graphicx}\n')
@@ -251,8 +259,6 @@ class LaTeXTableOutput(TableOutput):
 
       alignmentOption = 'c'
       alignment = findTag(style, 'text-align')
-      if alignment != None:
-         sys.stderr.write(alignment+'\t' + style + '\n')
       if alignment == 'left':
          alignmentOption = 'l'
       elif alignment == 'right':
@@ -296,7 +302,7 @@ class LaTeXTableOutput(TableOutput):
          return label
 
    def makeImage(self, url, style):      
-      name      = os.path.basename(url).replace(' ', '_', 1000000000)
+      name      = makeNameFromUnicode(os.path.basename(url), False)['ascii'].replace(' ', '_', 1000000000)
       extension = os.path.splitext(name)[1]
       url       = urllib2.quote(url.encode('utf-8')).replace('https%3A', 'https:', 1)
 
@@ -310,6 +316,15 @@ class LaTeXTableOutput(TableOutput):
          output.write(image.read())
          output.close()
 
+      if extension == '.svg':
+         oldName = name
+         name    = rreplace(name, '.svg', '.pdf', 1)
+         if not os.path.exists(name):
+            sys.stderr.write('Convert: ' + oldName + ' -> ' + name + ' ...\n')
+            subprocess.call(['/usr/bin/inkscape', '-f', oldName, '-A', name])
+
+      sys.stderr.write('OK: ' + name + '\n')
+
       options = 'keepaspectratio'
       width = findTag(style, 'width')
       if width != None:
@@ -318,12 +333,7 @@ class LaTeXTableOutput(TableOutput):
       if height != None:
          options = options + ',height=' + height
 
-      if extension == u'.svg':
-         return '(SVG)'
-      else:
-         return '\includegraphics[' + options + ']{' + name + '}'
-
-      return result
+      return '\includegraphics[' + options + ']{' + name + '}'
 
    def makeSmiley(self, positive = True):
       if positive == True:
@@ -395,6 +405,7 @@ showAddresses     = True
 showSlivers       = True
 useHpyerlinks     = True
 showIDsInOverview = True
+outputFormat      = 'html'
 i = 1
 while i < len(sys.argv):
    if sys.argv[i] == '-noaddresses':
@@ -405,8 +416,12 @@ while i < len(sys.argv):
       useHpyerlinks = False
    elif sys.argv[i] == '-noidsinoverview':
       showIDsInOverview = False
+   elif sys.argv[i] == '-html':
+      outputFormat = 'html'
+   elif sys.argv[i] == '-latex':
+      outputFormat = 'latex'
    else:
-      error('Usage: ' + sys.argv[0] + '[-noaddresses] [-noslivers] [-noidsinoverview] [-nohyperlinks]')
+      error('Usage: ' + sys.argv[0] + '[-noaddresses] [-noslivers] [-noidsinoverview] [-nohyperlinks] [-html|-latex]')
    i = i + 1
 
 loginToPLC(quietMode = True)
@@ -439,7 +454,10 @@ for slice in sliceList:
 nodeList       = sorted(nodeList, key = lambda x: x['node_index'])
 sliverNodeList = sorted(sliverNodeList, key = lambda x: x['pseudo_slice_node_index'])
 
-output = LaTeXTableOutput(useHpyerlinks)
+if outputFormat == 'latex':
+   output = LaTeXTableOutput(useHpyerlinks)
+else:
+   output = TableOutput(useHpyerlinks)
 siteIndexList = []
 for siteIndex in siteList:
    siteIndexList.append(siteIndex)
@@ -568,7 +586,7 @@ for siteIndex in sorted(siteIndexList):
       inRow = True
    imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
    siteNumber = siteNumber + 1
-   output.cell(output.makeXref(site['site_short_name'], output.makeImage(imageURL, 'height: 15em; height: 10em; overflow: hidden;')))
+   output.cell(output.makeXref(site['site_short_name'], output.makeImage(imageURL, 'width: 15em; height: 10em; overflow: hidden;')))
 
 if inRow == True:
    i = len(siteIndexList)
