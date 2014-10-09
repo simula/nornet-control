@@ -327,7 +327,8 @@ class LaTeXTableOutput(TableOutput):
          try:
             image = urllib2.urlopen(url)
          except:
-            return '(not found!)'
+            sys.stderr.write('ERROR: Failed to download ' + url + '!\n')
+            return ''
          output = open(name, 'w')
          output.write(image.read())
          output.close()
@@ -339,7 +340,7 @@ class LaTeXTableOutput(TableOutput):
             sys.stderr.write('Convert: ' + oldName + ' -> ' + name + ' ...\n')
             subprocess.call(['/usr/bin/inkscape', '-f', oldName, '-A', name])
 
-      sys.stderr.write('OK: ' + name + '\n')
+      #sys.stderr.write('OK: ' + name + '\n')
 
       options = 'keepaspectratio'
       width = findTag(style, 'width')
