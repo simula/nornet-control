@@ -30,6 +30,19 @@ from NorNetTools     import *;
 from NorNetAPI       import *;
 
 
+# ###### Find tag in style string ###########################################
+def findTag(style, tagName):
+   s1 = style.split(';')
+   for r in s1:
+      s2 = r.split(':')
+      try:
+         if s2[0].strip() == tagName:
+            return  s2[1].strip()
+      except:
+         pass
+   return None
+
+
 class TableOutput:
    def __init__(self, useHyperlinks):
       self.indent        = 0
@@ -204,7 +217,7 @@ class LaTeXTableOutput(TableOutput):
       self.write('\n')
 
    def beginTable(self, columns=2, textColor=None):
-      self.write('{\small{\center{\\begin{tabular}{|' + 'l|' * columns + '}\n\\hline\n')
+      self.write('{\small{\center{\\begin{tabular}{|' + 'c|' * columns + '}\n\\hline\n')
       self.doIndentation(True)
       self.indent = self.indent + 1
       self.multiRowCounter = 0
@@ -235,9 +248,22 @@ class LaTeXTableOutput(TableOutput):
          self.write(' & ')
       self.colspan = colspan
       self.rowspan = rowspan
+
+      alignmentOption = 'c'
+      alignment = findTag(style, 'text-align')
+      if alignment != None:
+         sys.stderr.write(alignment+'\t' + style + '\n')
+      if alignment == 'left':
+         alignmentOption = 'l'
+      elif alignment == 'right':
+         alignmentOption = 'r'
+
+      if ((alignmentOption != 'c') and (self.colspan < 1)):
+         self.colspan = 1   # Use \multicolumn for non-centered cell
+
       if self.colspan > 0:
-         self.write('\\multicolumn{' + str(self.colspan) + '}{|l|}{')
-         self.cellNumber = self.cellNumber + (colspan - 1)
+         self.write('\\multicolumn{' + str(self.colspan) + '}{|' + alignmentOption + '|}{')
+         self.cellNumber = self.cellNumber + (self.colspan - 1)
       if self.rowspan > 0:
          self.write('\\multirow{' + str(self.rowspan) + '}{*}{')
          self.multiRowCounter = self.rowspan
@@ -274,8 +300,6 @@ class LaTeXTableOutput(TableOutput):
       extension = os.path.splitext(name)[1]
       url       = urllib2.quote(url.encode('utf-8')).replace('https%3A', 'https:', 1)
 
-      sys.stderr.write('XXX: ' + name + '   ' + extension + ' ...\n')
-
       if not os.path.exists(name):
          sys.stderr.write('Download: ' + url + ' -> ' + name + ' ...\n')
          try:
@@ -285,11 +309,21 @@ class LaTeXTableOutput(TableOutput):
          output = open(name, 'w')
          output.write(image.read())
          output.close()
-         
+
+      options = 'keepaspectratio'
+      width = findTag(style, 'width')
+      if width != None:
+         options = options + ',width=' + width
+      height = findTag(style, 'height')
+      if height != None:
+         options = options + ',height=' + height
+
       if extension == u'.svg':
          return '(SVG)'
       else:
-         return '\includegraphics[width=5cm,keepaspectratio]{' + name + '}'
+         return '\includegraphics[' + options + ']{' + name + '}'
+
+      return result
 
    def makeSmiley(self, positive = True):
       if positive == True:
@@ -663,14 +697,14 @@ for siteIndex in sorted(siteIndexList):
 
    output.beginRow()
    imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
-   output.cell(output.makeImage(imageURL, 'height: 11em;'), nodePlusSliverCells, 1 + len(siteInfoTable), 12)
+   output.cell(output.makeImage(imageURL, 'height: 8.75em;'), nodePlusSliverCells, 1 + len(siteInfoTable), 12)
    output.cell('Site Information', 2 * len(providerList))
    output.endRow()
 
    for siteInfo in siteInfoTable:
       output.beginRow()
       output.multiRowFill(nodePlusSliverCells)
-      output.cell(siteInfo[0])
+      output.cell(siteInfo[0], -1, -1, -1, 'text-align: left;')
       output.cell(siteInfo[1], 2 * len(providerList) - 1, -1, -1, 'text-align: left;')
       output.endRow()
 
