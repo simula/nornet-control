@@ -31,7 +31,7 @@ xTitle <- "Source Endpoint"
 xSet   <- factor(d$FromProviderIndex * 256 + d$FromSiteIndex)
 yTitle <- "Destination Endpoint"
 ySet   <- factor(d$ToProviderIndex * 256 + d$ToSiteIndex)
-zTitle <- "Multi-Path Transport Gain Factor [1]"
+zTitle <- "Multi-Path Transport Gain Factor in Log Scale [1]"
 
 
 cat("X-Legend:\n")
@@ -72,20 +72,30 @@ for(ipVersion in levels(factor(d$IPVersion))) {
 
          mptcpMean <- mean(mptcp$passive.flow.ReceivedBytes)
          tcpMean   <- mean(tcp$passive.flow.ReceivedBytes)
-         zValue <- (mptcpMean - tcpMean) / tcpMean
+         zValue <- mptcpMean / tcpMean
 
-         if(!is.na(zValue)) {
+         if(!is.na(zValue) && (zValue > 0.0)) {
 
 #             if(zValue > 10) {
 #                zValue <- 10
 #             }
 
-            if(zValue < 0.80) {
+            if(zValue < 0.50) {
+               fValue <- "black"
+               cat("!!!",xLevel,yLevel,zValue,mptcpMean,tcpMean,"\n")
+            }
+            else if(zValue < 0.80) {
                fValue <- "gray"
+               cat("xxx",xLevel,yLevel,zValue,mptcpMean,tcpMean,"\n")
             }
             else {
                fValue <- getColor(100.0 * zValue, -200.0, 20000.0)
             }
+
+zValue <- log(zValue)
+if(zValue < 0) {
+ cat('neg',zValue,"\n")
+}
 
             x <- append(x, xLevel)
             y <- append(y, yLevel)
