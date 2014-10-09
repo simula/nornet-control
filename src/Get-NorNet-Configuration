@@ -160,6 +160,12 @@ class TableOutput:
          opts = opts + ' style="' + style + '"'
       return '<img src="' + url + '"' + opts + ' alt="" />'
 
+   def makeSub(self, text):
+      return '<sub>' + text + '</sub>'
+
+   def makeSup(self, text):
+      return '<sup>' + text + '</sup>'
+
    def makeSmiley(self, positive = True):
       if positive == True:
          return u'☺'
@@ -185,7 +191,7 @@ class LaTeXTableOutput(TableOutput):
       self.write('\\usepackage[T2A]{fontenc}\n')
       self.write('\\usepackage[utf8]{inputenc}\n')
       self.write('\\usepackage{graphicx}\n')
-      self.write('\\usepackage{svg}\n')
+      self.write('\\usepackage{longtable}\n')
       self.write('\\usepackage{multirow}\n')
       self.write('\\usepackage{textcomp}\n')
       self.write('\\usepackage{wasysym}\n')
@@ -203,14 +209,18 @@ class LaTeXTableOutput(TableOutput):
 
    def header(self, level, label, text):
       if level == 1:
-         self.write('\\chapter{' + text + '}\n')
+         c = '@' ; s = 4 ; cmd = '\\chapter{' + text + '}'
       elif level == 2:
-         self.write('\\section{' + text + '}\n')
+         c = '#' ; s = 3 ; cmd = '\\section{' + text + '}'
       elif level == 3:
-         self.write('\\subsection{' + text + '}\n')
+         c = '=' ; s = 2 ; cmd = '\\subsection{' + text + '}'
       else:
-         self.write('\\subsubsection{' + text + '}\n')
-      self.write('\\label{' + label + '}\n')
+         c = '-' ; s = 1 ; cmd = '\\subsubsection{' + text + '}'
+
+      self.write('\n' * s + '% ' + 76 * c + '\n' + \
+                 cmd + '\n' + \
+                 '\\label{' + label + '}\n' + \
+                 '% ' + 76 * c + '\n\n')
 
    def beginList(self):
       self.write('\\begin{itemize}\n')
@@ -225,14 +235,20 @@ class LaTeXTableOutput(TableOutput):
       self.write('\n')
 
    def beginTable(self, columns=2, textColor=None):
-      self.write('{\small{\center{\\begin{tabular}{|' + 'c|' * columns + '}\n\\hline\n')
+      self.write('\n% ' + 76 * '%' + '\n')
+      self.write('\\begin{small}\n')
+      self.write('\\begin{center}\n')
+      self.write('\\begin{tabular}{|' + 'c|' * columns + '}\n \\hline')
       self.doIndentation(True)
       self.indent = self.indent + 1
       self.multiRowCounter = 0
 
    def endTable(self):
       self.indent = self.indent - 1
-      self.write('\\end{tabular}}}\n')
+      self.write('\\end{tabular}\n')
+      self.write('\\end{center}\n')
+      self.write('\\end{small}\n')
+      self.write('% ' + 76 * '%' + '\n')
 
    def beginRow(self):
       self.clineArray = []
@@ -291,7 +307,7 @@ class LaTeXTableOutput(TableOutput):
 
    def makeXref(self, xref, label):
       if self.useHpyerlinks == True:
-         return label + ' (\\ref{' + xref + '})'
+         return '\hyperref[' + xref + ']{' + label + '}'
       else:
          return label
 
@@ -340,6 +356,12 @@ class LaTeXTableOutput(TableOutput):
          return '\\smiley{}'
       else:
          return '\\frownie{}'
+
+   def makeSub(self, text):
+      return '\\raisebox{-1ex}{' + text + '}'
+
+   def makeSup(self, text):
+      return '\\textsuperscript{' + text + '}'
 
 
 
@@ -465,31 +487,31 @@ for siteIndex in siteList:
 
 # ====== Make index =========================================================
 output.comment('BEGIN-OF-SITES-BLOCK')
-output.header(2, 'Index', 'Index')
+output.header(2, 'sec:Index', 'Index')
 output.beginList()
-output.makeItem(output.makeXref('Sites',      'Site Table'))
-output.makeItem(output.makeXref('Images',     'Site Images'))
-output.makeItem(output.makeXref('Statistics', 'Site Statistics'))
+output.makeItem(output.makeXref('sec:Sites',      'Site Table'))
+output.makeItem(output.makeXref('sec:Images',     'Site Images'))
+output.makeItem(output.makeXref('sec:Statistics', 'Site Statistics'))
 output.beginItem()
-output.write(output.makeXref('Details', 'Site Details'))
+output.write(output.makeXref('sec:Details', 'Site Details'))
 output.beginList()
 for siteIndex in sorted(siteIndexList):
    site = siteList[siteIndex]
-   output.makeItem(output.makeXref(site['site_short_name'], site['site_utf8']))
+   output.makeItem(output.makeXref('sub:' + site['site_short_name'], site['site_utf8']))
 output.endList()
 output.endItem()
 output.endList()
 
 
 # ====== Get site table =====================================================
-output.header(2, 'Sites', 'Site Table')
+output.header(2, 'sec:Sites', 'Site Table')
 
 maxISPs = 0
 for siteIndex in sorted(siteIndexList):
    providerList = getNorNetProvidersForSite(siteList[siteIndex])
    maxISPs = max(maxISPs, len(providerList))
 
-output.beginTable(4)
+output.beginTable(2 + maxISPs)
 output.beginRow()
 output.cell('No.')
 output.cell('Site', -1, -1, 20)
@@ -524,7 +546,7 @@ for siteIndex in sorted(siteIndexList):
    cellContent = site['site_utf8']
    if showIDsInOverview == True:
       cellContent = cellContent + ' (' + str(siteIndex) + ')'
-   output.cell(output.makeXref(site['site_short_name'], cellContent), -1, -1, -1, 'text-align: left;')
+   output.cell(output.makeXref('sub:' + site['site_short_name'], cellContent), -1, -1, -1, 'text-align: left;')
    isp = 0
    for onlyDefault in [ True, False ]:
       for providerIndex in providerList:
@@ -542,8 +564,9 @@ for siteIndex in sorted(siteIndexList):
             cellContent = output.makeURL(providerURL, cellContent)
 
             externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
-            if externalNetworkIPv6 == IPv6Address('::'):
-               cellContent = cellContent + ' <small>(IPv4 only)</small>'
+            cellContent = cellContent + output.makeSup('4')
+            if externalNetworkIPv6 != IPv6Address('::'):
+               cellContent = cellContent + output.makeSup(',6')
 
             # ------ Statistics ---------------------------------------------
             if siteEnabled == True:
@@ -570,7 +593,7 @@ output.endTable()
 
 
 # ====== Get site images ====================================================
-output.header(2, 'Images', 'Site Images')
+output.header(2, 'sec:Images', 'Site Images')
 
 columns = int(math.ceil(math.sqrt(len(siteIndexList))))
 output.beginTable(columns)
@@ -586,7 +609,7 @@ for siteIndex in sorted(siteIndexList):
       inRow = True
    imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
    siteNumber = siteNumber + 1
-   output.cell(output.makeXref(site['site_short_name'], output.makeImage(imageURL, 'width: 15em; height: 10em; overflow: hidden;')))
+   output.cell(output.makeXref('sub:' + site['site_short_name'], output.makeImage(imageURL, 'width: 15em; height: 10em; overflow: hidden;')))
 
 if inRow == True:
    i = len(siteIndexList)
@@ -600,7 +623,7 @@ output.endTable()
 
 
 # ====== Get site statistics ================================================
-output.header(2, 'Statistics', 'Site Statistics')
+output.header(2, 'sec:Statistics', 'Site Statistics')
 output.beginTable()
 
 output.beginRow()
@@ -647,7 +670,7 @@ output.endTable()
 
 
 # ====== Get site details ===================================================
-output.header(2, 'Details', 'Site Details')
+output.header(2, 'sec:Details', 'Site Details')
 for siteIndex in sorted(siteIndexList):
 
    # ====== Get site information ============================================
@@ -689,7 +712,7 @@ for siteIndex in sorted(siteIndexList):
    sitePosition = sitePosition + ' / ' + str(site['site_altitude']) + 'm'
 
 
-   output.header(3, site['site_short_name'], siteName + ' (' + str(siteIndex) + ')')
+   output.header(3, 'sub:' + site['site_short_name'], siteName + ' (' + str(siteIndex) + ')')
 
    if showSlivers == True:
       nodePlusSliverCells = 4
