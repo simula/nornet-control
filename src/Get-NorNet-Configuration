@@ -700,16 +700,19 @@ for siteIndex in sorted(siteIndexList):
       siteLocation = siteLocation + ', ' + siteProvince 
    siteLocation = siteLocation + '/' + siteCountry 
 
-   sitePosition = unicode(abs(site['site_longitude']))
-   if site['site_longitude'] >= 0:
-      sitePosition = sitePosition + u'°E'
-   else:
-      sitePosition = sitePosition + u'°W'
-   sitePosition = sitePosition + u' / ' + unicode(abs(site['site_latitude']))
+
+   sitePosition = unicode(abs(site['site_latitude']))
    if site['site_latitude'] >= 0:
       sitePosition = sitePosition + u'°N'
    else:
       sitePosition = sitePosition + u'°S'
+
+   sitePosition = sitePosition + u' / ' + unicode(abs(site['site_longitude']))
+   if site['site_longitude'] >= 0:
+      sitePosition = sitePosition + u'°E'
+   else:
+      sitePosition = sitePosition + u'°W'
+
    sitePosition = sitePosition + ' / ' + str(site['site_altitude']) + 'm'
 
 
