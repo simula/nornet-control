@@ -21,6 +21,7 @@
 
 import os, sys
 import math
+import urllib2
 from sets import Set
 
 # NorNet
@@ -114,6 +115,9 @@ class TableOutput:
    def endCell(self):
       self.write('</td>')
 
+   def multiRowFill(self, colspan = -1):
+      return
+
    def cell(self, cell = '', colspan = -1, rowspan = -1, width = -1, style = ''):
       self.beginCell(colspan, rowspan, width, style)
       self.write(cell)
@@ -159,6 +163,8 @@ class LaTeXTableOutput(TableOutput):
       self.write('\\documentclass[10pt,a4paper,landscape]{article}\n')
       self.write('\\usepackage[T2A]{fontenc}\n')
       self.write('\\usepackage[utf8]{inputenc}\n')
+      self.write('\\usepackage{graphicx}\n')
+      self.write('\\usepackage{svg}\n')
       self.write('\\usepackage{multirow}\n')
       self.write('\\usepackage{textcomp}\n')
       self.write('\\usepackage{wasysym}\n')
@@ -201,34 +207,55 @@ class LaTeXTableOutput(TableOutput):
       self.write('{\small{\center{\\begin{tabular}{|' + 'l|' * columns + '}\n\\hline\n')
       self.doIndentation(True)
       self.indent = self.indent + 1
+      self.multiRowCounter = 0
 
    def endTable(self):
       self.indent = self.indent - 1
       self.write('\\end{tabular}}}\n')
 
    def beginRow(self):
+      self.clineArray = []
       self.doIndentation(False)
       self.cellNumber = 0
 
    def endRow(self):
-      self.write(' \\\\ \\hline\n')
+      self.write(' \\\\ ')
+      self.multiRowCounter = self.multiRowCounter - 1
+      if ((len(self.clineArray) == self.cellNumber) or (self.multiRowCounter <= 0)):
+         self.write('\\hline')
+      else:
+         for c in self.clineArray:
+            self.write('\\cline{' + str(c) + '-' + str(c) + '}')
+      self.write('\n')
 
    def beginCell(self, colspan = -1, rowspan = -1, width = -1, style = ''):
       self.cellNumber = self.cellNumber + 1
+      startCellNumber = self.cellNumber
       if self.cellNumber > 1:
          self.write(' & ')
       self.colspan = colspan
       self.rowspan = rowspan
       if self.colspan > 0:
          self.write('\\multicolumn{' + str(self.colspan) + '}{|l|}{')
+         self.cellNumber = self.cellNumber + (colspan - 1)
       if self.rowspan > 0:
          self.write('\\multirow{' + str(self.rowspan) + '}{*}{')
+         self.multiRowCounter = self.rowspan
+      else:
+         for c in range(startCellNumber, self.cellNumber + 1):
+            self.clineArray.append(c)
 
    def endCell(self):
       if self.rowspan > 0:
          self.write('}')
       if self.colspan > 0:
          self.write('}')
+
+   def multiRowFill(self, colspan = -1):
+      bak = list(self.clineArray)
+      self.beginCell(colspan)
+      self.endCell()
+      self.clineArray = bak
 
    def makeXref(self, xref, label):
       if self.useHpyerlinks == True:
@@ -242,8 +269,27 @@ class LaTeXTableOutput(TableOutput):
       else:
          return label
 
-   def makeImage(self, url, style):
-      return '(image)'
+   def makeImage(self, url, style):      
+      name      = os.path.basename(url).replace(' ', '_', 1000000000)
+      extension = os.path.splitext(name)[1]
+      url       = urllib2.quote(url.encode('utf-8')).replace('https%3A', 'https:', 1)
+
+      sys.stderr.write('XXX: ' + name + '   ' + extension + ' ...\n')
+
+      if not os.path.exists(name):
+         sys.stderr.write('Download: ' + url + ' -> ' + name + ' ...\n')
+         try:
+            image = urllib2.urlopen(url)
+         except:
+            return '(not found!)'
+         output = open(name, 'w')
+         output.write(image.read())
+         output.close()
+         
+      if extension == u'.svg':
+         return '(SVG)'
+      else:
+         return '\includegraphics[width=5cm,keepaspectratio]{' + name + '}'
 
    def makeSmiley(self, positive = True):
       if positive == True:
@@ -359,7 +405,7 @@ for slice in sliceList:
 nodeList       = sorted(nodeList, key = lambda x: x['node_index'])
 sliverNodeList = sorted(sliverNodeList, key = lambda x: x['pseudo_slice_node_index'])
 
-output = TableOutput(useHpyerlinks)
+output = LaTeXTableOutput(useHpyerlinks)
 siteIndexList = []
 for siteIndex in siteList:
    siteIndexList.append(siteIndex)
@@ -623,6 +669,7 @@ for siteIndex in sorted(siteIndexList):
 
    for siteInfo in siteInfoTable:
       output.beginRow()
+      output.multiRowFill(nodePlusSliverCells)
       output.cell(siteInfo[0])
       output.cell(siteInfo[1], 2 * len(providerList) - 1, -1, -1, 'text-align: left;')
       output.endRow()
@@ -649,6 +696,11 @@ for siteIndex in sorted(siteIndexList):
    output.endRow()
 
    output.beginRow()
+   if showSlivers == True:
+      output.multiRowFill(2)
+      output.multiRowFill(2)
+   else:
+      output.multiRowFill(2)
    i = 0
    while i < isp:
       output.cell('IPv4', -1, -1, 8)
@@ -683,6 +735,8 @@ for siteIndex in sorted(siteIndexList):
                output.cell(output.makeSmiley(False))
    output.endRow()
    output.beginRow()
+   output.multiRowFill(1)
+   output.multiRowFill(nodePlusSliverCells - 1)
    extractIPs(providerIndex, siteIndex, 1)
    output.endRow()
 
@@ -730,6 +784,8 @@ for siteIndex in sorted(siteIndexList):
          # ====== Sliver context ============================================
          for sliverNode in sliversOfNode:
             output.beginRow()
+            output.multiRowFill()
+            output.multiRowFill()
             output.cell(str(sliverNode['pseudo_slice_node_index']))
             output.cell(sliverNode['node_name'], -1, -1, -1, 'text-align: left;')
 
