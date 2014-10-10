@@ -33,7 +33,7 @@ from NorNetAPI       import *;
 MeasurementName = 'One'
 SliceName = 'srl_mptcp'
 Runtime = 30
-PortBase = 11000
+PortBase = 11030
 ExperimentNodeNames = [
    "skoeyen.simula.nornet",
    "ekeberg.uio.nornet",
