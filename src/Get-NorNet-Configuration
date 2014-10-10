@@ -119,14 +119,12 @@ class TableOutput:
    def endRow(self):
       self.write('</tr>\n')
 
-   def beginCell(self, colspan = -1, rowspan = -1, width = -1, style = ''):
+   def beginCell(self, colspan = -1, rowspan = -1, style = ''):
       opts=''
       if colspan >= 0:
          opts = opts + ' colspan="' + str(colspan) + '"'
       if rowspan >= 0:
          opts = opts + ' rowspan="' + str(rowspan) + '"'
-      if width >= 0:
-         opts = opts + ' style="width: ' + str(width) + 'em;"'
       if style != '':
          opts = opts + ' style="' + style + '"'
       self.write('<td' + opts + '>')
@@ -137,8 +135,8 @@ class TableOutput:
    def multiRowFill(self, colspan = -1):
       return
 
-   def cell(self, cell = '', colspan = -1, rowspan = -1, width = -1, style = ''):
-      self.beginCell(colspan, rowspan, width, style)
+   def cell(self, cell = '', colspan = -1, rowspan = -1, style = ''):
+      self.beginCell(colspan, rowspan, style)
       self.write(cell)
       self.endCell()
 
@@ -265,7 +263,7 @@ class LaTeXTableOutput(TableOutput):
             self.write('\\cline{' + str(c) + '-' + str(c) + '}')
       self.write('\n')
 
-   def beginCell(self, colspan = -1, rowspan = -1, width = -1, style = ''):
+   def beginCell(self, colspan = -1, rowspan = -1, style = ''):
       self.cellNumber = self.cellNumber + 1
       startCellNumber = self.cellNumber
       if self.cellNumber > 1:
@@ -516,9 +514,9 @@ for siteIndex in sorted(siteIndexList):
 output.beginTable(2 + maxISPs)
 output.beginRow()
 output.cell('No.')
-output.cell('Site', -1, -1, 20)
+output.cell('Site', -1, -1, 'width: 20em;')
 for i in range(1, maxISPs + 1):
-   output.cell('ISP ' + str(i), -1, -1, 16)
+   output.cell('ISP ' + str(i), -1, -1, 'width: 16em;')
 output.endRow()
 
 activeSites          = 0
@@ -548,7 +546,7 @@ for siteIndex in sorted(siteIndexList):
    cellContent = site['site_utf8']
    if showIDsInOverview == True:
       cellContent = cellContent + ' (' + str(siteIndex) + ')'
-   output.cell(output.makeXref('sub:' + site['site_short_name'], cellContent), -1, -1, -1, 'text-align: left;')
+   output.cell(output.makeXref('sub:' + site['site_short_name'], cellContent), -1, -1, 'text-align: left;')
    isp = 0
    for onlyDefault in [ True, False ]:
       for providerIndex in providerList:
@@ -596,12 +594,12 @@ output.endTable()
 
 # ====== Get ISP table ======================================================
 output.header(2, 'sec:Providers', 'Provider Table')
-output.beginTable(3)
+output.beginTable(4)
 output.beginRow()
 output.cell('No.')
-output.cell('Full Name',  -1, -1, 30, 'text-align: left;')
-output.cell('Short Name', -1, -1, 12, 'text-align: left;')
-output.cell('URL', -1, -1, 20, 'text-align: left;')
+output.cell('Full Name',  -1, -1, 'width: 30em; text-align: left;')
+output.cell('Short Name', -1, -1, 'width: 10em; text-align: left;')
+output.cell('URL',        -1, -1, 'width: 20em; text-align: left;')
 output.endRow()
 
 ispNumber = 1
@@ -619,11 +617,11 @@ for providerIndex in sorted(activeSitesISPs):
    output.beginRow()
    output.cell(str(ispNumber))
    if showIDsInOverview == True:
-      output.cell(providerLongName + ' (' + str(providerIndex) + ')',  -1, -1, -1, 'text-align: left;')
+      output.cell(output.makeURL(providerURL, providerLongName + ' (' + str(providerIndex) + ')'),  -1, -1, 'text-align: left;')
    else:
-      output.cell(providerLongName,  -1, -1, -1, 'text-align: left;')
-   output.cell(providerShortName, -1, -1, -1, 'text-align: left;')
-   output.cell(output.makeURL(providerURL,providerURL), -1, -1, -1, 'text-align: left;')
+      output.cell(output.makeURL(providerURL, providerLongName),  -1, -1, 'text-align: left;')
+   output.cell(output.makeURL(providerURL, providerShortName), -1, -1, 'text-align: left;')
+   output.cell(output.makeURL(providerURL,providerURL), -1, -1, 'text-align: left;')
    output.endRow()
 
    ispNumber = ispNumber + 1
@@ -666,42 +664,42 @@ output.header(2, 'sec:Statistics', 'Site Statistics')
 output.beginTable()
 
 output.beginRow()
-output.cell('Active Sites', -1, -1, -1, 'text-align: left; width: 20em;')
-output.cell(str(activeSites), -1, -1, -1, 'width: 6em;')
+output.cell('Active Sites', -1, -1, 'text-align: left; width: 20em;')
+output.cell(str(activeSites), -1, -1, 'width: 6em;')
 output.endRow()
 
 output.beginRow()
-output.cell('Distinct ISPs of Active Sites', -1, -1, -1, 'text-align: left;')
+output.cell('Distinct ISPs of Active Sites', -1, -1, 'text-align: left;')
 output.cell(str(len(activeSitesISPs)))
 output.endRow()
 
 output.beginRow()
-output.cell('Distinct Countries of Active Sites', -1, -1, -1, 'text-align: left;')
+output.cell('Distinct Countries of Active Sites', -1, -1, 'text-align: left;')
 output.cell(str(len(activeSitesCountries)))
 output.endRow()
 
 output.beginRow()
-output.cell('Total IPv4 Interfaces', -1, -1, -1, 'text-align: left;')
+output.cell('Total IPv4 Interfaces', -1, -1, 'text-align: left;')
 output.cell(str(numInterfacesIPv4))
 output.endRow()
 
 output.beginRow()
-output.cell('Total IPv4 Tunnels', -1, -1, -1, 'text-align: left;')
+output.cell('Total IPv4 Tunnels', -1, -1, 'text-align: left;')
 output.cell(str(numInterfacesIPv4 * (numInterfacesIPv4 -1) / 2))
 output.endRow()
 
 output.beginRow()
-output.cell('Total IPv6 Interfaces', -1, -1, -1, 'text-align: left;')
+output.cell('Total IPv6 Interfaces', -1, -1, 'text-align: left;')
 output.cell(str(numInterfacesIPv6))
 output.endRow()
 
 output.beginRow()
-output.cell('Total IPv6 Tunnels', -1, -1, -1, 'text-align: left;')
+output.cell('Total IPv6 Tunnels', -1, -1, 'text-align: left;')
 output.cell(str(numInterfacesIPv6 * (numInterfacesIPv6 - 1) / 2))
 output.endRow()
 
 output.beginRow()
-output.cell('Inactive Sites', -1, -1, -1, 'text-align: left;')
+output.cell('Inactive Sites', -1, -1, 'text-align: left;')
 output.cell(str(siteNumber - activeSites))
 output.endRow()
 
@@ -780,23 +778,23 @@ for siteIndex in sorted(siteIndexList):
 
    output.beginRow()
    imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
-   output.cell(output.makeImage(imageURL, 'height: 8.75em;'), nodePlusSliverCells, 1 + len(siteInfoTable), 12)
+   output.cell(output.makeImage(imageURL, 'height: 8.75em;'), nodePlusSliverCells, 1 + len(siteInfoTable), 'width: 12em;')
    output.cell('Site Information', 2 * len(providerList))
    output.endRow()
 
    for siteInfo in siteInfoTable:
       output.beginRow()
       output.multiRowFill(nodePlusSliverCells)
-      output.cell(siteInfo[0], -1, -1, -1, 'text-align: left;')
-      output.cell(siteInfo[1], 2 * len(providerList) - 1, -1, -1, 'text-align: left;')
+      output.cell(siteInfo[0], -1, -1, 'text-align: left;')
+      output.cell(siteInfo[1], 2 * len(providerList) - 1, -1, 'text-align: left;')
       output.endRow()
 
 
    # ====== Get node information ============================================
    output.beginRow()
-   output.cell('Node', 2, 2, 4)
+   output.cell('Node', 2, 2, 'width: 4em;')
    if showSlivers == True:
-      output.cell('Sliver', 2, 2, 8)
+      output.cell('Sliver', 2, 2, 'width: 8em;')
    isp = 0
    for onlyDefault in [ True, False ]:
       for providerIndex in providerList:
@@ -820,8 +818,8 @@ for siteIndex in sorted(siteIndexList):
       output.multiRowFill(2)
    i = 0
    while i < isp:
-      output.cell('IPv4', -1, -1, 8)
-      output.cell('IPv6', -1, -1, 16)
+      output.cell('IPv4', -1, -1, 'width: 8em;')
+      output.cell('IPv6', -1, -1, 'width: 16em;')
       i = i + 1
    output.endRow()
 
@@ -889,7 +887,7 @@ for siteIndex in sorted(siteIndexList):
          # ====== Root context ==============================================
          output.beginRow()
          output.cell(str(nodeIndex), -1, 1 + len(sliversOfNode))
-         output.cell(nodeName, -1, 1 + len(sliversOfNode), -1, 'text-align: left;')
+         output.cell(nodeName, -1, 1 + len(sliversOfNode), 'text-align: left;')
          if showSlivers == True:
             output.cell('Root Context', 2)
 
@@ -904,7 +902,7 @@ for siteIndex in sorted(siteIndexList):
             output.multiRowFill()
             output.multiRowFill()
             output.cell(str(sliverNode['pseudo_slice_node_index']))
-            output.cell(sliverNode['node_name'], -1, -1, -1, 'text-align: left;')
+            output.cell(sliverNode['node_name'], -1, -1, 'text-align: left;')
 
             sliceNodeIndex = sliverNode['pseudo_slice_node_index']
             extractIPs(providerIndex, siteIndex, nodeIndex, sliceNodeIndex)
