@@ -491,6 +491,7 @@ output.comment('BEGIN-OF-SITES-BLOCK')
 output.header(2, 'sec:Index', 'Index')
 output.beginList()
 output.makeItem(output.makeXref('sec:Sites',      'Site Table'))
+output.makeItem(output.makeXref('sec:Providers',  'Provider Table'))
 output.makeItem(output.makeXref('sec:Images',     'Site Images'))
 output.makeItem(output.makeXref('sec:Statistics', 'Site Statistics'))
 output.beginItem()
@@ -589,6 +590,43 @@ for siteIndex in sorted(siteIndexList):
 
    output.endRow()
    siteNumber = siteNumber + 1
+
+output.endTable()
+
+
+# ====== Get ISP table ======================================================
+output.header(2, 'sec:Providers', 'Provider Table')
+output.beginTable(3)
+output.beginRow()
+output.cell('No.')
+output.cell('Full Name',  -1, -1, 30, 'text-align: left;')
+output.cell('Short Name', -1, -1, 12, 'text-align: left;')
+output.cell('URL', -1, -1, 20, 'text-align: left;')
+output.endRow()
+
+ispNumber = 1
+for providerIndex in sorted(activeSitesISPs):
+   providerLongName  = '???'
+   providerShortName = '???'
+   providerURL       = ''
+   try:
+      providerLongName  = NorNet_ProviderList[providerIndex][0]
+      providerShortName = NorNet_ProviderList[providerIndex][1]
+      providerURL       = NorNet_ProviderList[providerIndex][2]
+   except:
+      pass
+
+   output.beginRow()
+   output.cell(str(ispNumber))
+   if showIDsInOverview == True:
+      output.cell(providerLongName + ' (' + str(providerIndex) + ')',  -1, -1, -1, 'text-align: left;')
+   else:
+      output.cell(providerLongName,  -1, -1, -1, 'text-align: left;')
+   output.cell(providerShortName, -1, -1, -1, 'text-align: left;')
+   output.cell(output.makeURL(providerURL,providerURL), -1, -1, -1, 'text-align: left;')
+   output.endRow()
+
+   ispNumber = ispNumber + 1
 
 output.endTable()
 
