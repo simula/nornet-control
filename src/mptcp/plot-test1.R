@@ -125,8 +125,8 @@ for(onlyNegativeResults in c(FALSE, TRUE)) {
       z <- append(z, NA)
       f <- append(f, NA)
 
-      x <- append(x, 27)
-      y <- append(y, 27)
+      x <- append(x, 29)
+      y <- append(y, 29)
       z <- append(z, NA)
       f <- append(f, NA)
 
