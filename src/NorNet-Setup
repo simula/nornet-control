@@ -569,6 +569,30 @@ norNetSetup = [
       #[ 103, 4, u'stull' ]
    ] },
 
+ { 'site_index'        : 160,
+   'site_enabled'      : False,
+   'site_long_name'    : u'Bell Labs Seoul',
+   'site_short_name'   : 'BLS',
+   'site_url'          : 'http://www3.alcatel-lucent.com/wps/portal/CountryContact?LMSG_CABINET=Corporate&LMSG_CONTENT_FILE=Global_Map_and_Contacts/South_Korea_Contact.xml&LMSG_LOCALE=ko_KR',
+   'site_domain'       : 'bls.nornet',
+   'site_city'         : 'Seoul',
+   'site_province'     : 'Seoul',
+   'site_country'      : 'South Korea',
+   'site_country_code' : 'KR',
+   'site_latitude'     : 37.576104,
+   'site_longitude'    : 126.890443,
+   'site_altitude'     : 50,
+   'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Korea Research Environment Open NETwork', 'eth1',
+           IPv4Network('203.230.60.142/26'), IPv4Address('203.230.60.129'),
+           IPv6Network('::/0'),               IPv6Address('::') ],
+   ],
+   'site_nodes' : [
+      #[ 100, 1, u'smörgåstårta' ],
+      #[ 101, 2, u'knäckebröd'   ]
+   ] }
 
  #{ 'site_index'        : 120,
    #'site_enabled'      : False,
