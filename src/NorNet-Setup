@@ -569,6 +569,7 @@ norNetSetup = [
       #[ 103, 4, u'stull' ]
    ] },
 
+ # Bell Labs Seoul: 7th floor DMC R&D center, 37 Maebongsan-ro, Mapo-gu, Seoul, Republic of Korea
  { 'site_index'        : 160,
    'site_enabled'      : False,
    'site_long_name'    : u'Bell Labs Seoul',
@@ -590,8 +591,13 @@ norNetSetup = [
            IPv6Network('::/0'),               IPv6Address('::') ],
    ],
    'site_nodes' : [
-      #[ 100, 1, u'smörgåstårta' ],
-      #[ 101, 2, u'knäckebröd'   ]
+      # Naming scheme: bridges in Seoul
+      [ 100, 1, u'seogang'  ],
+      [ 101, 2, u'mapo'     ],
+      [ 102, 3, u'wonhyo'   ],
+      [ 103, 4, u'hangang'  ],
+      [ 104, 5, u'dongjak'  ],
+      [ 105, 6, u'jamsugyo' ]
    ] }
 
  #{ 'site_index'        : 120,
