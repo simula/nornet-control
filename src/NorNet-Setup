@@ -562,7 +562,13 @@ norNetSetup = [
            IPv6Network('::/0'),       IPv6Address('::') ],
    ],
    'site_nodes' : [
-      [ 100, 1, u'longlou'   ],
+      # Naming scheme: parts of Sanya
+      [ 100, 1, u'huixincun'  ],
+      [ 101, 2, u'danzhoucun' ],
+      [ 102, 3, u'laoguoyuan' ],
+      [ 103, 4, u'lizhigou'   ],
+      [ 104, 5, u'shuikoupo'  ],
+      [ 105, 6, u'baojiabeng' ]
    ] },
 
  { 'site_index'        : 100,
