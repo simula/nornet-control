@@ -507,6 +507,7 @@ norNetSetup = [
       #[ 103, 4, u'stenbron'         ]
    ] },
 
+ # Hainan University (海南大学)
  { 'site_index'        : 88,
    'site_enabled'      : True,
    'site_long_name'    : u'Hainan University',
@@ -537,6 +538,31 @@ norNetSetup = [
       [ 103, 4, u'wanqun'    ],   # Wan-ch'uan River，Wanquan River before and called the white river.
       [ 104, 5, u'nanshan'   ],   # Nanshan Buddhism Cultural Park is a display of traditional Chinese Buddhist culture
       [ 105, 6, u'yalongbay' ]    # This place has beautiful beach and tropical forest park
+   ] },
+
+ # Sanya University (三亚学院)
+ { 'site_index'        : 89,
+   'site_enabled'      : False,
+   'site_long_name'    : u'Sanya University',
+   'site_short_name'   : 'SU',
+   'site_url'          : 'http://www.sanyau.edu.cn',
+   'site_domain'       : 'su.nornet',
+   'site_city'         : 'Sanya',
+   'site_province'     : 'Hainan',
+   'site_country'      : 'China',
+   'site_country_code' : 'CN',
+   'site_latitude'     : 18.288405,
+   'site_longitude'    : 109.55445,
+   'site_altitude'     : 10,
+   'site_pcu'          : [ IPv4Address('1.1.1.1'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'China Education and Research Network', 'eth1',
+           IPv4Network('1.1.1.2/28'), IPv4Address('1.1.1.1'),
+           IPv6Network('::/0'),       IPv6Address('::') ],
+   ],
+   'site_nodes' : [
+      [ 100, 1, u'longlou'   ],
    ] },
 
  { 'site_index'        : 100,
