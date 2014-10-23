@@ -1,0 +1,10 @@
+1. TOS + SSH -> some segments may go over different ISP. Interference with firewall?
+ -> SSH stalls.
+ Observed TOS: 0x10
+ Observed when one of site's ISPs has problems. (Haikou: 2nd ISP)
+
+2. IPv6:
+If source IPv6 address is the address of the secondary ISP, and the
+secondary ISP does not work, IPv6 connection establishment times out!
+
+Possible to give priorities in RADVD?
