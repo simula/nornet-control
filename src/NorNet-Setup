@@ -540,7 +540,7 @@ norNetSetup = [
       [ 105, 6, u'yalongbay' ]    # This place has beautiful beach and tropical forest park
    ] },
 
- # Sanya University (琼州大学)
+ # Qiongzhou University (琼州大学)
  { 'site_index'        : 89,
    'site_enabled'      : False,
    'site_long_name'    : u'Qiongzhou University',
@@ -554,21 +554,21 @@ norNetSetup = [
    'site_latitude'     : 18.288405,
    'site_longitude'    : 109.55445,
    'site_altitude'     : 10,
-   'site_pcu'          : [ IPv4Address('1.1.1.1'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('222.17.128.252'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'China Education and Research Network', 'eth1',
-           IPv4Network('1.1.1.2/28'), IPv4Address('1.1.1.1'),
-           IPv6Network('::/0'),       IPv6Address('::') ],
+           IPv4Network('222.17.128.253/26'), IPv4Address('222.17.128.193'),
+           IPv6Network('::/0'),              IPv6Address('::') ]
    ],
    'site_nodes' : [
-      # Naming scheme: parts of Sanya
-      [ 100, 1, u'huixincun'  ],
-      [ 101, 2, u'danzhoucun' ],
-      [ 102, 3, u'laoguoyuan' ],
-      [ 103, 4, u'lizhigou'   ],
-      [ 104, 5, u'shuikoupo'  ],
-      [ 105, 6, u'baojiabeng' ]
+      # Naming scheme: places in Sanya
+      [ 100, 1, u'sanyabay'      ],
+      [ 101, 2, u'luhuitou'      ],
+      [ 102, 3, u'tianyahaijiao' ],
+      [ 103, 4, u'qiongzhou'     ],
+      [ 104, 5, u'lizhigou'      ],
+      [ 105, 6, u'haitangbay'    ]
    ] },
 
  { 'site_index'        : 100,

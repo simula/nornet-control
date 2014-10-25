@@ -56,7 +56,7 @@ d-i partman-auto/expert_recipe          string \
                       method{ efi }                               \
                       format{ /boot/efi }                         \
               .                                                   \
-              8192 10000 8192 reiserfs                            \
+              12288 16384 12288 reiserfs                          \
                       $primary{ } $bootable{ }                    \
                       method{ format } format{ }                  \
                       use_filesystem{ } filesystem{ reiserfs }    \
@@ -72,8 +72,10 @@ d-i partman-auto/expert_recipe          string \
               .                                                   \
 
 # Mirror
-d-i mirror/country                                  string cn
+d-i mirror/protocol                                 string http
 d-i mirror/http/proxy                               string
+d-i mirror/http/hostname                            string cn.archive.ubuntu.com
+d-i mirror/http/directory                           string /ubuntu
 
 # Packages
 popularity-contest popularity-contest/participate   boolean false
