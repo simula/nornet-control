@@ -37,7 +37,7 @@ NorNet_Provider10='"Broadnet"                                 "broadnet"   "http
 NorNet_Provider11='"Altibox"                                  "altibox"    "https://www.altibox.no"'
 NorNet_Provider12='"Eidsiva"                                  "eidsiva"    "https://www.eidsiva.net"'
 # ------ Sweden -----------------------------------------------------------------------------------
-NorNet_Provider20='"SUNET"                                    "sunet"      "http://www.sunet.se"'
+NorNet_Provider20='"Swedish University Network"               "sunet"      "http://www.sunet.se"'
 # ------ Germany ----------------------------------------------------------------------------------
 NorNet_Provider30='"Deutsches Forschungsnetz"                 "dfn"        "https://www.dfn.de"'
 NorNet_Provider31='"Versatel"                                 "versatel"   "http://www.versatel.de"'
@@ -47,6 +47,7 @@ NorNet_Provider70='"Korea Research Environment Open NETwork"  "kreonet"    "http
 # ------ China ------------------------------------------------------------------------------------
 NorNet_Provider80='"China Education and Research Network"     "cernet"     "http://www.cernet.edu.cn"'
 NorNet_Provider81='"China Unicom"                             "unicom"     "http://www.chinaunicom.com"'
+NorNet_Provider82='"China Telecom"                            "cntelecom"  "http://www.chinatelecom.com.cn"'
 # ------ U.S.A. -----------------------------------------------------------------------------------
 NorNet_Provider90='"Kansas Research and Education Network"    "kanren"     "http://www.kanren.net"'
 # NorNet_Provider91=

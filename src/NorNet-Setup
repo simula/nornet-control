@@ -497,8 +497,8 @@ norNetSetup = [
    'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ u'SUNET', 'eth1', IPv4Network('193.10.227.85/29'), IPv4Address('193.10.227.81'),
-                          IPv6Network('::/0'),             IPv6Address('::') ]
+      [ u'Swedish University Network', 'eth1', IPv4Network('193.10.227.85/29'), IPv4Address('193.10.227.81'),
+                                               IPv6Network('::/0'),             IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'vänern'           ],
@@ -540,13 +540,13 @@ norNetSetup = [
       [ 105, 6, u'yalongbay' ]    # This place has beautiful beach and tropical forest park
    ] },
 
- # Sanya University (三亚学院)
+ # Sanya University (琼州大学)
  { 'site_index'        : 89,
    'site_enabled'      : False,
-   'site_long_name'    : u'Sanya University',
-   'site_short_name'   : 'SU',
-   'site_url'          : 'http://www.sanyau.edu.cn',
-   'site_domain'       : 'su.nornet',
+   'site_long_name'    : u'Qiongzhou University',
+   'site_short_name'   : 'QU',
+   'site_url'          : 'http://www.qzu.edu.cn',
+   'site_domain'       : 'qu.nornet',
    'site_city'         : 'Sanya',
    'site_province'     : 'Hainan',
    'site_country'      : 'China',
