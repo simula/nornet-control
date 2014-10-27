@@ -928,14 +928,14 @@ def makeKey(string):
 
 # ###### Write security association #########################################
 def _writeSecAssoc(outputFile, localAddress, remoteAddress, inIndex, outIndex, ahKey, espKey):
-   outputFile.write('add ' + str(localAddress)  + ' ' + str(remoteAddress) + ' ah  ' + str((inIndex * 65536)  + outIndex) + ' -A hmac-sha512 ' + ahKey + '\n')
-   outputFile.write('add ' + str(remoteAddress) + ' ' + str(localAddress)  + ' ah  ' + str((outIndex * 65536) + inIndex)  + ' -A hmac-sha512 ' + ahKey + '\n')
-   outputFile.write('add ' + str(localAddress)  + ' ' + str(remoteAddress) + ' esp ' + str((inIndex * 65536)  + outIndex) + ' -A camilla-cbc ' + espKey + '\n')
-   outputFile.write('add ' + str(remoteAddress) + ' ' + str(localAddress)  + ' esp ' + str((outIndex * 65536) + inIndex)  + ' -A camilla-cbc ' + espKey + '\n')
-   outputFile.write('spadd ' + str(localAddress) + ' ' + str(remoteAddress) + ' any -P out ipsec\n')
+   outputFile.write('add ' + str(localAddress)  + ' ' + str(remoteAddress) + ' ah  ' + str((inIndex * 65536)  + outIndex) + ' -A hmac-sha512 "' + ahKey + '";\n')
+   outputFile.write('add ' + str(remoteAddress) + ' ' + str(localAddress)  + ' ah  ' + str((outIndex * 65536) + inIndex)  + ' -A hmac-sha512 "' + ahKey + '";\n')
+   outputFile.write('add ' + str(localAddress)  + ' ' + str(remoteAddress) + ' esp ' + str((inIndex * 65536)  + outIndex) + ' -E camellia-cbc "' + espKey + '";\n')
+   outputFile.write('add ' + str(remoteAddress) + ' ' + str(localAddress)  + ' esp ' + str((outIndex * 65536) + inIndex)  + ' -E camellia-cbc "' + espKey + '";\n')
+   outputFile.write('spdadd ' + str(localAddress) + ' ' + str(remoteAddress) + ' any -P out ipsec\n')
    outputFile.write('   esp/transport//require\n')
    outputFile.write('   ah/transport//require;\n')
-   outputFile.write('spadd ' + str(remoteAddress) + ' ' + str(localAddress) + ' any -P in ipsec\n')
+   outputFile.write('spdadd ' + str(remoteAddress) + ' ' + str(localAddress) + ' any -P in ipsec\n')
    outputFile.write('   esp/transport//require\n')
    outputFile.write('   ah/transport//require;\n\n')
 
@@ -966,15 +966,16 @@ def makeIPSECConfiguration(localSite):
 
    if localSiteIndex == NorNet_SiteIndex_Central:
       for remoteSiteIndex in fullSiteList:
-         remoteSite = fullSiteList[remoteSiteIndex]
-         remoteSiteProviders = getNorNetProvidersForSite(remoteSite)
-         remoteAddress = makeNorNetIP(remoteSite['site_default_provider_index'], localSiteIndex, NorNet_NodeIndex_Tunnelbox, 6).ip
-         ahKey  = makeKey(staticAHKey  + str(localAddress) + '-' + str(remoteAddress))[0:64]
-         espKey = makeKey(staticESPKey + str(localAddress) + '-' + str(remoteAddress))[0:32]
-         _writeSecAssoc(outputFile, localAddress, remoteAddress,
-                        (localSite['site_default_provider_index']  * 256) + NorNet_SiteIndex_Central,
-                        (remoteSite['site_default_provider_index'] * 256) + remoteSiteIndex,
-                        ahKey, espKey)
+         if remoteSiteIndex != localSiteIndex:
+            remoteSite = fullSiteList[remoteSiteIndex]
+            remoteSiteProviders = getNorNetProvidersForSite(remoteSite)
+            remoteAddress = makeNorNetIP(remoteSite['site_default_provider_index'], remoteSiteIndex, NorNet_NodeIndex_Tunnelbox, 6).ip
+            ahKey  = makeKey(staticAHKey  + str(localAddress) + '-' + str(remoteAddress))[0:64]
+            espKey = makeKey(staticESPKey + str(localAddress) + '-' + str(remoteAddress))[0:32]
+            _writeSecAssoc(outputFile, localAddress, remoteAddress,
+                           (localSite['site_default_provider_index']  * 256) + NorNet_SiteIndex_Central,
+                           (remoteSite['site_default_provider_index'] * 256) + remoteSiteIndex,
+                           ahKey, espKey)
 
    else:
       remoteAddress = makeNorNetIP(centralSite['site_default_provider_index'], localSiteIndex, NorNet_NodeIndex_Tunnelbox, 6).ip
