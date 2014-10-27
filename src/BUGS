@@ -8,3 +8,15 @@ If source IPv6 address is the address of the secondary ISP, and the
 secondary ISP does not work, IPv6 connection establishment times out!
 
 Possible to give priorities in RADVD?
+
+
+3. ICMP Rate Limit too low?
+
+Fixed in Tunnelbox-Setup: set to 20000 instead of 1000.
+
+
+4. Firewall issues
+
+The Great Firewall captures DNS calls to Facebook, Twitter, etc., even within the Great tunnel. When it detects such calls, it interrupts the tunnel for some time, while ICMP outside still works.
+
+Fixed by setting DNS to local DNS of HU.

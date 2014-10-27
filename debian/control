@@ -38,6 +38,7 @@ Depends: apt-file,
          hping3,
          htop,
          idn,
+         ipsec-tools,
          joe,
          language-pack-de-base,
          language-pack-en-base,
@@ -222,8 +223,7 @@ Description: NorNet Display
 
 Package: nornet-gatekeeper
 Architecture: all
-Depends: ipsec-tools,
-         nornet-node,
+Depends: nornet-node,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Gatekeeper
