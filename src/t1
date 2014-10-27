@@ -1,28 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from NorNetTools         import *;
-from NorNetConfiguration import *;
+import hashlib;
 
 
-
-# ###### Get hostname from FQDN #############################################
-def getHostnameFromFQDN(fqdn):
-   match = re.search('^([^\.]*)\.(.*)', fqdn)
-   if match != None:
-      return match.group(1)
-   else:
-      return fqdn
+# ###### Make a key #########################################################
+def makeKey(string):
+   key = hashlib.sha512()
+   key.update(string)
+   return key.hexdigest()
 
 
-# ###### Get hostname from FQDN #############################################
-def getDomainFromFQDN(fqdn):
-   match = re.search('^([^\.]*)\.(.*)', fqdn)
-   if match != None:
-      return match.group(2)
-   else:
-      return ''
-
-
-for fqdn in [ "åklungen.alpha.test", "test.alpha.test", "system.alpha.test", "rekesmørbrød.alpha.test", "kölsch.alpha.test" ]:
-   print getHostnameFromFQDN(fqdn), "\t", getDomainFromFQDN(fqdn)
+print makeKey("This is key söpgjdsögdjgdsösjgdögdsjgdsök")
