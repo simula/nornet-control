@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if [ $# -ne 3 ] ; then
+   echo >&2 "Usage: $0 ISO_directory from_machine_number to_machine_number"
+   exit 1
+fi
+
+DIRECTORY="$1"
+FROM_MACHINE="$2"
+TO_MACHINE="$3"
+
+
+ISOs=`find $DIRECTORY -name "*.iso" | sort -u`
+
+
+i=1
+for iso in $ISOs ; do
+   if [ $i -gt $TO_MACHINE ] ; then
+      break
+   fi
+   if [ $i -ge $FROM_MACHINE ] ; then
+
+      system=`echo $iso | sed -e "s/\.iso$//" -e "s/.*\///"`
+
+      echo "=== $system -> $iso ==="
+
+      ./vboxtest create "$system" "$iso"
+   fi
+   let i=$i+1
+done

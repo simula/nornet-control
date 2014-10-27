@@ -1,0 +1,40 @@
+#!/bin/sh
+
+if [ $# -ne 3 ] ; then
+   echo >&2 "Usage: $0 create|remove system_name ISO_file"
+   exit 1
+fi
+
+ACTION="$1"
+SYSTEM="$2"
+ISOFILE="$3"
+
+MEM_SIZE=512      # MiB
+VRAM_SIZE=16      # MiB
+HD_SIZE=22000     # MiB
+HD_TYPE="Fixed"   # "Standard" "Fixed"
+
+mkdir -p Harddisks
+
+
+if [ "$ACTION" = "remove" -o "$ACTION" = "create" ] ; then
+   echo "--- REMOVE ---"
+   VBoxManage unregistervm $SYSTEM --delete || true
+   rm -f Harddisks/$SYSTEM.vdi || true
+fi
+
+if [ "$ACTION" = "create" ] ; then
+   echo "--- CREATE ---"
+   VBoxManage createvm --register --name $SYSTEM --ostype Ubuntu_64 && \
+   VBoxManage modifyvm $SYSTEM --rtcuseutc on && \
+   VBoxManage modifyvm $SYSTEM --boot1 dvd --boot2 disk && \
+   VBoxManage modifyvm $SYSTEM --memory $MEM_SIZE && \
+   VBoxManage modifyvm $SYSTEM --bridgeadapter1 eth0 --nic1 bridged --nictype1 82545EM && \
+   VBoxManage modifyvm $SYSTEM --vram $VRAM_SIZE && \
+   VBoxManage createhd --filename Harddisks/$SYSTEM.vdi --size $HD_SIZE --variant $HD_TYPE && \
+   VBoxManage storagectl $SYSTEM --name "SATA Controller" --add sata --controller IntelAHCI && \
+   VBoxManage storageattach $SYSTEM --storagectl "SATA Controller" --type hdd --port 0 --device 0 --medium Harddisks/$SYSTEM.vdi && \
+   VBoxManage storageattach $SYSTEM --storagectl "SATA Controller" --type dvddrive --port 1 --device 0 --medium $ISOFILE && \
+   echo VBoxManage startvm $SYSTEM
+   # VBoxManage modifyvm $SYSTEM --dvd none
+fi
