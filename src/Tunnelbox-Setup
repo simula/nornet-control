@@ -643,12 +643,12 @@ activateInterface ()
          "$TUNNEL_LOCAL_OUTER_ADDRESS" "$TUNNEL_REMOTE_OUTER_ADDRESS" \
          "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" "$TUNNEL_INNER_PREFIX" "$options" && \
       make-route "$ROUTING_TABLE" "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" && \
-      make-route main             "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC" && \
+      make-route main             "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC"
       if [ $TUNNEL_IS_DEFAULT_ROUTE -eq 1 ] ; then
          make-route "$ROUTING_TABLE" default "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS"
       fi && \
       if [ "$ADDITIONAL_STATIC_ROUTES" != "" ] ; then
-         for additionalRoute in $ADDITIONAL_STATIC_ROUTES ; do
+         for additionalRoute in $ADDITIONAL_STATIC_ROUTES ; do           
             make-route main "$additionalRoute" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC"
          done
       fi && \
@@ -862,11 +862,12 @@ activateProvider ()
       for providerNetwork in $PROVIDER_INTERNAL_NETWORK_IPv4 $PROVIDER_INTERNAL_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv6 ; do
          add-table-selector main "$PROVIDER_INTERNAL_TABLE_DEST_PREF" to "$providerNetwork"
       done && \
-      if [ $PROVIDER_TOS -ne 0 ] ; then
-         for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv6 ; do
-            add-table-selector "$PROVIDER_INTERNAL_TABLE" "$PROVIDER_INTERNAL_TABLE_TOS_PREF" from "$nornetNetwork" tos "$PROVIDER_TOS"
-         done
-      fi && \
+# !!!
+#      if [ $PROVIDER_TOS -ne 0 ] ; then
+#         for nornetNetwork in $NORNET_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv6 ; do
+#            add-table-selector "$PROVIDER_INTERNAL_TABLE" "$PROVIDER_INTERNAL_TABLE_TOS_PREF" from "$nornetNetwork" tos "$PROVIDER_TOS"
+#         done
+#      fi && \
       for providerNetwork in $PROVIDER_INTERNAL_NETWORK_IPv4 $PROVIDER_INTERNAL_NETWORK_IPv6 ; do
          add-table-selector "$PROVIDER_INTERNAL_TABLE" "$PROVIDER_INTERNAL_TABLE_SOURCE_PREF" from "$providerNetwork"
       done && \
