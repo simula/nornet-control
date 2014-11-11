@@ -50,8 +50,8 @@ sliceName        = None
 sliceUserNames   = []
 sliceUsers       = []
 ownAddresses     = False
-sliceDescription = "PROVIDE A DESCRIPTION HERE!"
-sliceUrl         = "PROVIDE A PROJECT URL HERE!"
+sliceDescription = None
+sliceUrl         = None
 expiration       = time.time() + (8 * 7 * 24 * 60 * 60)
 maxNodesPerSite  = 4
 

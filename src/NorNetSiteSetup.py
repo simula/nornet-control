@@ -864,9 +864,12 @@ def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScrip
       # UpdateSlice() may only have certain fields. Therefore, initialize
       # "slice" object again, with only the allowed fields included.
       slice = {}
-      slice['description'] = sliceDescription
-      slice['url']         = sliceUrl
-      slice['initscript']  = initScript
+      if sliceDescription != None:
+         slice['description'] = sliceDescription
+      if sliceUrl != None:
+         slice['url'] = sliceUrl
+      if initScript != None:
+         slice['initscript'] = initScript
       if expirationTime == 0:
          slice['expires'] = int(time.mktime(time.strptime('2038-01-18@23:59:59', '%Y-%m-%d@%H:%M:%S')))
       else:
