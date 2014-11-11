@@ -853,30 +853,45 @@ def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScrip
       slice['name']        = sliceName
       slice['description'] = sliceDescription
       slice['url']         = sliceUrl
-      slice['initscript']  = initScript
       slice['max_nodes']   = 1000000
 
-      sliceID = lookupSliceID(sliceName)
+      existingSlice = getPLCServer().GetSlices(getPLCAuthentication(),
+                                               { 'name' : sliceName },
+                                               [ 'slice_id', 'node_ids', 'name', 'description', 'url', 'initscript_code', 'expires' ])
+      try:
+         sliceID = int(existingSlice[0]['slice_id'])
+         print existingSlice
+         if sliceUrl == None:
+            sliceUrl = existingSlice[0]['url']
+         if sliceDescription == None:
+            sliceDescription = existingSlice[0]['description']
+      except:
+         sliceID = 0
+         
+      if sliceUrl == None:
+         sliceUrl = 'invalid:'
+      if sliceDescription == None:
+         sliceDescription = '!!! NO DESCRIPTION !!!'
+
       if sliceID == 0:
-         sliceToAdd = slice
          sliceID = getPLCServer().AddSlice(getPLCAuthentication(), slice)
 
       # UpdateSlice() may only have certain fields. Therefore, initialize
       # "slice" object again, with only the allowed fields included.
       slice = {}
-      if sliceDescription != None:
-         slice['description'] = sliceDescription
-      if sliceUrl != None:
-         slice['url'] = sliceUrl
-      if initScript != None:
-         slice['initscript'] = initScript
+      slice['initscript']  = initScript
+      slice['description'] = sliceDescription
+      slice['url']         = sliceUrl
       if expirationTime == 0:
          slice['expires'] = int(time.mktime(time.strptime('2038-01-18@23:59:59', '%Y-%m-%d@%H:%M:%S')))
       else:
          slice['expires'] = int(expirationTime)
 
-      if getPLCServer().UpdateSlice(getPLCAuthentication(), sliceID, slice) != 1:
-        sliceID = 0
+      if sliceID == 0:
+         sliceID = getPLCServer().AddSlice(getPLCAuthentication(), slice)
+      if sliceID != 0:
+         if getPLCServer().UpdateSlice(getPLCAuthentication(), sliceID, slice) != 1:
+           sliceID = 0
 
       if sliceID <= 0:
          error('Unable to add/update slice ' + sliceName)
