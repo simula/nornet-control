@@ -43,8 +43,8 @@ def log(logstring):
 
 # ###### Abort with error ###################################################
 def error(logstring):
-   print(datetime.datetime.now().isoformat() + \
-         ' ===== ERROR: ' + logstring + ' =====');
+   sys.stderr.write(datetime.datetime.now().isoformat() + \
+                    ' ===== ERROR: ' + logstring + ' =====\n')
    sys.exit(1)
 
 
