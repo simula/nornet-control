@@ -493,13 +493,15 @@ output.makeItem(output.makeXref('sec:Providers',  'Provider Table'))
 output.makeItem(output.makeXref('sec:Images',     'Site Images'))
 output.makeItem(output.makeXref('sec:Statistics', 'Site Statistics'))
 output.beginItem()
-output.write(output.makeXref('sec:Details', 'Site Details'))
+output.write(output.makeXref('sec:Site-Details', 'Site Details'))
 output.beginList()
 for siteIndex in sorted(siteIndexList):
    site = siteList[siteIndex]
    output.makeItem(output.makeXref('sub:' + site['site_short_name'], site['site_utf8']))
 output.endList()
 output.endItem()
+if showSlivers == True:
+   output.write(output.makeXref('sec:Slice-Details', 'Slice Details'))
 output.endList()
 
 
@@ -707,7 +709,7 @@ output.endTable()
 
 
 # ====== Get site details ===================================================
-output.header(2, 'sec:Details', 'Site Details')
+output.header(2, 'sec:Site-Details', 'Site Details')
 for siteIndex in sorted(siteIndexList):
 
    # ====== Get site information ============================================
@@ -911,5 +913,43 @@ for siteIndex in sorted(siteIndexList):
 
 
    output.endTable()
+
+
+# ====== Get slice details ==================================================
+if showSlivers == True:
+   output.header(2, 'sec:Slice-Details', 'Slice Details')
+
+   output.beginTable(3)
+
+   output.beginRow()
+   output.cell('No.')
+   output.cell('Slice Name')
+   output.cell('Description', 2, -1, 'width: 50em')
+   output.endRow()
+
+   sliceNumber = 0
+   for slice in sorted(sliceList, key = lambda x: x['slice_name']):
+      #print slice
+      sliceNumber = sliceNumber + 1
+      output.beginRow()
+      output.cell(str(sliceNumber))
+      output.cell(slice['slice_name'], -1, 3)
+      output.cell(slice['slice_description'], 2, -1, 'text-align: justify;')
+      output.endRow()
+
+      output.beginRow()
+      output.multiRowFill(2)
+      output.cell('URL:', -1, -1, 'width: 5em; text-align: left;')
+      output.cell(output.makeURL(slice['slice_url'], slice['slice_url']), -1, -1, 'text-align: left;')
+      output.endRow()
+
+      output.beginRow()
+      output.multiRowFill(2)
+      output.cell('Slivers:', -1, -1, 'width: 5em; text-align: left;')
+      output.cell(str(len(slice['slice_node_ids'])), -1, -1, 'text-align: left;')
+      output.endRow()
+
+   output.endTable()
+
 
 output.comment('END-OF-SITES-BLOCK')
