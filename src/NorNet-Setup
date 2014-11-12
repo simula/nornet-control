@@ -619,8 +619,8 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Korea Research Environment Open NETwork', 'eth1',
-           IPv4Network('203.230.60.142/26'), IPv4Address('203.230.60.129'),
-           IPv6Network('::/0'),               IPv6Address('::') ],
+           IPv4Network('203.230.60.142/26'),     IPv4Address('203.230.60.129'),
+           IPv6Network('2001:320:4030:1::2/64'), IPv6Address('2001:320:4030:1::1') ]
    ],
    'site_nodes' : [
       # Naming scheme: bridges in Seoul
