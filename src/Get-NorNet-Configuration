@@ -361,7 +361,10 @@ class LaTeXTableOutput(TableOutput):
 
    def makeURL(self, url, label):
       if self.useHpyerlinks == True:
-         return '\href{' + url + '}{' + label + '}'
+         if url == label:
+            return '\url{' + url + '}'
+         else:
+            return '\href{' + url + '}{' + label + '}'
       else:
          return label
 
@@ -443,10 +446,11 @@ def reserve(address):
 
 
 # ###### Extract IPs of a node or sliver ####################################
-def extractIPs(providerIndex, siteIndex, nodeIndex, sliceNodeIndex = 0):
+def extractIPs(siteIndex, nodeIndex, sliceNodeIndex = 0):
+   results = [ ]
    for onlyDefault in [ True, False ]:
       for providerIndex in providerList:
-         if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+         if ( ((onlyDefault == True) and (providerIndex == site['site_default_provider_index'])) or \
                ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
 
             provider = providerList[providerIndex]
@@ -455,20 +459,29 @@ def extractIPs(providerIndex, siteIndex, nodeIndex, sliceNodeIndex = 0):
             reserve(ifIPv4)
             reserve(ifIPv6)
 
+            providerURL = ''
+            try:
+               providerURL = NorNet_ProviderList[providerIndex][2]
+            except:
+               pass
+            providerLabel = output.makeURL(providerURL, provider['provider_long_name']) + ' (' + str(provider['provider_index']) + ')'
+            
             if showAddresses == True:
-               output.cell(output.makeTiny(str(ifIPv4)))
-               output.cell(output.makeTiny(str(ifIPv6)))
+               results.append([ providerLabel, str(ifIPv4), str(ifIPv6) ])
             else:
                externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
                if externalNetworkIPv4 != IPv4Address('0.0.0.0'):
-                  output.cell('native')
+                  labelIPv4 = 'native'
                else:
-                  output.cell('tunnelled')
+                  labelIPv4 = 'tunnelled'
                externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
                if externalNetworkIPv6 != IPv6Address('::'):
-                  output.cell('native')
+                  labelIPv6 = 'native'
                else:
-                  output.cell('tunnelled')
+                  labelIPv6 = 'tunnelled'
+               results.append([ providerLabel, labelIPv4, labelIPv6 ])
+
+   return results
 
 
 
@@ -818,9 +831,9 @@ for siteIndex in sorted(siteIndexList):
       nodePlusSliverCells = 2
 
    if siteEnabled:
-      output.beginTable(nodePlusSliverCells + 2 * len(providerList))
+      output.beginTable(nodePlusSliverCells + 4)
    else:
-      output.beginTable(nodePlusSliverCells + 2 * len(providerList), 'grey')
+      output.beginTable(nodePlusSliverCells + 4, 'grey')
 
 
    # ====== Display site information ========================================
@@ -852,36 +865,14 @@ for siteIndex in sorted(siteIndexList):
 
    # ====== Get node information ============================================
    for stage in [1, 2]:
-      output.beginRow()
-      output.cell('Node', 2, 2, 'width: 4em;')
-      if showSlivers == True:
-         output.cell('Sliver', 2, 2, 'width: 6em;')
-      isp = 0
-      for onlyDefault in [ True, False ]:
-         for providerIndex in providerList:
-            if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
-                  ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
-               provider = providerList[providerIndex]
-               providerURL = ''
-               try:
-                  providerURL = NorNet_ProviderList[providerIndex][2]
-               except:
-                  pass
-               output.cell(output.makeURL(providerURL, provider['provider_long_name']) + ' (' + str(provider['provider_index']) + ')', 2)
-               isp = isp + 1
-      output.endRow()
 
       output.beginRow()
+      output.cell('Node', 2, -1, 'width: 20em;')
       if showSlivers == True:
-         output.multiRowFill(2)
-         output.multiRowFill(2)
-      else:
-         output.multiRowFill(2)
-      i = 0
-      while i < isp:
-         output.cell('IPv4', -1, -1, 'width: 4em;')
-         output.cell('IPv6', -1, -1, 'width: 6em;')
-         i = i + 1
+         output.cell('Sliver', 2, -1, 'width: 16em;')
+      output.cell('Provider', 2, -1, 'width: 20em;')
+      output.cell('IPv4', -1, -1, 'width: 16em;')
+      output.cell('IPv6', -1, -1, 'width: 16em;')
       output.endRow()
 
       if stage == 1:
@@ -893,35 +884,53 @@ for siteIndex in sorted(siteIndexList):
 
 
    # ===== Tunnelbox ========================================================
-   output.beginRow()
-   output.cell('1', -1, 2)
-   output.cell('tunnelbox.' + site['site_domain'], nodePlusSliverCells - 1, 2)
-
+   isp = 0
    for onlyDefault in [ True, False ]:
       for providerIndex in providerList:
          if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
                ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
-            provider = providerList[providerIndex]
-
+            isp         = isp + 1
+            provider    = providerList[providerIndex]
+            providerURL = ''
+            try:
+               providerURL = NorNet_ProviderList[providerIndex][2]
+            except:
+               pass
             externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
             externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
+            internalNetworkIPv4 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 4).ip
+            internalNetworkIPv6 = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, 6).ip
+
+            # ====== External addresses =====================================
+            output.beginRow()
+            if isp == 1:
+               output.cell('1', -1, 2 * len(providerList))
+               output.cell('tunnelbox.' + site['site_domain'], nodePlusSliverCells - 1, 2 * len(providerList))
+            else:
+               output.multiRowFill()
+               output.multiRowFill(nodePlusSliverCells - 1)
+
+            output.cell(output.makeURL(providerURL, provider['provider_long_name']) + ' (' + str(provider['provider_index']) + ')', 2, 2)
             if showAddresses == True:
-               output.cell(output.makeTiny(str(externalNetworkIPv4)))
+               output.cell(str(externalNetworkIPv4))
             else:
                output.cell(output.makeSmiley(True))
             if externalNetworkIPv6 != IPv6Address('::'):
                if showAddresses == True:
-                  output.cell(output.makeTiny(str(externalNetworkIPv6)))
+                  output.cell(str(externalNetworkIPv6))
                else:
                   output.cell(output.makeSmiley(True))
             else:
                output.cell(output.makeSmiley(False))
-   output.endRow()
-   output.beginRow()
-   output.multiRowFill(1)
-   output.multiRowFill(nodePlusSliverCells - 1)
-   extractIPs(providerIndex, siteIndex, 1)
-   output.endRow()
+            output.endRow()
+
+            output.beginRow()
+            output.multiRowFill()
+            output.multiRowFill(nodePlusSliverCells - 1)
+            output.multiRowFill()
+            output.cell(str(internalNetworkIPv4))
+            output.cell(str(internalNetworkIPv6))
+            output.endRow()
 
 
    for node in nodeList:
@@ -953,13 +962,29 @@ for siteIndex in sorted(siteIndexList):
 
 
          # ====== Root context ==============================================
-         output.beginRow()
-         output.cell(str(nodeIndex), -1, 1 + len(sliversOfNode))
-         output.cell(nodeName, -1, 1 + len(sliversOfNode), 'text-align: left;')
-         if showSlivers == True:
-            output.cell('Root Context', 2)
-         extractIPs(providerIndex, siteIndex, nodeIndex)
-         output.endRow()
+         endpointList    = extractIPs(siteIndex, nodeIndex)
+         isFirstEndpoint = True
+         for endpoint in endpointList:
+            output.beginRow()         
+            if isFirstEndpoint == True:
+               isFirstEndpoint = False
+               
+                #+ len(sliversOfNode))  ????????
+               
+               output.cell(str(nodeIndex), -1, (1 + len(sliversOfNode)) * len(providerList))
+               output.cell(nodeName,       -1, (1 + len(sliversOfNode)) * len(providerList), 'text-align: left;')
+               if showSlivers == True:
+                  output.cell('Root Context', 2, len(providerList))
+            else:
+               output.multiRowFill()
+               output.multiRowFill(1 + len(sliversOfNode))
+               if showSlivers == True:
+                  output.multiRowFill()
+
+            output.cell(endpoint[0], 2)
+            output.cell(endpoint[1])
+            output.cell(endpoint[2])
+            output.endRow()
 
 
          # ====== Sliver context ============================================
@@ -967,15 +992,24 @@ for siteIndex in sorted(siteIndexList):
             sliceNodeIndex  = sliverNode['pseudo_slice_node_index']
             sliverShortName = sliverNode['node_name'].split('.')[0]
 
-            output.beginRow()
-            output.multiRowFill()
-            output.multiRowFill()
-            output.cell(str(sliverNode['pseudo_slice_node_index']))
-            output.cell(sliverShortName, -1, -1, 'text-align: left;')
-            extractIPs(providerIndex, siteIndex, nodeIndex, sliceNodeIndex)
+            endpointList    = extractIPs(siteIndex, nodeIndex, sliceNodeIndex)
+            isFirstEndpoint = True
+            for endpoint in endpointList:
+               output.beginRow()
+               output.multiRowFill()
+               output.multiRowFill()
+               if isFirstEndpoint == True:
+                  isFirstEndpoint = False
+                  output.cell(str(sliverNode['pseudo_slice_node_index']), -1, len(providerList))
+                  output.cell(sliverShortName, -1, len(providerList), 'text-align: left;')
+               else:
+                 output.multiRowFill()
+                 output.multiRowFill()
 
-            output.endRow()
-
+               output.cell(endpoint[0], 2)
+               output.cell(endpoint[1])
+               output.cell(endpoint[2])
+               output.endRow()
 
    output.endTable()
 
