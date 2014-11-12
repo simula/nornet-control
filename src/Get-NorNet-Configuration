@@ -968,9 +968,6 @@ for siteIndex in sorted(siteIndexList):
             output.beginRow()         
             if isFirstEndpoint == True:
                isFirstEndpoint = False
-               
-                #+ len(sliversOfNode))  ????????
-               
                output.cell(str(nodeIndex), -1, (1 + len(sliversOfNode)) * len(providerList))
                output.cell(nodeName,       -1, (1 + len(sliversOfNode)) * len(providerList), 'text-align: left;')
                if showSlivers == True:
