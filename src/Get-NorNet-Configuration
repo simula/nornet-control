@@ -112,6 +112,18 @@ class TableOutput:
       self.indent = self.indent - 1
       self.write('</table>\n')
 
+   def beginTableFirstHead(self):
+      return
+      
+   def endTableFirstHead(self):
+      return
+
+   def beginTableHead(self):
+      return False
+      
+   def endTableHead(self):
+      return
+
    def beginRow(self):
       self.doIndentation(False)
       self.write('<tr>')
@@ -134,6 +146,9 @@ class TableOutput:
 
    def multiRowFill(self, colspan = -1):
       return
+
+   def makeTiny(self, text):
+      return '<small>' + text + '</small>'
 
    def cell(self, cell = '', colspan = -1, rowspan = -1, style = ''):
       self.beginCell(colspan, rowspan, style)
@@ -194,6 +209,21 @@ class LaTeXTableOutput(TableOutput):
       self.write('\\usepackage{graphicx}\n')
       self.write('\\usepackage{longtable}\n')
       self.write('\\usepackage{multirow}\n')
+      self.write('% ====== Page-break fix for \cline ========================\n')
+      self.write('\\makeatletter\n')
+      self.write('\\def\\@cline#1-#2\\@nil{%\n')
+      self.write('\\omit\n')
+      self.write('\\@multicnt#1%\n')
+      self.write('\\advance\\@multispan\\m@ne\n')
+      self.write('\\ifnum\\@multicnt=\\@ne\\@firstofone{&\\omit}\\fi\n')
+      self.write('\\@multicnt#2%\n')
+      self.write('\\advance\\@multicnt-#1%\n')
+      self.write('\\advance\\@multispan\@ne\n')
+      self.write('\\leaders\\hrule\\@height\\arrayrulewidth\\hfill\n')
+      self.write('\\cr\n')
+      self.write('\\noalign{\\nobreak\\vskip-\\arrayrulewidth}}\n')
+      self.write('\\makeatother\n')
+      self.write('% =========================================================\n')
       self.write('\\usepackage{textcomp}\n')
       self.write('\\usepackage{wasysym}\n')
       self.write('\\usepackage{url}\n')
@@ -239,17 +269,30 @@ class LaTeXTableOutput(TableOutput):
       self.write('\n% ' + 76 * '%' + '\n')
       self.write('\\begin{small}\n')
       self.write('\\begin{center}\n')
-      self.write('\\begin{tabular}{|' + 'c|' * columns + '}\n \\hline')
+      self.write('\\begin{longtable}{|' + 'c|' * columns + '}\n \\hline')
       self.doIndentation(True)
       self.indent = self.indent + 1
       self.multiRowCounter = 0
 
    def endTable(self):
       self.indent = self.indent - 1
-      self.write('\\end{tabular}\n')
+      self.write('\\end{longtable}\n')
       self.write('\\end{center}\n')
       self.write('\\end{small}\n')
       self.write('% ' + 76 * '%' + '\n')
+
+   def beginTableFirstHead(self):
+      return
+      
+   def endTableFirstHead(self):
+      self.write('\\endfirsthead\n')
+
+   def beginTableHead(self):
+      self.write('\\hline\n')
+      return True
+      
+   def endTableHead(self):
+      self.write('\\endhead\n')
 
    def beginRow(self):
       self.clineArray = []
@@ -257,11 +300,12 @@ class LaTeXTableOutput(TableOutput):
       self.cellNumber = 0
 
    def endRow(self):
-      self.write(' \\\\ ')
+      self.write(' \\\\')
       self.multiRowCounter = self.multiRowCounter - 1
       if ((len(self.clineArray) == self.cellNumber) or (self.multiRowCounter <= 0)):
-         self.write('\\hline')
+         self.write(' \\hline')
       else:
+         self.write('* ')
          for c in self.clineArray:
             self.write('\\cline{' + str(c) + '-' + str(c) + '}')
       self.write('\n')
@@ -305,6 +349,9 @@ class LaTeXTableOutput(TableOutput):
       self.beginCell(colspan)
       self.endCell()
       self.clineArray = bak
+
+   def makeTiny(self, text):
+      return '\\tiny{' + text + '}'
 
    def makeXref(self, xref, label):
       if self.useHpyerlinks == True:
@@ -409,8 +456,8 @@ def extractIPs(providerIndex, siteIndex, nodeIndex, sliceNodeIndex = 0):
             reserve(ifIPv6)
 
             if showAddresses == True:
-               output.cell(str(ifIPv4))
-               output.cell(str(ifIPv6))
+               output.cell(output.makeTiny(str(ifIPv4)))
+               output.cell(output.makeTiny(str(ifIPv6)))
             else:
                externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
                if externalNetworkIPv4 != IPv4Address('0.0.0.0'):
@@ -787,6 +834,8 @@ for siteIndex in sorted(siteIndexList):
       [ 'URL',          output.makeURL(site['site_url'], site['site_url']) ]
    ]
 
+   output.beginTableFirstHead()
+
    output.beginRow()
    imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
    output.cell(output.makeImage(imageURL, 'height: 8.75em;'), nodePlusSliverCells, 1 + len(siteInfoTable), 'width: 12em;')
@@ -802,37 +851,45 @@ for siteIndex in sorted(siteIndexList):
 
 
    # ====== Get node information ============================================
-   output.beginRow()
-   output.cell('Node', 2, 2, 'width: 4em;')
-   if showSlivers == True:
-      output.cell('Sliver', 2, 2, 'width: 8em;')
-   isp = 0
-   for onlyDefault in [ True, False ]:
-      for providerIndex in providerList:
-         if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
-               ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
-            provider = providerList[providerIndex]
-            providerURL = ''
-            try:
-               providerURL = NorNet_ProviderList[providerIndex][2]
-            except:
-               pass
-            output.cell(output.makeURL(providerURL, provider['provider_long_name']) + ' (' + str(provider['provider_index']) + ')', 2)
-            isp = isp + 1
-   output.endRow()
+   for stage in [1, 2]:
+      output.beginRow()
+      output.cell('Node', 2, 2, 'width: 4em;')
+      if showSlivers == True:
+         output.cell('Sliver', 2, 2, 'width: 6em;')
+      isp = 0
+      for onlyDefault in [ True, False ]:
+         for providerIndex in providerList:
+            if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
+                  ((onlyDefault == False) and (providerIndex != site['site_default_provider_index'])) ):
+               provider = providerList[providerIndex]
+               providerURL = ''
+               try:
+                  providerURL = NorNet_ProviderList[providerIndex][2]
+               except:
+                  pass
+               output.cell(output.makeURL(providerURL, provider['provider_long_name']) + ' (' + str(provider['provider_index']) + ')', 2)
+               isp = isp + 1
+      output.endRow()
 
-   output.beginRow()
-   if showSlivers == True:
-      output.multiRowFill(2)
-      output.multiRowFill(2)
-   else:
-      output.multiRowFill(2)
-   i = 0
-   while i < isp:
-      output.cell('IPv4', -1, -1, 'width: 8em;')
-      output.cell('IPv6', -1, -1, 'width: 16em;')
-      i = i + 1
-   output.endRow()
+      output.beginRow()
+      if showSlivers == True:
+         output.multiRowFill(2)
+         output.multiRowFill(2)
+      else:
+         output.multiRowFill(2)
+      i = 0
+      while i < isp:
+         output.cell('IPv4', -1, -1, 'width: 4em;')
+         output.cell('IPv6', -1, -1, 'width: 6em;')
+         i = i + 1
+      output.endRow()
+
+      if stage == 1:
+         output.endTableFirstHead()
+         if output.beginTableHead() == False:
+            break
+      else:
+         output.endTableHead()
 
 
    # ===== Tunnelbox ========================================================
@@ -849,12 +906,12 @@ for siteIndex in sorted(siteIndexList):
             externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
             externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
             if showAddresses == True:
-               output.cell(str(externalNetworkIPv4))
+               output.cell(output.makeTiny(str(externalNetworkIPv4)))
             else:
                output.cell(output.makeSmiley(True))
             if externalNetworkIPv6 != IPv6Address('::'):
                if showAddresses == True:
-                  output.cell(str(externalNetworkIPv6))
+                  output.cell(output.makeTiny(str(externalNetworkIPv6)))
                else:
                   output.cell(output.makeSmiley(True))
             else:
@@ -901,21 +958,20 @@ for siteIndex in sorted(siteIndexList):
          output.cell(nodeName, -1, 1 + len(sliversOfNode), 'text-align: left;')
          if showSlivers == True:
             output.cell('Root Context', 2)
-
          extractIPs(providerIndex, siteIndex, nodeIndex)
-
          output.endRow()
 
 
          # ====== Sliver context ============================================
          for sliverNode in sliversOfNode:
+            sliceNodeIndex  = sliverNode['pseudo_slice_node_index']
+            sliverShortName = sliverNode['node_name'].split('.')[0]
+
             output.beginRow()
             output.multiRowFill()
             output.multiRowFill()
             output.cell(str(sliverNode['pseudo_slice_node_index']))
-            output.cell(sliverNode['node_name'], -1, -1, 'text-align: left;')
-
-            sliceNodeIndex = sliverNode['pseudo_slice_node_index']
+            output.cell(sliverShortName, -1, -1, 'text-align: left;')
             extractIPs(providerIndex, siteIndex, nodeIndex, sliceNodeIndex)
 
             output.endRow()
