@@ -852,14 +852,14 @@ for siteIndex in sorted(siteIndexList):
    output.beginRow()
    imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
    output.cell(output.makeImage(imageURL, 'height: 8.75em;'), nodePlusSliverCells, 1 + len(siteInfoTable), 'width: 12em;')
-   output.cell('Site Information', 2 * len(providerList))
+   output.cell(siteName, 4)
    output.endRow()
 
    for siteInfo in siteInfoTable:
       output.beginRow()
       output.multiRowFill(nodePlusSliverCells)
       output.cell(siteInfo[0], -1, -1, 'text-align: left;')
-      output.cell(siteInfo[1], 2 * len(providerList) - 1, -1, 'text-align: left;')
+      output.cell(siteInfo[1], 3, -1, 'text-align: left;')
       output.endRow()
 
 
@@ -907,8 +907,8 @@ for siteIndex in sorted(siteIndexList):
                output.cell('1', -1, 2 * len(providerList))
                output.cell('tunnelbox.' + site['site_domain'], nodePlusSliverCells - 1, 2 * len(providerList))
             else:
-               output.multiRowFill()
-               output.multiRowFill(nodePlusSliverCells - 1)
+               #output.multiRowFill()
+               output.multiRowFill(nodePlusSliverCells)
 
             output.cell(output.makeURL(providerURL, provider['provider_long_name']) + ' (' + str(provider['provider_index']) + ')', 2, 2)
             if showAddresses == True:
@@ -925,9 +925,9 @@ for siteIndex in sorted(siteIndexList):
             output.endRow()
 
             output.beginRow()
-            output.multiRowFill()
-            output.multiRowFill(nodePlusSliverCells - 1)
-            output.multiRowFill()
+            #output.multiRowFill()
+            output.multiRowFill(nodePlusSliverCells)
+            #output.multiRowFill()
             output.cell(str(internalNetworkIPv4))
             output.cell(str(internalNetworkIPv6))
             output.endRow()
@@ -977,7 +977,7 @@ for siteIndex in sorted(siteIndexList):
                   output.cell('Root Context', 2, len(providerList))
             else:
                output.multiRowFill()
-               output.multiRowFill(1 + len(sliversOfNode))
+               output.multiRowFill()
                if showSlivers == True:
                   output.multiRowFill()
 
