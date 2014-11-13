@@ -293,8 +293,8 @@ def makeNodeForDNS(nodeName, site, nodeIndex, model, type, options):
    norNetNode = {
       'node_site_id'          : site['site_id'],
       'node_index'            : nodeIndex,
-      'node_name'             : dnsName['ascii'] + '.' + site['site_domain'],
-      'node_utf8'             : dnsName['utf8']  + '.' + site['site_domain'],
+      'node_name'             : str.lower(dnsName['ascii'])     + '.' + site['site_domain'],
+      'node_utf8'             : unicode.lower(dnsName['utf8'])  + '.' + site['site_domain'],
       'node_nornet_interface' : None,
       'node_model'            : model,
       'node_type'             : type,

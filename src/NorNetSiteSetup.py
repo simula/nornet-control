@@ -538,7 +538,7 @@ def makeNorNetNode(fullSliceList,
                    pcuID, pcuPort, norNetInterface,
                    model, bootState):
    dnsName      = makeNameFromUnicode(nodeNiceName)
-   nodeHostName = dnsName['ascii']   # Domain to be added below!
+   nodeHostName = str.lower(dnsName['ascii'])   # Domain to be added below!
 
    # ====== Get site information ============================================
    siteNorNetIndex = int(getTagValue(site['site_tags'], 'nornet_site_index', '-1'))

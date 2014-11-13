@@ -201,9 +201,13 @@ class LaTeXTableOutput(TableOutput):
    def __init__(self, useHyperlinks):
       self.indent        = 0
       self.useHpyerlinks = useHpyerlinks
-      self.write('\\documentclass[10pt,a4paper]{article}\n')
-      self.write('\\usepackage{geometry}\n')
-      self.write('\\geometry{verbose,a4paper,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}\n')
+      self.write('\\documentclass[11pt,a4paper,german,english,titlepage]{book}\n')
+      self.write('\\usepackage{babel}\n')
+      self.write('\\usepackage{fixltx2e}\n')
+      self.write('\\usepackage{times}\n')
+      self.write('\\usepackage{a4wide}\n')
+      #self.write('\\usepackage{geometry}\n')
+      #self.write('\\geometry{verbose,a4paper,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}\n')
       self.write('\\usepackage[T2A]{fontenc}\n')
       self.write('\\usepackage[utf8]{inputenc}\n')
       self.write('\\usepackage{graphicx}\n')
@@ -445,8 +449,8 @@ def makePseudoNode(nodeName, site, nodeIndex, model):
    norNetNode = {
       'node_site_id'          : site['site_id'],
       'node_index'            : int(nodeIndex),
-      'node_name'             : dnsName['ascii'] + '.' + site['site_domain'],
-      'node_utf8'             : dnsName['utf8']  + '.' + site['site_domain'],
+      'node_name'             : str.lower(dnsName['ascii'])    + '.' + site['site_domain'],
+      'node_utf8'             : unicode.lower(dnsName['utf8']) + '.' + site['site_domain'],
       'node_nornet_interface' : None,
       'node_model'            : model,
       'node_state'            : 'SLIVER',
@@ -653,9 +657,8 @@ for siteIndex in sorted(siteIndexList):
             cellContent = output.makeURL(providerURL, cellContent)
 
             externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
-            cellContent = cellContent + output.makeSup('4')
             if externalNetworkIPv6 != IPv6Address('::'):
-               cellContent = cellContent + output.makeSup(',6')
+               cellContent = cellContent + output.makeSup('6')
 
             # ------ Statistics ---------------------------------------------
             if siteEnabled == True:
@@ -686,8 +689,8 @@ output.header(2, 'sec:Providers', 'Provider Table')
 output.beginTable(4)
 output.beginRow()
 output.cell('No.')
-output.cell('Full Name',  -1, -1, 'width: 30em; text-align: left;')
 output.cell('Short Name', -1, -1, 'width: 10em; text-align: left;')
+output.cell('Long Name',  -1, -1, 'width: 30em; text-align: left;')
 output.cell('URL',        -1, -1, 'width: 25em; text-align: left;')
 output.endRow()
 
@@ -706,10 +709,10 @@ for providerIndex in sorted(activeSitesISPs):
    output.beginRow()
    output.cell(str(ispNumber))
    if showIDsInOverview == True:
-      output.cell(output.makeURL(providerURL, providerLongName + ' (' + str(providerIndex) + ')'),  -1, -1, 'text-align: left;')
+      output.cell(output.makeURL(providerURL, providerShortName + ' (' + str(providerIndex) + ')'),  -1, -1, 'text-align: left;')
    else:
-      output.cell(output.makeURL(providerURL, providerLongName),  -1, -1, 'text-align: left;')
-   output.cell(output.makeURL(providerURL, providerShortName), -1, -1, 'text-align: left;')
+      output.cell(output.makeURL(providerURL, providerShortName),  -1, -1, 'text-align: left;')
+   output.cell(output.makeURL(providerURL, providerLongName), -1, -1, 'text-align: left;')
    output.cell(output.makeURL(providerURL,providerURL), -1, -1, 'text-align: left;')
    output.endRow()
 
@@ -888,7 +891,7 @@ for siteIndex in sorted(siteIndexList):
       output.cell('Node', 2, -1, 'width: 20em;')
       if showSlivers == True:
          output.cell('Sliver', 2, -1, 'width: 16em;')
-      output.cell('Provider', 2, -1, 'width: 20em;')
+      output.cell('Provider', 2, -1, 'width: 16em;')
       output.cell('IPv4', -1, -1, 'width: 16em;')
       output.cell('IPv6', -1, -1, 'width: 16em;')
       output.endRow()
@@ -923,19 +926,19 @@ for siteIndex in sorted(siteIndexList):
             output.beginRow()
             if isp == 1:
                output.cell('1', -1, 2 * len(providerList))
-               output.cell('tunnelbox', nodePlusSliverCells - 1, 2 * len(providerList), 'width: 6em;')
+               output.cell('tunnelbox', nodePlusSliverCells - 1, 2 * len(providerList))
             else:
                output.multiRowFill()
                output.multiRowFill(nodePlusSliverCells - 1)
 
             output.cell(output.makeURL(providerURL, provider['provider_short_name']) + ' (' + str(provider['provider_index']) + ')', 2, 2)
             if showAddresses == True:
-               output.cell(str(externalNetworkIPv4))
+               output.cell(output.makeTiny(str(externalNetworkIPv4)))
             else:
                output.cell(output.makeSmiley(True))
             if externalNetworkIPv6 != IPv6Address('::'):
                if showAddresses == True:
-                  output.cell(str(externalNetworkIPv6))
+                  output.cell(output.makeTiny(str(externalNetworkIPv6)))
                else:
                   output.cell(output.makeSmiley(True))
             else:
@@ -946,8 +949,8 @@ for siteIndex in sorted(siteIndexList):
             output.multiRowFill()
             output.multiRowFill(nodePlusSliverCells - 1)
             output.multiRowFill(2)
-            output.cell(str(internalNetworkIPv4))
-            output.cell(str(internalNetworkIPv6))
+            output.cell(output.makeTiny(str(internalNetworkIPv4)))
+            output.cell(output.makeTiny(str(internalNetworkIPv6)))
             output.endRow()
 
 
@@ -983,11 +986,11 @@ for siteIndex in sorted(siteIndexList):
          endpointList    = extractIPs(siteIndex, nodeIndex)
          isFirstEndpoint = True
          for endpoint in endpointList:
-            output.beginRow()         
+            output.beginRow()
             if isFirstEndpoint == True:
                isFirstEndpoint = False
                output.cell(str(nodeIndex), -1, (1 + len(sliversOfNode)) * len(providerList))
-               output.cell(nodeName,       -1, (1 + len(sliversOfNode)) * len(providerList), 'text-align: left; width: 6em;')
+               output.cell(nodeName,       -1, (1 + len(sliversOfNode)) * len(providerList), 'text-align: left;')
                if showSlivers == True:
                   output.cell('Root Context', 2, len(providerList))
             else:
@@ -997,8 +1000,8 @@ for siteIndex in sorted(siteIndexList):
                   output.multiRowFill(2)
 
             output.cell(endpoint[0], 2)
-            output.cell(endpoint[1])
-            output.cell(endpoint[2])
+            output.cell(output.makeTiny(endpoint[1]))
+            output.cell(output.makeTiny(endpoint[2]))
             output.endRow()
 
 
@@ -1022,8 +1025,8 @@ for siteIndex in sorted(siteIndexList):
                  output.multiRowFill()
 
                output.cell(endpoint[0], 2)
-               output.cell(endpoint[1])
-               output.cell(endpoint[2])
+               output.cell(output.makeTiny(endpoint[1]))
+               output.cell(output.makeTiny(endpoint[2]))
                output.endRow()
 
    output.endTable()
