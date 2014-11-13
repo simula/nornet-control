@@ -590,7 +590,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
       for version in [ 4, 6 ]:
          providerNetwork  = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
          providerZone     = getZoneForAddress(providerNetwork, providerNetwork.prefixlen)
-         providerZoneFile = codecs.open(localProvider['provider_short_name'] + '.' + siteFQDN + 'ipv' + str(version) + '.db', 'w', 'utf-8')
+         providerZoneFile = codecs.open(str.lower(localProvider['provider_short_name']) + '.' + siteFQDN + 'ipv' + str(version) + '.db', 'w', 'utf-8')
          writeSOA(providerZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
 
          for node in fullNodeList:
@@ -676,7 +676,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
             providerZone = getZoneForAddress(providerNetwork, providerNetwork.prefixlen)
             writeZone(zoneConfFile,
                       providerZone,
-                      siteProvider['provider_short_name'] + '.' + site['site_domain'] + '.ipv' + str(version) + '.db',
+                      str.lower(siteProvider['provider_short_name']) + '.' + site['site_domain'] + '.ipv' + str(version) + '.db',
                       masterSite)
 
    zoneConfFile.write('\n// ====== Tunnel IP Reverse Lookup ======\n')
@@ -1319,10 +1319,10 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
 
 
       # ====== Generate provider configuration file =========================
-      providerFile = codecs.open(localProvider['provider_short_name'] + '.provider', 'w', 'utf-8')
+      providerFile = codecs.open(str.lower(localProvider['provider_short_name']) + '.provider', 'w', 'utf-8')
       providerFile.write('PROVIDER_INDEX='                      + str(localProvider['provider_index']) + '\n')
-      providerFile.write('PROVIDER_INTERFACE="'                 + localProvider['provider_tunnelbox_interface'] + '"\n')
-      providerFile.write('PROVIDER_SHORT_NAME="'                + localProvider['provider_short_name'] + '"\n')
+      providerFile.write('PROVIDER_INTERFACE="'                 + localProvider['provider_tunnelbox_interface']   + '"\n')
+      providerFile.write('PROVIDER_SHORT_NAME="'                + str.lower(localProvider['provider_short_name']) + '"\n')
       providerFile.write('PROVIDER_LONG_NAME="'                 + localProvider['provider_long_name']  + '"\n')
       providerFile.write('PROVIDER_TOS='                        + str(internalRoutingTableTOS)         + '\n')
       if localProviderIndex == localSite['site_default_provider_index']:
@@ -1362,8 +1362,8 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
       providerFile.close()
 
       tunnelboxFile.write('PROVIDER_FOR_INTERFACE_' + localProvider['provider_tunnelbox_interface'] + \
-                          '="' + localProvider['provider_short_name'] + '"\n')
-      providerSet.add(localProvider['provider_short_name'])
+                          '="' + str.lower(localProvider['provider_short_name']) + '"\n')
+      providerSet.add(str.lower(localProvider['provider_short_name']))
 
 
       # ====== Generate interface configuration files =======================
@@ -1398,7 +1398,7 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
                else:
                   interfaceFile.write('INTERFACE_TYPE="seks"\n')
 
-               interfaceFile.write('INTERFACE_PROVIDER="' + localProvider['provider_short_name'] + '"\n\n')
+               interfaceFile.write('INTERFACE_PROVIDER="' + str.lower(localProvider['provider_short_name']) + '"\n\n')
 
                if needsLinkLocalAddress == True:
                   interfaceFile.write('TUNNEL_V6LINKLOCAL_ADDRESS="' + \

@@ -24,41 +24,41 @@ NorNet_CentralSite_BootstrapProviderIndex=1
 
 # The provider list
 # ------ Norway -----------------------------------------------------------------------------------
-NorNet_Provider1='"Uninett"                                   "uninett"    "https://www.uninett.no"'
-NorNet_Provider2='"Hafslund"                                  "hafslund"   "http://kvantel.no"'
-NorNet_Provider3='"ICE"                                       "ice"        "http://www.ice.no"'
-NorNet_Provider4='"Telenor"                                   "telenor"    "https://www.telenor.no"'
-NorNet_Provider5='"NetCom"                                    "netcom"     "https://www.netcom.no"'
-NorNet_Provider6='"Tele2"                                     "tele2"      "https://www.tele2.no"'
-NorNet_Provider7='"Network Norway"                            "netnorway"  "http://www.networknorway.no"'
-NorNet_Provider8='"Bergenshalvøens Kommunale Kraftselskap"    "bkk"        "http://bkk.no"'
-NorNet_Provider9='"PowerTech"                                 "powertech"  "http://www.powertech.no"'
-NorNet_Provider10='"Broadnet"                                 "broadnet"   "https://www.broadnet.no"'
-NorNet_Provider11='"Altibox"                                  "altibox"    "https://www.altibox.no"'
-NorNet_Provider12='"Eidsiva"                                  "eidsiva"    "https://www.eidsiva.net"'
+NorNet_Provider1='"Uninett"                                   "Uninett"    "https://www.uninett.no"'
+NorNet_Provider2='"Kvantel"                                   "Kvantel"    "http://kvantel.no"'
+NorNet_Provider3='"ICE"                                       "ICE"        "http://www.ice.no"'
+NorNet_Provider4='"Telenor"                                   "Telenor"    "https://www.telenor.no"'
+NorNet_Provider5='"NetCom"                                    "Netcom"     "https://www.netcom.no"'
+NorNet_Provider6='"Tele2"                                     "Tele2"      "https://www.tele2.no"'
+NorNet_Provider7='"Network Norway"                            "NetNorway"  "http://www.networknorway.no"'
+NorNet_Provider8='"Bergenshalvøens Kommunale Kraftselskap"    "BKK"        "http://bkk.no"'
+NorNet_Provider9='"PowerTech"                                 "PowerTech"  "http://www.powertech.no"'
+NorNet_Provider10='"Broadnet"                                 "Broadnet"   "https://www.broadnet.no"'
+NorNet_Provider11='"Altibox"                                  "Altibox"    "https://www.altibox.no"'
+NorNet_Provider12='"Eidsiva"                                  "Eidsiva"    "https://www.eidsiva.net"'
 # ------ Sweden -----------------------------------------------------------------------------------
-NorNet_Provider20='"Swedish University Network"               "sunet"      "http://www.sunet.se"'
+NorNet_Provider20='"Swedish University Network"               "SUNET"      "http://www.sunet.se"'
 # ------ Germany ----------------------------------------------------------------------------------
-NorNet_Provider30='"Deutsches Forschungsnetz"                 "dfn"        "https://www.dfn.de"'
-NorNet_Provider31='"Versatel"                                 "versatel"   "http://www.versatel.de"'
-NorNet_Provider32='"Deutsche Telekom"                         "dtag"       "http://www.dtag.de"'
+NorNet_Provider30='"Deutsches Forschungsnetz"                 "DFN"        "https://www.dfn.de"'
+NorNet_Provider31='"Versatel"                                 "Versatel"   "http://www.versatel.de"'
+NorNet_Provider32='"Deutsche Telekom"                         "DTAG"       "http://www.dtag.de"'
 # ------ Korea ------------------------------------------------------------------------------------
-NorNet_Provider70='"Korea Research Environment Open NETwork"  "kreonet"    "http://www.kreonet.net"'
+NorNet_Provider70='"Korea Research Environment Open NETwork"  "KREONET"    "http://www.kreonet.net"'
 # ------ China ------------------------------------------------------------------------------------
-NorNet_Provider80='"China Education and Research Network"     "cernet"     "http://www.cernet.edu.cn"'
-NorNet_Provider81='"China Unicom"                             "unicom"     "http://www.chinaunicom.com"'
-NorNet_Provider82='"China Telecom"                            "cntelecom"  "http://www.chinatelecom.com.cn"'
+NorNet_Provider80='"China Education and Research Network"     "CERNET"     "http://www.cernet.edu.cn"'
+NorNet_Provider81='"China Unicom"                             "CnUnicom"   "http://www.chinaunicom.com"'
+NorNet_Provider82='"China Telecom"                            "CnTelecom"  "http://www.chinatelecom.com.cn"'
 # ------ U.S.A. -----------------------------------------------------------------------------------
-NorNet_Provider90='"Kansas Research and Education Network"    "kanren"     "http://www.kanren.net"'
+NorNet_Provider90='"Kansas Research and Education Network"    "KanREN"     "http://www.kanren.net"'
 # NorNet_Provider91=
 # ------ Brazil -----------------------------------------------------------------------------------
-NorNet_Provider110='"Rede Nacional de Ensino e Pesquisa"      "rnp"        "https://www.rnp.br"'
-NorNet_Provider111='"Academic Network at São Paulo"           "ansp"       "http://www.ansp.br"'
+NorNet_Provider110='"Rede Nacional de Ensino e Pesquisa"      "RNP"        "https://www.rnp.br"'
+NorNet_Provider111='"Academic Network at São Paulo"           "ANSP"       "http://www.ansp.br"'
 # ------ Test -------------------------------------------------------------------------------------
-NorNet_Provider255='"Provider Eins"                           "p1"         "https://www.nntb.no"'
-NorNet_Provider254='"Provider Zwei"                           "p2"         "https://www.nntb.no"'
-NorNet_Provider253='"Provider Drei"                           "p3"         "https://www.nntb.no"'
-NorNet_Provider252='"Provider Vier"                           "p4"         "https://www.nntb.no"'
+NorNet_Provider255='"Provider Eins"                           "P1"         "https://www.nntb.no"'
+NorNet_Provider254='"Provider Zwei"                           "P2"         "https://www.nntb.no"'
+NorNet_Provider253='"Provider Drei"                           "P3"         "https://www.nntb.no"'
+NorNet_Provider252='"Provider Vier"                           "P4"         "https://www.nntb.no"'
 
 # Collectd server
 collectd_server_name="perfmon1.simula.nornet"

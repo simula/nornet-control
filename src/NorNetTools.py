@@ -213,14 +213,16 @@ def getZoneForAddress(addressObject, prefix):
 
 # ###### Convert name to unicode, ASCII and punycode representations ########
 def makeNameFromUnicode(name, isDNSName = True):
-   unicodeName  = unicode(name)
+   if isDNSName == True:
+      unicodeName = unicode(name).lower()
+   else:
+      unicodeName = unicode(name)
    punycodeName = unicodeName.encode("idna")
    asciiName    = ''
    for i in range(0, len(unicodeName)):
       if ( ((unicodeName[i] >= 'a') and
             (unicodeName[i] <= 'z')) or
-           ((isDNSName == False) and
-            (unicodeName[i] >= 'A') and
+           ((unicodeName[i] >= 'A') and
             (unicodeName[i] <= 'Z')) or
            ((unicodeName[i] >= '0') and
             (unicodeName[i] <= '9')) or

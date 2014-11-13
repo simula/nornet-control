@@ -214,7 +214,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
             error('Bad configuration "' + NorNet_Configuration['NorNet_Provider' + str(providerIndex)] + '" for NorNet_Provider' + str(providerIndex))
 
          providerLongName  = unquote(provider[0])
-         providerShortName = makeNameFromUnicode(unquote(provider[1]))['ascii']
+         providerShortName = makeNameFromUnicode(unquote(provider[1]), False)['ascii']
          providerURL       = unquote(provider[2])
 
          NorNet_ProviderList[providerIndex] = [ providerLongName, providerShortName, providerURL ]
