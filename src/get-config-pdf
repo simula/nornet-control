@@ -1,0 +1,11 @@
+#!/bin/sh
+
+rm -f NorNet-Configuration.*
+./Get-NorNet-Configuration -latex >NorNet-Configuration.tex && \
+pdflatex NorNet-Configuration.tex && \
+makeindex NorNet-Configuration.nlo -s nomencl.ist -o NorNet-Configuration.nls && \
+makeindex NorNet-Configuration.idx && \
+pdflatex NorNet-Configuration.tex && \
+makeindex NorNet-Configuration.idx && \
+pdflatex NorNet-Configuration.tex && \
+grep "too wide" NorNet-Configuration.log
