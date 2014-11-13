@@ -32,7 +32,7 @@ from NorNetAPI       import *;
 
 
 # ###### Find tag in style string ###########################################
-def findTag(style, tagName):
+def findTag(style, tagName, default = None):
    s1 = style.split(';')
    for r in s1:
       s2 = r.split(':')
@@ -41,7 +41,7 @@ def findTag(style, tagName):
             return  s2[1].strip()
       except:
          pass
-   return None
+   return default
 
 
 def rreplace(s, old, new, count):
@@ -114,7 +114,7 @@ class TableOutput:
 
    def beginTableFirstHead(self):
       return
-      
+
    def endTableFirstHead(self):
       return
 
@@ -201,7 +201,7 @@ class LaTeXTableOutput(TableOutput):
    def __init__(self, useHyperlinks):
       self.indent        = 0
       self.useHpyerlinks = useHpyerlinks
-      self.write('\\documentclass[10pt,a4paper,landscape]{article}\n')
+      self.write('\\documentclass[10pt,a4paper]{article}\n')
       self.write('\\usepackage{geometry}\n')
       self.write('\\geometry{verbose,a4paper,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}\n')
       self.write('\\usepackage[T2A]{fontenc}\n')
@@ -272,7 +272,9 @@ class LaTeXTableOutput(TableOutput):
       self.write('\\begin{longtable}{|' + 'c|' * columns + '}\n \\hline')
       self.doIndentation(True)
       self.indent = self.indent + 1
-      self.multiRowCounter = 0
+      self.totalColumns = columns
+      self.rowNumber    = 0
+      self.multiRowList = []
 
    def endTable(self):
       self.indent = self.indent - 1
@@ -283,37 +285,40 @@ class LaTeXTableOutput(TableOutput):
 
    def beginTableFirstHead(self):
       return
-      
+
    def endTableFirstHead(self):
       self.write('\\endfirsthead\n')
 
    def beginTableHead(self):
       self.write('\\hline\n')
       return True
-      
+
    def endTableHead(self):
       self.write('\\endhead\n')
 
    def beginRow(self):
       self.clineArray = []
       self.doIndentation(False)
-      self.cellNumber = 0
+      self.columnNumber = 0
+      self.rowNumber    = self.rowNumber + 1
 
    def endRow(self):
       self.write(' \\\\')
-      self.multiRowCounter = self.multiRowCounter - 1
-      if ((len(self.clineArray) == self.cellNumber) or (self.multiRowCounter <= 0)):
+      if len(self.clineArray) == self.columnNumber:
          self.write(' \\hline')
       else:
          self.write('* ')
          for c in self.clineArray:
             self.write('\\cline{' + str(c) + '-' + str(c) + '}')
       self.write('\n')
+      if self.columnNumber != self.totalColumns:
+         sys.stderr.write('ERROR: cell number ' + str(self.columnNumber) + ' != ' + str(self.totalColumns) + ' at endRow()!\n')
+         sys.exit(1)
 
    def beginCell(self, colspan = -1, rowspan = -1, style = ''):
-      self.cellNumber = self.cellNumber + 1
-      startCellNumber = self.cellNumber
-      if self.cellNumber > 1:
+      self.columnNumber = self.columnNumber + 1
+      startColumnNumber = self.columnNumber
+      if self.columnNumber > 1:
          self.write(' & ')
       self.colspan = colspan
       self.rowspan = rowspan
@@ -324,31 +329,44 @@ class LaTeXTableOutput(TableOutput):
          alignmentOption = 'l'
       elif alignment == 'right':
          alignmentOption = 'r'
+      width = findTag(style, 'width', '*')
 
       if ((alignmentOption != 'c') and (self.colspan < 1)):
          self.colspan = 1   # Use \multicolumn for non-centered cell
 
-      if self.colspan > 0:
+      if self.colspan > 1:
          self.write('\\multicolumn{' + str(self.colspan) + '}{|' + alignmentOption + '|}{')
-         self.cellNumber = self.cellNumber + (self.colspan - 1)
-      if self.rowspan > 0:
-         self.write('\\multirow{' + str(self.rowspan) + '}{*}{')
-         self.multiRowCounter = self.rowspan
+         self.columnNumber = self.columnNumber + (self.colspan - 1)
+         cs = self.colspan
       else:
-         for c in range(startCellNumber, self.cellNumber + 1):
+         cs = 1
+
+      if self.rowspan > 1:
+         self.write('\\multirow{' + str(self.rowspan) + '}{' + width + '}{')
+         self.multiRowList.append([ self.rowNumber + (self.rowspan - 1), self.columnNumber - cs])
+      else:
+         for c in range(startColumnNumber, self.columnNumber + 1):
             self.clineArray.append(c)
 
    def endCell(self):
-      if self.rowspan > 0:
+      if self.rowspan > 1:
          self.write('}')
-      if self.colspan > 0:
+      if self.colspan > 1:
          self.write('}')
 
    def multiRowFill(self, colspan = -1):
+      isEndOfBlock = False
+      for entry in self.multiRowList:
+         if ((entry[0] == self.rowNumber) and (entry[1] == self.columnNumber)):
+            isEndOfBlock = True
+            self.multiRowList.remove(entry)
+            break
+
       bak = list(self.clineArray)
       self.beginCell(colspan)
       self.endCell()
-      self.clineArray = bak
+      if not isEndOfBlock:
+         self.clineArray = bak
 
    def makeTiny(self, text):
       return '\\tiny{' + text + '}'
@@ -464,7 +482,7 @@ def extractIPs(siteIndex, nodeIndex, sliceNodeIndex = 0):
                providerURL = NorNet_ProviderList[providerIndex][2]
             except:
                pass
-            providerLabel = output.makeURL(providerURL, provider['provider_long_name']) + ' (' + str(provider['provider_index']) + ')'
+            providerLabel = output.makeURL(providerURL, provider['provider_short_name']) + ' (' + str(provider['provider_index']) + ')'
             
             if showAddresses == True:
                results.append([ providerLabel, str(ifIPv4), str(ifIPv6) ])
@@ -629,7 +647,7 @@ for siteIndex in sorted(siteIndexList):
                providerURL = NorNet_ProviderList[providerIndex][2]
             except:
                pass
-            cellContent = provider['provider_long_name']
+            cellContent = provider['provider_short_name']
             if showIDsInOverview == True:
                cellContent = cellContent + ' (' + str(providerIndex) + ')'
             cellContent = output.makeURL(providerURL, cellContent)
@@ -703,7 +721,7 @@ output.endTable()
 # ====== Get site images ====================================================
 output.header(2, 'sec:Images', 'Site Images')
 
-columns = int(math.ceil(math.sqrt(len(siteIndexList))))
+columns = int(math.floor(math.sqrt(len(siteIndexList))))
 output.beginTable(columns)
 siteNumber = 0
 inRow     = False
@@ -717,7 +735,7 @@ for siteIndex in sorted(siteIndexList):
       inRow = True
    imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
    siteNumber = siteNumber + 1
-   output.cell(output.makeXref('sub:' + site['site_short_name'], output.makeImage(imageURL, 'width: 15em; height: 10em; overflow: hidden;')))
+   output.cell(output.makeXref('sub:' + site['site_short_name'], output.makeImage(imageURL, 'width: 12em; height: 8em; overflow: hidden;')))
 
 if inRow == True:
    i = len(siteIndexList)
@@ -905,12 +923,12 @@ for siteIndex in sorted(siteIndexList):
             output.beginRow()
             if isp == 1:
                output.cell('1', -1, 2 * len(providerList))
-               output.cell('tunnelbox.' + site['site_domain'], nodePlusSliverCells - 1, 2 * len(providerList))
+               output.cell('tunnelbox', nodePlusSliverCells - 1, 2 * len(providerList), 'width: 6em;')
             else:
-               #output.multiRowFill()
-               output.multiRowFill(nodePlusSliverCells)
+               output.multiRowFill()
+               output.multiRowFill(nodePlusSliverCells - 1)
 
-            output.cell(output.makeURL(providerURL, provider['provider_long_name']) + ' (' + str(provider['provider_index']) + ')', 2, 2)
+            output.cell(output.makeURL(providerURL, provider['provider_short_name']) + ' (' + str(provider['provider_index']) + ')', 2, 2)
             if showAddresses == True:
                output.cell(str(externalNetworkIPv4))
             else:
@@ -925,9 +943,9 @@ for siteIndex in sorted(siteIndexList):
             output.endRow()
 
             output.beginRow()
-            #output.multiRowFill()
-            output.multiRowFill(nodePlusSliverCells)
-            #output.multiRowFill()
+            output.multiRowFill()
+            output.multiRowFill(nodePlusSliverCells - 1)
+            output.multiRowFill(2)
             output.cell(str(internalNetworkIPv4))
             output.cell(str(internalNetworkIPv6))
             output.endRow()
@@ -938,7 +956,7 @@ for siteIndex in sorted(siteIndexList):
       if node['node_site_id'] == site['site_id']:
          #print node
          nodeIndex = node['node_index']
-         nodeName  = node['node_name']
+         nodeName  = node['node_name'].split('.')[0]
          nodeUTF8  = node['node_utf8']
          nodeState = node['node_state']
 
@@ -969,14 +987,14 @@ for siteIndex in sorted(siteIndexList):
             if isFirstEndpoint == True:
                isFirstEndpoint = False
                output.cell(str(nodeIndex), -1, (1 + len(sliversOfNode)) * len(providerList))
-               output.cell(nodeName,       -1, (1 + len(sliversOfNode)) * len(providerList), 'text-align: left;')
+               output.cell(nodeName,       -1, (1 + len(sliversOfNode)) * len(providerList), 'text-align: left; width: 6em;')
                if showSlivers == True:
                   output.cell('Root Context', 2, len(providerList))
             else:
                output.multiRowFill()
                output.multiRowFill()
                if showSlivers == True:
-                  output.multiRowFill()
+                  output.multiRowFill(2)
 
             output.cell(endpoint[0], 2)
             output.cell(endpoint[1])
@@ -1020,7 +1038,7 @@ if showSlivers == True:
    output.beginRow()
    output.cell('No.')
    output.cell('Slice Name')
-   output.cell('Description', 2, -1, 'width: 50em')
+   output.cell('Description', 2, -1, 'width: 30em')
    output.endRow()
 
    sliceNumber = 0
