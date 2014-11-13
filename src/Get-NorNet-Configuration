@@ -147,6 +147,9 @@ class TableOutput:
    def multiRowFill(self, colspan = -1):
       return
 
+   def makeBold(self, text):
+      return '<strong>' + text + '</strong>'
+
    def makeTiny(self, text):
       return '<small>' + text + '</small>'
 
@@ -188,6 +191,12 @@ class TableOutput:
       else:
          return u'☹'
 
+   def hasTableOfContents(self):
+      return False
+
+   def addToIndex(self, item, referTo = None, addToGlossary = False):
+      return ''
+
    def doIndentation(self, newline = False):
       if newline == True:
          self.write('\n')
@@ -201,13 +210,11 @@ class LaTeXTableOutput(TableOutput):
    def __init__(self, useHyperlinks):
       self.indent        = 0
       self.useHpyerlinks = useHpyerlinks
-      self.write('\\documentclass[11pt,a4paper,german,english,titlepage]{book}\n')
+      self.glossary      = []
+      self.write('\\documentclass[11pt,a4paper,norsk,german,english,titlepage]{book}\n')
       self.write('\\usepackage{babel}\n')
       self.write('\\usepackage{fixltx2e}\n')
-      self.write('\\usepackage{times}\n')
       self.write('\\usepackage{a4wide}\n')
-      #self.write('\\usepackage{geometry}\n')
-      #self.write('\\geometry{verbose,a4paper,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}\n')
       self.write('\\usepackage[T2A]{fontenc}\n')
       self.write('\\usepackage[utf8]{inputenc}\n')
       self.write('\\usepackage{graphicx}\n')
@@ -232,11 +239,29 @@ class LaTeXTableOutput(TableOutput):
       self.write('\\usepackage{wasysym}\n')
       self.write('\\usepackage{url}\n')
       self.write('\\urlstyle{rm}\n')
+      self.write('\\usepackage{makeidx}\n')
+      self.write('\\makeindex\n')
+      self.write('\\usepackage[dvipsnames]{xcolor}\n')
+      self.write('\\definecolor{darkred}{rgb}{0.5,0,0}\n')
+      self.write('\\definecolor{darkgreen}{rgb}{0,0.5,0}\n')
+      self.write('\\definecolor{darkblue}{rgb}{0,0,0.5}\n')
+      self.write('\\definecolor{black}{rgb}{0,0,0}\n')
       self.write('\\usepackage[draft=false,pdfpagemode=UseOutlines,plainpages=false,hypertexnames=true,pdfpagelabels=true,hyperindex=true,colorlinks=true]{hyperref}\n')
-      self.write('\\hypersetup{colorlinks}\n')
+      self.write('\\hypersetup{colorlinks,pdfauthor={Priv.-Doz.\ Dr.\ Thomas Dreibholz},pdftitle={The NorNet Core Configuration},pdfsubject={NorNet Core},pdfkeywords={NorNet Core, Testbed, Configuration},linkcolor=darkblue,urlcolor=blue,citecolor=darkblue,filecolor=darkgreen}\n')
+      self.write('\\usepackage{nomencl}\n')
+      self.write('\\renewcommand{\\nomname}{Glossary}\n')
+      self.write('\\setlength{\\nomitemsep}{-\parsep}\n')
+      self.write('\\setlength{\\nomlabelwidth}{4.5cm}\n')
+      self.write('\\makenomenclature\n')
       self.write('\\begin{document}\n')
+      self.write('\\tableofcontents\\cleardoublepage\n')
+      self.write('\\printnomenclature\n')
+      self.write('\\addcontentsline{toc}{chapter}{Glossary}\\cleardoublepage\n')
 
    def __del__(self):
+      self.write('\\printindex{}\n')
+      self.write('\\pagebreak\n')
+      self.write('\\cleardoublepage\n')
       self.write('\\end{document}\n')
 
    def comment(self, text):
@@ -374,6 +399,9 @@ class LaTeXTableOutput(TableOutput):
       if not isEndOfBlock:
          self.clineArray = bak
 
+   def makeBold(self, text):
+      return '\\textbf{' + text + '}'
+
    def makeTiny(self, text):
       return '\\tiny{' + text + '}'
 
@@ -415,8 +443,6 @@ class LaTeXTableOutput(TableOutput):
             sys.stderr.write('Convert: ' + oldName + ' -> ' + name + ' ...\n')
             subprocess.call(['/usr/bin/inkscape', '-f', oldName, '-A', name])
 
-      #sys.stderr.write('OK: ' + name + '\n')
-
       options = 'keepaspectratio'
       width = findTag(style, 'width')
       if width != None:
@@ -425,7 +451,7 @@ class LaTeXTableOutput(TableOutput):
       if height != None:
          options = options + ',height=' + height
 
-      return '\includegraphics[' + options + ']{' + name + '}'
+      return '\\includegraphics[' + options + ']{' + name + '}'
 
 
    def makeText(self, text):
@@ -436,6 +462,19 @@ class LaTeXTableOutput(TableOutput):
          return '\\smiley{}'
       else:
          return '\\frownie{}'
+
+   def hasTableOfContents(self):
+      return True
+
+   def addToIndex(self, item, referTo = None, addToGlossary = False):
+      if ((referTo != None) and (referTo != item)):
+         if not item in self.glossary:
+            self.glossary.append(item)
+            if addToGlossary == True:
+               return '\\nomenclature{' + item + '}{' + referTo + '}\\index{' + item + '|see{' + referTo + '}}'
+            else:
+               return '\\index{' + item + '|see{' + referTo + '}}'
+      return '\index{' + item + '}'
 
    def makeSub(self, text):
       return '\\raisebox{-1ex}{' + text + '}'
@@ -516,7 +555,6 @@ siteFlagURL   = 'https://www.nntb.no/Artwork/Graphics/Flags'
 showAddresses     = True
 showSlivers       = True
 useHpyerlinks     = True
-showIDsInOverview = True
 outputFormat      = 'html'
 headerBaseLevel   = 2
 i = 1
@@ -527,16 +565,13 @@ while i < len(sys.argv):
       showSlivers = False
    elif sys.argv[i] == '-nohyperlinks':
       useHpyerlinks = False
-   elif sys.argv[i] == '-noidsinoverview':
-      showIDsInOverview = False
    elif sys.argv[i] == '-html':
       outputFormat = 'html'
    elif sys.argv[i] == '-latex':
       outputFormat      = 'latex'
       headerBaseLevel   = 1
-      #showIDsInOverview = False
    else:
-      error('Usage: ' + sys.argv[0] + '[-noaddresses] [-noslivers] [-noidsinoverview] [-nohyperlinks] [-html|-latex]')
+      error('Usage: ' + sys.argv[0] + '[-noaddresses] [-noslivers] [-nohyperlinks] [-html|-latex]')
    i = i + 1
 
 loginToPLC(quietMode = True)
@@ -580,25 +615,27 @@ for siteIndex in siteList:
 
 # ====== Make index =========================================================
 output.comment('BEGIN-OF-SITES-BLOCK')
-output.header(headerBaseLevel, 'cha:Index', 'Index')
-output.beginList()
-output.makeItem(output.makeXref('cha:Sites',      'Site Table'))
-output.makeItem(output.makeXref('cha:Providers',  'Provider Table'))
-output.makeItem(output.makeXref('cha:Images',     'Site Images'))
-output.makeItem(output.makeXref('cha:Site-Statistics', 'Site Statistics'))
-output.beginItem()
-output.write(output.makeXref('cha:Site-Details', 'Site Details'))
-output.beginList()
-for siteIndex in sorted(siteIndexList):
-   site = siteList[siteIndex]
-   output.makeItem(output.makeXref('sec:' + site['site_short_name'], site['site_utf8']))
-output.endList()
-output.endItem()
-if showSlivers == True:
+
+if output.hasTableOfContents() == False:
+   output.header(headerBaseLevel, 'cha:Index', 'Index')
+   output.beginList()
+   output.makeItem(output.makeXref('cha:Sites',      'Site Table'))
+   output.makeItem(output.makeXref('cha:Providers',  'Provider Table'))
+   output.makeItem(output.makeXref('cha:Site-Statistics', 'Site Statistics'))
+   output.makeItem(output.makeXref('cha:Images',     'Site Images'))
    output.beginItem()
-   output.write(output.makeXref('cha:Slice-Details', 'Slice Details'))
+   output.write(output.makeXref('cha:Site-Details', 'Site Details'))
+   output.beginList()
+   for siteIndex in sorted(siteIndexList):
+      site = siteList[siteIndex]
+      output.makeItem(output.makeXref('sec:' + site['site_short_name'], site['site_utf8']))
+   output.endList()
    output.endItem()
-output.endList()
+   if showSlivers == True:
+      output.beginItem()
+      output.write(output.makeXref('cha:Slice-Details', 'Slice Details'))
+      output.endItem()
+   output.endList()
 
 
 # ====== Get site table =====================================================
@@ -611,7 +648,7 @@ for siteIndex in sorted(siteIndexList):
 
 output.beginTable(2 + maxISPs)
 output.beginRow()
-output.cell('No.')
+output.cell('Index')
 output.cell('Site', -1, -1, 'width: 20em;')
 for i in range(1, maxISPs + 1):
    output.cell('ISP ' + str(i), -1, -1, 'width: 16em;')
@@ -622,7 +659,6 @@ numInterfacesIPv4    = 0
 numInterfacesIPv6    = 0
 activeSitesISPs      = Set([])
 activeSitesCountries = Set([])
-siteNumber           = 1
 for siteIndex in sorted(siteIndexList):
    site         = siteList[siteIndex]
    siteTagsList = site['site_tags']
@@ -640,11 +676,9 @@ for siteIndex in sorted(siteIndexList):
 
    # ------ Get interface information ---------------------------------------
    output.beginRow()
-   output.cell(str(siteNumber))
+   output.cell(str(siteIndex))
    cellContent = site['site_utf8']
-   if showIDsInOverview == True:
-      cellContent = cellContent + ' (' + str(siteIndex) + ')'
-   output.cell(output.makeXref('sec:' + site['site_short_name'], cellContent), -1, -1, 'text-align: left;')
+   output.cell(output.addToIndex(site['site_utf8']) + output.addToIndex('Site!' + site['site_utf8']) + output.makeXref('sec:' + site['site_short_name'], cellContent), -1, -1, 'text-align: left;')
    isp = 0
    for onlyDefault in [ True, False ]:
       for providerIndex in providerList:
@@ -657,8 +691,6 @@ for siteIndex in sorted(siteIndexList):
             except:
                pass
             cellContent = provider['provider_short_name']
-            #if showIDsInOverview == True:
-               #cellContent = cellContent + ' (' + str(providerIndex) + ')'
             cellContent = output.makeURL(providerURL, cellContent)
 
             externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
@@ -684,22 +716,21 @@ for siteIndex in sorted(siteIndexList):
       output.cell(u'–')
 
    output.endRow()
-   siteNumber = siteNumber + 1
 
 output.endTable()
 
 
 # ====== Get ISP table ======================================================
 output.header(headerBaseLevel, 'cha:Providers', 'Provider Table')
+
 output.beginTable(4)
 output.beginRow()
-output.cell('No.')
+output.cell('Index')
 output.cell('Short Name', -1, -1, 'text-align: left;')
 output.cell('Long Name',  -1, -1, 'text-align: left;')
 output.cell('URL',        -1, -1, 'text-align: left;')
 output.endRow()
 
-ispNumber = 1
 for providerIndex in sorted(activeSitesISPs):
    providerLongName  = '???'
    providerShortName = '???'
@@ -712,45 +743,10 @@ for providerIndex in sorted(activeSitesISPs):
       pass
 
    output.beginRow()
-   output.cell(str(ispNumber))
-   if showIDsInOverview == True:
-      output.cell(output.makeURL(providerURL, providerShortName + ' (' + str(providerIndex) + ')'),  -1, -1, 'text-align: left;')
-   else:
-      output.cell(output.makeURL(providerURL, providerShortName),  -1, -1, 'text-align: left;')
-   output.cell(output.makeURL(providerURL, providerLongName), -1, -1, 'text-align: left;')
+   output.cell(str(providerIndex))
+   output.cell(output.addToIndex(providerShortName, providerLongName) + output.addToIndex('Provider!' + providerLongName) + output.makeURL(providerURL, providerShortName), -1, -1, 'text-align: left;')
+   output.cell(output.addToIndex(providerLongName)                    + output.makeURL(providerURL, providerLongName),  -1, -1, 'text-align: left;')
    output.cell(output.makeTiny(output.makeURL(providerURL,providerURL)), -1, -1, 'text-align: left;')
-   output.endRow()
-
-   ispNumber = ispNumber + 1
-
-output.endTable()
-
-
-# ====== Get site images ====================================================
-output.header(headerBaseLevel, 'cha:Images', 'Site Images')
-
-columns = int(math.floor(math.sqrt(len(siteIndexList))))
-output.beginTable(columns)
-siteNumber = 0
-inRow     = False
-
-for siteIndex in sorted(siteIndexList):
-   site = siteList[siteIndex]
-   if (siteNumber % columns) == 0:
-      if inRow == True:
-         output.endRow()
-      output.beginRow()
-      inRow = True
-   imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
-   siteNumber = siteNumber + 1
-   output.cell(output.makeXref('sec:' + site['site_short_name'], output.makeImage(imageURL, 'width: 9em; height: 6em; overflow: hidden;')))
-
-if inRow == True:
-   i = len(siteIndexList)
-   while (i % columns) != 0:
-      i = i + 1
-      output.cell()
-
    output.endRow()
 
 output.endTable()
@@ -797,8 +793,38 @@ output.endRow()
 
 output.beginRow()
 output.cell('Inactive Sites', -1, -1, 'text-align: left;')
-output.cell(str(siteNumber - activeSites))
+output.cell(str(len(siteIndexList) - activeSites))
 output.endRow()
+
+output.endTable()
+
+
+# ====== Get site images ====================================================
+output.header(headerBaseLevel, 'cha:Images', 'Site Images')
+
+columns = int(math.floor(math.sqrt(len(siteIndexList))))
+output.beginTable(columns)
+siteNumber = 0
+inRow     = False
+
+for siteIndex in sorted(siteIndexList):
+   site = siteList[siteIndex]
+   if (siteNumber % columns) == 0:
+      if inRow == True:
+         output.endRow()
+      output.beginRow()
+      inRow = True
+   imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
+   siteNumber = siteNumber + 1
+   output.cell(output.makeXref('sec:' + site['site_short_name'], output.makeImage(imageURL, 'width: 9em; height: 6em; overflow: hidden;')))
+
+if inRow == True:
+   i = len(siteIndexList)
+   while (i % columns) != 0:
+      i = i + 1
+      output.cell()
+
+   output.endRow()
 
 output.endTable()
 
@@ -864,26 +890,30 @@ for siteIndex in sorted(siteIndexList):
 
    # ====== Display site information ========================================
    siteInfoTable = [
-      [ 'City',         siteCity     ],
-      [ 'Province',     output.makeImage(siteFlagURL + '/' + siteCountryCode + '-' + siteProvince + '.svg', 'height: 0.8em;') + siteProvince ],
-      [ 'Country',      output.makeImage(siteFlagURL + '/Flag-' + siteCountryCode + '.svg', 'height: 0.8em;') + siteCountry  ],
+      [ 'City',         output.addToIndex(siteCity)     + siteCity     ],
+      [ 'Province',     output.addToIndex(siteProvince) + output.makeImage(siteFlagURL + '/' + siteCountryCode + '-' + siteProvince + '.svg', 'height: 0.8em;') + siteProvince ],
+      [ 'Country',      output.addToIndex(siteCountryCode, siteCountry, True) + output.addToIndex(siteCountry)  + output.makeImage(siteFlagURL + '/Flag-' + siteCountryCode + '.svg', 'height: 0.8em;') + siteCountry + ' (' + siteCountryCode + ')' ],
       [ u'GPS/ГЛОНАСС', sitePosition ],
-      [ 'Short Name',   site['site_short_name'] ],
-      [ 'Domain',       site['site_domain'] ],
+      [ 'Short Name',   output.addToIndex(site['site_short_name'], siteName, True) + site['site_short_name'] ],
+      [ 'Domain',       output.addToIndex(site['site_domain']) + site['site_domain'] ],
       [ 'URL',          output.makeURL(site['site_url'], site['site_url']) ]
    ]
 
    output.beginTableFirstHead()
 
    output.beginRow()
-   imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
-   output.cell(output.makeImage(imageURL, 'height: 8.75em;'), nodePlusSliverCells, 1 + len(siteInfoTable))
-   output.cell(siteName, 4)
+   output.cell(output.addToIndex(siteName) + output.makeBold(siteName), nodePlusSliverCells + 4)
    output.endRow()
 
+   firstRow = True
    for siteInfo in siteInfoTable:
       output.beginRow()
-      output.multiRowFill(nodePlusSliverCells)
+      if firstRow == True:
+         firstRow = False
+         imageURL = siteImageURL + '/' + site['site_utf8'] + '.jpeg'
+         output.cell(output.makeImage(imageURL, 'height: 7.75em;'), nodePlusSliverCells, len(siteInfoTable))
+      else:
+         output.multiRowFill(nodePlusSliverCells)
       output.cell(siteInfo[0], -1, -1, 'text-align: left;')
       output.cell(siteInfo[1], 3, -1, 'text-align: left;')
       output.endRow()
@@ -905,6 +935,9 @@ for siteIndex in sorted(siteIndexList):
          output.endTableFirstHead()
          if output.beginTableHead() == False:
             break
+         output.beginRow()
+         output.cell(output.makeBold(siteName + ' (continued)'), nodePlusSliverCells + 4)
+         output.endRow()
       else:
          output.endTableHead()
 
@@ -1055,7 +1088,7 @@ if showSlivers == True:
       sliceNumber = sliceNumber + 1
       output.beginRow()
       output.cell(str(sliceNumber), -1, 3)
-      output.cell(output.makeText(unicode(slice['slice_name'])), -1, 3)
+      output.cell(output.addToIndex(output.makeText(unicode(slice['slice_name']))) + output.addToIndex('Slice!' + output.makeText(unicode(slice['slice_name']))) + output.makeText(unicode(slice['slice_name'])), -1, 3)
       output.cell(output.makeText(unicode(slice['slice_description'])), 2, -1, 'text-align: justify; width: 30em;')
       output.endRow()
 
@@ -1074,6 +1107,5 @@ if showSlivers == True:
       output.endRow()
 
    output.endTable()
-
 
 output.comment('END-OF-SITES-BLOCK')
