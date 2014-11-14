@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd October 9, 2014
+.Dd November 14, 2014
 .Dt Get-NorNet-Configuration 1
 .Os Get-NorNet-Configuration
 .\" ###### Name #############################################################
@@ -27,8 +27,8 @@
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
 .Nm Get-NorNet-Configuration
+.Op Fl directory=data_directory
 .Op Fl nohyperlinks
-.Op Fl noidsinoverview
 .Op Fl noaddresses
 .Op Fl noslivers
 .Op Fl html|\-latex
@@ -40,10 +40,10 @@ export the testbed configuration from the PLC.
 .\" ###### Arguments ########################################################
 .Sh ARGUMENTS
 .Bl -tag -width indent
+.It Fl directory=data_directory
+Put the image files (LaTeX output only!) into the given directory.
 .It Fl nohyperlinks
 Do not generate hyperlinks.
-.It Fl noidsinoverview
-Hide site and provider indices in overview table.
 .It Fl noaddresses
 Hide addresses.
 .It Fl noslivers
@@ -59,6 +59,6 @@ Generate LaTeX output.
 .It Get-NorNet-Configuration
 .It Get-NorNet-Configuration \-noaddresses
 .It Get-NorNet-Configuration \-noaddresses \-noslivers
-.It Get-NorNet-Configuration \-noaddresses \-noslivers \-noidsinoverview \-nohyperlinks
-.It Get-NorNet-Configuration \-noaddresses \-latex >NorNet.tex
+.It Get-NorNet-Configuration \-noaddresses \-noslivers \-nohyperlinks
+.It Get-NorNet-Configuration \-noaddresses \-latex \-directory=LaTeX-Images >NorNet.tex
 .El

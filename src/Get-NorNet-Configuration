@@ -51,8 +51,8 @@ def rreplace(s, old, new, count):
 
 class TableOutput:
    def __init__(self, useHyperlinks):
-      self.indent        = 0
       self.useHpyerlinks = useHpyerlinks
+      self.indent        = 0
 
       self.write('<?xml version="1.0" encoding="utf-8" ?>\n')
       self.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n')
@@ -207,9 +207,10 @@ class TableOutput:
 
 
 class LaTeXTableOutput(TableOutput):
-   def __init__(self, useHyperlinks):
-      self.indent        = 0
+   def __init__(self, useHyperlinks, dataDirectory = ''):
       self.useHpyerlinks = useHpyerlinks
+      self.dataDirectory = dataDirectory
+      self.indent        = 0
       self.glossary      = []
       self.write('\\documentclass[11pt,a4paper,norsk,german,english,titlepage]{book}\n')
       self.write('\\usepackage{babel}\n')
@@ -420,8 +421,8 @@ class LaTeXTableOutput(TableOutput):
       else:
          return label
 
-   def makeImage(self, url, style):      
-      name      = makeNameFromUnicode(os.path.basename(url), False)['ascii'].replace(' ', '_', 1000000000)
+   def makeImage(self, url, style):
+      name      = self.dataDirectory + '/' + makeNameFromUnicode(os.path.basename(url), False)['ascii'].replace(' ', '_', 1000000000)
       extension = os.path.splitext(name)[1]
       url       = urllib2.quote(url.encode('utf-8')).replace('https%3A', 'https:', 1)
 
@@ -528,7 +529,7 @@ def extractIPs(siteIndex, nodeIndex, sliceNodeIndex = 0):
             except:
                pass
             providerLabel = output.makeURL(providerURL, provider['provider_short_name']) + ' (' + str(provider['provider_index']) + ')'
-            
+
             if showAddresses == True:
                results.append([ providerLabel, str(ifIPv4), str(ifIPv6) ])
             else:
@@ -557,9 +558,16 @@ showSlivers       = True
 useHpyerlinks     = True
 outputFormat      = 'html'
 headerBaseLevel   = 2
+dataDirectory     = 'NorNet-Configuration-Data'
 i = 1
 while i < len(sys.argv):
-   if sys.argv[i] == '-noaddresses':
+   match = re.search('^-([a-z]*)=(.*)', sys.argv[i])
+   if match != None:
+      if match.group(1) == 'directory':
+         dataDirectory = match.group(2)
+      else:
+        error('Invalid option parameter: ' + sys.argv[i])
+   elif sys.argv[i] == '-noaddresses':
       showAddresses = False
    elif sys.argv[i] == '-noslivers':
       showSlivers = False
@@ -571,7 +579,7 @@ while i < len(sys.argv):
       outputFormat      = 'latex'
       headerBaseLevel   = 1
    else:
-      error('Usage: ' + sys.argv[0] + '[-noaddresses] [-noslivers] [-nohyperlinks] [-html|-latex]')
+      error('Usage: ' + sys.argv[0] + ' [-directory=data_directory] [-noaddresses] [-noslivers] [-nohyperlinks] [-html|-latex]')
    i = i + 1
 
 loginToPLC(quietMode = True)
@@ -605,7 +613,9 @@ nodeList       = sorted(nodeList, key = lambda x: x['node_index'])
 sliverNodeList = sorted(sliverNodeList, key = lambda x: x['pseudo_slice_node_index'])
 
 if outputFormat == 'latex':
-   output = LaTeXTableOutput(useHpyerlinks)
+   if not os.path.exists(dataDirectory):
+      os.makedirs(dataDirectory)
+   output = LaTeXTableOutput(useHpyerlinks, dataDirectory)
 else:
    output = TableOutput(useHpyerlinks)
 siteIndexList = []
