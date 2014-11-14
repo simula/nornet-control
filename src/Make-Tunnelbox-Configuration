@@ -1654,7 +1654,7 @@ for i in range(NorNet_MinNodeIndex + 1, NorNet_MaxNodeIndex + 1):
       }
       staticList.append(staticEntry)
 
-makeIPSECConfiguration(localSite)
+#makeIPSECConfiguration(localSite)
 makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
 makeRADVDConfiguration(localSite)
 makeSquidConfiguration(getLocalNodeHostname(), localSite)
