@@ -101,17 +101,22 @@ def makeNorNetTagTypes():
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv4', 'nornet_site_tbp' + str(i) + '_gateway_ipv4')
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv6', 'nornet_site_tbp' + str(i) + '_gateway_ipv6')
 
-   makeTagType('node/nornet',      'NorNet Managed Node',             'nornet_is_managed_node')
-   makeTagType('node/nornet',      'NorNet Node UTF-8',               'nornet_node_utf8')
-   makeTagType('node/nornet',      'NorNet Node Index',               'nornet_node_index')
-   makeTagType('node/nornet',      'NorNet Node Interface',           'nornet_node_interface')
+   makeTagType('node/nornet',      'NorNet Managed Node',                  'nornet_is_managed_node')
+   makeTagType('node/nornet',      'NorNet Node UTF-8',                    'nornet_node_utf8')
+   makeTagType('node/nornet',      'NorNet Node Index',                    'nornet_node_index')
+   makeTagType('node/nornet',      'NorNet Node Interface',                'nornet_node_interface')
+   makeTagType('node/nornet',      'NorNet Node Machine Host',             'nornet_node_machine_host')
+   makeTagType('node/nornet',      'NorNet Node Machine Display',          'nornet_node_machine_display')
 
-   makeTagType('interface/nornet', 'NorNet Managed Interface',        'nornet_is_managed_interface')
-   makeTagType('interface/nornet', 'NorNet Interface Provider Index', 'nornet_ifprovider_index')
+   makeTagType('interface/nornet', 'NorNet Managed Interface',             'nornet_is_managed_interface')
+   makeTagType('interface/nornet', 'NorNet Interface Provider Index',      'nornet_ifprovider_index')
+   makeTagType('interface/nornet', 'NorNet Interface Provider Type',       'nornet_ifprovider_type')
+   makeTagType('interface/nornet', 'NorNet Interface Provider Downstream', 'nornet_ifprovider_downstream')
+   makeTagType('interface/nornet', 'NorNet Interface Provider Upstream',   'nornet_ifprovider_upstream')
 
-   makeTagType('slice/nornet',     'NorNet Managed Slice',            'nornet_is_managed_slice')
-   makeTagType('slice/nornet',     'NorNet Slice Node Index',         'nornet_slice_node_index')
-   makeTagType('slice/nornet',     'NorNet Slice Own Addresses',      'nornet_slice_own_addresses')
+   makeTagType('slice/nornet',     'NorNet Managed Slice',                 'nornet_is_managed_slice')
+   makeTagType('slice/nornet',     'NorNet Slice Node Index',              'nornet_slice_node_index')
+   makeTagType('slice/nornet',     'NorNet Slice Own Addresses',           'nornet_slice_own_addresses')
 
    # SysCtls
    nornetSysCtls = [
@@ -536,7 +541,8 @@ def addOrUpdateConfFile(configuration):
 def makeNorNetNode(fullSliceList,
                    site, nodeNiceName, nodeNorNetIndex,
                    pcuID, pcuPort, norNetInterface,
-                   model, bootState):
+                   model, bootState,
+                   machineHost, machineDisplay):
    dnsName      = makeNameFromUnicode(nodeNiceName)
    nodeHostName = str.lower(dnsName['ascii'])   # Domain to be added below!
 
@@ -586,6 +592,10 @@ def makeNorNetNode(fullSliceList,
          error('Unable to add "nornet_node_index" tag to node ' + nodeHostName)
       if addOrUpdateNodeTag(nodeID, 'nornet_node_interface', norNetInterface) <= 0:
          error('Unable to add "nornet_node_interface" tag to node ' + nodeHostName)
+      if addOrUpdateNodeTag(nodeID, 'nornet_node_machine_host', machineHost) <= 0:
+         error('Unable to add "nornet_node_machine_host" tag to node ' + nodeHostName)
+      if addOrUpdateNodeTag(nodeID, 'nornet_node_machine_display', machineDisplay) <= 0:
+         error('Unable to add "nornet_node_machine_display" tag to node ' + nodeHostName)
 
       # ====== Remove old configuration files ===============================
       #files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids','source','dest'])
