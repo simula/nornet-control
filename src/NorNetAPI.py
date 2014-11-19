@@ -149,8 +149,8 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
          if (((siteIndex < NorNet_MinSiteIndex) or (siteIndex > NorNet_MaxSiteIndex)) and (siteNameToFind == None)):
             error('Bad site index ' + str(siteIndex))
          siteContacts = []
-         for i in range(0, NorNet_MaxNTPServers - 1):
-            contact = getTagValue(siteTagsList, 'nornet_site_contact' + str(i + 1), '')
+         for i in range(0, NorNet_MaxSiteContacts):
+            contact = getTagValue(siteTagsList, 'nornet_site_contact' + str(i + 1), 'none')
             if contact != '':
                siteContacts.append(contact)
 

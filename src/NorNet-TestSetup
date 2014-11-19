@@ -211,7 +211,7 @@ def makeSite(fullSliceList, site, norNetInformation, ntpServers):
          machineHost    = ''
          machineDisplay = 'physical'
       makeNorNetNode(fullSliceList, newSite, node[2], address, newPCU, port,
-                     'eth0', 'Amiga 5000', 'boot', host, display)
+                     'eth0', 'Amiga 5000', 'boot', machineHost, machineDisplay)
 
 
 # ###### Make test setup ####################################################

@@ -329,7 +329,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
       i = 0
       for contact in siteContacts:
          if i <= NorNet_MaxSiteContacts:
-            if addOrUpdateSiteTag(siteID, 'nornet_site_contact' + str(providerIndex), contact.encode('utf-8')) <= 0:
+            if addOrUpdateSiteTag(siteID, 'nornet_site_contact' + str(i + 1), contact.encode('utf-8')) <= 0:
                error('Unable to add "nornet_site_contact" tag to site ' + siteName)
          i = i + 1
 
