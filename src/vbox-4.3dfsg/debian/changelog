@@ -1,3 +1,33 @@
+virtualbox (4.3.18-dfsg-1) unstable; urgency=medium
+
+  [ Gianfranco Costamagna ]
+  * Imported Upstream release.
+  * Add myself to uploaders.
+  * Patch refresh.
+  * Bump Standards-Version to 3.9.6, no changes needed.
+  * Wrap-and-sort control file.
+  * Fix lintian warnings:
+    - Remove old hardening-wrapper
+    - Remove broken symlinks.
+
+  [ Felix Geyer ]
+  * Remove myself from uploaders.
+
+ -- Gianfranco Costamagna <costamagnagianfranco@yahoo.it>  Fri, 17 Oct 2014 11:54:01 +0200
+
+virtualbox (4.3.14-dfsg-1) unstable; urgency=medium
+
+  [ Gianfranco Costamagna ]
+  * New upstream release (Closes: #754220)
+    thanks Mateusz Łukasik for the patch.
+  * Rebuild against the new xorg-video-abi-18 (Closes: #755067)
+  * Tweak README.source to show how to upgrade the package with
+    uscan (Closes: #699141), thanks Dmitry!
+  * Removing some binary files from the source tarball,
+    spotted by lintian.
+
+ -- Gianfranco Costamagna <costamagnagianfranco@yahoo.it>  Sat, 26 Jul 2014 15:25:37 +0200
+
 virtualbox (4.3.12-dfsg-1) unstable; urgency=medium
 
   [ Gianfranco Costamagna ]
