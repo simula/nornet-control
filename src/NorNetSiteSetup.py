@@ -90,12 +90,12 @@ def makeNorNetTagTypes():
    makeTagType('site/nornet', 'NorNet Site Altitude',                     'nornet_site_altitude')
    makeTagType('site/nornet', 'NorNet Site Default Provider Index',       'nornet_site_default_provider_index')
    makeTagType('site/nornet', 'NorNet Site Tunnelbox Internal Interface', 'nornet_site_tb_internal_interface')
-   for i in range(0, NorNet_MaxNTPServers - 1):
-      makeTagType('site/nornet', 'NorNet Site NTP Server ' + str(1 + i),  'nornet_site_ntp' + str(1 + i))
-   for i in range(0, NorNet_MaxSiteContacts - 1):
-      makeTagType('site/nornet', 'NorNet Site Contact ' + str(1 + i),     'nornet_site_contact' + str(1 + i))
+   for i in range(0, NorNet_MaxNTPServers):
+      makeTagType('site/nornet', 'NorNet Site NTP Server ' + str(i),      'nornet_site_ntp' + str(i))
+   for i in range(0, NorNet_MaxSiteContacts):
+      makeTagType('site/nornet', 'NorNet Site Contact ' + str(i),         'nornet_site_contact' + str(i))
 
-   for i in range(0, NorNet_MaxProviders - 1):
+   for i in range(0, NorNet_MaxProviders):
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Index',        'nornet_site_tbp' + str(i) + '_index')
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Interface',    'nornet_site_tbp' + str(i) + '_interface')
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv4', 'nornet_site_tbp' + str(i) + '_address_ipv4')
@@ -134,9 +134,9 @@ def makeNorNetTagTypes():
 
    # ====== Missing tags for plnet ==========================================
    makeTagType('interface/config', 'IPv6 Auto-Configuration',          'ipv6_autoconf')
-   for i in range(1,10):
-      makeTagType('interface/config', 'IPv4 Secondary IPv4 Address',   'ipaddr'  + str(i))
-      makeTagType('interface/config', 'IPv4 Secondary IPv4 Netmask',   'netmask' + str(i))
+   for i in range(0, NorNet_MaxProviders):
+      makeTagType('interface/config', 'IPv4 Secondary IPv4 Address',   'ipaddr'  + str(i + 1))
+      makeTagType('interface/config', 'IPv4 Secondary IPv4 Netmask',   'netmask' + str(i + 1))
 
    # ====== Special tags for ovs_bridge handling ============================
    makeTagType('interface/ovs', 'Name of Open vSwitch bridge', 'ovs_bridge')
@@ -328,22 +328,23 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
       # ====== Set contacts =================================================
       i = 0
       for contact in siteContacts:
-         if i <= NorNet_MaxSiteContacts:
-            if addOrUpdateSiteTag(siteID, 'nornet_site_contact' + str(i + 1), contact.encode('utf-8')) <= 0:
-               error('Unable to add "nornet_site_contact" tag to site ' + siteName)
+         if i >= NorNet_MaxSiteContacts:
+            break
+         if addOrUpdateSiteTag(siteID, 'nornet_site_contact' + str(i), contact.encode('utf-8')) <= 0:
+            error('Unable to add "nornet_site_contact' + str(i) + '" tag to site ' + siteName)
          i = i + 1
 
       # Remove previously-used (but now deleted) contacts:
-      while i < NorNet_MaxProviders:
+      while i < NorNet_MaxSiteContacts:
          _deleteSiteTag(siteID, 'nornet_site_contact' + str(i))
          i = i + 1
       
       # ====== Set NTP servers ==============================================
-      for i in range(0, NorNet_MaxNTPServers - 1):
+      for i in range(0, NorNet_MaxNTPServers):
          if i >= len(ntpServers):
             break
-         if addOrUpdateSiteTag(siteID, 'nornet_site_ntp' + str(1 + i), str(IPNetwork(ntpServers[i]).ip)) <= 0:
-            error('Unable to add "nornet_site_ntp' + str(1 + i) + '" tag to site ' + siteName)
+         if addOrUpdateSiteTag(siteID, 'nornet_site_ntp' + str(i), str(IPNetwork(ntpServers[i]).ip)) <= 0:
+            error('Unable to add "nornet_site_ntp' + str(i) + '" tag to site ' + siteName)
 
       # Write a PlanetLabConf file to set the NTP server of nodes at the site
       plcSiteNTPConfName = '/var/www/html/PlanetLabConf/ntp/ntp.conf.' + siteNorNetDomain

@@ -150,7 +150,7 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
             error('Bad site index ' + str(siteIndex))
          siteContacts = []
          for i in range(0, NorNet_MaxSiteContacts):
-            contact = getTagValue(siteTagsList, 'nornet_site_contact' + str(i + 1), 'none')
+            contact = getTagValue(siteTagsList, 'nornet_site_contact' + str(i), 'none')
             if contact != '':
                siteContacts.append(contact)
 
@@ -197,7 +197,7 @@ def getNorNetProvidersForSite(norNetSite):
 
       # ====== Get outgoing interfaces ======================================
       norNetProviderList = dict([])
-      for i in range(0, NorNet_MaxProviders - 1):
+      for i in range(0, NorNet_MaxProviders):
          providerIndex = int(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_index', '-1'))
          if providerIndex <= 0:
             continue
