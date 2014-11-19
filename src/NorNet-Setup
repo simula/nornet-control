@@ -590,15 +590,39 @@ norNetSetup = [
       [ u'Kansas Research and Education Network', 'eth1',
            IPv4Network('164.113.202.17/28'),        IPv4Address('164.113.202.30'),
            IPv6Network('2001:49d0:3c00:6::17/64'),  IPv6Address('2001:49d0:3c00:6::1') ]
-      #[ u'Provider Zwei', 'eth2',
-           #IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
-           #IPv6Network('::/0'),  IPv6Address('::') ]
    ],
    'site_nodes' : [
       [ 100, 1, u'watson'  ],
       [ 101, 2, u'clinton' ]
       #[ 102, 3, u'williamstown' ],
       #[ 103, 4, u'stull' ]
+   ] },
+
+ { 'site_index'        : 101,
+   'site_enabled'      : False,
+   'site_long_name'    : u'New York University',
+   'site_short_name'   : 'NYU',
+   'site_url'          : 'http://engineering.nyu.edu',
+   'site_domain'       : 'nyu.nornet',
+   'site_city'         : 'Brooklyn',
+   'site_province'     : 'New York',
+   'site_country'      : 'United States of America',
+   'site_country_code' : 'US',
+   'site_latitude'     : 40.693317,
+   'site_longitude'    : -73.986535,
+   'site_altitude'     : 20,
+   'site_pcu'          : [ IPv4Address('128.238.63.80'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Lightower', 'eth1',
+           IPv4Network('128.238.63.79/24'), IPv4Address('128.238.63.80'),
+           IPv6Network('::/0'),             IPv6Address('::') ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, u'brooklyn'  ],
+      [ 101, 2, u'manhattan' ],
+      [ 102, 3, u'bronx'     ],
+      [ 103, 4, u'queens'    ]
    ] },
 
  # Bell Labs Seoul: 7th floor DMC R&D center, 37 Maebongsan-ro, Mapo-gu, Seoul, Republic of Korea
