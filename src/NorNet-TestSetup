@@ -188,8 +188,8 @@ def makeSite(fullSliceList, site, norNetInformation, ntpServers):
                             site['site_url'], site['site_domain'], siteIndex,
                             site['site_city'], site['site_province'], site['site_country'], site['site_country_code'],
                             site['site_latitude'], site['site_longitude'], site['site_altitude'],
-                            site['site_providers'],
-                            site['site_providers'][0][0], site['site_nornet_if'],
+                            site['site_contacts'],
+                            site['site_providers'], site['site_providers'][0][0], site['site_nornet_if'],
                             ntpServers)
    newPCU = makeNorNetPCU(newSite, 'pcu', site['site_domain'],
                           site['site_pcu'][0], site['site_pcu'][1], site['site_pcu'][2],

@@ -92,6 +92,8 @@ def makeNorNetTagTypes():
    makeTagType('site/nornet', 'NorNet Site Tunnelbox Internal Interface', 'nornet_site_tb_internal_interface')
    for i in range(0, NorNet_MaxNTPServers - 1):
       makeTagType('site/nornet', 'NorNet Site NTP Server ' + str(1 + i),  'nornet_site_ntp' + str(1 + i))
+   for i in range(0, NorNet_MaxSiteContacts - 1):
+      makeTagType('site/nornet', 'NorNet Site Contact ' + str(1 + i),     'nornet_site_contact' + str(1 + i))
 
    for i in range(0, NorNet_MaxProviders - 1):
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Index',        'nornet_site_tbp' + str(i) + '_index')
@@ -222,7 +224,7 @@ def _deleteSiteTag(siteID, tagName):
 # ###### Create NorNet site #################################################
 def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl, siteNorNetDomain,
                    siteNorNetIndex, siteCity, siteProvince, cityCountry, siteCountryCode,
-                   siteLatitude, siteLogitude, siteAltitude,
+                   siteLatitude, siteLogitude, siteAltitude, siteContacts,
                    providerList, defaultProvider, tbInternalInterface,
                    ntpServers):
    siteLabel= makeNameFromUnicode(siteName, False)
@@ -323,6 +325,19 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
       if gotDefaultProvider == False:
          error('Site ' + siteName + ' is not connected to default provider ' + defaultProvider)
 
+      # ====== Set contacts =================================================
+      i = 0
+      for contact in siteContacts:
+         if i <= NorNet_MaxSiteContacts:
+            if addOrUpdateSiteTag(siteID, 'nornet_site_contact', str(providerIndex)) <= 0:
+               error('Unable to add "nornet_site_contact" tag to site ' + siteName)
+         i = i + 1
+
+      # Remove previously-used (but now deleted) contacts:
+      while i < NorNet_MaxProviders:
+         _deleteSiteTag(siteID, 'nornet_site_contact' + str(i))
+         i = i + 1
+      
       # ====== Set NTP servers ==============================================
       for i in range(0, NorNet_MaxNTPServers - 1):
          if i >= len(ntpServers):
@@ -407,7 +422,7 @@ def _deleteInterfaceTag(interfaceID, tagName):
 
 
 # ###### Update interfaces of a node ########################################
-def updateNorNetInterfaces(node, site, norNetInterface):
+def _updateNorNetInterfaces(node, site, norNetInterface):
    providerList         = getNorNetProvidersForSite(site)
    siteIndex            = int(site['site_index'])
    siteDomain           = site['site_domain']
@@ -751,7 +766,7 @@ def makeNorNetNode(fullSliceList,
       newNode = fetchNorNetNode(nodeHostName)
       if newNode == None:
          error('Unable to find new node ' + nodeHostName)
-      updateNorNetInterfaces(newNode, site, norNetInterface)
+      _updateNorNetInterfaces(newNode, site, norNetInterface)
 
       # ====== Print configuration files of the node ========================
       #files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids', 'source', 'dest'])
