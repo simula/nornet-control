@@ -90,10 +90,12 @@ def makeNorNetTagTypes():
    makeTagType('site/nornet', 'NorNet Site Altitude',                     'nornet_site_altitude')
    makeTagType('site/nornet', 'NorNet Site Default Provider Index',       'nornet_site_default_provider_index')
    makeTagType('site/nornet', 'NorNet Site Tunnelbox Internal Interface', 'nornet_site_tb_internal_interface')
-   for i in range(0, NorNet_MaxNTPServers - 1):
-      makeTagType('site/nornet', 'NorNet Site NTP Server ' + str(1 + i),  'nornet_site_ntp' + str(1 + i))
+   for i in range(0, NorNet_MaxNTPServers):
+      makeTagType('site/nornet', 'NorNet Site NTP Server ' + str(i),      'nornet_site_ntp' + str(i))
+   for i in range(0, NorNet_MaxSiteContacts):
+      makeTagType('site/nornet', 'NorNet Site Contact ' + str(i),         'nornet_site_contact' + str(i))
 
-   for i in range(0, NorNet_MaxProviders - 1):
+   for i in range(0, NorNet_MaxProviders):
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Index',        'nornet_site_tbp' + str(i) + '_index')
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Interface',    'nornet_site_tbp' + str(i) + '_interface')
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv4', 'nornet_site_tbp' + str(i) + '_address_ipv4')
@@ -101,17 +103,22 @@ def makeNorNetTagTypes():
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv4', 'nornet_site_tbp' + str(i) + '_gateway_ipv4')
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv6', 'nornet_site_tbp' + str(i) + '_gateway_ipv6')
 
-   makeTagType('node/nornet',      'NorNet Managed Node',             'nornet_is_managed_node')
-   makeTagType('node/nornet',      'NorNet Node UTF-8',               'nornet_node_utf8')
-   makeTagType('node/nornet',      'NorNet Node Index',               'nornet_node_index')
-   makeTagType('node/nornet',      'NorNet Node Interface',           'nornet_node_interface')
+   makeTagType('node/nornet',      'NorNet Managed Node',                  'nornet_is_managed_node')
+   makeTagType('node/nornet',      'NorNet Node UTF-8',                    'nornet_node_utf8')
+   makeTagType('node/nornet',      'NorNet Node Index',                    'nornet_node_index')
+   makeTagType('node/nornet',      'NorNet Node Interface',                'nornet_node_interface')
+   makeTagType('node/nornet',      'NorNet Node Machine Host',             'nornet_node_machine_host')
+   makeTagType('node/nornet',      'NorNet Node Machine Display',          'nornet_node_machine_display')
 
-   makeTagType('interface/nornet', 'NorNet Managed Interface',        'nornet_is_managed_interface')
-   makeTagType('interface/nornet', 'NorNet Interface Provider Index', 'nornet_ifprovider_index')
+   makeTagType('interface/nornet', 'NorNet Managed Interface',             'nornet_is_managed_interface')
+   makeTagType('interface/nornet', 'NorNet Interface Provider Index',      'nornet_ifprovider_index')
+   makeTagType('interface/nornet', 'NorNet Interface Provider Type',       'nornet_ifprovider_type')
+   makeTagType('interface/nornet', 'NorNet Interface Provider Downstream', 'nornet_ifprovider_downstream')
+   makeTagType('interface/nornet', 'NorNet Interface Provider Upstream',   'nornet_ifprovider_upstream')
 
-   makeTagType('slice/nornet',     'NorNet Managed Slice',            'nornet_is_managed_slice')
-   makeTagType('slice/nornet',     'NorNet Slice Node Index',         'nornet_slice_node_index')
-   makeTagType('slice/nornet',     'NorNet Slice Own Addresses',      'nornet_slice_own_addresses')
+   makeTagType('slice/nornet',     'NorNet Managed Slice',                 'nornet_is_managed_slice')
+   makeTagType('slice/nornet',     'NorNet Slice Node Index',              'nornet_slice_node_index')
+   makeTagType('slice/nornet',     'NorNet Slice Own Addresses',           'nornet_slice_own_addresses')
 
    # SysCtls
    nornetSysCtls = [
@@ -127,9 +134,9 @@ def makeNorNetTagTypes():
 
    # ====== Missing tags for plnet ==========================================
    makeTagType('interface/config', 'IPv6 Auto-Configuration',          'ipv6_autoconf')
-   for i in range(1,10):
-      makeTagType('interface/config', 'IPv4 Secondary IPv4 Address',   'ipaddr'  + str(i))
-      makeTagType('interface/config', 'IPv4 Secondary IPv4 Netmask',   'netmask' + str(i))
+   for i in range(0, NorNet_MaxProviders):
+      makeTagType('interface/config', 'IPv4 Secondary IPv4 Address',   'ipaddr'  + str(i + 1))
+      makeTagType('interface/config', 'IPv4 Secondary IPv4 Netmask',   'netmask' + str(i + 1))
 
    # ====== Special tags for ovs_bridge handling ============================
    makeTagType('interface/ovs', 'Name of Open vSwitch bridge', 'ovs_bridge')
@@ -217,7 +224,7 @@ def _deleteSiteTag(siteID, tagName):
 # ###### Create NorNet site #################################################
 def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl, siteNorNetDomain,
                    siteNorNetIndex, siteCity, siteProvince, cityCountry, siteCountryCode,
-                   siteLatitude, siteLogitude, siteAltitude,
+                   siteLatitude, siteLogitude, siteAltitude, siteContacts,
                    providerList, defaultProvider, tbInternalInterface,
                    ntpServers):
    siteLabel= makeNameFromUnicode(siteName, False)
@@ -318,12 +325,26 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
       if gotDefaultProvider == False:
          error('Site ' + siteName + ' is not connected to default provider ' + defaultProvider)
 
+      # ====== Set contacts =================================================
+      i = 0
+      for contact in siteContacts:
+         if i >= NorNet_MaxSiteContacts:
+            break
+         if addOrUpdateSiteTag(siteID, 'nornet_site_contact' + str(i), contact.encode('utf-8')) <= 0:
+            error('Unable to add "nornet_site_contact' + str(i) + '" tag to site ' + siteName)
+         i = i + 1
+
+      # Remove previously-used (but now deleted) contacts:
+      while i < NorNet_MaxSiteContacts:
+         _deleteSiteTag(siteID, 'nornet_site_contact' + str(i))
+         i = i + 1
+      
       # ====== Set NTP servers ==============================================
-      for i in range(0, NorNet_MaxNTPServers - 1):
+      for i in range(0, NorNet_MaxNTPServers):
          if i >= len(ntpServers):
             break
-         if addOrUpdateSiteTag(siteID, 'nornet_site_ntp' + str(1 + i), str(IPNetwork(ntpServers[i]).ip)) <= 0:
-            error('Unable to add "nornet_site_ntp' + str(1 + i) + '" tag to site ' + siteName)
+         if addOrUpdateSiteTag(siteID, 'nornet_site_ntp' + str(i), str(IPNetwork(ntpServers[i]).ip)) <= 0:
+            error('Unable to add "nornet_site_ntp' + str(i) + '" tag to site ' + siteName)
 
       # Write a PlanetLabConf file to set the NTP server of nodes at the site
       plcSiteNTPConfName = '/var/www/html/PlanetLabConf/ntp/ntp.conf.' + siteNorNetDomain
@@ -402,7 +423,7 @@ def _deleteInterfaceTag(interfaceID, tagName):
 
 
 # ###### Update interfaces of a node ########################################
-def updateNorNetInterfaces(node, site, norNetInterface):
+def _updateNorNetInterfaces(node, site, norNetInterface):
    providerList         = getNorNetProvidersForSite(site)
    siteIndex            = int(site['site_index'])
    siteDomain           = site['site_domain']
@@ -536,7 +557,8 @@ def addOrUpdateConfFile(configuration):
 def makeNorNetNode(fullSliceList,
                    site, nodeNiceName, nodeNorNetIndex,
                    pcuID, pcuPort, norNetInterface,
-                   model, bootState):
+                   model, bootState,
+                   machineHost, machineDisplay):
    dnsName      = makeNameFromUnicode(nodeNiceName)
    nodeHostName = str.lower(dnsName['ascii'])   # Domain to be added below!
 
@@ -586,6 +608,10 @@ def makeNorNetNode(fullSliceList,
          error('Unable to add "nornet_node_index" tag to node ' + nodeHostName)
       if addOrUpdateNodeTag(nodeID, 'nornet_node_interface', norNetInterface) <= 0:
          error('Unable to add "nornet_node_interface" tag to node ' + nodeHostName)
+      if addOrUpdateNodeTag(nodeID, 'nornet_node_machine_host', machineHost) <= 0:
+         error('Unable to add "nornet_node_machine_host" tag to node ' + nodeHostName)
+      if addOrUpdateNodeTag(nodeID, 'nornet_node_machine_display', machineDisplay) <= 0:
+         error('Unable to add "nornet_node_machine_display" tag to node ' + nodeHostName)
 
       # ====== Remove old configuration files ===============================
       #files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids','source','dest'])
@@ -741,7 +767,7 @@ def makeNorNetNode(fullSliceList,
       newNode = fetchNorNetNode(nodeHostName)
       if newNode == None:
          error('Unable to find new node ' + nodeHostName)
-      updateNorNetInterfaces(newNode, site, norNetInterface)
+      _updateNorNetInterfaces(newNode, site, norNetInterface)
 
       # ====== Print configuration files of the node ========================
       #files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids', 'source', 'dest'])

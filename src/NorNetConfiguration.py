@@ -109,6 +109,9 @@ NorNet_MaxNTPServers = 8
 # Maximum number of providers per site
 NorNet_MaxProviders = 8
 
+# Maximum number of contacts per site
+NorNet_MaxSiteContacts = 4
+
 # NorNet Internet connection to/from outside world goes via Site 1!
 NorNet_SiteIndex_Central = 1
 

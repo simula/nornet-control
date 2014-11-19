@@ -148,6 +148,11 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
             error('Bad site abbreviation ' + siteAbbrev)
          if (((siteIndex < NorNet_MinSiteIndex) or (siteIndex > NorNet_MaxSiteIndex)) and (siteNameToFind == None)):
             error('Bad site index ' + str(siteIndex))
+         siteContacts = []
+         for i in range(0, NorNet_MaxSiteContacts):
+            contact = getTagValue(siteTagsList, 'nornet_site_contact' + str(i), 'none')
+            if contact != '':
+               siteContacts.append(contact)
 
          norNetSite = {
             'site_id'                     : siteID,
@@ -160,6 +165,7 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
             'site_latitude'               : site['latitude'],
             'site_longitude'              : site['longitude'],
             'site_altitude'               : float(getTagValue(siteTagsList, 'nornet_site_altitude', '0.0')),
+            'site_contacts'               : siteContacts,
             'site_url'                    : site['url'],
             'site_tags'                   : siteTagsList,
             'site_default_provider_index' : siteDefProviderIndex
@@ -191,7 +197,7 @@ def getNorNetProvidersForSite(norNetSite):
 
       # ====== Get outgoing interfaces ======================================
       norNetProviderList = dict([])
-      for i in range(0, NorNet_MaxProviders - 1):
+      for i in range(0, NorNet_MaxProviders):
          providerIndex = int(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_index', '-1'))
          if providerIndex <= 0:
             continue
