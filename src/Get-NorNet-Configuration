@@ -19,10 +19,12 @@
 #
 # Contact: dreibh@simula.no
 
-import os, sys
+import os
+import sys
 import math
 import urllib2
 import subprocess
+import re
 from sets import Set
 
 # NorNet
@@ -82,6 +84,12 @@ class TableOutput:
 
    def header(self, level, label, text):
       self.write('<h' + str(level) + ' id="' + label + '">' + text + '</h' + str(level) + '>\n')
+
+   def beginEnumeration(self):
+      self.write('<ol>\n')
+
+   def endEnumeration(self):
+      self.write('</ol>\n')
 
    def beginList(self):
       self.write('<ul>\n')
@@ -288,6 +296,12 @@ class LaTeXTableOutput(TableOutput):
 
    def endList(self):
       self.write('\\end{itemize}\n')
+
+   def beginEnumeration(self):
+      self.write('\\begin{enumerate}\n')
+
+   def endEnumeration(self):
+      self.write('\\end{enumerate}\n')
 
    def beginItem(self):
       self.write(' \item ')
@@ -1110,6 +1124,31 @@ for siteIndex in sorted(siteIndexList):
                output.endRow()
 
    output.endTable()
+
+
+   # ====== Contacts ===========================================================
+   contacts = site['site_contacts']
+   if len(contacts) > 0:
+      output.beginEnumeration()
+      for contact in contacts:
+         found = re.match(r'(.*): ([a-zA-Z0-9\.]+@[a-zA-Z0-9\.]+)', contact)
+         if found:
+            contactMail       = found.group(2)
+            contactFullName   = found.group(1)
+            contactFamilyName = ''
+            contactGivenName  = ''
+
+            output.beginItem()
+            found = re.match(r'(.*), (.*)', contactFullName)
+            if found:
+               contactFamilyName = found.group(1)
+               contactGivenName  = found.group(2)
+               output.write(output.addToIndex(contactFamilyName + ', ' + contactGivenName) + output.makeURL('mailto:' + contactMail, contactGivenName + ' ' + contactFamilyName + ' (' + contactMail + ')'))
+            else:
+               output.write(output.addToIndex(contactFullName) + output.makeURL('mailto:' + contactMail, contactFullName + ' (' + contactMail + ')'))
+
+            output.endItem()
+      output.endEnumeration()
 
 
 # ====== Get slice details ==================================================
