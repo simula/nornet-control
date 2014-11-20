@@ -53,16 +53,20 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett',  'eth1',
            IPv4Network('158.39.4.2/24'),                     IPv4Address('158.39.4.1'),
-           IPv6Network('2001:700:4100:4::2/64'),             IPv6Address('2001:700:4100:4::1') ],
+           IPv6Network('2001:700:4100:4::2/64'),             IPv6Address('2001:700:4100:4::1'),
+           'fibre, business', 0, 0 ],
       [ u'Kvantel', 'eth2',
            IPv4Network('77.88.71.151/26'),                   IPv4Address('77.88.71.133'),
-           IPv6Network('2a02:270:2014:111:77:88:71:151/64'), IPv6Address('2a02:270:2014:111::1') ],
+           IPv6Network('2a02:270:2014:111:77:88:71:151/64'), IPv6Address('2a02:270:2014:111::1'),
+           'fibre, business', 0, 0 ],
       [ u'Telenor', 'eth3',
            IPv4Network('62.92.88.42/30'),                    IPv4Address('62.92.88.41'),
-           IPv6Network('::/0'),                              IPv6Address('::') ],
+           IPv6Network('::/0'),                              IPv6Address('::'),
+           'ADSL, consumer', 0, 0 ],
       [ u'PowerTech', 'eth4',
            IPv4Network('80.241.88.26/29'),                   IPv4Address('80.241.88.25'),
-           IPv6Network('2001:840:4ad5::34/64'),              IPv6Address('2001:840:4ad5::1') ]
+           IPv6Network('2001:840:4ad5::34/64'),              IPv6Address('2001:840:4ad5::1'),
+           'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100,  1, u'akerbrygge'  ],
@@ -103,13 +107,16 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Network('129.240.66.74/29'),       IPv4Address('129.240.66.73'),
-           IPv6Network('2001:700:100:279::4/64'), IPv6Address('2001:700:100:279::1') ],
+           IPv6Network('2001:700:100:279::4/64'), IPv6Address('2001:700:100:279::1'),
+           'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
            IPv4Network('195.159.158.198/30'),     IPv4Address('195.159.158.197'),
-           IPv6Network('2001:840:4abd::4/64'),    IPv6Address('2001:840:4abd::1') ],
+           IPv6Network('2001:840:4abd::4/64'),    IPv6Address('2001:840:4abd::1'),
+           'ADSL, consumer', 0, 0 ],
       [ u'Broadnet', 'eth3',
            IPv4Network('85.252.121.218/30'),     IPv4Address('85.252.121.217'),
-           IPv6Network('::/0'),                   IPv6Address('::') ]
+           IPv6Network('::/0'),                   IPv6Address('::'),
+           'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'bjørvika' ],
@@ -139,10 +146,12 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Network('128.39.49.154/25'),         IPv4Address('128.39.49.129'),
-           IPv6Network('2001:700:1d00:18::154/64'), IPv6Address('2001:700:1d00:18::1') ],
+           IPv6Network('2001:700:1d00:18::154/64'), IPv6Address('2001:700:1d00:18::1'),
+           'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
            IPv4Network('195.159.158.254/30'),       IPv4Address('195.159.158.253'),
-           IPv6Network('2001:840:490b::254/64'), IPv6Address('2001:840:490b::1') ]
+           IPv6Network('2001:840:490b::254/64'),    IPv6Address('2001:840:490b::1'),
+           'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'kapp'      ],
@@ -171,14 +180,17 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
-           IPv4Network('129.242.157.228/28'), IPv4Address('129.242.157.225'),
-           IPv6Network('::/0'),               IPv6Address('::') ],
+           IPv4Network('129.242.157.228/28'),    IPv4Address('129.242.157.225'),
+           IPv6Network('::/0'),                  IPv6Address('::'),
+           'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
            IPv4Network('195.159.158.162/30'),    IPv4Address('195.159.158.161'),
-           IPv6Network('2001:840:490c::162/64'), IPv6Address('2001:840:490c::1') ],
+           IPv6Network('2001:840:490c::162/64'), IPv6Address('2001:840:490c::1'),
+           'ADSL, consumer', 0, 0 ],
       [ u'Telenor', 'eth3',
-           IPv4Network('62.92.89.210/30'),    IPv4Address('62.92.89.209'),
-           IPv6Network('::/0'), IPv6Address('::') ]
+           IPv4Network('62.92.89.210/30'),       IPv4Address('62.92.89.209'),
+           IPv6Network('::/0'),                  IPv6Address('::'),
+           'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'amundsen'    ],
@@ -207,14 +219,17 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
-           IPv4Network('152.94.120.6/24'), IPv4Address('152.94.120.1'),
-           IPv6Network('::/0'),            IPv6Address('::') ],
+           IPv4Network('152.94.120.6/24'),       IPv4Address('152.94.120.1'),
+           IPv6Network('::/0'),                  IPv6Address('::'),
+           'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
-           IPv4Network('195.159.158.210/30'),     IPv4Address('195.159.158.209'),
-           IPv6Network('2001:840:4908::210/64'),  IPv6Address('2001:840:4908::1') ],
+           IPv4Network('195.159.158.210/30'),    IPv4Address('195.159.158.209'),
+           IPv6Network('2001:840:4908::210/64'), IPv6Address('2001:840:4908::1'),
+           'ADSL, consumer', 0, 0 ],
       [ u'Altibox', 'eth3',
-           IPv4Network('79.161.4.42/30'),  IPv4Address('79.161.4.41'),
-           IPv6Network('2a01:798:1:9::1/127'),  IPv6Address('2a01:798:1:9::') ]
+           IPv4Network('79.161.4.42/30'),        IPv4Address('79.161.4.41'),
+           IPv6Network('2a01:798:1:9::1/127'),   IPv6Address('2a01:798:1:9::'),
+           'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'mosterøy'  ],
@@ -244,10 +259,12 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Network('158.37.6.195/26'),           IPv4Address('158.37.6.193'),
-           IPv6Network('2001:700:201:F002::195/64'), IPv6Address('2001:700:201:F002::1') ],
+           IPv6Network('2001:700:201:F002::195/64'), IPv6Address('2001:700:201:F002::1'),
+           'fibre, business', 0, 0 ],
       [ u'Bergenshalvøens Kommunale Kraftselskap', 'eth2',
            IPv4Network('62.97.202.70/30'),           IPv4Address('62.97.202.69'),
-           IPv6Network('2A00:14D8:1001:556::2/126'), IPv6Address('2A00:14D8:1001:556::1') ]
+           IPv6Network('2A00:14D8:1001:556::2/126'), IPv6Address('2A00:14D8:1001:556::1'),
+           'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'fløibanen'        ],
@@ -277,13 +294,16 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Network('158.36.50.178/29'),         IPv4Address('158.36.50.177'),
-           IPv6Network('2001:700:1500:c064::2/64'), IPv6Address('2001:700:1500:c064::1') ],
+           IPv6Network('2001:700:1500:c064::2/64'), IPv6Address('2001:700:1500:c064::1'),
+           'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
            IPv4Network('195.159.203.50/30'),        IPv4Address('195.159.203.49'),
-           IPv6Network('2001:840:490a::50/64'),     IPv6Address('2001:840:490a::1') ]
+           IPv6Network('2001:840:490a::50/64'),     IPv6Address('2001:840:490a::1'),
+           'ADSL, consumer', 0, 0 ]
       #[ u'Broadnet', 'eth3',
            #IPv4Network('193.69.209.10'),            IPv4Address('193.69.209.9'),
-           #IPv6Network('::/0'),                     IPv6Address('::') ]
+           #IPv6Network('::/0'),                     IPv6Address('::'),
+           #'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'julenisse'    ],
@@ -313,10 +333,12 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Network('158.39.149.132/25'), IPv4Address('158.39.149.129'),
-           IPv6Network('::/0'),              IPv6Address('::') ],
+           IPv6Network('::/0'),              IPv6Address('::'),
+           'fibre, business', 0, 0 ],
       [ u'Telenor', 'eth2',
            IPv4Network('193.213.19.83/20'), IPv4Address('193.213.16.1'),
-           IPv6Network('::/0'),              IPv6Address('::') ]
+           IPv6Network('::/0'),              IPv6Address('::'),
+           'fibre, consumer', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'snøflak'       ],
@@ -346,10 +368,12 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Network('129.241.200.128/24'),        IPv4Address('129.241.200.1'),
-           IPv6Network('2001:700:300:2211::128/64'), IPv6Address('2001:700:300:2211::1') ],
+           IPv6Network('2001:700:300:2211::128/64'), IPv6Address('2001:700:300:2211::1'),
+           'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
            IPv4Network('195.159.158.134/30'),        IPv4Address('195.159.158.133'),
-           IPv6Network('2001:840:490e::134/64'),     IPv6Address('2001:840:490e::1') ]
+           IPv6Network('2001:840:490e::134/64'),     IPv6Address('2001:840:490e::1'),
+           'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'bybro'      ],
@@ -379,13 +403,16 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Network('158.39.93.231/27'),         IPv4Address('158.39.93.225'),
-           IPv6Network('2001:700:c00:150::231/64'), IPv6Address('2001:700:c00:150::1') ],
+           IPv6Network('2001:700:c00:150::231/64'), IPv6Address('2001:700:c00:150::1'),
+           'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
            IPv4Network('195.159.158.174/30'),       IPv4Address('195.159.158.173'),
-           IPv6Network('2001:840:490d::174/64'),    IPv6Address('2001:840:490d::1') ],
+           IPv6Network('2001:840:490d::174/64'),    IPv6Address('2001:840:490d::1'),
+           'ADSL, consumer', 0, 0 ],
       [ u'Broadnet', 'eth3',
            IPv4Network('85.252.123.242/30'),        IPv4Address('85.252.123.241'),
-           IPv6Network('::/0'),                     IPv6Address('::') ]
+           IPv6Network('::/0'),                     IPv6Address('::'),
+           'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'storsteinsfjellet' ],
@@ -415,10 +442,8 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Network('128.39.120.60/23'),       IPv4Address('128.39.120.1'),
-           IPv6Network('2001:700:700:22::60/64'), IPv6Address('2001:700:700:22::') ]
-      #[ u'Provider Zwei', 'eth2',
-           #IPv4Network('3.3.3.3/24'),     IPv4Address('3.3.3.1'),
-           #IPv6Network('::/0'),  IPv6Address('::') ]
+           IPv6Network('2001:700:700:22::60/64'), IPv6Address('2001:700:700:22::'),
+           'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'hovedøya'    ],
@@ -451,7 +476,8 @@ norNetSetup = [
    'site_providers' : [
       [ u'Deutsches Forschungsnetz', 'eth1',
            IPv4Network('131.246.112.120/24'),        IPv4Address('131.246.112.254'),
-           IPv6Network('2001:638:208:ef2d::120/64'), IPv6Address('2001:638:208:ef2d:0:ff:fe00:ffd') ],
+           IPv6Network('2001:638:208:ef2d::120/64'), IPv6Address('2001:638:208:ef2d:0:ff:fe00:ffd'),
+           'fibre, business', 0, 0 ],
    ],
    'site_nodes' : [
       [ 100, 1, u'betzenberg' ],
@@ -478,10 +504,12 @@ norNetSetup = [
    'site_providers' : [
       [ u'Deutsches Forschungsnetz', 'eth1',
            IPv4Network('132.252.152.105/24'),        IPv4Address('132.252.152.1'),
-           IPv6Network('2001:638:501:4ef2::105/64'), IPv6Address('2001:638:501:4ef2::1') ],
+           IPv6Network('2001:638:501:4ef2::105/64'), IPv6Address('2001:638:501:4ef2::1'),
+           'fibre, business', 0, 0 ],
       [ u'Versatel', 'eth2',
            IPv4Network('89.246.242.228/29'), IPv4Address('89.246.242.225'),
-           IPv6Network('::/0'),              IPv6Address('::') ]
+           IPv6Network('::/0'),              IPv6Address('::'),
+           'ADSL, consumer', 16000, 1000 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'altenessen'  ],
@@ -511,8 +539,10 @@ norNetSetup = [
    'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ u'Swedish University Network', 'eth1', IPv4Network('193.10.227.85/29'), IPv4Address('193.10.227.81'),
-                                               IPv6Network('::/0'),             IPv6Address('::') ]
+      [ u'Swedish University Network', 'eth1',
+           IPv4Network('193.10.227.85/29'), IPv4Address('193.10.227.81'),
+           IPv6Network('::/0'),             IPv6Address('::'),
+           'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'vänern'           ],
@@ -541,10 +571,12 @@ norNetSetup = [
    'site_providers' : [
       [ u'China Education and Research Network', 'eth1',
            IPv4Network('210.37.45.149/26'), IPv4Address('210.37.45.190'),
-           IPv6Network('::/0'),             IPv6Address('::') ],
+           IPv6Network('::/0'),             IPv6Address('::'),
+           'fibre, business', 0, 0 ],
       [ u'China Unicom', 'eth2',
            IPv4Network('113.59.104.58/29'), IPv4Address('113.59.104.62'),
-           IPv6Network('::/0'),             IPv6Address('::') ]
+           IPv6Network('::/0'),             IPv6Address('::'),
+           'fibre, consumer', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'longlou'   ],   # Wenchang Satellite Launch Center/WSLC
@@ -575,7 +607,8 @@ norNetSetup = [
    'site_providers' : [
       [ u'China Education and Research Network', 'eth1',
            IPv4Network('222.17.128.253/26'), IPv4Address('222.17.128.193'),
-           IPv6Network('::/0'),              IPv6Address('::') ]
+           IPv6Network('::/0'),              IPv6Address('::'),
+           'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
       # Naming scheme: places in Sanya
@@ -606,7 +639,8 @@ norNetSetup = [
    'site_providers' : [
       [ u'Kansas Research and Education Network', 'eth1',
            IPv4Network('164.113.202.17/28'),        IPv4Address('164.113.202.30'),
-           IPv6Network('2001:49d0:3c00:6::17/64'),  IPv6Address('2001:49d0:3c00:6::1') ]
+           IPv6Network('2001:49d0:3c00:6::17/64'),  IPv6Address('2001:49d0:3c00:6::1'),
+           'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'watson'  ],
@@ -664,7 +698,8 @@ norNetSetup = [
    'site_providers' : [
       [ u'Korea Research Environment Open NETwork', 'eth1',
            IPv4Network('203.230.60.142/26'),     IPv4Address('203.230.60.129'),
-           IPv6Network('2001:320:4030:1::2/64'), IPv6Address('2001:320:4030:1::1') ]
+           IPv6Network('2001:320:4030:1::2/64'), IPv6Address('2001:320:4030:1::1'),
+           'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
       # Naming scheme: bridges in Seoul
