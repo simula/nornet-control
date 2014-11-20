@@ -93,6 +93,11 @@ def removeComment(line):
    return line
 
 
+# ###### Filter for text ####################################################
+def filterForTextOnly(s):
+   return filter(lambda x: x in '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz,.:!? \t', s)
+
+
 # ###### Get tag value or return a default ##################################
 def getTagValue(tagList, tagName, default):
    for tag in tagList:

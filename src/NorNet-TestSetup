@@ -112,7 +112,7 @@ norNetSetup = [
    'site_providers' : [
       [ u'Provider Eins', 'eth1', IPv4Network('172.16.3.2/24'),     IPv4Address('172.16.3.1'),
                                   IPv6Network('fd00:16:3::2/64'),   IPv6Address('fd00:16:3::1'),
-                                  'fibre, business', 'fibre, business', 0, 0 ],
+                                  'fibre, business', 0, 0 ],
       [ u'Provider Zwei', 'eth2', IPv4Network('172.17.3.2/24'),     IPv4Address('172.17.3.1'),
                                   # IPv6Network('fd00:17:3::2/64'),   IPv6Address('fd00:17:3::1') ]
                                   IPv6Network('::/0'),  IPv6Address('::'),
@@ -214,7 +214,7 @@ def makeSite(fullSliceList, site, norNetInformation, ntpServers):
          machineHost    = ''
          machineDisplay = 'physical'
       makeNorNetNode(fullSliceList, newSite, node[2], address, newPCU, port,
-                     'eth0', site['site_providers'], 'Amiga 5000', 'boot', machineHost, machineDisplay)
+                     'eth0', 'Amiga 5000', 'boot', machineHost, machineDisplay)
 
 
 # ###### Make test setup ####################################################

@@ -973,13 +973,13 @@ for siteIndex in sorted(siteIndexList):
             # ====== External addresses =====================================
             output.beginRow()
             if isp == 1:
-               output.cell(output.makeTiny('1'), -1, 2 * len(providerList))
-               output.cell(output.makeTiny('tunnelbox'), nodePlusSliverCells - 1, 2 * len(providerList))
+               output.cell(output.makeTiny('1'), -1, 4 * len(providerList))
+               output.cell(output.makeTiny('tunnelbox'), nodePlusSliverCells - 1, 4 * len(providerList))
             else:
                output.multiRowFill()
                output.multiRowFill(nodePlusSliverCells - 1)
 
-            output.cell(output.makeTiny(output.makeURL(providerURL, provider['provider_short_name']) + ' (' + str(provider['provider_index']) + ')'), 2, 2)
+            output.cell(output.makeTiny(output.makeURL(providerURL, provider['provider_short_name']) + ' (' + str(provider['provider_index']) + ')'), 2, 4)
             if showAddresses == True:
                output.cell(output.makeTiny(str(externalNetworkIPv4)))
             else:
@@ -1001,9 +1001,41 @@ for siteIndex in sorted(siteIndexList):
             output.cell(output.makeTiny(str(internalNetworkIPv6)))
             output.endRow()
 
+            output.beginRow()
+            if provider['provider_type'] == '':
+               t = 'unspecified'
+            else:
+               t = provider['provider_type']
+            output.multiRowFill()
+            output.multiRowFill(nodePlusSliverCells - 1)
+            output.multiRowFill(2)
+            output.cell('Type:')
+            output.cell(t)
+            output.endRow()
 
+            output.beginRow()
+            if provider['provider_downstream'] <= 0:
+               d = '?'
+            else:
+               d = str(provider['provider_downstream'])
+            if provider['provider_upstream'] <= 0:
+               u = '?'
+            else:
+               u = str(provider['provider_upstream'])
+            if ((d == '?') and (u == '?')):
+               ud = 'unspecified'
+            else:
+               ud = d + ' / ' + u + ' Kbit/s'
+            output.multiRowFill()
+            output.multiRowFill(nodePlusSliverCells - 1)
+            output.multiRowFill(2)
+            output.cell('Down/Up: ')
+            output.cell(ud)
+            output.endRow()
+
+
+   # ====== Research nodes ==================================================
    for node in nodeList:
-      # ====== Obtain site information ======================================
       if node['node_site_id'] == site['site_id']:
          #print node
          nodeIndex = node['node_index']
@@ -1011,14 +1043,14 @@ for siteIndex in sorted(siteIndexList):
          nodeUTF8  = node['node_utf8']
          nodeState = node['node_state']
 
-         nodeFC = 'NA'
-         nodePL = 'NA'
-         nodeTagsList = node['node_tags']
-         for nodeTag in nodeTagsList:
-            if nodeTag['tagname'] == 'fcdistro':
-               nodeFC = nodeTag['value']
-            if nodeTag['tagname'] == 'pldistro':
-               nodePL = nodeTag['value']
+         #nodeHost    = ''
+         #nodeDisplay = ''
+         #nodeTagsList = node['node_tags']
+         #for nodeTag in nodeTagsList:
+            #if nodeTag['tagname'] == 'fcdistro':
+               #nodeFC = nodeTag['value']
+            #if nodeTag['tagname'] == 'pldistro':
+               #nodePL = nodeTag['value']
 
 
          # ====== Get slivers of node =======================================

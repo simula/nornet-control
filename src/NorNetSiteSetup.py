@@ -104,6 +104,9 @@ def makeNorNetTagTypes():
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv6', 'nornet_site_tbp' + str(i) + '_address_ipv6', [ 'admin' ])
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv4', 'nornet_site_tbp' + str(i) + '_gateway_ipv4', [ 'admin' ])
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv6', 'nornet_site_tbp' + str(i) + '_gateway_ipv6', [ 'admin' ])
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Type',         'nornet_site_tbp' + str(i) + '_type',         [ 'admin', 'tech' ])
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Downstream',   'nornet_site_tbp' + str(i) + '_downstream',   [ 'admin', 'tech' ])
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Upstream',     'nornet_site_tbp' + str(i) + '_upstream',     [ 'admin', 'tech' ])
 
    makeTagType('node/nornet',      'NorNet Managed Node',                  'nornet_is_managed_node',       [ 'admin' ])
    makeTagType('node/nornet',      'NorNet Node UTF-8',                    'nornet_node_utf8',             [ 'admin' ])
@@ -114,9 +117,6 @@ def makeNorNetTagTypes():
 
    makeTagType('interface/nornet', 'NorNet Managed Interface',             'nornet_is_managed_interface',  [ 'admin' ])
    makeTagType('interface/nornet', 'NorNet Interface Provider Index',      'nornet_ifprovider_index',      [ 'admin' ])
-   makeTagType('interface/nornet', 'NorNet Interface Provider Type',       'nornet_ifprovider_type',       [ 'admin', 'tech' ])
-   makeTagType('interface/nornet', 'NorNet Interface Provider Downstream', 'nornet_ifprovider_downstream', [ 'admin', 'tech' ])
-   makeTagType('interface/nornet', 'NorNet Interface Provider Upstream',   'nornet_ifprovider_upstream',   [ 'admin', 'tech' ])
 
    makeTagType('slice/nornet',     'NorNet Managed Slice',                 'nornet_is_managed_slice',      [ 'admin' ])
    makeTagType('slice/nornet',     'NorNet Slice Node Index',              'nornet_slice_node_index',      [ 'admin' ])
@@ -302,6 +302,15 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
             providerGatewayIPv4 = IPv4Address(provider[3])
             providerAddressIPv6 = IPv6Network(provider[4])
             providerGatewayIPv6 = IPv6Address(provider[5])
+            providerType       = ''
+            providerUpstream   = 0
+            providerDownstream = 0
+            try:
+               providerType       = provider[6]
+               providerUpstream   = int(provider[7])
+               providerDownstream = int(provider[8])
+            except:
+               print('WARNING: Incomplete provider metadata: ' + str(provider) + '\n')
 
             if addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_index', str(providerIndex)) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_index" tag to site ' + siteName)
@@ -315,6 +324,12 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
                error('Unable to add "nornet_site_tbp' + str(i) + '_gateway_ipv4" tag to site ' + siteName)
             if addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_gateway_ipv6', str(providerGatewayIPv6)) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_gateway_ipv6" tag to site ' + siteName)
+            if addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_type', str(providerType)) <= 0:
+               error('Unable to add "nornet_site_tbp' + str(i) + '_type" tag to site ' + siteName)
+            if addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_downstream', str(providerDownstream)) <= 0:
+               error('Unable to add "nornet_site_tbp' + str(i) + '_downstream" tag to site ' + siteName)
+            if addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_upstream', str(providerUpstream)) <= 0:
+               error('Unable to add "nornet_site_tbp' + str(i) + '_upstream" tag to site ' + siteName)
 
          i = i + 1
 
@@ -425,7 +440,7 @@ def _deleteInterfaceTag(interfaceID, tagName):
 
 
 # ###### Update interfaces of a node ########################################
-def _updateNorNetInterfaces(node, site, norNetInterface, siteProviders):
+def _updateNorNetInterfaces(node, site, norNetInterface):
    providerList         = getNorNetProvidersForSite(site)
    siteIndex            = int(site['site_index'])
    siteDomain           = site['site_domain']
@@ -474,14 +489,6 @@ def _updateNorNetInterfaces(node, site, norNetInterface, siteProviders):
                   ipv6Gateway             = ifGatewayIPv6.ip
                   interface['dns2']       = str(ifGatewayIPv6.ip)   # The tunnelbox is also the DNS server
 
-                  providerType       = ''
-                  providerUpstream   = 0
-                  providerDownstream = 0
-                  try:
-                     providerType = siteProviders[ipv4SecondaryIndex-1][6]
-                  except:
-                     print('WARNING: Incomplete provider metadata: ' + str(siteProviders) + '\n')
-
                   primaryInterfaceID = lookupPrimaryInterfaceID(node)
                   if primaryInterfaceID == 0:
                      primaryInterfaceID = getPLCServer().AddInterface(getPLCAuthentication(), nodeID, interface)
@@ -497,12 +504,6 @@ def _updateNorNetInterfaces(node, site, norNetInterface, siteProviders):
                      error('Unable to add "nornet_is_managed_interface" tag to interface ' + str(ifIPv4.ip))
                   if addOrUpdateInterfaceTag(primaryInterfaceID, 'nornet_ifprovider_index', str(providerIndex)) <= 0:
                      error('Unable to add "nornet_ifprovider_index" tag to interface ' + str(ifIPv4.ip))
-                  if addOrUpdateInterfaceTag(primaryInterfaceID, 'nornet_ifprovider_type', str(providerType)) <= 0:
-                     error('Unable to add "nornet_ifprovider_type" tag to interface ' + str(ifIPv4.ip))
-                  if addOrUpdateInterfaceTag(primaryInterfaceID, 'nornet_ifprovider_downstream', str(providerDownstream)) <= 0:
-                     error('Unable to add "nornet_ifprovider_downstream" tag to interface ' + str(ifIPv4.ip))
-                  if addOrUpdateInterfaceTag(primaryInterfaceID, 'nornet_ifprovider_upstream', str(providerUpstream)) <= 0:
-                     error('Unable to add "nornet_ifprovider_upstream" tag to interface ' + str(ifIPv4.ip))
 
                else:
                   ipv6Secondaries.append(ifIPv6)
@@ -572,7 +573,7 @@ def addOrUpdateConfFile(configuration):
 # ###### Create NorNet node #################################################
 def makeNorNetNode(fullSliceList,
                    site, nodeNiceName, nodeNorNetIndex,
-                   pcuID, pcuPort, norNetInterface, siteProviders,
+                   pcuID, pcuPort, norNetInterface,
                    model, bootState,
                    machineHost, machineDisplay):
    dnsName      = makeNameFromUnicode(nodeNiceName)
@@ -783,7 +784,7 @@ def makeNorNetNode(fullSliceList,
       newNode = fetchNorNetNode(nodeHostName)
       if newNode == None:
          error('Unable to find new node ' + nodeHostName)
-      _updateNorNetInterfaces(newNode, site, norNetInterface, siteProviders)
+      _updateNorNetInterfaces(newNode, site, norNetInterface)
 
       # ====== Print configuration files of the node ========================
       #files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids', 'source', 'dest'])

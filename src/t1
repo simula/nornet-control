@@ -4,11 +4,9 @@
 import hashlib;
 
 
-# ###### Make a key #########################################################
-def makeKey(string):
-   key = hashlib.sha512()
-   key.update(string)
-   return key.hexdigest()
+# ###### Filter for text ####################################################
+def filterForText(s):
+   return filter(lambda x: x in '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz \t', s)
 
 
-print makeKey("This is key söpgjdsögdjgdsösjgdögdsjgdsök")
+print filterForText("This is key söpgjdsögdjgdsösjgdögdsjgdsök")

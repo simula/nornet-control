@@ -209,6 +209,14 @@ def getNorNetProvidersForSite(norNetSite):
                   ': ' + str(providerGwIPv4) + ' not in ' + str(providerGwIPv4))
          providerTbIPv6      = IPv6Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::/0'))
          providerGwIPv6      = IPv6Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_gateway_ipv6', '::'))
+         try:
+            providerType        = filterForTextOnly(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_type', ''))
+            providerDownstream  = int(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_downstream', 0))
+            providerUpstream    = int(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_upstream', 0))
+         except:
+            providerType        = ''
+            providerDownstream  = 0
+            providerUpstream    = 0
          if not providerGwIPv6 in providerTbIPv6:
             error('Bad IPv6 network/gateway settings of provider ' + providerInfo[0] + \
                   ': ' + str(providerGwIPv6) + ' not in ' + str(providerGwIPv6))
@@ -223,7 +231,10 @@ def getNorNetProvidersForSite(norNetSite):
             'provider_tunnelbox_ipv6'      : providerTbIPv6,
             'provider_tunnelbox_interface' : providerTbInterface,
             'provider_gateway_ipv4'        : providerGwIPv4,
-            'provider_gateway_ipv6'        : providerGwIPv6
+            'provider_gateway_ipv6'        : providerGwIPv6,
+            'provider_type'                : providerType,
+            'provider_downstream'          : providerDownstream,
+            'provider_upstream'            : providerUpstream
          }
 
          norNetProviderList[providerIndex] = norNetProvider
