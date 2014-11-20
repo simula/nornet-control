@@ -901,18 +901,7 @@ for siteIndex in sorted(siteIndexList):
 
    sitePosition = sitePosition + ' / ' + str(site['site_altitude']) + 'm'
 
-
    output.header(headerBaseLevel + 1, 'sec:' + site['site_short_name'], siteName + ' (' + str(siteIndex) + ')')
-
-   if showSlivers == True:
-      nodePlusSliverCells = 4
-   else:
-      nodePlusSliverCells = 2
-
-   if siteEnabled:
-      output.beginTable(nodePlusSliverCells + 4)
-   else:
-      output.beginTable(nodePlusSliverCells + 4, 'grey')
 
 
    # ====== Contacts ===========================================================
@@ -943,6 +932,16 @@ for siteIndex in sorted(siteIndexList):
 
 
    # ====== Display site information ========================================
+   if showSlivers == True:
+      nodePlusSliverCells = 4
+   else:
+      nodePlusSliverCells = 2
+
+   if siteEnabled:
+      output.beginTable(nodePlusSliverCells + 4)
+   else:
+      output.beginTable(nodePlusSliverCells + 4, 'grey')
+
    siteInfoTable = [
       [ 'City',         output.addToIndex(siteCity)     + siteCity     ],
       [ 'Province',     output.addToIndex(siteProvince) + output.makeImage(siteFlagURL + '/' + siteCountryCode + '-' + siteProvince + '.svg', 'height: 0.8em;') + siteProvince ],
