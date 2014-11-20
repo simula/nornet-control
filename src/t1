@@ -1,12 +1,26 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import hashlib;
+import re;
 
 
-# ###### Filter for text ####################################################
-def filterForText(s):
-   return filter(lambda x: x in '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz \t', s)
+s = u'Müller, John: xy@example.com'
+
+found = re.match(r'(.*): ([a-zA-Z0-9\.]+@[a-zA-Z0-9\.]+)', s)
+print found
+if found:
+   contactMail       = found.group(2)
+   contactFullName   = found.group(1)
+   contactFamilyName = ''
+   contactGivenName  = ''
+
+   found = re.match(r'(.*), (.*)', contactFullName)
+   if found:
+      contactFamilyName = found.group(1)
+      contactGivenName  = found.group(2)
+   else:
+      contactGivenName  = found.group(2)
 
 
-print filterForText("This is key söpgjdsögdjgdsösjgdögdsjgdsök")
+
+   print contactFamilyName, contactGivenName, contactMail

@@ -106,7 +106,7 @@ norNetSetup = [
    'site_latitude'     : 50.971672,
    'site_longitude'    : 7.468232,
    'site_altitude'     : 220,
-   'site_contacts'     : [ u'托马斯博士: thomas@gamma.test' ],
+   'site_contacts'     : [ ],   # u'托马斯博士: thomas@gamma.test'
    'site_pcu'          : [ IPv4Address('172.16.1.203'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [

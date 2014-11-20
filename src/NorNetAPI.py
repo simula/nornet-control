@@ -150,7 +150,7 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
             error('Bad site index ' + str(siteIndex))
          siteContacts = []
          for i in range(0, NorNet_MaxSiteContacts):
-            contact = getTagValue(siteTagsList, 'nornet_site_contact' + str(i), 'none')
+            contact = getTagValue(siteTagsList, 'nornet_site_contact' + str(i), '')
             if contact != '':
                siteContacts.append(contact)
 
