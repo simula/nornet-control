@@ -50,7 +50,7 @@ def addOrUpdateInitScript(initScript):
 
 
 # ###### Create tag type ####################################################
-def makeTagType(category, description, tagName):
+def makeTagType(category, description, tagName, roles = []):
    found = getPLCServer().GetTagTypes(getPLCAuthentication(), tagName, ['tag_type_id'])
    if len(found) == 0:
       tagType = {}
@@ -58,6 +58,8 @@ def makeTagType(category, description, tagName):
       tagType['description'] = description
       tagType['tagname']     = tagName
       getPLCServer().AddTagType(getPLCAuthentication(), tagType)
+   for role in roles:
+      getPLCServer().AddRoleToTagType(getPLCAuthentication(), role, tagName)
 
 
 # ###### Replace string in init script by code to create file ###############
@@ -79,46 +81,46 @@ def replaceInInitScript(initScriptCode, label, localFileName, remoteFileName):
 # ###### Create NorNet tag types ############################################
 def makeNorNetTagTypes():
    # ====== Create tags =====================================================
-   makeTagType('site/nornet', 'NorNet Managed Site',                      'nornet_is_managed_site')
-   makeTagType('site/nornet', 'NorNet Site Index',                        'nornet_site_index')
-   makeTagType('site/nornet', 'NorNet Site Domain Name',                  'nornet_site_domain')
-   makeTagType('site/nornet', 'NorNet Site UTF-8',                        'nornet_site_utf8')
-   makeTagType('site/nornet', 'NorNet Site City',                         'nornet_site_city')
-   makeTagType('site/nornet', 'NorNet Site Province',                     'nornet_site_province')
-   makeTagType('site/nornet', 'NorNet Site Country',                      'nornet_site_country')
-   makeTagType('site/nornet', 'NorNet Site Country Code',                 'nornet_site_country_code')
-   makeTagType('site/nornet', 'NorNet Site Altitude',                     'nornet_site_altitude')
-   makeTagType('site/nornet', 'NorNet Site Default Provider Index',       'nornet_site_default_provider_index')
-   makeTagType('site/nornet', 'NorNet Site Tunnelbox Internal Interface', 'nornet_site_tb_internal_interface')
+   makeTagType('site/nornet', 'NorNet Managed Site',                      'nornet_is_managed_site',   [ 'admin' ])
+   makeTagType('site/nornet', 'NorNet Site Index',                        'nornet_site_index',        [ 'admin' ])
+   makeTagType('site/nornet', 'NorNet Site Domain Name',                  'nornet_site_domain',       [ 'admin' ])
+   makeTagType('site/nornet', 'NorNet Site UTF-8',                        'nornet_site_utf8',         [ 'admin' ])
+   makeTagType('site/nornet', 'NorNet Site City',                         'nornet_site_city',         [ 'admin' ])
+   makeTagType('site/nornet', 'NorNet Site Province',                     'nornet_site_province',     [ 'admin' ])
+   makeTagType('site/nornet', 'NorNet Site Country',                      'nornet_site_country',      [ 'admin' ])
+   makeTagType('site/nornet', 'NorNet Site Country Code',                 'nornet_site_country_code', [ 'admin' ])
+   makeTagType('site/nornet', 'NorNet Site Altitude',                     'nornet_site_altitude',     [ 'admin', 'pi' ])
+   makeTagType('site/nornet', 'NorNet Site Default Provider Index',       'nornet_site_default_provider_index', [ 'admin' ])
+   makeTagType('site/nornet', 'NorNet Site Tunnelbox Internal Interface', 'nornet_site_tb_internal_interface',  [ 'admin' ])
    for i in range(0, NorNet_MaxNTPServers):
-      makeTagType('site/nornet', 'NorNet Site NTP Server ' + str(i),      'nornet_site_ntp' + str(i))
+      makeTagType('site/nornet', 'NorNet Site NTP Server ' + str(i),      'nornet_site_ntp' + str(i),     [ 'admin', 'tech' ])
    for i in range(0, NorNet_MaxSiteContacts):
-      makeTagType('site/nornet', 'NorNet Site Contact ' + str(i),         'nornet_site_contact' + str(i))
+      makeTagType('site/nornet', 'NorNet Site Contact ' + str(i),         'nornet_site_contact' + str(i), [ 'admin', 'pi' ])
 
    for i in range(0, NorNet_MaxProviders):
-      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Index',        'nornet_site_tbp' + str(i) + '_index')
-      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Interface',    'nornet_site_tbp' + str(i) + '_interface')
-      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv4', 'nornet_site_tbp' + str(i) + '_address_ipv4')
-      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv6', 'nornet_site_tbp' + str(i) + '_address_ipv6')
-      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv4', 'nornet_site_tbp' + str(i) + '_gateway_ipv4')
-      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv6', 'nornet_site_tbp' + str(i) + '_gateway_ipv6')
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Index',        'nornet_site_tbp' + str(i) + '_index',        [ 'admin' ])
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Interface',    'nornet_site_tbp' + str(i) + '_interface',    [ 'admin' ])
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv4', 'nornet_site_tbp' + str(i) + '_address_ipv4', [ 'admin' ])
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv6', 'nornet_site_tbp' + str(i) + '_address_ipv6', [ 'admin' ])
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv4', 'nornet_site_tbp' + str(i) + '_gateway_ipv4', [ 'admin' ])
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv6', 'nornet_site_tbp' + str(i) + '_gateway_ipv6', [ 'admin' ])
 
-   makeTagType('node/nornet',      'NorNet Managed Node',                  'nornet_is_managed_node')
-   makeTagType('node/nornet',      'NorNet Node UTF-8',                    'nornet_node_utf8')
-   makeTagType('node/nornet',      'NorNet Node Index',                    'nornet_node_index')
-   makeTagType('node/nornet',      'NorNet Node Interface',                'nornet_node_interface')
-   makeTagType('node/nornet',      'NorNet Node Machine Host',             'nornet_node_machine_host')
-   makeTagType('node/nornet',      'NorNet Node Machine Display',          'nornet_node_machine_display')
+   makeTagType('node/nornet',      'NorNet Managed Node',                  'nornet_is_managed_node',       [ 'admin' ])
+   makeTagType('node/nornet',      'NorNet Node UTF-8',                    'nornet_node_utf8',             [ 'admin' ])
+   makeTagType('node/nornet',      'NorNet Node Index',                    'nornet_node_index',            [ 'admin' ])
+   makeTagType('node/nornet',      'NorNet Node Interface',                'nornet_node_interface',        [ 'admin' ])
+   makeTagType('node/nornet',      'NorNet Node Machine Host',             'nornet_node_machine_host',     [ 'admin', 'tech' ])
+   makeTagType('node/nornet',      'NorNet Node Machine Display',          'nornet_node_machine_display',  [ 'admin', 'tech' ])
 
-   makeTagType('interface/nornet', 'NorNet Managed Interface',             'nornet_is_managed_interface')
-   makeTagType('interface/nornet', 'NorNet Interface Provider Index',      'nornet_ifprovider_index')
-   makeTagType('interface/nornet', 'NorNet Interface Provider Type',       'nornet_ifprovider_type')
-   makeTagType('interface/nornet', 'NorNet Interface Provider Downstream', 'nornet_ifprovider_downstream')
-   makeTagType('interface/nornet', 'NorNet Interface Provider Upstream',   'nornet_ifprovider_upstream')
+   makeTagType('interface/nornet', 'NorNet Managed Interface',             'nornet_is_managed_interface',  [ 'admin' ])
+   makeTagType('interface/nornet', 'NorNet Interface Provider Index',      'nornet_ifprovider_index',      [ 'admin' ])
+   makeTagType('interface/nornet', 'NorNet Interface Provider Type',       'nornet_ifprovider_type',       [ 'admin', 'tech' ])
+   makeTagType('interface/nornet', 'NorNet Interface Provider Downstream', 'nornet_ifprovider_downstream', [ 'admin', 'tech' ])
+   makeTagType('interface/nornet', 'NorNet Interface Provider Upstream',   'nornet_ifprovider_upstream',   [ 'admin', 'tech' ])
 
-   makeTagType('slice/nornet',     'NorNet Managed Slice',                 'nornet_is_managed_slice')
-   makeTagType('slice/nornet',     'NorNet Slice Node Index',              'nornet_slice_node_index')
-   makeTagType('slice/nornet',     'NorNet Slice Own Addresses',           'nornet_slice_own_addresses')
+   makeTagType('slice/nornet',     'NorNet Managed Slice',                 'nornet_is_managed_slice',      [ 'admin' ])
+   makeTagType('slice/nornet',     'NorNet Slice Node Index',              'nornet_slice_node_index',      [ 'admin' ])
+   makeTagType('slice/nornet',     'NorNet Slice Own Addresses',           'nornet_slice_own_addresses',   [ 'admin' ])
 
    # SysCtls
    nornetSysCtls = [
@@ -127,16 +129,16 @@ def makeNorNetTagTypes():
       'net.ipv4.tcp_wmem',
       'net.ipv4.tcp_congestion_control',
       'net.sctp.sctp_rmem',
-      'net.sctp.sctp_wmem'      
+      'net.sctp.sctp_wmem'
    ]
    for nornetSysCtl in nornetSysCtls: 
-      makeTagType('slice/sysctl', 'SysCtl ' + nornetSysCtl, 'vsys_sysctl.' + nornetSysCtl)
+      makeTagType('slice/sysctl', 'SysCtl ' + nornetSysCtl, 'vsys_sysctl.' + nornetSysCtl, [ 'admin' ])
 
    # ====== Missing tags for plnet ==========================================
    makeTagType('interface/config', 'IPv6 Auto-Configuration',          'ipv6_autoconf')
    for i in range(0, NorNet_MaxProviders):
-      makeTagType('interface/config', 'IPv4 Secondary IPv4 Address',   'ipaddr'  + str(i + 1))
-      makeTagType('interface/config', 'IPv4 Secondary IPv4 Netmask',   'netmask' + str(i + 1))
+      makeTagType('interface/config', 'IPv4 Secondary IPv4 Address',   'ipaddr'  + str(i + 1), [ 'admin' ])
+      makeTagType('interface/config', 'IPv4 Secondary IPv4 Netmask',   'netmask' + str(i + 1), [ 'admin' ])
 
    # ====== Special tags for ovs_bridge handling ============================
    makeTagType('interface/ovs', 'Name of Open vSwitch bridge', 'ovs_bridge')
