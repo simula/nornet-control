@@ -47,6 +47,7 @@ norNetSetup = [
    'site_latitude'     : 59.895933,
    'site_longitude'    : 10.627635,
    'site_altitude'     : 15,
+   'site_contacts'     : [ 'Dreibholz, Thomas: dreibh@simula.no', 'Werme, Jonas: jonasw@simula.no' ],
    'site_pcu'          : [ IPv4Address('158.39.4.3'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -78,8 +79,8 @@ norNetSetup = [
       [ 111, 12, u'ullern'      ],
 
       # --- Test only! ---
-      [ 117, 18, u'vmtest1'     ],
-      [ 118, 19, u'vmtest2'     ],
+      #[ 117, 18, u'vmtest1'     ],
+      #[ 118, 19, u'vmtest2'     ],
       [ 119, 20, u'test'        ]
    ] },
 
@@ -96,6 +97,7 @@ norNetSetup = [
    'site_latitude'     : 59.944034,
    'site_longitude'    : 10.719013,
    'site_altitude'     : 100,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('129.240.66.75'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -131,6 +133,7 @@ norNetSetup = [
    'site_latitude'     : 60.789615,
    'site_longitude'    : 10.68166,
    'site_altitude'     : 200,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('128.39.49.165'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -163,6 +166,7 @@ norNetSetup = [
    'site_latitude'     : 69.681897,
    'site_longitude'    : 18.980541,
    'site_altitude'     : 50,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('129.242.157.229'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -198,6 +202,7 @@ norNetSetup = [
    'site_latitude'     : 58.938063,
    'site_longitude'    : 5.691172,
    'site_altitude'     : 25,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('152.94.120.7'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -233,6 +238,7 @@ norNetSetup = [
    'site_latitude'     : 60.384904,
    'site_longitude'    : 5.328636,
    'site_altitude'     : 50,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('158.37.6.194'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -265,6 +271,7 @@ norNetSetup = [
    'site_latitude'     : 58.163833,
    'site_longitude'    : 8.002936,
    'site_altitude'     : 50,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('158.36.50.178'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -300,6 +307,7 @@ norNetSetup = [
    'site_latitude'     : 78.222652,
    'site_longitude'    : 15.653273,
    'site_altitude'     : 20,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('158.39.149.133'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -332,6 +340,7 @@ norNetSetup = [
    'site_latitude'     : 63.418003,
    'site_longitude'    : 10.401625,
    'site_altitude'     : 50,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('129.241.200.129'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -364,6 +373,7 @@ norNetSetup = [
    'site_latitude'     : 68.436023,
    'site_longitude'    : 17.434984,
    'site_altitude'     : 75,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('158.39.93.232'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -399,6 +409,7 @@ norNetSetup = [
    'site_latitude'     : 59.921732,
    'site_longitude'    : 10.735502,
    'site_altitude'     : 20,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('128.39.120.63'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -434,6 +445,7 @@ norNetSetup = [
    'site_latitude'     :  49.4237695,
    'site_longitude'    : 7.7551096,
    'site_altitude'     : 50,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('131.246.112.121'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -460,6 +472,7 @@ norNetSetup = [
    'site_latitude'     : 51.476144,
    'site_longitude'    : 7.011656,
    'site_altitude'     : 120,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('132.252.156.12'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -494,6 +507,7 @@ norNetSetup = [
    'site_latitude'     : 59.404101,
    'site_longitude'    : 13.58189,
    'site_altitude'     : 60,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -521,6 +535,7 @@ norNetSetup = [
    'site_latitude'     : 20.059947,
    'site_longitude'    : 110.324425,
    'site_altitude'     : 10,
+   'site_contacts'     : [ 'Fa, Fu: fufa@hainu.edu.cn', 'Zhou, Xing: xingzhou50@126.com' ],
    'site_pcu'          : [ IPv4Address('210.37.45.148'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -554,6 +569,7 @@ norNetSetup = [
    'site_latitude'     : 18.288405,
    'site_longitude'    : 109.55445,
    'site_altitude'     : 10,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('222.17.128.252'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -584,6 +600,7 @@ norNetSetup = [
    'site_latitude'     : 38.952,
    'site_longitude'    : -95.264,
    'site_altitude'     : 300,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -641,6 +658,7 @@ norNetSetup = [
    'site_latitude'     : 37.576104,
    'site_longitude'    : 126.890443,
    'site_altitude'     : 50,
+   'site_contacts'     : [ ],
    'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -671,6 +689,7 @@ norNetSetup = [
    #'site_latitude'     : -21.980956,
    #'site_longitude'    : -47.883528,
    #'site_altitude'     : 50,
+   #'site_contacts'     : [ ],
    #'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
    #'site_nornet_if'    : 'eth0',
    #'site_providers' : [
