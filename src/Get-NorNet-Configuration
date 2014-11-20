@@ -569,6 +569,7 @@ siteFlagURL   = 'https://www.nntb.no/Artwork/Graphics/Flags'
 
 showAddresses     = True
 showSlivers       = True
+showContacts      = True
 useHpyerlinks     = True
 outputFormat      = 'html'
 headerBaseLevel   = 2
@@ -585,6 +586,8 @@ while i < len(sys.argv):
       showAddresses = False
    elif sys.argv[i] == '-noslivers':
       showSlivers = False
+   elif sys.argv[i] == '-nocontacts':
+      showContacts = False
    elif sys.argv[i] == '-nohyperlinks':
       useHpyerlinks = False
    elif sys.argv[i] == '-html':
@@ -593,7 +596,7 @@ while i < len(sys.argv):
       outputFormat      = 'latex'
       headerBaseLevel   = 1
    else:
-      error('Usage: ' + sys.argv[0] + ' [-directory=data_directory] [-noaddresses] [-noslivers] [-nohyperlinks] [-html|-latex]')
+      error('Usage: ' + sys.argv[0] + ' [-directory=data_directory] [-noaddresses] [-nocontacts] [-noslivers] [-nohyperlinks] [-html|-latex]')
    i = i + 1
 
 loginToPLC(quietMode = True)
@@ -912,6 +915,33 @@ for siteIndex in sorted(siteIndexList):
       output.beginTable(nodePlusSliverCells + 4, 'grey')
 
 
+   # ====== Contacts ===========================================================
+   if showContacts == True:
+      contacts = site['site_contacts']
+      if len(contacts) > 0:
+         output.write('Contacts:\n')
+         output.beginEnumeration()
+         for contact in contacts:
+            found = re.match(r'(.*): ([a-zA-Z0-9\.]+@[a-zA-Z0-9\.]+)', contact)
+            if found:
+               contactMail       = found.group(2)
+               contactFullName   = found.group(1)
+               contactFamilyName = ''
+               contactGivenName  = ''
+
+               output.beginItem()
+               found = re.match(r'(.*), (.*)', contactFullName)
+               if found:
+                  contactFamilyName = found.group(1)
+                  contactGivenName  = found.group(2)
+                  output.write(output.addToIndex(contactFamilyName + ', ' + contactGivenName) + output.makeURL('mailto:' + contactMail, contactGivenName + ' ' + contactFamilyName + ' (' + contactMail + ')'))
+               else:
+                  output.write(output.addToIndex(contactFullName) + output.makeURL('mailto:' + contactMail, contactFullName + ' (' + contactMail + ')'))
+
+               output.endItem()
+         output.endEnumeration()
+
+
    # ====== Display site information ========================================
    siteInfoTable = [
       [ 'City',         output.addToIndex(siteCity)     + siteCity     ],
@@ -1124,31 +1154,6 @@ for siteIndex in sorted(siteIndexList):
                output.endRow()
 
    output.endTable()
-
-
-   # ====== Contacts ===========================================================
-   contacts = site['site_contacts']
-   if len(contacts) > 0:
-      output.beginEnumeration()
-      for contact in contacts:
-         found = re.match(r'(.*): ([a-zA-Z0-9\.]+@[a-zA-Z0-9\.]+)', contact)
-         if found:
-            contactMail       = found.group(2)
-            contactFullName   = found.group(1)
-            contactFamilyName = ''
-            contactGivenName  = ''
-
-            output.beginItem()
-            found = re.match(r'(.*), (.*)', contactFullName)
-            if found:
-               contactFamilyName = found.group(1)
-               contactGivenName  = found.group(2)
-               output.write(output.addToIndex(contactFamilyName + ', ' + contactGivenName) + output.makeURL('mailto:' + contactMail, contactGivenName + ' ' + contactFamilyName + ' (' + contactMail + ')'))
-            else:
-               output.write(output.addToIndex(contactFullName) + output.makeURL('mailto:' + contactMail, contactFullName + ' (' + contactMail + ')'))
-
-            output.endItem()
-      output.endEnumeration()
 
 
 # ====== Get slice details ==================================================

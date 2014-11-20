@@ -1,5 +1,5 @@
 .\" Get Configuration
-.\" Copyright (C) 2014 by Thomas Dreibholz
+.\" Copyright (C) 2015 by Thomas Dreibholz
 .\"
 .\" This program is free software: you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd November 14, 2014
+.Dd November 20, 2014
 .Dt Get-NorNet-Configuration 1
 .Os Get-NorNet-Configuration
 .\" ###### Name #############################################################
@@ -30,6 +30,7 @@
 .Op Fl directory=data_directory
 .Op Fl nohyperlinks
 .Op Fl noaddresses
+.Op Fl nocontacts
 .Op Fl noslivers
 .Op Fl html|\-latex
 .\" ###### Description ######################################################
@@ -46,6 +47,8 @@ Put the image files (LaTeX output only!) into the given directory.
 Do not generate hyperlinks.
 .It Fl noaddresses
 Hide addresses.
+.It Fl nocontacts
+Hide site contacts information.
 .It Fl noslivers
 Hide sliver information.
 .It Fl html
@@ -59,6 +62,6 @@ Generate LaTeX output.
 .It Get-NorNet-Configuration
 .It Get-NorNet-Configuration \-noaddresses
 .It Get-NorNet-Configuration \-noaddresses \-noslivers
-.It Get-NorNet-Configuration \-noaddresses \-noslivers \-nohyperlinks
+.It Get-NorNet-Configuration \-noaddresses \-nocontacts \-noslivers \-nohyperlinks
 .It Get-NorNet-Configuration \-noaddresses \-latex \-directory=LaTeX-Images >NorNet.tex
 .El
