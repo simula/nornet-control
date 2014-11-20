@@ -347,15 +347,19 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
       for contact in siteContacts:
          if i >= NorNet_MaxSiteContacts:
             break
-         if addOrUpdateSiteTag(siteID, 'nornet_site_contact' + str(i), contact.encode('utf-8')) <= 0:
+         print i
+         print contact
+         if addOrUpdateSiteTag(siteID, 'nornet_site_contact' + str(i), str(contact.encode('utf-8'))) <= 0:
             error('Unable to add "nornet_site_contact' + str(i) + '" tag to site ' + siteName)
          i = i + 1
 
+      print 'ok!'
+      
       # Remove previously-used (but now deleted) contacts:
       while i < NorNet_MaxSiteContacts:
          _deleteSiteTag(siteID, 'nornet_site_contact' + str(i))
          i = i + 1
-      
+
       # ====== Set NTP servers ==============================================
       for i in range(0, NorNet_MaxNTPServers):
          if i >= len(ntpServers):
