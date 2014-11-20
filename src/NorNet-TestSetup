@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # NorNet Test Setup
-# Copyright (C) 2012 by Thomas Dreibholz
+# Copyright (C) 2012-2015 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ norNetSetup = [
    'site_latitude'     : 59.895933,
    'site_longitude'    : 10.627635,
    'site_altitude'     : 15,
-   'site_contacts'     : [ u'Ola Nordmann <ola.nordmann@alpha.test>' ],
+   'site_contacts'     : [ u'Nordmann, Ola: ola.nordmann@alpha.test' ],
    'site_pcu'          : [ IPv4Address('172.16.1.201'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -77,7 +77,7 @@ norNetSetup = [
    'site_latitude'     : 59.329952,
    'site_longitude'    : 18.072383,
    'site_altitude'     : 5,
-   'site_contacts'     : [ u'Gustavsson, Gösta <goesta.gustavsson@beta.test>' ],
+   'site_contacts'     : [ u'Gustavsson, Gösta: goesta.gustavsson@beta.test' ],
    'site_pcu'          : [ IPv4Address('172.16.1.202'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -106,7 +106,7 @@ norNetSetup = [
    'site_latitude'     : 50.971672,
    'site_longitude'    : 7.468232,
    'site_altitude'     : 220,
-   'site_contacts'     : [ u'托马斯博士 <thomas@gamma.test>' ],
+   'site_contacts'     : [ u'托马斯博士: thomas@gamma.test' ],
    'site_pcu'          : [ IPv4Address('172.16.1.203'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -136,27 +136,30 @@ norNetSetup = [
    'site_latitude'     : -37.951706,
    'site_longitude'    : 145.549149,
    'site_altitude'     : 200,
-   'site_contacts'     : [ u'Smith, John <john.smith@delt.test>', 'Admin, Joe <joe.admin@delt.test>' ],
+   'site_contacts'     : [ u'Smith, John: john.smith@delt.test', 'Admin, Joe: joe.admin@delt.test' ],
    'site_pcu'          : [ IPv4Address('172.16.1.204'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Provider Eins', 'eth1', IPv4Network('172.16.4.2/24'),     IPv4Address('172.16.4.1'),
-                                  IPv6Network('fd00:16:4::2/64'),   IPv6Address('fd00:16:4::1') ]
+                                  IPv6Network('fd00:16:4::2/64'),   IPv6Address('fd00:16:4::1'),
+                                  'fibre, business', 0, 0 ]
       #,
       #[ u'Provider Zwei', 'eth2', IPv4Network('172.17.4.2/24'),     IPv4Address('172.17.4.1'),
-                                  ## IPv6Network('fd00:17:4::2/64'),   IPv6Address('fd00:17:4::1') ]
-                                  #IPv6Network('::/0'),  IPv6Address('::') ]
+                                  # IPv6Network('fd00:17:4::2/64'),   IPv6Address('fd00:17:4::1') ]
+                                  #IPv6Network('::/0'),  IPv6Address('::'),
+                                  #'fibre, consumer', 100000, 20000 ]
       #,
       #[ u'Provider Drei', 'eth3', IPv4Network('172.18.4.2/24'),     IPv4Address('172.18.4.1'),
-                                  #IPv6Network('fd00:18:4::2/64'),   IPv6Address('fd00:18:4::1') ]
+                                  #IPv6Network('fd00:18:4::2/64'),   IPv6Address('fd00:18:4::1'),
+                                  #'fibre, consumer', 100000, 20000 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'kangaroo', 'belgrave', 'vnc:5700' ],
-      [ 101, 2, u'wombat',   'belgrave', 'vnc:5701' ],
-      [ 103, 3, u'wallaby',  'emerald',  'vnc:5700' ],
-      [ 104, 4, u'koala',    'emerald',  'vnc:5701' ],
-      [ 105, 5, u'redback',  'lakeside', 'vnc:5700' ],
-      [ 106, 6, u'quokka',   'lakeside', 'vnc:5701' ]
+      [ 100, 1, u'kangaroo', 'belgrave.delta.test', 'vnc://belgrave..delta.test:5700' ],
+      [ 101, 2, u'wombat',   'belgrave.delta.test', 'vnc://belgrave..delta.test:5701' ],
+      [ 103, 3, u'wallaby',  'emerald.delta.test',  'vnc://emerald..delta.test:5700'  ],
+      [ 104, 4, u'koala',    'emerald.delta.test',  'vnc://emerald..delta.test:5701'  ],
+      [ 105, 5, u'redback',  'lakeside.delta.test', 'vnc://lakeside..delta.test:5700' ],
+      [ 106, 6, u'quokka',   'lakeside.delta.test', 'vnc://lakeside..delta.test:5701' ]
    ] }
 
 ]
@@ -211,7 +214,7 @@ def makeSite(fullSliceList, site, norNetInformation, ntpServers):
          machineHost    = ''
          machineDisplay = 'physical'
       makeNorNetNode(fullSliceList, newSite, node[2], address, newPCU, port,
-                     'eth0', 'Amiga 5000', 'boot', machineHost, machineDisplay)
+                     'eth0', site['site_providers'], 'Amiga 5000', 'boot', machineHost, machineDisplay)
 
 
 # ###### Make test setup ####################################################

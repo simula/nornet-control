@@ -737,7 +737,14 @@ def makeSite(fullSliceList, site, norNetInformation, ntpServers):
       port = node[1]
       if port <= 0:
         port = i
-      makeNorNetNode(fullSliceList, newSite, node[2], address, newPCU, port, 'eth0', 'Amiga 5000', 'boot')
+      try:
+         machineHost    = node[2]
+         machineDisplay = node[3]
+      except:
+         machineHost    = ''
+         machineDisplay = 'physical'
+      makeNorNetNode(fullSliceList, newSite, node[2], address, newPCU, port,
+                     'eth0', 'Amiga 5000', 'boot', machineHost, machineDisplay)
 
 
 # ###### Make test setup ####################################################

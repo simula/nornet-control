@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # NorNet Site Setup
-# Copyright (C) 2012-2014 by Thomas Dreibholz
+# Copyright (C) 2012-2015 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -425,7 +425,7 @@ def _deleteInterfaceTag(interfaceID, tagName):
 
 
 # ###### Update interfaces of a node ########################################
-def _updateNorNetInterfaces(node, site, norNetInterface):
+def _updateNorNetInterfaces(node, site, norNetInterface, siteProviders):
    providerList         = getNorNetProvidersForSite(site)
    siteIndex            = int(site['site_index'])
    siteDomain           = site['site_domain']
@@ -474,6 +474,14 @@ def _updateNorNetInterfaces(node, site, norNetInterface):
                   ipv6Gateway             = ifGatewayIPv6.ip
                   interface['dns2']       = str(ifGatewayIPv6.ip)   # The tunnelbox is also the DNS server
 
+                  providerType       = ''
+                  providerUpstream   = 0
+                  providerDownstream = 0
+                  try:
+                     providerType = siteProviders[ipv4SecondaryIndex-1][6]
+                  except:
+                     print('WARNING: Incomplete provider metadata: ' + str(siteProviders) + '\n')
+
                   primaryInterfaceID = lookupPrimaryInterfaceID(node)
                   if primaryInterfaceID == 0:
                      primaryInterfaceID = getPLCServer().AddInterface(getPLCAuthentication(), nodeID, interface)
@@ -489,6 +497,12 @@ def _updateNorNetInterfaces(node, site, norNetInterface):
                      error('Unable to add "nornet_is_managed_interface" tag to interface ' + str(ifIPv4.ip))
                   if addOrUpdateInterfaceTag(primaryInterfaceID, 'nornet_ifprovider_index', str(providerIndex)) <= 0:
                      error('Unable to add "nornet_ifprovider_index" tag to interface ' + str(ifIPv4.ip))
+                  if addOrUpdateInterfaceTag(primaryInterfaceID, 'nornet_ifprovider_type', str(providerType)) <= 0:
+                     error('Unable to add "nornet_ifprovider_type" tag to interface ' + str(ifIPv4.ip))
+                  if addOrUpdateInterfaceTag(primaryInterfaceID, 'nornet_ifprovider_downstream', str(providerDownstream)) <= 0:
+                     error('Unable to add "nornet_ifprovider_downstream" tag to interface ' + str(ifIPv4.ip))
+                  if addOrUpdateInterfaceTag(primaryInterfaceID, 'nornet_ifprovider_upstream', str(providerUpstream)) <= 0:
+                     error('Unable to add "nornet_ifprovider_upstream" tag to interface ' + str(ifIPv4.ip))
 
                else:
                   ipv6Secondaries.append(ifIPv6)
@@ -558,7 +572,7 @@ def addOrUpdateConfFile(configuration):
 # ###### Create NorNet node #################################################
 def makeNorNetNode(fullSliceList,
                    site, nodeNiceName, nodeNorNetIndex,
-                   pcuID, pcuPort, norNetInterface,
+                   pcuID, pcuPort, norNetInterface, siteProviders,
                    model, bootState,
                    machineHost, machineDisplay):
    dnsName      = makeNameFromUnicode(nodeNiceName)
@@ -769,7 +783,7 @@ def makeNorNetNode(fullSliceList,
       newNode = fetchNorNetNode(nodeHostName)
       if newNode == None:
          error('Unable to find new node ' + nodeHostName)
-      _updateNorNetInterfaces(newNode, site, norNetInterface)
+      _updateNorNetInterfaces(newNode, site, norNetInterface, siteProviders)
 
       # ====== Print configuration files of the node ========================
       #files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids', 'source', 'dest'])
