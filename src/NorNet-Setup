@@ -616,7 +616,7 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Lightower Fiber Networks', 'eth1',
-           IPv4Network('128.238.63.79/24'), IPv4Address('128.238.63.80'),
+           IPv4Network('128.238.63.79/24'), IPv4Address('128.238.63.1'),
            IPv6Network('::/0'),             IPv6Address('::'),
            'fibre, business', 0, 0 ]
    ],
