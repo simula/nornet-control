@@ -1,0 +1,60 @@
+#!/bin/bash -e
+#
+# Harvest URLs from Web-Checker output
+# Copyright (C) 2015 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+TEMP_PREFIX="/tmp/webchecker"
+
+ESSEN="http://www.iem.uni-due.de http://www.exp-math.uni-essen.de http://web.iem.uni-due.de http://web.exp-math.uni-essen.de http://cna.uni-due.de http://cna.uni-essen.de https://www.tdr.wiwi.uni-due.de/"
+NNTB="https://www.nntb.no http://robustenett.no"
+SIMULA="https://www.simula.no"
+
+
+# ALL_URLS="$ESSEN $NNTB $SIMULA"
+ALL_URLS="http://cna.uni-due.de http://cna.uni-essen.de"
+
+
+i=1
+for url in $ALL_URLS ; do
+   echo "url$i=$url"
+   urldir="$TEMP_PREFIX/tempdir.$i"
+   if [ -e "$urldir" ] ; then
+      rm -rf "$urldir"
+   fi
+   mkdir -p "$urldir"
+
+   (
+      cd "$urldir"
+      webcheck "$url" >results.log
+   ) &
+
+   let i=$i+1
+done
+
+wait
+
+echo "" >results-unsorted.urls
+i=1
+for url in $ALL_URLS ; do
+   urldir="$TEMP_PREFIX/tempdir.$i"
+   ./Get-URLs "$urldir/results.log" >>results-unsorted.urls
+   let i=$i+1
+done
+
+sort -u <results-unsorted.urls >results.sorted.urls
+wc results.sorted.urls
