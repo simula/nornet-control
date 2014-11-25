@@ -69,18 +69,18 @@ norNetSetup = [
            'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100,  1, u'akerbrygge'  ],
-      [ 101,  2, u'bygdøy'      ],
-      [ 102,  3, u'tullinløkka' ],
-      [ 103,  4, u'frogner'     ],
-      [ 104,  5, u'nordberg'    ],
-      [ 105,  6, u'solvang'     ],
-      [ 106,  7, u'nordreaker'  ],
-      [ 107,  8, u'vestreaker'  ],
-      [ 108,  9, u'skøyen'      ],
-      [ 109, 10, u'vækerø'      ],
-      [ 110, 11, u'akerselva'   ],
-      [ 111, 12, u'ullern'      ],
+      [ 100,  1, u'akerbrygge',  'sognsvann.simula.nornet',      'vnc://sognsvann.simula.nornet:5700'      ],
+      [ 101,  2, u'bygdøy',      'sognsvann.simula.nornet',      'vnc://sognsvann.simula.nornet:5701'      ],
+      [ 102,  3, u'tullinløkka', 'svartkulp.simula.nornet',      'vnc://svartkulp.simula.nornet:5700'      ],
+      [ 103,  4, u'frogner',     'svartkulp.simula.nornet',      'vnc://svartkulp.simula.nornet:5701'      ],
+      [ 104,  5, u'nordberg',    'maridalsvannet.simula.nornet', 'vnc://maridalsvannet.simula.nornet:5700' ],
+      [ 105,  6, u'solvang',     'maridalsvannet.simula.nornet', 'vnc://maridalsvannet.simula.nornet:5701' ],
+      [ 106,  7, u'nordreaker',  'blanksjoe.simula.nornet',      'vnc://blanksjoe.simula.nornet:5700'      ],
+      [ 107,  8, u'vestreaker',  'blanksjoe.simula.nornet',      'vnc://blanksjoe.simula.nornet:5701'      ],
+      [ 108,  9, u'skøyen' ,     'tryvann.simula.nornet',        'vnc://tryvann.simula.nornet:5700'        ],
+      [ 109, 10, u'vækerø',      'tryvann.simula.nornet',        'vnc://tryvann.simula.nornet:5701'        ],
+      [ 110, 11, u'akerselva',   'aaklungen.simula.nornet',      'vnc://aaklungen.simula.nornet:5700'      ],
+      [ 111, 12, u'ullern',      'aaklungen.simula.nornet',      'vnc://aaklungen.simula.nornet:5701'      ],
 
       # --- Test only! ---
       #[ 117, 18, u'vmtest1'     ],
@@ -119,12 +119,12 @@ norNetSetup = [
            'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'bjørvika' ],
-      [ 101, 2, u'ekeberg'  ],
-      [ 102, 3, u'furuset'  ],
-      [ 103, 4, u'grefsen'  ],
-      [ 104, 5, u'helsfyr'  ],
-      [ 105, 6, u'tøyen'    ]
+      [ 100, 1, u'bjørvika', 'langevann.uio.nornet', 'vnc://langevann.uio.nornet:5700' ],
+      [ 101, 2, u'ekeberg',  'langevann.uio.nornet', 'vnc://langevann.uio.nornet:5701' ],
+      [ 102, 3, u'furuset',  'kringla.uio.nornet',   'vnc://kringla.uio.nornet:5700'   ],
+      [ 103, 4, u'grefsen',  'kringla.uio.nornet',   'vnc://kringla.uio.nornet:5701'   ],
+      [ 104, 5, u'helsfyr',  'smaavann.uio.nornet',  'vnc://smaavann.uio.nornet:5700'  ],
+      [ 105, 6, u'tøyen',    'smaavann.uio.nornet',  'vnc://smaavann.uio.nornet: 5701' ]
    ] },
 
  { 'site_index'        : 3,
@@ -154,12 +154,12 @@ norNetSetup = [
            'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'kapp'      ],
-      [ 101, 2, u'eina'      ],
-      [ 102, 3, u'raufoss'   ],
-      [ 103, 4, u'reinsvoll' ],
-      [ 104, 5, u'skreia'    ],
-      [ 105, 6, u'lena'      ]
+      [ 100, 1, u'kapp',      'fjellhallen.hig.nornet', 'vnc://fjellhallen.hig.nornet:5700' ],
+      [ 101, 2, u'eina',      'fjellhallen.hig.nornet', 'vnc://fjellhallen.hig.nornet:5701' ],
+      [ 102, 3, u'raufoss',   'skibladner.hig.nornet',  'vnc://skibladner.hig.nornet:5700'  ],
+      [ 103, 4, u'reinsvoll', 'skibladner.hig.nornet',  'vnc://skibladner.hig.nornet:5701'  ],
+      [ 104, 5, u'skreia',    'toten.hig.nornet',       'vnc://toten.hig.nornet:5700'       ],
+      [ 105, 6, u'lena',      'toten.hig.nornet',       'vnc://toten.hig.nornet:5701'       ]
    ] },
 
  { 'site_index'        : 4,
@@ -193,12 +193,12 @@ norNetSetup = [
            'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'amundsen'    ],
-      [ 101, 2, u'nansen'      ],
-      [ 102, 3, u'aunegården'  ],
-      [ 103, 4, u'skarven'     ],
-      [ 104, 5, u'arctandria'  ],
-      [ 105, 6, u'kongsbakken' ]
+      [ 100, 1, u'amundsen',    'ishav.uit.nornet',       'vnc://ishav.uit.nornet:5700'       ],
+      [ 101, 2, u'nansen',      'ishav.uit.nornet',       'vnc://ishav.uit.nornet:5701'       ],
+      [ 102, 3, u'aunegården',  'polaria.uit.nornet',     'vnc://polaria.uit.nornet:5700'     ],
+      [ 103, 4, u'skarven',     'polaria.uit.nornet',     'vnc://polaria.uit.nornet:5701'     ],
+      [ 104, 5, u'arctandria',  'tromsoebrua.uit.nornet', 'vnc://tromsoebrua.uit.nornet:5700' ],
+      [ 105, 6, u'kongsbakken', 'tromsoebrua.uit.nornet', 'vnc://tromsoebrua.uit.nornet:5701' ]
    ] },
 
  { 'site_index'        : 5,
@@ -232,12 +232,12 @@ norNetSetup = [
            'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'mosterøy'  ],
-      [ 101, 2, u'klosterøy' ],
-      [ 102, 3, u'askje'     ],
-      [ 103, 4, u'sokn'      ],
-      [ 104, 5, u'rennesoey' ],
-      [ 105, 6, u'fjøløy'    ]
+      [ 100, 1, u'mosterøy',  'petroleum.uis.nornet', 'vnc://petroleum.uis.nornet:5700' ],
+      [ 101, 2, u'klosterøy', 'petroleum.uis.nornet', 'vnc://petroleum.uis.nornet:5701' ],
+      [ 102, 3, u'askje',     'bensin.uis.nornet',    'vnc://bensin.uis.nornet:5700'    ],
+      [ 103, 4, u'sokn',      'bensin.uis.nornet',    'vnc://bensin.uis.nornet:5701'    ],
+      [ 104, 5, u'rennesoey', 'diesel.uis.nornet',    'vnc://diesel.uis.nornet:5700'    ],
+      [ 105, 6, u'fjøløy',    'diesel.uis.nornet',    'vnc://diesel.uis.nornet:5701'    ]
    ] },
 
  { 'site_index'        : 6,
@@ -267,12 +267,12 @@ norNetSetup = [
            'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'fløibanen'        ],
-      [ 101, 2, u'fisketorget'      ],
-      [ 102, 3, u'ulriksbanen'      ],
-      [ 103, 4, u'lungegårdsvannet' ],
-      [ 104, 5, u'bergenhus'        ],
-      [ 105, 6, u'sverresborg'      ]
+      [ 100, 1, u'fløibanen',        'floeyfjellet.uib.nornet',      'vnc://floeyfjellet.uib.nornet:5700'      ],
+      [ 101, 2, u'fisketorget',      'floeyfjellet.uib.nornet',      'vnc://floeyfjellet.uib.nornet:5701'      ],
+      [ 102, 3, u'ulriksbanen',      'ulriken.uib.nornet',           'vnc://ulriken.uib.nornet:5700'           ],
+      [ 103, 4, u'lungegårdsvannet', 'ulriken.uib.nornet',           'vnc://ulriken.uib.nornet:5701'           ],
+      [ 104, 5, u'bergenhus',        'damsgaardsfjellet.uib.nornet', 'vnc://damsgaardsfjellet.uib.nornet:5700' ],
+      [ 105, 6, u'sverresborg',      'damsgaardsfjellet.uib.nornet', 'vnc://damsgaardsfjellet.uib.nornet:5701' ],
    ] },
 
  { 'site_index'        : 7,
@@ -306,12 +306,12 @@ norNetSetup = [
            #'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'julenisse'    ],
-      [ 101, 2, u'fjøsnisse'    ],
-      [ 102, 3, u'gårdsnisse'   ],
-      [ 103, 4, u'hagenisse'    ],
-      [ 104, 5, u'skipsnisse'   ],
-      [ 105, 6, u'heinzelnisse' ]
+      [ 100, 1, u'julenisse',    'wergeland.uia.nornet', 'vnc://wergeland.uia.nornet:5700' ],
+      [ 101, 2, u'fjøsnisse',    'wergeland.uia.nornet', 'vnc://wergeland.uia.nornet:5701' ],
+      [ 102, 3, u'gårdsnisse',   'holberg.uia.nornet',   'vnc://holberg.uia.nornet:5700'   ],
+      [ 103, 4, u'hagenisse',    'holberg.uia.nornet',   'vnc://holberg.uia.nornet:5701'   ],
+      [ 104, 5, u'skipsnisse',   'andersen.uia.nornet',  'vnc://andersen.uia.nornet:5700'  ],
+      [ 105, 6, u'heinzelnisse', 'andersen.uia.nornet',  'vnc://andersen.uia.nornet:5701'  ]
    ] },
 
  { 'site_index'        : 8,
@@ -341,12 +341,12 @@ norNetSetup = [
            'fibre, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'snøflak'       ],
-      [ 101, 2, u'isbre'         ],
-      [ 102, 3, u'nordlys'       ],
-      [ 103, 4, u'midnattssol'   ],
-      [ 104, 5, u'adventfjorden' ],
-      [ 105, 6, u'isfjorden'     ]
+      [ 100, 1, u'snøflak',       'fjellrev.unis.nornet', 'vnc://fjellrev.unis.nornet:5700'  ],
+      [ 101, 2, u'isbre',         'fjellrev.unis.nornet', 'vnc://fjellrev.unis.nornet:5701'  ],
+      [ 102, 3, u'nordlys',       'hval.unis.nornet',     'vnc://hval.unis.nornet:5700'      ],
+      [ 103, 4, u'midnattssol',   'hval.unis.nornet',     'vnc://hval.unis.nornet:5701'      ],
+      [ 104, 5, u'adventfjorden', 'sel.unis.nornet',      'vnc://sel.unis.nornet:5700'       ],
+      [ 105, 6, u'isfjorden',     'sel.unis.nornet',      'vnc://sel.unis.nornet:5701'       ]
    ] },
 
  { 'site_index'        : 9,
@@ -376,12 +376,12 @@ norNetSetup = [
            'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'bybro'      ],
-      [ 101, 2, u'bakklandet' ],
-      [ 102, 3, u'byåsen'     ],
-      [ 103, 4, u'lerkendal'  ],
-      [ 104, 5, u'bymarka'    ],
-      [ 105, 6, u'heimdal'    ]
+      [ 100, 1, u'bybro',      'munkholmen.ntnu.nornet',   'vnc://munkholmen.ntnu.nornet:5700'   ],
+      [ 101, 2, u'bakklandet', 'munkholmen.ntnu.nornet',   'vnc://munkholmen.ntnu.nornet:5701'   ],
+      [ 102, 3, u'byåsen',     'kristiansten.ntnu.nornet', 'vnc://kristiansten.ntnu.nornet:5700' ],
+      [ 103, 4, u'lerkendal',  'kristiansten.ntnu.nornet', 'vnc://kristiansten.ntnu.nornet:5701' ],
+      [ 104, 5, u'bymarka',    'nidelva.ntnu.nornet',      'vnc://nidelva.ntnu.nornet:5700'      ],
+      [ 105, 6, u'heimdal',    'nidelva.ntnu.nornet',      'vnc://nidelva.ntnu.nornet:5701'      ]
    ] },
 
  { 'site_index'        : 10,
@@ -415,12 +415,12 @@ norNetSetup = [
            'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'storsteinsfjellet' ],
-      [ 101, 2, u'nihkevarri'        ],
-      [ 102, 3, u'beisfjordtøtta'    ],
-      [ 103, 4, u'rombakstøtta'      ],
-      [ 104, 5, u'bjørnfjell'        ],
-      [ 105, 6, u'fagernesfjellet'   ]
+      [ 100, 1, u'storsteinsfjellet', 'herjangsfjorden.hin.nornet', 'vnc://herjangsfjorden.hin.nornet:5700' ],
+      [ 101, 2, u'nihkevarri',        'herjangsfjorden.hin.nornet', 'vnc://herjangsfjorden.hin.nornet:5701' ],
+      [ 102, 3, u'beisfjordtøtta',    'skjomen.hin.nornet',         'vnc://skjomen.hin.nornet:5700'         ],
+      [ 103, 4, u'rombakstøtta',      'skjomen.hin.nornet',         'vnc://skjomen.hin.nornet:5701'         ],
+      [ 104, 5, u'bjørnfjell',        'beisfjorden.hin.nornet',     'vnc://beisfjorden.hin.nornet:5700'     ],
+      [ 105, 6, u'fagernesfjellet',   'beisfjorden.hin.nornet',     'vnc://beisfjorden.hin.nornet:5701'     ]
    ] },
 
  { 'site_index'        : 11,
@@ -446,15 +446,15 @@ norNetSetup = [
            'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'hovedøya'    ],
-      [ 101, 2, u'lindøya'     ],
-      [ 102, 3, u'nakholmen'   ],
-      [ 103, 4, u'gressholmen' ],
-      [ 104, 5, u'bleikøya'    ],
-      [ 105, 6, u'langøyene'   ],
-      [ 106, 7, u'heggholmen'  ],
-      [ 107, 8, u'rambergøya'  ],
-      [ 108, 9, u'vippetangen' ]
+      [ 100, 1, u'hovedøya',    'dalsbergstien.hioa.nornet', 'vnc://dalsbergstien.hioa.nornet:5700' ],
+      [ 101, 2, u'lindøya',     'dalsbergstien.hioa.nornet', 'vnc://dalsbergstien.hioa.nornet:5701' ],
+      [ 102, 3, u'nakholmen',   'dalsbergstien.hioa.nornet', 'vnc://dalsbergstien.hioa.nornet:5702' ],
+      [ 103, 4, u'gressholmen', 'holbergsplass.hioa.nornet', 'vnc://holbergsplass.hioa.nornet:5700' ],
+      [ 104, 5, u'bleikøya',    'holbergsplass.hioa.nornet', 'vnc://holbergsplass.hioa.nornet:5701' ],
+      [ 105, 6, u'langøyene',   'holbergsplass.hioa.nornet', 'vnc://holbergsplass.hioa.nornet:5702' ],
+      [ 106, 7, u'heggholmen',  'pilestredet.hioa.nornet',   'vnc:/pilestredet.hioa.nornet/:5700'   ],
+      [ 107, 8, u'rambergøya',  'pilestredet.hioa.nornet',   'vnc://pilestredet.hioa.nornet:5701'   ],
+      [ 108, 9, u'vippetangen', 'pilestredet.hioa.nornet',   'vnc://pilestredet.hioa.nornet:5702'   ]
    ] },
 
  { 'site_index'        : 40,
@@ -511,7 +511,7 @@ norNetSetup = [
            IPv6Network('::/0'),              IPv6Address('::'),
            'ADSL, consumer', 16000, 1000 ]
    ],
-   'site_nodes' : [
+   'site_nodes' : [   # VMware cluster
       [ 100, 1, u'altenessen'  ],
       [ 101, 2, u'baldeneysee' ],
       [ 102, 3, u'borbeck'     ],
@@ -544,7 +544,7 @@ norNetSetup = [
            IPv6Network('::/0'),             IPv6Address('::'),
            'fibre, business', 0, 0 ]
    ],
-   'site_nodes' : [
+   'site_nodes' : [   # VMware cluster + physical machines
       [ 100, 1, u'vänern'           ],
       [ 101, 2, u'mariebergsskogen' ],
       [ 102, 3, u'klarälven'        ]
@@ -579,12 +579,12 @@ norNetSetup = [
            'fibre, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'longlou'   ],   # Wenchang Satellite Launch Center/WSLC
-      [ 101, 2, u'bamenbay'  ],   # This place is mangrove forests.
-      [ 102, 3, u'boao'      ],   # This is the permanent address of Boao forum for asia.
-      [ 103, 4, u'wanqun'    ],   # Wan-ch'uan River，Wanquan River before and called the white river.
-      [ 104, 5, u'nanshan'   ],   # Nanshan Buddhism Cultural Park is a display of traditional Chinese Buddhist culture
-      [ 105, 6, u'yalongbay' ]    # This place has beautiful beach and tropical forest park
+      [ 100, 1, u'longlou',   'wenchang.hu.nornet', 'vnc://wenchang.hu.nornet:5700' ],   # Wenchang Satellite Launch Center/WSLC
+      [ 101, 2, u'bamenbay',  'wenchang.hu.nornet', 'vnc://wenchang.hu.nornet:5701' ],   # This place is mangrove forests.
+      [ 102, 3, u'boao',      'qionghai.hu.nornet', 'vnc://qionghai.hu.nornet:5700' ],   # This is the permanent address of Boao forum for asia.
+      [ 103, 4, u'wanqun',    'qionghai.hu.nornet', 'vnc://qionghai.hu.nornet:5701' ],   # Wan-ch'uan River，Wanquan River before and called the white river.
+      [ 104, 5, u'nanshan',   'sanya.hu.nornet',    'vnc://sanya.hu.nornet:5700'    ],   # Nanshan Buddhism Cultural Park is a display of traditional Chinese Buddhist culture
+      [ 105, 6, u'yalongbay', 'sanya.hu.nornet',    'vnc://sanya.hu.nornet:5701'    ]    # This place has beautiful beach and tropical forest park
    ] },
 
  # Qiongzhou University (琼州大学)
@@ -612,12 +612,12 @@ norNetSetup = [
    ],
    'site_nodes' : [
       # Naming scheme: places in Sanya
-      [ 100, 1, u'sanyabay'      ],
-      [ 101, 2, u'luhuitou'      ],
-      [ 102, 3, u'tianyahaijiao' ],
-      [ 103, 4, u'qiongzhou'     ],
-      [ 104, 5, u'lizhigou'      ],
-      [ 105, 6, u'haitangbay'    ]
+      [ 100, 1, u'sanyabay',      'boating.qu.nornet',   'vnc://boating.qu.nornet:5700'   ],
+      [ 101, 2, u'luhuitou',      'boating.qu.nornet',   'vnc://boating.qu.nornet:5701'   ],
+      [ 102, 3, u'tianyahaijiao', 'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5700'  ],
+      [ 103, 4, u'qiongzhou',     'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5701'  ],
+      [ 104, 5, u'lizhigou',      'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5700' ],
+      [ 105, 6, u'haitangbay',    'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5701' ]
    ] },
 
  { 'site_index'        : 100,
@@ -643,8 +643,8 @@ norNetSetup = [
            'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'watson'  ],
-      [ 101, 2, u'clinton' ]
+      [ 100, 1, u'watson',  'oread.ku.nornet', 'vnc://oread.ku.nornet:5700' ],
+      [ 101, 2, u'clinton', 'oread.ku.nornet', 'vnc://oread.ku.nornet:5701' ]
       #[ 102, 3, u'williamstown' ],
       #[ 103, 4, u'stull' ]
    ] },
@@ -671,7 +671,7 @@ norNetSetup = [
            IPv6Network('::/0'),             IPv6Address('::'),
            'fibre, business', 0, 0 ]
    ],
-   'site_nodes' : [
+   'site_nodes' : [   # VMware cluster
       [ 100, 1, u'brooklyn'  ],
       [ 101, 2, u'manhattan' ],
       [ 102, 3, u'bronx'     ],
@@ -703,10 +703,10 @@ norNetSetup = [
    ],
    'site_nodes' : [
       # Naming scheme: bridges in Seoul
-      [ 100, 1, u'seogang'  ],
-      [ 101, 2, u'mapo'     ],
-      [ 102, 3, u'wonhyo'   ],
-      [ 103, 4, u'hangang'  ]
+      [ 100, 1, u'seogang', 'yongsan.bls.nornet', 'vnc://yongsan.bls.nornet:5700' ],
+      [ 101, 2, u'mapo',    'yongsan.bls.nornet', 'vnc://yongsan.bls.nornet:5701' ],
+      [ 102, 3, u'wonhyo',  'ichon.bls.nornet',   'vnc://ichon.bls.nornet:5700'   ],
+      [ 103, 4, u'hangang', 'ichon.bls.nornet',   'vnc://ichon.bls.nornet:5701'   ]
       #[ 104, 5, u'dongjak'  ],
       #[ 105, 6, u'jamsugyo' ]
    ] }
