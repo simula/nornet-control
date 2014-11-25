@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # NorNet Setup
-# Copyright (C) 2012-2013 by Thomas Dreibholz
+# Copyright (C) 2012-2015 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ norNetSetup = [
    'site_latitude'     : 59.895933,
    'site_longitude'    : 10.627635,
    'site_altitude'     : 15,
-   'site_contacts'     : [ u'Dreibholz, Thomas: dreibh@simula.no', u'Werme, Jonas: jonasw@simula.no' ],
+   'site_contacts'     : [ u'Dreibholz, Thomas: dreibh@simula.no', u'Elmokashfi, Ahmed: ahmed@simula.no', u'Werme, Jonas: jonasw@simula.no' ],
    'site_pcu'          : [ IPv4Address('158.39.4.3'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -709,7 +709,7 @@ norNetSetup = [
       [ 103, 4, u'hangang', 'ichon.bls.nornet',   'vnc://ichon.bls.nornet:5701'   ]
       #[ 104, 5, u'dongjak'  ],
       #[ 105, 6, u'jamsugyo' ]
-   ] }
+   ] },
 
  #{ 'site_index'        : 120,
    #'site_enabled'      : False,
@@ -724,22 +724,24 @@ norNetSetup = [
    #'site_latitude'     : -21.980956,
    #'site_longitude'    : -47.883528,
    #'site_altitude'     : 50,
-   #'site_contacts'     : [ ],
+   #'site_contacts'     : [ u'Sandri, Marcus: mwws55@gmail.com', u'Verdi, Fábio Luciano: verdi@ufscar.br', u'Silva, Alan: alansilva@acm.org' ],
    #'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
    #'site_nornet_if'    : 'eth0',
    #'site_providers' : [
       #[ u'Rede Nacional de Ensino e Pesquisa', 'eth1',
            #IPv4Network('200.133.238.124/27'), IPv4Address('200.133.238.97'),
-           #IPv6Network('::/0'),               IPv6Address('::') ],
+           #IPv6Network('::/0'),               IPv6Address('::'),
+           #'fibre, business', 0, 0 ],
       #[ u'Academic Network at São Paulo', 'eth2',
            #IPv4Network('186.219.95.214/24'), IPv4Address('186.219.95.1'),
-           #IPv6Network('::/0'),              IPv6Address('::') ]
+           #IPv6Network('::/0'),              IPv6Address('::'),
+           #'fibre, business', 0, 0 ]
    #],
    #'site_nodes' : [
       ##[ 100, 1, u'smörgåstårta' ],
       ##[ 101, 2, u'knäckebröd'   ]
    #] }
-
+ 
       #[ 100, 1, u'lutefisk'     ],
       #[ 101, 2, u'pinnekjøtt'   ],
       #[ 102, 3, u'ribbe'        ],
