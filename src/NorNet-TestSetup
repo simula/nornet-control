@@ -208,8 +208,8 @@ def makeSite(fullSliceList, site, norNetInformation, ntpServers):
       if port <= 0:
         port = i
       try:
-         machineHost    = node[2]
-         machineDisplay = node[3]
+         machineHost    = node[3]
+         machineDisplay = node[4]
       except:
          machineHost    = ''
          machineDisplay = 'physical'
