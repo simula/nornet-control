@@ -18,7 +18,7 @@
 #
 # Contact: dreibh@simula.no
 
-BROWSER="/usr/lib/firefox-trunk/firefox-trunk"
+BROWSER="/usr/bin/firefox"
 BROWSERARGS="-new-instance"
 PREFIX="http://web.archive.org/save/"
 

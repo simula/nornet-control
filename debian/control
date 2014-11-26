@@ -213,6 +213,7 @@ Depends: firefox,
          kdm,
          kubuntu-desktop,
          nornet-node,
+         xserver-xorg-video-vmware,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Display
