@@ -15,6 +15,14 @@ OTHERMIRROR="deb http://ppa.launchpad.net/dreibh/ubuntu $DISTRIBUTION main"
 # sudo pbuilder update --override-config
 
 
+# Trust
+APTKEYRINGS=( '/etc/apt/trusted.gpg' )
+DEBOOTSTRAPOPTS=( '--variant=buildd' '--keyring' '/etc/apt/trusted.gpg' )
+# NOTE: pbuilder seems to ignore these settings!
+# Then, ALLOWUNTRUSTED=yes "solves" the problem to build VirtualBox (needs kbuild).
+# This is, of course, not a good solution!
+# ALLOWUNTRUSTED=yes
+
 # Turn OFF ccache! It will not work properly!
 CCACHEDIR=
 
