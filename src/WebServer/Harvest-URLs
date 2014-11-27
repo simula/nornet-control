@@ -20,8 +20,8 @@
 
 TEMP_PREFIX="/tmp/webchecker"
 
-ESSEN="http://www.iem.uni-due.de http://www.exp-math.uni-essen.de http://web.iem.uni-due.de http://web.exp-math.uni-essen.de http://cna.uni-due.de http://cna.uni-essen.de https://www.tdr.wiwi.uni-due.de/"
-NNTB="https://www.nntb.no http://robustenett.no"
+ESSEN="http://www.iem.uni-due.de http://www.exp-math.uni-essen.de http://web.iem.uni-due.de http://web.exp-math.uni-essen.de http://cna.uni-due.de http://cna.uni-essen.de https://www.tdr.wiwi.uni-due.de"
+NNTB="https://www.nntb.no http://robustenett.no http://packages.nntb.no http://benlomond.nntb.no/"
 SIMULA="https://www.simula.no"
 
 
@@ -56,5 +56,5 @@ for url in $ALL_URLS ; do
    let i=$i+1
 done
 
-sort -u <results-unsorted.urls >results.sorted.urls
-wc results.sorted.urls
+sort -u <results-unsorted.urls >results-sorted.urls
+wc results-sorted.urls
