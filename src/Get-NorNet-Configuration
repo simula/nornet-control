@@ -1015,14 +1015,18 @@ for siteIndex in sorted(siteIndexList):
 
             # ====== External addresses =====================================
             output.beginRow()
+            if showAddresses == True:
+               t = 4
+            else:
+               t = 3
             if isp == 1:
-               output.cell(output.makeTiny('1'), -1, 4 * len(providerList))
-               output.cell(output.makeTiny('tunnelbox'), nodePlusSliverCells - 1, 4 * len(providerList))
+               output.cell(output.makeTiny('1'), -1, t * len(providerList))
+               output.cell(output.makeTiny('tunnelbox'), nodePlusSliverCells - 1, t * len(providerList))
             else:
                output.multiRowFill()
                output.multiRowFill(nodePlusSliverCells - 1)
 
-            output.cell(output.makeTiny(output.makeURL(providerURL, provider['provider_short_name']) + ' (' + str(provider['provider_index']) + ')'), 2, 4)
+            output.cell(output.makeTiny(output.makeURL(providerURL, provider['provider_short_name']) + ' (' + str(provider['provider_index']) + ')'), 2, t)
             if showAddresses == True:
                output.cell(output.makeTiny(str(externalNetworkIPv4)))
             else:
@@ -1036,13 +1040,18 @@ for siteIndex in sorted(siteIndexList):
                output.cell(output.makeSmiley(False))
             output.endRow()
 
-            output.beginRow()
-            output.multiRowFill()
-            output.multiRowFill(nodePlusSliverCells - 1)
-            output.multiRowFill(2)
-            output.cell(output.makeTiny(str(internalNetworkIPv4)))
-            output.cell(output.makeTiny(str(internalNetworkIPv6)))
-            output.endRow()
+            if showAddresses == True:
+               output.beginRow()
+               output.multiRowFill()
+               output.multiRowFill(nodePlusSliverCells - 1)
+               output.multiRowFill(2)
+               if showAddresses == True:
+                  output.cell(output.makeTiny(str(internalNetworkIPv4)))
+                  output.cell(output.makeTiny(str(internalNetworkIPv6)))
+               else:
+                  output.cell(output.makeSmiley(True))
+                  output.cell(output.makeSmiley(True))
+               output.endRow()
 
             output.beginRow()
             if provider['provider_type'] == '':
