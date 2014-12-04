@@ -738,8 +738,8 @@ norNetSetup = [
            #'fibre, business', 0, 0 ]
    #],
    #'site_nodes' : [
-      ##[ 100, 1, u'smörgåstårta' ],
-      ##[ 101, 2, u'knäckebröd'   ]
+      #[ 100, 1, u'soroc'   ],
+      #[ 101, 2, u'lerisor' ]
    #] }
  
       #[ 100, 1, u'lutefisk'     ],
