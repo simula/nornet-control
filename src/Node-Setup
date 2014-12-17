@@ -54,7 +54,7 @@ else
 fi
 OUTPUT="/tmp/nornetapi-config.tmp"
 
-sed -e "s/^NorNet_LocalNode_Hostname=[\"\'].*[\"\']/NorNet_LocalNode_Index=\"$NODE_NAME\"/g" \
+sed -e "s/^NorNet_LocalNode_Hostname=[\"\'].*[\"\']/NorNet_LocalNode_Hostname=\"$NODE_NAME\"/g" \
     -e "s/^NorNet_LocalNode_Index=[\"\'].*[\"\']/NorNet_LocalNode_Index=\'$NODE_INDEX\'/g" \
     -e "s/^NorNet_LocalNode_ControlBox=[\"\'].*[\"\']/NorNet_LocalNode_ControlBox=\'$CONTROLBOX\'/g" \
     -e "s/^[# \t]*NorNet_LocalNode_SSHAuthorizedKeysUpdate=.*$/NorNet_LocalNode_SSHAuthorizedKeysUpdate=$AUTOKEYSUPDATE/g" \
