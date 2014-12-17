@@ -1,0 +1,70 @@
+#!/bin/bash -e
+#
+# Node Setup
+# Copyright (C) 2014-2015 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+# ###### Main program #######################################################
+
+if [ $# -lt 2 ] ; then
+   echo >&2 "Usage: $0 node_name node_index [-controlbox]"
+   exit 1
+fi
+NODE_NAME="$1"
+NODE_INDEX="$2"
+CONTROLBOX="no"
+shift ; shift
+while [ $# -gt 0 ] ; do
+   if [ "$1" = "-controlbox" ] ; then
+      CONTROLBOX="yes"
+   else
+      echo >&2 "ERROR: Bad parameter $1!"
+      exit 1
+   fi
+   shift
+done
+
+if [ -e /etc/nornet/nornetapi-config ] ; then
+   INPUT="/etc/nornet/nornetapi-config"
+elif [ -e /etc/nornet/nornetapi-config.EXAMPLE ] ; then
+   INPUT="/etc/nornet/nornetapi-config.EXAMPLE"
+else
+   echo >&2 "ERROR: Neither /etc/nornet/nornetapi-config or /etc/nornet/nornetapi-config.EXAMPLE are existing!"
+   exit 1
+fi
+OUTPUT="/tmp/nornetapi-config.tmp"
+
+sed -e "s/^NorNet_LocalNode_Hostname=[\"\'].*[\"\']/NorNet_LocalNode_Index=\"$NODE_NAME\"/g" \
+    -e "s/^NorNet_LocalNode_Index=[\"\'].*[\"\']/NorNet_LocalNode_Index=\'$NODE_INDEX\'/g" \
+    -e "s/^NorNet_LocalNode_ControlBox=[\"\'].*[\"\']/NorNet_LocalNode_ControlBox=\'$CONTROLBOX\'/g" \
+   <$INPUT >$OUTPUT
+
+echo "------ /etc/nornet/nornetapi-config:"
+colordiff $INPUT $OUTPUT
+
+echo -en "\x1b[33mApply changes (current configuration files will be backuped to <file>~)?\x1b[0m [yes/no]? "
+read -er applyChanges
+if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
+   echo "Skipped!"
+else
+   if [ -e /etc/nornet/nornetapi-config ] ; then
+      cp /etc/nornet/nornetapi-config /etc/nornet/nornetapi-config~
+   fi
+   mv $OUTPUT /etc/nornet/nornetapi-config
+   sudo service nornet-node configure || true
+fi
