@@ -2,6 +2,7 @@ Auto-Update-Keys         /usr/bin
 Get-Nodes                /usr/bin
 Get-NorNet-Configuration /usr/bin
 Get-Sites                /usr/bin
+Node-Setup               /usr/bin
 Interface-Setup          /sbin
 Probe-Endpoint-Setup     /usr/bin
 Random-Sleep             /usr/bin
