@@ -1,0 +1,58 @@
+.\" Node Setup
+.\" Copyright (C) 2014-2015 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd December 17, 2014
+.Dt Node-Setup 1
+.Os Node-Setup
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Node-Setup
+.Nd NorNet Node Configuration Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Node-Setup
+node_name
+node_index
+.Op \-controlbox
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Node-Setup
+generates and sets the basic node parameters in /etc/nornet/nornetapi-config.
+If /etc/nornet/nornetapi-config already exists, the parameters are replaced.
+Otherwise, /etc/nornet/nornetapi-config.EXAMPLE is used as template.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following parameters need to be provided:
+.Bl -tag -width indent
+.It node_name
+Provides the node name.
+.It node_index
+Provides the node index.
+.It \-controlbox
+If set, the node is a Control Box. That is, the default routes are not via
+the NorNet network. In this case, static routes for just the NorNet address
+range are configured instead of using default routes.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Node-Setup brunost.simula.nornet 200 -controlbox
+.It Node-Setup rekesmoerbroed.simula.nornet 201
+.El
