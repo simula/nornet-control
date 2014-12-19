@@ -85,9 +85,11 @@ Package: nornet-development
 Architecture: any
 Depends: autoconf,
          automake,
+         bison,
          createrepo,
          debhelper,
          devscripts,
+         flex,
          gnuplot,
          imagemagick,
          kbuild,
