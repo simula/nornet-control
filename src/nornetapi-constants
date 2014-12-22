@@ -44,6 +44,8 @@ NorNet_Provider31='"Versatel"                                 "Versatel"   "http
 NorNet_Provider32='"Deutsche Telekom"                         "DTAG"       "http://www.dtag.de"'
 # ------ Korea ------------------------------------------------------------------------------------
 NorNet_Provider70='"Korea Research Environment Open NETwork"  "KREONET"    "http://www.kreonet.net"'
+# ------ Mongolia ---------------------------------------------------------------------------------
+NorNet_Provider78='"Erdemnet"                                 "Erdemnet"   "http://www.erdemnet.mn"'
 # ------ China ------------------------------------------------------------------------------------
 NorNet_Provider80='"China Education and Research Network"     "CERNET"     "http://www.cernet.edu.cn"'
 NorNet_Provider81='"China Unicom"                             "CnUnicom"   "http://www.chinaunicom.com"'
