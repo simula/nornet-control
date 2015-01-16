@@ -74,7 +74,7 @@ d-i partman-auto/expert_recipe          string \
 # Mirror
 d-i mirror/protocol                                 string http
 d-i mirror/http/proxy                               string
-d-i mirror/http/hostname                            string cn.archive.ubuntu.com
+d-i mirror/http/hostname                            string no.archive.ubuntu.com
 d-i mirror/http/directory                           string /ubuntu
 
 # Packages
