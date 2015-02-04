@@ -620,6 +620,36 @@ norNetSetup = [
       [ 105, 6, u'haitangbay',    'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5701' ]
    ] },
 
+ # Mongolian University of Science and Technology (Шинжлэх ухаан технологийн их сургууль)
+ { 'site_index'        : 95,
+   'site_enabled'      : False,
+   'site_long_name'    : u'Mongolian Univeristy of Science and Technology',
+   'site_short_name'   : 'MUST',
+   'site_url'          : 'http://www.must.edu.mn',
+   'site_domain'       : 'must.nornet',
+   'site_city'         : 'Ulan Bator',
+   'site_province'     : 'Ulan Bator',
+   'site_country'      : 'Mongolia',
+   'site_country_code' : 'MN',
+   'site_latitude'     : 47.922041,
+   'site_longitude'    : 106.924384,
+   'site_altitude'     : 200,
+   'site_contacts'     : [ u'Esbold, Unurkhaan: esbold98@gmail.com' ],
+   'site_pcu'          : [ IPv4Address('202.5.194.8'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Erdemnet', 'eth0',   # << --- CHECK ME! ---
+           IPv4Network('202.5.194.9/24'), IPv4Address('202.5.194.2'),
+           IPv6Network('::/0'),           IPv6Address('::'),
+           'fibre, business', 0, 0 ]
+   ],
+   'site_nodes' : [
+      # Naming scheme: districts of Ulan Bator
+      # Baganuur, Bagakhangai, Bayangol, Bayanzürkh, Chingeltei, Khan Uul, Nalaikh, Songino Khairkhan, and Sükhbaatar
+      [ 100, 1, u'baganuur',    'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5700' ],
+      [ 101, 2, u'bagakhangai', 'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5701' ]
+   ] },
+
  { 'site_index'        : 100,
    'site_enabled'      : True,
    'site_long_name'    : u'The University of Kansas',
