@@ -633,7 +633,7 @@ norNetSetup = [
    'site_country_code' : 'MN',
    'site_latitude'     : 47.922041,
    'site_longitude'    : 106.924384,
-   'site_altitude'     : 200,
+   'site_altitude'     : 1350,
    'site_contacts'     : [ u'Esbold, Unurkhaan: esbold98@gmail.com' ],
    'site_pcu'          : [ IPv4Address('202.5.194.8'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
