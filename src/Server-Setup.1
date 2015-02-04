@@ -32,6 +32,7 @@ node_index
 \-site site_index
 \-interface interface_name
 \-providers default_provider[,provider2,...]
+.Op \-bridge interface_name
 .Op \-controlbox
 .Op \-from-current-dir
 .\" ###### Description ######################################################
@@ -61,6 +62,9 @@ Provides the NorNet interface name (e.g. eth0).
 Provides the providers the server is conntected to. They will be configured
 on the NorNet interface. Providers can be given by their name or provider
 index.
+.It \-bridge interface_name
+Sets the NorNet interface into bridge mode. The new bridge interface's name
+is given as parameter. All configuration is made with the bridge interface.
 .It \-controlbox
 If set, the node is a Control Box. That is, the default routes are not via
 the NorNet network. In this case, static routes for just the NorNet address
