@@ -1,5 +1,5 @@
 .\" Make Server Configuration
-.\" Copyright (C) 2012-2013 by Thomas Dreibholz
+.\" Copyright (C) 2012-2015 by Thomas Dreibholz
 .\"
 .\" This program is free software: you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd May 29, 2013
+.Dd February 4, 2015
 .Dt Make-Server-Configuration 1
 .Os Make-Server-Configuration
 .\" ###### Name #############################################################
@@ -33,6 +33,7 @@ node_index
 \-interface interface_name
 \-providers default_provider[,provider2,...]
 .Op \-controlbox
+.Op \-bridge interface_name
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
 .Nm Make-Server-Configuration
@@ -64,9 +65,13 @@ or provider index.
 If set, the node is a Control Box. That is, the default routes are not via
 the NorNet network. In this case, static routes for just the NorNet address
 range are configured instead of using default routes.
+.It \-bridge interface_name
+Sets the NorNet interface into bridge mode. The new bridge interface's name
+is given as parameter. All configuration is made with the bridge interface.
 .El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
-.It Make-Server-Configuration isbjoen.unis.nornet 254 \-site 8 \-interface eth0 \-providers uninett,hafslund
+.It Make-Server-Configuration isbjoen.unis.nornet 254 \-site 8 \-interface eth0 \-providers uninett,telenor
+.It Make-Server-Configuration skjennungen.simula.nornet 254 \-site 1 \-interface eth0 \-providers uninett,kvantel,telenor,powertech \-bridge br0
 .El

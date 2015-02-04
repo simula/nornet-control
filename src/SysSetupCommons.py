@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # NorNet System Setup Commons
-# Copyright (C) 2015 by Thomas Dreibholz
+# Copyright (C) 2014-2015 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -57,11 +57,12 @@ def writeHosts(outputName, hostName, domainName):
 
 # ###### Write sysctl.conf file #############################################
 def writeSysctlConfiguration(outputName, interfaceName):
+   interfaceTag = interfaceName.replace(".", "/")
    outputFile = codecs.open(outputName, 'w', 'utf-8')
    outputFile.write('# Disable IPv6 auto-config on NorNet interface:\n')
-   outputFile.write('net.ipv6.conf.' + interfaceName + '.use_tempaddr=0\n')
-   outputFile.write('net.ipv6.conf.' + interfaceName + '.autoconf=0\n')
-   outputFile.write('net.ipv6.conf.' + interfaceName + '.accept_ra=0\n')
+   outputFile.write('net.ipv6.conf.' + interfaceTag + '.use_tempaddr=0\n')
+   outputFile.write('net.ipv6.conf.' + interfaceTag + '.autoconf=0\n')
+   outputFile.write('net.ipv6.conf.' + interfaceTag + '.accept_ra=0\n')
    outputFile.write('# Enable TCP ECN:\n')
    outputFile.write('net.ipv4.tcp_ecn=1\n')
    outputFile.close()
@@ -94,7 +95,8 @@ def writeProxyConfiguration(suffix, siteDomain, variant, controlBoxMode):
 # ###### Write interface configuration file #################################
 def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                                 domainName, nodeIndex, siteIndex,
-                                providerList, defaultProviderIndex):
+                                providerList, defaultProviderIndex,
+                                bridgeInterface = None):
    # ====== Write Debian /etc/network/interfaces ============================
    if variant == 'Debian':
       outputFile = codecs.open('interfaces' + suffix, 'w', 'utf-8')
@@ -104,8 +106,13 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
       outputFile.write('iface lo inet loopback\n\n')
 
       outputFile.write('# ====== NorNet-Internal Networks ======\n')
-      outputFile.write('auto ' + interfaceName + '\n')
+      bridgeTo = None
+      if bridgeInterface != None:
+        outputFile.write('iface ' + interfaceName + ' manual\n\n')
+        bridgeTo      = interfaceName
+        interfaceName = bridgeInterface
 
+      outputFile.write('auto ' + interfaceName + '\n')
       logSuffix = " >>/var/log/nornet-ifupdown.log 2>&1"
       for version in [ 4, 6 ]:
          providerConfigs = []
@@ -138,6 +145,11 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                   if providerIndex == defaultProviderIndex:
                      if version == 4:
                         outputFile.write('iface ' + interfaceName + ' inet manual\n')
+                        if bridgeTo != None:
+                           outputFile.write('\tbridge_ports    ' + bridgeTo + '\n')
+                           outputFile.write('\tbridge_stp      off\n')
+                           outputFile.write('\tbridge_waitport 0\n')
+                           outputFile.write('\tbridge_fd       0\n')
                      else:
                         outputFile.write('\niface ' + interfaceName + ' inet6 manual\n')
 
