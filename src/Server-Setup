@@ -44,7 +44,6 @@ parse-interface-configuration ()
                echo "$inputLine" | sed -e "s/^[ \t][ \t]*/\t/g" >>$outputFile
             else
                if [ $writeMode -eq 1 ] ; then
-#                   echo "" >>$outputFile
                   writeMode=0
                fi
             fi
@@ -156,7 +155,11 @@ fi
 # ====== Create network configuration =======================================
 cd /root   # Ensure that configurations a written in /root!
 
-${MakeServerConfigurationPath}Make-Server-Configuration "$Variant" "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers "$ProviderList" $ControlBoxMode || exit 1
+options=""
+if [ "$BridgeInterface" != "" ] ; then
+   options="$options -bridge $BridgeInterface"
+fi
+${MakeServerConfigurationPath}Make-Server-Configuration "$Variant" "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers "$ProviderList" $ControlBoxMode $options || exit 1
 AllEthernetInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-\.@]+):/ { print $2 }' | grep "^eth" | sed -e "s/:$//" -e "s/@.*$//" | xargs`
 for interface in $AllEthernetInterfaces ; do
    if [ "$interface" != "lo" -a "$interface" != "$InterfaceName" ] ; then
