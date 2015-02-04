@@ -78,7 +78,8 @@ if [ "$state" = "pre-up" ] ; then
    (
       log "Pre-Up of interface $interface/$type"
       if [ "$type" == "ipv6" ] ; then
-         /sbin/sysctl -q -e -w net.ipv6.conf.$interface.use_tempaddr=0 net.ipv6.conf.$interface.accept_ra=0 net.ipv6.conf.$interface.autoconf=0 || true
+         interfaceTag="${interface/./\/}"
+         /sbin/sysctl -q -w net.ipv6.conf.$interfaceTag.use_tempaddr=0 net.ipv6.conf.$interfaceTag.accept_ra=0 net.ipv6.conf.$interfaceTag.autoconf=0 || true
       fi
 
       # NOTE:
