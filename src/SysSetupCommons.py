@@ -108,7 +108,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
       outputFile.write('# ====== NorNet-Internal Networks ======\n')
       bridgeTo = None
       if bridgeInterface != None:
-        outputFile.write('iface ' + interfaceName + ' manual\n\n')
+        outputFile.write('iface ' + interfaceName + ' inet manual\n\n')
         bridgeTo      = interfaceName
         interfaceName = bridgeInterface
 
