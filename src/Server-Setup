@@ -30,18 +30,21 @@ parse-interface-configuration ()
    local found=0
    local writeMode=0
    while read inputLine ; do
-      if [[ $inputLine =~ ^auto([ \t]*)${interface}(:[0-9]*|)([ \t]*)(.*)$ ]] ; then
+      if [[ $inputLine =~ ^auto([ \t]*)${interface}$ ]] ; then
+         echo -e "\n# ====== Additional Interface $interface ======" >>$outputFile
          echo "$inputLine" >>$outputFile
          found=1
       else
          # ====== New interface? =========================================
          if [[ $inputLine =~ ^iface([ \t]*)|^([ \t]*)$ ]] ; then
-            if [[ $inputLine =~ ^iface([ \t]*)${interface}(:[0-9]*|)([ \t]*)(.*)$ ]] ; then
+            if [[ $inputLine =~ ^iface([ \t]*)${interface}(\.[0-9]*)([ \t]) ]] ; then
+               found=2   # Found the interface, but the interface has VLANs => do nothing!
+            elif [[ $inputLine =~ ^iface([ \t]*)${interface}([ \t]) ]] ; then
                writeMode=1
                echo "$inputLine" | sed -e "s/^[ \t][ \t]*/\t/g" >>$outputFile
             else
                if [ $writeMode -eq 1 ] ; then
-                  echo "" >>$outputFile
+#                   echo "" >>$outputFile
                   writeMode=0
                fi
             fi
@@ -154,16 +157,16 @@ fi
 cd /root   # Ensure that configurations a written in /root!
 
 ${MakeServerConfigurationPath}Make-Server-Configuration "$Variant" "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers "$ProviderList" $ControlBoxMode || exit 1
-AllEthernetInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | grep "^eth" | sed -e "s/:$//" | xargs`
+AllEthernetInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-\.@]+):/ { print $2 }' | grep "^eth" | sed -e "s/:$//" -e "s/@.*$//" | xargs`
 for interface in $AllEthernetInterfaces ; do
    if [ "$interface" != "lo" -a "$interface" != "$InterfaceName" ] ; then
-      echo -e "\n# ====== Additional Interface $interface ======" >>interfaces.new
       if parse-interface-configuration /etc/network/interfaces $interface interfaces.new ; then
          (
+            echo -e "\n# ====== Additional Interface $interface ======"
             echo "auto $interface"
             echo "iface $interface inet static"
-            echo "   address 0.0.0.0"
-            echo "   netmask 0.0.0.0"
+            echo -e "\taddress 0.0.0.0"
+            echo -e "\tnetmask 0.0.0.0"
          ) >>interfaces.new
       fi
    fi
