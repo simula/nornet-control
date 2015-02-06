@@ -1,0 +1,10 @@
+#!/bin/bash
+
+ISO_DIRECTORY="$HOME/Downloads"
+ISOs=`find $ISO_DIRECTORY -name *test.iso`
+
+if [ "$ISOs" != "" ] ; then
+   rm -f $ISOs
+fi
+cd ..
+./Make-Boot-ISO --directory=$ISO_DIRECTORY ALL
