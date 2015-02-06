@@ -5,4 +5,6 @@ cd ..
 ./Slice-Setup add --name=as_test      --own-addresses --user=plc-root@simula.nornet --user=dreibh@simula.no --permanent
 ./Slice-Setup add --name=bs_multipath --own-addresses --user=plc-root@simula.nornet --user=dreibh@simula.no --permanent
 ./Slice-Setup add --name=cs_rserpool  --own-addresses --user=plc-root@simula.nornet --user=dreibh@simula.no --permanent
+
+# yum --releasever=19 install openssl openssl-libs glibc
   

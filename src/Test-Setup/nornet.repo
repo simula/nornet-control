@@ -1,0 +1,18 @@
+[NorNet-Applications]
+name=NorNet Packages
+baseurl=http://packages.nntb.no/nornet-applications/fedora/$releasever/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/nornet.key
+
+[NorNet-PLC-F18]
+name=MyPLC
+baseurl=http://benlomond.nntb.no/nornet/2015.02.06--test--nornet-f18-linux64/RPMS/
+enabled=1
+gpgcheck=0
+
+#[NorNet-PLC-F20]
+#name=MyPLC
+#baseurl=http://benlomond.nntb.no/nornet/2015.02.04--test--nornet-f20-linux64/RPMS/
+#enabled=1
+#gpgcheck=0
