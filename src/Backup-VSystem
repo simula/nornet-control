@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
 # Backup virtual system
-# Copyright (C) 2013 by Thomas Dreibholz
+# Copyright (C) 2013-2015 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ TEMP_FILE="$TEMP_DIRECTORY/`basename $EXPORT_FILE`"
 
 # ====== Shut down machine, if necessary ====================================
 initialMachineState=`Check-VSystem "$MACHINE_NAME"`
-if [ "$initialMachineState" != "stopped" -o "$initialMachineState" != "aborted" ] ; then
+if [ "$initialMachineState" != "stopped" -o "$initialMachineState" != "aborted" -o "$initialMachineState" != "poweroff" ] ; then
    echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME is in state \"$initialMachineState\" -> stopping ..."
    service nornet-server stop "$MACHINE_NAME" || true
 fi
@@ -63,14 +63,14 @@ rm -f "$EXPORT_FILE" "$TEMP_FILE"
 result=1
 sudo -u $NorNet_LocalNode_NorNetUser \
    VBoxManage export "$MACHINE_NAME" --output "$TEMP_FILE" --manifest --vsys 0 \
-      --product "The NorNet Project" --producturl "https://www.nntb.no" \
+      --product "$MACHINE_NAME" --producturl "https://www.nntb.no" \
       --vendor "Simula Research Laboratory" --vendorurl "https://www.simula.no" \
       --version "1.0" && \
 result=0 || true
 
 
 # ====== Restart machine, if it was running =================================
-if [ "$initialMachineState" != "stopped" -o "$initialMachineState" != "aborted" ] ; then
+if [ "$initialMachineState" != "stopped" -o "$initialMachineState" != "aborted" -o "$initialMachineState" != "poweroff" ] ; then
    echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME was in state \"$initialMachineState\" -> restarting ..."
    service nornet-server start "$MACHINE_NAME" || true
 fi
