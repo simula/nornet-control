@@ -136,7 +136,7 @@ norNetSetup = [
    'site_latitude'     : -37.951706,
    'site_longitude'    : 145.549149,
    'site_altitude'     : 200,
-   'site_contacts'     : [ u'Smith, John: john.smith@delt.test', 'Admin, Joe: joe.admin@delt.test' ],
+   'site_contacts'     : [ u'Smith, John: john.smith@delta.test', 'Admin, Joe: joe.admin@delta.test' ],
    'site_pcu'          : [ IPv4Address('172.16.1.204'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [

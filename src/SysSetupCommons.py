@@ -104,6 +104,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
       outputFile.write('# ====== Loopback ======\n')
       outputFile.write('auto lo\n')
       outputFile.write('iface lo inet loopback\n\n')
+      outputFile.write('iface lo inet6 loopback\n\n')
 
       outputFile.write('# ====== NorNet-Internal Networks ======\n')
       bridgeTo = None

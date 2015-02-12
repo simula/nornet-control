@@ -44,11 +44,11 @@ if [ $INSTALL_TOOLS -eq 1 ] ; then
    apt-get install -y libc6-i386 lib32gcc1 xsltproc
    mkdir -p $HOME/hp-tools
    cd $HOME/hp-tools
-   TOOLS="cpqacuxe_9.25.2-3._amd64.deb hpacucli_9.25.2-3._amd64.deb hp-health_9.2.5.1.5-5._amd64.deb hponcfg_4.0.1.3-6._amd64.deb hpsmh_7.1.2-3.2-4._amd64.deb"
+   TOOLS="cpqacuxe_9.40.2-2._amd64.deb hpssaducli-2.0-16.0_amd64.deb hp-health_10.0.0.1.3-4._amd64.deb hponcfg_4.4.0.8-2._amd64.deb hpsmh_7.3.2-1.5-2._amd64.deb"
    for tool in $TOOLS ; do
       if [ ! -e $tool ] ; then
          wget "http://downloads.linux.hp.com/SDR/repo/mcp/ubuntu/pool/non-free/$tool"
-      fi      
+      fi
    done
    dpkg -i $TOOLS
 fi
@@ -143,7 +143,7 @@ rm -f $NEW_SNMP_CONFIGURATION $OLD_ILO_CONFIGURATION $NEW_ILO_CONFIGURATION
 if [ $REMOVE_TOOLS -eq 1 ] ; then
    echo -e "\x1b[34mRemoving hponcfg ...\x1b[0m"
    dpkg -P cpqacuxe hpacucli hp-health hponcfg hpsmh
-   apt-get remove -y libc6-i386 lib32gcc1 xsltproc
+   apt-get remove -y lib32gcc1 xsltproc
    apt-get autoremove -y
    rm -rf /opt/hp /var/spool/hp-health
 fi
