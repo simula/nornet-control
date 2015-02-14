@@ -289,7 +289,7 @@ norNetSetup = [
    'site_longitude'    : 8.002936,
    'site_altitude'     : 50,
    'site_contacts'     : [ u'Benestvedt, Ove: ove.benestvedt@uia.no', u'Prinz, Andreas: andreas.prinz@uia.no' ],
-   'site_pcu'          : [ IPv4Address('158.36.50.178'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('158.36.50.179'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
@@ -508,10 +508,10 @@ norNetSetup = [
            'fibre, business', 0, 0 ],
    ],
    'site_nodes' : [
-      #[ 100, 1, u'' ],
-      #[ 101, 2, u'' ]
-      #[ 102, 3, u'' ],
-      #[ 103, 4, u'' ],
+      [ 100, 1, u'reeperbahn',      'stpauli.haw.nornet',      'vnc://stpauli.haw.nornet:5700'        ],
+      [ 101, 2, u'grossefreiheit',  'stpauli.haw.nornet',      'vnc://stpauli.haw.nornet:5701'        ],
+      [ 102, 3, u'herbertstrasse,'  'wilhelmsburg.haw.nornet', 'vnc://wilhelmsburg.haw.nornet:5700'   ],
+      [ 103, 4, u'spielbudenplatz', 'wilhelmsburg.haw.nornet', 'vnc://wilhelmsburg.haw.nornet:5701'   ],
    ] },
 
  { 'site_index'        : 42,
@@ -693,7 +693,7 @@ norNetSetup = [
    'site_longitude'    : -95.264,
    'site_altitude'     : 300,
    'site_contacts'     : [ u'Gangadhar, Siddharth: siddharth@ittc.ku.edu', u'Fleming, Brad: bdfleming@kanren.net', u'Sterbenz, James P.G.: jpgs@ittc.ku.edu' ],
-   'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('164.113.202.18'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Kansas Research and Education Network', 'eth1',
