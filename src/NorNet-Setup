@@ -510,7 +510,7 @@ norNetSetup = [
    'site_nodes' : [
       [ 100, 1, u'reeperbahn',      'stpauli.haw.nornet',      'vnc://stpauli.haw.nornet:5700'        ],
       [ 101, 2, u'grossefreiheit',  'stpauli.haw.nornet',      'vnc://stpauli.haw.nornet:5701'        ],
-      [ 102, 3, u'herbertstrasse,'  'wilhelmsburg.haw.nornet', 'vnc://wilhelmsburg.haw.nornet:5700'   ],
+      [ 102, 3, u'herbertstraße,'   'wilhelmsburg.haw.nornet', 'vnc://wilhelmsburg.haw.nornet:5700'   ],
       [ 103, 4, u'spielbudenplatz', 'wilhelmsburg.haw.nornet', 'vnc://wilhelmsburg.haw.nornet:5701'   ],
    ] },
 
