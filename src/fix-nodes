@@ -5,6 +5,7 @@ while [ $# -gt 0 ] ; do
    (
       echo "yum clean all"
       echo "yum -y remove 'ipfwroot*'"
+      echo "NodeUpdate.py"
    ) | sudo ssh -o StrictHostKeyChecking=no -i /etc/planetlab/root_ssh_key.rsa root@$1 &
    shift
 done
