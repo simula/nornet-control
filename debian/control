@@ -55,7 +55,6 @@ Depends: apt-file,
          nttcp,
          open-vm-tools,
          openssh-server,
-         paris-traceroute,
          python-software-properties,
          rsplib-tools,
          smartmontools,
@@ -63,10 +62,8 @@ Depends: apt-file,
          sslscan,
          subnetcalc,
          tftp,
-         tracebox,
          traceroute,
          tree,
-         tshark,
          update-motd,
          virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental | virtualbox-guest-utils,
          vlan,
@@ -74,6 +71,9 @@ Depends: apt-file,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
+Recommends: paris-traceroute,
+            tracebox,
+            tshark
 Conflicts: landscape-common
 Replaces: landscape-common
 Description: NorNet Management Tools
