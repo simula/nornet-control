@@ -762,10 +762,10 @@ norNetSetup = [
    ],
    'site_nodes' : [
       # Naming scheme: bridges in Seoul
-      [ 100, 1, u'seogang', 'yongsan.bls.nornet', 'vnc://yongsan.bls.nornet:5700' ],
-      [ 101, 2, u'mapo',    'yongsan.bls.nornet', 'vnc://yongsan.bls.nornet:5701' ],
-      [ 102, 3, u'wonhyo',  'ichon.bls.nornet',   'vnc://ichon.bls.nornet:5700'   ],
-      [ 103, 4, u'hangang', 'ichon.bls.nornet',   'vnc://ichon.bls.nornet:5701'   ]
+      [ 100, 1, u'seogang', 'ichon.bls.nornet', 'vnc://ichon.bls.nornet:5700' ],
+      [ 101, 2, u'mapo',    'ichon.bls.nornet', 'vnc://ichon.bls.nornet:5701' ],
+      [ 102, 3, u'wonhyo',  'ichon.bls.nornet', 'vnc://ichon.bls.nornet:5702' ],
+      [ 103, 4, u'hangang', 'ichon.bls.nornet', 'vnc://ichon.bls.nornet:5703' ]
       #[ 104, 5, u'dongjak'  ],
       #[ 105, 6, u'jamsugyo' ]
    ] },
