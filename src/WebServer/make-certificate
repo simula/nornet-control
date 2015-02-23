@@ -34,12 +34,12 @@ fi
 
 
 # Create certificate signing request (CSR)
-openssl req -config nntb.config -new -utf8 $HASH_PARAM -outform PEM \
+openssl req -config $1.config -new -utf8 $HASH_PARAM -outform PEM \
             -key "$PREFIX.key" -out "$PREFIX.csr"
 openssl req -noout -text -in "$PREFIX.csr"
 
 # Create certificate (CRT)
-openssl req -config nntb.config -new -utf8 $HASH_PARAM -x509 -days $DAYS \
+openssl req -config $1.config -new -utf8 $HASH_PARAM -x509 -days $DAYS \
             -in "$PREFIX.csr" \
             -key "$PREFIX.key" -out "$PREFIX.crt"
 openssl x509 -noout -text -in "$PREFIX.crt"
