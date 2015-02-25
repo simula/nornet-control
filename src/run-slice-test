@@ -10,7 +10,7 @@ if [ "$NODE" = "" ] ; then
    NODE="pinnekjoett.alpha.test"
 fi
 
-DELAY=15
+DELAY=25
 INSTANCES=1
 
 if ! cat /etc/planetlab/root_ssh_key.rsa >/dev/null 2>&1 ; then
