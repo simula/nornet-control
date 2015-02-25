@@ -22,7 +22,9 @@ fi
 run-nodemanager ()
 {
    echo "====== Running node manager ======"
+   echo "ssh -i /etc/planetlab/root_ssh_key.rsa root@$NODE /usr/bin/env /usr/bin/python /usr/share/NodeManager/nodemanager.py"
    ssh -i /etc/planetlab/root_ssh_key.rsa root@$NODE /usr/bin/env /usr/bin/python /usr/share/NodeManager/nodemanager.py &
+   echo "Waiting $DELAY s ..."
    sleep $DELAY
    ssh -i /etc/planetlab/root_ssh_key.rsa root@$NODE killall /usr/bin/python || return 1
    return 0
@@ -36,6 +38,7 @@ while [ true ] ; do
    echo ""
    date
    echo "###### ROUND $i ###################################################"
+   echo ""
 
    echo "====== Making slice ======"
    ./Slice-Setup add --own-addresses --user=plc-root@simula.nornet --name=$SLICE
