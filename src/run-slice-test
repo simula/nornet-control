@@ -11,7 +11,7 @@ if [ "$NODE" = "" ] ; then
 fi
 
 DELAY=15
-
+INSTANCES=1
 
 if ! cat /etc/planetlab/root_ssh_key.rsa >/dev/null 2>&1 ; then
    echo 2>&1 "ERROR: run as PLC root!"
@@ -23,7 +23,7 @@ run-nodemanager ()
 {
    echo "====== Running node manager ======"
    echo "ssh -i /etc/planetlab/root_ssh_key.rsa root@$NODE /usr/bin/env /usr/bin/python /usr/share/NodeManager/nodemanager.py"
-   ssh -i /etc/planetlab/root_ssh_key.rsa root@$NODE /usr/bin/env /usr/bin/python /usr/share/NodeManager/nodemanager.py &
+   ssh -i /etc/planetlab/root_ssh_key.rsa root@$NODE "/usr/bin/env /usr/bin/python /usr/share/NodeManager/nodemanager.py >>/tmp/nodemanager-run.txt 2>&1" &
    echo "Waiting $DELAY s ..."
    sleep $DELAY
    ssh -i /etc/planetlab/root_ssh_key.rsa root@$NODE killall /usr/bin/python || return 1
@@ -41,20 +41,53 @@ while [ true ] ; do
    echo ""
 
    echo "====== Making slice ======"
-   ./Slice-Setup add --own-addresses --user=plc-root@simula.nornet --name=$SLICE
+   j=0
+   while [ $j -lt $INSTANCES ] ; do
+       sliceName="${SLICE}_${j}"
+       echo "- $sliceName"
+      ./Slice-Setup add --own-addresses --user=plc-root@simula.nornet --name=$sliceName >>slicetest.log
+      let j=$j+1
+   done
    run-nodemanager
    
-   echo "====== Checking slice ======"
-   ssh -i /etc/planetlab/root_ssh_key.rsa $SLICE@$NODE /usr/bin/System-Info && echo "PASS" || break
+   echo "====== Checking working slice ======"
+   j=0
+   while [ $j -lt $INSTANCES ] ; do
+      sliceName="${SLICE}_${j}"
+      echo "- $sliceName"
+      if ssh -i /etc/planetlab/root_ssh_key.rsa $sliceName@$NODE uname -a | grep "^Linux" ; then
+         echo "PASS"
+      else
+         ssh -i /etc/planetlab/root_ssh_key.rsa $sliceName@$NODE uname -a || true
+         echo "FAIL in round $i"
+         exit 1
+      fi
+      let j=$j+1
+   done
    
    echo "====== Removing slice ======"
-   ./Slice-Setup remove --name=$SLICE
+   j=0
+   while [ $j -lt $INSTANCES ] ; do
+      sliceName="${SLICE}_${j}"
+      echo "- $sliceName"
+      ./Slice-Setup remove --name=$sliceName >>slicetest.log
+      let j=$j+1
+   done
    run-nodemanager
 
-   echo "====== Checking slice ======"
-   ssh -i /etc/planetlab/root_ssh_key.rsa $SLICE@$NODE /usr/bin/System-Info && break || echo "PASS"
+   echo "====== Checking removed slice ======"
+   j=0
+   while [ $j -lt $INSTANCES ] ; do
+      sliceName="${SLICE}_${j}"
+      echo "- $sliceName"
+      if ! ssh -i /etc/planetlab/root_ssh_key.rsa $sliceName@$NODE uname -a | grep "^Linux" ; then
+         echo "PASS"
+      else
+         ssh -i /etc/planetlab/root_ssh_key.rsa $sliceName@$NODE uname -a || true
+         echo "FAIL in round $i"
+         exit 1
+      fi
+      let j=$j+1
+   done
 
 done
-
-echo ""
-echo "FAILED after $i rounds"
