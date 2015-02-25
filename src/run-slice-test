@@ -1,0 +1,57 @@
+#!/bin/bash -e
+
+SLICE="$1"
+if [ "$SLICE" = "" ] ; then 
+   SLICE="as_test"
+fi
+
+NODE="$2"
+if [ "$NODE" = "" ] ; then 
+   NODE="pinnekjoett.alpha.test"
+fi
+
+DELAY=15
+
+
+if ! cat /etc/planetlab/root_ssh_key.rsa >/dev/null 2>&1 ; then
+   echo 2>&1 "ERROR: run as PLC root!"
+   exit 1
+fi
+
+
+run-nodemanager ()
+{
+   echo "====== Running node manager ======"
+   ssh -i /etc/planetlab/root_ssh_key.rsa root@$NODE /usr/bin/env /usr/bin/python /usr/share/NodeManager/nodemanager.py &
+   sleep $DELAY
+   ssh -i /etc/planetlab/root_ssh_key.rsa root@$NODE killall /usr/bin/python || return 1
+   return 0
+}
+
+
+i=0
+while [ true ] ; do
+   let i=$i+1
+   
+   echo ""
+   date
+   echo "###### ROUND $i ###################################################"
+
+   echo "====== Making slice ======"
+   ./Slice-Setup add --own-addresses --user=plc-root@simula.nornet --name=$SLICE
+   run-nodemanager
+   
+   echo "====== Checking slice ======"
+   ssh -i /etc/planetlab/root_ssh_key.rsa $SLICE@$NODE /usr/bin/System-Info && echo "PASS" || break
+   
+   echo "====== Removing slice ======"
+   ./Slice-Setup remove --name=$SLICE
+   run-nodemanager
+
+   echo "====== Checking slice ======"
+   ssh -i /etc/planetlab/root_ssh_key.rsa $SLICE@$NODE /usr/bin/System-Info && break || echo "PASS"
+
+done
+
+echo ""
+echo "FAILED after $i rounds"
