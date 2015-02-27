@@ -7,11 +7,14 @@ fi
 
 NODE="$2"
 if [ "$NODE" = "" ] ; then 
-   NODE="pinnekjoett.alpha.test"
+   NODE="rekesmoerbroed.alpha.test"
 fi
 
-DELAY=25
+DELAY=60
 INSTANCES=1
+
+FCDISTRO=f20
+PLDISTRO=lxc
 
 if ! cat /etc/planetlab/root_ssh_key.rsa >/dev/null 2>&1 ; then
    echo 2>&1 "ERROR: run as PLC root!"
@@ -45,7 +48,7 @@ while [ true ] ; do
    while [ $j -lt $INSTANCES ] ; do
        sliceName="${SLICE}_${j}"
        echo "- $sliceName"
-      ./Slice-Setup add --own-addresses --user=plc-root@simula.nornet --name=$sliceName >>slicetest.log
+      ./Slice-Setup add --own-addresses --user=plc-root@simula.nornet --name=$sliceName --fcdistro=$FCDISTRO --pldistro=$PLDISTRO >>slicetest.log
       let j=$j+1
    done
    run-nodemanager
