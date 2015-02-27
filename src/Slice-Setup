@@ -43,7 +43,7 @@ if len(sys.argv) > 2:
    elif sys.argv[1] == 'remove':
       action = 'remove'
 if action == '':
-   error('Usage: ' + sys.argv[0] + ' add|renew|remove [--name=Name] [--own-addresses] [--permanent] [--maxnodespersite=number] [--description=Description] [--url=URL] [--user=User] ...')
+   error('Usage: ' + sys.argv[0] + ' add|renew|remove [--name=Name] [--own-addresses] [--permanent] [--maxnodespersite=number] [--description=Description] [--url=URL] [--fcdistro=Distribution] [--pldistro=Distribution] [--user=User] ...')
 
 
 sliceName        = None
@@ -52,6 +52,8 @@ sliceUsers       = []
 ownAddresses     = False
 sliceDescription = None
 sliceUrl         = None
+fcDistro         = None   # use default
+plDistro         = None   # use default
 expiration       = time.time() + (8 * 7 * 24 * 60 * 60)
 maxNodesPerSite  = 4
 
@@ -67,6 +69,10 @@ while i < len(sys.argv):
          sliceDescription = match.group(2)
       elif match.group(1) == 'url':
          sliceUrl = match.group(2)
+      elif match.group(1) == 'fcdistro':
+         fcDistro = match.group(2)
+      elif match.group(1) == 'pldistro':
+         plDistro = match.group(2)
       elif match.group(1) == 'maxnodespersite':
           maxNodesPerSite = int(match.group(2))
       else:
@@ -103,7 +109,7 @@ if ((action == 'remove') or (action == 'renew')):
       removeNorNetSlice(sliceName)
 
 if ((action == 'add') or (action == 'renew')):
-   slice = makeNorNetSlice(sliceName, ownAddresses, sliceDescription, sliceUrl, 'nornet_slice_initscript', expiration)
+   slice = makeNorNetSlice(sliceName, ownAddresses, sliceDescription, sliceUrl, 'nornet_slice_initscript', expiration, fcDistro, plDistro)
 
    log('Adding slice to all nodes ...')
    addNorNetSliceToNorNetNodes(fullSiteList, fullNodeList, fullSliceList, slice, fullNodeList, maxNodesPerSite)

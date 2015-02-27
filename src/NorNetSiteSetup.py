@@ -888,7 +888,7 @@ def addOrUpdateSliceTag(sliceID, node, tagName, tagValue):
 
 
 # ###### Create NorNet slice ################################################
-def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScript, expirationTime):
+def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScript, expirationTime, fcDistro = None, plDistro = None):
    try:
       # ====== Add slice =====================================================
       log('Adding slice ' + sliceName + ' ...')
@@ -910,7 +910,7 @@ def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScrip
             sliceDescription = existingSlice[0]['description']
       except:
          sliceID = 0
-         
+
       if sliceUrl == None:
          sliceUrl = 'invalid:'
       if sliceDescription == None:
@@ -947,6 +947,12 @@ def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScrip
          allocateOwnAddress = 0
       if addOrUpdateSliceTag(sliceID, None, 'nornet_slice_own_addresses', str(allocateOwnAddress)) <= 0:
          error('Unable to add "nornet_slice_own_addresses" tag to slice ' + sliceName)
+      if fcDistro != None:
+         if addOrUpdateSliceTag(sliceID, None, 'fcdistro', fcDistro) <= 0:
+            error('Unable to add "fcDistro" tag to slice ' + sliceName)
+      if plDistro != None:
+         if addOrUpdateSliceTag(sliceID, None, 'pldistro', plDistro) <= 0:
+            error('Unable to add "plDistro" tag to slice ' + sliceName)
 
    except Exception as e:
       error('Adding slice ' + sliceName + ' has failed: ' + str(e))
