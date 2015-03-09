@@ -799,8 +799,36 @@ norNetSetup = [
    'site_nodes' : [
       [ 100, 1, u'soroc'   ],
       [ 101, 2, u'lerisor' ]
-   ] }
+   ] },
  
+ { 'site_index'        : 200,
+   'site_enabled'      : True,
+   'site_long_name'    : u'National ICT Australia',
+   'site_short_name'   : 'NICTA',
+   'site_url'          : 'https://www.nicta.com.au/',
+   'site_domain'       : 'nicta.nornet',
+   'site_city'         : 'Sydney',
+   'site_province'     : 'New South Wales',
+   'site_country'      : 'Australia',
+   'site_country_code' : 'AU',
+   'site_latitude'     : -33.895430,
+   'site_longitude'    : 151.197021,
+   'site_altitude'     : 15,
+   'site_contacts'     : [ u'Mehani, Olivier: olivier.mehani@nicta.com.au',
+                           u'Rakotoarivelo, Thierry: Thierry.Rakotoarivelo@nicta.com.au' ],
+   'site_pcu'          : [ IPv4Address('221.199.217.168'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Rede Nacional de Ensino e Pesquisa', 'eth1',
+           IPv4Network('221.199.217.167/26'), IPv4Address('221.199.217.129'),
+           IPv6Network('::/0'),               IPv6Address('::'),
+           'fibre, business', 0, 0 ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, u'coogee' ],
+      [ 101, 2, u'bondi'  ]
+   ] }
+
       #[ 100, 1, u'lutefisk'     ],
       #[ 101, 2, u'pinnekjøtt'   ],
       #[ 102, 3, u'ribbe'        ],
