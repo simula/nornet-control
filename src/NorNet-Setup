@@ -805,7 +805,7 @@ norNetSetup = [
    'site_enabled'      : True,
    'site_long_name'    : u'National ICT Australia',
    'site_short_name'   : 'NICTA',
-   'site_url'          : 'https://www.nicta.com.au/',
+   'site_url'          : 'https://www.nicta.com.au',
    'site_domain'       : 'nicta.nornet',
    'site_city'         : 'Sydney',
    'site_province'     : 'New South Wales',
