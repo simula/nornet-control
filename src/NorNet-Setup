@@ -819,7 +819,7 @@ norNetSetup = [
    'site_pcu'          : [ IPv4Address('221.199.217.168'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ u'Rede Nacional de Ensino e Pesquisa', 'eth1',
+      [ u'Australian Academic and Research Network', 'eth1',
            IPv4Network('221.199.217.167/26'), IPv4Address('221.199.217.129'),
            IPv6Network('::/0'),               IPv6Address('::'),
            'fibre, business', 0, 0 ]
