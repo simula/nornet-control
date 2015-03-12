@@ -784,17 +784,17 @@ norNetSetup = [
    'site_longitude'    : -47.883528,
    'site_altitude'     : 50,
    'site_contacts'     : [ u'Sandri, Marcus: mwws55@gmail.com', u'Verdi, Fábio Luciano: verdi@ufscar.br', u'Silva, Alan: alansilva@acm.org' ],
-   'site_pcu'          : [ IPv4Address('0.0.0.0'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('200.133.238.124'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Rede Nacional de Ensino e Pesquisa', 'eth1',
-           IPv4Network('200.133.238.124/27'), IPv4Address('200.133.238.97'),
+           IPv4Network('200.133.238.125/27'), IPv4Address('200.133.238.97'),
            IPv6Network('::/0'),               IPv6Address('::'),
-           'fibre, business', 0, 0 ],
-      [ u'Academic Network at São Paulo', 'eth2',
-           IPv4Network('186.219.95.214/24'), IPv4Address('186.219.95.1'),
-           IPv6Network('::/0'),              IPv6Address('::'),
            'fibre, business', 0, 0 ]
+      #[ u'Academic Network at São Paulo', 'eth2',
+           #IPv4Network('186.219.95.214/24'), IPv4Address('186.219.95.1'),
+           #IPv6Network('::/0'),              IPv6Address('::'),
+           #'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'soroc'   ],
