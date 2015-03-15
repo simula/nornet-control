@@ -29,9 +29,9 @@ SIMULA="https://www.simula.no"
 OTHER="https://www.monroe-project.eu https://www.neat-project.org"
 
 
-# ALL_URLS="$OTHER"
-# ALL_URLS="$ESSEN $NNTB $OTHER $ESSEN_TDONLY"
-ALL_URLS="http://cna.uni-due.de http://cna.uni-essen.de"
+# ALL_URLS="$ESSEN_TDONLY"
+ALL_URLS="$ESSEN $NNTB $OTHER $ESSEN"
+# ALL_URLS="http://cna.uni-due.de http://cna.uni-essen.de"
 
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -54,7 +54,7 @@ for url in $ALL_URLS ; do
 
    (
       cd "$urldir"
-      linkchecker --verbose --check-extern -o text "$url" >results.log
+      linkchecker --threads=256 --verbose --check-extern -o text "$url" >results.log
    ) &
 
    let i=$i+1
@@ -71,5 +71,5 @@ for url in $ALL_URLS ; do
 done
 
 sort -u  <results-unsorted.urls >results-sorted.urls
-sort -ur <results-unsorted.urls >results-randomised.urls
+sort -Ru <results-unsorted.urls >results-randomised.urls
 wc results-sorted.urls
