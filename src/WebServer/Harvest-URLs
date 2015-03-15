@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 #
 # Harvest URLs with Web-Checker
 # Copyright (C) 2015 by Thomas Dreibholz
@@ -18,15 +18,29 @@
 #
 # Contact: dreibh@simula.no
 
-TEMP_PREFIX="/tmp/webchecker"
+TEMP_PREFIX="/tmp/linkchecker"
 
-ESSEN="http://www.iem.uni-due.de http://www.exp-math.uni-essen.de http://web.iem.uni-due.de http://web.exp-math.uni-essen.de http://cna.uni-due.de http://cna.uni-essen.de https://www.tdr.wiwi.uni-due.de"
-NNTB="https://www.nntb.no http://robustenett.no http://packages.nntb.no http://benlomond.nntb.no/"
+
+
+ESSEN="https://www.uni-due.de/~be0001/ http://www.uni-due.de/~be0001/ http://www.iem.uni-due.de http://www.exp-math.uni-essen.de http://web.iem.uni-due.de http://web.exp-math.uni-essen.de http://cna.uni-due.de http://cna.uni-essen.de https://www.tdr.wiwi.uni-due.de"
+ESSEN_TDONLY="https://www.uni-due.de/~be0001/ http://www.uni-due.de/~be0001/ http://www.iem.uni-due.de/~dreibh/"
+NNTB="https://www.nntb.no http://robustenett.no http://packages.nntb.no http://benlomond.nntb.no"
 SIMULA="https://www.simula.no"
+OTHER="https://www.monroe-project.eu https://www.neat-project.org"
 
 
-ALL_URLS="$ESSEN $NNTB $SIMULA"
-# ALL_URLS="http://cna.uni-due.de http://cna.uni-essen.de"
+# ALL_URLS="$OTHER"
+# ALL_URLS="$ESSEN $NNTB $OTHER $ESSEN_TDONLY"
+ALL_URLS="http://cna.uni-due.de http://cna.uni-essen.de"
+
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# NOTE: PdfParser
+# Requires pdfminer (install with pip install pdfminer).
+# The package in Ubuntu Utopic is too load!
+# Activate in ~/.linkchecker/linkcheckerrc:
+# [PdfParser]
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 i=1
@@ -40,7 +54,7 @@ for url in $ALL_URLS ; do
 
    (
       cd "$urldir"
-      webcheck "$url" >results.log
+      linkchecker --verbose --check-extern -o text "$url" >results.log
    ) &
 
    let i=$i+1
@@ -56,5 +70,6 @@ for url in $ALL_URLS ; do
    let i=$i+1
 done
 
-sort -u <results-unsorted.urls >results-sorted.urls
+sort -u  <results-unsorted.urls >results-sorted.urls
+sort -ur <results-unsorted.urls >results-randomised.urls
 wc results-sorted.urls
