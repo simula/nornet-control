@@ -1,0 +1,35 @@
+# ====== Loopback ======
+auto lo
+iface lo inet loopback
+
+# ====== NorNet-Internal Networks ======
+auto eth0
+iface eth0 inet manual
+	dns-nameservers 10.70.160.1
+	dns-search      bls.nornet
+	pre-up          /sbin/Interface-Setup eth0 pre-up    ipv4
+	up              /sbin/Interface-Setup eth0 up        ipv4	10.70.160.253/24 10.0.0.0/8 10.70.160.1 5 "broadcast 10.70.160.255"
+	down            /sbin/Interface-Setup eth0 down      ipv4	10.70.160.253/24 10.0.0.0/8 10.70.160.1 5 "broadcast 10.70.160.255"
+	post-up         /sbin/Interface-Setup eth0 post-up   ipv4
+	post-down       /sbin/Interface-Setup eth0 post-down ipv4
+
+iface eth0 inet6 manual
+	dns-nameservers 2001:700:4100:46a0::1
+	dns-search      bls.nornet
+	pre-up          /sbin/Interface-Setup eth0 pre-up    ipv6
+	up              /sbin/Interface-Setup eth0 up        ipv6	2001:700:4100:46a0::fd/64 2001:700:4100::/48 2001:700:4100:46a0::1 5 ""
+	down            /sbin/Interface-Setup eth0 down      ipv6	2001:700:4100:46a0::fd/64 2001:700:4100::/48 2001:700:4100:46a0::1 5 ""
+	post-up         /sbin/Interface-Setup eth0 post-up   ipv6
+	post-down       /sbin/Interface-Setup eth0 post-down ipv6
+
+# ====== Additional Interface eth1 ======
+auto eth1
+iface eth1 inet static
+	address 203.230.60.141
+	netmask 255.255.255.192
+	network 203.230.60.128
+	broadcast 203.230.60.191
+	gateway 203.230.60.129
+	# dns-* options are implemented by the resolvconf package, if installed
+	dns-nameservers 134.75.30.1
+	dns-search unassigned-domain

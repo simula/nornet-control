@@ -1,0 +1,5 @@
+NAME="seogang.bls.nornet"
+STARTDELAY=30
+STOPDELAY=30
+OPTIONS="default"
+AUTO_UPDATE_BOOTCD="default"
