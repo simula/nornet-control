@@ -1,0 +1,8 @@
+NAME="NorNet-Experiment-kimchi.bls.nornet"
+MEMORY=768
+STARTDELAY=30
+STOPDELAY=30
+OPTIONS="default"
+AUTO_UPDATE_BOOTCD="default"
+WATCHDOG_COMMAND="ping -c5 -i0.2 -W3 10.70.160.10"
+VNCPASSWORD="gmXS2con!"
