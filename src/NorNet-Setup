@@ -739,7 +739,7 @@ norNetSetup = [
 
  # Bell Labs Seoul: 7th floor DMC R&D center, 37 Maebongsan-ro, Mapo-gu, Seoul, Republic of Korea
  { 'site_index'        : 160,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'Bell Labs Seoul',
    'site_short_name'   : 'BLS',
    'site_url'          : 'http://www.alcatel-lucent.com',
