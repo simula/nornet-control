@@ -771,7 +771,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 120,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Universidade Federal de São Carlos',
    'site_short_name'   : 'UFSCAR',
    'site_url'          : 'http://www.ufscar.br',

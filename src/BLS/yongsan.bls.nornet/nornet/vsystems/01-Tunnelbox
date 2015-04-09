@@ -1,0 +1,6 @@
+NAME="NorNet-Tunnelbox-seoul.bls.nornet"
+STARTDELAY=30
+STOPDELAY=30
+NUMCPUS=1
+MEMORY=2902
+OPTIONS="default"
