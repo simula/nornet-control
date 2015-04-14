@@ -27,8 +27,6 @@ REPOSITORIES="/home/nornetpp/repos/nornet-applications"
 DISTRIBUTIONS="fedora-20-x86_64 fedora-21-x86_64"
 
 PACKAGES="libvirt bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
-# kernel
-# PACKAGES=""
 
 
 # ====== BibTeXConv =======================================
@@ -52,11 +50,11 @@ tsctp_DIR="$SOURCES/misc-trunk/tsctp"
 # ====== libvirt ==========================================
 libvirt_DIR="`pwd`/libvirt"
 
-# ====== Tracebox =========================================
-tracebox_DIR="$SOURCES/tracebox"
-
-# ====== MPTCP Kernel =====================================
-kernel_DIR="$SOURCES/misc-trunk/mptcp-kernel"
+## ====== Tracebox =========================================
+#tracebox_DIR="$SOURCES/tracebox"
+#
+## ====== MPTCP Kernel =====================================
+#kernel_DIR="$SOURCES/misc-trunk/mptcp-kernel"
 
 
 # # ====== cfengine ==========================================
