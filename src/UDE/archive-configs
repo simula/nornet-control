@@ -1,4 +1,0 @@
-#!/bin/bash -e
-
-cd /nfs/sys
-ls [0-9]*/1/backup/daily/latest/nornet/nornetapi-config [0-9]*/1/backup/daily/latest/nornet/nornetapi-constants [0-9]*/1/backup/daily/latest/network/interfaces 42/10/backup/daily/latest/rc.local  | xargs tar czvf /tmp/ude-configs.tar.gz
