@@ -108,7 +108,7 @@
 %define with_storage_iscsi    0%{!?_without_storage_iscsi:%{server_drivers}}
 %define with_storage_disk     0%{!?_without_storage_disk:%{server_drivers}}
 %define with_storage_mpath    0%{!?_without_storage_mpath:%{server_drivers}}
-%if 0%{?fedora} >= 16 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 16
     %define with_storage_rbd      0%{!?_without_storage_rbd:%{server_drivers}}
 %else
     %define with_storage_rbd      0
@@ -179,13 +179,6 @@
 %ifnarch x86_64
     %if 0%{?rhel} >= 6
         %define with_storage_gluster 0
-    %endif
-%endif
-
-# librados and librbd are built only on x86_64 on rhel
-%ifnarch x86_64
-    %if 0%{?rhel} >= 7
-        %define with_storage_rbd 0
     %endif
 %endif
 
@@ -371,7 +364,7 @@
 
 Summary: Library providing a simple virtualization API
 Name: libvirt
-Version: 1.2.14
+Version: 1.2.12
 Release: 1%{?dist}%{?extra_release}
 License: LGPLv2+
 Group: Development/Libraries
@@ -525,7 +518,7 @@ BuildRequires: cyrus-sasl-devel
 %endif
 %if %{with_polkit}
     %if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
-BuildRequires: polkit-devel >= 0.112
+BuildRequires: polkit-devel >= 0.107
     %else
         %if 0%{?fedora} || 0%{?rhel} >= 6
 BuildRequires: polkit-devel >= 0.93
@@ -573,12 +566,7 @@ BuildRequires: device-mapper-devel
     %endif
 %endif
 %if %{with_storage_rbd}
-    %if 0%{?rhel} >= 7
-BuildRequires: librados2-devel
-BuildRequires: librbd1-devel
-    %else
 BuildRequires: ceph-devel
-    %endif
 %endif
 %if %{with_storage_gluster}
     %if 0%{?rhel} >= 6
@@ -2129,6 +2117,8 @@ exit 0
 %files daemon-driver-vbox
 %defattr(-, root, root)
 %{_libdir}/%{name}/connection-driver/libvirt_driver_vbox.so
+%{_libdir}/%{name}/connection-driver/libvirt_driver_vbox_network.so
+%{_libdir}/%{name}/connection-driver/libvirt_driver_vbox_storage.so
         %endif
     %endif # %{with_driver_modules}
 
@@ -2291,17 +2281,6 @@ exit 0
 %doc examples/systemtap
 
 %changelog
-* Thu Apr  2 2015 Daniel Veillard <veillard@redhat.com> - 1.2.14-1
-- qemu: Implement memory device hotplug
-- Implement public API for virDomainPinIOThread
-- Implement public API for virDomainGetIOThreadsInfo
-- SRIOV NIC offload feature discovery
-- a lot of improvement and bug fixes
-
-* Mon Mar  2 2015 Daniel Veillard <veillard@redhat.com> - 1.2.13-1
-- lot of improvements around NUMA code
-- a lot of improvement and bug fixes
-
 * Tue Jan 27 2015 Daniel Veillard <veillard@redhat.com> - 1.2.12-1
 - CVE-2015-0236: qemu: Check ACLs when dumping security info from snapshots
 - CVE-2015-0236: qemu: Check ACLs when dumping security info from save image
