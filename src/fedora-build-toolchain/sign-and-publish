@@ -48,7 +48,7 @@ if [ "$PACKAGES" != "" ] ; then
       fi
       if [ "$groupsFile" ] ; then
          # NOTE: The groups file may not be inside the repo directory.
-         # Otherwise, createrepo seems to silently ignores it!
+         # Otherwise, createrepo seems to silently ignore it!
          echo "Using groups file $groupsFile!"
          cp "$groupsFile" ~/groups.xml
          createrepo -g ~/groups.xml "$repo"
