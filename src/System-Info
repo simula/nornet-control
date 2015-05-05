@@ -45,12 +45,16 @@ fi
 processes=`ps axue | grep -vE "^USER|grep|ps" | wc -l`
 users=`who | awk ' { print $1 }' | sort -ud | wc -l`
 
-memoryUsed=`env LANG=en free -mto | grep Mem: | awk '{ print $3 }'  | xargs printf "%5d"`
-memoryFree=`env LANG=en free -mto | grep Mem: | awk '{ print $4 }'  | xargs printf "%5d"`
-memoryTotal=`env LANG=en free -mto | grep Mem: | awk '{ print $2 }' | xargs printf "%5d"`
-swapUsed=`env LANG=en free -mto | grep Swap | awk '{ print $3 }'    | xargs printf "%5d"`
-swapFree=`env LANG=en free -mto | grep Swap: | awk '{ print $4 }'   | xargs printf "%5d"`
-swapTotal=`env LANG=en free -mto | grep Swap: | awk '{ print $2 }'  | xargs printf "%5d"`
+freeOutput="`env LANG=en free -mto`"
+freeMemOutput="`echo "$freeOutput" | grep "Mem:"`"
+freeSwapOutput="`echo "$freeOutput" | grep "Swap:"`"
+
+memoryUsed=`echo "$freeMemOutput" | awk '{ print $3 }'  | xargs printf "%5d"`
+memoryFree=`echo "$freeMemOutput" | awk '{ print $4 }'  | xargs printf "%5d"`
+memoryTotal=`echo "$freeMemOutput" | awk '{ print $2 }' | xargs printf "%5d"`
+swapUsed=`echo "$freeSwapOutput" | awk '{ print $3 }'    | xargs printf "%5d"`
+swapFree=`echo "$freeSwapOutput" | awk '{ print $4 }'   | xargs printf "%5d"`
+swapTotal=`echo "$freeSwapOutput" | awk '{ print $2 }'  | xargs printf "%5d"`
 
 diskRoot=`env LANG=en df -hT /     | grep -vE "^Filesystem|shm" | awk '{ print $6 }'`
 diskHome=`env LANG=en df -hT /home | grep -vE "^Filesystem|shm" | awk '{ print $6 }'`
