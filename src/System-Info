@@ -85,9 +85,9 @@ elif  [ "$system" == "FreeBSD" ] ; then
    let vmstatCache=`sysctl -n vm.stats.vm.v_cache_count`*pageSize
    let vmstatFree=`sysctl -n vm.stats.vm.v_free_count`*pageSize
 
-   let memFree=($vmstatInactive+$vmstatCache+$vmstatFree)/1048576
-   let memTotal=`sysctl -n hw.physmem`/1048576
-   let memUsed=$memTotal-$memFree
+   let memoryFree=($vmstatInactive+$vmstatCache+$vmstatFree)/1048576
+   let memoryTotal=`sysctl -n hw.physmem`/1048576
+   let memoryUsed=$memoryTotal-$memoryFree
 
    let swapTotal=`sysctl -n vm.swap_total`/1048576
    let swapUsed=`sysctl -n vm.swap_reserved`/1048576
@@ -141,7 +141,7 @@ fi
 echo "System:           ${DISTRIB_ID} ${DISTRIB_RELEASE}${codeNameText} with ${kernel}"
 echo "Load:             ${systemLoad}"
 printf "Used Memory:      %5d MiB of %5d MiB (%5d MiB free)\n" ${memoryUsed} ${memoryTotal} ${memoryFree}
-printf "Used Swap:        %5d MiB of %5d MiB (%5d MiB free)\n" ${swaporyUsed} ${swaporyTotal} ${swaporyFree}
+printf "Used Swap:        %5d MiB of %5d MiB (%5d MiB free)\n" ${swapUsed} ${swapTotal} ${swapFree}
 echo "Used Diskspace:   ${diskRoot} on /, ${diskHome} on /home"
 echo "Network:"
 
@@ -151,7 +151,7 @@ function showAddresses ()
    if [ "$addressListIPv4" != "" -o "$addressListIPv6" != "" ] ; then
 
       # ====== Get interface status ===================================
-      if [ "`ip link show dev $interface | head -n1 | grep "^.*<.*UP.*>"`" != "" ] ; then
+      if [ $isUp -ne 0 ] ; then
          echo -en "\x1b[34m"   # up
       else
          echo -en "\x1b[37m"   # down
@@ -204,8 +204,15 @@ else
 
       # ====== Only show non-loopback interfaces ============================
       if [ "`echo "$ifconfigResult" | head -n1 | grep "^.*<.*LOOPBACK.*>"`" == "" ] ; then
-         addressListIPv4=`echo "$ifconfigResult" | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+)\/([0-9]+) / { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
-         addressListIPv6=`echo "$ifconfigResult" | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
+         # ====== Get status ================================================
+         isUp=0
+         if [ "`echo "$ifconfigResult" | head -n1 | grep "^.*<.*UP.*>"`" != "" ] ; then
+            isUp=1
+         fi
+         
+         # ====== Get addresses =============================================
+         addressListIPv4=`echo "$ifconfigResult" | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+) / { print $2 }' | sort`
+         addressListIPv6=`echo "$ifconfigResult" | awk '/[ \t]*inet6 [0-9a-fA-F:]* prefixlen ([0-9]+) / { print $2 }' | sort`
          showAddresses
       fi
    done
