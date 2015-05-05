@@ -68,6 +68,10 @@ elif [ -e /etc/fedora-release ] ; then
    DISTRIB_ID=`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\1/g"`
    DISTRIB_RELEASE=`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\2/g"`
    DISTRIB_CODENAME=`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\3/g"`
+elif [ -e /etc/freebsd-update.conf ] ; then
+   DISTRIB_ID="FreeBSD"
+   DISTRIB_RELEASE="`echo "$kernel" | sed -e "s/-[A-Z].*//g"`"
+   DISTRIB_CODENAME=""
 fi
 NORNET_VERSION=""
 if [ -e /etc/nornet/nornet-version ] ; then
@@ -108,7 +112,11 @@ fi
 echo "Host:             ${hostnameResult}"
 echo "Uptime:           ${uptime}"
 echo "CPU:              $cores × ${cpu}; ${processes} processes; ${users} users"
-echo "System:           ${DISTRIB_ID} ${DISTRIB_RELEASE} (${DISTRIB_CODENAME}) with ${kernel}"
+codeNameText=""
+if [ "$DISTRIB_CODENAME" != "" ] ; then
+   codeNameText=" (${DISTRIB_CODENAME})"
+fi
+echo "System:           ${DISTRIB_ID} ${DISTRIB_RELEASE}${codeNameText} with ${kernel}"
 echo "Load:             ${systemLoad}"
 echo "Used Memory:      ${memoryUsed} MiB of ${memoryTotal} MiB (${memoryFree} MiB free)"
 echo "Used Swap:        ${swapUsed} MiB of ${swapTotal} MiB (${swapFree} MiB free)"
