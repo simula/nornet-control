@@ -29,6 +29,7 @@ echo ""
 hostnameResult=`hostname -f`
 uptimeResult=`env LANG=en uptime`
 
+system=`uname`
 cpu=`uname -m`
 kernel=`uname -r`
 
@@ -45,34 +46,55 @@ fi
 processes=`ps axue | grep -vE "^USER|grep|ps" | wc -l`
 users=`who | awk ' { print $1 }' | sort -ud | wc -l`
 
-freeOutput="`env LANG=en free -mto`"
-freeMemOutput="`echo "$freeOutput" | grep "Mem:"`"
-freeSwapOutput="`echo "$freeOutput" | grep "Swap:"`"
-
-memoryUsed=`echo "$freeMemOutput" | awk '{ print $3 }'  | xargs printf "%5d"`
-memoryFree=`echo "$freeMemOutput" | awk '{ print $4 }'  | xargs printf "%5d"`
-memoryTotal=`echo "$freeMemOutput" | awk '{ print $2 }' | xargs printf "%5d"`
-swapUsed=`echo "$freeSwapOutput" | awk '{ print $3 }'    | xargs printf "%5d"`
-swapFree=`echo "$freeSwapOutput" | awk '{ print $4 }'   | xargs printf "%5d"`
-swapTotal=`echo "$freeSwapOutput" | awk '{ print $2 }'  | xargs printf "%5d"`
-
 diskRoot=`env LANG=en df -hT /     | grep -vE "^Filesystem|shm" | awk '{ print $6 }'`
 diskHome=`env LANG=en df -hT /home | grep -vE "^Filesystem|shm" | awk '{ print $6 }'`
+
 
 DISTRIB_ID="Unknown"
 DISTRIB_RELEASE="00.00"
 DISTRIB_CODENAME="unknown"
-if [ -e /etc/lsb-release ] ; then
-   . /etc/lsb-release
-elif [ -e /etc/fedora-release ] ; then
-   DISTRIB_ID=`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\1/g"`
-   DISTRIB_RELEASE=`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\2/g"`
-   DISTRIB_CODENAME=`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\3/g"`
-elif [ -e /etc/freebsd-update.conf ] ; then
+if [ "$system" == "Linux" ] ; then
+   if [ -e /etc/lsb-release ] ; then
+      . /etc/lsb-release
+   elif [ -e /etc/fedora-release ] ; then
+      DISTRIB_ID=`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\1/g"`
+      DISTRIB_RELEASE=`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\2/g"`
+      DISTRIB_CODENAME=`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\3/g"`
+   fi
+
+   freeOutput="`env LANG=en free -mto`"
+   freeMemOutput="`echo "$freeOutput" | grep "Mem:"`"
+   freeSwapOutput="`echo "$freeOutput" | grep "Swap:"`"
+
+   let memoryUsed=`echo "$freeMemOutput" | awk '{ print $3 }'`
+   let memoryFree=`echo "$freeMemOutput" | awk '{ print $4 }' `
+   let memoryTotal=`echo "$freeMemOutput" | awk '{ print $2 }'`
+   let swapUsed=`echo "$freeSwapOutput" | awk '{ print $3 }'`
+   let swapFree=`echo "$freeSwapOutput" | awk '{ print $4 }'`
+   let swapTotal=`echo "$freeSwapOutput" | awk '{ print $2 }'`
+
+elif  [ "$system" == "FreeBSD" ] ; then
    DISTRIB_ID="FreeBSD"
    DISTRIB_RELEASE="`echo "$kernel" | sed -e "s/-[A-Z].*//g"`"
    DISTRIB_CODENAME=""
+
+   pageSize=`sysctl -n hw.pagesize`
+
+   let vmstatActive=`sysctl -n vm.stats.vm.v_active_count`*pageSize
+   let vmstatInactive=`sysctl -n vm.stats.vm.v_inactive_count`*pageSize
+   let vmstatCache=`sysctl -n vm.stats.vm.v_cache_count`*pageSize
+   let vmstatFree=`sysctl -n vm.stats.vm.v_free_count`*pageSize
+
+   let memFree=($vmstatInactive+$vmstatCache+$vmstatFree)/1048576
+   let memTotal=`sysctl -n hw.physmem`/1048576
+   let memUsed=$memTotal-$memFree
+
+   let swapTotal=`sysctl -n vm.swap_total`/1048576
+   let swapUsed=`sysctl -n vm.swap_reserved`/1048576
+   let swapFree=$swapTotal-$swapUsed
+
 fi
+
 NORNET_VERSION=""
 if [ -e /etc/nornet/nornet-version ] ; then
    NORNET_VERSION=`cat /etc/nornet/nornet-version`
@@ -118,8 +140,8 @@ if [ "$DISTRIB_CODENAME" != "" ] ; then
 fi
 echo "System:           ${DISTRIB_ID} ${DISTRIB_RELEASE}${codeNameText} with ${kernel}"
 echo "Load:             ${systemLoad}"
-echo "Used Memory:      ${memoryUsed} MiB of ${memoryTotal} MiB (${memoryFree} MiB free)"
-echo "Used Swap:        ${swapUsed} MiB of ${swapTotal} MiB (${swapFree} MiB free)"
+printf "Used Memory:      %5d MiB of %5d MiB (%5d MiB free)\n" ${memoryUsed} ${memoryTotal} ${memoryFree}
+printf "Used Swap:        %5d MiB of %5d MiB (%5d MiB free)\n" ${swaporyUsed} ${swaporyTotal} ${swaporyFree}
 echo "Used Diskspace:   ${diskRoot} on /, ${diskHome} on /home"
 echo "Network:"
 
