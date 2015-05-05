@@ -145,43 +145,66 @@ printf "Used Swap:        %5d MiB of %5d MiB (%5d MiB free)\n" ${swaporyUsed} ${
 echo "Used Diskspace:   ${diskRoot} on /, ${diskHome} on /home"
 echo "Network:"
 
-allInterfaces=`ip link show 2>/dev/null | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//" | sort`
-for interface in $allInterfaces ; do
-   # ====== Only show non-tunnel interfaces =================================
-   if [ "`ip tunnel show $interface 2>/dev/null`" == "" -a \
-        "`ip -6 tunnel show $interface 2>/dev/null`" == "" ] ; then
-      # ====== Only show non-loopback interfaces ============================
-      if [ "`ip link show dev $interface | head -n1 | grep "^.*<.*LOOPBACK.*>"`" == "" ] ; then
 
-         # ====== Get addresses =============================================
-         addressListIPv4=`ip -4 addr show dev $interface 2>/dev/null | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+)\/([0-9]+) / { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
-         addressListIPv6=`ip -6 addr show dev $interface 2>/dev/null | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
-         if [ "$addressListIPv4" != "" -o "$addressListIPv6" != "" ] ; then
+function showAddresses ()
+{
+   if [ "$addressListIPv4" != "" -o "$addressListIPv6" != "" ] ; then
 
-            # ====== Get interface status ===================================
-            if [ "`ip link show dev $interface | head -n1 | grep "^.*<.*UP.*>"`" != "" ] ; then
-               echo -en "\x1b[34m"   # up
-            else
-               echo -en "\x1b[37m"   # down
-            fi
+      # ====== Get interface status ===================================
+      if [ "`ip link show dev $interface | head -n1 | grep "^.*<.*UP.*>"`" != "" ] ; then
+         echo -en "\x1b[34m"   # up
+      else
+         echo -en "\x1b[37m"   # down
+      fi
 
-            # ====== Print addresses ========================================
-            echo -n "   `printf "%-8s" "${interface}:"` "
-            if [ "$addressListIPv4" != "" ] ; then
-               for address in $addressListIPv4 ; do
-                  echo -n "$address   "
-               done
-            else
-               echo -n "(No IPv4)"
-            fi
-            for address in $addressListIPv6 ; do
-               echo -en "\n            $address "
-            done
+      # ====== Print addresses ========================================
+      echo -n "   `printf "%-8s" "${interface}:"` "
+      if [ "$addressListIPv4" != "" ] ; then
+         for address in $addressListIPv4 ; do
+            echo -n "$address   "
+         done
+      else
+         echo -n "(No IPv4)"
+      fi
+      for address in $addressListIPv6 ; do
+         echo -en "\n            $address "
+      done
 
-            echo ""
+      echo ""
+   fi
+}
+
+
+if [ "$system" == "Linux" ] ; then
+   allInterfaces=`ip link show 2>/dev/null | awk '/^([0-9]*:) ([a-zA-Z0-9\-]+):/ { print $2 }' | sed -e "s/:$//" | sort`
+   for interface in $allInterfaces ; do
+      # ====== Only show non-tunnel interfaces =================================
+      if [ "`ip tunnel show $interface 2>/dev/null`" == "" -a \
+           "`ip -6 tunnel show $interface 2>/dev/null`" == "" ] ; then
+         # ====== Only show non-loopback interfaces ============================
+         if [ "`ip link show dev $interface | head -n1 | grep "^.*<.*LOOPBACK.*>"`" == "" ] ; then
+
+            # ====== Get addresses =============================================
+            addressListIPv4=`ip -4 addr show dev $interface 2>/dev/null | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+)\/([0-9]+) / { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
+            addressListIPv6=`ip -6 addr show dev $interface 2>/dev/null | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
+            showAddresses
          fi
       fi
-   fi
-done
+   done
+
+else
+   allInterfaces=`ifconfig | awk '/^([a-zA-Z0-9\-]+):/ { print $1 }'  | sed -e "s/:$//" | sort`
+   for interface in $allInterfaces ; do
+      ifconfigResult="`ifconfig $interface`"
+
+      # ====== Only show non-loopback interfaces ============================
+      if [ "`echo "$ifconfigResult" | head -n1 | grep "^.*<.*LOOPBACK.*>"`" == "" ] ; then
+         addressListIPv4=`echo "$ifconfigResult" | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+)\/([0-9]+) / { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
+         addressListIPv6=`echo "$ifconfigResult" | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [gsh]/ { print $2 }' | sed -e "s/\/[0-9]*//g" | sort`
+         showAddresses
+      fi
+   done
+
+fi
 
 echo -en "\x1b[0m"
