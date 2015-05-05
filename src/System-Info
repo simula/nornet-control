@@ -85,9 +85,9 @@ elif  [ "$system" == "FreeBSD" ] ; then
    let vmstatCache=`sysctl -n vm.stats.vm.v_cache_count`*pageSize
    let vmstatFree=`sysctl -n vm.stats.vm.v_free_count`*pageSize
 
-   let memFree=($vmstatInactive+$vmstatCache+$vmstatFree)/1048576
-   let memTotal=`sysctl -n hw.physmem`/1048576
-   let memUsed=$memTotal-$memFree
+   let memoryFree=($vmstatInactive+$vmstatCache+$vmstatFree)/1048576
+   let memoryTotal=`sysctl -n hw.physmem`/1048576
+   let memoryUsed=$memTotal-$memFree
 
    let swapTotal=`sysctl -n vm.swap_total`/1048576
    let swapUsed=`sysctl -n vm.swap_reserved`/1048576
@@ -141,7 +141,7 @@ fi
 echo "System:           ${DISTRIB_ID} ${DISTRIB_RELEASE}${codeNameText} with ${kernel}"
 echo "Load:             ${systemLoad}"
 printf "Used Memory:      %5d MiB of %5d MiB (%5d MiB free)\n" ${memoryUsed} ${memoryTotal} ${memoryFree}
-printf "Used Swap:        %5d MiB of %5d MiB (%5d MiB free)\n" ${swaporyUsed} ${swaporyTotal} ${swaporyFree}
+printf "Used Swap:        %5d MiB of %5d MiB (%5d MiB free)\n" ${swapUsed} ${swapTotal} ${swapFree}
 echo "Used Diskspace:   ${diskRoot} on /, ${diskHome} on /home"
 echo "Network:"
 
