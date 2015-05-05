@@ -26,13 +26,13 @@ echo ""
 
 
 # ====== Get system information =============================================
-hostnameResult=`hostname --fqdn`
+hostnameResult=`hostname -f`
 uptimeResult=`env LANG=en uptime`
 
 cpu=`uname -m`
 kernel=`uname -r`
 
-cores=$(grep -c ^processor /proc/cpuinfo 2>/dev/null)
+cores=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || grep -c ^processor /compat/linux/proc/cpuinfo 2>/dev/null || echo "1" )
 [ "$cores" -eq "0" ] && cores=1
 systemLoad=`echo "$uptimeResult" | awk -F 'average:' '{ print $2 }'`
 
@@ -52,8 +52,8 @@ swapUsed=`env LANG=en free -mto | grep Swap | awk '{ print $3 }'    | xargs prin
 swapFree=`env LANG=en free -mto | grep Swap: | awk '{ print $4 }'   | xargs printf "%5d"`
 swapTotal=`env LANG=en free -mto | grep Swap: | awk '{ print $2 }'  | xargs printf "%5d"`
 
-diskRoot=`env LANG=en df /     -hT | grep -vE "^Filesystem|shm" | awk '{ print $6 }'`
-diskHome=`env LANG=en df /home -hT | grep -vE "^Filesystem|shm" | awk '{ print $6 }'`
+diskRoot=`env LANG=en df -hT /     | grep -vE "^Filesystem|shm" | awk '{ print $6 }'`
+diskHome=`env LANG=en df -hT /home | grep -vE "^Filesystem|shm" | awk '{ print $6 }'`
 
 DISTRIB_ID="Unknown"
 DISTRIB_RELEASE="00.00"
