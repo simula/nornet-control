@@ -122,10 +122,6 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
             for providerIndex in providerList:
                if ( ((onlyDefault == True)  and (providerIndex == defaultProviderIndex)) or \
                     ((onlyDefault == False) and (providerIndex != defaultProviderIndex)) ):
-                  try:
-                     providerName = NorNet_ProviderList[providerIndex][0]
-                  except:
-                     providerName = '???'
 
                   # ====== Addressing =======================================
                   address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
@@ -185,63 +181,6 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
       outputFile.close()
 
 
-   # ====== FreeBSD rc.conf =================================================
-   elif variant == 'FreeBSD':
-      outputFile = codecs.open('rc.conf' + suffix, 'w', 'utf-8')
-
-      providerConfigs = []
-      aliasNumber     = 0
-      for onlyDefault in [ True, False ]:
-         providerNumber  = 0
-         for providerIndex in providerList:
-            if ( ((onlyDefault == True)  and (providerIndex == defaultProviderIndex)) or \
-                  ((onlyDefault == False) and (providerIndex != defaultProviderIndex)) ):
-               try:
-                  providerName = NorNet_ProviderList[providerIndex][0]
-               except:
-                  providerName = '???'
-
-               for version in [ 4, 6 ]:
-
-                  if providerIndex == defaultProviderIndex:
-                     aliasString = ''
-                  else:
-                     aliasString = '_alias' + str(aliasNumber)
-                     aliasNumber = aliasNumber + 1
-
-                  # ====== Addressing =======================================
-                  address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
-                  gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
-                  metric = NorNet_RoutingMetric_AdditionalProvider + providerNumber
-                  if providerIndex == defaultProviderIndex:
-                     metric = NorNet_RoutingMetric_DefaultProvider
-                  addrOpts = ''
-                  if version == 4:
-                     addrOpts = 'broadcast ' + str(address.broadcast)
-
-                  if controlBoxMode == False:
-                     network = 'default'
-                  else:
-                     network = str(makeNorNetIP(0, 0, 0, version))
-
-                  # ====== Write configuration ==============================
-                  if version == 4:
-                     outputFile.write('ifconfig_' + interfaceName + aliasString + '="inet ' +
-                                      str(address.ip) + ' netmask ' +
-                                      str(address.netmask) +
-                                      '"\n')
-                  else:
-                     if aliasString == '':
-                        ipv6String = '_ipv6'
-                     else:
-                        ipv6String = ''
-                     outputFile.write('ifconfig_' + interfaceName + ipv6String + aliasString + '="inet6 ' +
-                                      str(address.ip) + ' prefixlen ' +
-                                      str(address.prefixlen) + '"\n')
-
-      outputFile.close()
-
-
    # ====== Fedora /etc/sysconfig/network-scripts/ifcfg-* ===================
    elif variant == 'Fedora':
       outputFile = codecs.open('ifcfg' + suffix, 'w', 'utf-8')
@@ -261,10 +200,6 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
             for providerIndex in providerList:
                if ( ((onlyDefault == True)  and (providerIndex == defaultProviderIndex)) or \
                     ((onlyDefault == False) and (providerIndex != defaultProviderIndex)) ):
-                  try:
-                     providerName = NorNet_ProviderList[providerIndex][0]
-                  except:
-                     providerName = '???'
 
                   # ====== Addressing =======================================
                   address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
@@ -322,6 +257,58 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
       for route in routesIPv6:
          routesIPv6File.write(route[0] + ' via ' + route[1] + ' metric ' + route[2] + '\n')
       routesIPv6File.close()
+
+
+   # ====== FreeBSD rc.conf =================================================
+   elif variant == 'FreeBSD':
+      outputFile = codecs.open('rc.conf' + suffix, 'w', 'utf-8')
+
+      providerConfigs = []
+      aliasNumber     = 0
+      for onlyDefault in [ True, False ]:
+         providerNumber  = 0
+         for providerIndex in providerList:
+            if ( ((onlyDefault == True)  and (providerIndex == defaultProviderIndex)) or \
+                  ((onlyDefault == False) and (providerIndex != defaultProviderIndex)) ):
+               for version in [ 4, 6 ]:
+
+                  if providerIndex == defaultProviderIndex:
+                     aliasString = ''
+                  else:
+                     aliasString = '_alias' + str(aliasNumber)
+                     aliasNumber = aliasNumber + 1
+
+                  # ====== Addressing =======================================
+                  address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
+                  gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
+                  metric = NorNet_RoutingMetric_AdditionalProvider + providerNumber
+                  if providerIndex == defaultProviderIndex:
+                     metric = NorNet_RoutingMetric_DefaultProvider
+                  addrOpts = ''
+                  if version == 4:
+                     addrOpts = 'broadcast ' + str(address.broadcast)
+
+                  if controlBoxMode == False:
+                     network = 'default'
+                  else:
+                     network = str(makeNorNetIP(0, 0, 0, version))
+
+                  # ====== Write configuration ==============================
+                  if version == 4:
+                     outputFile.write('ifconfig_' + interfaceName + aliasString + '="inet ' +
+                                      str(address.ip) + ' netmask ' +
+                                      str(address.netmask) +
+                                      '"\n')
+                  else:
+                     if aliasString == '':
+                        ipv6String = '_ipv6'
+                     else:
+                        ipv6String = ''
+                     outputFile.write('ifconfig_' + interfaceName + ipv6String + aliasString + '="inet6 ' +
+                                      str(address.ip) + ' prefixlen ' +
+                                      str(address.prefixlen) + '"\n')
+
+      outputFile.close()
 
 
    # ====== Unknown variant =================================================

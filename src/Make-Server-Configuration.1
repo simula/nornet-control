@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd February 4, 2015
+.Dd May 6, 2015
 .Dt Make-Server-Configuration 1
 .Os Make-Server-Configuration
 .\" ###### Name #############################################################
@@ -27,6 +27,7 @@
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
 .Nm Make-Server-Configuration
+Debian|Fedora|FreeBSD
 FQDN
 node_index
 \-site site_index
@@ -72,6 +73,7 @@ range are configured instead of using default routes.
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
-.It Make-Server-Configuration isbjoen.unis.nornet 254 \-site 8 \-interface eth0 \-providers uninett,telenor
-.It Make-Server-Configuration skjennungen.simula.nornet 254 \-site 1 \-interface eth0 \-providers uninett,kvantel,telenor,powertech \-bridge br0
+.It Make-Server-Configuration Debian isbjoen.unis.nornet 254 \-site 8 \-interface eth0 \-providers Uninett,Telenor
+.It Make-Server-Configuration Debian skjennungen.simula.nornet 254 \-site 1 \-interface eth0 \-providers Uninett,Kvantel,Telenor,PowerTech \-bridge br0
+.It Make-Server-Configuration Debian bsdtest1.simula.nornet 41 \-site 1 \-interface vtnet0 \-providers Uninett,Kvantel,Telenor,PowerTech
 .El
