@@ -265,10 +265,10 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
 
       outputFile.write('hostname="' + hostName + '.' + domainName + '"\n')
 
-      providerConfigs = []
+      routesIPv4      = []
+      routesIPv6      = []
       aliasNumber     = 0
       for onlyDefault in [ True, False ]:
-         providerNumber  = 0
          for providerIndex in providerList:
             if ( ((onlyDefault == True)  and (providerIndex == defaultProviderIndex)) or \
                   ((onlyDefault == False) and (providerIndex != defaultProviderIndex)) ):
@@ -283,12 +283,6 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                   # ====== Addressing =======================================
                   address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
                   gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
-                  metric = NorNet_RoutingMetric_AdditionalProvider + providerNumber
-                  if providerIndex == defaultProviderIndex:
-                     metric = NorNet_RoutingMetric_DefaultProvider
-                  addrOpts = ''
-                  if version == 4:
-                     addrOpts = 'broadcast ' + str(address.broadcast)
 
                   if controlBoxMode == False:
                      network = 'default'
@@ -297,11 +291,15 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
 
                   # ====== Write configuration ==============================
                   if version == 4:
+                     if providerIndex == defaultProviderIndex:
+                        routesIPv4.append([ str(network), str(gateway.ip) ])
                      outputFile.write('ifconfig_' + interfaceName + aliasString + '="inet ' +
                                       str(address.ip) + ' netmask ' +
                                       str(address.netmask) +
                                       '"\n')
                   else:
+                     if providerIndex == defaultProviderIndex:
+                        routesIPv6.append([ str(network), str(gateway.ip) ])
                      if aliasString == '':
                         ipv6String = '_ipv6'
                      else:
@@ -310,8 +308,32 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                                       str(address.ip) + ' prefixlen ' +
                                       str(address.prefixlen) + '"\n')
 
+      # ====== Routes =======================================================
+      for version in [ 4, 6 ]:
+         if version == 4:
+            ipv6String = ''
+            routes = routesIPv4
+         else:
+            ipv6String = 'ipv6_'
+            routes = routesIPv6
+
+         n = 0
+         outputFile.write(ipv6String + 'static_routes="')
+         for route in routes:
+            if n > 0:
+               outputFile.write(' ')
+            outputFile.write('nornet' + str(n))
+            n = n + 1
+         outputFile.write('"\n')
+
+         n = 0
+         for route in routes:
+            outputFile.write(ipv6String + 'route_nornet' + str(n) + '="-net ' + route[0] + ' ' + route[1] + '"\n')
+            n = n + 1
+
       outputFile.close()
 
+      # ====== DNS ==========================================================
       outputFile = codecs.open('resolv.conf' + suffix, 'w', 'utf-8')
       for version in [ 4, 6 ]:
          dns = makeNorNetIP(defaultProviderIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
