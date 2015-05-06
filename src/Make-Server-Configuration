@@ -122,11 +122,12 @@ print('Interface:  ' + interfaceName)
 print('Providers:  ' + str(providerList))
 
 
-writeHostname('hostname.new', hostName, domainName)
-writeHosts('hosts.new', hostName, domainName)
 writeInterfaceConfiguration('.new', variant, interfaceName, controlBoxMode,
-                            domainName, nodeIndex, siteIndex, providerList, defaultProvider,
+                            hostName, domainName, nodeIndex, siteIndex, providerList, defaultProvider,
                             bridgeInterface)
+writeHosts('hosts.new', hostName, domainName)
+if variant != 'FreeBSD':
+   writeHostname('hostname.new', hostName, domainName)
 writeProxyConfiguration('.new', domainName, variant, controlBoxMode)
 writeNTPConfiguration('ntp.new', nodeIndex, siteIndex, defaultProvider)
 writeSysctlConfiguration('sysctl.new', interfaceName)

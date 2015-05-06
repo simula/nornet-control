@@ -98,6 +98,8 @@ if [ -e /etc/network/interfaces ] ; then
    Variant="Debian"
 elif [ -e /etc/sysconfig/network ] ; then
    Variant="Fedora"
+elif [ -e /etc/freebsd-update.conf ] ; then
+   Variant="FreeBSD"
 else
    echo >&2 "ERROR: Unknown/unsupported operating system? Cannot determine how to configure network!"
    exit 1
@@ -194,38 +196,37 @@ fi
 
 # ====== Compare new configurations to old ones =============================
 echo "------ BEGIN OF DIFFS ------"
-echo "------ /etc/hostname:"
-colordiff /etc/hostname hostname.new
+
+if [ "$Variant" != "FreeBSD" ] ; then
+   echo "------ /etc/hostname:"
+   colordiff /etc/hostname hostname.new
+   echo "------ /etc/modules:"
+   colordiff /etc/modules modules.new
+   echo "------ /etc/default/rcS:"
+   colordiff /etc/default/rcS rcS.new
+   echo "------ /etc/sysctl.d/90-nornet.conf:"
+   if [ -e /etc/sysctl.d/90-nornet.conf ] ; then
+      colordiff /etc/sysctl.d/90-nornet.conf sysctl.new
+   else
+      cat sysctl.new
+   fi
+   echo "------ /etc/profile.d/proxy.sh:"
+   if [ -e /etc/profile.d/proxy.sh ] ; then
+      colordiff /etc/profile.d/proxy.sh proxy.sh.new
+   else
+      cat proxy.sh.new
+   fi
+   echo "------ /etc/profile.d/proxy.csh:"
+   if [ -e /etc/profile.d/proxy.csh ] ; then
+      colordiff /etc/profile.d/proxy.csh proxy.csh.new
+   else
+      cat proxy.csh.new
+   fi
+fi
+
 echo "------ /etc/hosts:"
 colordiff /etc/hosts hosts.new
-echo "------ /etc/ntp.conf:"
-if [ -e /etc/ntp.conf ] ; then
-   colordiff /etc/ntp.conf ntp.new
-else
-   cat ntp.new
-fi
-echo "------ /etc/modules:"
-colordiff /etc/modules modules.new
-echo "------ /etc/default/rcS:"
-colordiff /etc/default/rcS rcS.new
-echo "------ /etc/profile.d/proxy.sh:"
-if [ -e /etc/sysctl.d/90-nornet.conf ] ; then
-   colordiff /etc/sysctl.d/90-nornet.conf sysctl.new
-else
-   cat sysctl.new
-fi
-echo "------ /etc/profile.d/proxy.sh:"
-if [ -e /etc/profile.d/proxy.sh ] ; then
-   colordiff /etc/profile.d/proxy.sh proxy.sh.new
-else
-   cat proxy.sh.new
-fi
-echo "------ /etc/profile.d/proxy.csh:"
-if [ -e /etc/profile.d/proxy.csh ] ; then
-   colordiff /etc/profile.d/proxy.csh proxy.csh.new
-else
-   cat proxy.csh.new
-fi
+
 if [ "$Variant" = "Debian" ] ; then
    echo "------ /etc/apt/apt.conf.d/10-proxy:"
    if [ -e /etc/apt/apt.conf.d/10-proxy ] ; then
@@ -233,23 +234,39 @@ if [ "$Variant" = "Debian" ] ; then
    else
       cat apt-proxy.new
    fi
+   if [ -e interfaces.new -a  -e /etc/network/interfaces ] ; then
+      echo "------ /etc/network/interfaces:"
+      colordiff /etc/network/interfaces interfaces.new
+   fi
+elif [ "$Variant" = "Fedora" ] ; then
+   if [ -e ifcfg.new -a  -e /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ] ; then
+      echo "------ /etc/sysconfig/network-scripts/ifcfg-$InterfaceName:"
+      colordiff /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ifcfg.new
+   fi
+   if [ -e route.new -a  -e /etc/sysconfig/network-scripts/route-$InterfaceName ] ; then
+      echo "------ /etc/sysconfig/network-scripts/route-$InterfaceName:"
+      colordiff /etc/sysconfig/network-scripts/route-$InterfaceName route.new
+   fi
+   if [ -e route6.new -a  -e /etc/sysconfig/network-scripts/route6-$InterfaceName ] ; then
+      echo "------ /etc/sysconfig/network-scripts/route6-$InterfaceName:"
+      colordiff /etc/sysconfig/network-scripts/route6-$InterfaceName route6.new
+   fi
+elif [ "$Variant" = "FreeBSD" ] ; then
+   echo "------ /etc/resolv.conf:"
+   if [ -e /etc/resolv.conf ] ; then
+      colordiff /etc/resolv.conf resolv.conf.new
+   else
+      cat resolv.conf.new
+   fi
 fi
-if [ -e interfaces.new -a  -e /etc/network/interfaces ] ; then
-   echo "------ /etc/network/interfaces:"
-   colordiff /etc/network/interfaces interfaces.new
+
+echo "------ /etc/ntp.conf:"
+if [ -e /etc/ntp.conf ] ; then
+   colordiff /etc/ntp.conf ntp.new
+else
+   cat ntp.new
 fi
-if [ -e ifcfg.new -a  -e /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ] ; then
-   echo "------ /etc/sysconfig/network-scripts/ifcfg-$InterfaceName:"
-   colordiff /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ifcfg.new
-fi
-if [ -e route.new -a  -e /etc/sysconfig/network-scripts/route-$InterfaceName ] ; then
-   echo "------ /etc/sysconfig/network-scripts/route-$InterfaceName:"
-   colordiff /etc/sysconfig/network-scripts/route-$InterfaceName route.new
-fi
-if [ -e route6.new -a  -e /etc/sysconfig/network-scripts/route6-$InterfaceName ] ; then
-   echo "------ /etc/sysconfig/network-scripts/route6-$InterfaceName:"
-   colordiff /etc/sysconfig/network-scripts/route6-$InterfaceName route6.new
-fi
+
 echo "------ /etc/auto.master:"
 if [ -e /etc/auto.master ] ; then
    colordiff /etc/auto.master auto.master

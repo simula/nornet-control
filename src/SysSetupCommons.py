@@ -94,7 +94,7 @@ def writeProxyConfiguration(suffix, siteDomain, variant, controlBoxMode):
 
 # ###### Write interface configuration file #################################
 def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
-                                domainName, nodeIndex, siteIndex,
+                                hostName, domainName, nodeIndex, siteIndex,
                                 providerList, defaultProviderIndex,
                                 bridgeInterface = None):
    # ====== Write Debian /etc/network/interfaces ============================
@@ -263,6 +263,8 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
    elif variant == 'FreeBSD':
       outputFile = codecs.open('rc.conf' + suffix, 'w', 'utf-8')
 
+      outputFile.write('hostname="' + hostName + '.' + domainName + '"\n')
+
       providerConfigs = []
       aliasNumber     = 0
       for onlyDefault in [ True, False ]:
@@ -308,6 +310,13 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                                       str(address.ip) + ' prefixlen ' +
                                       str(address.prefixlen) + '"\n')
 
+      outputFile.close()
+
+      outputFile = codecs.open('resolv.conf' + suffix, 'w', 'utf-8')
+      for version in [ 4, 6 ]:
+         dns = makeNorNetIP(defaultProviderIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
+         outputFile.write('nameserver ' + str(dns.ip) + '\n')
+      outputFile.write('search ' + domainName + '\n')
       outputFile.close()
 
 

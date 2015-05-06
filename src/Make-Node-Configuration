@@ -210,7 +210,7 @@ writeHosts('hosts-config', localNode['node_name'], localSite['site_domain'])
 
 writeInterfaceConfiguration('', distribution, interfaceName,
                             NorNet_Configuration['NorNet_LocalNode_ControlBox'],
-                            localSite['site_domain'], localNode['node_index'], localSite['site_index'],
+                            localNode['node_name'], localSite['site_domain'], localNode['node_index'], localSite['site_index'],
                             providerList, localSite['site_default_provider_index'])
 writeProxyConfiguration('', localSite['site_domain'], distribution,
                         False)   # Use tunnelbox's proxy!
