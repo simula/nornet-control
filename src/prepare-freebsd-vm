@@ -1,0 +1,11 @@
+#!/bin/bash
+
+KEYDIR=~/.ssh
+KEY=id_dsa.pub
+
+scp -o PreferredAuthentications=keyboard-interactive nornetapi-constants System-Maintenance System-Info Server-Setup Make-Server-Configuration $KEYDIR/$KEY nornetpp@10.1.1.42:
+
+cmd=""
+cmd="$cmd ; mkdir .ssh ; chmod 700 .ssh ; cat $KEY >>.ssh/authorized_keys ; rm -f $KEY ; sudo mkdir /etc/nornet ; sudo mv nornetapi-constants /etc/nornet/"
+
+ssh -o PreferredAuthentications=keyboard-interactive "$cmd"
