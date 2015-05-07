@@ -162,20 +162,23 @@ if [ "$BridgeInterface" != "" ] ; then
    options="$options -bridge $BridgeInterface"
 fi
 ${MakeServerConfigurationPath}Make-Server-Configuration "$Variant" "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers "$ProviderList" $ControlBoxMode $options || exit 1
-AllEthernetInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-\.@]+):/ { print $2 }' | grep "^eth" | sed -e "s/:$//" -e "s/@.*$//" | xargs`
-for interface in $AllEthernetInterfaces ; do
-   if [ "$interface" != "lo" -a "$interface" != "$InterfaceName" ] ; then
-      if parse-interface-configuration /etc/network/interfaces $interface interfaces.new ; then
-         (
-            echo -e "\n# ====== Additional Interface $interface ======"
-            echo "auto $interface"
-            echo "iface $interface inet static"
-            echo -e "\taddress 0.0.0.0"
-            echo -e "\tnetmask 0.0.0.0"
-         ) >>interfaces.new
+
+if [ "$Variant" = "Debian" ] ; then
+   AllEthernetInterfaces=`ip link show | awk '/^([0-9]*:) ([a-zA-Z0-9\-\.@]+):/ { print $2 }' | grep "^eth" | sed -e "s/:$//" -e "s/@.*$//" | xargs`
+   for interface in $AllEthernetInterfaces ; do
+      if [ "$interface" != "lo" -a "$interface" != "$InterfaceName" ] ; then
+         if parse-interface-configuration /etc/network/interfaces $interface interfaces.new ; then
+            (
+               echo -e "\n# ====== Additional Interface $interface ======"
+               echo "auto $interface"
+               echo "iface $interface inet static"
+               echo -e "\taddress 0.0.0.0"
+               echo -e "\tnetmask 0.0.0.0"
+            ) >>interfaces.new
+         fi
       fi
-   fi
-done
+   done
+fi
 
 if [ $MAY_BE_CONTROLBOX -ne 0 ] ; then
    if [ "$ControlBoxMode" != "-controlbox" ] ; then
@@ -190,8 +193,10 @@ fi
 
 
 # ====== Create other configurations ========================================
-( cat /etc/modules | grep -v "^dummy" ; echo "dummy numdummies=1" ) >modules.new
-( cat /etc/default/rcS | sed -e "s/^FSCKFIX=no/FSCKFIX=yes/g" ) >rcS.new
+if [ "$Variant" != "FreeBSD" ] ; then
+   ( cat /etc/modules | grep -v "^dummy" ; echo "dummy numdummies=1" ) >modules.new
+   ( cat /etc/default/rcS | sed -e "s/^FSCKFIX=no/FSCKFIX=yes/g" ) >rcS.new
+fi
 
 
 # ====== Compare new configurations to old ones =============================
@@ -258,6 +263,24 @@ elif [ "$Variant" = "FreeBSD" ] ; then
    else
       cat resolv.conf.new
    fi
+
+   echo "------ /etc/rc.conf:" 
+   SED_FILE=`mktemp`
+   rm -f $SED_FILE rc.conf.updated
+   cat rc.conf.new | (
+      while read line ; do
+         if [[ "$line" =~ ^([a-zA-Z0-9_]*)=(.*)$ ]] ; then
+            echo "/${BASH_REMATCH[1]}/d" >>$SED_FILE
+         fi
+      done
+   )
+   cp rc.conf.new rc.conf.updated && sed -f $SED_FILE </etc/rc.conf >>rc.conf.updated || rm -f rc.conf.updated
+   if [ ! -e rc.conf.updated ] ; then
+      echo >&2 "ERROR: Merging rc.conf updates failed!"
+      exit 1
+   fi
+   rm -f $SED_FILE
+   colordiff /etc/rc.conf rc.conf.updated
 fi
 
 echo "------ /etc/ntp.conf:"
@@ -288,32 +311,35 @@ read -er applyChanges
 if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
    echo "Skipped!"
 else
-   cp /etc/hostname /etc/hostname~
-   cp  hostname.new /etc/hostname
+   if [ "$Variant" != "FreeBSD" ] ; then
+      cp /etc/hostname /etc/hostname~
+      cp  hostname.new /etc/hostname
+      hostname `cat /etc/hostname`
+   fi
 
    cp /etc/hosts /etc/hosts~
    cp  hosts.new /etc/hosts
-   hostname `cat /etc/hostname`
-
-   cp modules.new /etc/modules
-   cp rcS.new /etc/default/rcS
-   cp sysctl.new /etc/sysctl.d/90-nornet.conf
 
    if [ -e /etc/ntp.conf ] ; then
       cp /etc/ntp.conf /etc/ntp.conf~
    fi
    cp ntp.new /etc/ntp.conf
 
-   if [ -e /etc/profile.d/proxy.sh ] ; then
-      cp /etc/profile.d/proxy.sh /etc/profile.d/proxy.sh~
+   if [ "$Variant" != "FreeBSD" ] ; then
+      if [ -e /etc/profile.d/proxy.sh ] ; then
+         cp /etc/profile.d/proxy.sh /etc/profile.d/proxy.sh~
+      fi
+      cp proxy.sh.new /etc/profile.d/proxy.sh
+      if [ -e /etc/profile.d/proxy.csh ] ; then
+         cp /etc/profile.d/proxy.csh /etc/profile.d/proxy.csh~
+      fi
+      cp proxy.csh.new /etc/profile.d/proxy.csh
    fi
-   cp proxy.sh.new /etc/profile.d/proxy.sh
-   if [ -e /etc/profile.d/proxy.csh ] ; then
-      cp /etc/profile.d/proxy.csh /etc/profile.d/proxy.csh~
-   fi
-   cp proxy.csh.new /etc/profile.d/proxy.csh
 
    if [ "$Variant" = "Debian" ] ; then
+      cp modules.new /etc/modules
+      cp rcS.new /etc/default/rcS
+      cp sysctl.new /etc/sysctl.d/90-nornet.conf
       cp /etc/network/interfaces /etc/network/interfaces~
       cp interfaces.new /etc/network/interfaces
 
@@ -321,6 +347,13 @@ else
          cp /etc/apt/apt.conf.d/10-proxy /etc/apt/apt.conf.d/10-proxy~
       fi
       cp apt-proxy.new /etc/apt/apt.conf.d/10-proxy
+      if [ -e /etc/udev/rules.d/70-persistent-net.rules ] ; then
+         if ! ifconfig eth0 >/dev/null 2>&1 ; then
+            echo "eth0 does not exist => Deleting /etc/udev/rules.d/70-persistent-net.rules"
+            rm -f /etc/udev/rules.d/70-persistent-net.rules
+            echo "*** Interfaces should be remapping during next boot! ***"
+         fi
+      fi
    elif [ "$Variant" = "Fedora" ] ; then
       if [ -e /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ] ; then
          cp /etc/sysconfig/network-scripts/ifcfg-$InterfaceName /etc/sysconfig/network-scripts/ifcfg-$InterfaceName~
@@ -335,13 +368,8 @@ else
       cp ifcfg.new /etc/sysconfig/network-scripts/ifcfg-$InterfaceName
       cp route.new /etc/sysconfig/network-scripts/route-$InterfaceName
       cp route6.new /etc/sysconfig/network-scripts/route6-$InterfaceName
-   fi
-   if [ -e /etc/udev/rules.d/70-persistent-net.rules ] ; then
-      if ! ifconfig eth0 >/dev/null 2>&1 ; then
-         echo "eth0 does not exist => Deleting /etc/udev/rules.d/70-persistent-net.rules"
-         rm -f /etc/udev/rules.d/70-persistent-net.rules
-         echo "*** Interfaces should be remapping during next boot! ***"
-      fi
+   elif [ "$Variant" = "FreeBSD" ] ; then
+      cp rc.conf.updated /etc/rc.conf
    fi
 
    cp /etc/auto.master /etc/auto.master~
@@ -349,7 +377,9 @@ else
    cp auto.master /etc/auto.master
    cp auto.nfs /etc/auto.nfs
 
-   sysctl -f
+   if [ "$Variant" != "FreeBSD" ] ; then   
+      sysctl -f
+   fi
    if [ "$Variant" = "Fedora" ] ; then
       chkconfig network on
       systemctl start network.service
@@ -362,6 +392,8 @@ else
       rpm -q ntp >/dev/null || yum install -y ntp
       systemctl enable ntpd.service
       systemctl start ntpd.service
+   elif [ "$Variant" = "FreeBSD" ] ; then
+      /etc/netstart
    fi
 
    if [ "$Variant" = "Fedora" ] ; then
@@ -383,16 +415,18 @@ echo "$AllParameters" >$LAST_PARAMETERS_FILE
 
 
 # ====== Keyboard configuration =============================================
-echo -en "\x1b[33mConfigure keyboard? [yes/no]\x1b[0m? "
-read -er applyChanges
-if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
-   echo "Skipped!"
-else
-   if [ "$Variant" = "Debian" ] ; then
-      dpkg-reconfigure keyboard-configuration
-   elif [ "$Variant" = "Fedora" ] ; then
-      rpm -q system-config-keyboard || yum install -y system-config-keyboard
-      system-config-keyboard
+if [ "$Variant" != "FreeBSD" ] ; then
+   echo -en "\x1b[33mConfigure keyboard? [yes/no]\x1b[0m? "
+   read -er applyChanges
+   if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
+      echo "Skipped!"
+   else
+      if [ "$Variant" = "Debian" ] ; then
+         dpkg-reconfigure keyboard-configuration
+      elif [ "$Variant" = "Fedora" ] ; then
+         rpm -q system-config-keyboard || yum install -y system-config-keyboard
+         system-config-keyboard
+      fi
    fi
 fi
 
