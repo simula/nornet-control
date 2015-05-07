@@ -331,6 +331,11 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
             outputFile.write(ipv6String + 'route_nornet' + str(n) + '="-net ' + route[0] + ' ' + route[1] + '"\n')
             n = n + 1
 
+
+      # ====== Services =====================================================
+      outputFile.write('ntpd_enable="YES"\n')
+      outputFile.write('autofs_enable="YES"\n')
+
       outputFile.close()
 
       # ====== DNS ==========================================================
