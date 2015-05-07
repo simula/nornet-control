@@ -290,11 +290,20 @@ else
    cat ntp.new
 fi
 
-echo "------ /etc/auto.master:"
-if [ -e /etc/auto.master ] ; then
-   colordiff /etc/auto.master auto.master
+if [ "$Variant" != "FreeBSD" ] ; then
+   echo "------ /etc/auto.master:"
+   if [ -e /etc/auto.master ] ; then
+      colordiff /etc/auto.master auto.master
+   else
+      cat auto.master
+   fi
 else
-   cat auto.master
+   echo "------ /etc/auto_master:"
+   if [ -e /etc/auto_master ] ; then
+      colordiff /etc/auto_master auto.master
+   else
+      cat auto.master
+   fi
 fi
 echo "------ /etc/auto.nfs:"
 if [ -e /etc/auto.nfs ] ; then
@@ -370,11 +379,17 @@ else
       cp route6.new /etc/sysconfig/network-scripts/route6-$InterfaceName
    elif [ "$Variant" = "FreeBSD" ] ; then
       cp rc.conf.updated /etc/rc.conf
+      cp /etc/auto_master /etc/auto_master~
+      cp auto.master /etc/auto_master
    fi
 
-   cp /etc/auto.master /etc/auto.master~
-   cp /etc/auto.nfs /etc/auto.nfs~
-   cp auto.master /etc/auto.master
+   if [ "$Variant" != "FreeBSD" ] ; then
+      cp /etc/auto.master /etc/auto.master~
+      cp auto.master /etc/auto.master
+   fi
+   if [ -e /etc/auto.nfs ] ; then
+      cp /etc/auto.nfs /etc/auto.nfs~
+   fi
    cp auto.nfs /etc/auto.nfs
 
    if [ "$Variant" != "FreeBSD" ] ; then   
