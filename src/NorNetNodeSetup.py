@@ -25,6 +25,7 @@ import hashlib;
 import datetime;
 import codecs;
 import socket;
+import platform;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
@@ -46,6 +47,11 @@ def writeAutoConfigInformation(outputFile, comment='#'):
 
 # ###### Generate NFS daemon configuration ##################################
 def makeAutoFSConfiguration(weAreOnFileServer, siteIndex, nodeIndex, addHeader):
+   if platform.system() == 'FreeBSD':
+      nfsOptions = 'nfsv4,tcp,rsize=32768,wsize=32768,soft,async,intr,noatime'
+   else:
+      nfsOptions = 'nfsvers=4,proto=tcp,rsize=32768,wsize=32768,soft,async,intr,noatime,nodiratime'
+
    outputFile = codecs.open('auto.master', 'w', 'utf-8')
    if addHeader == True:
       writeAutoConfigInformation(outputFile)
@@ -53,11 +59,9 @@ def makeAutoFSConfiguration(weAreOnFileServer, siteIndex, nodeIndex, addHeader):
       outputFile.write('/nfs\t/etc/auto.nfs\n')
    outputFile.close()
 
-   nfsOptions = 'nfsvers=4,proto=tcp,rsize=32768,wsize=32768,soft,async,intr,noatime,nodiratime'
-
    outputFile = codecs.open('auto.nfs', 'w', 'utf-8')
    if addHeader == True:
-      writeAutoConfigInformation(outputFile)         
+      writeAutoConfigInformation(outputFile)
    if weAreOnFileServer == False:
       fileServer = 'nfs.' + getCentralSiteDomainName()
       outputFile.write('adm\t-fstype=nfs,' + nfsOptions + ',rw\t' + fileServer + ':/filesrv/adm\n')
@@ -66,7 +70,8 @@ def makeAutoFSConfiguration(weAreOnFileServer, siteIndex, nodeIndex, addHeader):
       outputFile.write('node\t-fstype=nfs,' + nfsOptions + ',rw\t' + fileServer + ':/filesrv/sys/' + str(siteIndex) + '/' + str(nodeIndex) + '\n')
    outputFile.close()
 
-# ##### Make collectd skeleton configuration
+
+# ##### Make collectd skeleton configuration ################################
 def makeCollectdNetworkConfig(serverName,collectdNetworkConfigFileName='collectd-network-config'):
    collectdNetworkConfigFile = codecs.open(collectdNetworkConfigFileName, 'w', 'utf-8')
    collectdNetworkConfigFile.write('LoadPlugin network\n')
@@ -78,6 +83,8 @@ def makeCollectdNetworkConfig(serverName,collectdNetworkConfigFileName='collectd
    collectdNetworkConfigFile.write('</Server>"\n')
    collectdNetworkConfigFile.write('</Plugin>\n')
 
+
+# ##### Make collectd skeleton configuration ################################
 def makeCollectdGeneralConfig(collectdGeneralConfigFileName='collectd-general-config'):
    dot_d_dir = '/etc/collectd.d/'
    collectdNetworkConfigFile = codecs.open(collectdGeneralConfigFileName, 'w', 'utf-8')
