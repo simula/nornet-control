@@ -35,6 +35,7 @@ DESC="NorNet Tunnelbox"
 NORNET_DIRECTORY="/etc/nornet"
 # NORNET_DIRECTORY=/home/dreibh/src/rn/nornet/nornet-control/src
 LOGFILE="/var/log/nornet-tunnelbox.log"
+LOCKFILE="/var/lock/nornet-tunnelbox.lock"
 PATH=$NORNET_DIRECTORY:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 ACTION="$1"
 shift
@@ -226,34 +227,38 @@ check_and_configure ()
 
 
 # ###### Main program #######################################################
-case "$ACTION" in
-  start|stop|restart)
-   echo -n "Performing $ACTION of $DESC: "
-   Tunnelbox-Setup "$ACTION" -providers "@ALL" -event "init script action: $ACTION" $@ >>$LOGFILE 2>&1 && \
-   echo "$NAME."
-   ;;
-  force-reload)
-   Tunnelbox-Setup coldstart -providers "@ALL" $@ >>$LOGFILE 2>&1
-   ;;
-  status)
-   Tunnelbox-Setup status -providers "@ALL" $@
-   ;;
-  configure)
-     # All configuration files are gone. The tests below will trigger update.
-     check_and_configure -update-all >>$LOGFILE 2>&1
-     Tunnelbox-Setup start -providers "@ALL" -event "MANUAL CONFIGURE" >>$LOGFILE 2>&1
-     service nornet-node configure
-     ;;
-  check-and-configure)
-     # Compare with existing configuration, update only if necessary.
-     check_and_configure >>$LOGFILE 2>&1
-     service nornet-node check-and-configure
-     ;;
-  *)
-   N=/etc/init.d/$NAME
-   echo "Usage: $N {start|stop|restart|force-reload|configure|check-and-configure|status}" >&2
-   exit 1
-   ;;
-esac
+(
+   flock -n 9 || exit 1
+
+   case "$ACTION" in
+   start|stop|restart)
+      echo -n "Performing $ACTION of $DESC: "
+      Tunnelbox-Setup "$ACTION" -providers "@ALL" -event "init script action: $ACTION" $@ >>$LOGFILE 2>&1 && \
+      echo "$NAME."
+      ;;
+   force-reload)
+      Tunnelbox-Setup coldstart -providers "@ALL" $@ >>$LOGFILE 2>&1
+      ;;
+   status)
+      Tunnelbox-Setup status -providers "@ALL" $@
+      ;;
+   configure)
+      # All configuration files are gone. The tests below will trigger update.
+      check_and_configure -update-all >>$LOGFILE 2>&1
+      Tunnelbox-Setup start -providers "@ALL" -event "MANUAL CONFIGURE" >>$LOGFILE 2>&1
+      service nornet-node configure
+      ;;
+   check-and-configure)
+      # Compare with existing configuration, update only if necessary.
+      check_and_configure >>$LOGFILE 2>&1
+      service nornet-node check-and-configure
+      ;;
+   *)
+      N=/etc/init.d/$NAME
+      echo "Usage: $N {start|stop|restart|force-reload|configure|check-and-configure|status}" >&2
+      exit 1
+      ;;
+   esac
+) 9>$LOCKFILE
 
 exit 0
