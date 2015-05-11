@@ -13,7 +13,10 @@ Standards-Version: 3.9.5
 
 Package: nornet-api
 Architecture: any
-Depends: python-ipaddr, ${misc:Depends}, ${python:Depends}, ${shlibs:Depends}
+Depends: python-ipaddr,
+         ${misc:Depends},
+         ${python:Depends},
+         ${shlibs:Depends}
 Description: NorNet API
  This package contains the NorNet Python API library. It contains functions
  to communicate with the central server (MyPLC), based on XMLRPC.
@@ -67,7 +70,10 @@ Depends: apt-file,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
-Recommends: open-vm-tools, paris-traceroute, tracebox, tshark
+Recommends: open-vm-tools,
+            paris-traceroute,
+            tracebox,
+            tshark
 Conflicts: landscape-common
 Replaces: landscape-common
 Description: NorNet Management Tools
@@ -179,7 +185,8 @@ Description: NorNet File Server
 
 Package: nornet-artwork
 Architecture: all
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
 Description: NorNet Artwork
  This package contains some images for the monitor server
  on a NorNet central site.
@@ -223,7 +230,9 @@ Description: NorNet Display
 
 Package: nornet-gatekeeper
 Architecture: all
-Depends: nornet-node, ${misc:Depends}, ${shlibs:Depends}
+Depends: nornet-node,
+         ${misc:Depends},
+         ${shlibs:Depends}
 Description: NorNet Gatekeeper
  This package contains the packages to set up a gatekeeper station for the
  project presentation. It is in fact just a node with a dependency on the
