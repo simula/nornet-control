@@ -77,7 +77,7 @@ elif [ "$Variant" = "FreeBSD" ] ; then
       sudo portsnap fetch
    fi
 fi
-   
+
 # ====== apt-get package fixes ==============================================
 if [ "$Variant" = "Debian" ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing missing dependencies, if necessary ...\x1b[0m"
@@ -222,7 +222,7 @@ if [ $DONT_TOUCH_GRUB -eq 0 ] ; then
       cat /tmp/install.log
    fi
 fi
-   
+
 # ====== apt-file cache update ==============================================
 # Cache updates
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Updating caches ...\x1b[0m"
@@ -262,12 +262,17 @@ fi
 if [ -e /etc/ntp.conf ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Synchronising system time ...\x1b[0m"
    sudo service ntp stop >/dev/null 2>&1 || true
+
+   # Trying ntp1.uio.no via IPv6 (2001:700:100:2::6) first:
    sudo ntpdate 2001:700:100:2::6 || sudo ntpdate ntp1.ptb.de || sudo ntpdate 10.1.1.1
+
+   # Write time to hardware clock
    if [ "$Variant" != "FreeBSD" ] ; then
       sudo hwclock -w
    else
       sudo date -v +0S
    fi
+
    sudo service ntp start >/dev/null 2>&1 || true
 fi
 
@@ -275,7 +280,7 @@ fi
 if [ "$Variant" = "Debian" ] ; then
    if [ -e /usr/bin/apt-show-versions ] ; then
       echo "====== Installed NorNet Software ============================================="
-      /usr/bin/apt-show-versions | grep "^nornet-"   
+      /usr/bin/apt-show-versions | grep "^nornet-"
       echo "=============================================================================="
    fi
 fi
