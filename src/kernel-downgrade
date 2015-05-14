@@ -1,0 +1,9 @@
+#!/bin/bash
+
+OLD=3.2.0-83
+NEW=3.13.0-52
+
+sudo apt-get install -y linux-image-$OLD-generic linux-headers-$OLD-generic ;\
+sudo apt-get autoremove -y linux-image-generic-lts-trusty linux-headers-generic-lts-trusty linux-image-$NEW-generic linux-headers-$NEW-generic ;\
+sudo grub-install /dev/sda ;\
+sudo update-grub

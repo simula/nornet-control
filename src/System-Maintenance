@@ -244,6 +244,10 @@ fi
 if [ "$Variant" = "Debian" ] ; then
    if [ $KEEP_INTERFACE_MAPPINGS -eq 0 ] ; then
       echo -e "\x1b[34m`date +%FT%H:%M:%S`: Checking interface mapping ...\x1b[0m"
+
+      # Ensure that new interfaces get mapped!
+      sudo udevadm trigger --action=add
+
       if ! ifconfig eth0 >/dev/null 2>&1 ; then
          echo "eth0 does not exist => Deleting /etc/udev/rules.d/70-persistent-net.rules"
          rm -f /etc/udev/rules.d/70-persistent-net.rules
