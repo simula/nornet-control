@@ -693,7 +693,7 @@ norNetSetup = [
    'site_longitude'    : -95.264,
    'site_altitude'     : 300,
    'site_contacts'     : [ u'Gangadhar, Siddharth: siddharth@ittc.ku.edu', u'Fleming, Brad: bdfleming@kanren.net', u'Sterbenz, James P.G.: jpgs@ittc.ku.edu' ],
-   'site_pcu'          : [ IPv4Address('164.113.202.18'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('164.113.202.19'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Kansas Research and Education Network', 'eth1',
