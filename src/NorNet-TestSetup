@@ -123,7 +123,7 @@ norNetSetup = [
       [ 101, 2, u'kölsch'   ]
    ] },
 
- { 'site_index'        : 64,
+ { 'site_index'        : 4,
    'site_enabled'      : False,
    'site_long_name'    : u'Delta Site',
    'site_short_name'   : 'DS',
