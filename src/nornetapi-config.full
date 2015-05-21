@@ -44,6 +44,11 @@ NorNet_LocalNode_ControlBox='no'
 
 
 # ###### NorNet Server configuration ########################################
+# The virtualization system used for the virtual systems.
+# Default is "" -> VirtualBox.
+# Possible settings: VirtualBox, KVM
+# NorNet_Server_VirtualizationSystem=""
+
 # The default VNC password to access virtual systems on this host. It may be
 # superseeded by VNCPASSWORD settings in the virtual systems configurations.
 # NorNet_Server_DefaultVNCPassword=""
