@@ -94,15 +94,15 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
 
    virt-install --connect qemu:///system  --virt-type "kvm"\
                 --name "$VM_NAME" \
-                --os-type="linux" --os-variant="fedora18" \
+                --arch x86_64 --os-type="linux" --os-variant="fedora18" \
                 --vcpu="$CPUS" \
                 --ram "$MEMORY_SIZE" \
-                --disk path="$HOME/KVM/$VM_NAME/DH0.img,size="$DISK_SIZE",device=disk,bus=scsi",sparse=$sparseMode \
                 --graphics vnc \
+                --noautoconsole \
                 --network bridge:br0 \
+                --disk path="$HOME/KVM/$VM_NAME/DH0.img,format=raw,size="$DISK_SIZE",device=disk,bus=scsi",sparse=$sparseMode \
                 --cdrom "$ISO_NAME" \
-                --boot cdrom,hd \
-                --noautoconsole
+                --boot cdrom,hd
 
 else
    echo >&2 "ERROR: Bad setting $NorNet_Server_VirtualizationSystem for NorNet_Server_VirtualizationSystem!"
