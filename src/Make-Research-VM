@@ -95,12 +95,14 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
       sparseMode="false"
    fi
 
-   virt-install --connect qemu:///system  --virt-type "kvm"\
+   virt-install --connect qemu:///system --virt-type kvm \
                 --name "$VM_NAME" \
                 --arch x86_64 --os-type="linux" --os-variant="fedora16" \
+                --cpu host \
                 --vcpu="$CPUS" \
                 --ram "$MEMORY_SIZE" \
                 --graphics vnc \
+                --video=vga \
                 --noautoconsole \
                 --network bridge:br0 \
                 --disk path="$HOME/KVM/$VM_NAME/DH0.img,format=raw,size="$DISK_SIZE",device=disk,bus=scsi",sparse=$sparseMode \
