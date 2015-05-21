@@ -1,7 +1,9 @@
 #!/bin/sh -e
 #
 # Show all virtual systems
-# Copyright (C) 2013 by Thomas Dreibholz
+# Copyright (C) 2013-2015 by Thomas Dreibholz
+# Copyright (C) 2014 by Forough Golkar <forough.golkar87@gmail.com>
+# Copyright (C) 2013 by Nima Fallah Darya <nima.darya@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -48,5 +50,15 @@ if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
    NorNet_LocalNode_NorNetUser="nornetpp"
 fi
 
+
 # ====== Reset the machine ==================================================
-vmcontrol "$MACHINE_NAME" reset
+if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
+   vmcontrol "$MACHINE_NAME" reset
+
+elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
+   sudo -u $NorNet_LocalNode_NorNetUser virsh reboot "$MACHINE_NAME"
+
+else
+   echo >&2 "ERROR: Bad setting $NorNet_Server_VirtualizationSystem for NorNet_Server_VirtualizationSystem!"
+   exit 1
+fi
