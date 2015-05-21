@@ -59,7 +59,7 @@ wait_for_shutdown ()
          if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
             vmcontrol "$1" acpipowerbutton
          elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
-            sudo -u $NorNet_LocalNode_NorNetUser virsh shutdown "$1"
+            sudo -u $NorNet_LocalNode_NorNetUser virsh shutdown "$1" >/dev/null
          fi
       fi
    done || true
