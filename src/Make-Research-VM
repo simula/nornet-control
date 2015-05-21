@@ -33,7 +33,10 @@ if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
 elif [ -e ./nornetapi-config ] ; then
    . ./nornetapi-config
 fi
-
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
+fi
+   
 # ====== Get command-line parameters ========================================
 VM_NAME="$1"
 ISO_NAME="$2"
@@ -94,7 +97,7 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
 
    virt-install --connect qemu:///system  --virt-type "kvm"\
                 --name "$VM_NAME" \
-                --arch x86_64 --os-type="linux" --os-variant="fedora18" \
+                --arch x86_64 --os-type="linux" --os-variant="fedora16" \
                 --vcpu="$CPUS" \
                 --ram "$MEMORY_SIZE" \
                 --graphics vnc \
