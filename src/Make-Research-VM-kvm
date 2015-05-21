@@ -1,0 +1,101 @@
+#!/bin/bash -e
+#
+# Make Research VM
+# Copyright (C) 2012-2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+if [ $# -lt 4 ] ; then
+   echo >&2 "Usage: $0 VM_name ISO_name memory_MiB disk_GiB [Fixed|Standard]"
+   exit 1
+fi
+
+NORNET_DIRECTORY="/etc/nornet"
+VM_NAME="$1"
+ISO_NAME="$2"
+
+#################################################################
+#################  Check whether NorNet directory is existing
+if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
+   . $NORNET_DIRECTORY/nornetapi-config
+elif [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+    NorNet_LocalNode_NorNetUser="nornetpp"
+fi
+
+if [ "$NorNet_LocalNode_Vplatform" = "kvm" ] ; then
+  Vplatform="kvm"
+elif [ "$NorNet_LocalNode_Vplatform" = "vbox" ] ; then
+  Vplatform="vbox"
+fi
+
+if [ ! -e "$ISO_NAME" ] ; then
+   echo >&2 "ERROR: ISO file $ISO_NAME does not exist!"
+   exit 1
+fi
+
+let MEMORY_SIZE=1*$3
+#let DISK_SIZE=1024*$4
+VARIANT="$5"
+if [ "$VARIANT" = "" ] ; then
+   VARIANT="Fixed"
+fi
+
+CPUS="1"
+VRAM="16"
+
+
+if [ "$Vplatform" = "vbox" ] ; then
+   let DISK_SIZE=1024*$4
+   VBoxManage unregistervm "$VM_NAME" --delete || true
+
+   VBoxManage createvm --register --name "$VM_NAME" --ostype Fedora_64
+   VBoxManage modifyvm "$VM_NAME" --cpus "$CPUS" \
+                               --memory "$MEMORY_SIZE" --vram "$VRAM" \
+                               --rtcuseutc on --firmware bios --chipset piix3 --acpi on --ioapic on \
+                               --hwvirtex on --pae on --boot1 dvd --boot2 disk --boot3 none --boot4 none
+   VBoxManage modifyvm "$VM_NAME" --nic1 bridged --nictype1 virtio --bridgeadapter1 eth0 --cableconnected1 on --macaddress1 auto --nicpromisc1 allow-all
+   VBoxManage storagectl "$VM_NAME" --name "SCSI Controller" --add scsi --controller LSILogic
+   VBoxManage storageattach "$VM_NAME" --storagectl "SCSI Controller" --port 0 --device 0 --type dvddrive \
+                                    --medium "$ISO_NAME"
+   VBoxManage createhd --filename "$HOME/VirtualBox VMs/$VM_NAME/DH0.vdi" --size "$DISK_SIZE" --format vdi --variant "$VARIANT"
+   VBoxManage storageattach "$VM_NAME" --storagectl "SCSI Controller" --port 1 --device 0 --type hdd \
+                                    --medium "$HOME/VirtualBox VMs/$VM_NAME/DH0.vdi"
+elif [ "$Vplatform" = "kvm" ] ; then
+   let DISK_SIZE=$4
+   if [ ! -d "$HOME/kvm-vm/$VM_NAME" ]; then
+        sudo -u $NorNet_LocalNode_NorNetUser mkdir -p "$HOME/kvm-vm/$VM_NAME"
+   fi
+   virt-install --connect qemu:///system  --virt-type "kvm"\
+                --name "$VM_NAME"  --os-type="linux" --vcpu="$CPUS" \
+                --ram "$MEMORY_SIZE" --os-variant="fedora16"\
+                --disk path="$HOME/kvm-vm/$VM_NAME/DH0.img,size="$DISK_SIZE",device=disk,bus=sata"\
+                --graphics vnc  --network bridge:br0 --cdrom "$ISO_NAME"  --boot cdrom,hd\
+                --noautoconsole
+
+
+fi
+(
+   echo "NAME=\"$VM_NAME"\"
+   echo "STARTDELAY=30"
+   echo "STOPDELAY=30"
+   echo "OPTIONS=\"default\""
+   echo "AUTO_UPDATE_BOOTCD=\"default\""
+) >"70-$VM_NAME"

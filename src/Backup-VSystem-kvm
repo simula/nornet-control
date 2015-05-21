@@ -1,0 +1,147 @@
+#!/bin/bash -e
+#
+# Backup virtual system
+# Copyright (C) 2013 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+# ###### Main program #######################################################
+if [ $# -lt 1 ] ; then
+#   echo >&2 "Usage: $0 VM_name [VM_backup_Name] [compress]"
+   echo >&2 "Usage: $0 VM_name [Backup_Directory]"
+   exit 1
+fi
+
+NORNET_DIRECTORY="/etc/nornet"
+MACHINE_NAME="$1"
+Backup_Dir="$2"
+
+#################################################################
+#################  Check whether NorNet directory is existing
+if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
+   . $NORNET_DIRECTORY/nornetapi-config
+elif [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
+fi
+
+if [ "$NorNet_LocalNode_Vplatform" = "kvm" ] ; then
+  Vplatform="kvm"
+elif [ "$NorNet_LocalNode_Vplatform" = "vbox" ] ; then
+  Vplatform="vbox"
+fi
+      
+
+
+mydate() {
+  date '+%m%d%Y_%H%M%p'
+}
+   
+##############################################################################
+
+if [ "$Backup_Dir" = "" ]; then
+   if [ "$NorNet_LocalNode_VM_Backup_Dir" = "" ]; then
+      Back_DIRECTORY_BASE="/home/nornetpp/VM-Backups"
+   else
+      Back_DIRECTORY_BASE="$NorNet_LocalNode_VM_Backup_Dir"
+   fi
+else
+   Back_DIRECTORY_BASE=$Backup_Dir
+fi
+
+if [ ! -d "$Back_DIRECTORY_BASE" ] ; then
+   sudo -u $NorNet_LocalNode_NorNetUser mkdir -p "$Back_DIRECTORY_BASE"
+fi
+
+Backup_Directory="$Back_DIRECTORY_BASE/$MACHINE_NAME-`mydate`"
+if [ ! -d $Backup_Directory ]; then
+   sudo -u $NorNet_LocalNode_NorNetUser mkdir -p "$Backup_Directory"
+else 
+   echo "The $Backup_Directory exists, Overwriting the backup data..."
+fi
+
+
+# ====== Shut down machine, if necessary ====================================
+initialMachineState=`./Check-VSystem-kvm $MACHINE_NAME`
+if [ "$initialMachineState" = "running" ]; then
+   echo "The machine $MACHINE_NAME is $initialMachineState. Sending shutdown signal to $MACHINE_NAME"
+   ./Stop-VSystem-kvm $MACHINE_NAME
+   echo -n "Waiting for $MACHINE_NAME to shut down "
+   for i in 1 2 3 4 5 
+    do
+      echo -n "."
+      State=`./Check-VSystem-kvm $MACHINE_NAME`  | while read State
+        do
+            if [ "$State" = "running" ]; then
+              sleep 30
+            fi
+        done 
+    done
+fi                                                              
+
+result=1
+
+################# Virtual Box
+if [ "$Vplatform" = "vbox" ] ; then
+  echo "Backing up $MACHINE_NAME ...."
+  sudo -u $NorNet_LocalNode_NorNetUser \
+     VBoxManage export "$MACHINE_NAME" --output "${Backup_Directory}/${MACHINE_NAME}.ova" --manifest --vsys 0 \
+        --product "The NorNet Project" --producturl "http://www.nntb.no" \
+        --vendor "Simula Research Laboratory" --vendorurl "http://www.simula.no" \
+        --version "1.0" && \
+  result=0 || true
+  
+################################## KVM
+elif [ "$Vplatform" = "kvm" ] ; then
+  sudo -u $NorNet_LocalNode_NorNetUser env HOME=~$NorNet_LocalNode_NorNetUser virsh dumpxml $MACHINE_NAME > ${Backup_Directory}/${MACHINE_NAME}.xml
+  echo "Copying disk(s)"
+  sudo -u $NorNet_LocalNode_NorNetUser env HOME=~$NorNet_LocalNode_NorNetUser virsh domblklist $MACHINE_NAME | grep -v "^$" | grep -v "^Target" | grep -v "\-\-\-\-\-" | awk '{print $2}' | while read DISK
+  do
+    if [ ! "$DISK" = "-" ]; then
+      echo "   $DISK ..."
+      sudo -u $NorNet_LocalNode_NorNetUser cp $DISK $Backup_Directory  
+    fi
+  done
+  result=0
+fi
+
+
+
+# ====== On success, move export file to given name =========================
+
+
+if [ $result -eq 0 ] ; then
+   echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME is successfully backed up!"
+else
+   echo "`env LANG=C date +%FT%H:%M:%S`: Backup of $MACHINE_NAME FAILED!"
+fi
+
+
+
+# ====== Restart machine, if it was running =================================
+if [ "$initialMachineState" != "poweroff" ] && [ "$initialMachineState" != "shut off" ] ; then
+  echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME was in state \"$initialMachineState\" -> restarting ..."
+  ./Start-VSystem-kvm "$MACHINE_NAME" || true
+fi
+       
+############# Compressing in the background      
+#if [ "$3" = "compress" ] ; then
+#   echo " Backgrounding bzip of $Backup_Directory"
+#   nohup bzip2 $Backup_Directory/* &
+#fi
