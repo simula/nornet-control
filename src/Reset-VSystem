@@ -56,7 +56,7 @@ if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_Virtualizatio
    vmcontrol "$MACHINE_NAME" reset
 
 elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
-   sudo -u $NorNet_LocalNode_NorNetUser virsh reboot "$MACHINE_NAME"
+   sudo -u $NorNet_LocalNode_NorNetUser virsh reset "$MACHINE_NAME"
 
 else
    echo >&2 "ERROR: Bad setting $NorNet_Server_VirtualizationSystem for NorNet_Server_VirtualizationSystem!"
