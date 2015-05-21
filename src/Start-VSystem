@@ -1,7 +1,9 @@
 #!/bin/bash -e
 #
 # Start virtual system
-# Copyright (C) 2013 by Thomas Dreibholz
+# Copyright (C) 2013-2015 by Thomas Dreibholz
+# Copyright (C) 2014 by Forough Golkar <forough.golkar87@gmail.com>
+# Copyright (C) 2013 by Nima Fallah Darya <nima.darya@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -59,55 +61,83 @@ if [ "$OPTIONS" = "default" ] ; then
 fi
 
 if [ `Check-VSystem "$NAME"` != "running" ] ; then
-   # ====== Set options =====================================================
    echo "`env LANG=C date +%FT%H:%M:%S`: Starting $NAME"
-   if [ "$NUMCPUS" != "" ] ; then
-      sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" --cpus "$NUMCPUS" || true
-   fi
-   if [ "$MEMORY" != "" ] ; then
-      sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" --memory "$MEMORY" || true
-   fi
-   if [ "$OPTIONS" != "" ] ; then
-      sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" $OPTIONS || true
-   fi
-   sudo -u $NorNet_LocalNode_NorNetUser VBoxManage setextradata "$NAME" \
-      "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" $GETHOSTTIMEDISABLED || true
 
-   # ====== Set VNC options =================================================
-   vncOptions=
-   if [ "$VNCPORT" != "" ] ; then
-      if [ $VNCPORT -ne 0 ] ; then
-         version=( `VBoxManage --version | tr '.' ' '` )
-         # echo "`env LANG=C date +%FT%H:%M:%S`: VirtualBox version is ${version[0]}.${version[1]}"
-         if [ ${version[0]} -eq 4 -a ${version[1]} -lt 2 ] ; then
-            vncOptions="--vrde off --vnc --vncport $VNCPORT"
-            if [ "$VNCPASSWORD" != "" ] ; then
-               vncOptions="$vncOptions --vncpass \"$VNCPASSWORD\""
+   # ====== VirtualBox ======================================================
+   if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
+      # ====== Set options ==================================================
+      if [ "$NUMCPUS" != "" ] ; then
+         sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" --cpus "$NUMCPUS" || true
+      fi
+      if [ "$MEMORY" != "" ] ; then
+         sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" --memory "$MEMORY" || true
+      fi
+      if [ "$OPTIONS" != "" ] ; then
+         sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" $OPTIONS || true
+      fi
+      sudo -u $NorNet_LocalNode_NorNetUser VBoxManage setextradata "$NAME" \
+         "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" $GETHOSTTIMEDISABLED || true
+
+      # ====== Set VNC options ==============================================
+      vncOptions=
+      if [ "$VNCPORT" != "" ] ; then
+         if [ $VNCPORT -ne 0 ] ; then
+            version=( `VBoxManage --version | tr '.' ' '` )
+            # echo "`env LANG=C date +%FT%H:%M:%S`: VirtualBox version is ${version[0]}.${version[1]}"
+            if [ ${version[0]} -eq 4 -a ${version[1]} -lt 2 ] ; then
+               vncOptions="--vrde off --vnc --vncport $VNCPORT"
+               if [ "$VNCPASSWORD" != "" ] ; then
+                  vncOptions="$vncOptions --vncpass \"$VNCPASSWORD\""
+               fi
+            else
+               sudo -u $NorNet_LocalNode_NorNetUser VBoxManage setproperty vrdeextpack VNC
+               sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" \
+                  --vrdeproperty "VNCPassword=$VNCPASSWORD" \
+                  --vrdeauthlibrary null \
+                  --vrdeport=$VNCPORT
             fi
-         else
-            sudo -u $NorNet_LocalNode_NorNetUser VBoxManage setproperty vrdeextpack VNC
-            sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" \
-               --vrdeproperty "VNCPassword=$VNCPASSWORD" \
-               --vrdeauthlibrary null \
-               --vrdeport=$VNCPORT
          fi
       fi
+
+      # ====== Start the virtual system =====================================
+      touch "/var/log/nornet-server-$NAME.log"
+      touch "/var/run/nornet-server-$NAME.pid"
+      chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser "/var/log/nornet-server-$NAME.log" "/var/run/nornet-server-$NAME.pid"
+      # Note: The "permission denied" error is a false positive from libjpeg-turbo8. Bug #1014487 and #1031718 => filtering it out!"
+      sudo -u $NorNet_LocalNode_NorNetUser /bin/sh -c \
+         "nohup </dev/null VBoxHeadless --startvm \"$NAME\" $vncOptions >\"/var/log/nornet-server-$NAME.log\" 2>&1 & echo \$! >\"/var/run/nornet-server-$NAME.pid\" 2>&1" || true
+
+
+   # ====== KVM =============================================================
+   elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
+      # ====== Set options ==================================================
+      if [ "$NUMCPUS" != "" ] ; then
+         sudo -u $NorNet_LocalNode_NorNetUser virsh setvcpus "$NAME" "$NUMCPUS" --maximum --config || true
+         sudo -u $NorNet_LocalNode_NorNetUser virsh setvcpus "$NAME" "$NUMCPUS" --config || true
+      fi
+      if [ "$MEMORY" != "" ] ; then
+         MEMORY=$(($MEMORY*1024))
+         sudo -u $NorNet_LocalNode_NorNetUser virsh setmaxmem "$NAME" "$MEMORY" --config || true
+         sudo -u $NorNet_LocalNode_NorNetUser virsh setmem    "$NAME" "$MEMORY" --config || true
+      fi
+
+      # ====== Start the virtual system =====================================
+      sudo -u $NorNet_LocalNode_NorNetUser virsh start "$NAME" || true
+
+
+   # ====== Invalid NorNet_Server_VirtualizationSystem setting ==============
+   else
+      echo >&2 "ERROR: Bad setting $NorNet_Server_VirtualizationSystem for NorNet_Server_VirtualizationSystem!"
+      exit 1
    fi
 
-   # ====== Start the virtual system ========================================
-   touch "/var/log/nornet-server-$NAME.log"
-   touch "/var/run/nornet-server-$NAME.pid"
-   chown $NorNet_LocalNode_NorNetUser:$NorNet_LocalNode_NorNetUser "/var/log/nornet-server-$NAME.log" "/var/run/nornet-server-$NAME.pid"
-   # Note: The "permission denied" error is a false positive from libjpeg-turbo8. Bug #1014487 and #1031718 => filtering it out!"
-   sudo -u $NorNet_LocalNode_NorNetUser /bin/sh -c \
-      "nohup </dev/null VBoxHeadless --startvm \"$NAME\" $vncOptions >\"/var/log/nornet-server-$NAME.log\" 2>&1 & echo \$! >\"/var/run/nornet-server-$NAME.pid\" 2>&1" || true
-      
+
    # ====== Give the system time to boot ====================================
    if [ "$STARTDELAY" != "" ] ; then
       echo "`env LANG=C date +%FT%H:%M:%S`: Waiting $STARTDELAY seconds ..."
       sleep "$STARTDELAY"
    fi
-   
+
 else
    echo "`env LANG=C date +%FT%H:%M:%S`: $NAME is already running -> okay."
 fi
