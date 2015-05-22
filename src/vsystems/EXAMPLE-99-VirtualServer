@@ -8,5 +8,9 @@ NUMCPUS=1
 # GETHOSTTIMEDISABLED=0
 OPTIONS="default"
 
+# WATCHDOG_COMMAND="ping -c5 -i0.2 -W3 ADDRESS_HERE && Check-Research-Node \"$NAME\""
+
+# VNCADDRESS=""
 # VNCPORT=1234
+# VNCKEYMAP="en-us"
 # VNCPASSWORD="<insert here>"
