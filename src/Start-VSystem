@@ -127,9 +127,10 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
          sudo -u $NorNet_LocalNode_NorNetUser virsh setmaxmem "$NAME" "$MEMORY" --config || true
          sudo -u $NorNet_LocalNode_NorNetUser virsh setmem    "$NAME" "$MEMORY" --config || true
       fi
-      MACHINE_FILE=`mktemp --suffix=.xml`
-      if [ $VNCPORT -ne 0 -a "$VNCADDRESS" != "" -a "$VNCPASSWORD" != "" ] ; then
-         sudo -u $NorNet_LocalNode_NorNetUser virsh dumpxml "$NAME" | \
+      OLD_MACHINE_FILE=`mktemp --suffix=.xml`
+      NEW_MACHINE_FILE=`mktemp --suffix=.xml`
+      sudo -u $NorNet_LocalNode_NorNetUser virsh dumpxml "$NAME" >$OLD_MACHINE_FILE && \
+      if [ $VNCPORT -ne 0 -a "$VNCADDRESS" != "" -a "$VNCPASSWORD" != "" ] ; then      
          xmlstarlet ed \
             -d '/domain/devices/graphics[@type="vnc"]' \
             \
@@ -143,18 +144,17 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
             -s '/domain/devices/graphics[@type="vnc"]' --type 'elem' -n 'listen' -v "" \
             -a '/domain/devices/graphics[@type="vnc"]/listen' --type 'attr' -n 'type'    -v "address"     \
             -a '/domain/devices/graphics[@type="vnc"]/listen' --type 'attr' -n 'address' -v "$VNCADDRESS" \
-         >$MACHINE_FILE
+         $OLD_MACHINE_FILE >$NEW_MACHINE_FILE
       else
-         sudo -u $NorNet_LocalNode_NorNetUser virsh dumpxml "$NAME" | \
          xmlstarlet ed \
             -d '/domain/devices/graphics[@type="vnc"]' \
-         >$MACHINE_FILE
-      fi
-      chown $NorNet_LocalNode_NorNetUser $MACHINE_FILE
+         $OLD_MACHINE_FILE >$NEW_MACHINE_FILE
+      fi && \
+      chown $NorNet_LocalNode_NorNetUser $OLD_MACHINE_FILE $NEW_MACHINE_FILE
 
       # ====== Start the virtual system =====================================
-     sudo -u $NorNet_LocalNode_NorNetUser virsh create $MACHINE_FILE || true
-     rm -f $MACHINE_FILE
+     sudo -u $NorNet_LocalNode_NorNetUser virsh create --file $NEW_MACHINE_FILE || sudo -u $NorNet_LocalNode_NorNetUser virsh create --file $OLD_MACHINE_FILE --paused || true
+     rm -f $OLD_MACHINE_FILE $NEW_MACHINE_FILE
 
 
    # ====== Invalid NorNet_Server_VirtualizationSystem setting ==============
