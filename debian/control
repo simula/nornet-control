@@ -67,6 +67,7 @@ Depends: apt-file,
          virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental | virtualbox-guest-utils,
          vlan,
          whois,
+         xmlstarlet,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
