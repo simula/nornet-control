@@ -49,6 +49,14 @@ NorNet_LocalNode_ControlBox='no'
 # Possible settings: VirtualBox, KVM
 # NorNet_Server_VirtualizationSystem=""
 
+# The default VNC address to access virtual systems on this host. It may be
+# superseeded by VNCADDRESS settings in the virtual systems configurations.
+# NorNet_Server_DefaultVNCAddress="127.0.0.1"
+
+# The default VNC keymap for access virtual systems on this host. It may be
+# superseeded by VNCKEYMAP settings in the virtual systems configurations.
+# NorNet_Server_DefaultVNCKeymap="en-us"
+
 # The default VNC password to access virtual systems on this host. It may be
 # superseeded by VNCPASSWORD settings in the virtual systems configurations.
 # NorNet_Server_DefaultVNCPassword=""
