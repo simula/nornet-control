@@ -95,6 +95,8 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
       sparseMode="false"
    fi
 
+   virsh shutdown "$VM_NAME" || true
+   virsh undefine "$VM_NAME" || true
    virt-install --connect qemu:///system --virt-type kvm \
                 --name "$VM_NAME" \
                 --arch x86_64 --os-type="linux" --os-variant="fedora16" \
