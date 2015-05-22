@@ -97,6 +97,14 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
 
    virsh destroy "$VM_NAME"  >/dev/null 2>&1 || true
    virsh undefine "$VM_NAME" >/dev/null 2>&1 || true
+   rm -f "$HOME/KVM/$VM_NAME/DH0.img"
+   if [ "$sparseMode" == "true" ] ; then
+      echo "Creating sparse file $HOME/KVM/$VM_NAME/DH0.img ..."
+      truncate --size=${DISK_SIZE}GB "$HOME/KVM/$VM_NAME/DH0.img"
+   else
+      echo "Creating non-sparse file $HOME/KVM/$VM_NAME/DH0.img ..."
+      fallocate -l ${DISK_SIZE}GB "$HOME/KVM/$VM_NAME/DH0.img" || dd if=/dev/zero of="$HOME/KVM/$VM_NAME/DH0.img" bs=1G count=$DISK_SIZE
+   fi
    virt-install --connect qemu:///system --virt-type kvm \
                 --name "$VM_NAME" \
                 --arch x86_64 --os-type="linux" --os-variant="fedora16" \
