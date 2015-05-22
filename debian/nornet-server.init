@@ -104,7 +104,7 @@ start_virtual_systems ()
       NUMCPUS=1
       MEMORY=
       GETHOSTTIMEDISABLED=
-      VNCADDRESS="0.0.0.0"
+      VNCADDRESS="127.0.0.1"
       VNCPORT=-1
       VNCPASSWORD="$NorNet_Server_DefaultVNCPassword"
       VNCKEYMAP="en-us"
