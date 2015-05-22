@@ -130,7 +130,7 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
       OLD_MACHINE_FILE=`mktemp --suffix=.xml`
       NEW_MACHINE_FILE=`mktemp --suffix=.xml`
       sudo -u $NorNet_LocalNode_NorNetUser virsh dumpxml "$NAME" >$OLD_MACHINE_FILE && \
-      if [ $VNCPORT -ne 0 -a "$VNCADDRESS" != "" -a "$VNCPASSWORD" != "" ] ; then      
+      if [ $VNCPORT -ne 0 -a "$VNCADDRESS" != "" -a "$VNCPASSWORD" != "" ] ; then
          xmlstarlet ed \
             -d '/domain/devices/graphics[@type="vnc"]' \
             \
