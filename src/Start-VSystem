@@ -63,9 +63,6 @@ fi
 if [ "$VNCPASSWORD" = "" ] ; then
    VNCPASSWORD="$NorNet_Server_DefaultVNCPassword"
 fi
-if [ "$OPTIONS" = "default" ] ; then
-   OPTIONS="--chipset piix3 --audio none --mouse ps2 --keyboard ps2 --usb off --hpet on --pae on --hwvirtex on --nestedpaging on --largepages on --vtxvpid on"
-fi
 
 if [ `Check-VSystem "$NAME"` != "running" ] ; then
    echo "`env LANG=C date +%FT%H:%M:%S`: Starting $NAME"
@@ -78,6 +75,9 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
       fi
       if [ "$MEMORY" != "" ] ; then
          sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" --memory "$MEMORY" || true
+      fi
+      if [ "$OPTIONS" = "default" ] ; then
+         OPTIONS="--chipset piix3 --audio none --mouse ps2 --keyboard ps2 --usb off --hpet on --pae on --hwvirtex on --nestedpaging on --largepages on --vtxvpid on"
       fi
       if [ "$OPTIONS" != "" ] ; then
          sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" $OPTIONS || true
