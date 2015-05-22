@@ -155,7 +155,7 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
       # ====== Start the virtual system =====================================
      cat $MACHINE_FILE
      sudo -u $NorNet_LocalNode_NorNetUser virsh create $MACHINE_FILE || true
-      # rm -f $MACHINE_FILE
+     rm -f $MACHINE_FILE
 
 
    # ====== Invalid NorNet_Server_VirtualizationSystem setting ==============
