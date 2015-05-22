@@ -104,10 +104,11 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
                 --graphics vnc \
                 --video=vga \
                 --noautoconsole \
-                --network bridge:br0 \
+                --network bridge=br0,model=virtio \
                 --disk path="$HOME/KVM/$VM_NAME/DH0.img,format=raw,size="$DISK_SIZE",device=disk,bus=scsi",sparse=$sparseMode \
                 --cdrom "$ISO_NAME" \
-                --boot cdrom,hd
+                --boot cdrom,hd \
+                --noreboot
 
 else
    echo >&2 "ERROR: Bad setting $NorNet_Server_VirtualizationSystem for NorNet_Server_VirtualizationSystem!"
