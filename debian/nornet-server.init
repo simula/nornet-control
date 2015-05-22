@@ -104,8 +104,10 @@ start_virtual_systems ()
       NUMCPUS=1
       MEMORY=
       GETHOSTTIMEDISABLED=
+      VNCADDRESS="0.0.0.0"
       VNCPORT=-1
       VNCPASSWORD="$NorNet_Server_DefaultVNCPassword"
+      VNCKEYMAP="en-us"
       OPTIONS="default"
       ( . ./$vsystem
         vncOptions=
@@ -116,7 +118,7 @@ start_virtual_systems ()
            if [ "$NAME" = "$1" ] ; then
               STARTDELAY=0   # Do not wait when restricted to one machine!
            fi
-           Start-VSystem "$NAME" "$STARTDELAY" "$NUMCPUS" "$MEMORY" "$GETHOSTTIMEDISABLED" "$VNCPORT" "$VNCPASSWORD" "$OPTIONS" || true
+           Start-VSystem "$NAME" "$STARTDELAY" "$NUMCPUS" "$MEMORY" "$GETHOSTTIMEDISABLED" "$VNCADDRESS" "$VNCPORT" "$VNCPASSWORD" "$VNCKEYMAP" "$OPTIONS" || true
         else
            echo "Skipped".
         fi
