@@ -1,7 +1,7 @@
 #!/bin/bash
 # --------------- NorNet -- The Multi-Homing Testbed Project ----------------
 #
-# Copyright (C) 2012-2013 by Thomas Dreibholz
+# Copyright (C) 2012-2015 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -74,9 +74,6 @@ if [ -e ./nornetapi-config ] ; then
 fi
 if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
    NorNet_LocalNode_NorNetUser="nornetpp"
-fi
-if [ "$NorNet_Server_DefaultVNCPassword" = "" ] ; then
-   NorNet_Server_DefaultVNCPassword="Access4Me"
 fi
 
 
@@ -154,18 +151,22 @@ stop_virtual_systems ()
 # ###### Load kernel modules ################################################
 load_modules ()
 {
-   for vboxModule in vboxdrv vboxnetadp vboxnetflt vboxpci ; do
-      modprobe $vboxModule >>$LOGFILE 2>&1 || true
-   done
+   if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
+      for vboxModule in vboxdrv vboxnetadp vboxnetflt vboxpci ; do
+         modprobe $vboxModule >>$LOGFILE 2>&1 || true
+      done
+   fi
 }
 
 
 # ###### Unload kernel modules ##############################################
 unload_modules ()
 {
-   for vboxModule in vboxpci vboxnetflt vboxnetadp vboxdrv ; do
-      rmmod $vboxModule >>$LOGFILE 2>&1 || true
-   done
+   if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
+      for vboxModule in vboxpci vboxnetflt vboxnetadp vboxdrv ; do
+         rmmod $vboxModule >>$LOGFILE 2>&1 || true
+      done
+   fi
 }
 
 
@@ -188,14 +189,14 @@ show_status ()
 # ###### Main program #######################################################
 case "$ACTION" in
   start)
-     # First, ensure that VirtualBox kernel modules are loaded!
+     # First, ensure that necessary kernel modules are loaded!
      load_modules
      # Now, start the virtual systems.
      start_virtual_systems "$MACHINE_NAME" >>$LOGFILE 2>&1
      ;;
   stop)
      stop_virtual_systems "$MACHINE_NAME" >>$LOGFILE 2>&1
-     # Try to unload VirtualBox kernel modules
+     # Try to unload kernel modules
      unload_modules
      ;;
   restart)
