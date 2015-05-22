@@ -124,19 +124,22 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
          sudo -u $NorNet_LocalNode_NorNetUser virsh setmaxmem "$NAME" "$MEMORY" --config || true
          sudo -u $NorNet_LocalNode_NorNetUser virsh setmem    "$NAME" "$MEMORY" --config || true
       fi
+      MACHINE_FILE=`mktemp --suffix=.xml`
       if [ $VNCPORT -ne 0 -a "$VNCADDRESS" != "" -a "$VNCPASSWORD" != "" ] ; then
          sudo -u $NorNet_LocalNode_NorNetUser virsh dumpxml vestreaker.simula.nornet | \
          sed -e "s/\(<graphics type='vnc'\)\(.*\)\(\/>\)/\1 port='$VNCPORT' autoport='no' passwd='$VNCPASSWORD' keymap='no' listen='$VNCADDRESS' \3/g" \
-         >"/root/$NAME.xml"
+         >$MACHINE_FILE
       else
          sudo -u $NorNet_LocalNode_NorNetUser virsh dumpxml vestreaker.simula.nornet | \
-         sed -e "s/\(<graphics type='vnc'\)\(.*\)\(\/>\)//g" \
-         >"/root/$NAME.xml"
+         sed -e "s/\(<graphics type='vnc'\)\(.*\)\(\/>\)/<!-- no VNC -->/g" \
+         >$MACHINE_FILE
       fi
+      chown $NorNet_LocalNode_NorNetUser $MACHINE_FILE
 
       # ====== Start the virtual system =====================================
-      sudo -u $NorNet_LocalNode_NorNetUser virsh create "/root/$NAME.xml" || true
-      # rm -f "/root/$NAME.xml"
+      cat $MACHINE_FILE
+exit      sudo -u $NorNet_LocalNode_NorNetUser virsh create $MACHINE_FILE || true
+      # rm -f $MACHINE_FILE
 
 
    # ====== Invalid NorNet_Server_VirtualizationSystem setting ==============

@@ -95,8 +95,8 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
       sparseMode="false"
    fi
 
-   virsh shutdown "$VM_NAME" || true
-   virsh undefine "$VM_NAME" || true
+   virsh destroy "$VM_NAME"  >/dev/null 2>&1 || true
+   virsh undefine "$VM_NAME" >/dev/null 2>&1 || true
    virt-install --connect qemu:///system --virt-type kvm \
                 --name "$VM_NAME" \
                 --arch x86_64 --os-type="linux" --os-variant="fedora16" \
@@ -106,10 +106,11 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
                 --graphics vnc \
                 --video=vga \
                 --noautoconsole \
-                --network bridge:br0 \
+                --network bridge=br0,model=virtio \
+                --disk path="$ISO_NAME",format=iso,device=cdrom,bus=ide \
                 --disk path="$HOME/KVM/$VM_NAME/DH0.img,format=raw,size="$DISK_SIZE",device=disk,bus=scsi",sparse=$sparseMode \
-                --cdrom "$ISO_NAME" \
-                --boot cdrom,hd
+                --watchdog default,action=reset \
+                --import --noreboot   # No installation procedure, no start of the domain
 
 else
    echo >&2 "ERROR: Bad setting $NorNet_Server_VirtualizationSystem for NorNet_Server_VirtualizationSystem!"
