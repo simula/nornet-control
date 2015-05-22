@@ -39,9 +39,6 @@ fi
 if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
    NorNet_LocalNode_NorNetUser="nornetpp"
 fi
-if [ "$NorNet_Server_DefaultVNCPassword" = "" ] ; then
-   NorNet_Server_DefaultVNCPassword="Access4Me"
-fi
 
 
 # ====== Obtain machine status ==============================================
@@ -88,7 +85,7 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
       # ====== Set VNC options ==============================================
       vncOptions=
       if [ "$VNCPORT" != "" ] ; then
-         if [ $VNCPORT -ne 0 ] ; then
+         if [ $VNCPORT -ne 0 -a "$VNCADDRESS" != "" -a "$VNCPASSWORD" != "" ] ; then
             version=( `VBoxManage --version | tr '.' ' '` )
             # echo "`env LANG=C date +%FT%H:%M:%S`: VirtualBox version is ${version[0]}.${version[1]}"
             if [ ${version[0]} -eq 4 -a ${version[1]} -lt 2 ] ; then
@@ -127,13 +124,19 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
          sudo -u $NorNet_LocalNode_NorNetUser virsh setmaxmem "$NAME" "$MEMORY" --config || true
          sudo -u $NorNet_LocalNode_NorNetUser virsh setmem    "$NAME" "$MEMORY" --config || true
       fi
-      sudo -u $NorNet_LocalNode_NorNetUser virsh dumpxml vestreaker.simula.nornet | \
-      sed -e "s/\(<graphics type='vnc'\)\(.*\)\(\/>\)/\1 port='$VNCPORT' autoport='no' passwd='$VNCPASSWORD' keymap='no' listen='$VNCADDRESS' \3/g" \
-      >"/root/$NAME.xml"
+      if [ $VNCPORT -ne 0 -a "$VNCADDRESS" != "" -a "$VNCPASSWORD" != "" ] ; then
+         sudo -u $NorNet_LocalNode_NorNetUser virsh dumpxml vestreaker.simula.nornet | \
+         sed -e "s/\(<graphics type='vnc'\)\(.*\)\(\/>\)/\1 port='$VNCPORT' autoport='no' passwd='$VNCPASSWORD' keymap='no' listen='$VNCADDRESS' \3/g" \
+         >"/root/$NAME.xml"
+      else
+         sudo -u $NorNet_LocalNode_NorNetUser virsh dumpxml vestreaker.simula.nornet | \
+         sed -e "s/\(<graphics type='vnc'\)\(.*\)\(\/>\)//g" \
+         >"/root/$NAME.xml"
+      fi
 
       # ====== Start the virtual system =====================================
       sudo -u $NorNet_LocalNode_NorNetUser virsh create "/root/$NAME.xml" || true
-      rm -f "/root/$NAME.xml"
+      # rm -f "/root/$NAME.xml"
 
 
    # ====== Invalid NorNet_Server_VirtualizationSystem setting ==============
