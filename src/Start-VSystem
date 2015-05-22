@@ -56,6 +56,9 @@ if [ "$VNCADDRESS" = "" ] ; then
 fi
 if [ "$VNCKEYMAP" = "" ] ; then
    VNCKEYMAP="$NorNet_Server_DefaultVNCKeymap"
+   if [ "$VNCKEYMAP" = "" ] ; then
+      VNCKEYMAP="en-us"
+   fi
 fi
 if [ "$VNCPASSWORD" = "" ] ; then
    VNCPASSWORD="$NorNet_Server_DefaultVNCPassword"
@@ -131,14 +134,15 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
             -d '/domain/devices/graphics[@type="vnc"]' \
             \
             -s '/domain/devices' --type 'elem' -n 'graphics' -v "" \
-            -a '/domain/devices/graphics[not(@type)]' --type 'attr' -n 'type'      -v 'vnc'        \
-            -a '/domain/devices/graphics[@type="vnc"]' --type 'attr' -n 'port'     -v '$VNCPORT'   \
-            -a '/domain/devices/graphics[@type="vnc"]' --type 'attr' -n 'autoport' -v 'no'         \
-            -a '/domain/devices/graphics[@type="vnc"]' --type 'attr' -n 'keymap'   -v '$VNCKEYMAP' \
+            -a '/domain/devices/graphics[not(@type)]' --type 'attr'  -n 'type'     -v "vnc"          \
+            -a '/domain/devices/graphics[@type="vnc"]' --type 'attr' -n 'port'     -v "$VNCPORT"     \
+            -a '/domain/devices/graphics[@type="vnc"]' --type 'attr' -n 'autoport' -v "no"           \
+            -a '/domain/devices/graphics[@type="vnc"]' --type 'attr' -n 'keymap'   -v "$VNCKEYMAP"   \
+            -a '/domain/devices/graphics[@type="vnc"]' --type 'attr' -n 'passwd'   -v "$VNCPASSWORD" \
             \
-            -s '/domain/devices/graphics[@type="vnc"]' --type 'elem' -n 'listen' -v 0 \
-            -a '/domain/devices/graphics[@type="vnc"]/listen' --type 'attr' -n 'type'    -v 'address'     \
-            -a '/domain/devices/graphics[@type="vnc"]/listen' --type 'attr' -n 'address' -v '$VNCADDRESS' \
+            -s '/domain/devices/graphics[@type="vnc"]' --type 'elem' -n 'listen' -v "" \
+            -a '/domain/devices/graphics[@type="vnc"]/listen' --type 'attr' -n 'type'    -v "address"     \
+            -a '/domain/devices/graphics[@type="vnc"]/listen' --type 'attr' -n 'address' -v "$VNCADDRESS" \
          >$MACHINE_FILE
       else
          sudo -u $NorNet_LocalNode_NorNetUser virsh dumpxml vestreaker.simula.nornet | \
@@ -149,8 +153,8 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
       chown $NorNet_LocalNode_NorNetUser $MACHINE_FILE
 
       # ====== Start the virtual system =====================================
-      cat $MACHINE_FILE
-exit      sudo -u $NorNet_LocalNode_NorNetUser virsh create $MACHINE_FILE || true
+     cat $MACHINE_FILE
+     sudo -u $NorNet_LocalNode_NorNetUser virsh create $MACHINE_FILE || true
       # rm -f $MACHINE_FILE
 
 
