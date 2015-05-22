@@ -296,12 +296,15 @@ Description: NorNet Database
 Package: nornet-server
 Architecture: all
 Depends: grub2-common | grub,
+         libvirt-bin,
          linux-headers-generic | linux-headers-generic-lts-quantal | linux-headers-generic-lts-raring | linux-headers-generic-lts-saucy | linux-headers-generic-lts-trusty,
          linux-image-generic | linux-image-generic-lts-quantal | linux-image-generic-lts-raring | linux-image-generic-lts-saucy | linux-image-generic-lts-trusty,
          linux-source,
          nornet-management,
          ntp,
          python (>= 2.7),
+         qemu-kvm,
+         virtinst,
          virtualbox-nornet-stable | virtualbox-nornet-testing | virtualbox-nornet-experimental | virtualbox,
          xauth,
          ${misc:Depends},
