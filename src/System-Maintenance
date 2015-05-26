@@ -265,7 +265,9 @@ fi
 # ====== Fix time ===========================================================
 if [ -e /etc/ntp.conf ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Synchronising system time ...\x1b[0m"
-   sudo service ntp stop >/dev/null 2>&1 || true
+   for ntpServiceName in ntp ntpd ; do
+      sudo service $ntpServiceName stop >/dev/null 2>&1 || true
+   done
 
    # Trying ntp1.uio.no via IPv6 (2001:700:100:2::6) first:
    sudo ntpdate 2001:700:100:2::6 || sudo ntpdate ntp1.ptb.de || sudo ntpdate 10.1.1.1
@@ -277,7 +279,9 @@ if [ -e /etc/ntp.conf ] ; then
       sudo date -v +0S
    fi
 
-   sudo service ntp start >/dev/null 2>&1 || true
+   for ntpServiceName in ntp ntpd ; do
+      sudo service $ntpServiceName start >/dev/null 2>&1 || true
+   done
 fi
 
 # ====== Show NorNet package versions =======================================
