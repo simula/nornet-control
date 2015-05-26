@@ -379,6 +379,10 @@ else
       cp route6.new /etc/sysconfig/network-scripts/route6-$InterfaceName
    elif [ "$Variant" = "FreeBSD" ] ; then
       cp rc.conf.updated /etc/rc.conf
+
+      cp /etc/resolv.conf /etc/resolv.conf~
+      cp resolv.conf.new /etc/resolv.conf
+
       cp /etc/auto_master /etc/auto_master~
       cp auto.master /etc/auto_master
    fi
