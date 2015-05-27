@@ -61,12 +61,17 @@ set -e
 cd "$NORNET_DIRECTORY"
 
 # Load configuration from API config file
+NorNet_Server_DefaultVNCAddress=""
+NorNet_Server_DefaultVNCPassword=""
 if [ ! -e ./vsystems ] ; then
    echo >&2 "ERROR: $NORNET_DIRECTORY/vsystems does not exist!"
    exit 0
 fi
 if [ -e ./nornetapi-config ] ; then
    . ./nornetapi-config
+fi
+if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
+   NorNet_LocalNode_NorNetUser="nornetpp"
 fi
 
 
@@ -94,10 +99,10 @@ start_virtual_systems ()
       NUMCPUS=1
       MEMORY=
       GETHOSTTIMEDISABLED=
-      VNCADDRESS=
       VNCPORT=-1
-      VNCPASSWORD=
-      VNCKEYMAP=
+      VNCADDRESS="$NorNet_Server_DefaultVNCAddress"
+      VNCPASSWORD="$NorNet_Server_DefaultVNCPassword"
+      VNCKEYMAP="en-us"
       OPTIONS="default"
       ( . ./$vsystem
         vncOptions=
