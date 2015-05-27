@@ -88,7 +88,7 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
       # ====== Set VNC options ==============================================
       vncOptions=
       if [ "$VNCPORT" != "" ] ; then
-         if [ $VNCPORT -ne 0 -a "$VNCADDRESS" != "" -a "$VNCPASSWORD" != "" ] ; then
+         if [ $VNCPORT -gt 0 -a "$VNCADDRESS" != "" -a "$VNCPASSWORD" != "" ] ; then
             version=( `VBoxManage --version | tr '.' ' '` )
             # echo "`env LANG=C date +%FT%H:%M:%S`: VirtualBox version is ${version[0]}.${version[1]}"
             if [ ${version[0]} -eq 4 -a ${version[1]} -lt 2 ] ; then

@@ -61,19 +61,12 @@ set -e
 cd "$NORNET_DIRECTORY"
 
 # Load configuration from API config file
-NorNet_LocalNode_Hostname=""
-NorNet_LocalNode_NorNetInterface=""
-NorNet_LocalNode_NorNetUser=""
-NorNet_Server_DefaultVNCPassword=""
 if [ ! -e ./vsystems ] ; then
    echo >&2 "ERROR: $NORNET_DIRECTORY/vsystems does not exist!"
    exit 0
 fi
 if [ -e ./nornetapi-config ] ; then
    . ./nornetapi-config
-fi
-if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
-   NorNet_LocalNode_NorNetUser="nornetpp"
 fi
 
 
