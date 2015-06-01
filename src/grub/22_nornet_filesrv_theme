@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 # Include the GRUB helper library for grub-mkconfig.
-. /usr/lib/grub/grub-mkconfig_lib
+. "/usr/share/grub/grub-mkconfig_lib"
 
 # ====== NorNet theme =======================================================
 echo >&2 "Using NorNet File Server theme!"
