@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ISO_DIRECTORY="$HOME/Downloads"
-ISOs=`find $ISO_DIRECTORY -name *test.iso`
+ISOs=`find $ISO_DIRECTORY -name *test*.iso`
 
 VM_DISK=200
 VM_MEMORY=1024
