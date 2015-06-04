@@ -1,13 +1,6 @@
-#[NorNet-Packages]
-#name=NorNet Packages
-#baseurl=http://packages.nntb.no/nornet/fedora/$releasever/$basearch
-#enabled=1
-#gpgcheck=1
-#gpgkey=file:///etc/pki/rpm-gpg/nornet.key
-
-#[NorNet-LXC]
-#name=NorNet LXC
-#baseurl=http://packages.nntb.no/lxc/fedora/$releasever/$basearch
-#enabled=1
-#gpgcheck=1
-#gpgkey=file:///etc/pki/rpm-gpg/nornet.key
+[NorNet-Packages]
+name=NorNet Packages
+baseurl=http://packages.nntb.no/nornet-applications/fedora/$releasever/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/nornet.key
