@@ -116,7 +116,7 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
                 --noautoconsole \
                 --network bridge=br0,model=virtio \
                 --disk path="$ISO_NAME",format=iso,device=cdrom,bus=ide \
-                --disk path="$HOME/KVM/$VM_NAME/DH0.img,format=raw,size="$DISK_SIZE",device=disk,bus=scsi",sparse=$sparseMode \
+                --disk path="$HOME/KVM/$VM_NAME/DH0.img,format=raw,size="$DISK_SIZE",device=disk,bus=virtio",sparse=$sparseMode \
                 --watchdog default,action=reset \
                 --import --noreboot   # No installation procedure, no start of the domain
 
