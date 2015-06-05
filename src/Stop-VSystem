@@ -141,6 +141,8 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
       wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
    fi
 
+   rm -f "/var/run/nornet-server-$MACHINE_NAME.pid"
+
 else
    echo >&2 "ERROR: Bad setting $NorNet_Server_VirtualizationSystem for NorNet_Server_VirtualizationSystem!"
    exit 1

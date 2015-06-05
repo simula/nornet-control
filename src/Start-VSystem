@@ -153,8 +153,9 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
       chown $NorNet_LocalNode_NorNetUser $OLD_MACHINE_FILE $NEW_MACHINE_FILE
 
       # ====== Start the virtual system =====================================
-     sudo -u $NorNet_LocalNode_NorNetUser virsh create --file $NEW_MACHINE_FILE || sudo -u $NorNet_LocalNode_NorNetUser virsh create --file $OLD_MACHINE_FILE --paused || true
-     rm -f $OLD_MACHINE_FILE $NEW_MACHINE_FILE
+      touch "/var/run/nornet-server-$NAME.pid"
+      sudo -u $NorNet_LocalNode_NorNetUser virsh create --file $NEW_MACHINE_FILE || sudo -u $NorNet_LocalNode_NorNetUser virsh create --file $OLD_MACHINE_FILE --paused || true
+      rm -f $OLD_MACHINE_FILE $NEW_MACHINE_FILE
 
 
    # ====== Invalid NorNet_Server_VirtualizationSystem setting ==============

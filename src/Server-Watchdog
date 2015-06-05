@@ -35,21 +35,25 @@ fi
 mkdir -p /var/tmp/nornet
 VSYSTEMS=`find /etc/nornet/vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
 for vsystem in $VSYSTEMS ; do
-   WATCHDOG_COMMAND=""
-   . "$vsystem"
+   (
+      WATCHDOG_COMMAND=""
+      . "$vsystem"
 
-   if [ "$WATCHDOG_COMMAND" != "" ] ; then
-      (
-          echo "WATCHDOG_MAXFAILURES=\"15\""
-          echo "WATCHDOG_MAXFINALTRIALS=\"15\""
-          echo "WATCHDOG_FAILCOUNT_FILE=\"/usr/local/share/nornet-server/nornet-server-watchdog-$NAME.failcount\""
-          echo "WATCHDOG_FAILURE_ACTION=\"service nornet-server restart \\\"$NAME\\\"\" ; rm -f \"$WATCHDOG_FAILCOUNT_FILE\""
-          echo "WATCHDOG_FAILURE_FINAL=\"\""
-          echo "WATCHDOG_LOOPMODE=1"
-          cat "$vsystem"             
-      ) >"/var/tmp/nornet/$NAME-watchdog-config"
+      if [ "$WATCHDOG_COMMAND" != "" ] ; then
+         if [ -e "/var/run/nornet-server-$NAME.pid" ] ; then
+            (
+                echo "WATCHDOG_MAXFAILURES=\"15\""
+                echo "WATCHDOG_MAXFINALTRIALS=\"15\""
+                echo "WATCHDOG_FAILCOUNT_FILE=\"/usr/local/share/nornet-server/nornet-server-watchdog-$NAME.failcount\""
+                echo "WATCHDOG_FAILURE_ACTION=\"service nornet-server restart \\\"$NAME\\\"\" ; rm -f \"$WATCHDOG_FAILCOUNT_FILE\""
+                echo "WATCHDOG_FAILURE_FINAL=\"\""
+                echo "WATCHDOG_LOOPMODE=1"
+                cat "$vsystem"
+            ) >"/var/tmp/nornet/$NAME-watchdog-config"
 
-      Watchdog "/var/tmp/nornet/$NAME-watchdog-config" >>"/var/log/nornet-server-watchdog-$NAME.log" 2>&1 &
-   fi
+            Watchdog "/var/tmp/nornet/$NAME-watchdog-config" >>"/var/log/nornet-server-watchdog-$NAME.log" 2>&1
+         fi
+      fi
+   ) &
 done
 wait
