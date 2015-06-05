@@ -87,6 +87,7 @@ Package: nornet-development
 Architecture: any
 Depends: autoconf,
          automake,
+         autopoint,
          bison,
          createrepo,
          debhelper,
