@@ -5,9 +5,12 @@ while [ $# -gt 0 ] ; do
    shift
 
    echo "Trying $NODE ..."
-   scp -i /etc/planetlab/root_ssh_key.rsa *.repo perform-update root@$NODE:
-   ssh -i /etc/planetlab/root_ssh_key.rsa root@$NODE '
-      hostname && ./perform-update
-   '
+   (
+      scp -q -oStrictHostKeyChecking=no -i /etc/planetlab/root_ssh_key.rsa *.repo perform-update root@$NODE: && \
+      ssh -oStrictHostKeyChecking=no -i /etc/planetlab/root_ssh_key.rsa root@$NODE '
+         hostname && ./perform-update
+      '
+   ) &
  
 done
+wait
