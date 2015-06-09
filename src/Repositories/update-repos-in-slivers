@@ -1,0 +1,13 @@
+#!/bin/bash
+
+while [ $# -gt 0 ] ; do
+   NODE="$1"
+   shift
+
+   echo "Trying $NODE ..."
+   scp -i /etc/planetlab/root_ssh_key.rsa *.repo perform-update root@$NODE:
+   ssh -i /etc/planetlab/root_ssh_key.rsa root@$NODE '
+      hostname && ./perform-update
+   '
+ 
+done
