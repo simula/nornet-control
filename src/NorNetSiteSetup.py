@@ -156,12 +156,12 @@ def makeNorNetTagTypes():
    except:
       error('Cannot read nornet-slice-initscript')
 
-   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FC-FILE', 'fedora.repo', '/etc/yum.repos.d/fedora.repo')
-   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FU-FILE', 'fedora-updates.repo', '/etc/yum.repos.d/fedora-updates.repo')
-   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FT-FILE', 'fedora-updates-testing.repo', '/etc/yum.repos.d/fedora-updates-testing.repo')
+   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FC-FILE', 'Repositories/fedora.repo', '/etc/yum.repos.d/fedora.repo')
+   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FU-FILE', 'Repositories/fedora-updates.repo', '/etc/yum.repos.d/fedora-updates.repo')
+   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FT-FILE', 'Repositories/fedora-updates-testing.repo', '/etc/yum.repos.d/fedora-updates-testing.repo')
 
-   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-NN-FILE', 'nornet.repo', '/etc/yum.repos.d/nornet.repo')
-   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-KEY-NN-FILE',  'nornet.key',  '/etc/pki/rpm-gpg/nornet.key')
+   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-NN-FILE', 'Repositories/nornet.repo', '/etc/yum.repos.d/nornet.repo')
+   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-KEY-NN-FILE',  'Repositories/nornet.key',  '/etc/pki/rpm-gpg/nornet.key')
 
    initScript = {}
    initScript['name']    = 'nornet_slice_initscript'
@@ -658,11 +658,11 @@ def makeNorNetNode(fullSliceList,
          print('WARNING: Unable to write ' + nmConfigName)
 
       # ====== Add yum repositories =========================================
-      yumRepoSourceFile = codecs.open('nornet.repo', 'r', 'utf-8')
+      yumRepoSourceFile = codecs.open('Repositories/nornet.repo', 'r', 'utf-8')
       yumRepoSource = yumRepoSourceFile.read()
       yumRepoSourceFile.close()
 
-      yumKeySourceFile = codecs.open('nornet.key', 'r', 'utf-8')
+      yumKeySourceFile = codecs.open('Repositories/nornet.key', 'r', 'utf-8')
       yumKeySource = yumKeySourceFile.read()
       yumKeySourceFile.close()
 
