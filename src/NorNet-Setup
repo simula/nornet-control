@@ -293,7 +293,7 @@ norNetSetup = [
    'site_latitude'     : 58.163833,
    'site_longitude'    : 8.002936,
    'site_altitude'     : 50,
-   'site_contacts'     : [ u'Benestvedt, Ove: ove.benestvedt@uia.no', u'Prinz, Andreas: andreas.prinz@uia.no' ],
+   'site_contacts'     : [ u'Kittelsen, Rune: rune.kittelsen@uia.no', u'Prinz, Andreas: andreas.prinz@uia.no' ],
    'site_pcu'          : [ IPv4Address('158.36.50.179'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
