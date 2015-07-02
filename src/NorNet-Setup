@@ -275,6 +275,11 @@ norNetSetup = [
       [ 105, 6, u'sverresborg',      'damsgaardsfjellet.uib.nornet', 'vnc://damsgaardsfjellet.uib.nornet:5701' ],
    ] },
 
+ # ====== Universitetet i Agder =============================================
+ # Server #1 at UiA: 158.36.50.179 / 2001:700:1500:c064::179
+ # Server #2 at UiA: 158.36.50.180 / 2001:700:1500:c064::180
+ # Server #3 at UiA: 158.36.50.181 / 2001:700:1500:c064::181
+ # Server #4 at UiA: 158.36.50.182 / 2001:700:1500:c064::182
  { 'site_index'        : 7,
    'site_enabled'      : True,
    'site_long_name'    : u'Universitetet i Agder',
