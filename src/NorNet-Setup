@@ -737,37 +737,38 @@ norNetSetup = [
       [ 103, 4, u'queens'    ]
    ] },
 
- # Bell Labs Seoul: 7th floor DMC R&D center, 37 Maebongsan-ro, Mapo-gu, Seoul, Republic of Korea
  { 'site_index'        : 160,
    'site_enabled'      : False,
-   'site_long_name'    : u'Bell Labs Seoul',
-   'site_short_name'   : 'BLS',
-   'site_url'          : 'http://www.alcatel-lucent.com',
-   'site_domain'       : 'bls.nornet',
+   'site_long_name'    : u'Korea University',   # 고려대학교
+   'site_short_name'   : 'KRU',
+   'site_url'          : 'http://www.korea.ac.kr',
+   'site_domain'       : 'korea.nornet',
    'site_city'         : 'Seoul',
    'site_province'     : 'Seoul',
    'site_country'      : 'South Korea',
    'site_country_code' : 'KR',
-   'site_latitude'     : 37.576104,
-   'site_longitude'    : 126.890443,
+   'site_latitude'     : 37.585175,
+   'site_longitude'    : 127.028460,
    'site_altitude'     : 50,
    'site_contacts'     : [ u'Hwang, Jae Hyun: jh.hwang@alcatel-lucent.com', u'Walid, Anwar: anwar@research.bell-labs.com' ],
-   'site_pcu'          : [ IPv4Address('203.230.60.141'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('203.230.60.126'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Korea Research Environment Open NETwork', 'eth1',
-           IPv4Network('203.230.60.142/26'),     IPv4Address('203.230.60.129'),
-           IPv6Network('2001:320:4030:1::2/64'), IPv6Address('2001:320:4030:1::1'),
+           IPv4Network('203.230.60.125/26'), IPv4Address('203.230.60.65'),
+           IPv6Network('::/0'),              IPv6Address('::'),
            'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
-      # Naming scheme: bridges in Seoul
-      [ 100, 1, u'seogang', 'ichon.bls.nornet', 'vnc://ichon.bls.nornet:5700' ],
-      [ 101, 2, u'mapo',    'ichon.bls.nornet', 'vnc://ichon.bls.nornet:5701' ],
-      [ 102, 3, u'wonhyo',  'ichon.bls.nornet', 'vnc://ichon.bls.nornet:5702' ],
-      [ 103, 4, u'hangang', 'ichon.bls.nornet', 'vnc://ichon.bls.nornet:5703' ]
-      #[ 104, 5, u'dongjak'  ],
-      #[ 105, 6, u'jamsugyo' ]
+      # Naming schemes:
+      # Research nodes: stations in Seoul
+      # Physical machines: rivers in Seoul
+      [ 100, 1, u'yongsan' 'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5700' ],
+      [ 101, 2, u'mapo',   'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5701' ],
+      [ 102, 3, u'ichon',  'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5702' ],
+      [ 103, 4, u'gireum', 'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5703' ]
+      #[ 104, 5, u'aram',   'hangang.korea.nornet',   'vnc://hangang.korea.nornet:5700'   ],
+      #[ 105, 6, u'geumho', 'hangang.korea.nornet',   'vnc://hangang.korea.nornet:5701'   ]
    ] },
 
  { 'site_index'        : 120,
@@ -800,7 +801,7 @@ norNetSetup = [
       [ 100, 1, u'soroc'   ],
       [ 101, 2, u'lerisor' ]
    ] },
- 
+
  { 'site_index'        : 200,
    'site_enabled'      : True,
    'site_long_name'    : u'National ICT Australia',
