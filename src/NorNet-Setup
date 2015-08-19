@@ -556,6 +556,35 @@ norNetSetup = [
       #[ 107, 8, u'zollverein'  ]
    ] },
 
+ { 'site_index'        : 43,
+   'site_enabled'      : False,
+   'site_long_name'    : u'Universität Darmstadt',
+   'site_short_name'   : 'TUDA',
+   'site_url'          : 'https://www.deeds.informatik.tu-darmstadt.de',
+   'site_domain'       : 'tuda.nornet',
+   'site_city'         : 'Darmstadt',
+   'site_province'     : 'Hessen',
+   'site_country'      : 'Deutschland',
+   'site_country_code' : 'DE',
+   'site_latitude'     : 49.877621,
+   'site_longitude'    : 8.654673,
+   'site_altitude'     : 50,
+   'site_contacts'     : [ u'Demir, Kubilay: kubidem@deeds.informatik.tu-darmstadt.de' ],
+   'site_pcu'          : [ IPv4Address('130.83.162.211'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Deutsches Forschungsnetz', 'eth1',
+           IPv4Network('130.83.162.212/25'), IPv4Address('130.83.162.254'),
+           IPv6Network('::/0'),              IPv6Address('::'),
+           'fibre, business', 0, 0 ],
+   ],
+   'site_nodes' : [
+      [ 100, 1, u'woogsviertel',     'herrngarten.tuda.nornet', 'vnc://herrngarten.tuda.nornet:5700' ],
+      [ 101, 2, u'edelsteinviertel', 'herrngarten.tuda.nornet', 'vnc://herrngarten.tuda.nornet:5701' ],
+      [ 102, 3, u'verlegerviertel',  'lichtwiese.tuda.nornet',  'vnc://lichtwiese.tuda.nornet:5700'  ],
+      [ 103, 4, u'bessungen',        'lichtwiese.tuda.nornet',  'vnc://lichtwiese.tuda.nornet:5701'  ]
+   ] },
+
  { 'site_index'        : 30,
    'site_enabled'      : True,
    'site_long_name'    : u'Karlstads Universitet',
