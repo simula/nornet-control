@@ -158,7 +158,7 @@ function showAddresses ()
       fi
 
       # ====== Print addresses ========================================
-      echo -n "   `printf "%-8s" "${interface}:"` "
+      echo -n "   `printf "%-9s" "${interface}:"` "
       if [ "$addressListIPv4" != "" ] ; then
          for address in $addressListIPv4 ; do
             echo -n "$address   "
@@ -167,7 +167,7 @@ function showAddresses ()
          echo -n "(No IPv4)"
       fi
       for address in $addressListIPv6 ; do
-         echo -en "\n            $address "
+         echo -en "\n             $address "
       done
 
       echo ""
@@ -209,7 +209,7 @@ else
          if [ "`echo "$ifconfigResult" | head -n1 | grep "^.*<.*UP.*>"`" != "" ] ; then
             isUp=1
          fi
-         
+
          # ====== Get addresses =============================================
          addressListIPv4=`echo "$ifconfigResult" | awk '/[ \t]*inet ([0-9]+).([0-9]+).([0-9]+).([0-9]+) / { print $2 }' | sort`
          addressListIPv6=`echo "$ifconfigResult" | awk '/[ \t]*inet6 [0-9a-fA-F:]* prefixlen ([0-9]+) / { print $2 }' | sort`
