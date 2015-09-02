@@ -128,7 +128,7 @@ class TableOutput:
 
    def beginTableHead(self):
       return False
-      
+
    def endTableHead(self):
       return
 
@@ -883,8 +883,8 @@ for siteIndex in sorted(siteIndexList):
 
    siteLocation = siteCity
    if siteProvince != '':
-      siteLocation = siteLocation + ', ' + siteProvince 
-   siteLocation = siteLocation + '/' + siteCountry 
+      siteLocation = siteLocation + ', ' + siteProvince
+   siteLocation = siteLocation + '/' + siteCountry
 
 
    sitePosition = unicode(abs(site['site_latitude']))
