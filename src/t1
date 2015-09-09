@@ -1,0 +1,37 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+
+from ipaddr import IPv4Address, IPv6Address
+from scapy.all import *
+
+
+def runTraceroute(src, dst, minTTL=1, maxTTL=35, timeout=3):
+   if dst.version == 4:
+      ipPacket = IP(dst=str(dst), ttl=(minTTL, maxTTL)) / ICMP()
+      filter = "(icmp and (icmp[0]= 0 or icmp[0]=3 or icmp[0]=11 or icmp[0]=12))"
+   else:
+      ipPacket = IPv6(dst=str(dst), hlim=(minTTL, maxTTL)) / ICMPv6EchoRequest()
+      filter = "icmp6"
+
+   answered,unanswered = scapy.all.sr(ipPacket, filter=filter, timeout=timeout, verbose=0)
+
+   for i in range(0, len(answered)):
+      #print answered[i]
+      rx = answered.res[i][1]
+      tx = answered[i][0]
+      delta = rx.time-tx.sent_time
+      print rx.src,delta
+      if ((dst.version == 4) and (answered.res[i][1].type == 0)):
+         break   # Destination reached!
+      elif ((dst.version == 6) and (answered.res[i][1].type == 129)):
+         break   # Destination reached!
+
+
+dst=IPv6Address("2a00:1450:400f:805::2004")
+src=IPv6Address("2a02:270:2014:40:a116:dfd5:11df:3adb")
+
+#dst=IPv4Address("193.99.144.80")
+#src="172.16.0.122"
+
+runTraceroute(src, dst)
