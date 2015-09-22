@@ -1,13 +1,13 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 
-from ipaddress import IPv4Address, IPv6Address
+from ipaddr import IPv4Address, IPv6Address
 from scapy.all import *
 
 
+src=IPv6Address("2a02:270:2014:40:172:16:1:2")
 dst=IPv6Address("2001:700:4100:102::65")
-src=IPv6Address("2001:700:4100:101::33")
 
 #src=str(src),
 ip =  IPv6( dst=str(dst), hlim=64)

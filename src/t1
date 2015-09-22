@@ -1,8 +1,8 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 
-from ipaddress import IPv4Address, IPv6Address
+from ipaddr import IPv4Address, IPv6Address
 from scapy.all import *
 
 
