@@ -1,0 +1,25 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
+
+from ipaddress import IPv4Address, IPv6Address
+from scapy.all import *
+
+
+dst=IPv6Address("2001:700:4100:102::65")
+src=IPv6Address("2001:700:4100:101::33")
+
+#src=str(src),
+ip =  IPv6( dst=str(dst), hlim=64)
+icmp = ICMPv6EchoRequest(id=RandShort(), seq=1, data="AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEEEEEEEFFFFFF")
+
+packet = ip / icmp
+
+#scapy.all.sendp(packet)
+
+timeout=3
+filter=None
+
+answered,unanswered = scapy.all.sr(packet, filter=filter, timeout=timeout, verbose=0)
+answered.show()
+unanswered.show()

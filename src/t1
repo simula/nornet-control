@@ -1,17 +1,17 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 
-from ipaddr import IPv4Address, IPv6Address
+from ipaddress import IPv4Address, IPv6Address
 from scapy.all import *
 
 
 def runTraceroute(src, dst, minTTL=1, maxTTL=35, timeout=3):
    if dst.version == 4:
-      ipPacket = IP(dst=str(dst), ttl=(minTTL, maxTTL)) / ICMP()
+      ipPacket = IP(src=str(src), dst=str(dst), ttl=(minTTL, maxTTL)) / ICMP()
       filter = "(icmp and (icmp[0]= 0 or icmp[0]=3 or icmp[0]=11 or icmp[0]=12))"
    else:
-      ipPacket = IPv6(dst=str(dst), hlim=(minTTL, maxTTL)) / ICMPv6EchoRequest()
+      ipPacket = IPv6(src=str(src), dst=str(dst), hlim=(minTTL, maxTTL)) / ICMPv6EchoRequest()
       filter = "icmp6"
 
    answered,unanswered = scapy.all.sr(ipPacket, filter=filter, timeout=timeout, verbose=0)
@@ -21,7 +21,7 @@ def runTraceroute(src, dst, minTTL=1, maxTTL=35, timeout=3):
       rx = answered.res[i][1]
       tx = answered[i][0]
       delta = rx.time-tx.sent_time
-      print rx.src,delta
+      print(rx.src,delta)
       if ((dst.version == 4) and (answered.res[i][1].type == 0)):
          break   # Destination reached!
       elif ((dst.version == 6) and (answered.res[i][1].type == 129)):
@@ -34,7 +34,7 @@ def runPing(srcArray, dstArray, timeout=1):
    filter    = "icmp6"# or (icmp and (icmp[0]= 0 or icmp[0]=3 or icmp[0]=11 or icmp[0]=12))"
 
    for src in srcArray:
-      print src
+      print(src)
       for dst in dstArray:
          if src.version == dst.version:
             if dst.version == 4:
@@ -42,23 +42,26 @@ def runPing(srcArray, dstArray, timeout=1):
                #testArray.append(ipPacket)
                x=0
             else:
-               print "src=",str(src)
+               print("src=",str(src))
                ipPacket = IPv6(src=str(src), dst=str(dst), hlim=64) / ICMPv6EchoRequest(id=RandShort(), seq=1, data="AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEEEEEEEFFFFFF")
                testArray.append(ipPacket)
 
-   print len(testArray)
-   answered,unanswered = scapy.all.sr(testArray[0], filter=filter, timeout=timeout, verbose=0)
+   print(len(testArray))
+   answered,unanswered = scapy.all.srp(testArray[0], filter=filter, timeout=timeout, verbose=0)
    answered.show()
    unanswered.show()
 
    for i in range(0, len(answered)):
       request  = answered[i][0]
       response = answered.res[i][1]
-      print request.src,request.dst,response.time - request.sent_time
+      print(request.src,request.dst,response.time - request.sent_time)
 
 
-dst=IPv6Address("2a00:1450:400f:805::2004")
-src=IPv6Address("2a02:270:2014:40:a116:dfd5:11df:3adb")
+#dst=IPv6Address("2a00:1450:400f:805::2004")
+#src=IPv6Address("2a02:270:2014:40:a116:dfd5:11df:3adb")
+
+dst=IPv6Address("2001:700:4100:102::65")
+src=IPv6Address("2001:700:4100:101::33")
 
 #dst=IPv4Address("193.99.144.80")
 #src="172.16.0.122"
