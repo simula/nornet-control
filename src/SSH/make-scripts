@@ -4,9 +4,10 @@ SITES="10.1.1.1 10.1.2.1 10.1.3.1 10.1.4.1 10.1.5.1 10.1.6.1 10.1.7.1 10.1.8.1 1
 
 i=1
 for site in $SITES ; do
-   name=`printf "ssh%02d" $i`
+   name=`printf "tbox%02d" $i`
    ( echo "#!/bin/sh"
-     echo "ssh nornetpp@$site" ) >$name
+     echo "echo \"Connecting to $site ...\""
+     echo "ssh -C nornetpp@$site" ) >$name
    chmod +x $name
    let i=$i+1
 done
