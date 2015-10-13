@@ -280,8 +280,7 @@ Description: NorNet Wiki Server
 
 Package: nornet-database
 Architecture: all
-Depends: apache2,
-         postgresql,
+Depends: postgresql,
          postgresql-contrib,
          ${misc:Depends},
          ${shlibs:Depends}
