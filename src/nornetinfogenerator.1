@@ -1,0 +1,58 @@
+.\" High-Performance Connectivity Tracer (HiPerConTracer)
+.\" Copyright (C) 2015 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@iem.uni-due.de
+.\"
+.\" ###### Setup ############################################################
+.Dd September 25, 2015
+.Dt nornetinfogenerator 1
+.Os nornetinfogenerator
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm nornetinfogenerator
+.Nd HiPerConTracer Address Info Generator
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm nornetinfogenerator
+database_configuration
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm nornetinfogenerator
+updates the HiPerConTracer PostgreSQL database with additional information
+from the NorNet PLC.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following argument has to be provided:
+.Bl -tag -width indent
+.It database_configuration
+Specifies the database configuration file. See
+/usr/share/doc/hipercontracer/examples/hipercontracer-database-configuration
+for an example.
+.El
+.\" ###### Arguments ########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It nornetinfogenerator hipercontracer-database-configuration
+.El
+.\" ###### Authors ##########################################################
+.Sh AUTHORS
+Thomas Dreibholz
+.br
+http://www.iem.uni-due.de/~dreibh/nornetinfogenerator
+.br
+mailto://dreibh@iem.uni-due.de
+.br
