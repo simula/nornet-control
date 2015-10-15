@@ -1,0 +1,153 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+#  =================================================================
+#           #     #                 #     #
+#           ##    #   ####   #####  ##    #  ######   #####
+#           # #   #  #    #  #    # # #   #  #          #
+#           #  #  #  #    #  #    # #  #  #  #####      #
+#           #   # #  #    #  #####  #   # #  #          #
+#           #    ##  #    #  #   #  #    ##  #          #
+#           #     #   ####   #    # #     #  ######     #
+#
+#        ---   The NorNet Testbed for Multi-Homed Systems  ---
+#                        https://www.nntb.no
+#  =================================================================
+#
+#  High-Performance Connectivity Tracer (HiPerConTracer)
+#  Copyright (C) 2015 by Thomas Dreibholz
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#  Contact: dreibh@simula.no
+
+import os
+import sys
+import io
+import re
+import datetime
+import bz2
+import shutil
+import socket
+import psycopg2
+import ConfigParser
+
+# NorNet
+from NorNetSiteSetup import *;
+from NorNetTools     import *;
+from NorNetAPI       import *;
+
+
+# ###### Print log message ##################################################
+def log(logstring):
+   print('\x1b[32m' + datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + ': ' + logstring + '\x1b[0m');
+
+
+# ###### Abort with error ###################################################
+def error(logstring):
+   sys.stderr.write(datetime.datetime.now().isoformat() + \
+                    ' ===== ERROR: ' + logstring + ' =====\n')
+   sys.exit(1)
+
+
+
+# ###### Main program #######################################################
+if len(sys.argv) < 2:
+   error('Usage: ' + sys.argv[0] + ' database_configuration')
+
+configFileName = sys.argv[1]
+dbServer       = 'localhost'
+dbPort         = 5432
+dbUser         = 'importer'
+dbPassword     = None
+dbName         = 'pingtraceroutedb'
+
+
+# ====== Get parameters =====================================================
+parsedConfigFile = ConfigParser.RawConfigParser()
+parsedConfigFile.optionxform = str   # Make it case-sensitive!
+try:
+   parsedConfigFile.readfp(io.StringIO(u'[root]\n' + open(configFileName, 'r').read()))
+except Exception as e:
+    error('Unable to read database configuration file' +  sys.argv[1] + ': ' + str(e))
+    sys.exit(1)
+
+for parameterName in parsedConfigFile.options('root'):
+   parameterValue = parsedConfigFile.get('root', parameterName)
+   if parameterName == 'dbserver':
+      dbServer = parameterValue
+   elif parameterName == 'dbport':
+      dbPort = parameterValue
+   elif parameterName == 'dbuser':
+      dbUser = parameterValue
+   elif parameterName == 'dbpassword':
+      dbPassword = parameterValue
+   elif parameterName == 'database':
+      dbName = parameterValue
+
+
+# ====== Get NorNet information =============================================
+loginToPLC(quietMode = True)
+siteList = fetchNorNetSite(None)
+
+
+# ====== Connect to the database ============================================
+try:
+   dbConnection = psycopg2.connect(host=str(dbServer), port=str(dbPort),
+                                   user=str(dbUser), password=str(dbPassword),
+                                   dbname=str(dbName))
+   dbConnection.autocommit = False
+except Exception as e:
+    log('Unable to connect to the database!')
+    sys.exit(1)
+
+dbCursor = dbConnection.cursor()
+
+
+# ====== Update sites =======================================================
+for siteIndex in siteList:
+   site = siteList[siteIndex]
+   siteIndex = site['site_index']
+
+   # ------ PostgreSQL has to UPSERT yet -> ensure that sites are there -----
+   try:
+      dbCursor.execute(
+         """INSERT INTO SiteInfo VALUES (""" + str(siteIndex) + """, NOW())"""
+      )
+      dbConnection.commit()
+   except Exception as e:
+      dbConnection.rollback()
+      # print(str(e))
+      pass
+
+   # ------ Now, it is possible to perform UPDATEs --------------------------
+   print(site)
+   try:
+      dbCursor.execute(
+         """UPDATE SiteInfo
+            SET TimeStamp=NOW()
+            ,FullName='""" + site['site_utf8'] + """'
+            ,ShortName='""" + site['site_short_name'] + """'
+            ,Country='""" + getTagValue(site['site_tags'], 'nornet_site_country', '') + """'
+            ,CountryCode='""" + getTagValue(site['site_tags'], 'nornet_site_country_code', '') + """'
+            ,Region='""" + getTagValue(site['site_tags'], 'nornet_site_province', '') + """'
+            ,City='""" + getTagValue(site['site_tags'], 'nornet_site_city', '') + """'
+            ,Latitude='""" + str(site['site_latitude']) + """'
+            ,Longitude='""" + str(site['site_longitude']) + """'
+            WHERE SiteIndex=""" + str(siteIndex) + """;"""
+      )
+      dbConnection.commit()
+   except Exception as e:
+      log('Update failed: ' + str(e))
+      sys.exit(1)
