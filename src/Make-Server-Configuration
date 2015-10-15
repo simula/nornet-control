@@ -21,7 +21,6 @@
 
 import re;
 import os;
-import base64;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
 from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
