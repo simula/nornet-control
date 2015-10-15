@@ -1,1 +1,1 @@
-22 * * * *   root   if [ -e /etc/nornet/hipercontracer-configuration ] ; then /usr/bin/Random-Sleep 0 1800 -quiet && flock -x -n /var/lock/nornet-trace-import.lock -c "/usr/bin/tracedataimporter /etc/nornet/hipercontracer-configuration >>/var/log/nornet-trace-import.log 2>&1" ; fi
+22 * * * *   root   if [ -e /etc/nornet/hipercontracer-database-configuration ] ; then /usr/bin/Random-Sleep 0 1800 -quiet && flock -x -n /var/lock/nornet-trace-import.lock -c "/usr/bin/tracedataimporter /etc/nornet/hipercontracer-database-configuration >>/var/log/nornet-trace-import.log 2>&1" ; fi
