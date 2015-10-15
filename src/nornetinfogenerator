@@ -115,6 +115,44 @@ except Exception as e:
 dbCursor = dbConnection.cursor()
 
 
+# ====== Update providers ===================================================
+log('Updating provider information ...')
+providerSet = set()
+for siteIndex in siteList:
+   site         = siteList[siteIndex]
+   providerList = getNorNetProvidersForSite(site)
+   for providerIndex in providerList:
+      providerSet.add(providerIndex)
+
+for providerIndex in sorted(providerSet):
+   provider = NorNet_ProviderList[providerIndex]
+
+   # ------ PostgreSQL has to UPSERT yet -> ensure that providers are there -
+   try:
+      dbCursor.execute(
+         """INSERT INTO ProviderInfo VALUES (""" + str(providerIndex) + """, NOW())"""
+      )
+      dbConnection.commit()
+   except Exception as e:
+      dbConnection.rollback()
+      # print(str(e))
+      pass
+
+   # ------ Now, it is possible to perform UPDATEs --------------------------
+   try:
+      dbCursor.execute(
+         """UPDATE ProviderInfo
+            SET TimeStamp=NOW()
+            ,FullName='"""      + provider[0] + """'
+            ,ShortName='"""     + provider[1] + """'
+            WHERE ProviderIndex=""" + str(providerIndex) + """;"""
+      )
+      dbConnection.commit()
+   except Exception as e:
+      log('Update failed: ' + str(e))
+      sys.exit(1)
+
+
 # ====== Update sites =======================================================
 log('Updating site information ...')
 for siteIndex in siteList:
