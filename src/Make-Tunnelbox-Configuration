@@ -1529,7 +1529,7 @@ def makeHiPerConTracerConfiguration(localSite):
    log('Making HiPerConTracer configuration for ' + localSite['site_long_name'] + ' ...')
    outputFile = codecs.open('hipercontracer-config', 'w', 'utf-8')
 
-   outputFile.write('HIPERCONTRACER_OPTIONS="-ping -sqlpingtable=Ping -traceroute -sqltraceroutetable=Traceroute -sqldirectory=/var/hipercontracer" -pinginterval=1000 -pingexpiration=5000 -pingttl=64 -tracerouteduration=2000 -tracerouteinitialmaxttl=5 -traceroutefinalmaxttl=35 -tracerouteincrementmaxttl=5\n')
+   outputFile.write('DAEMON_ARGS="-ping -sqlpingtable=Ping -traceroute -sqltraceroutetable=Traceroute -sqldirectory=/var/hipercontracer" -pinginterval=1000 -pingexpiration=5000 -pingttl=64 -tracerouteduration=2000 -tracerouteinitialmaxttl=5 -traceroutefinalmaxttl=35 -tracerouteincrementmaxttl=5\n')
 
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
@@ -1537,7 +1537,7 @@ def makeHiPerConTracerConfiguration(localSite):
       addressV4 = IPv4Network(localProvider['provider_tunnelbox_ipv4'])
       addressV6 = IPv6Network(localProvider['provider_tunnelbox_ipv6'])
 
-      outputFile.write('HIPERCONTRACER_OPTIONS="$HIPERCONTRACER_OPTIONS -source=' + str(addressV4.ip))
+      outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -source=' + str(addressV4.ip))
       if addressV6 != IPv6Network('::/0'):
          outputFile.write(' -destination=' + str(addressV6.ip))
       outputFile.write('"\n')
@@ -1558,7 +1558,7 @@ def makeHiPerConTracerConfiguration(localSite):
          addressV4 = IPv4Network(remoteProvider['provider_tunnelbox_ipv4'])
          addressV6 = IPv6Network(remoteProvider['provider_tunnelbox_ipv6'])
 
-         outputFile.write('HIPERCONTRACER_OPTIONS="$HIPERCONTRACER_OPTIONS -destination=' + str(addressV4.ip))
+         outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -destination=' + str(addressV4.ip))
          if addressV6 != IPv6Network('::/0'):
             outputFile.write(' -destination=' + str(addressV6.ip))
          outputFile.write('"\n')

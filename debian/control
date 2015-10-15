@@ -309,3 +309,14 @@ Description: NorNet Server
  to host NorNet virtual machines.
  .
  See https://www.nntb.no for details on NorNet!
+
+Package: nornet-trace-service
+Architecture: any
+Depends: hipercontracer,
+         ${misc:Depends},
+         ${python:Depends},
+         ${shlibs:Depends}
+Description: NorNet Trace Service
+ NorNet Trace Service is the traceroute service for the NorNet testbed.
+ It performs regular traceroute/traceroute6 runs among all sites and
+ imports the results into an SQL database.

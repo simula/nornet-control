@@ -212,6 +212,17 @@ check_and_configure ()
          fi
       fi
 
+      # ====== Apply HiPerConTracer configuration update ====================
+      rm -f hipercontracer-config
+      mv updated-tunnelbox-config/hipercontracer-config .
+      if needs_update hipercontracer-config /etc/default/nornet-trace $1 ; then
+         if [ -e /etc/init.d/nornet-trace-service ] ; then
+            echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: HiPerConTracer configuration has been updated => restarting HiPerConTracer service ...\x1b[0m"
+            cp hipercontracer-config /etc/default/nornet-trace
+            service nornet-trace-service restart >/dev/null || true
+         fi
+      fi
+
       # ====== Collectd ping configuration ==================================
       find . -maxdepth 1 -name "collectd-tb-ping-*"|xargs --no-run-if-empty rm -f
       mv updated-tunnelbox-config/collectd-tb-ping* .
