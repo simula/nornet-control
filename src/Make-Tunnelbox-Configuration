@@ -1539,7 +1539,7 @@ def makeHiPerConTracerConfiguration(localSite):
 
       outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -source=' + str(addressV4.ip))
       if addressV6 != IPv6Network('::/0'):
-         outputFile.write(' -destination=' + str(addressV6.ip))
+         outputFile.write(' -source=' + str(addressV6.ip))
       outputFile.write('"\n')
    outputFile.write('\n')
 
