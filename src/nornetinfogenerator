@@ -116,6 +116,7 @@ dbCursor = dbConnection.cursor()
 
 
 # ====== Update sites =======================================================
+log('Updating site information ...')
 for siteIndex in siteList:
    site = siteList[siteIndex]
    siteIndex = site['site_index']
@@ -132,22 +133,70 @@ for siteIndex in siteList:
       pass
 
    # ------ Now, it is possible to perform UPDATEs --------------------------
-   print(site)
    try:
       dbCursor.execute(
          """UPDATE SiteInfo
             SET TimeStamp=NOW()
-            ,FullName='""" + site['site_utf8'] + """'
-            ,ShortName='""" + site['site_short_name'] + """'
-            ,Country='""" + getTagValue(site['site_tags'], 'nornet_site_country', '') + """'
-            ,CountryCode='""" + getTagValue(site['site_tags'], 'nornet_site_country_code', '') + """'
-            ,Region='""" + getTagValue(site['site_tags'], 'nornet_site_province', '') + """'
-            ,City='""" + getTagValue(site['site_tags'], 'nornet_site_city', '') + """'
-            ,Latitude='""" + str(site['site_latitude']) + """'
-            ,Longitude='""" + str(site['site_longitude']) + """'
+            ,FullName='"""      + site['site_utf8']       + """'
+            ,ShortName='"""     + site['site_short_name'] + """'
+            ,Country='"""       + getTagValue(site['site_tags'], 'nornet_site_country', '')      + """'
+            ,CountryCode='"""   + getTagValue(site['site_tags'], 'nornet_site_country_code', '') + """'
+            ,Region='"""        + getTagValue(site['site_tags'], 'nornet_site_province', '')     + """'
+            ,City='"""          + getTagValue(site['site_tags'], 'nornet_site_city', '')         + """'
+            ,Latitude='"""      + str(site['site_latitude'])  + """'
+            ,Longitude='"""     + str(site['site_longitude']) + """'
             WHERE SiteIndex=""" + str(siteIndex) + """;"""
       )
       dbConnection.commit()
    except Exception as e:
       log('Update failed: ' + str(e))
       sys.exit(1)
+
+
+# ====== Update addresses ===================================================
+log('Updating address information ...')
+for siteIndex in siteList:
+   site         = siteList[siteIndex]
+   providerList = getNorNetProvidersForSite(site)
+
+   for providerIndex in providerList:
+      provider = providerList[providerIndex]
+
+      addressV4 = IPv4Network(provider['provider_tunnelbox_ipv4'])
+      addressV6 = IPv6Network(provider['provider_tunnelbox_ipv6'])
+
+      addressList = [ addressV4.ip ]
+      if addressV6 != IPv6Network('::/0'):
+         addressList.append(addressV6.ip)
+
+      for address in addressList:
+         # ------ PostgreSQL has to UPSERT yet ... --------------------------
+         try:
+            dbCursor.execute(
+               """INSERT INTO AddressInfo VALUES ('""" + str(address) + """', NOW())"""
+            )
+            dbConnection.commit()
+         except Exception as e:
+            dbConnection.rollback()
+            # print(str(e))
+            pass
+
+         # ------ Now, it is possible to perform UPDATEs --------------------
+         try:
+            dbCursor.execute(
+               """UPDATE AddressInfo
+                  SET TimeStamp=NOW()
+                  ,SiteIndex="""     + str(site['site_index'])         + """
+                  ,ProviderIndex=""" + str(provider['provider_index']) + """
+                  ,Country='"""      + getTagValue(site['site_tags'], 'nornet_site_country', '')      + """'
+                  ,CountryCode='"""  + getTagValue(site['site_tags'], 'nornet_site_country_code', '') + """'
+                  ,Region='"""       + getTagValue(site['site_tags'], 'nornet_site_province', '')     + """'
+                  ,City='"""         + getTagValue(site['site_tags'], 'nornet_site_city', '')         + """'
+                  ,Latitude='"""     + str(site['site_latitude'])  + """'
+                  ,Longitude='"""    + str(site['site_longitude']) + """'
+                  WHERE IP='""" + str(address) + """';"""
+            )
+            dbConnection.commit()
+         except Exception as e:
+            log('Update failed: ' + str(e))
+            sys.exit(1)
