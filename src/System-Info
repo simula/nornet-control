@@ -62,7 +62,7 @@ if [ "$system" == "Linux" ] ; then
       DISTRIB_CODENAME=`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\3/g"`
    fi
 
-   freeOutput="`env LANG=en free -mto`"
+   freeOutput="`env LANG=en free -mt`"
    freeMemOutput="`echo "$freeOutput" | grep "Mem:"`"
    freeSwapOutput="`echo "$freeOutput" | grep "Swap:"`"
 

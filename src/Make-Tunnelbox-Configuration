@@ -706,9 +706,9 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
    optionsConfFile.write("\tauth-nxdomain      no;   # conform to RFC1035\n")
    optionsConfFile.write("\tempty-zones-enable yes;\n")
    optionsConfFile.write("\tlisten-on-v6       { any; };\n")
-   
+
    dnsForwardersString = getLocalSiteDNSForwardersString()
-   if ((dnsForwardersString != None) and (dnsForwardersString != u'')):      
+   if ((dnsForwardersString != None) and (dnsForwardersString != u'')):
       dnsForwarders = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', getLocalSiteDNSForwardersString())
       if len(dnsForwarders) > 0:
          optionsConfFile.write("\tforwarders         {")
@@ -717,7 +717,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
                address = unquote(dnsForwarders[i])
                dnsForwarder = IPAddress(address)
                optionsConfFile.write(' ' + str(dnsForwarder) + ';')
-               
+
             except Exception as e:
                error('Bad configuration "' + dnsForwarders[i] + '" for NorNet_LocalSite_DNS_Forwarders: ' + str(e))
          optionsConfFile.write(" };\n")
@@ -951,11 +951,11 @@ def makeIPSECConfiguration(localSite):
    outputFile = codecs.open('ipsec-config', 'w', 'utf-8')
    outputFile.write('#!/sbin/setkey -f\n')
    writeAutoConfigInformation(outputFile)
-   
+
    outputFile.write('flush;\n')
    outputFile.write('spdflush;\n\n')
-   
-   
+
+
    # ########################################################################
    # WARNING: This static configuration is not intended for high security!
    # It is just so block annying packet modification effects by firewalls.
@@ -1198,7 +1198,7 @@ def makeFirewallConfiguration(fullSiteList, localSite):
          v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4Prefix'])       + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
          v4File.write('-A POSTROUTING -s ' + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + ' -o ' + interfaceName + ' -j ' + natTraget + "\n")
 
-   if getSquidTransparentProxy() == 'on':      
+   if getSquidTransparentProxy() == 'on':
       v4File.write('-A PREROUTING -i "' + str(NorNet_Configuration['NorNet_LocalNode_NorNetInterface']) + '" -p tcp' + \
                    ' ! -d ' + str(makeNorNetIP(0, 0, 0, 4)) + ' --dport 80 -j REDIRECT --to-port 3129' + "\n")
 
@@ -1516,6 +1516,56 @@ LoadPlugin target_set
          collectdPingConfigFile.close()
 
 
+# ###########################################################################
+# #### HiPerConTracer Configuration                                      ####
+# ###########################################################################
+
+
+# ###### Generate HiPerConTracer daemon configuration #######################
+def makeHiPerConTracerConfiguration(localSite):
+   localSiteIndex = localSite['site_index']
+   localProviderList = getNorNetProvidersForSite(localSite)
+
+   log('Making HiPerConTracer configuration for ' + localSite['site_long_name'] + ' ...')
+   outputFile = codecs.open('hipercontracer-config', 'w', 'utf-8')
+
+   outputFile.write('DAEMON_ARGS="-ping -sqlpingtable=Ping -traceroute -sqltraceroutetable=Traceroute -sqltransactionlength=300 -sqldirectory=/var/hipercontracer -quiet -pinginterval=1000 -pingexpiration=5000 -pingttl=64 -tracerouteduration=2000 -tracerouteinitialmaxttl=5 -traceroutefinalmaxttl=35 -tracerouteincrementmaxttl=5"\n')
+
+   for localProviderIndex in localProviderList:
+      localProvider = localProviderList[localProviderIndex]
+
+      addressV4 = IPv4Network(localProvider['provider_tunnelbox_ipv4'])
+      addressV6 = IPv6Network(localProvider['provider_tunnelbox_ipv6'])
+
+      outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -source=' + str(addressV4.ip))
+      if addressV6 != IPv6Network('::/0'):
+         outputFile.write(' -source=' + str(addressV6.ip))
+      outputFile.write('"\n')
+   outputFile.write('\n')
+
+
+   for remoteSiteIndex in fullSiteList:
+      if remoteSiteIndex == localSiteIndex:
+         continue
+      remoteSite         = fullSiteList[remoteSiteIndex]
+      remoteProviderList = getNorNetProvidersForSite(remoteSite)
+
+      outputFile.write('# ' + remoteSite['site_utf8'] + '\n')
+
+      for remoteProviderIndex in remoteProviderList:
+         remoteProvider = remoteProviderList[remoteProviderIndex]
+
+         addressV4 = IPv4Network(remoteProvider['provider_tunnelbox_ipv4'])
+         addressV6 = IPv6Network(remoteProvider['provider_tunnelbox_ipv6'])
+
+         outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -destination=' + str(addressV4.ip))
+         if addressV6 != IPv6Network('::/0'):
+            outputFile.write(' -destination=' + str(addressV6.ip))
+         outputFile.write('"\n')
+
+   outputFile.close()
+
+
 
 # ###########################################################################
 # #### Main program                                                      ####
@@ -1654,6 +1704,7 @@ for i in range(NorNet_MinNodeIndex + 1, NorNet_MaxNodeIndex + 1):
       }
       staticList.append(staticEntry)
 
+makeHiPerConTracerConfiguration(localSite)
 #makeIPSECConfiguration(localSite)
 makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
 makeRADVDConfiguration(localSite)

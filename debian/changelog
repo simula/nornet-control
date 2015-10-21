@@ -1,3 +1,9 @@
+nornet (0.9.7.5~rc1.0-1ubuntu1) precise; urgency=high
+
+  * New release.
+
+ -- Thomas Dreibholz <dreibh@simula.no>  Fri, 16 Oct 2015 08:08:08 +0800
+
 nornet (0.9.7.4-1ubuntu1) precise; urgency=high
 
   * New release.

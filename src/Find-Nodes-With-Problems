@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Find Nodes with Problems
-# Copyright (C) 2012 by Thomas Dreibholz
+# Copyright (C) 2012-2015 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 
 import re;
 import os;
-import base64;
 
 # NorNet
 from NorNetTools import *;
@@ -31,7 +30,7 @@ from NorNetAPI   import *;
 # ###### Main program #######################################################
 loginToPLC()
 
-nodeList = getPLCServer().GetNodes(getPLCAuthentication(), 
+nodeList = getPLCServer().GetNodes(getPLCAuthentication(),
               { },
               [ 'hostname', 'boot_state', 'run_level' ])
 

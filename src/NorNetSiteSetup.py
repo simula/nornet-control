@@ -131,7 +131,7 @@ def makeNorNetTagTypes():
       'net.sctp.sctp_rmem',
       'net.sctp.sctp_wmem'
    ]
-   for nornetSysCtl in nornetSysCtls: 
+   for nornetSysCtl in nornetSysCtls:
       makeTagType('slice/sysctl', 'SysCtl ' + nornetSysCtl, 'vsys_sysctl.' + nornetSysCtl, [ 'admin' ])
 
    # ====== Missing tags for plnet ==========================================
@@ -168,7 +168,7 @@ def makeNorNetTagTypes():
    initScript['enabled'] = True
    initScript['script']  = initScriptCode
    addOrUpdateInitScript(initScript)
-   # print initScriptCode
+   # print(initScriptCode)
 
 
 # ###### Remove NorNet site #################################################
@@ -634,7 +634,7 @@ def makeNorNetNode(fullSliceList,
       #files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids','source','dest'])
       #for file in files:
       #   if nodeID in file['node_ids']:
-      #      print file['conf_file_id'], file['dest'],file['source']
+      #      print(file['conf_file_id'], file['dest'],file['source'])
       #      getPLCServer().DeleteConfFile(getPLCAuthentication(), file['conf_file_id'])
 
       # ====== nodemanager ==================================================
@@ -790,13 +790,13 @@ def makeNorNetNode(fullSliceList,
       #files = getPLCServer().GetConfFiles(getPLCAuthentication(), {}, ['conf_file_id', 'node_ids', 'source', 'dest'])
       #for file in files:
       #   if nodeID in file['node_ids']:
-      #      print 'Config file ' + str(file['conf_file_id']) + ': ' + file['source'] + ' -> ' + file['dest']
+      #      print('Config file ' + str(file['conf_file_id']) + ': ' + file['source'] + ' -> ' + file['dest'])
 
       # ====== Update slivers with new configuration ========================
       for slice in fullSliceList:
          sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, newNode)
          if sliceNodeIndex != 0:
-            print 'Updating ' + slice['slice_name']
+            print('Updating ' + slice['slice_name'])
             _updateSliceNodeNetConfig(slice, newNode, site, sliceNodeIndex)
 
       return newNode
@@ -903,7 +903,7 @@ def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScrip
                                                [ 'slice_id', 'node_ids', 'name', 'description', 'url', 'initscript_code', 'expires' ])
       try:
          sliceID = int(existingSlice[0]['slice_id'])
-         print existingSlice
+         print(existingSlice)
          if sliceUrl == None:
             sliceUrl = existingSlice[0]['url']
          if sliceDescription == None:
@@ -1041,7 +1041,7 @@ def _selectNodes(slice, siteNodeList, maxNodesPerSite):
          updated = True
 
    #for node in selectedNodes:
-      #print 'S=',node['node_name']
+      #print('S=',node['node_name'])
 
    return(selectedNodes)
 
@@ -1149,7 +1149,7 @@ def addNorNetSliceToNorNetNodes(fullSiteList, fullNodeList, fullSliceList, slice
    # Remove not selected nodes from slice
    for node in fullNodeList:
       if not node['node_id'] in addedNodeIDs:
-         #print 'REM ' + node['node_name']
+         #print('REM ' + node['node_name'])
          getPLCServer().DeleteSliceFromNodes(getPLCAuthentication(),
                                              slice['slice_id'], [ node['node_id'] ])
 
