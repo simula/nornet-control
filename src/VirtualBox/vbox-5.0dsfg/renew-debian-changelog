@@ -178,7 +178,7 @@ for buildPackage in $BUILD_PACKAGES ; do
    echo "s/^\(Package: ${buildPackage}${PACKAGE_SUFFIX}\)$/\1\nReplaces: ${conflicts}\nConflicts: ${conflicts}/g" >>package-names.sed.tmp2
 
 done
-echo "/^Conflicts:/d"        >package-names.sed
+# echo "/^Conflicts:/d"        >package-names.sed
 echo "/^Replaces:/d"        >>package-names.sed
 sort <package-names.sed.tmp >>package-names.sed
 cat package-names.sed.tmp2  >>package-names.sed
