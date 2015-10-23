@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+   remove|purge|abort-install)
+      rm -f /etc/grub.d/??_nornet_database_theme
+      update-grub
+      ;;
+esac
+
+#DEBHELPER#
+
+exit 0
