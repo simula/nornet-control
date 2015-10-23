@@ -19,7 +19,7 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
 DESC="datacenter management platform"
 NAME=cfengine3
-PIDROOT=/run/cfengine3
+PIDROOT=/var/run/cfengine3
 SCRIPTNAME=/etc/init.d/$NAME
 
 CFEXECD_DAEMON=/usr/sbin/cf-execd
@@ -51,7 +51,7 @@ RUN_CFSERVERD=1
 
 
 #
-# Function that checks if /run/cfengine3 exists
+# Function that checks if $PIDROOT exists
 #
 check_run_dir()
 {
@@ -212,15 +212,6 @@ case "$1" in
         status_cfengine
         exit $?
         ;;
-  #reload|force-reload)
-	#
-	# If do_reload() is not implemented then leave this commented out
-	# and leave 'force-reload' as an alias for 'restart'.
-	#
-	#log_daemon_msg "Reloading $DESC" "$NAME"
-	#do_reload
-	#log_end_msg $?
-	#;;
   restart|force-reload)
 	#
 	# If the "reload" option is implemented then remove the
@@ -245,7 +236,6 @@ case "$1" in
 	esac
 	;;
   *)
-	#echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
 	echo "Usage: $SCRIPTNAME {start|stop|status|restart|force-reload}" >&2
 	exit 3
 	;;

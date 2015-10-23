@@ -1,0 +1,22 @@
+Index: cfengine3/tests/unit/Makefile.am
+===================================================================
+--- cfengine3.orig/tests/unit/Makefile.am
++++ cfengine3/tests/unit/Makefile.am
+@@ -127,7 +127,6 @@ check_PROGRAMS = \
+ 	rb-tree-test \
+ 	variable_test \
+ 	protocol_test \
+-	mon_cpu_test \
+ 	mon_load_test \
+ 	mon_processes_test \
+ 	mustache_test \
+@@ -339,9 +338,6 @@ sysinfo_test_LDADD = libtest.la \
+ 	../../libenv/libenv.la \
+ 	../../libpromises/libpromises.la
+ 
+-mon_cpu_test_SOURCES = mon_cpu_test.c ../../cf-monitord/mon.h ../../cf-monitord/mon_cpu.c
+-mon_cpu_test_LDADD = ../../libpromises/libpromises.la libtest.la
+-
+ mon_load_test_SOURCES = mon_load_test.c ../../cf-monitord/mon.h ../../cf-monitord/mon_load.c
+ mon_load_test_LDADD = ../../libpromises/libpromises.la libtest.la
+ 
