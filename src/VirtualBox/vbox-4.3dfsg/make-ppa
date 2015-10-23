@@ -3,6 +3,6 @@
 ./clean-deb
 svn update
 ./renew-debian-changelog $@
-./make-deb precise trusty utopic wily xenial
+./make-deb precise trusty vivid wily xenial
 
 dput ppa *.changes
