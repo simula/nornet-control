@@ -1,0 +1,266 @@
+#!/bin/bash -e
+#
+# Debian Packaging Scripts
+# Copyright (C) 2002-2015 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@iem.uni-due.de
+
+. ./debian.conf
+
+
+# ====== Get variant ========================================================
+
+VARIANT="$1"     # e.g. nornet-stable nornet-testing nornet-experimental
+PUBLISHER="$2"   # e.g. DEBUG0001 (*must* be uppercase!)
+
+VARIANTS="nornet-stable nornet-testing nornet-experimental"
+PACKAGE_SUFFIX=""
+if [ "$VARIANT" != "" ] ; then
+   for v in $VARIANTS ; do
+      if [ "$v" = "$VARIANT" ] ; then
+         PACKAGE_SUFFIX="-${VARIANT}"
+         break
+      fi
+   done
+   if [ "$PACKAGE_SUFFIX" = "" ] ; then
+      echo >&2 "Usage: $0 variant"
+      echo "Possible variants are: $VARIANTS"
+      exit 1
+   fi
+fi
+PUBLISHER=`echo "$PUBLISHER" | tr  '[:lower:]' '[:upper:]'`
+
+
+# ====== Revert debian/changelog and debian/control =========================
+rm -f LocalConfig.kmk
+if [ -e ".svn" ] ; then
+   # Get SVN version identifier
+   SVN_VERSION="`svnversion . | tr -d [M]`"
+   BUILD_VERSION_IDENTIFIER="SVN`printf "%07d" "${SVN_VERSION}"`${PUBLISHER}"
+else
+   echo "*** Not an SVN repository ***"
+   # No special SVN version
+   SVN_VERSION="0000000"
+   BUILD_VERSION_IDENTIFIER="${PUBLISHER}"
+fi
+
+# When running the first time, backup the original Debian files
+BACKUP_FILES="changelog rules control virtualbox-source.files/control.modules.in virtualbox-guest-source.files/control.modules.in virtualbox-source.files/rules virtualbox-guest-source.files/rules source.lintian-overrides"
+# VirtualBox has several control files ...
+for backupFile in $BACKUP_FILES ; do
+   if [ ! -e debian/${backupFile}.orig ] ; then
+      cp debian/${backupFile} debian/${backupFile}.orig
+   fi
+done
+# Revert Debian files (from the backup versions)
+for backupFile in $BACKUP_FILES ; do
+   cp debian/${backupFile}.orig debian/${backupFile}
+done
+
+echo -e "\x1b[34mBUILD_VERSION_IDENTIFIER: $BUILD_VERSION_IDENTIFIER\x1b[0m"
+
+
+# ====== Update changelog header from Config.kmk version ====================
+eval `grep "^VBOX_VERSION_MAJOR[ \t]*=[ \t]*" Config.kmk | sed -e "s/ //g"`
+eval `grep "^VBOX_VERSION_MINOR[ \t]*=[ \t]*" Config.kmk | sed -e "s/ //g"`
+eval `grep "^VBOX_VERSION_BUILD[ \t]*=[ \t]*" Config.kmk | sed -e "s/ //g"`
+
+if [ "$VBOX_VERSION_MAJOR" = "" ] ; then
+   echo >&2 "ERROR: Unable to extract VBOX_VERSION_MAJOR from Config.kmk!"
+   exit 1
+fi
+if [ "$VBOX_VERSION_MINOR" = "" ] ; then
+   echo >&2 "ERROR: Unable to extract VBOX_VERSION_MINOR from Config.kmk!"
+   exit 1
+fi
+if [ "$VBOX_VERSION_BUILD" = "" ] ; then
+   echo >&2 "ERROR: Unable to extract VBOX_VERSION_BUILD from Config.kmk!"
+   exit 1
+fi
+PLAIN_VERSION=${VBOX_VERSION_MAJOR}.${VBOX_VERSION_MINOR}.${VBOX_VERSION_BUILD}
+
+CHANGELOG_HEADER="`head -n1 debian/changelog`"
+echo "Old CHANGELOG_HEADER=$CHANGELOG_HEADER"
+CHANGELOG_HEADER=`echo "$CHANGELOG_HEADER" | sed -e "s/^\([a-zA-Z0-9]*\) (\([0-9]*\.[0-9]*\.[0-9]*\)\(.*\))/\1 (${PLAIN_VERSION}\3)/g"`
+echo "New CHANGELOG_HEADER=$CHANGELOG_HEADER"
+
+# The package name, e.g. MyApplication
+PACKAGE=`echo $CHANGELOG_HEADER | sed -e "s/(.*//" -e "s/ //g"`
+
+# The package distribution, e.g. precise, raring, ...
+PACKAGE_DISTRIBUTION=`echo $CHANGELOG_HEADER | sed -e "s/[^)]*)//" -e "s/;.*//g" -e "s/ //g"`
+# The package's version, e.g. 1.2.3-1ubuntu1
+PACKAGE_VERSION=`echo $CHANGELOG_HEADER | sed -e "s/.*(//" -e "s/).*//" -e "s/ //g" -e "s/ //g"`
+# The package's output version, e.g. 1.2.3-1ubuntu
+OUTPUT_VERSION=`echo $PACKAGE_VERSION   | sed -e "s/\(ubuntu\)[0-9]*$/\1/"`
+# The package's Debian version, e.g. 1.2.3-1
+DEBIAN_VERSION=`echo $OUTPUT_VERSION    | sed -e "s/ubuntu$//1"`
+# The package's upstream version, e.g. 1.2.3
+UPSTREAM_VERSION=`echo $DEBIAN_VERSION  | sed -e "s/-[0-9]*$//"`
+# The package's plain upstream version, e.g. 1.2.3 (without e.g. ~svn<xxxx>)
+PLAIN_VERSION=`echo $UPSTREAM_VERSION   | sed -e "s/\([0-9\.]*\)[-+~].*$/\1/"`
+
+
+echo -e "\x1b[34m######################################################################\x1b[0m"
+echo -e "\x1b[34mCHANGELOG_HEADER:     $CHANGELOG_HEADER\x1b[0m"
+echo -e "\x1b[34mPACKAGE:              $PACKAGE\x1b[0m"
+echo -e "\x1b[34mPACKAGE_DISTRIBUTION: $PACKAGE_DISTRIBUTION\x1b[0m"
+echo -e "\x1b[34mPACKAGE_VERSION       $PACKAGE_VERSION\x1b[0m"
+echo -e "\x1b[34mOUTPUT_VERSION:       $OUTPUT_VERSION\x1b[0m"
+echo -e "\x1b[34mDEBIAN_VERSION:       $DEBIAN_VERSION\x1b[0m"
+echo -e "\x1b[34mUPSTREAM_VERSION:     $UPSTREAM_VERSION\x1b[0m"
+echo -e "\x1b[34mPLAIN_VERSION:        $PLAIN_VERSION\x1b[0m"
+echo -e "\x1b[34m######################################################################\x1b[0m"
+
+
+# ====== Create debian/changelog ============================================
+(
+   echo "${PACKAGE}${PACKAGE_SUFFIX} (${PLAIN_VERSION}~${BUILD_VERSION_IDENTIFIER}-1ubuntu1) ${PACKAGE_DISTRIBUTION}; urgency=medium"
+   echo ""
+   echo "  * New Debian package from SVN revision ${SVN_VERSION}."
+   echo ""
+   echo " -- $MAINTAINER  `env LANG=en date +"%a, %02d %b %Y %H:%M:%S %z"`"
+   echo ""
+   sed <debian/changelog -e "s/^${PACKAGE} /${PACKAGE}${PACKAGE_SUFFIX} /g"
+) >debian/changelog.new
+
+
+# ====== Copy package files =================================================
+BUILD_PACKAGES=`grep "^Package: " debian/control.orig | sed -e "s/Package: //g"`
+cd debian
+echo "" >package-names.sed.tmp
+echo "" >package-names.sed.tmp2
+for buildPackage in $BUILD_PACKAGES ; do
+   buildPackageFiles=`find . -maxdepth 1 -name "${buildPackage}.*" -printf '%f\\n'`
+   echo "P=${buildPackage}" 
+   for buildPackageFile in $buildPackageFiles ; do
+      targetPackageFile=`echo "${buildPackageFile}" | sed -e "s/^${buildPackage}/${buildPackage}${PACKAGE_SUFFIX}/g"`
+      if [ "${buildPackageFile}" != "${targetPackageFile}" ] ; then
+         if [ -e "${targetPackageFile}" ] ; then
+            rm -rf "${targetPackageFile}"
+         fi
+         cp -a "${buildPackageFile}" "${targetPackageFile}"
+      fi
+   done
+
+   conflicts=""
+   if [ "${PACKAGE_SUFFIX}" != "" ] ; then
+      conflicts="${buildPackage}"   # The original name
+   fi
+   for v in $VARIANTS ; do
+      if [ "$v" != "$VARIANT" ] ; then
+         if [ "$conflicts" = "" ] ; then
+            conflicts="${buildPackage}-${v}"
+         else
+            conflicts="${conflicts}, ${buildPackage}-${v}"
+         fi
+      fi
+   done
+   if [ "${buildPackage}" = "virtualbox" ] ; then
+      conflicts="${conflicts}, virtualbox-2.0, virtualbox-2.1, virtualbox-2.2, virtualbox-3.0, virtualbox-4.2"
+   fi
+
+   echo "s/${buildPackage}$/${buildPackage}${PACKAGE_SUFFIX}/g" >>package-names.sed.tmp
+   echo "s/${buildPackage}[ \t]/${buildPackage}${PACKAGE_SUFFIX} /g" >>package-names.sed.tmp
+   echo "s/^\(Package: ${buildPackage}${PACKAGE_SUFFIX}\)$/\1\nReplaces: ${conflicts}\nConflicts: ${conflicts}/g" >>package-names.sed.tmp2
+
+done
+# echo "/^Conflicts:/d"        >package-names.sed
+echo "/^Replaces:/d"        >>package-names.sed
+sort <package-names.sed.tmp >>package-names.sed
+cat package-names.sed.tmp2  >>package-names.sed
+rm -f package-names.sed.tmp
+cd ..
+
+
+# ====== Change debian/control ==============================================
+# VirtualBox has several control files ...
+CONTROL_FILES="control virtualbox-source${PACKAGE_SUFFIX}.files/control.modules.in virtualbox-guest-source${PACKAGE_SUFFIX}.files/control.modules.in"
+for controlFile in $CONTROL_FILES ; do
+   (
+      sed <debian/${controlFile} \
+         -f debian/package-names.sed \
+         -e "s/^Maintainer:.*/Maintainer: $MAINTAINER/g" \
+         -e "s/: Oracle VM /: Open Source /g" | \
+      if [ "${PACKAGE_SUFFIX}" != "" ] ; then
+         sed -e "s/^Package: ${PACKAGE}${PACKAGE_SUFFIX}$/Package: ${PACKAGE}${PACKAGE_SUFFIX}\nProvides: ${PACKAGE}/g" \
+             -e "s/^Package: ${PACKAGE}-guest-utils${PACKAGE_SUFFIX}$/Package: ${PACKAGE}-guest-utils${PACKAGE_SUFFIX}\nProvides: ${PACKAGE}-guest-utils/g"
+      else
+         cat
+      fi
+
+   ) >debian/${controlFile}.new
+done
+
+
+# ====== Change debian/rules ================================================
+RULES_FILES="rules virtualbox-source${PACKAGE_SUFFIX}.files/rules virtualbox-guest-source${PACKAGE_SUFFIX}.files/rules"
+for rulesFile in $RULES_FILES ; do
+   (
+      sed <debian/rules \
+         -e "s/^\(verpkg[ \t]*\):=[ \t]*${PACKAGE}/\1:= ${PACKAGE}${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(psource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(gsource\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(pdkms\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(gdkms\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(sname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(sxname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(gname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(uname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/^\(uxname\):=\([a-zA-Z0-9+-]*\)$/\1 := \2${PACKAGE_SUFFIX}/g" \
+         -e "s/dh_strip --dbg-package=\$(sname)-dbg/dh_strip --dbg-package=${PACKAGE}-dbg${PACKAGE_SUFFIX}/g"
+   ) >debian/${rulesFile}.new
+done
+
+
+# ====== Change source install files ========================================
+if [ "${PACKAGE_SUFFIX}" != "" ] ; then
+   SOURCE_FILES="virtualbox-source${PACKAGE_SUFFIX}.links virtualbox-source${PACKAGE_SUFFIX}.install virtualbox-guest-source${PACKAGE_SUFFIX}.links virtualbox-guest-source${PACKAGE_SUFFIX}.install virtualbox-dkms${PACKAGE_SUFFIX}.dkms virtualbox-dkms${PACKAGE_SUFFIX}.links.in virtualbox-dkms${PACKAGE_SUFFIX}.install.in virtualbox-guest-dkms${PACKAGE_SUFFIX}.dkms virtualbox-guest-dkms${PACKAGE_SUFFIX}.links.in virtualbox-guest-dkms${PACKAGE_SUFFIX}.install.in"
+   for sourceFile in $SOURCE_FILES ; do
+      (
+         sed <debian/${sourceFile} \
+            -e "s/\/modules\/virtualbox\//\/modules\/virtualbox${PACKAGE_SUFFIX}\//g" \
+            -e "s/\/modules\/virtualbox$/\/modules\/virtualbox${PACKAGE_SUFFIX}/g" \
+            -e "s/\/modules\/virtualbox-guest\//\/modules\/virtualbox-guest${PACKAGE_SUFFIX}\//g" \
+            -e "s/\/modules\/virtualbox-guest$/\/modules\/virtualbox-guest${PACKAGE_SUFFIX}/g" \
+            -e "s/^PACKAGE_NAME=\"virtualbox\"$/PACKAGE_NAME=\"virtualbox${PACKAGE_SUFFIX}\"/g" \
+            -e "s/^PACKAGE_NAME=\"virtualbox-guest\"$/PACKAGE_NAME=\"virtualbox-guest${PACKAGE_SUFFIX}\"/g" \
+            -e "s/virtualbox-guest-CVERSION/virtualbox-guest${PACKAGE_SUFFIX}-CVERSION/g" \
+            -e "s/virtualbox-CVERSION/virtualbox${PACKAGE_SUFFIX}-CVERSION/g"
+      ) >debian/${sourceFile}.new
+   done
+   
+   LINTIAN_FILES="source.lintian-overrides `find  debian/ -name "*${PACKAGE_SUFFIX}.lintian-overrides" -printf "%f\\n"`"
+   for lintianFile in $LINTIAN_FILES ; do
+      (
+         sed <debian/${lintianFile} \
+            -e "s/^\(virtualbox[a-zA-Z0-9+-]*\):/\1${PACKAGE_SUFFIX}:/g" \
+            -e "s/^\(virtualbox[a-zA-Z0-9+-]*\) source:/\1${PACKAGE_SUFFIX} source:/g"
+      ) >debian/${lintianFile}.new
+   done
+fi
+
+
+# ====== Apply changes ======================================================
+for updatedFile in changelog $CONTROL_FILES $RULES_FILES $SOURCE_FILES $LINTIAN_FILES ; do
+   mv "debian/${updatedFile}.new" "debian/${updatedFile}"
+done
+
+
+# ====== Write LocalConfig.kmk ==============================================
+(
+   echo "VBOX_BUILD_PUBLISHER = _${BUILD_VERSION_IDENTIFIER}"
+) >LocalConfig.kmk
