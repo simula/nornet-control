@@ -23,7 +23,7 @@ import re;
 import os;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddr import IPAddress, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
 from NorNetTools         import *;
@@ -35,7 +35,7 @@ from SysSetupCommons     import *;
 
 
 # ###### Write NTP configuration file ##############################################
-def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider):
+def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider, ntpServerList):
    outputFile = codecs.open(outputName, 'w', 'utf-8')
 
    outputFile.write('# ====== Drift File ======\n')
@@ -53,10 +53,15 @@ def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider):
    outputFile.write('restrict ::1\n\n')
 
    outputFile.write('# ====== NTP server ======\n')
-   for version in [ 6 ]:
-      ntpServer = makeNorNetIP(defaultProvider, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
-      outputFile.write('server    ' + str(ntpServer.ip) + '\n')
-      outputFile.write('restrict  ' + str(ntpServer.ip) + '\n')
+   if(len(ntpServerList) == 0):
+      for version in [ 6 ]:
+         ntpServer = makeNorNetIP(defaultProvider, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
+         outputFile.write('server    ' + str(ntpServer.ip) + '\n')
+         outputFile.write('restrict  ' + str(ntpServer.ip) + '\n')
+   else:
+      for ntpServer in ntpServerList:
+         outputFile.write('server    ' + ntpServer + '\n')
+         outputFile.write('restrict  ' + ntpServer + '\n')
 
    outputFile.close()
 
@@ -64,7 +69,7 @@ def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider):
 
 # ###### Main program #######################################################
 if ((len(sys.argv) < 10) or (sys.argv[4] != '-site') or (sys.argv[6] != '-interface') or (sys.argv[8] != '-providers')):
-   error('Usage: ' + sys.argv[0] + ' variant FQDN node_index -site site_index -interface interface_name -providers default_provider[,provider2,...] [-controlbox]')
+   error('Usage: ' + sys.argv[0] + ' variant FQDN node_index -site site_index -interface interface_name -providers default_provider[,provider2,...] [-controlbox] [-bridge interface] [-ntp server,...]')
 
 variant    = sys.argv[1]
 hostName   = getHostnameFromFQDN(sys.argv[2])
@@ -78,6 +83,7 @@ if ((siteIndex < 1) or (siteIndex > 255)):
 interfaceName = sys.argv[7]
 controlBoxMode  = False
 bridgeInterface = None
+ntpServers      = None
 if len(sys.argv) > 10:
     i = 10
     while i < len(sys.argv):
@@ -89,6 +95,12 @@ if len(sys.argv) > 10:
              i = i + 1
           else:
              error('No bridge interface given!')
+       elif sys.argv[i] == '-ntp':
+          if i + 1 < len(sys.argv):
+             ntpServers = sys.argv[i + 1]
+             i = i + 1
+          else:
+             error('No NTP servers given!')
        else:
           error('Bad argument: ' + sys.argv[i])
        i = i + 1
@@ -113,12 +125,29 @@ for providerName in sys.argv[9].split(','):
       defaultProvider = providerIndex
    providerList.append(providerIndex)
 
+ntpServerList = []
+if ntpServers != None:
+   for ntpServer in ntpServers.split(','):
+      success = False
+      for type in [ socket.AF_INET6, socket.AF_INET ]:
+         try:
+            result = socket.getaddrinfo (ntpServer, 123, type, socket.SOCK_DGRAM)
+            for resultItem in result:
+               ntpServerList.append(str(IPAddress(resultItem[4][0])))
+               success = True
+         except:
+            continue
+      if success == False:
+         error('Unable to resolve NTP server name: ' + ntpServer)
+   ntpServerList = sorted(set(ntpServerList))
 
-print('Node:       ' + hostName + ' . ' + domainName)
-print('Node Index: ' + str(nodeIndex))
-print('Site Index: ' + str(siteIndex))
-print('Interface:  ' + interfaceName)
-print('Providers:  ' + str(providerList))
+print('Node:        ' + hostName + ' . ' + domainName)
+print('Node Index:  ' + str(nodeIndex))
+print('Site Index:  ' + str(siteIndex))
+print('Interface:   ' + interfaceName)
+print('Bridge:      ' + str(bridgeInterface))
+print('Providers:   ' + str(providerList))
+print('NTP Servers: ' + str(ntpServerList))
 
 
 writeInterfaceConfiguration('.new', variant, interfaceName, controlBoxMode,
@@ -128,7 +157,7 @@ writeHosts('hosts.new', hostName, domainName)
 if variant != 'FreeBSD':
    writeHostname('hostname.new', hostName, domainName)
 writeProxyConfiguration('.new', domainName, variant, controlBoxMode)
-writeNTPConfiguration('ntp.new', nodeIndex, siteIndex, defaultProvider)
+writeNTPConfiguration('ntp.new', nodeIndex, siteIndex, defaultProvider, ntpServerList)
 writeSysctlConfiguration('sysctl.new', interfaceName)
 
 # Create AutoFS configuration only if we are not on the file server itself!
