@@ -52,6 +52,10 @@ def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider, ntp
    outputFile.write('restrict 127.0.0.1\n')
    outputFile.write('restrict ::1\n\n')
 
+   outputFile.write('# ====== Fudge Clock ======\n')
+   outputFile.write('server 127.127.1.0\n')
+   outputFile.write('fudge 127.127.1.0 stratum 10\n\n')
+
    outputFile.write('# ====== NTP server ======\n')
    if(len(ntpServerList) == 0):
       for version in [ 6 ]:
