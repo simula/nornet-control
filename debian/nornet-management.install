@@ -10,6 +10,7 @@ Reset-Networking                        /usr/bin
 System-Backup                           /usr/bin
 System-Info                             /usr/bin
 System-Maintenance                      /usr/bin
+Test-NTP-Configuration                  /usr/bin
 Watchdog                                /usr/bin
 grub/??_nornet_management_theme         /etc/grub.d
 grub/Splash-Management1-1024x768.jpeg   /boot
