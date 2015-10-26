@@ -34,7 +34,7 @@ node_index
 \-interface interface_name
 \-providers default_provider[,provider2,...]
 .Op \-bridge interface_name
-.Op \-ntp server,...
+.Op \-ntp server[,server2,...]
 .Op \-controlbox
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
@@ -66,7 +66,7 @@ or provider index.
 .It \-bridge interface_name
 Sets the NorNet interface into bridge mode. The new bridge interface's name
 is given as parameter. All configuration is made with the bridge interface.
-.It \-ntp server,...
+.It \-ntp server1[,server2,...]
 Use the given list of NTP servers instead of the local tunnelbox.
 .It \-controlbox
 If set, the node is a Control Box. That is, the default routes are not via
