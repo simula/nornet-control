@@ -59,7 +59,7 @@ def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider, ntp
          outputFile.write('server    ' + str(ntpServer.ip) + '\n')
          outputFile.write('restrict  ' + str(ntpServer.ip) + '\n')
    else:
-      for ntpServer in sorted(ntpServerList):
+      for ntpServer in ntpServerList:
          outputFile.write('server    ' + ntpServer + '\n')
          outputFile.write('restrict  ' + ntpServer + '\n')
 
@@ -139,7 +139,7 @@ if ntpServers != None:
             continue
       if success == False:
          error('Unable to resolve NTP server name: ' + ntpServer)
-
+   ntpServerList = sorted(set(ntpServerList))
 
 print('Node:        ' + hostName + ' . ' + domainName)
 print('Node Index:  ' + str(nodeIndex))
