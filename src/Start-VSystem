@@ -103,6 +103,9 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
                   --vrdeproperty "VNCPassword=$VNCPASSWORD" \
                   --vrdeauthlibrary null \
                   --vrdeport=$VNCPORT
+               if [ ${version[0]} -ge 5 ] ; then
+                  sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" --vrde on
+               fi
             fi
          fi
       fi
