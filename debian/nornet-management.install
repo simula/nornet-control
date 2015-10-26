@@ -11,6 +11,6 @@ System-Backup                     /usr/bin
 System-Info                       /usr/bin
 System-Maintenance                /usr/bin
 Watchdog                          /usr/bin
+grub/??_nornet_management_theme   /etc/grub.d
 nornet-authorized_keys            /etc/nornet
 nornet-version                    /etc/nornet
-grub/??_nornet_management_theme   /etc/grub.d
