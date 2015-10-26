@@ -49,6 +49,10 @@ def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider, ntp
 
    outputFile.write('# ====== Generic Access Restrictions ======\n')
    outputFile.write('restrict default ignore\n')
+   if len(ntpServerList) != 0:
+      for version in [ 4, 6 ]:
+         fullNorNetNetwork = makeNorNetIP(0, 0, 0, version)
+         outputFile.write('restrict ' + str(fullNorNetNetwork.ip) + ' mask ' + str(fullNorNetNetwork.netmask) + ' nomodify\n')
    outputFile.write('restrict 127.0.0.1\n')
    outputFile.write('restrict ::1\n\n')
 
@@ -57,7 +61,7 @@ def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider, ntp
    outputFile.write('fudge 127.127.1.0 stratum 10\n\n')
 
    outputFile.write('# ====== NTP server ======\n')
-   if(len(ntpServerList) == 0):
+   if len(ntpServerList) == 0:
       for version in [ 6 ]:
          ntpServer = makeNorNetIP(defaultProvider, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
          outputFile.write('server    ' + str(ntpServer.ip) + '\n')
