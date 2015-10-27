@@ -55,7 +55,7 @@ def makeNTPConfiguration(fullSiteList, localSite, localNode):
             except:
                continue
          if success == False:
-            error('Unable to resolve NTP server name: ' + ntpServer)
+            error('Unable to resolve NTP server name: ' + ntpServerName)
    else:
       if localSite != None:
          for i in range(0, NorNet_MaxNTPServers - 1):
@@ -64,7 +64,6 @@ def makeNTPConfiguration(fullSiteList, localSite, localNode):
                ntpServerList.append(str(ntpServer))
 
    ntpServerList = sorted(set(ntpServerList))
-   print ntpServerList
 
    outputFile.write('# ====== Drift File ======\n')
    outputFile.write('driftfile /var/lib/ntp/ntp.drift\n\n')
