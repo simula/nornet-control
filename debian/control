@@ -9,7 +9,7 @@ Build-Depends: debhelper (>= 9),
                python (>= 2.7),
                python-ipaddr,
                python-support
-Standards-Version: 3.9.5
+Standards-Version: 3.9.6
 
 Package: nornet-api
 Architecture: any
@@ -89,7 +89,10 @@ Depends: fvwm,
          x11-apps,
          xdm,
          xloadimage,
-         xterm
+         xterm,
+         ${misc:Depends},
+         ${python:Depends},
+         ${shlibs:Depends}
 Description: NorNet X11 Login
  This metapackage contains basic X11 software for NorNet systems. The
  software provides a very lightweight graphical login (fvwm) with a shell
