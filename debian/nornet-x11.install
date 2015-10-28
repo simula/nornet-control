@@ -1,2 +1,2 @@
-XDM/Xsetup       /etc/X11/xdm
 XDM/Xresources   /etc/X11/xdm
+XDM/Xsetup       /etc/X11/xdm

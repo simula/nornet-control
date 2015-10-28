@@ -85,7 +85,11 @@ Description: NorNet Management Tools
 
 Package: nornet-x11
 Architecture: any
-Depends: xdm,xloadimage,fvwm,xterm,x11-apps
+Depends: fvwm,
+         x11-apps,
+         xdm,
+         xloadimage,
+         xterm
 Description: NorNet X11 Login
  This metapackage contains basic X11 software for NorNet systems. The
  software provides a very lightweight graphical login (fvwm) with a shell
