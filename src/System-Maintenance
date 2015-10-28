@@ -114,7 +114,7 @@ if [ "$Variant" = "Debian" ] ; then
       if grep "^virtualbox-guest-utils[/ ]" $PackageVersionsFile >/dev/null ; then
          echo "VirtualBox guest utilities will be upgraded to NorNet package!"
          sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -y -q virtualbox-guest-utils-nornet-stable >/tmp/install.log 2>&1 &
-         wait      
+         wait
          cat /tmp/install.log
       fi
       if grep "^virtualbox-nornet-" $PackageVersionsFile >/dev/null ; then
@@ -126,7 +126,7 @@ if [ "$Variant" = "Debian" ] ; then
             service /etc/init.d/nornet-server stop || true
          fi
          sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -y -q virtualbox-nornet-stable >/tmp/install.log 2>&1 &
-         wait      
+         wait
          cat /tmp/install.log
       fi
       rm -f $PackageVersionsFile
@@ -159,7 +159,7 @@ if [ "$Variant" = "Debian" ] ; then
    echo "Kernel Boot Version: $kernelBootVersion"
    echo "Kernel Disk Version: $kernelDiskVersion"
 
-   toBeRemoved=`apt-show-versions | awk '{ print $1 }' | sed -e "s/:.*$//g" -e "s/\/.*$//g" | ( 
+   toBeRemoved=`apt-show-versions | awk '{ print $1 }' | sed -e "s/:.*$//g" -e "s/\/.*$//g" | (
       while read line ; do
          if [[ $line =~ ^(linux-image-|linux-headers-).*$ ]] ; then
             if [[ $line =~ ^(linux-image-${kernelBootVersion}-${kernelType}|linux-image-extra-${kernelBootVersion}-${kernelType}|linux-headers-${kernelBootVersion}-${kernelType}|linux-headers-${kernelBootVersion}).*$ ]] ; then
@@ -269,8 +269,11 @@ if [ -e /etc/ntp.conf ] ; then
       sudo service $ntpServiceName stop >/dev/null 2>&1 || true
    done
 
-   # Trying ntp1.uio.no via IPv6 (2001:700:100:2::6) first:
-   sudo ntpdate 2001:700:100:2::6 || sudo ntpdate ntp1.ptb.de || sudo ntpdate 10.1.1.1
+   # 1. Try ntp1.uio.no via IPv6 (2001:700:100:2::6) first.
+   # 2. Try PTB's server.
+   # 3. Try noeyaktig.simula.nornet, via IPv6 and IPv4.
+   # 4. Try Simula tunnelbox.
+   sudo ntpdate 2001:700:100:2::6 || sudo ntpdate ntp1.ptb.de || sudo ntpdate 2001:700:4100:101::fa || sudo ntpdate 10.1.1.250 || sudo ntpdate 10.1.1.1
 
    # Write time to hardware clock
    if [ "$Variant" != "FreeBSD" ] ; then
