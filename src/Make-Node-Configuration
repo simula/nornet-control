@@ -34,12 +34,36 @@ def makeNTPConfiguration(fullSiteList, localSite, localNode):
    outputFile = codecs.open('ntp-config', 'w', 'utf-8')
    writeAutoConfigInformation(outputFile)
 
-   ntpServerList = []
-   if localSite != None:
-      for i in range(0, NorNet_MaxNTPServers - 1):
-         ntpServer = IPAddress(getTagValue(localSite['site_tags'], 'nornet_site_ntp' + str(1 + i), '0.0.0.0'))
-         if ntpServer != IPv4Address('0.0.0.0'):
-            ntpServerList.append(ntpServer)
+   customNTPServerList = False
+   ntpServerList       = []
+   ntpServerNameList   = []
+   try:
+      ntpServerNameList = NorNet_Configuration['NorNet_LocalNode_NTPServers'].split(' ')
+   except:
+      pass
+
+   if len(ntpServerNameList) > 0:
+      for ntpServerName in ntpServerNameList:
+         success = False
+         for type in [ socket.AF_INET6, socket.AF_INET ]:
+            try:
+               result = socket.getaddrinfo (ntpServerName, 123, type, socket.SOCK_DGRAM)
+               for resultItem in result:
+                  ntpServerList.append(str(IPAddress(resultItem[4][0])))
+                  success             = True
+                  customNTPServerList = True
+            except:
+               continue
+         if success == False:
+            error('Unable to resolve NTP server name: ' + ntpServerName)
+   else:
+      if localSite != None:
+         for i in range(0, NorNet_MaxNTPServers - 1):
+            ntpServer = IPAddress(getTagValue(localSite['site_tags'], 'nornet_site_ntp' + str(1 + i), '0.0.0.0'))
+            if ntpServer != IPv4Address('0.0.0.0'):
+               ntpServerList.append(str(ntpServer))
+
+   ntpServerList = sorted(set(ntpServerList))
 
    outputFile.write('# ====== Drift File ======\n')
    outputFile.write('driftfile /var/lib/ntp/ntp.drift\n\n')
@@ -99,10 +123,15 @@ def makeNTPConfiguration(fullSiteList, localSite, localNode):
    # ====== Write non-tunnelbox NTP server configuration ===================#
    else:
       outputFile.write('# ====== Local NTP Server ======\n')
-      ntpServer = makeNorNetIP(localSite['site_default_provider_index'],
-                               localSite['site_index'], NorNet_NodeIndex_Tunnelbox, 6)
-      outputFile.write('server ' + str(ntpServer.ip) + '\n')
-      outputFile.write('restrict ' + str(ntpServer.ip) + '\n')
+      if customNTPServerList == False:
+         ntpServer = makeNorNetIP(localSite['site_default_provider_index'],
+                                 localSite['site_index'], NorNet_NodeIndex_Tunnelbox, 6)
+         outputFile.write('server ' + str(ntpServer.ip) + '\n')
+         outputFile.write('restrict ' + str(ntpServer.ip) + '\n')
+      else:
+         for ntpServer in ntpServerList:
+            outputFile.write('server ' + str(ntpServer) + '\n')
+            outputFile.write('restrict ' + str(ntpServer) + '\n')
 
    outputFile.close()
 

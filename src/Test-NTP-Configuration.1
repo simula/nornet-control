@@ -1,0 +1,48 @@
+.\" Test-NTP-Configuration
+.\" Copyright (C) 2015 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd October 26, 2015
+.Dt Test-NTP-Configuration 1
+.Os Test-NTP-Configuration
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Test-NTP-Configuration
+.Nd NorNet Server Configuration Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Test-NTP-Configuration
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Test-NTP-Configuration
+is a simple test to check the NTP server configuration in /etc/ntp.conf. It
+tries to contact all servers listed as "server <address>" in parallel and
+prints out the result for each server.
+.Pp
+.\" .\" ###### Arguments ########################################################
+.\" .Sh ARGUMENTS
+.\" The following parameters need to be provided:
+.\" .Bl -tag -width indent
+.\" .It xxxxx
+.\" yyyy
+.\" .El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Test-NTP-Configuration
+.El

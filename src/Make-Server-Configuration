@@ -77,7 +77,7 @@ def writeNTPConfiguration(outputName, nodeIndex, siteIndex, defaultProvider, ntp
 
 # ###### Main program #######################################################
 if ((len(sys.argv) < 10) or (sys.argv[4] != '-site') or (sys.argv[6] != '-interface') or (sys.argv[8] != '-providers')):
-   error('Usage: ' + sys.argv[0] + ' variant FQDN node_index -site site_index -interface interface_name -providers default_provider[,provider2,...] [-controlbox] [-bridge interface] [-ntp server,...]')
+   error('Usage: ' + sys.argv[0] + ' variant FQDN node_index -site site_index -interface interface_name -providers default_provider[,provider2,...] [-controlbox] [-bridge interface] [-ntp server[,server2,...]]')
 
 variant    = sys.argv[1]
 hostName   = getHostnameFromFQDN(sys.argv[2])

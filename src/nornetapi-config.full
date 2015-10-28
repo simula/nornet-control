@@ -11,14 +11,14 @@ NorNetPLC_Address='10.1.1.2'
 # These are the user name and corresponding password for accessing the PLC.
 # SECURITY ADVICE:
 # Use a user with restricted access permissions. For most operations (e.g.
-# obtaining the node configurations), it is just sufficient to read the PLC
+# obtaining the node configurations)  it is just sufficient to read the PLC
 # database. Only modifying the configuration needs a more "powerful" user!
 NorNetPLC_User='dummy@simula.nornet'
 NorNetPLC_Password='dummy-password'
 
 
 # ###### NorNet Node configuration ##########################################
-# Node Index; needed,if if the node is not a PLC-managed node:
+# Node Index; needed if if the node is not a PLC-managed node:
 # This is also the case for tunnelboxes (in this case: always 1)!
 NorNet_LocalNode_Index="1"
 
@@ -34,9 +34,14 @@ NorNet_LocalNode_NorNetInterface='eth0'
 # no  -> set the default route via tunnelbox
 NorNet_LocalNode_ControlBox='no'
 
+# Set custom NTP servers (seperated by space).
+# Default:
+# For tunnelbox: use use the configuration from the PLC
+# All other nodes: use the local tunnelbox
+# NorNet_LocalNode_NTPServers='10.1.1.250 2001:700:4100:101::fa 10.10.10.251 2001:700:4100:10a::fb 164.113.202.19,2001:49d0:3c00:6::19 ntp1.uio.no ntp2.uio.no ntp1.ptb.de ntp2.ptb.de ntp3.ptb.de'
 
 # ###### NorNet system user #################################################
-# The NorNet user on this system. By default, it is 'nornetpp'.
+# The NorNet user on this system. By default  it is 'nornetpp'.
 # NorNet_LocalNode_NorNetUser='nornetpp'
 
 # Automatically update the NorNet user's SSH authorized_keys.
@@ -46,7 +51,7 @@ NorNet_LocalNode_ControlBox='no'
 # ###### NorNet Server configuration ########################################
 # The virtualization system used for the virtual systems.
 # Default is "" -> VirtualBox.
-# Possible settings: VirtualBox, KVM
+# Possible settings: VirtualBox  KVM
 # NorNet_Server_VirtualizationSystem=""
 
 # The default VNC address to access virtual systems on this host. It may be
@@ -75,7 +80,7 @@ NorNet_Slice_NodeIndexRange="120 199"
 # ###### NorNet Tunnelbox configuration #####################################
 # NOTE:
 # The following information is only necessary to bootstrap a tunnelbox on the
-# local site. For other nodes, the variables do not have to be set!
+# local site. For other nodes  the variables do not have to be set!
 
 # This is the Site Index of the local site:
 NorNet_LocalSite_SiteIndex=1
@@ -115,7 +120,7 @@ NorNet_Squid_TransparentProxy="on"
 # NorNet_CentralSite_NAT_Range="<Address1> <AddressN>"
 
 # Additional external interface
-# (an interface for external Internet access, e.g. via NAT)
+# (an interface for external Internet access  e.g. via NAT)
 # that is *not* part of the provider configuration:
 # NorNet_CentralSite_AdditionalExtInterface='eth3'
 
@@ -125,9 +130,9 @@ NorNet_Squid_TransparentProxy="on"
 
 
 # ###### Additional DNS names ###############################################
-# Add additional, non-managed nodes here.
+# Add additional  non-managed nodes here.
 # The syntax is:
-# 'NorNet_LocalSite_Node<XXX>='"Hostname" "Hardware" "Type" "Options"',
+# 'NorNet_LocalSite_Node<XXX>='"Hostname" "Hardware" "Type" "Options"'
 # where <XXX> denotes the node index (i.e. 2 to 254).
 
 NorNet_LocalSite_Node254='"skjennungen"        "HP DL-320"  "Physical Server #1"'

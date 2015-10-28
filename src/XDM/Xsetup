@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# This script is run as root before showing login widget.
+
+#xsetroot -solid rgb:8/8/8
+
+background=""
+inputFile=`find /etc/grub.d -name '??_nornet*' | sort -ur | head -n1`
+if [ "$inputFile" != "" ] ; then
+   background=`grep "/boot/Splash" $inputFile | sed -e 's/^.*\(\/boot\/Splash.*jpeg\).*$/\1/g' | head -n1`
+fi
+
+if [ "$background" != "" -a -e "$background" ] ; then
+   # echo "B=$background"
+   xloadimage -onroot -quiet -fullscreen "$background"
+else
+   xsetroot -solid rgb:8/8/8
+fi

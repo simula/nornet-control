@@ -50,7 +50,8 @@ GETHOSTTIMEDISABLED=$5
 VNCADDRESS="$6"
 VNCPORT=$7
 VNCPASSWORD="$8"
-OPTIONS="$9"
+VNCKEYMAP="$9"
+OPTIONS="${10}"
 if [ "$VNCADDRESS" = "" ] ; then
    VNCADDRESS="$NorNet_Server_DefaultVNCAddress"
 fi
@@ -86,12 +87,12 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
          "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" $GETHOSTTIMEDISABLED || true
 
       # ====== Set VNC options ==============================================
-      vncOptions=
+      vncOptions=""
       if [ "$VNCPORT" != "" ] ; then
          if [ $VNCPORT -gt 0 -a "$VNCADDRESS" != "" -a "$VNCPASSWORD" != "" ] ; then
             version=( `VBoxManage --version | tr '.' ' '` )
             # echo "`env LANG=C date +%FT%H:%M:%S`: VirtualBox version is ${version[0]}.${version[1]}"
-            if [ ${version[0]} -eq 4 -a ${version[1]} -lt 2 ] ; then
+            if [ ${version[0]} -eq 4 -a ${version[1]} -lt 2 ] ; then            
                vncOptions="--vrde off --vnc --vncport $VNCPORT"
                if [ "$VNCPASSWORD" != "" ] ; then
                   vncOptions="$vncOptions --vncpass \"$VNCPASSWORD\""
@@ -102,6 +103,9 @@ if [ `Check-VSystem "$NAME"` != "running" ] ; then
                   --vrdeproperty "VNCPassword=$VNCPASSWORD" \
                   --vrdeauthlibrary null \
                   --vrdeport=$VNCPORT
+               if [ ${version[0]} -ge 5 ] ; then
+                  sudo -u $NorNet_LocalNode_NorNetUser VBoxManage modifyvm "$NAME" --vrde on
+               fi
             fi
          fi
       fi
