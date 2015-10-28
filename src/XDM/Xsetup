@@ -13,4 +13,6 @@ fi
 if [ "$background" != "" -a -e "$background" ] ; then
    # echo "B=$background"
    xloadimage -onroot -quiet -fullscreen "$background"
+else
+   xsetroot -solid rgb:8/8/8
 fi
