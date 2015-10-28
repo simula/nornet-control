@@ -77,6 +77,16 @@ Description: NorNet Management Tools
  .
  See https://www.nntb.no for details on NorNet!
 
+Package: nornet-x11
+Architecture: any
+Depends: xdm,xloadimage,fvwm,xterm,x11-apps
+Description: NorNet X11 Login
+ This metapackage contains basic X11 software for NorNet systems. The
+ software provides a very lightweight graphical login (fvwm) with a shell
+ (xterm).
+ .
+ See https://www.nntb.no for details on NorNet!
+
 Package: nornet-development
 Architecture: any
 Depends: autoconf,

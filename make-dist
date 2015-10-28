@@ -72,6 +72,10 @@ echo "NorNet $UPSTREAM_VERSION, packaged `env LANG=en date`" >$PACKAGE-$UPSTREAM
 mkdir $PACKAGE-$UPSTREAM_VERSION/cron-apt
 cp src/cron-apt/5-install $PACKAGE-$UPSTREAM_VERSION/cron-apt/
 
+mkdir $PACKAGE-$UPSTREAM_VERSION/XDM
+cp src/XDM/Xsetup     $PACKAGE-$UPSTREAM_VERSION/XDM/
+cp src/XDM/Xresources $PACKAGE-$UPSTREAM_VERSION/XDM/
+
 mkdir $PACKAGE-$UPSTREAM_VERSION/background
 cp src/Background/*.png $PACKAGE-$UPSTREAM_VERSION/background/
 
