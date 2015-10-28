@@ -4,4 +4,13 @@
 
 #xsetroot -solid rgb:8/8/8
 
-xloadimage -onroot -quiet -fullscreen /boot/Splash-Node1-1024x768.jpeg
+background=""
+inputFile=`find /etc/grub.d -name '??_nornet*' | sort -ur | head -n1`
+if [ "$inputFile" != "" ] ; then
+   background=`grep "/boot/Splash" $inputFile | sed -e 's/^.*\(\/boot\/Splash.*jpeg\).*$/\1/g' | head -n1`
+fi
+
+if [ "$background" != "" -a -e "$background" ] ; then
+   # echo "B=$background"
+   xloadimage -onroot -quiet -fullscreen "$background"
+fi
