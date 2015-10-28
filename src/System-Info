@@ -143,8 +143,23 @@ echo "Load:             ${systemLoad}"
 printf "Used Memory:      %5d MiB of %5d MiB (%5d MiB free)\n" ${memoryUsed} ${memoryTotal} ${memoryFree}
 printf "Used Swap:        %5d MiB of %5d MiB (%5d MiB free)\n" ${swapUsed} ${swapTotal} ${swapFree}
 echo "Used Diskspace:   ${diskRoot} on /, ${diskHome} on /home"
-echo "Network:"
 
+echo -n "SSH Key (ECDSA):  "
+if [ -e /etc/ssh/ssh_host_ecdsa_key ] ; then
+   ssh-keygen -l -f /etc/ssh/ssh_host_ecdsa_key | awk '{ print $2 }'
+else
+   echo "not available!"
+fi
+
+echo -n "SSH Key (RSA):    "
+if [ -e /etc/ssh/ssh_host_rsa_key ] ; then
+   ssh-keygen -l -f /etc/ssh/ssh_host_rsa_key | awk '{ print $2 }'
+else
+   echo "not available!"
+fi
+
+
+echo "Network:"
 
 function showAddresses ()
 {
