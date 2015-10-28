@@ -150,14 +150,9 @@ stop_virtual_systems ()
 load_modules ()
 {
    if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
-      vboxNetAdp="`lsmod|grep "^vboxnetadp" || true`"
       for vboxModule in vboxdrv vboxnetadp vboxnetflt vboxpci ; do
          modprobe $vboxModule >>$LOGFILE 2>&1 || true
       done
-      if [ "$vboxNetAdp" == "" ] ; then
-         echo "Creating host-only interface" >>$LOGFILE
-         vboxmanage hostonlyif create >>$LOGFILE 2>&1 || true
-      fi
    fi
 }
 
@@ -166,13 +161,9 @@ load_modules ()
 unload_modules ()
 {
    if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
-      for vboxModule in vboxpci vboxnetflt vboxdrv ; do
-         rmmod $vboxModule >/dev/null 2>&1 || true
+      for vboxModule in vboxpci vboxnetflt vboxnetadp vboxdrv ; do
+         rmmod $vboxModule >>$LOGFILE 2>&1 || true
       done
-      if [ "`lsmod | grep "^vboxnetflt" || true`" == "" ] ; then      
-         echo "Removing host-only interface" >>$LOGFILE
-         rmmod vboxnetadp >/dev/null 2>&1 || true
-      fi
    fi
 }
 
