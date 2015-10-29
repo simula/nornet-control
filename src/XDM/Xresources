@@ -16,7 +16,7 @@ XConsole.verbose:        true
 XConsole*iconic:         true
 XConsole*font:	         fixed
 
-xlogin*geometry:         600x200+275+10
+xlogin*geometry:         600x220+275+10
 xlogin*greeting:         CLIENTHOST
 xlogin*namePrompt:       User:
 xlogin*fail:             Login incorrect or forbidden by policy
