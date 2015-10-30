@@ -837,7 +837,7 @@ def makeSquidConfiguration(nodeName, localSite):
    outputFile.write('# debug_options ALL,2\n\n')
 
    outputFile.write('# ================== ACLs ==============================\n')
-   outputFile.write('# acl manager proto cache_object\n')
+   outputFile.write('acl manager proto cache_object\n')
    outputFile.write('acl localhost src 127.0.0.1/32 ::1\n')
    outputFile.write('acl to_localhost dst 127.0.0.0/8 0.0.0.0/32 ::1\n')
    outputFile.write('# ' + localSite['site_long_name'] + ' site:\n')
