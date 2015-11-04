@@ -25,7 +25,8 @@ Description: NorNet API
 
 Package: nornet-management
 Architecture: any
-Depends: apt-file,
+Depends: apport-retrace,
+         apt-file,
          apt-show-versions,
          autofs,
          bridge-utils,
@@ -41,11 +42,13 @@ Depends: apt-file,
          idn,
          ipsec-tools,
          joe,
+         kexec-tools,
          language-pack-de-base,
          language-pack-en-base,
          language-pack-nb-base,
          libc6-i386 [amd64],
          libfile-fcntllock-perl,
+         linux-crashdump,
          lksctp-tools,
          lsb-base (>= 3.2-14),
          netperfmeter,
