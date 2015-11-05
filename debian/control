@@ -13,7 +13,10 @@ Standards-Version: 3.9.6
 
 Package: nornet-api
 Architecture: any
-Depends: python-ipaddr, ${misc:Depends}, ${python:Depends}, ${shlibs:Depends}
+Depends: python-ipaddr,
+         ${misc:Depends},
+         ${python:Depends},
+         ${shlibs:Depends}
 Description: NorNet API
  This package contains the NorNet Python API library. It contains functions
  to communicate with the central server (MyPLC), based on XMLRPC.
@@ -52,6 +55,7 @@ Depends: apport-retrace,
          nfs-common,
          nmap,
          nornet-api,
+         ntpdate,
          nttcp,
          openssh-server,
          python-software-properties,
@@ -71,7 +75,10 @@ Depends: apport-retrace,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
-Recommends: open-vm-tools, paris-traceroute, tracebox, tshark
+Recommends: open-vm-tools,
+            paris-traceroute,
+            tracebox,
+            tshark
 Conflicts: landscape-common
 Replaces: landscape-common
 Description: NorNet Management Tools
@@ -112,13 +119,18 @@ Depends: autoconf,
          gnuplot,
          imagemagick,
          kbuild,
+         kernel-wedge,
          libbz2-dev,
+         libdw-dev,
+         libelf-dev,
          libglib2.0-dev,
          liblua5.2-dev,
+         libnewt-dev,
          libpcap-dev,
          libsctp-dev,
          libtool,
          lua5.2,
+         module-init-tools,
          pbuilder,
          pkg-config,
          python-pythonmagick,
@@ -204,7 +216,8 @@ Description: NorNet File Server
 
 Package: nornet-artwork
 Architecture: all
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
 Description: NorNet Artwork
  This package contains some images for the monitor server
  on a NorNet central site.
@@ -248,7 +261,9 @@ Description: NorNet Display
 
 Package: nornet-gatekeeper
 Architecture: all
-Depends: nornet-management, ${misc:Depends}, ${shlibs:Depends}
+Depends: nornet-management,
+         ${misc:Depends},
+         ${shlibs:Depends}
 Description: NorNet Gatekeeper
  This package contains the packages to set up a gatekeeper station for the
  project presentation. It is in fact just a node with a dependency on the
@@ -296,7 +311,10 @@ Description: NorNet Wiki Server
 
 Package: nornet-timesrv
 Architecture: all
-Depends: nornet-management, ntp, ntpdate, ${misc:Depends}, ${shlibs:Depends}
+Depends: nornet-management,
+         ntp,
+         ${misc:Depends},
+         ${shlibs:Depends}
 Description: NorNet Time Server
  This package contains the packages to set up an NTP server.
  .
@@ -304,7 +322,10 @@ Description: NorNet Time Server
 
 Package: nornet-database
 Architecture: all
-Depends: postgresql, postgresql-contrib, ${misc:Depends}, ${shlibs:Depends}
+Depends: postgresql,
+         postgresql-contrib,
+         ${misc:Depends},
+         ${shlibs:Depends}
 Description: NorNet Database
  This package contains the packages to set up a database station for
  experiment results collection. It is in fact just a node with a
@@ -336,7 +357,10 @@ Description: NorNet Server
 
 Package: nornet-trace-service
 Architecture: any
-Depends: hipercontracer, ${misc:Depends}, ${python:Depends}, ${shlibs:Depends}
+Depends: hipercontracer,
+         ${misc:Depends},
+         ${python:Depends},
+         ${shlibs:Depends}
 Description: NorNet Trace Service
  NorNet Trace Service is the traceroute service for the NorNet testbed.
  It performs regular traceroute/traceroute6 runs among all sites and
