@@ -28,7 +28,7 @@ MACHINE_NAME="$1"
 IMAGE_FORMAT="$2"
 IMAGE_VARIANT="$3"
 
- 
+
 # ====== Obtain machine status ==============================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Obtaining configuration of virtual system $MACHINE_NAME ...\x1b[0m"
 MACHINE_STATUS_FILE=`mktemp`
@@ -42,7 +42,7 @@ CONFIG_DIR=`dirname "$CONFIG_FILE"`
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Looking for storage controllers ...\x1b[0m"
 for controller in 0 1 2 3 ; do
    for port in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 ; do
-      controllerNames=`cat $MACHINE_STATUS_FILE | grep "^\"[a-zA-Z0-9 ]*-ImageUUID-$port-$controller" | sed -e "s/^\"\([a-zA-Z0-9 ]*\)-ImageUUID-$port-$controller\"=.*$/\1/" || echo ""`
+      controllerNames=`cat $MACHINE_STATUS_FILE | grep "^\"[a-zA-Z0-9 ]*-ImageUUID-$port-$controller" | sed -e "s/^\"\([a-zA-Z0-9 ]*\)-ImageUUID-$port-$controller\"=.*$/\1/" -e "s/ /./" || echo ""`
       for controllerName in $controllerNames ; do
          uuid=`cat $MACHINE_STATUS_FILE | grep "^\"$controllerName-ImageUUID-$port-$controller" | sed -e "s/^\"$controllerName-ImageUUID-$port-$controller\"=\"//" -e "s/\"$//" || echo ""`
          # ====== Check for image attached to controller ====================
@@ -72,7 +72,7 @@ for controller in 0 1 2 3 ; do
                         diskInfo=`cat $HDD_STATUS_FILE | grep -A6 "^UUID:[ ]*$uuid" || echo ""`
                         if [ "$diskInfo" != "" ] ; then
                            usage=`echo "$diskInfo" | grep "^Usage:" || echo ""`
-                           if [ "$usage" = "" ] ; then 
+                           if [ "$usage" = "" ] ; then
                               echo -e "\x1b[34m`date +%FT%H:%M:%S`: Removing old image $oldImage ...\x1b[0m"
                               VBoxManage -q closemedium disk "$uuid" --delete || true
                            else
@@ -84,7 +84,7 @@ for controller in 0 1 2 3 ; do
                         fi
 
                         rm -f $HDD_STATUS_FILE
-                     else 
+                     else
                         echo -e "\x1b[34m`date +%FT%H:%M:%S`: WARNING: Disk $newImage already exists -> skipping conversion!\x1b[0m"
                      fi
                   else
