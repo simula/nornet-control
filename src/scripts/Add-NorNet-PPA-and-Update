@@ -1,0 +1,7 @@
+#!/bin/sh
+
+sudo apt-get install -y software-properties-common ;\
+sudo apt-add-repository -y -s ppa:dreibh/ppa ;\
+sudo apt-get update ; sudo apt-get update ;\
+sudo apt-get dist-upgrade -yd ;\
+sudo System-Maintenance

@@ -33,6 +33,7 @@ node_index
 \-interface interface_name
 \-providers default_provider[,provider2,...]
 .Op \-bridge interface_name
+.Op \-ntp server[,server2,...]
 .Op \-controlbox
 .Op \-from-current-dir
 .\" ###### Description ######################################################
@@ -65,6 +66,8 @@ index.
 .It \-bridge interface_name
 Sets the NorNet interface into bridge mode. The new bridge interface's name
 is given as parameter. All configuration is made with the bridge interface.
+.It \-ntp server1[,server2,...]
+Use the given list of NTP servers instead of the local tunnelbox.
 .It \-controlbox
 If set, the node is a Control Box. That is, the default routes are not via
 the NorNet network. In this case, static routes for just the NorNet address
@@ -79,5 +82,5 @@ without installing it or for using a different version.
 .Bl -tag -width indent
 .It Server-Setup isbjoern.unis.nornet 254 \-site 8 \-interface eth0 \-providers Uninett,Telenor
 .It Server-Setup queenstown.simula.nornet 200 \-site 1 \-interface p16p1 \-providers Uninett,Kvantel,PowerTech,Telenor
-.It Server-Setup midtstuen.simula.nornet 16 \-site 1 \-interface eth0 \-providers Uninett,Kvantel,PowerTech,Telenor \-bridge br0
+.It Server-Setup midtstuen.simula.nornet 16 \-site 1 \-interface eth0 \-providers Uninett,Kvantel,PowerTech,Telenor \-bridge .It Server-Setup wauchope.simula.nornet 34 \-site 1 \-interface eth0 \-providers Uninett,Kvantel,PowerTech,Telenor \-bridge br0 -ntp ntp1.uio.no,ntp2.uio.no,ntp1.ptb.de,ntp2.ptb.de,ntp3.ptb.de
 .El

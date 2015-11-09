@@ -1,9 +1,54 @@
-cfengine3 (3.5.2-1+nmu1) unstable; urgency=low
+cfengine3 (3.6.2-4) unstable; urgency=medium
 
-  * Non-maintainer upload.
-  * New upstream release
+  * debian/patches:
+    + fix_kfreebsd_build fixed after testing on a porterbox
+    + disable_failing_test_on_sparc: disable mon_cpu_test to build on sparc
 
- -- Cfengine Debian Team <debian-team@cfengine.com>  Mon, 14 Oct 2013 12:41:51 -0700
+ -- Antonio Radici <antonio@debian.org>  Sun, 26 Oct 2014 09:42:11 +0000
+
+cfengine3 (3.6.2-3) unstable; urgency=medium
+
+  * debian/patches:
+    + fix_kfreebsd_build to allow the build on Debian/kFreeBSD
+
+ -- Antonio Radici <antonio@debian.org>  Sun, 26 Oct 2014 07:30:01 +0000
+
+cfengine3 (3.6.2-2) unstable; urgency=medium
+
+  * debian/patches:
+    + removing some more tests that are causing FTBFS on different archs.
+
+ -- Antonio Radici <antonio@debian.org>  Sat, 25 Oct 2014 22:01:24 +0000
+
+cfengine3 (3.6.2-1) unstable; urgency=low
+
+  * New upstream release (Closes: 609366, 699809)
+    + big thanks to Brian Bennett, Bas van der Vlies and
+      debian-team@cfengine.com!
+    + no longer using /etc/cfengine3 as repository for the state files;
+      documented that in NEWS.Debian
+  * Multi-tar package, it also includes the masterfiles (Closes: 641319)
+  * debian/postinst:
+    + added code to migrate the files contained in /etc/cfengine3 to
+     /var/lib/cfengine3 if and only if the latter is a symlink to the directory
+     in /etc (Closes: 611659)
+    + added the code to move the masterfiles into
+      /var/lib/cfengine3/masterfiles if the directory is empty
+  * debian/control:
+    + added libpromises3 as output of the build process
+    + Standards-Version updated to 3.9.6
+  * debian/rules:
+    + got rid of the info and html docs, they are not shipped anymore
+  * debian/patches:
+    + major cleanup done, some patches adapted to the new code
+  * debian/NEWS:
+    + added this file to announce the demise of the inputs symlink
+  * debian/cfengine3.default:
+    + Brian fixed the variable names sourced by the init scirpt (Closes: 602404)
+  * debian/watch:
+    + updated to pick up the source from the right URL
+
+ -- Antonio Radici <antonio@debian.org>  Tue, 21 Oct 2014 14:49:40 +0000
 
 cfengine3 (3.2.4-2+nmu1) unstable; urgency=medium
 

@@ -3,7 +3,7 @@
 WIDTH=1024
 HEIGHT=768
 
-for name in PLC1 Node1 Tunnelbox1 Monitor1 Display1 Server1 FileSrv1 Development1 Gatekeeper1 WebSrv1 WikiSrv1 Database1 ; do
+for name in Management1 PLC1 Node1 Tunnelbox1 Monitor1 Display1 Server1 FileSrv1 Development1 Gatekeeper1 WebSrv1 WikiSrv1 Database1 TimeSrv1 ; do
    echo "Processing $name ..."
    composite -gravity center NorNet-InformationText.png Background-${name}.jpeg -resize ${WIDTH}x${HEIGHT} Splash-${name}-${WIDTH}x${HEIGHT}.jpeg
    exiftool -@ exiftool.argfile Splash-${name}-${WIDTH}x${HEIGHT}.jpeg

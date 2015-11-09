@@ -79,10 +79,10 @@ if [ $# -lt 8 -o \
      "$3" != "-site" -o \
      "$5" != "-interface" -o \
      "$7" != "-providers" ] ; then
-   echo >&2 "Usage: $0 FQDN node_index -site site_index -interface interface_name -providers default_provider[,provider2,...] [-controlbox] [-bridge interface_name]"
+   echo >&2 "Usage: $0 FQDN node_index -site site_index -interface interface_name -providers default_provider[,provider2,...] [-controlbox] [-bridge interface_name] [-ntp server1[,server2,...]]"
    if [ -e "$LAST_PARAMETERS_FILE" ] ; then
       LAST_PARAMETERS_ARGS=`cat $LAST_PARAMETERS_FILE`
-      echo -en "\x1b[33mRun $0 $LAST_PARAMETERS_ARGS? [yes/no]?\x1b[0m "
+      echo -en "\x1b[33mRun: sudo $0 $LAST_PARAMETERS_ARGS? [yes/no]?\x1b[0m "
       read -er applyChanges
       if [ "$applyChanges" == "yes" -o "$applyChanges" == "y" ] ; then
          bash -c "$0 $LAST_PARAMETERS_ARGS"
@@ -114,6 +114,7 @@ InterfaceName="$6"
 ProviderList="$8"
 ControlBoxMode=""
 BridgeInterface=""
+NTPServers=""
 MakeServerConfigurationPath=""
 shift ; shift ; shift ; shift ; shift ; shift ; shift ; shift
 while [ $# -gt 0 ] ; do
@@ -123,6 +124,13 @@ while [ $# -gt 0 ] ; do
       BridgeInterface="$2"
       if [ "$BridgeInterface" == "" ] ; then
          echo >&2 "ERROR: No bridge interface given!"
+         exit 1
+      fi
+      shift
+   elif [ "$1" = "-ntp" ] ; then
+      NTPServers="$2"
+      if [ "$NTPServers" == "" ] ; then
+         echo >&2 "ERROR: No NTP server(s) given!"
          exit 1
       fi
       shift
@@ -160,6 +168,9 @@ cd /root   # Ensure that configurations a written in /root!
 options=""
 if [ "$BridgeInterface" != "" ] ; then
    options="$options -bridge $BridgeInterface"
+fi
+if [ "$NTPServers" != "" ] ; then
+   options="$options -ntp $NTPServers"
 fi
 ${MakeServerConfigurationPath}Make-Server-Configuration "$Variant" "$FQDN" "$NodeIndex" -site "$SiteIndex" -interface "$InterfaceName" -providers "$ProviderList" $ControlBoxMode $options || exit 1
 
@@ -264,7 +275,7 @@ elif [ "$Variant" = "FreeBSD" ] ; then
       cat resolv.conf.new
    fi
 
-   echo "------ /etc/rc.conf:" 
+   echo "------ /etc/rc.conf:"
    SED_FILE=`mktemp`
    rm -f $SED_FILE rc.conf.updated
    cat rc.conf.new | (
@@ -396,7 +407,7 @@ else
    fi
    cp auto.nfs /etc/auto.nfs
 
-   if [ "$Variant" != "FreeBSD" ] ; then   
+   if [ "$Variant" != "FreeBSD" ] ; then
       sysctl -f
    fi
    if [ "$Variant" = "Fedora" ] ; then

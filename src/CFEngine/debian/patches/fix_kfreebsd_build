@@ -1,0 +1,14 @@
+Index: cfengine3/cf-agent/verify_users_pam.c
+===================================================================
+--- cfengine3.orig/cf-agent/verify_users_pam.c
++++ cfengine3/cf-agent/verify_users_pam.c
+@@ -80,6 +80,9 @@ static const char *GetPlatformSpecificEx
+     return "January 02 1970";
+ #elif defined(__linux__)
+     return "1970-01-02";
++// special case for Debian/kFreeBSD
++#elif defined(__GLIBC__)
++    return "1970-01-02";
+ #else
+ # error Your operating system lacks the proper string for the "usermod -e" utility.
+ #endif

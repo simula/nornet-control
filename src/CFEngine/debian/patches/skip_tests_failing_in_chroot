@@ -1,0 +1,346 @@
+Index: cfengine3/tests/acceptance/10_files/templating/timed/expired_edit_line_locks.cf
+===================================================================
+--- cfengine3.orig/tests/acceptance/10_files/templating/timed/expired_edit_line_locks.cf
++++ /dev/null
+@@ -1,44 +0,0 @@
+-# Check whether file promises have a shorter expiry time than edit_line promises
+-# resulting from templates. This will create an empty file because the file is
+-# opened for editing, but all the edit_line promises have expired.
+-
+-body common control
+-{
+-    inputs => { "../../../dcs.cf.sub", "../../../plucked.cf.sub" };
+-    bundlesequence => { default($(this.promise_filename)) };
+-}
+-
+-bundle agent test
+-{
+-        
+-  commands:
+-      # Note, no -K, we are testing locks.
+-      "$(sys.cf_agent) -v -D AUTO,DEBUG -f $(this.promise_filename).sub"
+-        contain => in_shell;
+-}
+-
+-bundle agent check
+-{
+-  methods:
+-    test_pass_1::
+-      "any" usebundle => dcs_wait($(this.promise_filename), 70);
+-
+-  vars:
+-    test_pass_2::
+-      "content_edit_line" string => readfile("$(G.testfile).edit_line", 10000);
+-      "content_cftemplate" string => readfile("$(G.testfile).cftemplate", 10000);
+-      "content_mustache" string => readfile("$(G.testfile).mustache", 10000);
+-
+-  classes:
+-    test_pass_2::
+-      "ok_edit_line" expression => strcmp($(content_edit_line), "text"),
+-        scope => "namespace";
+-      "ok_cftemplate" expression => strcmp($(content_cftemplate), "text"),
+-        scope => "namespace";
+-      "ok_mustache" expression => strcmp($(content_mustache), "text"),
+-        scope => "namespace";
+-
+-  methods:
+-    test_pass_2::
+-      "any" usebundle => dcs_passif("ok_edit_line.ok_cftemplate.ok_mustache", $(this.promise_filename));
+-}
+Index: cfengine3/tests/acceptance/01_vars/02_functions/network/008.cf
+===================================================================
+--- cfengine3.orig/tests/acceptance/01_vars/02_functions/network/008.cf
++++ /dev/null
+@@ -1,66 +0,0 @@
+-#######################################################
+-#
+-# Test host2ip()
+-#
+-#######################################################
+-
+-body common control
+-{
+-      inputs => { "../../../default.cf.sub" };
+-      bundlesequence  => { default("$(this.promise_filename)") };
+-      version => "1.0";
+-}
+-
+-#######################################################
+-
+-bundle agent init
+-{
+-  vars:
+-      "dummy" string => "dummy";
+-}
+-
+-#######################################################
+-
+-bundle agent test
+-{
+-
+-  vars:
+-      # Neither of these are likely to change...
+-      "localhost" string => host2ip("localhost");
+-      "a" string => host2ip("a.root-servers.net");
+-}
+-
+-#######################################################
+-
+-bundle agent check
+-{
+-  vars:
+-      "localhost" string => "127.0.0.1";
+-      "localhost_6" string => "::1";
+-      "a" string => "198.41.0.4";
+-      "a_6" string => "2001:503:ba3e::2:30";
+-
+-  classes:
+-      "ok_a" or => {
+-                     strcmp("$(test.a)", "$(a)"),
+-                     strcmp("$(test.a)", "$(a_6)"),
+-      };
+-      "ok_localhost" or => {
+-			     strcmp("$(test.localhost)", "$(localhost)"),
+-			     strcmp("$(test.localhost)", "$(localhost_6)"),
+-      };
+-      "ok" and => {
+-                    "ok_a",
+-                    "ok_localhost",
+-      };
+-
+-  reports:
+-    DEBUG::
+-      "Expected $(test.localhost) == $(localhost)";
+-      "Expected $(test.a) == ( $(a) or $(a_6) )";
+-    ok::
+-      "$(this.promise_filename) Pass";
+-    !ok::
+-      "$(this.promise_filename) FAIL";
+-}
+-
+Index: cfengine3/tests/acceptance/01_vars/02_functions/network/selectservers.cf
+===================================================================
+--- cfengine3.orig/tests/acceptance/01_vars/02_functions/network/selectservers.cf
++++ /dev/null
+@@ -1,52 +0,0 @@
+-# Test that failure to connect to remote host does not result in "Could not
+-# close socket" error messages.
+-
+-body common control
+-{
+-      inputs => { "../../../default.cf.sub" };
+-      bundlesequence  => { default("$(this.promise_filename)") };
+-      version => "1.0";
+-}
+-
+-body agent control
+-{
+-      # 5 seconds timeout for selectservers for non-connecting host 8.8.8.8
+-      default_timeout => "5";
+-}
+-
+-bundle agent init
+-{
+-}
+-
+-bundle agent test
+-{
+-  vars:
+-
+-      # The first two hosts listen to port 80, the third does not listen
+-      # to port 80, the fourth does not even resolve
+-      "hosts"     slist   => { "cfengine.com", "ntua.gr", "8.8.8.8", "inexistent-server" };
+-      "retval"    int     => selectservers("@(hosts)","80","","","100","alive_servers");
+-}
+-
+-bundle agent check
+-{
+-  classes:
+-      "up2servers"   expression => strcmp("$(test.retval)", "2");
+-
+-      "first_is_ok"  expression => isvariable("test.alive_servers[0]");
+-      "second_is_ok" expression => isvariable("test.alive_servers[1]");
+-      "third_is_bad"        not => isvariable("test.alive_servers[2]");
+-      "fourth_is_bad"       not => isvariable("test.alive_servers[3]");
+-
+-  methods:
+-      # All above classes must be set for test to pass
+-      "" usebundle => dcs_passif_expected("up2servers,first_is_ok,second_is_ok,third_is_bad,fourth_is_bad",
+-					  "", $(this.promise_filename)),
+-          inherit => "true";
+-
+-  reports:
+-    DEBUG::
+-      "retval:        $(test.retval)";
+-      "alive_servers: $(test.alive_servers[0]) $(test.alive_servers[1]) $(test.alive_servers[2])";
+-}
+-
+Index: cfengine3/tests/acceptance/01_vars/03_lists/016.cf
+===================================================================
+--- cfengine3.orig/tests/acceptance/01_vars/03_lists/016.cf
++++ /dev/null
+@@ -1,60 +0,0 @@
+-##############################################################################
+-#
+-# Redmine #2936: Check that list variables under reserved scope expand
+-# as they should. The initial bug report was for reports promises only,
+-# but here we check it for files promises.
+-#
+-##############################################################################
+-
+-body common control
+-{
+-  inputs => { "../../default.cf.sub" };
+-  bundlesequence => { default("$(this.promise_filename)") };
+-  version => "1.0";
+-}
+-
+-
+-bundle agent init
+-{
+-# TODO delete the testfile
+-}
+-
+-
+-bundle agent test
+-{
+-  meta:
+-      "test_suppress_fail" string => "hpux|windows|sunos_5_11",
+-        meta => { "redmine4745", "redmine4963" };
+-
+-files:
+-  "$(G.testfile).actual"
+-    create => "true",
+-    edit_defaults => init_empty,
+-    edit_line => test_insert_macs;
+-}
+-
+-body edit_defaults init_empty
+-{
+-        empty_file_before_editing => "true";
+-}
+-
+-bundle edit_line test_insert_macs
+-{
+-insert_lines:
+-  "$(sys.hardware_addresses)";
+-}
+-
+-
+-bundle agent check
+-{
+-# If the file contains the string "sys.hardware_addresses" then we
+-# failed to expand the variable!
+-classes:
+-  "ok" not => regline(".*sys\.hardware_addresses.*", "$(G.testfile).actual");
+-
+-reports:
+-  ok::
+-    "$(this.promise_filename) Pass";
+-  !ok::
+-    "$(this.promise_filename) FAIL";
+-}
+Index: cfengine3/tests/acceptance/14_reports/00_output/002.cf
+===================================================================
+--- cfengine3.orig/tests/acceptance/14_reports/00_output/002.cf
++++ /dev/null
+@@ -1,47 +0,0 @@
+-##############################################################################
+-#
+-# Redmine #2936: Check that list variables under reserved scope expand
+-# as they should in reports promises.
+-#
+-##############################################################################
+-
+-body common control
+-{
+-  inputs => { "../../default.cf.sub" };
+-  bundlesequence => { default("$(this.promise_filename)") };
+-  version => "1.0";
+-}
+-
+-bundle agent init
+-{
+-
+-}
+-
+-bundle agent test
+-{
+-  meta:
+-      "test_suppress_fail" string => "hpux|windows|sunos_5_11",
+-        meta => { "redmine4745", "redmine4963" };
+-
+-  vars:
+-    "subout" string => execresult("$(sys.cf_agent) -Kf $(this.promise_filename).sub", "noshell");
+-}
+-
+-bundle agent check
+-{
+-  # If the output contains the string "$(sys.hardware_addresses)" then we
+-  # failed to expand the variable!
+-  classes:
+-    "ok" not => regcmp(".*hardware_addresses.*", "$(test.subout)");
+-
+-reports:
+-  DEBUG::
+-    "$(test.subout)";
+-
+-  ok::
+-    "$(this.promise_filename) Pass";
+-  !ok::
+-    "$(this.promise_filename) FAIL";
+-}
+-### PROJECT_ID: core
+-### CATEGORY_ID: 2
+Index: cfengine3/tests/acceptance/16_cf-serverd/01_start/004.cf
+===================================================================
+--- cfengine3.orig/tests/acceptance/16_cf-serverd/01_start/004.cf
++++ /dev/null
+@@ -1,19 +0,0 @@
+-#
+-body common control
+-{
+-      inputs => { "../../default.cf.sub", "./run_with_server.cf.sub" };
+-      bundlesequence => { default("$(this.promise_filename)") };
+-      version => "1.0";
+-}
+-
+-bundle agent test
+-{
+-  methods:
+-      "any" usebundle => dcs_fini("$(G.testdir)/destination_file");
+-      "any" usebundle => file_make("$(G.testdir)/source_file",
+-                                                 "This is the source file to copy $(sys.date) - always fresh");
+-      "any" usebundle => generate_key;
+-      "any" usebundle => start_server("lan_open");
+-      "any" usebundle => run_test("$(this.promise_filename).sub");
+-      "any" usebundle => stop_server("lan_open");
+-}
+Index: cfengine3/tests/Makefile.am
+===================================================================
+--- cfengine3.orig/tests/Makefile.am
++++ cfengine3/tests/Makefile.am
+@@ -1 +1 @@
+-SUBDIRS = unit load acceptance
++SUBDIRS = unit load
+Index: cfengine3/tests/unit/Makefile.am
+===================================================================
+--- cfengine3.orig/tests/unit/Makefile.am
++++ cfengine3/tests/unit/Makefile.am
+@@ -112,7 +112,6 @@ check_PROGRAMS = \
+ 	files_interfaces_test \
+ 	refcount_test \
+ 	list_test \
+-	buffer_test \
+ 	cf_key_functions_test \
+ 	connection_management_test \
+ 	expand_test \
+@@ -195,8 +194,6 @@ list_test_SOURCES = list_test.c
+ 
+ refcount_test_SOURCES = refcount_test.c ../../libutils/refcount.c
+ 
+-buffer_test_SOURCES = buffer_test.c ../../libutils/buffer.c
+-
+ csv_parser_test_SOURCES = csv_parser_test.c ../../libutils/csv_parser.c
+ csv_parser_test_LDADD = libtest.la ../../libutils/libutils.la
+ 

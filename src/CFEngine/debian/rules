@@ -6,59 +6,53 @@
 
 override_dh_auto_configure:
 	dh_autoreconf
-	./configure --enable-shared=yes \
-				--prefix=/usr \
-				--with-sql=yes \
-				--with-mysql \
-				--with-postgresql \
-				--with-libvirt \
-				--with-tokyocabinet \
-				--with-libxml2 \
-				--with-workdir=/var/lib/cfengine3 \
-				--with-logdir=/var/log/cfengine3 \
-				--with-piddir=/run/cfengine3 \
-				--docdir=\$${prefix}/share/doc/cfengine3 \
-				--datadir=\$${prefix}/share/cfengine3 \
-				--mandir=\$${prefix}/share/man \
-				--infodir=\$${prefix}/share/info \
-				--htmldir=\$${prefix}/share/doc/cfengine3/html \
-				CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs,-z,relro" \
-				CPPFLAGS=-D_FORTIFY_SOURCE=2
-
-override_dh_auto_test:
-	echo "Skipping testsuite."
+	./configure 	--prefix=/usr \
+			--with-sql=yes \
+			--with-mysql \
+			--with-postgresql \
+			--with-libvirt \
+			--with-lmdb \
+			--with-libxml2 \
+			--with-workdir=/var/lib/cfengine3 \
+			--with-logdir=/var/log/cfengine3 \
+			--with-piddir=/var/run/cfengine3 \
+			--libdir=/usr/lib/cfengine3 \
+			--docdir=\$${prefix}/share/doc/cfengine3 \
+			--datadir=\$${prefix}/share/cfengine3 \
+			--mandir=\$${prefix}/share/man \
+			CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,relro" \
+			CPPFLAGS=-D_FORTIFY_SOURCE=2
+	cd masterfiles && ./autogen.sh  --prefix=/usr/share/cfengine3 \
+					--with-core=$(CURDIR)
 
 override_dh_clean:
 	dh_autoreconf_clean
-	dh_clean
+	dh_clean --exclude=#008.cf#
+
+override_dh_installchangelogs:
+	dh_installchangelogs --exclude=ChangeLog
+
+override_dh_auto_clean:
+	dh_auto_clean
+	dh_auto_clean -Dmasterfiles
 
 override_dh_compress:
 	dh_compress -X.cf
 
-override_dh_installinfo:
-
 override_dh_strip:
 	dh_strip --dbg-package=cfengine3-dbg
 
-override_dh_installchangelogs:
-	# rm debian/cfengine3/usr/share/doc/cfengine3/ChangeLog
-	dh_installchangelogs
+override_dh_installman:
+	## Man pages are created with an undocumented flag
+	/bin/mkdir -p $(CURDIR)/debian/cfengine3/usr/share/man/man8/
+	for p in cf-agent cf-key cf-promises cf-runagent cf-execd cf-serverd cf-monitord; \
+		do $(CURDIR)/$$p/$$p -M > $(CURDIR)/debian/cfengine3/usr/share/man/man8/$$p.8 ;\
+        done
+	dh_installman
 
-##  There is no html documentation
-#
-override_dh_installdocs:
-	dh_installdocs
+override_dh_auto_install:
+	dh_auto_install
+	dh_auto_install -Dmasterfiles
 
 override_dh_install:
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
-
-	# Add here commands to install the package into debian/cfengine3.
-	$(MAKE) DESTDIR=$(CURDIR)/debian/cfengine3 install
-	/bin/rmdir $(CURDIR)/debian/cfengine3/usr/sbin
-	/bin/mv $(CURDIR)/debian/cfengine3/usr/bin $(CURDIR)/debian/cfengine3/usr/sbin
-
-	/bin/rmdir $(CURDIR)/debian/cfengine3/var/lib/cfengine3/inputs
-	/bin/rm $(CURDIR)/debian/cfengine3/usr/lib/*.la
+	dh_install --exclude=examples --exclude=ChangeLog

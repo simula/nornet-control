@@ -1,21 +1,20 @@
 #!/bin/bash
 
 ISO_DIRECTORY="$HOME/Downloads"
-ISOs=`find $ISO_DIRECTORY -name *test.iso`
+ISOs=`find $ISO_DIRECTORY -name *test*.iso`
 
 VM_DISK=200
-VM_MEMORY=1024
+VM_MEMORY=1536
 VM_DISK_TYPE=Standard
 
 for iso in $ISOs ;do
    echo "##### $iso #####"
 
-   name=`echo "$iso" | sed -e "s/.*\///g" -e "s/.iso$//g"`
-
-   site=`echo "$name" | sed -e "s/\.test$//g" -e "s/^.*\.//g" -e "s/\b\(.\)/\u\1/g"`
+   name=`echo "$iso" | sed -e "s/.*\///g" -e "s/-x86_64-.*\.iso$//g" -e "s/.iso$//g"`
+   site=`echo "$name" | sed -e "s/\.test-x86_64.*$//g" -e "s/\.test$//g" -e "s/^.*\.//g" -e "s/\b\(.\)/\u\1/g"`
    net="TestNetwork-${site}"
-   echo "$net"
+   echo "====== Create: $name in network $net ======"
 
-   ../Make-Research-VM $name $iso $VM_MEMORY $VM_DISK $VM_DISK_TYPE
-   VBoxManage modifyvm $name --nic1 intnet --intnet1 "$net"
+   ../Make-Research-VM "$name" "$iso" $VM_MEMORY $VM_DISK $VM_DISK_TYPE
+   VBoxManage modifyvm "$name" --nic1 intnet --intnet1 "$net"
 done
