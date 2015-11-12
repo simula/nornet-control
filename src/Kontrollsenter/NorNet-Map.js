@@ -77,7 +77,8 @@ function makeMap(latitude, longitude, zoomLevel)
    window.mapbaselayers.push(window.googlemap2);
 
    // ====== Create Bing map ================================================
-   var apiKey = "AqTGBsziZHIJYYxgivLBf0hVdrAk9mWO5cQcb8Yux8sW5M8c8opEC2lZqKR1ZZXf";
+   // FIXME: TEST ONLY! Needs proper API key!
+   var apiKey = "Agl-rpGco3Mo07n16sDpY4jsu35RAbvEwPAND7hi8-6JgIFVetQdhnZ4i_oSiNyd";
    window.bingmap1 = new OpenLayers.Layer.Bing( { name: "Bing Road", key: apiKey, type: "Road" } );
    window.maplayers.push(window.bingmap1);
    window.mapbaselayers.push(window.bingmap1);
@@ -86,9 +87,11 @@ function makeMap(latitude, longitude, zoomLevel)
    window.mapbaselayers.push(window.bingmap2);
 
    // ====== OpenWeather overlay ============================================
-   window.wcity = new OpenLayers.Layer.Vector.OWMWeather("Weather");
+   // FIXME: TEST ONLY! Needs proper APP ID!
+   var appID = "2de143494c0b295cca9337e1e96b00e0";
+   window.wcity = new OpenLayers.Layer.Vector.OWMWeather("Weather", { 'appid' : appID } );
    window.maplayers.push(wcity);
-   
+
    window.wstations = new OpenLayers.Layer.Vector.OWMStations("Stations");
    window.wstations.setVisibility(false);
    window.maplayers.push(wstations);
