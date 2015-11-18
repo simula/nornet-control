@@ -61,7 +61,7 @@ cd "$NORNET_DIRECTORY"
 
 # Load configuration from API config file
 NorNet_LocalNode_Hostname=""
-. ./nornetapi-config
+. ./nornetapi-config || exit 0
 if [ "$NorNet_LocalNode_Hostname" = "" ] ; then
    echo >&2 "ERROR: NorNet_LocalNode_Hostname is not set!"
    exit 1
