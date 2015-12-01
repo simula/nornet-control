@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
 # Backup all virtual systems
-# Copyright (C) 2013 by Thomas Dreibholz
+# Copyright (C) 2013-2015 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,10 +46,9 @@ fi
 VMs=`sudo -u $NorNet_LocalNode_NorNetUser VBoxManage list vms 2>&1 | grep "^\"" | sed -e "s/ {.*}$//g" -e "s/^\"//g" -e "s/\"$//g"`
 for vm in $VMs ; do
    echo -e "\n\x1b[34m`date +%FT%H:%M:%S`: ====== Backup for virtual system ${vm} ... ======\x1b[0m\n"
- 
+
    if [ -e "$DIRECTORY/${vm}.ova" ] ; then
       mv "$DIRECTORY/${vm}.ova" "$DIRECTORY/${vm}.ova~"
    fi
    Backup-VSystem "${vm}" "$DIRECTORY/${vm}.ova" || true
-   
 done

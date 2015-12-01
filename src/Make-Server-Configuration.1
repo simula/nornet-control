@@ -34,6 +34,7 @@ node_index
 \-interface interface_name
 \-providers default_provider[,provider2,...]
 .Op \-bridge interface_name
+.Op \-ntp server[,server2,...]
 .Op \-controlbox
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
@@ -65,6 +66,8 @@ or provider index.
 .It \-bridge interface_name
 Sets the NorNet interface into bridge mode. The new bridge interface's name
 is given as parameter. All configuration is made with the bridge interface.
+.It \-ntp server1[,server2,...]
+Use the given list of NTP servers instead of the local tunnelbox.
 .It \-controlbox
 If set, the node is a Control Box. That is, the default routes are not via
 the NorNet network. In this case, static routes for just the NorNet address
@@ -76,4 +79,5 @@ range are configured instead of using default routes.
 .It Make-Server-Configuration Debian isbjoen.unis.nornet 254 \-site 8 \-interface eth0 \-providers Uninett,Telenor
 .It Make-Server-Configuration Debian skjennungen.simula.nornet 254 \-site 1 \-interface eth0 \-providers Uninett,Kvantel,Telenor,PowerTech \-bridge br0
 .It Make-Server-Configuration Debian bsdtest1.simula.nornet 41 \-site 1 \-interface vtnet0 \-providers Uninett,Kvantel,Telenor,PowerTech
+.It Make-Server-Configuration Debian bsdtest2.simula.nornet 42 \-site 1 \-interface vtnet0 \-providers Uninett,Kvantel,Telenor,PowerTech \-ntp ntp1.uio.no,ntp2.uio.no,ntp1.ptb.de,ntp2.ptb.de,ntp3.ptb.de
 .El

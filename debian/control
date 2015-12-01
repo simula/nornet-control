@@ -9,7 +9,7 @@ Build-Depends: debhelper (>= 9),
                python (>= 2.7),
                python-ipaddr,
                python-support
-Standards-Version: 3.9.5
+Standards-Version: 3.9.6
 
 Package: nornet-api
 Architecture: any
@@ -25,7 +25,8 @@ Description: NorNet API
 
 Package: nornet-management
 Architecture: any
-Depends: apt-file,
+Depends: apport-retrace,
+         apt-file,
          apt-show-versions,
          autofs,
          bridge-utils,
@@ -41,17 +42,20 @@ Depends: apt-file,
          idn,
          ipsec-tools,
          joe,
+         kdump-tools,
          language-pack-de-base,
          language-pack-en-base,
          language-pack-nb-base,
          libc6-i386 [amd64],
          libfile-fcntllock-perl,
+         linux-crashdump,
          lksctp-tools,
          lsb-base (>= 3.2-14),
          netperfmeter,
          nfs-common,
          nmap,
          nornet-api,
+         ntpdate,
          nttcp,
          openssh-server,
          python-software-properties,
@@ -67,6 +71,7 @@ Depends: apt-file,
          virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental | virtualbox-guest-utils,
          vlan,
          whois,
+         xmlstarlet,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
@@ -82,25 +87,50 @@ Description: NorNet Management Tools
  .
  See https://www.nntb.no for details on NorNet!
 
+Package: nornet-x11
+Architecture: any
+Depends: fvwm,
+         x11-apps,
+         xdm,
+         xloadimage,
+         xserver-xorg,
+         xterm,
+         ${misc:Depends},
+         ${python:Depends},
+         ${shlibs:Depends}
+Description: NorNet X11 Login
+ This metapackage contains basic X11 software for NorNet systems. The
+ software provides a very lightweight graphical login (fvwm) with a shell
+ (xterm).
+ .
+ See https://www.nntb.no for details on NorNet!
+
 Package: nornet-development
 Architecture: any
 Depends: autoconf,
          automake,
+         autopoint,
          bison,
          createrepo,
          debhelper,
          devscripts,
          flex,
+         gdb,
          gnuplot,
          imagemagick,
          kbuild,
+         kernel-wedge,
          libbz2-dev,
+         libdw-dev,
+         libelf-dev,
          libglib2.0-dev,
          liblua5.2-dev,
+         libnewt-dev,
          libpcap-dev,
          libsctp-dev,
          libtool,
          lua5.2,
+         module-init-tools,
          pbuilder,
          pkg-config,
          python-pythonmagick,
@@ -108,6 +138,7 @@ Depends: autoconf,
          r-base,
          rpm,
          subversion,
+         valgrind,
          yum-utils,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -171,7 +202,7 @@ Description: NorNet Tunnelbox Control
 Package: nornet-filesrv
 Architecture: all
 Depends: nfs-kernel-server,
-         nornet-node,
+         nornet-management,
          python (>= 2.7),
          python-adns,
          tftpd-hpa,
@@ -201,7 +232,7 @@ Depends: apache2,
          nagios3,
          nagios3-doc,
          nornet-artwork,
-         nornet-node,
+         nornet-management,
          postfix,
          python (>= 2.7),
          ${misc:Depends},
@@ -217,7 +248,7 @@ Architecture: all
 Depends: firefox,
          kdm,
          kubuntu-desktop,
-         nornet-node,
+         nornet-management,
          xserver-xorg-video-vmware,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -230,7 +261,7 @@ Description: NorNet Display
 
 Package: nornet-gatekeeper
 Architecture: all
-Depends: nornet-node,
+Depends: nornet-management,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Gatekeeper
@@ -248,7 +279,7 @@ Depends: apache2,
          libgeo-ip-perl,
          libnet-dns-perl,
          libnet-ip-perl,
-         nornet-node,
+         nornet-management,
          oxygen-icon-theme,
          wdg-html-validator,
          ${misc:Depends},
@@ -278,6 +309,17 @@ Description: NorNet Wiki Server
  .
  See https://www.nntb.no for details on NorNet!
 
+Package: nornet-timesrv
+Architecture: all
+Depends: nornet-management,
+         ntp,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Time Server
+ This package contains the packages to set up an NTP server.
+ .
+ See https://www.nntb.no for details on NorNet!
+
 Package: nornet-database
 Architecture: all
 Depends: postgresql,
@@ -294,12 +336,15 @@ Description: NorNet Database
 Package: nornet-server
 Architecture: all
 Depends: grub2-common | grub,
+         libvirt-bin,
          linux-headers-generic | linux-headers-generic-lts-quantal | linux-headers-generic-lts-raring | linux-headers-generic-lts-saucy | linux-headers-generic-lts-trusty,
          linux-image-generic | linux-image-generic-lts-quantal | linux-image-generic-lts-raring | linux-image-generic-lts-saucy | linux-image-generic-lts-trusty,
          linux-source,
          nornet-management,
          ntp,
          python (>= 2.7),
+         qemu-kvm,
+         virtinst,
          virtualbox-nornet-stable | virtualbox-nornet-testing | virtualbox-nornet-experimental | virtualbox,
          xauth,
          ${misc:Depends},

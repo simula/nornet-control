@@ -1,7 +1,9 @@
 #!/bin/bash -e
 #
 # Stop virtual system
-# Copyright (C) 2013 by Thomas Dreibholz
+# Copyright (C) 2013-2015 by Thomas Dreibholz
+# Copyright (C) 2014 by Forough Golkar <forough.golkar87@gmail.com>
+# Copyright (C) 2013 by Nima Fallah Darya <nima.darya@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,51 +44,26 @@ wait_for_shutdown ()
       let r=($i % 10)
       if [ $r -eq 0 ] ; then
          echo -n "${i}s"
-      fi      
+      fi
       status=`Check-VSystem "$MACHINE_NAME"`
       if [ "$status" = "aborted" -o "$status" = "poweroff" -o "$status" = "stuck" -o "$status" = "stuck" ] ; then
          echo -n " OK!"
          break
       elif [ "$status" = "BAD_MACHINE" ] ; then
          echo -n " HANGING?"
-         break      
+         break
       fi
       # Again send ACPI powerbutton.
       # If the system had been booting, the event might have been missed.
       if [ "$status" = "running" ] ; then
-         vmcontrol "$1" acpipowerbutton
+         if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
+            vmcontrol "$1" acpipowerbutton
+         elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
+            sudo -u $NorNet_LocalNode_NorNetUser virsh shutdown "$1" >/dev/null
+         fi
       fi
    done || true
    echo ""
-}
-
-
-# ###### Stop virtual systems ###############################################
-stop_virtual_systems ()
-{
-   VSYSTEMS=`find vsystems -name "[0-9][0-9]*[a-zA-Z0-9]" | sort`
-   echo "`env LANG=C date +%FT%H:%M:%S`: Stopping virtual systems ..."
-   for vsystem in $VSYSTEMS ; do
-      echo "`env LANG=C date +%FT%H:%M:%S`: Processing $vsystem ..."
-      NAME="BAD-NAME"
-      STOPDELAY=0
-      ( . ./$vsystem && \
-        status=`Check-VSystem "$MACHINE_NAME"` && \
-        if [ "$status" = "paused" ] ; then
-           vmcontrol "$MACHINE_NAME" resume
-           status=`Check-VSystem "$MACHINE_NAME"`
-        fi
-        if [ "$status" = "running" ] ; then
-           echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (ACPI power button) ..." && \
-           vmcontrol "$MACHINE_NAME" acpipowerbutton
-           wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
-           if [ "$status" = "running" ] ; then
-              echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (power off) ..." && \
-              vmcontrol "$MACHINE_NAME" poweroff
-           fi
-        fi
-      ) || true
-   done   
 }
 
 
@@ -98,13 +75,6 @@ if [ $# -lt 1 ] ; then
 fi
 
 NORNET_DIRECTORY="/etc/nornet"
-MACHINE_NAME="$1"
-if [ "$2" != "" ] ; then
-   STOPDELAY="$2"
-else
-   STOPDELAY=0
-fi
-
 
 # ====== Get NorNet user name ===============================================
 if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
@@ -116,42 +86,83 @@ if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
    NorNet_LocalNode_NorNetUser="nornetpp"
 fi
 
-
-# ====== Obtain machine status ==============================================
-status=`Check-VSystem "$MACHINE_NAME"` && \
-if [ "$status" = "paused" ] ; then
-   echo "`env LANG=C date +%FT%H:%M:%S`: Resuming $MACHINE_NAME to perform shutdown ..." && \
-   vmcontrol "$MACHINE_NAME" resume
-   status=`Check-VSystem "$MACHINE_NAME"`
+MACHINE_NAME="$1"
+if [ "$2" != "" ] ; then
+   STOPDELAY="$2"
+else
+   STOPDELAY=0
 fi
 
-if [ "$status" = "running" ] ; then
-   echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (ACPI power button) ..." && \
-   vmcontrol "$MACHINE_NAME" acpipowerbutton && \
-   wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
-   status=`Check-VSystem "$MACHINE_NAME"`
-fi
 
-if [ "$status" = "running" -o "$status" = "stopping" ] ; then
-   echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (power off) ..."
-   if [ "$status" = "running" ] ; then
-      vmcontrol "$MACHINE_NAME" poweroff
+# ====== Perform shutdown ===================================================
+if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
+   status=`Check-VSystem "$MACHINE_NAME"` && \
+   if [ "$status" = "paused" ] ; then
+      echo "`env LANG=C date +%FT%H:%M:%S`: Resuming $MACHINE_NAME to perform shutdown ..." && \
+      vmcontrol "$MACHINE_NAME" resume
+      status=`Check-VSystem "$MACHINE_NAME"`
    fi
-   wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
+
+   if [ "$status" = "running" ] ; then
+      echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (ACPI power button) ..." && \
+      vmcontrol "$MACHINE_NAME" acpipowerbutton && \
+      wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
+      status=`Check-VSystem "$MACHINE_NAME"`
+   fi
+
+   if [ "$status" = "running" -o "$status" = "stopping" ] ; then
+      echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (power off) ..."
+      if [ "$status" = "running" ] ; then
+         vmcontrol "$MACHINE_NAME" poweroff
+      fi
+      wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
+   fi
+
+elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
+   status=`Check-VSystem "$MACHINE_NAME"` && \
+   if [ "$status" = "paused" ] ; then
+      echo "`env LANG=C date +%FT%H:%M:%S`: Resuming $MACHINE_NAME to perform shutdown ..." && \
+      sudo -u $NorNet_LocalNode_NorNetUser virsh resume "$MACHINE_NAME"
+      status=`Check-VSystem "$MACHINE_NAME"`
+   fi
+
+   if [ "$status" = "running" ] ; then
+      echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (ACPI power button) ..." && \
+      sudo -u $NorNet_LocalNode_NorNetUser virsh shutdown "$MACHINE_NAME" && \
+      wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
+      status=`Check-VSystem "$MACHINE_NAME"`
+   fi
+
+   if [ "$status" = "running" -o "$status" = "stopping" ] ; then
+      echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (power off) ..."
+      if [ "$status" = "running" ] ; then
+         sudo -u $NorNet_LocalNode_NorNetUser virsh destroy "$MACHINE_NAME"
+      fi
+      wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
+   fi
+
+   rm -f "/var/run/nornet-server-$MACHINE_NAME.pid"
+
+else
+   echo >&2 "ERROR: Bad setting $NorNet_Server_VirtualizationSystem for NorNet_Server_VirtualizationSystem!"
+   exit 1
 fi
+
 
 # ====== Work around for VirtualBox problem =================================
-# Check whether the VirtualBox machine hangs.
-# This seems to be a common and yet unfixed bug of VirtualBox ...
-if [ -e "/var/run/nornet-server-$MACHINE_NAME.pid" ] ; then
-   pid=`cat "/var/run/nornet-server-$MACHINE_NAME.pid"`
-   if [ "$pid" != "" ] ; then
-      if ps -p $pid >/dev/null 2>&1 ; then
-         echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME seems to be BROKEN! Scheiße!"
-         ps -p $pid || true
-         echo "Sending SIGKILL to $pid ..."
-         sudo -u $NorNet_LocalNode_NorNetUser kill -KILL $pid || true
+if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
+   # Check whether the VirtualBox machine hangs.
+   # This seems to be a common and yet unfixed bug of VirtualBox ...
+   if [ -e "/var/run/nornet-server-$MACHINE_NAME.pid" ] ; then
+      pid=`cat "/var/run/nornet-server-$MACHINE_NAME.pid"`
+      if [ "$pid" != "" ] ; then
+         if ps -p $pid >/dev/null 2>&1 ; then
+            echo "`env LANG=C date +%FT%H:%M:%S`: $MACHINE_NAME seems to be BROKEN! Scheiße!"
+            ps -p $pid || true
+            echo "Sending SIGKILL to $pid ..."
+            sudo -u $NorNet_LocalNode_NorNetUser kill -KILL $pid || true
+         fi
       fi
+      rm -f "/var/run/nornet-server-$MACHINE_NAME.pid"
    fi
-   rm -f "/var/run/nornet-server-$MACHINE_NAME.pid"
 fi

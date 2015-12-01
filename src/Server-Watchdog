@@ -48,7 +48,7 @@ for vsystem in $VSYSTEMS ; do
                 echo "WATCHDOG_FAILURE_ACTION=\"service nornet-server restart \\\"$NAME\\\"\" ; rm -f \"$WATCHDOG_FAILCOUNT_FILE\""
                 echo "WATCHDOG_FAILURE_FINAL=\"\""
                 echo "WATCHDOG_LOOPMODE=1"
-                cat "$vsystem"             
+                cat "$vsystem"
             ) >"/var/tmp/nornet/$NAME-watchdog-config"
 
             Watchdog "/var/tmp/nornet/$NAME-watchdog-config" >>"/var/log/nornet-server-watchdog-$NAME.log" 2>&1

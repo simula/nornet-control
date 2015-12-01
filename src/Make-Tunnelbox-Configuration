@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Make Tunnelbox Configuration
-# Copyright (C) 2012-2013 by Thomas Dreibholz
+# Copyright (C) 2012-2015 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,7 +19,9 @@
 #
 # Contact: dreibh@simula.no
 
-import sys;
+import sys
+import re
+import subprocess
 
 # NorNet
 from NorNetTools         import *;
@@ -831,13 +833,23 @@ def makeRADVDConfiguration(localSite):
 def makeSquidConfiguration(nodeName, localSite):
    outputFile = codecs.open('squid-config', 'w', 'utf-8')
 
+   # Try to obtain Squid version
+   try:
+      result = subprocess.Popen("/usr/bin/dpkg -s squid3 | grep 'Version' | awk '{ print $2 }'", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+      version = result.stdout.read()
+   except:
+      version = '999.999'
+
    outputFile.write('# ================== Proxy =============================\n')
    outputFile.write('visible_hostname ' + nodeName + '\n')
    outputFile.write('via on\n')
    outputFile.write('# debug_options ALL,2\n\n')
 
    outputFile.write('# ================== ACLs ==============================\n')
-   outputFile.write('acl manager proto cache_object\n')
+   if re.match('^(3\.0\.|3\.1\.)', version):
+      outputFile.write('acl manager proto cache_object\n')
+   else:
+      outputFile.write('# acl manager proto cache_object\n')
    outputFile.write('acl localhost src 127.0.0.1/32 ::1\n')
    outputFile.write('acl to_localhost dst 127.0.0.0/8 0.0.0.0/32 ::1\n')
    outputFile.write('# ' + localSite['site_long_name'] + ' site:\n')

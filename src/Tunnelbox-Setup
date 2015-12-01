@@ -197,7 +197,7 @@ make-tunnel ()
    local mode=""
    local greOption=""
    if [[ "$interface" =~ ^seks ]] ; then
-      mode="any"
+      mode="ip6ip6"
    elif [[ "$interface" =~ ^fire ]] ; then
       mode="sit"
    elif [[ "$interface" =~ ^gre ]] ; then
@@ -648,7 +648,7 @@ activateInterface ()
          make-route "$ROUTING_TABLE" default "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS"
       fi && \
       if [ "$ADDITIONAL_STATIC_ROUTES" != "" ] ; then
-         for additionalRoute in $ADDITIONAL_STATIC_ROUTES ; do           
+         for additionalRoute in $ADDITIONAL_STATIC_ROUTES ; do
             make-route main "$additionalRoute" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC"
          done
       fi && \

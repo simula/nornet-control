@@ -1,9 +1,8 @@
-#add-configure-logdir-option.patch 
-#piddir.patch
-#strftime_unit_test.patch
-#kfreebsd-support.patch
-#docdir.patch
-#spelling_mistakes.patch
-#copy_to_symlinked_dir.patch
-fix_10_files_02_maintian_010_test.patch
-#datadir.patch
+redmine_6316
+clean_xml_output
+remove_man_errors
+remove_rpath
+do_not_build_rpmver
+skip_tests_failing_in_chroot
+fix_kfreebsd_build
+disable_failing_test_on_sparc

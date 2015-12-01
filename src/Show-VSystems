@@ -1,7 +1,9 @@
 #!/bin/sh -e
 #
 # Show all virtual systems
-# Copyright (C) 2013 by Thomas Dreibholz
+# Copyright (C) 2013-2015 by Thomas Dreibholz
+# Copyright (C) 2014 by Forough Golkar <forough.golkar87@gmail.com>
+# Copyright (C) 2013 by Nima Fallah Darya <nima.darya@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,5 +21,24 @@
 # Contact: dreibh@simula.no
 
 
+NORNET_DIRECTORY="/etc/nornet"
+
+# ====== Get NorNet parameters ==============================================
+if [ -e $NORNET_DIRECTORY/nornetapi-config ] ; then
+   . $NORNET_DIRECTORY/nornetapi-config
+elif [ -e ./nornetapi-config ] ; then
+   . ./nornetapi-config
+fi
+
+
 # ###### Main program #######################################################
-VBoxManage list vms 2>&1 | grep "^\"" | sed -e "s/ {.*}$//g" -e "s/^\"//g" -e "s/\"$//g"
+if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
+   VBoxManage list vms 2>&1 | grep "^\"" | sed -e "s/ {.*}$//g" -e "s/^\"//g" -e "s/\"$//g"
+
+elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
+    virsh list --all | sed -e '1,/^-*/d' | sed '/^$/d' | awk '{print $2}'
+
+else
+   echo >&2 "ERROR: Bad setting $NorNet_Server_VirtualizationSystem for NorNet_Server_VirtualizationSystem!"
+   exit 1
+fi

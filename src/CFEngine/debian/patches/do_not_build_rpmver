@@ -1,0 +1,30 @@
+Index: Cfengine-debian/Makefile.am
+===================================================================
+--- Cfengine-debian.orig/Makefile.am
++++ Cfengine-debian/Makefile.am
+@@ -6,11 +6,11 @@ LCOV_FLAGS = $(if $(filter-out 0,$(V)),,
+ 
+ SUBDIRS = libcompat libutils libcfnet libenv libpromises \
+ 	cf-agent cf-execd cf-key cf-monitord \
+-	cf-promises cf-runagent cf-serverd cf-upgrade ext examples \
++	cf-promises cf-runagent cf-serverd cf-upgrade examples \
+ 	tests
+ 
+ DIST_SUBDIRS = libcompat libutils libcfnet libenv libpromises cf-agent cf-execd	\
+-	cf-key cf-monitord cf-promises cf-runagent cf-serverd cf-upgrade ext	        \
++	cf-key cf-monitord cf-promises cf-runagent cf-serverd cf-upgrade \
+ 	examples tests
+ 
+ # Set explicitly to avoid picking up {nova}/*.m4
+Index: Cfengine-debian/configure.ac
+===================================================================
+--- Cfengine-debian.orig/configure.ac
++++ Cfengine-debian/configure.ac
+@@ -1404,7 +1404,6 @@ AC_CONFIG_FILES([Makefile
+     cf-upgrade/Makefile
+     cf-runagent/Makefile
+     cf-serverd/Makefile
+-    ext/Makefile
+     examples/Makefile
+     tests/Makefile
+     tests/acceptance/Makefile
