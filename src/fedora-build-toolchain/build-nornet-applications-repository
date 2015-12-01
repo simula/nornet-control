@@ -24,7 +24,7 @@ HOME="/home/nornetpp"
 
 SOURCES="$HOME/src"
 REPOSITORIES="$HOME/repos/nornet-applications"
-DISTRIBUTIONS="fedora-21-x86_64 fedora-22-x86_64   fedora-21-i386 fedora-22-i386"
+DISTRIBUTIONS="fedora-23-x86_64 fedora-22-x86_64 fedora-21-x86_64   fedora-23-i386 fedora-22-i386 fedora-21-i386"
 
 PACKAGES="bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
 #PACKAGES="libvirt"
