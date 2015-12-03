@@ -153,6 +153,28 @@ load_modules ()
       for vboxModule in vboxdrv vboxnetadp vboxnetflt vboxpci ; do
          modprobe $vboxModule >>$LOGFILE 2>&1 || true
       done
+   elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
+
+      (
+      socket="/var/run/libvirt/libvirt-sock"
+      if [ ! -e "$socket" ] ; then
+         echo "$socket not available yet => need to start QEMU-KVM ..."
+         service qemu-kvm start || true
+         service libvirt-bin start || true
+
+         i=0
+         while [ $i -lt 30 ] ; do
+            sleep 1
+            if [ -e "$socket" ] ; then
+               break
+            fi
+            let i=$i+1
+            echo "$i ..."
+         done
+
+      fi
+      ) >>$LOGFILE 2>&1
+
    fi
 }
 
