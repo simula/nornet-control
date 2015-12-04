@@ -61,7 +61,7 @@ cd "$NORNET_DIRECTORY"
 
 # Load configuration from API config file
 NorNet_LocalNode_Hostname=""
-. ./nornetapi-config
+source ./nornetapi-config || exit 0
 if [ "$NorNet_LocalNode_Hostname" = "" ] ; then
    echo >&2 "ERROR: NorNet_LocalNode_Hostname is not set!"
    exit 1
@@ -239,37 +239,39 @@ check_and_configure ()
 
 # ###### Main program #######################################################
 (
-   flock -n 9 || exit 1
+   flock -n 200 || { echo "Lock not available." ; exit 1 ; }
+   (
+      case "$ACTION" in
+      start|stop|restart)
+         echo -n "Performing $ACTION of $DESC: "
+         Tunnelbox-Setup "$ACTION" -providers "@ALL" -event "init script action: $ACTION" $@ >>$LOGFILE 2>&1 && \
+         echo "$NAME."
+         ;;
+      force-reload)
+         Tunnelbox-Setup coldstart -providers "@ALL" $@ >>$LOGFILE 2>&1
+         ;;
+      status)
+         Tunnelbox-Setup status -providers "@ALL" $@
+         ;;
+      configure)
+         # All configuration files are gone. The tests below will trigger update.
+         check_and_configure -update-all >>$LOGFILE 2>&1
+         Tunnelbox-Setup start -providers "@ALL" -event "MANUAL CONFIGURE" >>$LOGFILE 2>&1
+         service nornet-node configure
+         ;;
+      check-and-configure)
+         # Compare with existing configuration, update only if necessary.
+         check_and_configure >>$LOGFILE 2>&1
+         service nornet-node check-and-configure
+         ;;
+      *)
+         N=/etc/init.d/$NAME
+         echo "Usage: $N {start|stop|restart|force-reload|configure|check-and-configure|status}" >&2
+         exit 1
+         ;;
+      esac
+   ) 200>/dev/null   # Redirect to /dev/null. The lock file should only be used by *this* script!
 
-   case "$ACTION" in
-   start|stop|restart)
-      echo -n "Performing $ACTION of $DESC: "
-      Tunnelbox-Setup "$ACTION" -providers "@ALL" -event "init script action: $ACTION" $@ >>$LOGFILE 2>&1 && \
-      echo "$NAME."
-      ;;
-   force-reload)
-      Tunnelbox-Setup coldstart -providers "@ALL" $@ >>$LOGFILE 2>&1
-      ;;
-   status)
-      Tunnelbox-Setup status -providers "@ALL" $@
-      ;;
-   configure)
-      # All configuration files are gone. The tests below will trigger update.
-      check_and_configure -update-all >>$LOGFILE 2>&1
-      Tunnelbox-Setup start -providers "@ALL" -event "MANUAL CONFIGURE" >>$LOGFILE 2>&1
-      service nornet-node configure
-      ;;
-   check-and-configure)
-      # Compare with existing configuration, update only if necessary.
-      check_and_configure >>$LOGFILE 2>&1
-      service nornet-node check-and-configure
-      ;;
-   *)
-      N=/etc/init.d/$NAME
-      echo "Usage: $N {start|stop|restart|force-reload|configure|check-and-configure|status}" >&2
-      exit 1
-      ;;
-   esac
-) 9>$LOCKFILE
+) 200>$LOCKFILE
 
 exit 0
