@@ -291,7 +291,7 @@ fi
 if [ "$Variant" = "Debian" ] ; then
    if [ -e /usr/bin/apt-show-versions ] ; then
       echo "====== Installed NorNet Software ============================================="
-      /usr/bin/apt-show-versions | grep "^nornet-"
+      /usr/bin/apt-show-versions | grep "^nornet-" | grep -v "not installed$"
       echo "=============================================================================="
    fi
 fi
