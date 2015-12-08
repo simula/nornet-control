@@ -153,7 +153,7 @@ if [ "$Variant" = "Debian" ] ; then
 
    kernelType=$(uname -r | sed 's/.*-\(generic\|i386\|server\|common\|rt\|xen\|ec2\)/\1/')
    kernelBootVersion=$(uname -r | sed s/-$kernelType//)
-   kernelDiskVersion=$(ls -t /boot/vmlinuz-*-$kernelType | head -n1 | sed -e "s/\/boot\/vmlinuz-//" -e "s/-$kernelType//")
+   kernelDiskVersion=$(ls -t /boot/vmlinuz-*-$kernelType | sort -rV | head -n1 | sed -e "s/\/boot\/vmlinuz-//" -e "s/-$kernelType//")
 
    echo "Kernel Type:         $kernelType"
    echo "Kernel Boot Version: $kernelBootVersion"
