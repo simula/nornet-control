@@ -700,6 +700,14 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
    optionsConfFile = codecs.open('named.conf.options', 'w', 'utf-8')
    writeAutoConfigInformation(optionsConfFile, '//')
 
+   optionsConfFile.write('acl "nornet" {\n')
+   for version in [ 4, 6 ]:
+      optionsConfFile.write('\t' + str(makeNorNetIP(0, 0, 0, version)) + ';\n')
+      optionsConfFile.write('\t' + str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + ';\n')
+   optionsConfFile.write('\tlocalhost;\n')
+   optionsConfFile.write('\tlocalnets;\n')
+   optionsConfFile.write('};\n\n')
+
    optionsConfFile.write("options {\n")
    optionsConfFile.write("\tdirectory          \"/var/cache/bind\";\n")
    optionsConfFile.write("\tdnssec-enable      yes;\n")
@@ -708,6 +716,9 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
    optionsConfFile.write("\tauth-nxdomain      no;   # conform to RFC1035\n")
    optionsConfFile.write("\tempty-zones-enable yes;\n")
    optionsConfFile.write("\tlisten-on-v6       { any; };\n")
+   optionsConfFile.write('\tallow-recursion    { nornet; };\n')
+   optionsConfFile.write('\tallow-query        { nornet; };\n')
+   optionsConfFile.write('\tallow-query-cache  { nornet; };\n')
 
    dnsForwardersString = getLocalSiteDNSForwardersString()
    if ((dnsForwardersString != None) and (dnsForwardersString != u'')):
