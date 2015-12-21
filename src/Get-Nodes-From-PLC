@@ -37,4 +37,4 @@ nodeList = plc_server.GetNodes(plc_authentication,
                                { 'boot_state' : 'boot' },
                                ['node_id', 'site_id', 'hostname', 'model', 'boot_state'])
 for node in nodeList:
-   print node['hostname']
+   print(node['hostname'])
