@@ -75,19 +75,13 @@ def loginToPLC(overrideUser = None, quietMode = False):
       if plc_server.AuthCheck(plc_authentication) != 1:
          raise Exception('Authorization at PLC failed!')
 
-   except:
-      raise Exception('Unable to log into PLC!')
+   except Exception as e:
+      raise Exception('Unable to log into PLC: ' + str(e))
 
 
 # ###### Get PLC address ####################################################
 def getPLCAddress():
-   try:
-      return IPv4Address(NorNet_Configuration['NorNetPLC_Address'])
-   except Exception as e:
-      try:
-         return IPv6Address(NorNet_Configuration['NorNetPLC_Address'])
-      except Exception as e:
-         error('Invalid or missing setting of NorNetPLC_Address: ' + str(e))
+   return NorNet_Configuration['NorNetPLC_Address']
 
 
 # ###### Get PLC server object ##############################################
