@@ -10,7 +10,7 @@ sudo apt-get update && \
 sudo apt-get dist-upgrade -yd && \
 sudo apt-get install -yd virtualbox-dkms-nornet-stable virtualbox-nornet-stable && \
 sudo apt-get install -y linux-image-$OLD-generic linux-headers-$OLD-generic && \
-sudo apt-get autoremove 'virtualbox-.*-nornet-experimental' ;\
+sudo apt-get autoremove 'virtualbox-.*nornet-experimental' ;\
 sudo apt-get dist-upgrade ;\
 sudo apt-get autoremove linux-image-generic-lts-trusty linux-headers-generic-lts-trusty linux-image-$NEW-generic linux-headers-$NEW-generic ;\
 sudo grub-install /dev/sda ;\

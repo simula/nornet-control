@@ -981,7 +981,9 @@ fullSliceList = fetchNorNetSliceList()
 
 
 # ====== Some server settings ===============================================
-norNetInformation = getNorNetInformationForAddress(getPLCAddress())
+# norNetInformation = getNorNetInformationForAddress(getPLCAddress())
+norNetInformation = getMyNorNetInformation()
+print(norNetInformation)
 ntpServerNames = [ 'ntp1.ptb.de', 'ntp2.ptb.de', 'ntp3.ptb.de',   # The PTB servers (very reliable sources)
                    'ntp1.uio.no', 'ntp2.uio.no' ]                 # UiO (nearby)
 
