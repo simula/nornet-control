@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ $# -ne 1 ] ; then
+   echo >&2 "Usage: $0 number_of_users"
+   exit 1
+fi
+N="$1"
+
+echo -e "Timestamp\tFamily Name\tGiven Name\tOrganisation/Company\tAddress\tPost Code\tCity\tCountry\tE-Mail\tPersonal Website\tPhone\tFax\tT-Shirt Size (European)\tDietary Requirements\tComments"
+n=1
+while [ $n -le $N ] ; do
+   echo -e "8/8/2016 08:08:08\tTutorial\tUser\tSimula Research Laboratory\tMartin Linges vei 17\t1364\tFornebu\tNorway\t`printf "user%02d@tutorial.simula.nornet" $n`\thttps://www.nntb.no\t\t\tM\t"
+   let n=$n+1
+done
