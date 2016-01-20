@@ -11,4 +11,4 @@ TUNNELBOX="$2"
 echo "Connecting to ControlBox $CONTROLBOX ..."
 echo "NOTE: Use \"sudo net.ipv4.tcp_ecn=2\" to turn ECN off, since HP fails to handle it properly ..."
 
-sudo ssh nornetpp@$CONTROLBOX -L 4000:$TUNNELBOX:443 -L 23:$TUNNELBOX:23 -L 17988:$TUNNELBOX:17988
+sudo ssh nornetpp@$CONTROLBOX -L 5000:$TUNNELBOX:443 -L 23:$TUNNELBOX:23 -L 17988:$TUNNELBOX:17988
