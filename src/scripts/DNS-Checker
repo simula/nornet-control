@@ -13,7 +13,7 @@ while [ true ] ; do
    result=`dig $HOST a +short @$DNS`
 
 
-   if [ "$result" == "$EXPECTED" ] ; then
+   if [ "$result" = "$EXPECTED" ] ; then
       echo >&2 "OK"
       let ok=$ok+1
    else
