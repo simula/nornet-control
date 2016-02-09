@@ -1,0 +1,25 @@
+#!/bin/bash
+
+DNS="10.1.1.1"
+HOST="www.heise.de"
+EXPECTED=`dig $HOST a +short`
+
+
+ok=0
+bad=0
+while [ true ] ; do
+   echo >&2 -en "`env LANG=C date` ($ok good, $bad bad): "
+
+   result=`dig $HOST a +short @$DNS`
+
+
+   if [ "$result" == "$EXPECTED" ] ; then
+      echo >&2 "OK"
+      let ok=$ok+1
+   else
+      echo >&2 "BAD: $result"
+      let bad=$bad+1
+   fi
+
+   sleep 10
+done
