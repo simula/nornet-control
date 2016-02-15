@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "Connecting to 129.241.200.129 ..."
+ssh -C nornetpp@129.241.200.129
