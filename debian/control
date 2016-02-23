@@ -30,7 +30,6 @@ Depends: apport-retrace,
          apt-show-versions,
          autofs,
          bridge-utils,
-         cfengine3,
          colordiff,
          cron,
          cron-apt,
@@ -53,12 +52,10 @@ Depends: apport-retrace,
          lksctp-tools,
          lsb-base (>= 3.2-14),
          netperfmeter,
-         nfs-common,
          nmap,
          nornet-api,
          ntpdate,
          nttcp,
-         openssh-server,
          python-software-properties,
          rsplib-tools,
          smartmontools,
@@ -69,17 +66,13 @@ Depends: apport-retrace,
          traceroute,
          tree,
          update-motd,
-         virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental | virtualbox-guest-utils,
          vlan,
          whois,
          xmlstarlet,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
-Recommends: open-vm-tools,
-            paris-traceroute,
-            tracebox,
-            tshark
+Recommends: tshark
 Conflicts: landscape-common
 Replaces: landscape-common
 Description: NorNet Management Tools
@@ -152,15 +145,20 @@ Description: NorNet Development Tools
 Package: nornet-node
 Architecture: any
 Conflicts: miredo
-Depends: grub2-common | grub,
+Depends: cfengine3,
+         grub2-common | grub,
+         nfs-common,
          nornet-api,
          nornet-management,
          ntp,
+         openssh-server,
          python (>= 2.7),
          rsplib-services,
          snmpd,
          ${misc:Depends},
          ${shlibs:Depends}
+Recommends: open-vm-tools,
+            virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental | virtualbox-guest-utils
 Description: NorNet Node Control
  This package contains the scripts to configure a generic node on a NorNet
  site.
@@ -194,6 +192,8 @@ Depends: arpwatch,
          traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
+Recommends: paris-traceroute,
+            tracebox
 Description: NorNet Tunnelbox Control
  This package contains the scripts to configure the tunnelboxes of NorNet
  sites.
@@ -336,10 +336,13 @@ Description: NorNet Database
 
 Package: nornet-server
 Architecture: all
-Depends: grub2-common | grub,
+Depends: cfengine3,
+         grub2-common | grub,
          libvirt-bin,
+         nfs-common,
          nornet-management,
          ntp,
+         openssh-server,
          python (>= 2.7),
          qemu-kvm,
          virtinst,
