@@ -70,6 +70,7 @@ Depends: apt-file,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
+Conflicts: minidlna, webfs, kdeconnect, kdeconnect-plasma
 Recommends: open-vm-tools,
             paris-traceroute,
             tracebox,
