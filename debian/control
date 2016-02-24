@@ -60,7 +60,12 @@ Depends: apport-retrace,
          ${python:Depends},
          ${shlibs:Depends}
 Recommends: tshark
-Conflicts: landscape-common
+Conflicts: kdeconnect,
+           kdeconnect-plasma,
+           landscape-common,
+           minidlna,
+           tntnet,
+           webfs
 Replaces: landscape-common
 Description: NorNet Management Tools
  This metapackage contains basic software nor NorNet node management. The
@@ -149,7 +154,6 @@ Depends: cfengine3,
          nfs-common,
          nornet-api,
          nornet-management,
-         nornet-api,
          ntp,
          openssh-server,
          python (>= 2.7),
@@ -203,8 +207,8 @@ Description: NorNet Tunnelbox Control
 Package: nornet-filesrv
 Architecture: all
 Depends: nfs-kernel-server,
-         nornet-management,
          nornet-api,
+         nornet-management,
          python (>= 2.7),
          python-adns,
          tftpd-hpa,
@@ -228,14 +232,13 @@ Description: NorNet Artwork
 
 Package: nornet-monitor
 Architecture: all
-Conflicts: tntnet
 Depends: apache2,
          libapache2-mod-php5,
          nagios3,
          nagios3-doc,
+         nornet-api,
          nornet-artwork,
          nornet-management,
-         nornet-api,
          postfix,
          python (>= 2.7),
          ${misc:Depends},
@@ -251,8 +254,8 @@ Architecture: all
 Depends: firefox,
          kdm,
          kubuntu-desktop,
-         nornet-management,
          nornet-api,
+         nornet-management,
          xserver-xorg-video-vmware,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -265,8 +268,8 @@ Description: NorNet Display
 
 Package: nornet-gatekeeper
 Architecture: all
-Depends: nornet-management,
-         nornet-api,
+Depends: nornet-api,
+         nornet-management,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Gatekeeper
@@ -284,8 +287,8 @@ Depends: apache2,
          libgeo-ip-perl,
          libnet-dns-perl,
          libnet-ip-perl,
-         nornet-management,
          nornet-api,
+         nornet-management,
          oxygen-icon-theme,
          wdg-html-validator,
          ${misc:Depends},
@@ -317,8 +320,8 @@ Description: NorNet Wiki Server
 
 Package: nornet-timesrv
 Architecture: all
-Depends: nornet-management,
-         nornet-api,
+Depends: nornet-api,
+         nornet-management,
          ntp,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -346,8 +349,8 @@ Depends: cfengine3,
          grub2-common | grub,
          libvirt-bin,
          nfs-common,
-         nornet-management,
          nornet-api,
+         nornet-management,
          ntp,
          openssh-server,
          python (>= 2.7),
