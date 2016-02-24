@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+if [ $# -ne 1 ] ; then
+   echo >&2 "Usage: $0 old_tunnelbox"
+   exit 1
+fi
+
+OLD="$1"
+mkdir -p "$OLD"
+
+
+echo "Copying interfaces ..."
+rsync -cz nornetpp@$OLD:/etc/network/interfaces $OLD/interfaces
+
+echo "Copying nornet ..."
+rsync -Pacz --delete nornetpp@$OLD:/etc/nornet/          $OLD/nornet/
+
+echo "Copying traces ..."
+rsync -Pacz --delete nornetpp@$OLD:/var/hipercontracer/  $OLD/hipercontracer/
+
+chown -R root:root $OLD/
+
+
+echo "Stopping services"
+service nornet-trace-service stop
+service nornet-tunnelbox stop
+
+
+echo "Replacing current configuration:"
+
+
+rm /var/log/nornet-*.log
+cp $OLD/interfaces /etc/network/interfaces
+rsync -avc --delete $OLD/nornet/         /etc/nornet/
+rsync -avc --delete $OLD/hipercontracer/ /var/hipercontracer/
