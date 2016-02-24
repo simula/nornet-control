@@ -11,18 +11,6 @@ Build-Depends: debhelper (>= 9),
                python-support
 Standards-Version: 3.9.6
 
-Package: nornet-api
-Architecture: any
-Depends: python-ipaddr,
-         ${misc:Depends},
-         ${python:Depends},
-         ${shlibs:Depends}
-Description: NorNet API
- This package contains the NorNet Python API library. It contains functions
- to communicate with the central server (MyPLC), based on XMLRPC.
- .
- See https://www.nntb.no for details on NorNet!
-
 Package: nornet-management
 Architecture: any
 Depends: apport-retrace,
@@ -53,7 +41,6 @@ Depends: apport-retrace,
          lsb-base (>= 3.2-14),
          netperfmeter,
          nmap,
-         nornet-api,
          ntpdate,
          nttcp,
          python-software-properties,
@@ -142,6 +129,18 @@ Description: NorNet Development Tools
  .
  See https://www.nntb.no for details on NorNet!
 
+Package: nornet-api
+Architecture: any
+Depends: python-ipaddr,
+         ${misc:Depends},
+         ${python:Depends},
+         ${shlibs:Depends}
+Description: NorNet API
+ This package contains the NorNet Python API library. It contains functions
+ to communicate with the central server (MyPLC), based on XMLRPC.
+ .
+ See https://www.nntb.no for details on NorNet!
+
 Package: nornet-node
 Architecture: any
 Conflicts: miredo
@@ -150,6 +149,7 @@ Depends: cfengine3,
          nfs-common,
          nornet-api,
          nornet-management,
+         nornet-api,
          ntp,
          openssh-server,
          python (>= 2.7),
@@ -204,6 +204,7 @@ Package: nornet-filesrv
 Architecture: all
 Depends: nfs-kernel-server,
          nornet-management,
+         nornet-api,
          python (>= 2.7),
          python-adns,
          tftpd-hpa,
@@ -234,6 +235,7 @@ Depends: apache2,
          nagios3-doc,
          nornet-artwork,
          nornet-management,
+         nornet-api,
          postfix,
          python (>= 2.7),
          ${misc:Depends},
@@ -250,6 +252,7 @@ Depends: firefox,
          kdm,
          kubuntu-desktop,
          nornet-management,
+         nornet-api,
          xserver-xorg-video-vmware,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -263,6 +266,7 @@ Description: NorNet Display
 Package: nornet-gatekeeper
 Architecture: all
 Depends: nornet-management,
+         nornet-api,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Gatekeeper
@@ -281,6 +285,7 @@ Depends: apache2,
          libnet-dns-perl,
          libnet-ip-perl,
          nornet-management,
+         nornet-api,
          oxygen-icon-theme,
          wdg-html-validator,
          ${misc:Depends},
@@ -313,6 +318,7 @@ Description: NorNet Wiki Server
 Package: nornet-timesrv
 Architecture: all
 Depends: nornet-management,
+         nornet-api,
          ntp,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -341,6 +347,7 @@ Depends: cfengine3,
          libvirt-bin,
          nfs-common,
          nornet-management,
+         nornet-api,
          ntp,
          openssh-server,
          python (>= 2.7),
