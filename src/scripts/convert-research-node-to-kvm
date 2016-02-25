@@ -1,0 +1,40 @@
+#!/bin/bash -e
+
+mkdir -p $HOME/KVM
+
+if [ $# -lt 2 ] ; then
+   echo >&2 "Usage: $0 vnc_address machine ..."
+   exit 1
+fi
+vncAddress="$1"
+vncPort=5700
+shift
+
+while [ $# -ge 1 ] ; do
+   machine="$1"
+   shift
+
+   echo "Machine: $machine"
+   disk=`find "$HOME/VirtualBox VMs/$machine/" -name "*.vdi"`
+   if [ "$disk" != "" ] ; then
+      echo "Disk: $disk"
+
+      newDisk="$HOME/KVM/$machine/DH0.vdi"
+
+      rm -rf $HOME/KVM/$machine.xml $HOME/KVM/$machine
+
+      sed <ResearchNode.xml \
+          -e "s/MACHINENAME/$machine/g" \
+          -e "s#DISKIMAGE#$newDisk#g" \
+          -e "s/VNCADDRESS/$vncAddress/g" \
+          -e "s/VNCPORT/$vncPort/g" \
+          >$HOME/KVM/$machine.xml
+      mkdir -p $HOME/KVM/$machine
+      ln "$disk" $HOME/KVM/$machine/DH0.vdi
+
+   else
+      echo >&2 "ERROR: Disk of $machine not found!"
+   fi
+
+   let vncPort=$vncPort+1
+done
