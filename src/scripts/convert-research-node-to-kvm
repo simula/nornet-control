@@ -1,15 +1,19 @@
 #!/bin/bash -e
 
+. /etc/nornet/nornetapi-config
+
 mkdir -p $HOME/KVM
 
-if [ $# -lt 2 ] ; then
-   echo >&2 "Usage: $0 vnc_address machine ..."
+if [ $# -lt 1 ] ; then
+   echo >&2 "Usage: $0 machine ..."
    exit 1
 fi
-vncAddress="$1"
+vncAddress="$NorNet_Server_DefaultVNCAddress"
 vncPort=5700
-shift
 
+echo "VNC base: $vncAddress, port $vncPort"
+
+xmlList=""
 while [ $# -ge 1 ] ; do
    machine="$1"
    shift
@@ -20,21 +24,34 @@ while [ $# -ge 1 ] ; do
       echo "Disk: $disk"
 
       newDisk="$HOME/KVM/$machine/DH0.vdi"
+      newCD="$HOME/ISOs/$machine.iso"
+
+      echo "New disk: $newDisk"
+      echo "New CD: $newCD"
 
       rm -rf $HOME/KVM/$machine.xml $HOME/KVM/$machine
 
       sed <ResearchNode.xml \
           -e "s/MACHINENAME/$machine/g" \
           -e "s#DISKIMAGE#$newDisk#g" \
+          -e "s#CDROMIMAGE#$newCD#g" \
           -e "s/VNCADDRESS/$vncAddress/g" \
           -e "s/VNCPORT/$vncPort/g" \
           >$HOME/KVM/$machine.xml
       mkdir -p $HOME/KVM/$machine
       ln "$disk" $HOME/KVM/$machine/DH0.vdi
+      xmlList="$xmlList $HOME/KVM/$machine.xml"
 
    else
       echo >&2 "ERROR: Disk of $machine not found!"
    fi
 
    let vncPort=$vncPort+1
+done
+
+echo "Defining VMs:"
+chown -R nornetpp:nornetpp $HOME/KVM
+cd $HOME/KVM
+for xml in $xmlList ; do
+   virsh define $xml || true
 done
