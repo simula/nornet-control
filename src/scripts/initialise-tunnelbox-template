@@ -22,6 +22,8 @@ chown -R root:root $OLD/
 
 
 echo "Stopping services"
+service collectd stop
+service cfengine3 stop
 service nornet-trace-service stop
 service nornet-tunnelbox stop
 
@@ -33,3 +35,4 @@ rm /var/log/nornet-*.log
 cp $OLD/interfaces /etc/network/interfaces
 rsync -avc --delete $OLD/nornet/         /etc/nornet/
 rsync -avc --delete $OLD/hipercontracer/ /var/hipercontracer/
+rm -rf /var/lib/collectd/rrd/*

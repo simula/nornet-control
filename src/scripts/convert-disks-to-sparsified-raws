@@ -10,7 +10,7 @@ n=0
 for disk in $disks ; do
    old="$disk"
    new="DH$n.raw"   # "`echo "$disk" | sed -e "s/.vdi$/.raw/g"`"
-   echo "virt-sparsify $old --convert raw $new"
-   sudo virt-sparsify $old --convert raw $new
+   echo "env TMPDIR=$TMPDIR virt-sparsify $old --convert raw $new"
+   sudo env TMPDIR=$TMPDIR virt-sparsify $old --convert raw $new
    let n=$n+1
 done
