@@ -3,9 +3,10 @@
 while [ $# -gt 0 ] ; do
    node="$1"
    shift
-   echo "Updating node $node ..."
    (
-      scp -q -i /etc/planetlab/root_ssh_key.rsa /home/nornetpp/src/nornet-nn/src/nornet-research-node-initializer root@$node:/etc/init.d/
-      ssh -i /etc/planetlab/root_ssh_key.rsa root@$node service nornet-research-node-initializer start >/dev/null
-   )
+      echo "Updating node $node ..."
+      scp -oStrictHostKeyChecking=no -oConnectTimeout=30 -q -i /etc/planetlab/root_ssh_key.rsa /home/nornetpp/src/nornet-nn/src/nornet-research-node-initializer root@$node:/etc/init.d/
+      ssh -oStrictHostKeyChecking=no -oConnectTimeout=30 -i /etc/planetlab/root_ssh_key.rsa root@$node service nornet-research-node-initializer start >/dev/null
+   ) &
 done
+wait
