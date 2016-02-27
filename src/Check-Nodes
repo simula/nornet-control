@@ -19,22 +19,27 @@
 # Contact: dreibh@simula.no
 
 SLICE=srl_test
+KEY=~/.ssh/test2
 
 ./Get-Nodes | awk '{ print $2 }' | xargs -n1 | (
    while read node ; do
+      site=`echo "$node" | sed -e "s/^[a-z0-9]*\.//g"`
       echo "Trying $node ..."
       (
          if ! ping -c3 >/dev/null 2>&1 ; then
-            result=`ssh -oStrictHostKeyChecking=no -oConnectTimeout=30 $SLICE@$node echo "Node is OK"`
+            result=`ssh -oStrictHostKeyChecking=no -oConnectTimeout=30 -i $KEY $SLICE@$node echo "Node is OK"`
             if [ "$result" = "Node is OK" ] ; then
-               echo -e "OK\t$node"
+               echo -e "$site\tOK\t$node"
             else
-               echo -e "BAD\t$node"
+               echo -e "$site\tBAD\t$node"
                echo "$result"
             fi
          else
-            echo -e "UNREACHABLE\t$node"
+            echo -e "$site\tUNREACHABLE\t$node"
          fi
       ) &
    done
+   wait
 )
+
+echo "Done."
