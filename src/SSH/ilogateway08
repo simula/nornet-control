@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "Connecting to 158.39.149.133 ..."
+ssh -C nornetpp@158.39.149.133 -L 4008:10.1.8.244:443

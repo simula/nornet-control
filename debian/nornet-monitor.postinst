@@ -17,6 +17,9 @@ case "$1" in
       ) >/etc/nagios3/nagios.cfg.new
       mv /etc/nagios3/nagios.cfg.new /etc/nagios3/nagios.cfg
 
+      # The NorNet Management cron job has been moved to Server/Node!
+      rm -f /etc/cron.d/nornet-management
+
       update-grub
       ;;
 esac

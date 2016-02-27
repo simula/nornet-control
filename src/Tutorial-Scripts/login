@@ -1,0 +1,7 @@
+#!/bin/sh
+
+USER=user1
+
+ssh $USER@gatekeeper.nntb.no \
+	-L 2000:plc.simula.nornet:443 \
+	-L 2001:monitor.simula.nornet:80

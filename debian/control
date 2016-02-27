@@ -11,18 +11,6 @@ Build-Depends: debhelper (>= 9),
                python-support
 Standards-Version: 3.9.6
 
-Package: nornet-api
-Architecture: any
-Depends: python-ipaddr,
-         ${misc:Depends},
-         ${python:Depends},
-         ${shlibs:Depends}
-Description: NorNet API
- This package contains the NorNet Python API library. It contains functions
- to communicate with the central server (MyPLC), based on XMLRPC.
- .
- See https://www.nntb.no for details on NorNet!
-
 Package: nornet-management
 Architecture: any
 Depends: apport-retrace,
@@ -30,7 +18,6 @@ Depends: apport-retrace,
          apt-show-versions,
          autofs,
          bridge-utils,
-         cfengine3,
          colordiff,
          cron,
          cron-apt,
@@ -53,12 +40,9 @@ Depends: apport-retrace,
          lksctp-tools,
          lsb-base (>= 3.2-14),
          netperfmeter,
-         nfs-common,
          nmap,
-         nornet-api,
          ntpdate,
          nttcp,
-         openssh-server,
          python-software-properties,
          rsplib-tools,
          smartmontools,
@@ -69,18 +53,19 @@ Depends: apport-retrace,
          traceroute,
          tree,
          update-motd,
-         virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental | virtualbox-guest-utils,
          vlan,
          whois,
          xmlstarlet,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
-Recommends: open-vm-tools,
-            paris-traceroute,
-            tracebox,
-            tshark
-Conflicts: landscape-common
+Recommends: tshark
+Conflicts: kdeconnect,
+           kdeconnect-plasma,
+           landscape-common,
+           minidlna,
+           tntnet,
+           webfs
 Replaces: landscape-common
 Description: NorNet Management Tools
  This metapackage contains basic software nor NorNet node management. The
@@ -149,18 +134,35 @@ Description: NorNet Development Tools
  .
  See https://www.nntb.no for details on NorNet!
 
+Package: nornet-api
+Architecture: any
+Depends: python-ipaddr,
+         ${misc:Depends},
+         ${python:Depends},
+         ${shlibs:Depends}
+Description: NorNet API
+ This package contains the NorNet Python API library. It contains functions
+ to communicate with the central server (MyPLC), based on XMLRPC.
+ .
+ See https://www.nntb.no for details on NorNet!
+
 Package: nornet-node
 Architecture: any
 Conflicts: miredo
-Depends: grub2-common | grub,
+Depends: cfengine3,
+         grub2-common | grub,
+         nfs-common,
          nornet-api,
          nornet-management,
          ntp,
+         openssh-server,
          python (>= 2.7),
          rsplib-services,
          snmpd,
          ${misc:Depends},
          ${shlibs:Depends}
+Recommends: open-vm-tools,
+            virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental | virtualbox-guest-utils
 Description: NorNet Node Control
  This package contains the scripts to configure a generic node on a NorNet
  site.
@@ -194,6 +196,8 @@ Depends: arpwatch,
          traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
+Recommends: paris-traceroute,
+            tracebox
 Description: NorNet Tunnelbox Control
  This package contains the scripts to configure the tunnelboxes of NorNet
  sites.
@@ -203,6 +207,7 @@ Description: NorNet Tunnelbox Control
 Package: nornet-filesrv
 Architecture: all
 Depends: nfs-kernel-server,
+         nornet-api,
          nornet-management,
          python (>= 2.7),
          python-adns,
@@ -227,11 +232,11 @@ Description: NorNet Artwork
 
 Package: nornet-monitor
 Architecture: all
-Conflicts: tntnet
 Depends: apache2,
          libapache2-mod-php5,
          nagios3,
          nagios3-doc,
+         nornet-api,
          nornet-artwork,
          nornet-management,
          postfix,
@@ -249,6 +254,7 @@ Architecture: all
 Depends: firefox,
          kdm,
          kubuntu-desktop,
+         nornet-api,
          nornet-management,
          xserver-xorg-video-vmware,
          ${misc:Depends},
@@ -262,7 +268,8 @@ Description: NorNet Display
 
 Package: nornet-gatekeeper
 Architecture: all
-Depends: nornet-management,
+Depends: nornet-api,
+         nornet-management,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Gatekeeper
@@ -280,6 +287,7 @@ Depends: apache2,
          libgeo-ip-perl,
          libnet-dns-perl,
          libnet-ip-perl,
+         nornet-api,
          nornet-management,
          oxygen-icon-theme,
          wdg-html-validator,
@@ -312,7 +320,8 @@ Description: NorNet Wiki Server
 
 Package: nornet-timesrv
 Architecture: all
-Depends: nornet-management,
+Depends: nornet-api,
+         nornet-management,
          ntp,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -336,10 +345,14 @@ Description: NorNet Database
 
 Package: nornet-server
 Architecture: all
-Depends: grub2-common | grub,
+Depends: cfengine3,
+         grub2-common | grub,
          libvirt-bin,
+         nfs-common,
+         nornet-api,
          nornet-management,
          ntp,
+         openssh-server,
          python (>= 2.7),
          qemu-kvm,
          virtinst,
