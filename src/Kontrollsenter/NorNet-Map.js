@@ -44,40 +44,21 @@ function setVariable(variable, value)
 
 // ###### Initialize NorNet map #############################################
 function makeMap(latitude, longitude, zoomLevel)
-{
-//   window.mapLayers     = new Array();   // All layers
-//   window.mapbaselayers = new Array();   // Only base layers
-
-      var iconFeature = new ol.Feature({
-              geometry: new ol.geom.Point([5, 60]),
-                      name: 'Null Island',
-                              population: 4000,
-                                      rainfall: 500
-                                            });
-                                            
-                                                  var iconStyle = new ol.style.Style({
-                                                          image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-                                                                    anchor: [0.5, 46],
-                                                                              anchorXUnits: 'fraction',
-                                                                                        anchorYUnits: 'pixels',
-                                                                                                  src: '../Artwork/Graphics/Icons/Icon-Tux.png'
-                                                                                                          }))
-                                                                                                                });
-                                                                                                                
+{                                                                                                               
    // ====== Create layers for markers and vectors ==========================
-   window.sitesSource = new ol.source.Vector({
-      features: [iconFeature]
-   });
+   window.sitesSource = new ol.source.Vector();
    window.sitesVector = new ol.layer.Vector({
       title:   'NorNet Sites',
       visible: true,
       source:  window.sitesSource
    });
 
-//   window.mapmarkers = new ol.Layer.Markers("NorNet Sites");
-//   window.mapLayers.push(window.mapmarkers);
-//   window.mapvectors = new ol.Layer.Vector("NorNet Connections");
-//   window.mapLayers.push(window.mapvectors);
+   window.connectionsSource = new ol.source.Vector();
+   window.connectionsVector = new ol.layer.Vector({
+      title:   'NorNet Connections',
+      visible: true,
+      source:  window.connectionsSource
+   });
 
    // ====== Create OSM map =================================================
    window.mapLayers = [
@@ -119,7 +100,8 @@ function makeMap(latitude, longitude, zoomLevel)
    ]
    
    window.overlayLayers = [
-      window.sitesVector
+      window.sitesVector,
+      window.connectionsVector
    ]
 
    // ====== Create Google map ==============================================
@@ -329,7 +311,6 @@ function makeMarker(markerVariable, title, icon, positionVariable, zIndex, infoT
 //   markerFeature.markerReference.events.register("mousedown", markerFeature, markerClick);
 
    window.sitesSource.addFeature(markerFeature);
-
    setVariable(markerVariable, markerFeature);
 }
 
@@ -338,9 +319,9 @@ function makeMarker(markerVariable, title, icon, positionVariable, zIndex, infoT
 function removeConnection(connectionVariable)
 {
    if (variableExists(connectionVariable) && (getVariable(connectionVariable) != null)) {
-      var connection = getVariable(connectionVariable);
-//      window.mapvectors.removeFeatures([connection], true);
-      connection.destroy();
+      var connectionFeature = getVariable(connectionVariable);
+//      window.connectionsSource.removeFeature(connectionFeature);
+//      connection.destroy();
       setVariable(connectionVariable, null);
    }
 }
@@ -350,10 +331,32 @@ function makeConnection(connectionVariable, points, color, thickness, dashStyle,
 {
    removeConnection(connectionVariable);
    var linePoints = [];
-//   for(i = 0;i < points.length; i++) {
-//      linePoints[i] = new ol.geom.Point(points[i].lon, points[i].lat);
-//   }
-//   var lineString = new OpenLayers.Geometry.LineString(linePoints);
+
+
+   
+   for(i = 0;i < points.length; i++) {
+      points[i] = new ol.geom.Point([Math.random() % 80, Math.random() % 80]);
+   
+      linePoints[i] = ol.proj.transform(points[i], 'EPSG:4326', 'EPSG:3857');
+      console.log('XXX ' + i + ' ' + points[i][0] + "\n");
+      // new ol.geom.Point(points[i]);
+   }
+   
+   var lineString = new ol.geom.LineString([ points[0], points[1] ]);
+
+   var connectionFeature = new ol.Feature({
+      geometry: lineString
+   });
+   connectionFeature.setStyle(new ol.style.Style({
+      stroke : new ol.style.Stroke({
+         color:    color,
+         width:    thickness,
+         lineDash: dashStyle
+      }),
+      zIndex : zIndex
+   }));
+
+
 //   var connection = new OpenLayers.Feature.Vector(lineString, null, {
 //         strokeColor:     color,
 //         strokeOpacity:   0.9,
@@ -363,5 +366,7 @@ function makeConnection(connectionVariable, points, color, thickness, dashStyle,
 //      });
 //   window.mapvectors.addFeatures([connection]);
 //
-//   setVariable(connectionVariable, connection);
+
+//   window.connectionsSource.addFeature(connectionFeature); 
+   setVariable(connectionVariable, connectionFeature);
 }
