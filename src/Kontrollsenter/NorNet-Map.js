@@ -60,7 +60,11 @@ function makeMap(latitude, longitude, zoomLevel)
       source:  window.connectionsSource
    });
 
-   // ====== Create OSM map =================================================
+   // ====== Map settings ===================================================
+   // FIXME: TEST ONLY! Needs proper API key!
+   bingKey = 'AkGbxXx6tDWf1swIhPJyoAVp06H0s0gDTYslNWWHZ6RoPqMpB9ld5FY1WutX8UoF';
+
+   // ====== Create map layers ==============================================
    window.mapLayers = [
       new ol.layer.Tile({
          title:   'OpenStreetMap',
@@ -73,98 +77,66 @@ function makeMap(latitude, longitude, zoomLevel)
             url: 'http://{a-c}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png'
          }),
          type:    'base', visible: false }),
-      new ol.layer.Tile({
-         title:   'OpenRailwayMap',
-         source:  new ol.source.OSM({
-            attributions: [ new ol.Attribution({ html: '<a href="http://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>, Style: <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a> and OpenStreetMap' }) ],
-            url: 'http://{a-c}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png'
-         }),
-         type:    'base', visible: false }),
+//      new ol.layer.Tile({
+//         title:   'OpenRailwayMap',
+//         source:  new ol.source.OSM({
+//            attributions: [ new ol.Attribution({ html: '<a href="http://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>, Style: <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a> and OpenStreetMap' }) ],
+//            url: 'http://{a-c}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png'
+//         }),
+//         type:    'base', visible: false }),
 
       new ol.layer.Tile({
          title:   'Stamen Watercolor',
          source:  new ol.source.Stamen({ layer: 'watercolor' }),
          type:    'base', visible: false }),
-      new ol.layer.Tile({
-         title:   'Stamen Terrain',
-         source:  new ol.source.Stamen({ layer: 'terrain' }),
-         type:    'base', visible: false }),
+//      new ol.layer.Tile({
+//         title:   'Stamen Terrain',
+//         source:  new ol.source.Stamen({ layer: 'terrain' }),
+//         type:    'base', visible: false }),
          
       new ol.layer.Tile({
          title:   'Bing Aerial',
          source:  new ol.source.BingMaps({
             imagerySet: 'AerialWithLabels',
-            key: 'AkGbxXx6tDWf1swIhPJyoAVp06H0s0gDTYslNWWHZ6RoPqMpB9ld5FY1WutX8UoF'
+            key:        bingKey
+         }),
+         type:   'base', visible: false }),
+      new ol.layer.Tile({
+         title:   'Bing Road',
+         source:  new ol.source.BingMaps({
+            imagerySet: 'Road',
+            key:        bingKey
          }),
          type:   'base', visible: false }),
    ]
-   
+
+   // ====== Create overlay layers ==========================================
    window.overlayLayers = [
       window.sitesVector,
-      window.connectionsVector
+      window.connectionsVector,
+      new ol.layer.Tile({
+         title:   'Temperature',
+         source:  new ol.source.XYZ({ url: 'http://{a-c}.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png' }), opacity: 0.5, visible: false }),
+      new ol.layer.Tile({
+         title:   'Pressure',
+         source:  new ol.source.XYZ({ url: 'http://{a-c}.tile.openweathermap.org/map/pressure_cntr/{z}/{x}/{y}.png' }), opacity: 0.5, visible: false }),
+      new ol.layer.Tile({
+         title:   'Clouds',
+         source:  new ol.source.XYZ({ url: 'http://{a-c}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png' }), opacity: 0.5, visible: false }),
+      new ol.layer.Tile({
+         title:   'Snow',
+         source:  new ol.source.XYZ({ url: 'http://{a-c}.tile.openweathermap.org/map/snow/{z}/{x}/{y}.png' }), opacity: 0.5, visible: false }),
+      new ol.layer.Tile({
+         title:   'Rain',
+         source:  new ol.source.XYZ({ url: 'http://{a-c}.tile.openweathermap.org/map/rain/{z}/{x}/{y}.png' }), opacity: 0.5, visible: false }),
+      new ol.layer.Tile({
+         title:   'Wind',
+         source:  new ol.source.XYZ({ url: 'http://{a-c}.tile.openweathermap.org/map/wind/{z}/{x}/{y}.png' }), opacity: 0.5, visible: false }),
    ]
-
-   // ====== Create Google map ==============================================
-//   window.googlemap1 = new OpenLayers.Layer.Google("Google Satellite", { type: google.maps.MapTypeId.HYBRID });
-//   window.mapLayers.push(window.googlemap1);
-//   window.mapbaselayers.push(window.googlemap1);
-//   window.googlemap2 = new OpenLayers.Layer.Google("Google Terrain",   { type: google.maps.MapTypeId.TERRAIN });
-//   window.mapLayers.push(window.googlemap2);
-//   window.mapbaselayers.push(window.googlemap2);
-
-   // ====== Create Bing map ================================================
-   // FIXME: TEST ONLY! Needs proper API key!
-//   var apiKey = "Agl-rpGco3Mo07n16sDpY4jsu35RAbvEwPAND7hi8-6JgIFVetQdhnZ4i_oSiNyd";
-//   window.bingmap1 = new OpenLayers.Layer.Bing( { name: "Bing Road", key: apiKey, type: "Road" } );
-//   window.mapLayers.push(window.bingmap1);
-//   window.mapbaselayers.push(window.bingmap1);
-//   window.bingmap2 = new OpenLayers.Layer.Bing( { name: "Bing Aerial", key: apiKey, type: "AerialWithLabels" } );
-//   window.mapLayers.push(window.bingmap2);
-//   window.mapbaselayers.push(window.bingmap2);
-
-   // ====== OpenWeather overlay ============================================
-   // FIXME: TEST ONLY! Needs proper APP ID! Example: http://openweathermap.org/current
-//   var appID = "44db6a862fba0b067b1930da0d769e98";
-//   window.wcity = new OpenLayers.Layer.Vector.OWMWeather("Weather", { 'appid' : appID } );
-//   window.mapLayers.push(wcity);
-
-//   window.wstations = new OpenLayers.Layer.Vector.OWMStations("Stations");
-//   window.wstations.setVisibility(false);
-//   window.mapLayers.push(wstations);
-
-
-//   window.wclouds = new OpenLayers.Layer.XYZ("Clouds", "http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png",
-//                                             { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
-//   window.wclouds.setVisibility(false);
-//   window.mapLayers.push(wclouds);
-//
-//   window.wpressure = new OpenLayers.Layer.XYZ("Pressure", "http://${s}.tile.openweathermap.org/map/pressure_cntr/${z}/${x}/${y}.png",
-//                                               { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
-//   window.wpressure.setVisibility(false);
-//   window.mapLayers.push(wpressure);
-//
-//   window.wwind = new OpenLayers.Layer.XYZ("Wind", "http://${s}.tile.openweathermap.org/map/wind/${z}/${x}/${y}.png",
-//                                               { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
-//   window.wwind.setVisibility(false);
-//   window.mapLayers.push(wwind);
-//
-//   window.wtemperature = new OpenLayers.Layer.XYZ("Temperature", "http://${s}.tile.openweathermap.org/map/temp/${z}/${x}/${y}.png",
-//                                                    { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
-//   window.wtemperature.setVisibility(false);
-//   window.mapLayers.push(wtemperature);
-//
-//   window.wrain = new OpenLayers.Layer.XYZ("Rain", "http://${s}.tile.openweathermap.org/map/rain/${z}/${x}/${y}.png",
-//                                                    { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
-//   window.wrain.setVisibility(false);
-//   window.mapLayers.push(wrain);
-//
-//   window.wsnow = new OpenLayers.Layer.XYZ("Snow", "http://${s}.tile.openweathermap.org/map/snow/${z}/${x}/${y}.png",
-//                                                    { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
-//   window.wsnow.setVisibility(false);
-//   window.mapLayers.push(wsnow);
 
    // ====== Create the map =================================================
    window.mapLayers.reverse();
+   window.overlayLayers.reverse();
    window.map = new ol.Map({
       target:  'map_canvas',
       layers:  [ new ol.layer.Group({ title:  'Base maps',
@@ -260,8 +232,6 @@ function removeMarker(markerVariable)
    if (variableExists(markerVariable) && (getVariable(markerVariable) != null)) {
       var markerFeature = getVariable(markerVariable);
       window.sitesSource.removeFeature(markerFeature);
-      // markerFeature.destroyMarker();
-      // markerFeature.destroy();
       setVariable(markerVariable, null);
    }
 }
@@ -320,8 +290,7 @@ function removeConnection(connectionVariable)
 {
    if (variableExists(connectionVariable) && (getVariable(connectionVariable) != null)) {
       var connectionFeature = getVariable(connectionVariable);
-//      window.connectionsSource.removeFeature(connectionFeature);
-//      connection.destroy();
+      window.connectionsSource.removeFeature(connectionFeature);
       setVariable(connectionVariable, null);
    }
 }
@@ -330,43 +299,22 @@ function removeConnection(connectionVariable)
 function makeConnection(connectionVariable, points, color, thickness, dashStyle, zIndex)
 {
    removeConnection(connectionVariable);
-   var linePoints = [];
-
-
-   
+   var linePoints = []; 
    for(i = 0;i < points.length; i++) {
-      points[i] = new ol.geom.Point([Math.random() % 80, Math.random() % 80]);
-   
-      linePoints[i] = ol.proj.transform(points[i], 'EPSG:4326', 'EPSG:3857');
-      console.log('XXX ' + i + ' ' + points[i][0] + "\n");
-      // new ol.geom.Point(points[i]);
-   }
-   
-   var lineString = new ol.geom.LineString([ points[0], points[1] ]);
+      linePoints[i] = points[i].getCoordinates()
+   }   
 
    var connectionFeature = new ol.Feature({
-      geometry: lineString
+      geometry: new ol.geom.LineString(linePoints)
    });
    connectionFeature.setStyle(new ol.style.Style({
       stroke : new ol.style.Stroke({
-         color:    color,
-         width:    thickness,
-         lineDash: dashStyle
+         color: color,
+         width: thickness
       }),
       zIndex : zIndex
    }));
 
-
-//   var connection = new OpenLayers.Feature.Vector(lineString, null, {
-//         strokeColor:     color,
-//         strokeOpacity:   0.9,
-//         strokeWidth:     thickness,
-//         strokeDashstyle: dashStyle,
-//         graphicZIndex:   zIndex
-//      });
-//   window.mapvectors.addFeatures([connection]);
-//
-
-//   window.connectionsSource.addFeature(connectionFeature); 
+   window.connectionsSource.addFeature(connectionFeature); 
    setVariable(connectionVariable, connectionFeature);
 }
