@@ -74,6 +74,7 @@ function makeMap(latitude, longitude, zoomLevel)
             url: 'http://{a-c}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png'
          }),
          type:    'base', visible: false }),
+
       new ol.layer.Tile({
          title:   'Stamen Watercolor',
          source:  new ol.source.Stamen({ layer: 'watercolor' }),
@@ -81,6 +82,14 @@ function makeMap(latitude, longitude, zoomLevel)
       new ol.layer.Tile({
          title:   'Stamen Terrain',
          source:  new ol.source.Stamen({ layer: 'terrain' }),
+         type:    'base', visible: false }),
+         
+      new ol.layer.Tile({
+         title:   'Bing Aerial',
+         source:  new ol.source.BingMaps({
+            imagerySet: 'AerialWithLabels',
+            key: 'AkGbxXx6tDWf1swIhPJyoAVp06H0s0gDTYslNWWHZ6RoPqMpB9ld5FY1WutX8UoF'
+         }),
          type:    'base', visible: false })
    ]
 
