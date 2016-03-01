@@ -137,21 +137,35 @@ function makeMap(latitude, longitude, zoomLevel)
    window.maplayers.reverse();
    window.map = new ol.Map({
       target:            "map_canvas",
-      units:             "m",
-      view: new ol.View({ center: [0, 0], zoom: 2 }),
+//      units:             "m",
+      view: new ol.View({ projection: 'EPSG:4326',
+                          center: [5, 50], zoom: 5 }),
 //      projection:        new ol.Projection("EPSG:4326"),
 //      displayProjection: new ol.Projection("EPSG:4326"),
       layers:            window.maplayers,
 //      controls: [
 //         new OpenLayers.Control.PanZoomBar(),
-//         new OpenLayers.Control.ScaleLine(),
+//         new ol.control.Zoom(),
+//         new ol.control.ZoomSlider(),
+//         new ol.control.ZoomToExtent(),
+//         new ol.control.ScaleLine(),
+//         new ol.control.Rotate(),
 //         new OpenLayers.Control.Navigation(),
-//         new OpenLayers.Control.MousePosition(),
-//         new OpenLayers.Control.OverviewMap(),
+//         new ol.control.MousePosition(),
+         //new ol.control.OverviewMap(),
 //         new OpenLayers.Control.KeyboardDefaults(),
 //         new OpenLayers.Control.LayerSwitcher( { 'ascending': false } )
 //      ]
    });
+   
+   window.map.addControl(new ol.control.Zoom());
+   window.map.addControl(new ol.control.ZoomSlider());
+   window.map.addControl(new ol.control.ZoomToExtent());
+   window.map.addControl(new ol.control.ScaleLine());
+   window.map.addControl(new ol.control.Rotate());
+   window.map.addControl(new ol.control.MousePosition());
+   window.map.addControl(new ol.control.OverviewMap( { view: new ol.View({ projection: 'EPSG:4326' }) } ));
+   
    window.default_latitude  = latitude;
    window.default_longitude = longitude;
    window.default_zoomlevel = zoomLevel;
@@ -162,10 +176,10 @@ function makeMap(latitude, longitude, zoomLevel)
 // ###### Zoom to given location ############################################
 function zoomToLocation(latitude, longitude, zoomLevel)
 {
-//   window.map.setCenter(new OpenLayers.LonLat(longitude, latitude).transform(
-//                           new OpenLayers.Projection("EPSG:4326"),
-//                           window.map.getProjectionObject()),
-//                        zoomLevel);
+   window.map.setView(new ol.View({
+                         projection: 'EPSG:4326',
+                         center:     [ longitude, latitude ],
+                         zoom:       zoomLevel}));
 }
 
 // ###### Zoom to default location ##########################################
