@@ -45,7 +45,7 @@ function setVariable(variable, value)
 // ###### Initialize NorNet map #############################################
 function makeMap(latitude, longitude, zoomLevel)
 {
-//   window.maplayers     = new Array();   // All layers
+//   window.mapLayers     = new Array();   // All layers
 //   window.mapbaselayers = new Array();   // Only base layers
 
       var iconFeature = new ol.Feature({
@@ -69,19 +69,18 @@ function makeMap(latitude, longitude, zoomLevel)
       features: [iconFeature]
    });
    window.sitesVector = new ol.layer.Vector({
-      title: 'NorNet Sites',
-      type:  'base',
+      title:   'NorNet Sites',
       visible: true,
-      source: window.sitesSource
+      source:  window.sitesSource
    });
 
 //   window.mapmarkers = new ol.Layer.Markers("NorNet Sites");
-//   window.maplayers.push(window.mapmarkers);
+//   window.mapLayers.push(window.mapmarkers);
 //   window.mapvectors = new ol.Layer.Vector("NorNet Connections");
-//   window.maplayers.push(window.mapvectors);
+//   window.mapLayers.push(window.mapvectors);
 
    // ====== Create OSM map =================================================
-   window.maplayers = [
+   window.mapLayers = [
       new ol.layer.Tile({
          title:   'OpenStreetMap',
          source:  new ol.source.OSM(),
@@ -117,76 +116,79 @@ function makeMap(latitude, longitude, zoomLevel)
             key: 'AkGbxXx6tDWf1swIhPJyoAVp06H0s0gDTYslNWWHZ6RoPqMpB9ld5FY1WutX8UoF'
          }),
          type:   'base', visible: false }),
-
+   ]
+   
+   window.overlayLayers = [
       window.sitesVector
    ]
 
    // ====== Create Google map ==============================================
 //   window.googlemap1 = new OpenLayers.Layer.Google("Google Satellite", { type: google.maps.MapTypeId.HYBRID });
-//   window.maplayers.push(window.googlemap1);
+//   window.mapLayers.push(window.googlemap1);
 //   window.mapbaselayers.push(window.googlemap1);
 //   window.googlemap2 = new OpenLayers.Layer.Google("Google Terrain",   { type: google.maps.MapTypeId.TERRAIN });
-//   window.maplayers.push(window.googlemap2);
+//   window.mapLayers.push(window.googlemap2);
 //   window.mapbaselayers.push(window.googlemap2);
 
    // ====== Create Bing map ================================================
    // FIXME: TEST ONLY! Needs proper API key!
 //   var apiKey = "Agl-rpGco3Mo07n16sDpY4jsu35RAbvEwPAND7hi8-6JgIFVetQdhnZ4i_oSiNyd";
 //   window.bingmap1 = new OpenLayers.Layer.Bing( { name: "Bing Road", key: apiKey, type: "Road" } );
-//   window.maplayers.push(window.bingmap1);
+//   window.mapLayers.push(window.bingmap1);
 //   window.mapbaselayers.push(window.bingmap1);
 //   window.bingmap2 = new OpenLayers.Layer.Bing( { name: "Bing Aerial", key: apiKey, type: "AerialWithLabels" } );
-//   window.maplayers.push(window.bingmap2);
+//   window.mapLayers.push(window.bingmap2);
 //   window.mapbaselayers.push(window.bingmap2);
 
    // ====== OpenWeather overlay ============================================
    // FIXME: TEST ONLY! Needs proper APP ID! Example: http://openweathermap.org/current
 //   var appID = "44db6a862fba0b067b1930da0d769e98";
 //   window.wcity = new OpenLayers.Layer.Vector.OWMWeather("Weather", { 'appid' : appID } );
-//   window.maplayers.push(wcity);
+//   window.mapLayers.push(wcity);
 
 //   window.wstations = new OpenLayers.Layer.Vector.OWMStations("Stations");
 //   window.wstations.setVisibility(false);
-//   window.maplayers.push(wstations);
+//   window.mapLayers.push(wstations);
 
 
 //   window.wclouds = new OpenLayers.Layer.XYZ("Clouds", "http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png",
 //                                             { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
 //   window.wclouds.setVisibility(false);
-//   window.maplayers.push(wclouds);
+//   window.mapLayers.push(wclouds);
 //
 //   window.wpressure = new OpenLayers.Layer.XYZ("Pressure", "http://${s}.tile.openweathermap.org/map/pressure_cntr/${z}/${x}/${y}.png",
 //                                               { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
 //   window.wpressure.setVisibility(false);
-//   window.maplayers.push(wpressure);
+//   window.mapLayers.push(wpressure);
 //
 //   window.wwind = new OpenLayers.Layer.XYZ("Wind", "http://${s}.tile.openweathermap.org/map/wind/${z}/${x}/${y}.png",
 //                                               { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
 //   window.wwind.setVisibility(false);
-//   window.maplayers.push(wwind);
+//   window.mapLayers.push(wwind);
 //
 //   window.wtemperature = new OpenLayers.Layer.XYZ("Temperature", "http://${s}.tile.openweathermap.org/map/temp/${z}/${x}/${y}.png",
 //                                                    { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
 //   window.wtemperature.setVisibility(false);
-//   window.maplayers.push(wtemperature);
+//   window.mapLayers.push(wtemperature);
 //
 //   window.wrain = new OpenLayers.Layer.XYZ("Rain", "http://${s}.tile.openweathermap.org/map/rain/${z}/${x}/${y}.png",
 //                                                    { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
 //   window.wrain.setVisibility(false);
-//   window.maplayers.push(wrain);
+//   window.mapLayers.push(wrain);
 //
 //   window.wsnow = new OpenLayers.Layer.XYZ("Snow", "http://${s}.tile.openweathermap.org/map/snow/${z}/${x}/${y}.png",
 //                                                    { isBaseLayer: false, sphericalMercator: true, opacity: 0.5 } );
 //   window.wsnow.setVisibility(false);
-//   window.maplayers.push(wsnow);
+//   window.mapLayers.push(wsnow);
 
    // ====== Create the map =================================================
-   window.maplayers.reverse();
+   window.mapLayers.reverse();
    window.map = new ol.Map({
       target:  'map_canvas',
-      layers:  new ol.layer.Group({ 'title': 'Base maps',
-                                    layers:  window.maplayers
-                                  }),
+      layers:  [ new ol.layer.Group({ title:  'Base maps',
+                                      layers: window.mapLayers }),
+                 new ol.layer.Group({ title:  'Overlays',
+                                      layers: window.overlayLayers  }) ]
    });
    
    window.map.addControl(new ol.control.Zoom());
@@ -265,10 +267,8 @@ function removePosition(positionVariable)
 function makePosition(positionVariable, latitude, longitude)
 {
    removePosition(positionVariable);
-//   position = new OpenLayers.LonLat(longitude, latitude).transform(
-//                 new OpenLayers.Projection("EPSG:4326"),
-//                 window.map.getProjectionObject());
-//   setVariable(positionVariable, position);
+   position = new ol.geom.Point(ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'));
+   setVariable(positionVariable, position);
 }
 
 
@@ -296,7 +296,7 @@ function makeMarker(markerVariable, title, icon, positionVariable, zIndex, infoT
    });
    markerFeature.setStyle(new ol.style.Style({
       image: new ol.style.Icon({
-         anchor:       [0.5, 0.5],
+         anchor:       [0.5, 1],
          anchorXUnits: 'fraction',
          anchorYUnits: 'fraction',
          src:           icon
