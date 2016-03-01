@@ -239,6 +239,7 @@ Depends: apache2,
          nornet-management,
          postfix,
          python (>= 2.7),
+         wdg-html-validator,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Monitor
