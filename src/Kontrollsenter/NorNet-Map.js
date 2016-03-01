@@ -55,24 +55,34 @@ function makeMap(latitude, longitude, zoomLevel)
 //   window.maplayers.push(window.mapvectors);
 
    // ====== Create OSM map =================================================
-   window.mapnik = new ol.layer.Tile({  source: new ol.source.OSM() });
-//   new ol.Map({
-//      layers: [ new ol.layer.Tile({  source: new ol.source.OSM() }) ],
-//      target: 'map',
-//      view: new ol.View( { center: [0, 0], zoom: 2 })
-//      });
-   
-//   window.mapnik.setOpacity(1.0);
-   window.maplayers.push(window.mapnik);
-//   window.mapbaselayers.push(window.googlemap2);
-
-//   window.cyclemap = new OpenLayers.Layer.OSM.CycleMap("Open Cycle Map");
-//   window.cyclemap.setOpacity(1.0);
-//   window.maplayers.push(window.cyclemap);
-
-//   window.transportmap = new OpenLayers.Layer.OSM.TransportMap("Open Transport Map");
-//   window.transportmap.setOpacity(1.0);
-//   window.maplayers.push(window.transportmap);
+   window.maplayers = [
+      new ol.layer.Tile({
+         title:   'OpenStreetMap',
+         source:  new ol.source.OSM(),
+         type:    'base', visible: true }),
+      new ol.layer.Tile({
+         title:   'OpenCycleMap',
+         source:  new ol.source.OSM({
+            attributions: [ new ol.Attribution({ html: '<a href="http://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>, Style: <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a> <a href="http://www.opencyclemap.org/">OpenCycleMap</a> and OpenStreetMap' }) ],
+            url: 'http://{a-c}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png'
+         }),
+         type:    'base', visible: false }),
+      new ol.layer.Tile({
+         title:   'OpenRailwayMap',
+         source:  new ol.source.OSM({
+            attributions: [ new ol.Attribution({ html: '<a href="http://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>, Style: <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a> and OpenStreetMap' }) ],
+            url: 'http://{a-c}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png'
+         }),
+         type:    'base', visible: false }),
+      new ol.layer.Tile({
+         title:   'Stamen Watercolor',
+         source:  new ol.source.Stamen({ layer: 'watercolor' }),
+         type:    'base', visible: false }),
+      new ol.layer.Tile({
+         title:   'Stamen Terrain',
+         source:  new ol.source.Stamen({ layer: 'terrain' }),
+         type:    'base', visible: false })
+   ]
 
    // ====== Create Google map ==============================================
 //   window.googlemap1 = new OpenLayers.Layer.Google("Google Satellite", { type: google.maps.MapTypeId.HYBRID });
@@ -136,13 +146,15 @@ function makeMap(latitude, longitude, zoomLevel)
    // ====== Create the map =================================================
    window.maplayers.reverse();
    window.map = new ol.Map({
-      target:            "map_canvas",
-//      units:             "m",
-      view: new ol.View({ projection: 'EPSG:4326',
-                          center: [5, 50], zoom: 5 }),
-//      projection:        new ol.Projection("EPSG:4326"),
-//      displayProjection: new ol.Projection("EPSG:4326"),
-      layers:            window.maplayers,
+      target:  'map_canvas',
+//      view:    new ol.View({ //projection: 'EPSG:3857',
+//                             center: ol.proj.transform([50, 5], 'EPSG:4326', 'EPSG:3857'),
+//                             zoom: 5 }),
+      layers:  new ol.layer.Group({ 'title': 'Base maps',
+                                    layers:  window.maplayers
+                                  }),
+
+//      window.maplayers,
 //      controls: [
 //         new OpenLayers.Control.PanZoomBar(),
 //         new ol.control.Zoom(),
@@ -164,7 +176,11 @@ function makeMap(latitude, longitude, zoomLevel)
    window.map.addControl(new ol.control.ScaleLine());
    window.map.addControl(new ol.control.Rotate());
    window.map.addControl(new ol.control.MousePosition());
-   window.map.addControl(new ol.control.OverviewMap( { view: new ol.View({ projection: 'EPSG:4326' }) } ));
+   window.map.addControl(new ol.control.OverviewMap( { view: new ol.View({ projection: 'EPSG:3857' }) } ));
+
+   window.map.addControl(new ol.control.LayerSwitcher({
+      tipLabel: 'Légende' // Optional label for button
+   }));
    
    window.default_latitude  = latitude;
    window.default_longitude = longitude;
@@ -177,8 +193,8 @@ function makeMap(latitude, longitude, zoomLevel)
 function zoomToLocation(latitude, longitude, zoomLevel)
 {
    window.map.setView(new ol.View({
-                         projection: 'EPSG:4326',
-                         center:     [ longitude, latitude ],
+//                         projection: 'EPSG:3857',
+                         center:     ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'),
                          zoom:       zoomLevel}));
 }
 
