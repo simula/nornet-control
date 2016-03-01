@@ -38,7 +38,7 @@ body {
    margin:           0px;
 }
 
-h1 {
+h1.kontrollsenter {
    text-align:    center;
    margin-top:    0pt;
    margin-bottom: 0pt;
@@ -49,7 +49,7 @@ h1 {
    color:         white;
 }
 
-.h2 {
+h2.kontrollsenter {
    text-align:    left;
    margin-left:   4pt;
    margin-right:  4pt;
@@ -60,7 +60,7 @@ h1 {
    color:         #02266B;
 }
 
-h3 {
+h3.kontrollsenter {
    text-align:   left;
    margin-left:  8pt;
    margin-right: 8pt;
@@ -70,7 +70,7 @@ h3 {
 }
 
 
-p {
+p.kontrollsenter {
    text-align: left;
    font-size:  14pt;
    color:      #02266B;
@@ -91,11 +91,11 @@ img.selected {
    background-color: #ffff00;
 }
 
-li {
+li.kontrollsenter {
    font-size:  14pt;
 }
 
-hr {
+hr.kontrollsenter {
    color:        #02266B;
    margin-left:  4pt;
    margin-right: 4pt;
@@ -117,7 +117,7 @@ hr {
    height:       36pt;
    top:          0;
    right:        0;
-   bottom:       auto;
+   bottom:       0;
    left:         0;
    overflow:     hidden;
    background:   red;
@@ -224,7 +224,7 @@ img.footerflag {
    border-color:     white;
 }
 
-h2.popup {
+h2.kontrollsenter-popup {
    text-align:      center;
    text-decoration: underline;
    margin-left:     4pt;
@@ -236,10 +236,10 @@ h2.popup {
    color:           #02266B;
 }
 
-img.popup {
+img.kontrollsenter-popup {
    text-align:     center;
-   width:          640px;
-   height:         480px;
+   width:          480px;
+   height:         320px;
    vertical-align: text-top;
    padding:        3px;
    border:         2px;

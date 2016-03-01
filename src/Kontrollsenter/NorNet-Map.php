@@ -81,7 +81,7 @@ foreach ($status as $hostName => $hostEntry) {
            '"' . $icon . '", ' .
            '"window.' . $status[$hostName][""]["host_identifier"] . '_position", ' .
            '1, ' .
-           "'" . '<h2 class="popup">' . $hostName . '</h2><p class="center">' . $location . '</p><p class="center"><img class="popup" src="' . $image . '" alt="(No image: ' . $image . ')" /></p>' . "'" . ');' . "\n\n";
+           "'" . '<h2 class="kontrollsenter-popup">' . $hostName . '</h2><p class="center">' . $location . '</p><p class="center"><img class="kontrollsenter-popup" src="' . $image . '" alt="(No image: ' . $image . ')" /></p>' . "'" . ');' . "\n\n";
       $sites++;
    }
 }

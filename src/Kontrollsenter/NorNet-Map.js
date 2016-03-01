@@ -144,6 +144,51 @@ function makeMap(latitude, longitude, zoomLevel)
                  new ol.layer.Group({ title:  'Overlays',
                                       layers: window.overlayLayers  }) ]
    });
+
+   // ====== Create popup layer =============================================
+   var element = document.getElementById('popup');   
+   window.popup = new ol.Overlay({
+                     element:     element,
+                     positioning: 'bottom-center',
+                     stopEvent:   false,
+                     autoPan:     true,
+                     autoPanAnimation: {
+                        duration: 250
+                     }
+                  });
+   window.map.addOverlay(popup);
+
+
+   // display popup on click
+   window.map.on('click', function(evt) {
+      var feature = map.forEachFeatureAtPixel(evt.pixel,
+         function(feature) {
+           return feature;
+         });
+      if (feature) {
+         popup.setPosition(evt.coordinate);          
+         $(element).popover({
+            'placement': 'top',
+            'html':      true,
+            'content':   feature.infoText    // The content is set in makeMarker()!
+         });
+         $(element).popover('show');
+      } else {
+         $(element).popover('destroy');
+      }
+   });
+
+   // change mouse cursor when over marker
+   window.map.on('pointermove', function(e) {
+      if (e.dragging) {
+         $(element).popover('destroy');
+         return;
+      }
+      var pixel = map.getEventPixel(e.originalEvent);
+      var hit = map.hasFeatureAtPixel(pixel);
+      map.getTarget().style.cursor = hit ? 'pointer' : '';
+   });
+                                             
    
    window.map.addControl(new ol.control.Zoom());
    window.map.addControl(new ol.control.ZoomSlider());
@@ -254,7 +299,8 @@ function makeMarker(markerVariable, title, icon, positionVariable, zIndex, infoT
          src:           icon
       })
    }));
-      
+   markerFeature.infoText = infoText;   // This sets the popup content!
+
 //   var markerFeature = new ol.Feature(window.mapmarkers, getVariable(positionVariable));
 //   markerFeature.closeBox              = true;
 //   markerFeature.popupClass            = ol.Class(ol.Popup.FramedCloud, { 'autoSize': true });
