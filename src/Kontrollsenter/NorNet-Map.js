@@ -45,10 +45,36 @@ function setVariable(variable, value)
 // ###### Initialize NorNet map #############################################
 function makeMap(latitude, longitude, zoomLevel)
 {
-   window.maplayers     = new Array();   // All layers
-   window.mapbaselayers = new Array();   // Only base layers
+//   window.maplayers     = new Array();   // All layers
+//   window.mapbaselayers = new Array();   // Only base layers
 
+      var iconFeature = new ol.Feature({
+              geometry: new ol.geom.Point([5, 60]),
+                      name: 'Null Island',
+                              population: 4000,
+                                      rainfall: 500
+                                            });
+                                            
+                                                  var iconStyle = new ol.style.Style({
+                                                          image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+                                                                    anchor: [0.5, 46],
+                                                                              anchorXUnits: 'fraction',
+                                                                                        anchorYUnits: 'pixels',
+                                                                                                  src: '../Artwork/Graphics/Icons/Icon-Tux.png'
+                                                                                                          }))
+                                                                                                                });
+                                                                                                                
    // ====== Create layers for markers and vectors ==========================
+   window.sitesSource = new ol.source.Vector({
+      features: [iconFeature]
+   });
+   window.sitesVector = new ol.layer.Vector({
+      title: 'NorNet Sites',
+      type:  'base',
+      visible: true,
+      source: window.sitesSource
+   });
+
 //   window.mapmarkers = new ol.Layer.Markers("NorNet Sites");
 //   window.maplayers.push(window.mapmarkers);
 //   window.mapvectors = new ol.Layer.Vector("NorNet Connections");
@@ -90,7 +116,9 @@ function makeMap(latitude, longitude, zoomLevel)
             imagerySet: 'AerialWithLabels',
             key: 'AkGbxXx6tDWf1swIhPJyoAVp06H0s0gDTYslNWWHZ6RoPqMpB9ld5FY1WutX8UoF'
          }),
-         type:    'base', visible: false })
+         type:   'base', visible: false }),
+
+      window.sitesVector
    ]
 
    // ====== Create Google map ==============================================
@@ -156,27 +184,9 @@ function makeMap(latitude, longitude, zoomLevel)
    window.maplayers.reverse();
    window.map = new ol.Map({
       target:  'map_canvas',
-//      view:    new ol.View({ //projection: 'EPSG:3857',
-//                             center: ol.proj.transform([50, 5], 'EPSG:4326', 'EPSG:3857'),
-//                             zoom: 5 }),
       layers:  new ol.layer.Group({ 'title': 'Base maps',
                                     layers:  window.maplayers
                                   }),
-
-//      window.maplayers,
-//      controls: [
-//         new OpenLayers.Control.PanZoomBar(),
-//         new ol.control.Zoom(),
-//         new ol.control.ZoomSlider(),
-//         new ol.control.ZoomToExtent(),
-//         new ol.control.ScaleLine(),
-//         new ol.control.Rotate(),
-//         new OpenLayers.Control.Navigation(),
-//         new ol.control.MousePosition(),
-         //new ol.control.OverviewMap(),
-//         new OpenLayers.Control.KeyboardDefaults(),
-//         new OpenLayers.Control.LayerSwitcher( { 'ascending': false } )
-//      ]
    });
    
    window.map.addControl(new ol.control.Zoom());
@@ -186,10 +196,7 @@ function makeMap(latitude, longitude, zoomLevel)
    window.map.addControl(new ol.control.Rotate());
    window.map.addControl(new ol.control.MousePosition());
    window.map.addControl(new ol.control.OverviewMap( { view: new ol.View({ projection: 'EPSG:3857' }) } ));
-
-   window.map.addControl(new ol.control.LayerSwitcher({
-      tipLabel: 'Légende' // Optional label for button
-   }));
+   window.map.addControl(new ol.control.LayerSwitcher());
    
    window.default_latitude  = latitude;
    window.default_longitude = longitude;
@@ -202,9 +209,8 @@ function makeMap(latitude, longitude, zoomLevel)
 function zoomToLocation(latitude, longitude, zoomLevel)
 {
    window.map.setView(new ol.View({
-//                         projection: 'EPSG:3857',
-                         center:     ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'),
-                         zoom:       zoomLevel}));
+                         center: ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'),
+                         zoom:   zoomLevel}));
 }
 
 // ###### Zoom to default location ##########################################
@@ -271,9 +277,9 @@ function removeMarker(markerVariable)
 {
    if (variableExists(markerVariable) && (getVariable(markerVariable) != null)) {
       var markerFeature = getVariable(markerVariable);
-      window.mapmarkers.removeMarker(markerFeature.markerReference);
+      window.sitesSource.removeFeature(markerFeature);
       // markerFeature.destroyMarker();
-      markerFeature.destroy();
+      // markerFeature.destroy();
       setVariable(markerVariable, null);
    }
 }
@@ -284,34 +290,45 @@ function makeMarker(markerVariable, title, icon, positionVariable, zIndex, infoT
 {
    removeMarker(markerVariable);
 
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!
+   var markerFeature = new ol.Feature({
+      geometry: getVariable(positionVariable),
+      name:     title
+   });
+   markerFeature.setStyle(new ol.style.Style({
+      image: new ol.style.Icon({
+         anchor:       [0.5, 0.5],
+         anchorXUnits: 'fraction',
+         anchorYUnits: 'fraction',
+         src:           icon
+      })
+   }));
+      
+//   var markerFeature = new ol.Feature(window.mapmarkers, getVariable(positionVariable));
+//   markerFeature.closeBox              = true;
+//   markerFeature.popupClass            = ol.Class(ol.Popup.FramedCloud, { 'autoSize': true });
+//   markerFeature.data.popupContentHTML = infoText;
+//   markerFeature.data.overflow         = "hidden";
+//   markerFeature.data.icon             = new ol.Icon(icon,
+//                                                             new ol.Size(24,38), null,
+//                                                             function(size) {
+//                                                                return new ol.Pixel(-(size.w/2), -size.h);
+//                                                             });
 
-   return;
+//   markerFeature.markerReference       = markerFeature.createMarker();
+//   var markerClick = function (event) {
+//      if (this.popup == null) {
+//         this.popup = this.createPopup(this.closeBox);
+//         map.addPopup(this.popup);
+//         this.popup.show();
+//      } else {
+//         this.popup.toggle();
+//      }
+//      currentPopup = this.popup;
+//      OpenLayers.Event.stop(event);
+//   };
+//   markerFeature.markerReference.events.register("mousedown", markerFeature, markerClick);
 
-   var markerFeature = new OpenLayers.Feature(window.mapmarkers, getVariable(positionVariable));
-   markerFeature.closeBox              = true;
-   markerFeature.popupClass            = OpenLayers.Class(OpenLayers.Popup.FramedCloud, { 'autoSize': true });
-   markerFeature.data.popupContentHTML = infoText;
-   markerFeature.data.overflow         = "hidden";
-   markerFeature.data.icon             = new OpenLayers.Icon(icon,
-                                                             new OpenLayers.Size(24,38), null,
-                                                             function(size) {
-                                                                return new OpenLayers.Pixel(-(size.w/2), -size.h);
-                                                             });
-   markerFeature.markerReference       = markerFeature.createMarker();
-   var markerClick = function (event) {
-      if (this.popup == null) {
-         this.popup = this.createPopup(this.closeBox);
-         map.addPopup(this.popup);
-         this.popup.show();
-      } else {
-         this.popup.toggle();
-      }
-      currentPopup = this.popup;
-      OpenLayers.Event.stop(event);
-   };
-   markerFeature.markerReference.events.register("mousedown", markerFeature, markerClick);
-   window.mapmarkers.addMarker(markerFeature.markerReference);
+   window.sitesSource.addFeature(markerFeature);
 
    setVariable(markerVariable, markerFeature);
 }
@@ -334,7 +351,7 @@ function makeConnection(connectionVariable, points, color, thickness, dashStyle,
    removeConnection(connectionVariable);
    var linePoints = [];
 //   for(i = 0;i < points.length; i++) {
-//      linePoints[i] = new OpenLayers.Geometry.Point(points[i].lon, points[i].lat);
+//      linePoints[i] = new ol.geom.Point(points[i].lon, points[i].lat);
 //   }
 //   var lineString = new OpenLayers.Geometry.LineString(linePoints);
 //   var connection = new OpenLayers.Feature.Vector(lineString, null, {
