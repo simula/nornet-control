@@ -23,7 +23,7 @@
   font-family: 'UnifrakturCook';
   font-style: normal;
   font-weight: bold;
-  src: local('UnifrakturCook'), url(http://themes.googleusercontent.com/static/fonts/unifrakturcook/v5/ASwh69ykD8iaoYijVEU6Rm_7m0YPLwupdydlBc09ccE.woff) format('woff');
+  src: local('UnifrakturCook'), local('UnifrakturCook-Bold'), url(Fonts/UniFraktur.woff) format('woff2')
 }
 
 
