@@ -190,7 +190,9 @@ function makeMap(latitude, longitude, zoomLevel)
    window.map.addControl(new ol.control.Rotate());
    window.map.addControl(new ol.control.MousePosition());
    window.map.addControl(new ol.control.OverviewMap( { view: new ol.View({ projection: 'EPSG:3857' }) } ));
-   window.map.addControl(new ol.control.LayerSwitcher());
+   
+   window.layerSwitcherControl = new ol.control.LayerSwitcher();
+   window.map.addControl(window.layerSwitcherControl);
    
    window.default_latitude  = latitude;
    window.default_longitude = longitude;

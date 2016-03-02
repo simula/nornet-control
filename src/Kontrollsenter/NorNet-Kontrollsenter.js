@@ -273,8 +273,15 @@ function requestNorNetStatus()
 
                // ====== Auto-mode ==========================================
                if(autoMode == true) {
-//                  selectedMap = Math.round(Math.random() * (window.mapLayers.length));
-//                  window.map.setBaseLayer(window.mapLayers[selectedMap]);
+                  var selectedLayerNumber = Math.round(Math.random() * (window.mapLayers.length - 1));
+                  for(var i = 0; i < window.mapLayers.length; i++) {
+                     if(i == selectedLayerNumber) {
+                        window.mapLayers[i].setVisible(true);
+                     }
+                     else {
+                        window.mapLayers[i].setVisible(false);
+                     }
+                  }
 
                   showSelectedSite = Math.round(Math.random());
                   if((showSelectedSite == 1) && (window.mapContents.length > 0)) {
