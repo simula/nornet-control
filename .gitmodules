@@ -1,0 +1,3 @@
+[submodule "src/Kontrollsenter/ol3-layerswitcher"]
+	path = src/Kontrollsenter/ol3-layerswitcher
+	url = https://github.com/walkermatt/ol3-layerswitcher.git
