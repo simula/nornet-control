@@ -18,10 +18,7 @@
 //
 // Contact: dreibh@simula.no
 //
-?>
 
-
-<?php
 include('NorNet-Status.php');
 $status = getNorNetStatus();
 
@@ -30,10 +27,12 @@ $status = getNorNetStatus();
 echo "function makeMapContents() {\n";
 
 // ====== Set up the sites ==================================================
-echo "   window.mapContents = new Array();\n";
+echo "   window.mapContents = new Array();\n\n";
 $sites = 0;
 foreach ($status as $hostName => $hostEntry) {
    if (isset($status[$hostName][""]["location"])) {
+      echo '   // ====== ' . $hostName . ' ======' . "\n";
+      
       // ====== Get location ================================================
       $status[$hostName]['site_number'] = $sites;
       $location = $status[$hostName][""]["city"] . ', ' . $status[$hostName][""]["province"] . '/' . $status[$hostName][""]["country"];
@@ -44,20 +43,19 @@ foreach ($status as $hostName => $hostEntry) {
       echo "   var latitude  = parseFloat(locationArray[0]);" . "\n";
       echo "   var longitude = parseFloat(locationArray[1]);" . "\n";
       echo '   window.mapContents[' . $status[$hostName]['site_number'] . '] = new Array();' . "\n";
-      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["name"]          = "' . $hostName . '"' . ";\n";
-      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["latitude"]      = latitude'  . ";\n";
-      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["longitude"]     = longitude' . ";\n";
-      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["city"]          = "' . $status[$hostName][""]["city"] . '"' . ";\n";
-      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["province"]      = "' . $status[$hostName][""]["province"] . '"' . ";\n";
-      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["country"]       = "' . $status[$hostName][""]["country"] . '"' . ";\n";
-      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["country_code"]  = "' . $status[$hostName][""]["country_code"] . '"' . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["name"]         = "' . $hostName . '"' . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["latitude"]     = latitude'  . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["longitude"]    = longitude' . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["city"]         = "' . $status[$hostName][""]["city"] . '"' . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["province"]     = "' . $status[$hostName][""]["province"] . '"' . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["country"]      = "' . $status[$hostName][""]["country"] . '"' . ";\n";
+      echo '   window.mapContents[' . $status[$hostName]['site_number'] . ']["country_code"] = "' . $status[$hostName][""]["country_code"] . '"' . ";\n";
 
       // ====== Test mode ===================================================
       // echo "latitude  = latitude + ((10 * Math.random()) - 5);" . "\n";
       // echo "longitude = longitude + ((10 * Math.random()) - 5);" . "\n";
 
       // ====== Create position for sites ===================================
-      echo '   // ====== ' . $hostName . ' ======' . "\n";
       echo '   makePosition("window.' . $status[$hostName][""]["host_identifier"] . '_position", latitude, longitude);' . "\n";
 
       // ====== Create marker ===============================================
@@ -88,6 +86,7 @@ foreach ($status as $hostName => $hostEntry) {
 
 
 // ====== Set up the links ==================================================
+echo '   // ====== Connectivity ======\n';
 $mayBeGoodDestination  = Array();
 $destinations          = Array();
 $connectivityState     = Array();
@@ -113,7 +112,7 @@ foreach ($status as $hostName => $hostEntry) {
             }
             if($tunnelState == 0) {
                $mayBeGoodDestination[$remoteIdentifier] = 1;
-               echo "// May be good: " . $remoteHostName . " (" . $serviceName."l".$localIdentifier."r".$remoteIdentifier. ")\n";
+               // echo "// May be good: " . $remoteHostName . " (" . $serviceName. ")\n";
             }
             $destinations[$remoteIdentifier] = $remoteIdentifier;
             if(isset($connectivityState[$connectivity])) {
@@ -131,8 +130,11 @@ foreach ($destinations as $from) {
    foreach ($destinations as $to) {
       if($from != $to) {
          $connectivity = $from . "_to_" . $to;
+         if(!isset($connectivityState[$connectivity])) {
+            continue;
+         }
          $tunnelState  = $connectivityState[$connectivity];
-         $mayBeGood    = isset($mayBeGoodDestination[$to]) || isset($mayBeGoodDestination[$from]);
+         $mayBeGood    = isset($mayBeGoodDestination[$to]) && isset($mayBeGoodDestination[$from]);
 
          $omit = false;
          if( ($from != $centralSiteIdentifier) && (!$mayBeGood) ) {   // all connections to a site are bad
@@ -142,7 +144,7 @@ foreach ($destinations as $from) {
              $omit = true;
          }         
          
-         echo "// Draw: ". $connectivity . " " . $tunnelState . "\tomit=" . $omit . " mayBeGood=".$mayBeGood."\n";
+         // echo "// Draw: ". $connectivity . " " . $tunnelState . "\tomit=" . $omit . " mayBeGood=".$mayBeGood."\n";
          if($omit == false) {
 
             $zIndex          = 1000;
@@ -179,8 +181,8 @@ foreach ($destinations as $from) {
                     '[ ' . $from . '_position, window.' . $to . '_position ], ' .
                     '"' . $linkColor . '", ' .
                     $strokeWeight . ', ' .
-                    '"' . $strokeDashstyle . '", ' .
-                    '2);' . "\n";
+                    '"' . $strokeDashstyle . '", -' . $zIndex .
+                    ');' . "\n";
          }
          else {
             echo '   removeConnection("window.' . $connectivity . '");' . "\n";
