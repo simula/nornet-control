@@ -119,10 +119,10 @@ cp src/WebServer/nntb.config $PACKAGE-$UPSTREAM_VERSION/WebServer/
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock
 cp -r src/Kontrollsenter/Clock/station-clock.svg $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock/
 cp -r src/Kontrollsenter/Clock/License.pdf $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock/
-mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/ol3-layerswitcher
-mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/ol3-layerswitcher/src
-cp -r src/Kontrollsenter/ol3-layerswitcher/src/ol3-layerswitcher.js  $PACKAGE-$UPSTREAM_VERSION/ol3-layerswitcher/src/
-cp -r src/Kontrollsenter/ol3-layerswitcher/src/ol3-layerswitcher.css $PACKAGE-$UPSTREAM_VERSION/ol3-layerswitcher/src/
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/ol3-layerswitcher/
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/ol3-layerswitcher/src/
+cp -r src/Kontrollsenter/ol3-layerswitcher/src/ol3-layerswitcher.js  $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/ol3-layerswitcher/src/
+cp -r src/Kontrollsenter/ol3-layerswitcher/src/ol3-layerswitcher.css $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/ol3-layerswitcher/src/
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Backgrounds
