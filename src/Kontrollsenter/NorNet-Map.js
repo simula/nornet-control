@@ -76,23 +76,55 @@ function makeMap(latitude, longitude, zoomLevel)
             attributions: [ new ol.Attribution({ html: '<a href="http://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>, Style: <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a> <a href="http://www.opencyclemap.org/">OpenCycleMap</a> and OpenStreetMap' }) ],
             url: 'http://{a-c}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png'
          }),
-         type:    'base', visible: false }),
+         type: 'base', visible: false }),
 //      new ol.layer.Tile({
 //         title:   'OpenRailwayMap',
 //         source:  new ol.source.OSM({
 //            attributions: [ new ol.Attribution({ html: '<a href="http://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>, Style: <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a> and OpenStreetMap' }) ],
 //            url: 'http://{a-c}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png'
 //         }),
-//         type:    'base', visible: false }),
+//         type: 'base', visible: false }),
+
+      new ol.layer.Tile({
+         title:   'Thunderforest Outdoors',
+         source:  new ol.source.OSM({
+            attributions: [ new ol.Attribution({ html: '&copy; Gravitystorm Limited. Thunderforest is a project by <a href="http://www.gravitystorm.co.uk">Andy Allan</a>' }) ],
+            url: 'https://{a-c}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png'
+         }),
+         type: 'base', visible: false }),
+      new ol.layer.Tile({
+         title:   'Thunderforest OpenCycleMap',
+         source:  new ol.source.OSM({
+            attributions: [ new ol.Attribution({ html: '&copy; Gravitystorm Limited. Thunderforest is a project by <a href="http://www.gravitystorm.co.uk">Andy Allan</a>' }) ],
+            url: 'https://{a-c}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png'
+         }),
+         type: 'base', visible: false }),
+      new ol.layer.Tile({
+         title:   'Thunderforest Transport',
+         source:  new ol.source.OSM({
+            attributions: [ new ol.Attribution({ html: '&copy; Gravitystorm Limited. Thunderforest is a project by <a href="http://www.gravitystorm.co.uk">Andy Allan</a>' }) ],
+            url: 'https://{a-c}.tile.thunderforest.com/transport/{z}/{x}/{y}.png'
+         }),
+         type: 'base', visible: false }),
+      new ol.layer.Tile({
+         title:   'Thunderforest Transport Dark',
+         source:  new ol.source.OSM({
+            attributions: [ new ol.Attribution({ html: '&copy; Gravitystorm Limited. Thunderforest is a project by <a href="http://www.gravitystorm.co.uk">Andy Allan</a>' }) ],
+            url: 'https://{a-c}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png'
+         }),
+         type: 'base', visible: false }),
+      new ol.layer.Tile({
+         title:   'Thunderforest Landscape',
+         source:  new ol.source.OSM({
+            attributions: [ new ol.Attribution({ html: '&copy; Gravitystorm Limited. Thunderforest is a project by <a href="http://www.gravitystorm.co.uk">Andy Allan</a>' }) ],
+            url: 'https://{a-c}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'
+         }),
+         type: 'base', visible: false }),
 
       new ol.layer.Tile({
          title:   'Stamen Watercolor',
          source:  new ol.source.Stamen({ layer: 'watercolor' }),
          type:    'base', visible: false }),
-//      new ol.layer.Tile({
-//         title:   'Stamen Terrain',
-//         source:  new ol.source.Stamen({ layer: 'terrain' }),
-//         type:    'base', visible: false }),
 
       new ol.layer.Tile({
          title:   'Bing Aerial',
@@ -100,14 +132,14 @@ function makeMap(latitude, longitude, zoomLevel)
             imagerySet: 'AerialWithLabels',
             key:        bingKey
          }),
-         type:   'base', visible: false }),
+         type: 'base', visible: false }),
       new ol.layer.Tile({
          title:   'Bing Road',
          source:  new ol.source.BingMaps({
             imagerySet: 'Road',
             key:        bingKey
          }),
-         type:   'base', visible: false }),
+         type: 'base', visible: false }),
    ]
 
    // ====== Create overlay layers ==========================================
