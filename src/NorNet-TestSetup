@@ -160,7 +160,33 @@ norNetSetup = [
       [ 104, 4, u'koala',    'emerald.delta.test',  'vnc://emerald..delta.test:5701'  ],
       [ 105, 5, u'redback',  'lakeside.delta.test', 'vnc://lakeside..delta.test:5700' ],
       [ 106, 6, u'quokka',   'lakeside.delta.test', 'vnc://lakeside..delta.test:5701' ]
-   ] }
+   ] },
+
+ { 'site_index'        : 5,
+   'site_enabled'      : False,
+   'site_long_name'    : u'Epsilon Site',
+   'site_short_name'   : 'ES',
+   'site_url'          : 'http://www.epsilon.test',
+   'site_domain'       : 'epsilon.test',
+   'site_city'         : 'Fukuoka',
+   'site_province'     : 'Fukuoka Prefecture',
+   'site_country'      : 'Japan',
+   'site_country_code' : 'JP',
+   'site_latitude'     : 36.6730,
+   'site_longitude'    : 136.6544,
+   'site_altitude'     : 10,
+   'site_contacts'     : [ u'Smith, John: john.smith@epsilon.test', 'Admin, Joe: joe.admin@epsilon.test' ],
+   'site_pcu'          : [ IPv4Address('172.16.1.205'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Provider Eins', 'eth1', IPv4Network('172.16.5.2/24'),     IPv4Address('172.16.5.1'),
+                                  IPv6Network('fd00:16:5::2/64'),   IPv6Address('fd00:16:5::1'),
+                                  'fibre, business', 0, 0 ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, u'test1', 'sushi.epsilon.test', 'vnc://sushi.epsilon.test:5700' ],
+      [ 101, 2, u'test2', 'sushi.epsilon.test', 'vnc://sushi.epsilon.test:5701' ],
+   ] },
 
 ]
 
