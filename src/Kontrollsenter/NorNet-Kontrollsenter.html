@@ -49,7 +49,7 @@
 <body>
 
 <div id="header" class="header">
- <h1 class="kontrollsenter" style="margin: 0px; padding: 0px;" id="header.title">
+ <h1 style="margin: 0px; padding: 0px;" id="header.title">
   <noscript>
    <h2 class="h2">NorNet Map requires JavaScript!</h2>
   </noscript>
@@ -58,20 +58,20 @@
 
 
 <div id="map_canvas" class="map"></div>
-<div id="popup" class="kontrollsenter-popup">
- <a href="#" id="popup-closer" class="div.kontrollsenter-popup-closer">✖</a>
+<div id="popup" class="popup">
+ <a href="#" id="popup-closer" class="popup-closer">✖</a>
  <div id="popup-content"></div>
 </div>
 
 <div id="sidebar" class="sidebar">
- <h2 class="kontrollsenter" style="text-align: center;">
+ <h2 style="text-align: center;">
   <span id="languages" class="center">...</span>
   &nbsp;|&nbsp;
   <img class="selected" id="automode" onclick="setAutoMode(!autoMode);" src="/Artwork/Graphics/Control/AutoMode.png" alt="Auto Mode" height="21" />
  </h2>
- <hr class="kontrollsenter" />
+ <hr />
 
-<!--  <h2 class="kontrollsenter" id="sidebar.clock">Time</h2> -->
+<!--  <h2 id="sidebar.clock">Time</h2> -->
   <p class="center">
    <object id="analog-clock" class="analog-clock" data="Clock/station-clock.svg" type="image/svg+xml">
    <param name="dial"               value="din 41091.1"/>
@@ -95,12 +95,12 @@
   <span id="clock" class="time">--:--:--</span><br />
   <span id="date" class="date">--</span>
   </p>
- <hr class="kontrollsenter" />
+ <hr />
 
- <h2 class="kontrollsenter"><a href="javascript:void(0)" onclick="zoomToDefaultLocation();"><span id="sidebar.sites">Sites</span></a></h2>
-  <h3 class="kontrollsenter"><span id="sidebar.sites.problems.title">Problems</span></h3>
+ <h2><a href="javascript:void(0)" onclick="zoomToDefaultLocation();"><span id="sidebar.sites">Sites</span></a></h2>
+  <h3><span id="sidebar.sites.problems.title">Problems</span></h3>
    <span id="sidebar.sites.problems"></span>
-  <h3 class="kontrollsenter"><span id="sidebar.sites.okay.title">Okay</span></h3>
+  <h3><span id="sidebar.sites.okay.title">Okay</span></h3>
    <span id="sidebar.sites.okay"></span>
 
 </div>

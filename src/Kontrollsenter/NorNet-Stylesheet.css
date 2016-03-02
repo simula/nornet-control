@@ -38,7 +38,7 @@ body {
    margin:           0px;
 }
 
-h1.kontrollsenter {
+h1 {
    text-align:    center;
    margin-top:    0pt;
    margin-bottom: 0pt;
@@ -49,7 +49,7 @@ h1.kontrollsenter {
    color:         white;
 }
 
-h2.kontrollsenter {
+h2 {
    text-align:    left;
    margin-left:   4pt;
    margin-right:  4pt;
@@ -60,7 +60,7 @@ h2.kontrollsenter {
    color:         #02266B;
 }
 
-h3.kontrollsenter {
+h3 {
    text-align:   left;
    margin-left:  8pt;
    margin-right: 8pt;
@@ -70,7 +70,7 @@ h3.kontrollsenter {
 }
 
 
-p.kontrollsenter {
+p {
    text-align: left;
    font-size:  14pt;
    color:      #02266B;
@@ -91,11 +91,11 @@ img.selected {
    background-color: #ffff00;
 }
 
-li.kontrollsenter {
+li {
    font-size:  14pt;
 }
 
-hr.kontrollsenter {
+hr {
    color:        #02266B;
    margin-left:  4pt;
    margin-right: 4pt;
@@ -224,7 +224,7 @@ img.footerflag {
    border-color:     white;
 }
 
-div.kontrollsenter-popup {
+div.popup {
    background-color: white;
    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
    padding: 15px;
@@ -235,15 +235,15 @@ div.kontrollsenter-popup {
    min-width: 280px;
 }
 
-a.kontrollsenter-popup-closer {
+a.popup-closer {
    text-decoration: none;
    position: absolute;
    top: 2px;
-   right: 8px;
-   font-size: 24pt;
+   left: 8px;
+   font-size: 18pt;
 }
 
-h2.kontrollsenter-popup {
+h2.popup {
    text-align:      center;
    text-decoration: underline;
    margin-left:     4pt;
@@ -255,7 +255,7 @@ h2.kontrollsenter-popup {
    color:           #02266B;
 }
 
-img.kontrollsenter-popup {
+img.popup {
    text-align:     center;
    width:          480px;
    height:         320px;
