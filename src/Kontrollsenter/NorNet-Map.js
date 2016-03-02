@@ -188,7 +188,10 @@ function makeMap(latitude, longitude, zoomLevel)
    window.map.addControl(new ol.control.ZoomToExtent());
    window.map.addControl(new ol.control.ScaleLine());
    window.map.addControl(new ol.control.Rotate());
-   window.map.addControl(new ol.control.MousePosition());
+   window.map.addControl(new ol.control.MousePosition({
+      coordinateFormat: ol.coordinate.createStringXY(5),
+      projection: 'EPSG:4326'
+   }));
    window.map.addControl(new ol.control.OverviewMap( { view: new ol.View({ projection: 'EPSG:3857' }) } ));
    
    window.layerSwitcherControl = new ol.control.LayerSwitcher();
