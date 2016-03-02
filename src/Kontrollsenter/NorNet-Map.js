@@ -93,7 +93,7 @@ function makeMap(latitude, longitude, zoomLevel)
 //         title:   'Stamen Terrain',
 //         source:  new ol.source.Stamen({ layer: 'terrain' }),
 //         type:    'base', visible: false }),
-         
+
       new ol.layer.Tile({
          title:   'Bing Aerial',
          source:  new ol.source.BingMaps({
