@@ -255,7 +255,7 @@ Description: NorNet Monitor
 Package: nornet-display
 Architecture: all
 Depends: firefox,
-         kdm,
+         kdm | sddm,
          kubuntu-desktop,
          nornet-api,
          nornet-management,
