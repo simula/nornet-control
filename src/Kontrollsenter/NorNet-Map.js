@@ -1,6 +1,6 @@
 //
-// NorNet Map JavaScript Functions
-// Copyright (C) 2012-2015 by Thomas Dreibholz
+// NorNet Kontrollsenter
+// Copyright (C) 2012-2016 by Thomas Dreibholz
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -146,9 +146,8 @@ function makeMap(latitude, longitude, zoomLevel)
    });
 
    // ====== Create popup layer =============================================
-   var element = document.getElementById('popup');   
    window.popup = new ol.Overlay({
-                     element:     element,
+                     element:     document.getElementById('popup'),
                      positioning: 'bottom-center',
                      stopEvent:   false,
                      autoPan:     true,
@@ -158,6 +157,13 @@ function makeMap(latitude, longitude, zoomLevel)
                   });
    window.map.addOverlay(popup);
 
+   // closer button
+   var closer = document.getElementById('popup-closer');
+   closer.onclick = function() {
+      window.popup.setPosition(undefined);
+      closer.blur();
+      return false;
+   };
 
    // display popup on click
    window.map.on('click', function(evt) {
@@ -166,27 +172,14 @@ function makeMap(latitude, longitude, zoomLevel)
            return feature;
          });
       if (feature) {
-         popup.setPosition(evt.coordinate);          
-         $(element).popover({
-            'placement': 'top',
-            'html':      true,
-            'content':   feature.infoText    // The content is set in makeMarker()!
-         });
-         $(element).popover('show');
-      } else {
-         $(element).popover('destroy');
+         if (feature.infoText != null) {
+            document.getElementById('popup-content').innerHTML = feature.infoText;
+            window.popup.setPosition(evt.coordinate);
+         }
       }
-   });
-
-   // change mouse cursor when over marker
-   window.map.on('pointermove', function(e) {
-      if (e.dragging) {
-         $(element).popover('destroy');
-         return;
+      else {
+         window.popup.setPosition(undefined);
       }
-      var pixel = map.getEventPixel(e.originalEvent);
-      var hit = map.hasFeatureAtPixel(pixel);
-      map.getTarget().style.cursor = hit ? 'pointer' : '';
    });
                                              
    
@@ -300,31 +293,6 @@ function makeMarker(markerVariable, title, icon, positionVariable, zIndex, infoT
       })
    }));
    markerFeature.infoText = infoText;   // This sets the popup content!
-
-//   var markerFeature = new ol.Feature(window.mapmarkers, getVariable(positionVariable));
-//   markerFeature.closeBox              = true;
-//   markerFeature.popupClass            = ol.Class(ol.Popup.FramedCloud, { 'autoSize': true });
-//   markerFeature.data.popupContentHTML = infoText;
-//   markerFeature.data.overflow         = "hidden";
-//   markerFeature.data.icon             = new ol.Icon(icon,
-//                                                             new ol.Size(24,38), null,
-//                                                             function(size) {
-//                                                                return new ol.Pixel(-(size.w/2), -size.h);
-//                                                             });
-
-//   markerFeature.markerReference       = markerFeature.createMarker();
-//   var markerClick = function (event) {
-//      if (this.popup == null) {
-//         this.popup = this.createPopup(this.closeBox);
-//         map.addPopup(this.popup);
-//         this.popup.show();
-//      } else {
-//         this.popup.toggle();
-//      }
-//      currentPopup = this.popup;
-//      OpenLayers.Event.stop(event);
-//   };
-//   markerFeature.markerReference.events.register("mousedown", markerFeature, markerClick);
 
    window.sitesSource.addFeature(markerFeature);
    setVariable(markerVariable, markerFeature);
