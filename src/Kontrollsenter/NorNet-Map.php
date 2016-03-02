@@ -88,63 +88,102 @@ foreach ($status as $hostName => $hostEntry) {
 
 
 // ====== Set up the links ==================================================
+$mayBeGoodDestination  = Array();
+$destinations          = Array();
+$connectivityState     = Array();
+$centralSiteIdentifier = '';
+
 foreach ($status as $hostName => $hostEntry) {
    foreach ($hostEntry as $serviceName => $serviceEntry) {
       if ($serviceName != "") {   // A real service!
          if ( (isset($status[$hostName][$serviceName]["tunnel_local_host_name"])) &&
               (isset($status[$hostName][$serviceName]["tunnel_remote_host_name"])) ) {
-            $tunnelState    = $status[$hostName][$serviceName]['last_hard_state'];
-            $localHostName  = $status[$hostName][$serviceName]['tunnel_local_host_name'];
-            $remoteHostName = $status[$hostName][$serviceName]['tunnel_remote_host_name'];
+            $tunnelState     = $status[$hostName][$serviceName]['last_hard_state'];
+            $localHostName   = $status[$hostName][$serviceName]['tunnel_local_host_name'];
+            $remoteHostName  = $status[$hostName][$serviceName]['tunnel_remote_host_name'];
+            $localIdentifier  = $status[$hostName][$serviceName]['tunnel_local_identifier'];            
+            $remoteIdentifier = $status[$hostName][$serviceName]['tunnel_remote_identifier'];
+            $connectivity    = $localIdentifier . "_to_" . $remoteIdentifier;
+            if(isset($status[$hostName][""]['is_central_site'])) {
+               $centralSiteIdentifier = $localIdentifier;
+            }
+            if( (isset($status[$localHostName][""]['is_disabled_site'])) ||
+                (isset($status[$remoteHostName][""]['is_disabled_site'])) ) {
+               $tunnelState = 1000000;  // link with a disabled site!
+            }
+            if($tunnelState == 0) {
+               $mayBeGoodDestination[$remoteIdentifier] = 1;
+               echo "// May be good: " . $remoteHostName . " (" . $serviceName."l".$localIdentifier."r".$remoteIdentifier. ")\n";
+            }
+            $destinations[$remoteIdentifier] = $remoteIdentifier;
+            if(isset($connectivityState[$connectivity])) {
+               $connectivityState[$connectivity] = max ($connectivityState[$connectivity], $tunnelState);
+            }
+            else {
+               $connectivityState[$connectivity] = $tunnelState;
+            }
+         }
+      }
+   }
+}
 
-            $localIdentifer  = $status[$hostName][$serviceName]['tunnel_local_identifier'];
-            $remoteIdentifer = $status[$hostName][$serviceName]['tunnel_remote_identifier'];
+foreach ($destinations as $from) {
+   foreach ($destinations as $to) {
+      if($from != $to) {
+         $connectivity = $from . "_to_" . $to;
+         $tunnelState  = $connectivityState[$connectivity];
+         $mayBeGood    = isset($mayBeGoodDestination[$to]) || isset($mayBeGoodDestination[$from]);
 
-            $state = $status[$hostName][$serviceName]['last_hard_state'];
+         $omit = false;
+         if( ($from != $centralSiteIdentifier) && (!$mayBeGood) ) {   // all connections to a site are bad
+             $omit = true;
+         }
+         else if( ($from != $centralSiteIdentifier) && ($mayBeGood) && ($tunnelState == 0) ) {   // a good connection of a partly-bad site
+             $omit = true;
+         }         
+         
+         echo "// Draw: ". $connectivity . " " . $tunnelState . "\tomit=" . $omit . " mayBeGood=".$mayBeGood."\n";
+         if($omit == false) {
 
-            if( ($state == 1) || ($state == 2) ||
-                (isset($status[$hostName][""]['is_central_site'])) ) {
-
-               $zIndex = 10;
-               if (!isset($status[$remoteHostName][""]['is_disabled_site'])) {
+            $zIndex          = 1000;
+            $strokeWeight    = 1;
+            $strokeDashstyle = "solid";
+            switch($tunnelState) {
+               case 0:
+                  $linkColor       = "#00ff00";
                   $strokeWeight    = 5;
-                  $strokeDashstyle = "solid";
-                  switch($state) {
-                     case 0:
-                        $linkColor = "#00ff00";
-                     break;
-                     case 1:
-                        $linkColor = "yellow";
-                        $zIndex    = 15;
-                     break;
-                     case 2:
-                        $linkColor    = "red";
-                        $strokeWeight = 10;
-                        $zIndex       = 20;
-                     break;
-                     default:
-                        $linkColor = "grey";
-                     break;
-                  }
-               }
-               else {
+                  $zIndex          = 20;
+               break;
+               case 1:
+                  $linkColor       = "yellow";
+                  $strokeWeight    = 5;
                   $zIndex          = 15;
+               break;
+               case 2:
+                  $linkColor       = "red";
+                  $strokeWeight    = 10;
+                  $zIndex          = 10;
+               break;
+               case 1000000:
+                  $linkColor       = "grey";
                   $strokeWeight    = 5;
                   $strokeDashstyle = "dash";
-                  $linkColor       = "grey";
-               }
-
-               echo "   // ====== Tunnel ".$localHostName." to ".$remoteHostName." S=".$tunnelState." ======\n";
-               echo '   makeConnection("window.' . $localIdentifer . '_to_' . $remoteIdentifer . '", ' .
-                    '[ ' . $localIdentifer . '_position, window.' . $remoteIdentifer . '_position ], ' .
+                  $zIndex          = 25;
+               break;
+               default:
+                  $linkColor       = "black";
+                  $zIndex          = 50;
+               break;
+            }
+            echo '   makeConnection("window.' . $connectivity . '", ' .
+                    '[ ' . $from . '_position, window.' . $to . '_position ], ' .
                     '"' . $linkColor . '", ' .
                     $strokeWeight . ', ' .
                     '"' . $strokeDashstyle . '", ' .
                     '2);' . "\n";
-             }
-             else {
-                echo '   removeConnection("window.' . $localIdentifer . '_to_' . $remoteIdentifer . '");' . "\n";
-             }
+         }
+         else {
+            echo '   removeConnection("window.' . $connectivity . '");' . "\n";
          }
       }
    }
