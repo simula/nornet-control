@@ -69,26 +69,26 @@ function makeMap(latitude, longitude, zoomLevel)
    window.maplayers.push(window.transportmap);
 
    // ====== Create Google map ==============================================
-   window.googlemap1 = new OpenLayers.Layer.Google("Google Satellite", { type: google.maps.MapTypeId.HYBRID });
-   window.maplayers.push(window.googlemap1);
-   window.mapbaselayers.push(window.googlemap1);
-   window.googlemap2 = new OpenLayers.Layer.Google("Google Terrain",   { type: google.maps.MapTypeId.TERRAIN });
-   window.maplayers.push(window.googlemap2);
-   window.mapbaselayers.push(window.googlemap2);
+//   window.googlemap1 = new OpenLayers.Layer.Google("Google Satellite", { type: google.maps.MapTypeId.HYBRID });
+//   window.maplayers.push(window.googlemap1);
+//   window.mapbaselayers.push(window.googlemap1);
+//   window.googlemap2 = new OpenLayers.Layer.Google("Google Terrain",   { type: google.maps.MapTypeId.TERRAIN });
+//   window.maplayers.push(window.googlemap2);
+//   window.mapbaselayers.push(window.googlemap2);
 
    // ====== Create Bing map ================================================
    // FIXME: TEST ONLY! Needs proper API key!
-   var apiKey = "Agl-rpGco3Mo07n16sDpY4jsu35RAbvEwPAND7hi8-6JgIFVetQdhnZ4i_oSiNyd";
-   window.bingmap1 = new OpenLayers.Layer.Bing( { name: "Bing Road", key: apiKey, type: "Road" } );
-   window.maplayers.push(window.bingmap1);
-   window.mapbaselayers.push(window.bingmap1);
-   window.bingmap2 = new OpenLayers.Layer.Bing( { name: "Bing Aerial", key: apiKey, type: "AerialWithLabels" } );
-   window.maplayers.push(window.bingmap2);
-   window.mapbaselayers.push(window.bingmap2);
+//   var apiKey = "Agl-rpGco3Mo07n16sDpY4jsu35RAbvEwPAND7hi8-6JgIFVetQdhnZ4i_oSiNyd";
+//   window.bingmap1 = new OpenLayers.Layer.Bing( { name: "Bing Road", key: apiKey, type: "Road" } );
+//   window.maplayers.push(window.bingmap1);
+//   window.mapbaselayers.push(window.bingmap1);
+//   window.bingmap2 = new OpenLayers.Layer.Bing( { name: "Bing Aerial", key: apiKey, type: "AerialWithLabels" } );
+//   window.maplayers.push(window.bingmap2);
+//   window.mapbaselayers.push(window.bingmap2);
 
    // ====== OpenWeather overlay ============================================
-   // FIXME: TEST ONLY! Needs proper APP ID!
-   var appID = "2de143494c0b295cca9337e1e96b00e0";
+   // FIXME: TEST ONLY! Needs proper APP ID! Example: http://openweathermap.org/current
+   var appID = "44db6a862fba0b067b1930da0d769e98";
    window.wcity = new OpenLayers.Layer.Vector.OWMWeather("Weather", { 'appid' : appID } );
    window.maplayers.push(wcity);
 
