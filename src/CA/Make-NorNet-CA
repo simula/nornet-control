@@ -27,7 +27,6 @@ CERT_KEYLEN=$(($CA_KEYLEN/2))
 CA_DAYS=3650     # 10 years
 CERT_DAYS=1825   # 5 years
 
-HASH="sha512"
 SUBJECTHEADER_SRL="/C=NO/ST=Akershus/L=Fornebu/O=Simula Research Laboratory/OU=Centre for Resilient Networks and Applications"
 SUBJECTHEADER_UDE="/C=DE/ST=Nordrhein-Westfalen/L=Essen/O=Universität Duisburg-Essen/OU=Institut für Experimentelle Mathematik"
 
@@ -40,12 +39,15 @@ make-ca ()
    NAME="$3"
    SUBJECT="$4"
 
+   echo ""
    echo -e "\x1b[34m###### Creating Certification Authority: $NAME ######\x1b[0m"
+   echo ""
 
    mkdir -p -m 0700 \
       $CA_DIRECTORY/$NAME \
       $CA_DIRECTORY/$NAME/certs \
       $CA_DIRECTORY/$NAME/crl \
+      $CA_DIRECTORY/$NAME/csr \
       $CA_DIRECTORY/$NAME/newcerts \
       $CA_DIRECTORY/$NAME/private \
       $CA_DIRECTORY/$NAME/chains
@@ -55,9 +57,6 @@ make-ca ()
    if [ ! -e $CA_DIRECTORY/$NAME/serial ] ; then
       echo "1000" >$CA_DIRECTORY/$NAME/serial
    fi
-#    if [ ! -e $NAME/crlnumber ] ; then
-#       echo "1" >$NAME/crlnumber
-#    fi
 
    # ====== Create key ======================================================
    if [ -e $CA_DIRECTORY/$NAME/private/$NAME.key ] ; then
@@ -77,7 +76,7 @@ make-ca ()
 
    if [ "$UPPERLEVEL" = "root" ] ; then
       # ====== Create top-level certificate =================================
-      openssl req -utf8 -new -$HASH -days $CA_DAYS \
+      openssl req -utf8 -new -days $CA_DAYS \
          -x509 \
          -config $NAME.config -extensions $EXTENSION \
          -key $CA_DIRECTORY/$NAME/private/$NAME.key \
@@ -87,21 +86,21 @@ make-ca ()
    else
       # ====== Create signed certificate ====================================
       echo "- Creating CSR for $NAME"
-      openssl req -utf8 -new -$HASH \
+      openssl req -utf8 -new \
          -key $CA_DIRECTORY/$NAME/private/$NAME.key \
          -passin file:$NAME.password \
-         -out $NAME.csr -days $CA_DAYS \
+         -out $CA_DIRECTORY/$NAME/certs/$NAME.csr -days $CA_DAYS \
          -config $NAME.config -extensions $EXTENSION \
          -subj "$SUBJECT"
 
       echo "- Letting $UPPERLEVEL issue CRT for $NAME"
 
-      openssl ca -md $HASH -days $CERT_DAYS -batch -notext \
+      openssl ca -days $CERT_DAYS -batch -notext \
          -config $UPPERLEVEL.config -extensions $EXTENSION \
          -cert $CA_DIRECTORY/$UPPERLEVEL/certs/$UPPERLEVEL.crt \
          -keyfile $CA_DIRECTORY/$UPPERLEVEL/private/$UPPERLEVEL.key \
          -passin file:$UPPERLEVEL.password \
-         -in $NAME.csr \
+         -in $CA_DIRECTORY/$NAME/certs/$NAME.csr \
          -out $CA_DIRECTORY/$NAME/certs/$NAME.crt \
          -subj "$SUBJECT"
    fi
@@ -129,7 +128,9 @@ make-certificate ()
    SUBJECT="$3"
    ALTNAME="$4"
 
+   echo ""
    echo -e "\x1b[34m###### Creating Certificate: $NAME ######\x1b[0m"
+   echo ""
 
    mkdir -p -m 0700 $SERVER_DIRECTORY/$NAME
    if [ -e $SERVER_DIRECTORY/$NAME.key ] ; then
@@ -138,7 +139,7 @@ make-certificate ()
    fi
 
    # ====== Create key ======================================================
-   openssl genrsa -out $SERVER_DIRECTORY/$NAME/$NAME.key $CERT_KEYLEN
+   openssl genrsa -out $SERVER_DIRECTORY/$NAME/$NAME.key $CERT_KEYLEN 2>/dev/null
 
    # ====== Create server certificate =======================================
    (
@@ -152,7 +153,7 @@ make-certificate ()
       fi
    ) >$NAME.config
 
-   openssl req -new -$HASH -utf8 \
+   openssl req -new \
       -key $SERVER_DIRECTORY/$NAME/$NAME.key \
       -out $SERVER_DIRECTORY/$NAME/$NAME.csr -days $CERT_DAYS -outform PEM \
       -config $NAME.config -reqexts SAN \
@@ -161,7 +162,7 @@ make-certificate ()
    # OpenSSL would create the certificate without subjectAltName.
    # Therefore, it is necessary to specify the config file and section again:
    # -extfile ... -extensions SAN
-   openssl ca -utf8 -md $HASH \
+   openssl ca \
       -config $UPPERLEVEL.config \
       -extfile $NAME.config -extensions SAN \
       -cert $CA_DIRECTORY/$UPPERLEVEL/certs/$UPPERLEVEL.crt -keyfile $CA_DIRECTORY/$UPPERLEVEL/private/$UPPERLEVEL.key \
@@ -187,4 +188,4 @@ make-ca v3_intermediate_ca NorNet-CA-Level2 NorNet-CA-Simula     "$SUBJECTHEADER
 # # make-ca v3_intermediate_ca NorNet-CA-Test   NorNet-CA-Test-Alpha "$SUBJECTHEADER_SRL/CN=*.alpha.test"
 
 
-make-certificate NorNet-CA-Simula   monitor.simula.nornet   "$SUBJECTHEADER_SRL/CN=monitor.simula.nornet"
+make-certificate NorNet-CA-Simula   monitor.simula.nornet   "$SUBJECTHEADER_SRL/CN=monitor.simula.nornet" "DNS:holmenkollen.simula.nornet"
