@@ -1,23 +1,16 @@
 #!/bin/bash
 
-DIR="$1"
-TMPDIR=/storage/tmp
+export TMPDIR=/storage/tmp
 
-(
-   find "$DIR/" -name "*.vmdk"
-   find "$DIR/" -name "*.vdi"
-   find "$DIR/" -name "*.qcow2"
-   find "$DIR/" -name "*.raw"
-   find "$DIR/" -name "*.img"
-) | grep -v "/Snapshots/" | sort -u |
-(
-   while read disk ; do
-      echo -e "\x1b[34m`env LANG=C date +%FT%H:%M:%S`: ====== $disk ======\x1b[0m"
-      {
-        du -m "$disk" && \
-        virt-sparsify -q "$disk" "$disk.tmp" && \
-        mv "$disk.tmp" "$disk" && \
-        du -m "$disk"
-      } || echo "FAILED!"
-   done
-)
+while [ $# -gt 0 ] ; do
+   disk="$1"
+   shift
+
+   echo -e "\x1b[34m`env LANG=C date +%FT%H:%M:%S`: ====== $disk ======\x1b[0m"
+   {
+     du -m "$disk" && \
+     virt-sparsify -q "$disk" "$disk.tmp" && \
+     mv "$disk.tmp" "$disk" && \
+     du -m "$disk"
+   } || echo "FAILED!"
+done
