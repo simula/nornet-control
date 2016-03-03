@@ -19,7 +19,8 @@
 # Contact: dreibh@simula.no
 
 
-CA_DIRECTORY=NorNet-CAs
+SERVER_DIRECTORY=NorNet-Servers   # <-- where to place server certificates
+CA_DIRECTORY=NorNet-CAs           # <-- where to place CAs
 CA_KEYLEN=2048
 CERT_KEYLEN=$(($CA_KEYLEN/2))
 
@@ -39,9 +40,7 @@ make-ca ()
    NAME="$3"
    SUBJECT="$4"
 
-#    echo ""
    echo -e "\x1b[34m###### Creating Certification Authority: $NAME ######\x1b[0m"
-#    echo ""
 
    mkdir -p -m 0700 \
       $CA_DIRECTORY/$NAME \
@@ -122,10 +121,70 @@ make-ca ()
 }
 
 
-# ###### NorNet CA ##########################################################
-make-ca v3_ca              root             NorNet-CA-Level1 "$SUBJECTHEADER_SRL/CN=NorNet Level-1 CA"
-make-ca v3_ca              NorNet-CA-Level1 NorNet-CA-Level2 "$SUBJECTHEADER_SRL/CN=NorNet Level-2 CA"
-make-ca v3_intermediate_ca NorNet-CA-Level2 NorNet-CA-Simula "$SUBJECTHEADER_SRL/CN=*.simula.nornet"
+# ###### Make a server certificate ##########################################
+make-certificate ()
+{
+   UPPERLEVEL="$1"
+   NAME="$2"
+   SUBJECT="$3"
+   ALTNAME="$4"
 
+   echo -e "\x1b[34m###### Creating Certificate: $NAME ######\x1b[0m"
+
+   mkdir -p -m 0700 $SERVER_DIRECTORY/$NAME
+   if [ -e $SERVER_DIRECTORY/$NAME.key ] ; then
+      echo >&2 "ERROR: Key $SERVER_DIRECTORY/$NAME/$NAME.key already exists!"
+      exit 1
+   fi
+
+   # ====== Create key ======================================================
+   openssl genrsa -out $SERVER_DIRECTORY/$NAME/$NAME.key $CERT_KEYLEN
+
+   # ====== Create server certificate =======================================
+   (
+      echo "[req]"
+      echo "distinguished_name = SAN"
+      echo "[SAN]"
+      echo "basicConstraints = CA:FALSE"
+      echo "keyUsage         = nonRepudiation,digitalSignature,keyEncipherment"
+      if [ "$ALTNAME" != "" ] ; then
+         echo "subjectAltName   = $ALTNAME"
+      fi
+   ) >$NAME.config
+
+   openssl req -new -$HASH -utf8 \
+      -key $SERVER_DIRECTORY/$NAME/$NAME.key \
+      -out $SERVER_DIRECTORY/$NAME/$NAME.csr -days $CERT_DAYS -outform PEM \
+      -config $NAME.config -reqexts SAN \
+      -subj "$SUBJECT"
+
+   # OpenSSL would create the certificate without subjectAltName.
+   # Therefore, it is necessary to specify the config file and section again:
+   # -extfile ... -extensions SAN
+   openssl ca -utf8 -md $HASH \
+      -config $UPPERLEVEL.config \
+      -extfile $NAME.config -extensions SAN \
+      -cert $CA_DIRECTORY/$UPPERLEVEL/certs/$UPPERLEVEL.crt -keyfile $CA_DIRECTORY/$UPPERLEVEL/private/$UPPERLEVEL.key \
+      -batch -notext \
+      -passin file:$UPPERLEVEL.password \
+      -days $CERT_DAYS \
+      -in $SERVER_DIRECTORY/$NAME/$NAME.csr \
+      -out $CA_DIRECTORY/$UPPERLEVEL/certs/$NAME.crt \
+      -subj "$SUBJECT"
+   cp $CA_DIRECTORY/$UPPERLEVEL/certs/$NAME.crt $SERVER_DIRECTORY/$NAME/$NAME.crt
+   openssl verify -verbose -CAfile $CA_DIRECTORY/$UPPERLEVEL/chains/$UPPERLEVEL-chain.pem $SERVER_DIRECTORY/$NAME/$NAME.crt
+}
+
+
+# ###### NorNet CA ##########################################################
+make-ca v3_ca              root             NorNet-CA-Level1     "$SUBJECTHEADER_SRL/CN=NorNet Level-1 CA"
+make-ca v3_ca              NorNet-CA-Level1 NorNet-CA-Level2     "$SUBJECTHEADER_SRL/CN=NorNet Level-2 CA"
+make-ca v3_intermediate_ca NorNet-CA-Level2 NorNet-CA-Simula     "$SUBJECTHEADER_SRL/CN=*.simula.nornet"
+
+# # make-ca v3_intermediate_ca NorNet-CA-Level2 NorNet-CA-UDE        "$SUBJECTHEADER_UDE/CN=*.ude.nornet"
 #
-# make-ca NorNet-CA-Level2 NorNet-CA-UDE    "$SUBJECTHEADER_UDE/CN=*.ude.nornet"
+# # make-ca v3_intermediate_ca NorNet-CA-Level2 NorNet-CA-Test       "$SUBJECTHEADER_SRL/CN=*.test"
+# # make-ca v3_intermediate_ca NorNet-CA-Test   NorNet-CA-Test-Alpha "$SUBJECTHEADER_SRL/CN=*.alpha.test"
+
+
+make-certificate NorNet-CA-Simula   monitor.simula.nornet   "$SUBJECTHEADER_SRL/CN=monitor.simula.nornet"
