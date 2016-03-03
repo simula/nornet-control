@@ -34,13 +34,14 @@ SUBJECTHEADER_UDE="/C=DE/ST=Nordrhein-Westfalen/L=Essen/O=Universität Duisburg-
 # ###### Make a CA ##########################################################
 make-ca ()
 {
-   UPPERLEVEL="$1"
-   NAME="$2"
-   SUBJECT="$3"
+   EXTENSION="$1"
+   UPPERLEVEL="$2"
+   NAME="$3"
+   SUBJECT="$4"
 
-   echo ""
+#    echo ""
    echo -e "\x1b[34m###### Creating Certification Authority: $NAME ######\x1b[0m"
-   echo ""
+#    echo ""
 
    mkdir -p -m 0700 \
       $CA_DIRECTORY/$NAME \
@@ -69,60 +70,62 @@ make-ca ()
       echo >&2 "Create this file containing the password on the first line!"
       exit 1
    fi
+   echo "- Creating key for $NAME"
    openssl genrsa -aes256 \
       -passout file:$NAME.password \
       -out $CA_DIRECTORY/$NAME/private/$NAME.key \
-      $CA_KEYLEN
+      $CA_KEYLEN 2>/dev/null
 
    if [ "$UPPERLEVEL" = "root" ] ; then
       # ====== Create top-level certificate =================================
-      openssl req -new -$HASH \
+      openssl req -utf8 -new -$HASH -days $CA_DAYS \
          -x509 \
+         -config $NAME.config -extensions $EXTENSION \
          -key $CA_DIRECTORY/$NAME/private/$NAME.key \
          -passin file:$NAME.password \
-         -out $CA_DIRECTORY/$NAME/certs/$NAME.crt -days $CA_DAYS \
-         -$HASH -outform PEM \
-         -config $NAME.config -extensions v3_ca \
+         -out $CA_DIRECTORY/$NAME/certs/$NAME.crt -outform PEM \
          -subj "$SUBJECT"
    else
       # ====== Create signed certificate ====================================
-      openssl req -new -$HASH \
+      echo "- Creating CSR for $NAME"
+      openssl req -utf8 -new -$HASH \
          -key $CA_DIRECTORY/$NAME/private/$NAME.key \
          -passin file:$NAME.password \
          -out $NAME.csr -days $CA_DAYS \
-         -config $UPPERLEVEL.config -extensions v3_ca \
+         -config $NAME.config -extensions $EXTENSION \
          -subj "$SUBJECT"
 
-      openssl ca -md $HASH \
-         -config $UPPERLEVEL.config -extensions v3_ca \
+      echo "- Letting $UPPERLEVEL issue CRT for $NAME"
+
+      openssl ca -md $HASH -days $CERT_DAYS -batch -notext \
+         -config $UPPERLEVEL.config -extensions $EXTENSION \
          -cert $CA_DIRECTORY/$UPPERLEVEL/certs/$UPPERLEVEL.crt \
          -keyfile $CA_DIRECTORY/$UPPERLEVEL/private/$UPPERLEVEL.key \
-         -batch -notext \
          -passin file:$UPPERLEVEL.password \
-         -days $CERT_DAYS \
          -in $NAME.csr \
          -out $CA_DIRECTORY/$NAME/certs/$NAME.crt \
          -subj "$SUBJECT"
    fi
 
    # ====== Write chain file ================================================
+   echo "- Writing chain to $NAME"
    if [ "$UPPERLEVEL" = "root" ] ; then
-      cp $NAME/certs/$NAME.crt $NAME/chains/$NAME-chain.pem
-      openssl verify -verbose -CAfile $NAME/chains/$NAME-chain.pem $NAME/certs/$NAME.crt
+      cp $CA_DIRECTORY/$NAME/certs/$NAME.crt $CA_DIRECTORY/$NAME/chains/$NAME-chain.pem
+      openssl verify -verbose -CAfile $CA_DIRECTORY/$NAME/chains/$NAME-chain.pem $CA_DIRECTORY/$NAME/certs/$NAME.crt
    else
       (
-         cat $NAME/chains/$UPPERLEVEL-chain.pem
-         cat $NAME/certs/$NAME.crt
-      ) >$NAME/chains/$NAME-chain.pem
-      openssl verify -verbose -CAfile $NAME/chains/$UPPERLEVEL-chain.pem $NAME/certs/$NAME.crt
+         cat $CA_DIRECTORY/$UPPERLEVEL/chains/$UPPERLEVEL-chain.pem
+         cat $CA_DIRECTORY/$NAME/certs/$NAME.crt
+      ) >$CA_DIRECTORY/$NAME/chains/$NAME-chain.pem
+      openssl verify -CAfile $CA_DIRECTORY/$UPPERLEVEL/chains/$UPPERLEVEL-chain.pem $CA_DIRECTORY/$NAME/certs/$NAME.crt
    fi
 }
 
 
 # ###### NorNet CA ##########################################################
-make-ca root             NorNet-CA-Level1 "$SUBJECTHEADER_SRL/CN=NorNet Level-1 CA"
-make-ca NorNet-CA-Level1 NorNet-CA-Level2 "$SUBJECTHEADER_SRL/CN=NorNet Level-2 CA"
-make-ca NorNet-CA-Level2 NorNet-CA-Simula "$SUBJECTHEADER_SRL/CN=*.simula.nornet"
+make-ca v3_ca              root             NorNet-CA-Level1 "$SUBJECTHEADER_SRL/CN=NorNet Level-1 CA"
+make-ca v3_ca              NorNet-CA-Level1 NorNet-CA-Level2 "$SUBJECTHEADER_SRL/CN=NorNet Level-2 CA"
+make-ca v3_intermediate_ca NorNet-CA-Level2 NorNet-CA-Simula "$SUBJECTHEADER_SRL/CN=*.simula.nornet"
 
 #
 # make-ca NorNet-CA-Level2 NorNet-CA-UDE    "$SUBJECTHEADER_UDE/CN=*.ude.nornet"
