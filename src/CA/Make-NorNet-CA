@@ -1,0 +1,128 @@
+#!/bin/bash -e
+#
+# NorNet CA Setup
+# Copyright (C) 2015-2016 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+CA_DIRECTORY=NorNet-CAs
+CA_KEYLEN=2048
+CERT_KEYLEN=$(($CA_KEYLEN/2))
+
+CA_DAYS=3650     # 10 years
+CERT_DAYS=1825   # 5 years
+
+HASH="sha512"
+SUBJECTHEADER_SRL="/C=NO/ST=Akershus/L=Fornebu/O=Simula Research Laboratory/OU=Centre for Resilient Networks and Applications"
+SUBJECTHEADER_UDE="/C=DE/ST=Nordrhein-Westfalen/L=Essen/O=Universität Duisburg-Essen/OU=Institut für Experimentelle Mathematik"
+
+
+# ###### Make a CA ##########################################################
+make-ca ()
+{
+   UPPERLEVEL="$1"
+   NAME="$2"
+   SUBJECT="$3"
+
+   echo ""
+   echo -e "\x1b[34m###### Creating Certification Authority: $NAME ######\x1b[0m"
+   echo ""
+
+   mkdir -p -m 0700 \
+      $CA_DIRECTORY/$NAME \
+      $CA_DIRECTORY/$NAME/certs \
+      $CA_DIRECTORY/$NAME/crl \
+      $CA_DIRECTORY/$NAME/newcerts \
+      $CA_DIRECTORY/$NAME/private \
+      $CA_DIRECTORY/$NAME/chains
+   if [ ! -e $CA_DIRECTORY/$NAME/index.txt ] ; then
+      touch $CA_DIRECTORY/$NAME/index.txt
+   fi
+   if [ ! -e $CA_DIRECTORY/$NAME/serial ] ; then
+      echo "1000" >$CA_DIRECTORY/$NAME/serial
+   fi
+#    if [ ! -e $NAME/crlnumber ] ; then
+#       echo "1" >$NAME/crlnumber
+#    fi
+
+   # ====== Create key ======================================================
+   if [ -e $CA_DIRECTORY/$NAME/private/$NAME.key ] ; then
+      echo >&2 "ERROR: Key $CA_DIRECTORY/$NAME/private/$NAME.key already exists!"
+      exit 1
+   fi
+   if [ ! -e $NAME.password ] ; then
+      echo >&2 "ERROR: Key $NAME.password does not exist!"
+      echo >&2 "Create this file containing the password on the first line!"
+      exit 1
+   fi
+   openssl genrsa -aes256 \
+      -passout file:$NAME.password \
+      -out $CA_DIRECTORY/$NAME/private/$NAME.key \
+      $CA_KEYLEN
+
+   if [ "$UPPERLEVEL" = "root" ] ; then
+      # ====== Create top-level certificate =================================
+      openssl req -new -$HASH \
+         -x509 \
+         -key $CA_DIRECTORY/$NAME/private/$NAME.key \
+         -passin file:$NAME.password \
+         -out $CA_DIRECTORY/$NAME/certs/$NAME.crt -days $CA_DAYS \
+         -$HASH -outform PEM \
+         -config $NAME.config -extensions v3_ca \
+         -subj "$SUBJECT"
+   else
+      # ====== Create signed certificate ====================================
+      openssl req -new -$HASH \
+         -key $CA_DIRECTORY/$NAME/private/$NAME.key \
+         -passin file:$NAME.password \
+         -out $NAME.csr -days $CA_DAYS \
+         -config $UPPERLEVEL.config -extensions v3_ca \
+         -subj "$SUBJECT"
+
+      openssl ca -md $HASH \
+         -config $UPPERLEVEL.config -extensions v3_ca \
+         -cert $CA_DIRECTORY/$UPPERLEVEL/certs/$UPPERLEVEL.crt \
+         -keyfile $CA_DIRECTORY/$UPPERLEVEL/private/$UPPERLEVEL.key \
+         -batch -notext \
+         -passin file:$UPPERLEVEL.password \
+         -days $CERT_DAYS \
+         -in $NAME.csr \
+         -out $CA_DIRECTORY/$NAME/certs/$NAME.crt \
+         -subj "$SUBJECT"
+   fi
+
+   # ====== Write chain file ================================================
+   if [ "$UPPERLEVEL" = "root" ] ; then
+      cp $NAME/certs/$NAME.crt $NAME/chains/$NAME-chain.pem
+      openssl verify -verbose -CAfile $NAME/chains/$NAME-chain.pem $NAME/certs/$NAME.crt
+   else
+      (
+         cat $NAME/chains/$UPPERLEVEL-chain.pem
+         cat $NAME/certs/$NAME.crt
+      ) >$NAME/chains/$NAME-chain.pem
+      openssl verify -verbose -CAfile $NAME/chains/$UPPERLEVEL-chain.pem $NAME/certs/$NAME.crt
+   fi
+}
+
+
+# ###### NorNet CA ##########################################################
+make-ca root             NorNet-CA-Level1 "$SUBJECTHEADER_SRL/CN=NorNet Level-1 CA"
+make-ca NorNet-CA-Level1 NorNet-CA-Level2 "$SUBJECTHEADER_SRL/CN=NorNet Level-2 CA"
+make-ca NorNet-CA-Level2 NorNet-CA-Simula "$SUBJECTHEADER_SRL/CN=*.simula.nornet"
+
+#
+# make-ca NorNet-CA-Level2 NorNet-CA-UDE    "$SUBJECTHEADER_UDE/CN=*.ude.nornet"
