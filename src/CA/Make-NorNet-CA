@@ -256,11 +256,7 @@ replace-server-certificate ()
 # ###### Test Setup #########################################################
 # replace-ca v3_intermediate_ca NorNet-CA-Level2 NorNet-CA-Test       "$SUBJECTHEADER_SRL/CN=*.test"
 # replace-ca v3_leaf_ca         NorNet-CA-Test   NorNet-CA-Test-Alpha "$SUBJECTHEADER_SRL/CN=*.alpha.test"
-#
-# CERT_KEYLEN=4096
-# replace-server-certificate server_cert NorNet-CA-Test-Alpha Test-PLC    "$SUBJECTHEADER_SRL/CN=plc.alpha.test" \
-#    "DNS:ullevaalseter.alpha.test,DNS:ullevaalseter.simula.nornet,IP:11.254.1.2,IP:11.255.1.2,IP:fd00:cafe:0:fe01::2,IP:10.1.1.219"
-# replace-server-certificate server_cert NorNet-CA-Test-Alpha Test-API    "$SUBJECTHEADER_SRL/CN=api.alpha.test" \
-#    "DNS:ullevaalseter.alpha.test,DNS:ullevaalseter.simula.nornet,IP:11.254.1.2,IP:11.255.1.2,IP:fd00:cafe:0:fe01::2,IP:10.1.1.219"
-# replace-server-certificate server_cert NorNet-CA-Test-Alpha Test-Boot   "$SUBJECTHEADER_SRL/CN=boot.alpha.test" \
-#    "DNS:ullevaalseter.alpha.test,DNS:ullevaalseter.simula.nornet,IP:11.254.1.2,IP:11.255.1.2,IP:fd00:cafe:0:fe01::2,IP:10.1.1.219"
+
+CERT_KEYLEN=4096
+replace-server-certificate server_cert NorNet-CA-Test-Alpha   ullevaalseter.alpha.test   "$SUBJECTHEADER_SRL/CN=ullevaalseter.alpha.test" \
+   "DNS:ullevaalseter.alpha.test,DNS:plc.alpha.test,IP:11.254.1.2,IP:11.255.1.2,IP:fd00:cafe:0:ff01::2,IP:fd00:cafe:0:fe01::2,IP:10.1.1.219"
