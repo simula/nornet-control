@@ -229,6 +229,7 @@ echo -e "\x1b[34m`date +%FT%H:%M:%S`: Updating caches ...\x1b[0m"
 if [ "$Variant" = "Debian" ] ; then
    if [ -e /usr/bin/apt-file ] ; then
       sudo /usr/bin/apt-file update >/dev/null
+      sudo apt-show-versions -i
    fi
 fi
 if [ "$Variant" != "FreeBSD" ] ; then
