@@ -59,7 +59,7 @@ def makeNTPConfiguration(fullSiteList, localSite, localNode):
    else:
       if localSite != None:
          for i in range(0, NorNet_MaxNTPServers - 1):
-            ntpServer = IPAddress(getTagValue(localSite['site_tags'], 'nornet_site_ntp' + str(1 + i), '0.0.0.0'))
+            ntpServer = ip_address(getTagValue(localSite['site_tags'], 'nornet_site_ntp' + str(1 + i), '0.0.0.0'))
             if ntpServer != IPv4Address('0.0.0.0'):
                ntpServerList.append(str(ntpServer))
 

@@ -591,7 +591,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
       localProvider = localProviderList[localProviderIndex]
       for version in [ 4, 6 ]:
          providerNetwork  = makeNorNetIP(localProviderIndex, localSiteIndex, 0, version)
-         providerZone     = getZoneForAddress(providerNetwork, providerNetwork.prefixlen)
+         providerZone     = getZoneForAddress(providerNetwork, providerNetwork.network.prefixlen)
          providerZoneFile = codecs.open(str.lower(localProvider['provider_short_name']) + '.' + siteFQDN + 'ipv' + str(version) + '.db', 'w', 'utf-8')
          writeSOA(providerZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
 
@@ -621,7 +621,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
    if localSiteIndex == NorNet_SiteIndex_Central:
       for version in [ 4, 6 ]:
          tunnelNetwork  = makeNorNetTunnelIP(0, 0, 0, 0, version)
-         tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
+         tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.network.prefixlen)
          tunnelZoneFile = codecs.open('tunnels.ipv' + str(version) + '.db', 'w', 'utf-8')
          writeSOA(tunnelZoneFile, hostNameForDefaultProvider, siteFQDN, refreshTime, retryTime, expireTime, minTTL, defaultTTL, slaveServers)
          prefixLength = 32
@@ -675,7 +675,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
          siteProvider = siteProviderList[siteProviderIndex]
          for version in [ 4, 6 ]:
             providerNetwork = makeNorNetIP(siteProviderIndex, siteIndex, 0, version)
-            providerZone = getZoneForAddress(providerNetwork, providerNetwork.prefixlen)
+            providerZone = getZoneForAddress(providerNetwork, providerNetwork.network.prefixlen)
             writeZone(zoneConfFile,
                       providerZone,
                       str.lower(siteProvider['provider_short_name']) + '.' + site['site_domain'] + '.ipv' + str(version) + '.db',
@@ -689,7 +689,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
       masterSite = fullSiteList[NorNet_SiteIndex_Central]
    for version in [ 4, 6 ]:
       tunnelNetwork  = makeNorNetTunnelIP(0, 0, 0, 0, version)
-      tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.prefixlen)
+      tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.network.prefixlen)
       writeZone(zoneConfFile, tunnelZone, 'tunnels.ipv' + str(version) + '.db',
                 masterSite)
 
@@ -1294,7 +1294,7 @@ def makeRemoteSiteTunnelRoutes(fullSiteList, localSite, version,
             if tunnel['tunnel_local_inner_address'].ip < tunnel['tunnel_remote_inner_address'].ip:
                # Route over remote site, but only if the "lower" side of the tunnel is on this site!
                destNetwork = IPNetwork(str(tunnel['tunnel_local_inner_address'].network) + '/' + \
-                                       str(tunnel['tunnel_local_inner_address'].prefixlen))
+                                       str(tunnel['tunnel_local_inner_address'].network.prefixlen))
                additionalStaticRoutes.append(destNetwork)
 
    return additionalStaticRoutes
@@ -1360,16 +1360,16 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
       providerFile.write('PROVIDER_INTERNAL_TABLE_TOS_PREF='    + str(internalRoutingTableTOSPref)    + '\n')
       providerFile.write('PROVIDER_INTERNAL_TABLE_SOURCE_PREF=' + str(internalRoutingTableSourcePref) + '\n')
 
-      externalNetworkIPv4 = IPv4Interface(str(localProvider['provider_tunnelbox_ipv4'].network) + '/' + \
-                                        str(localProvider['provider_tunnelbox_ipv4'].prefixlen))
+      externalNetworkIPv4 = IPv4Interface(str(localProvider['provider_tunnelbox_ipv4'].network.network_address) + '/' + \
+                                        str(localProvider['provider_tunnelbox_ipv4'].network.prefixlen))
       providerFile.write('PROVIDER_EXTERNAL_NETWORK_IPv4="' + str(externalNetworkIPv4) + '"\n')
       providerFile.write('PROVIDER_EXTERNAL_GATEWAY_IPv4="' + str(localProvider['provider_gateway_ipv4']) + '"\n')
       providerFile.write('PROVIDER_EXTERNAL_TUNNELBOX_IPv4="' + str(localProvider['provider_tunnelbox_ipv4'].ip) + '"\n')
 
 
-      externalNetworkIPv6 = IPv6Interface(str(localProvider['provider_tunnelbox_ipv6'].network) + '/' + \
-                                        str(localProvider['provider_tunnelbox_ipv6'].prefixlen))
-      if externalNetworkIPv6.prefixlen > 0:
+      externalNetworkIPv6 = IPv6Interface(str(localProvider['provider_tunnelbox_ipv6'].network.network_address) + '/' + \
+                                        str(localProvider['provider_tunnelbox_ipv6'].network.prefixlen))
+      if externalNetworkIPv6.network.prefixlen > 0:
          providerFile.write('PROVIDER_EXTERNAL_NETWORK_IPv6="' + str(externalNetworkIPv6) + '"\n')
          providerFile.write('PROVIDER_EXTERNAL_GATEWAY_IPv6="' + str(localProvider['provider_gateway_ipv6']) + '"\n')
          providerFile.write('PROVIDER_EXTERNAL_TUNNELBOX_IPv6="' + str(localProvider['provider_tunnelbox_ipv6'].ip) + '"\n')
@@ -1431,11 +1431,11 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
 
                interfaceFile.write('TUNNEL_LOCAL_OUTER_ADDRESS="'  + str(tunnel['tunnel_local_outer_address'].ip)  + '"\n')
                interfaceFile.write('TUNNEL_REMOTE_OUTER_ADDRESS="' + str(tunnel['tunnel_remote_outer_address'].ip) + '"\n')
-               interfaceFile.write('TUNNEL_OUTER_PREFIX='          + str(tunnel['tunnel_local_outer_address'].prefixlen) + '\n\n')
+               interfaceFile.write('TUNNEL_OUTER_PREFIX='          + str(tunnel['tunnel_local_outer_address'].network.prefixlen) + '\n\n')
 
                interfaceFile.write('TUNNEL_LOCAL_INNER_ADDRESS="'  + str(tunnel['tunnel_local_inner_address'].ip)  + '"\n')
                interfaceFile.write('TUNNEL_REMOTE_INNER_ADDRESS="' + str(tunnel['tunnel_remote_inner_address'].ip) + '"\n')
-               interfaceFile.write('TUNNEL_INNER_PREFIX='          + str(tunnel['tunnel_local_inner_address'].prefixlen) + '\n\n')
+               interfaceFile.write('TUNNEL_INNER_PREFIX='          + str(tunnel['tunnel_local_inner_address'].network.prefixlen) + '\n\n')
 
                # ====== Routing =============================================
                interfaceFile.write('REMOTE_SITE_NETWORK="'   + str(remoteNetwork)   + '"\n')

@@ -160,7 +160,8 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
       # The space is too small in IPv4 addresses. Use MD5 to create most likely
       # unique addresses.
       m = hashlib.md5()
-      m.update('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' + str(address))
+      label = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' + str(address)
+      m.update(label.encode('utf-8'))
       s = m.hexdigest()
       value   = int(s[0:8], 16) & 0xfffffffe
       mask    = ~int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4TunnelPrefix'].netmask) & 0xffffffff

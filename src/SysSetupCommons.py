@@ -129,7 +129,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                      metric = NorNet_RoutingMetric_DefaultProvider
                   addrOpts = ''
                   if version == 4:
-                     addrOpts = 'broadcast ' + str(address.broadcast)
+                     addrOpts = 'broadcast ' + str(address.network.broadcast_address)
 
                   if controlBoxMode == False:
                      network = 'default'
