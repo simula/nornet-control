@@ -1,8 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Image Best-Fit (resize with cropping, keeping aspect ratio)
-# Copyright (C) 2012 by Thomas Dreibholz
+# Copyright (C) 2012-2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,13 +20,13 @@
 # Contact: dreibh@simula.no
 #
 
-from PythonMagick import *
+from wand.image import Image
 from math import *
 from sys import *
 
 
 if len(argv) != 4:
-   print('Usage: ' + argv[0] + ' [Input] [Output] [Aspect|A4]')
+   print(('Usage: ' + argv[0] + ' [Input] [Output] [Aspect|A4]'))
    exit(1)
 
 inputFileName  = argv[1]
@@ -36,15 +36,15 @@ if ((argv[3] == 'A4') or (argv[3] == 'a4')):
 else:
    outputAspect = float(argv[3])
 
-image       = Image(inputFileName)
-inputWidth  = 0.0 + image.size().width()    # Use float!
-inputHeight = 0.0 + image.size().height()   # Use float!
+image       = Image(filename=inputFileName)
+inputWidth  = 0.0 + image.width    # Use float!
+inputHeight = 0.0 + image.height   # Use float!
 inputAspect = inputWidth / inputHeight      # => result is also float!
 if inputAspect < 1.0:
    outputAspect = 1 / outputAspect   # Portrait
 
 
-#print 'Input:  ' + inputFileName + ' ' + str(inputWidth) + '*' + str(inputHeight) + ' (' + str(inputAspect) + ':1)'
+#print('Input:  ' + inputFileName + ' ' + str(inputWidth) + '*' + str(inputHeight) + ' (' + str(inputAspect) + ':1)')
 if inputAspect < outputAspect:
    newWidth  = int(inputWidth)
    newHeight = int(round(newWidth / outputAspect))
@@ -54,8 +54,9 @@ else:
 
 cropWidth  = int(inputWidth - newWidth)
 cropHeight = int(inputHeight - newHeight)
-#print ' -> crop: w=' + str(cropWidth) + ' h=' + str(cropHeight)
+#print(' -> crop: w=' + str(cropWidth) + ' h=' + str(cropHeight))
 
-#print 'Output: ' + outputFileName + ' ' + str(newWidth) + '*' + str(newHeight) + ' (' + str(outputAspect) + ':1)'
-image.crop(str(newWidth) + 'x' + str(newHeight) + '+' + str(cropWidth / 2) + '+' + str(cropHeight / 2))
-image.write(outputFileName)
+#print('Output: ' + outputFileName + ' ' + str(newWidth) + '*' + str(newHeight) + ' (' + str(outputAspect) + ':1)')
+image.crop(int(cropWidth / 2), int(cropHeight / 2),
+           width=newWidth, height=newHeight)
+image.save(filename=outputFileName)

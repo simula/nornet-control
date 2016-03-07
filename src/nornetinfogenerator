@@ -75,7 +75,7 @@ dbName         = 'pingtraceroutedb'
 
 
 # ====== Get parameters =====================================================
-parsedConfigFile = ConfigParser.RawConfigParser()
+parsedConfigFile = configparser.RawConfigParser()
 parsedConfigFile.optionxform = str   # Make it case-sensitive!
 try:
    parsedConfigFile.readfp(io.StringIO(u'[root]\n' + open(configFileName, 'r').read()))
