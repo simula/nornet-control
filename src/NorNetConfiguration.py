@@ -27,7 +27,7 @@ import configparser;
 import io;
 import xmlrpc.client;
 
-from ipaddress import ip_address, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
+from ipaddress import ip_address, IPv4Address, IPv4Network, IPv4Interface, IPv6Address, IPv6Network, IPv6Interface;
 
 # NorNet
 from NorNetTools         import *;
@@ -217,28 +217,28 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
       NorNet_Configuration['NorNet_IPv4Prefix'] = IPv4Interface(NorNet_Configuration['NorNet_IPv4Prefix'])
    except Exception as e:
       error('NorNet_IPv4Prefix setting "' + NorNet_Configuration['NorNet_IPv4Prefix'] + ' is invalid: ' + str(e))
-   if NorNet_Configuration['NorNet_IPv4Prefix'].prefixlen > 8:
+   if IPv4Network(NorNet_Configuration['NorNet_IPv4Prefix']).prefixlen > 8:
       error('NorNet_IPv4Prefix must be at least a /8 network!')
 
    try:
       NorNet_Configuration['NorNet_IPv6Prefix'] = IPv6Interface(NorNet_Configuration['NorNet_IPv6Prefix'])
    except Exception as e:
       error('NorNet_IPv6Prefix setting "' + NorNet_Configuration['NorNet_IPv6Prefix'] + ' is invalid: ' + str(e))
-   if NorNet_Configuration['NorNet_IPv6Prefix'].prefixlen > 48:
+   if IPv6Network(NorNet_Configuration['NorNet_IPv6Prefix']).prefixlen > 48:
       error('NorNet_IPv6Prefix must be at least a /48 network!')
 
    try:
       NorNet_Configuration['NorNet_IPv4TunnelPrefix'] = IPv4Interface(NorNet_Configuration['NorNet_IPv4TunnelPrefix'])
    except Exception as e:
       error('NorNet_IPv4TunnelPrefix setting "' + NorNet_Configuration['NorNet_IPv4TunnelPrefix'] + ' is invalid: ' + str(e))
-   if NorNet_Configuration['NorNet_IPv4TunnelPrefix'].prefixlen > 16:
+   if IPv4Network(NorNet_Configuration['NorNet_IPv4TunnelPrefix']).prefixlen > 16:
       error('NorNet_IPv4TunnelPrefix must be at least a /16 network!')
 
    try:
       NorNet_Configuration['NorNet_IPv6TunnelPrefix'] = IPv6Interface(NorNet_Configuration['NorNet_IPv6TunnelPrefix'])
    except Exception as e:
       error('NorNet_IPv6TunnelPrefix setting "' + NorNet_Configuration['NorNet_IPv6TunnelPrefix'] + ' is invalid: ' + str(e))
-   if NorNet_Configuration['NorNet_IPv6TunnelPrefix'].prefixlen > 80:
+   if IPv6Network(NorNet_Configuration['NorNet_IPv6TunnelPrefix']).prefixlen > 80:
       error('NorNet_IPv6TunnelPrefix must be at least a /80 network!')
 
    if includeAPIConfiguration == True:
