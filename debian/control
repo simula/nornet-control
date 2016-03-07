@@ -6,9 +6,8 @@ Homepage: https://www.nntb.no/
 Build-Depends: debhelper (>= 9),
                imagemagick,
                libfile-fcntllock-perl,
-               python (>= 2.7),
-               python-ipaddr,
-               python-support
+               python3,
+               python3-psycopg2
 Standards-Version: 3.9.6
 
 Package: nornet-management
@@ -44,7 +43,7 @@ Depends: apport-retrace,
          nmap,
          ntpdate,
          nttcp,
-         python-software-properties,
+         software-properties-common,
          reiserfsprogs,
          rsplib-tools,
          secure-delete,
@@ -139,7 +138,7 @@ Description: NorNet Development Tools
 
 Package: nornet-api
 Architecture: any
-Depends: python-ipaddr,
+Depends: python3-ipaddr,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
@@ -211,7 +210,7 @@ Architecture: all
 Depends: nfs-kernel-server,
          nornet-api,
          nornet-management,
-         python (>= 2.7),
+         python3,
          python-adns,
          tftpd-hpa,
          ${misc:Depends},
