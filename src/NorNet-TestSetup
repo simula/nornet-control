@@ -23,7 +23,7 @@ import re;
 import os;
 import base64;
 
-from ipaddr import IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
+from ipaddress import IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
 
 # NorNet
 from NorNetTools         import *;

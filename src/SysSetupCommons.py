@@ -212,9 +212,9 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                      network = str(makeNorNetIP(0, 0, 0, version))
 
                   if version == 4:
-                     outputFile.write('\nIPADDR'  + str(addressNumber) + '=' + str(address.ip)        + '\n')
-                     outputFile.write('NETMASK'   + str(addressNumber) + '=' + str(address.netmask)   + '\n')
-                     outputFile.write('BROADCAST' + str(addressNumber) + '=' + str(address.broadcast) + '\n')
+                     outputFile.write('\nIPADDR'  + str(addressNumber) + '=' + str(address.ip)                        + '\n')
+                     outputFile.write('NETMASK'   + str(addressNumber) + '=' + str(address.network.netmask)           + '\n')
+                     outputFile.write('BROADCAST' + str(addressNumber) + '=' + str(address.network.broadcast_address) + '\n')
                      if providerIndex == defaultProviderIndex:
                         outputFile.write('DNS1=' + str(gateway.ip) + '\n')
                      routesIPv4.append([ str(network), str(gateway.ip), str(metric) ])
@@ -304,7 +304,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                         ipv6String = ''
                      outputFile.write('ifconfig_' + interfaceName + ipv6String + aliasString + '="inet6 ' +
                                       str(address.ip) + ' prefixlen ' +
-                                      str(address.prefixlen) + '"\n')
+                                      str(address.network.prefixlen) + '"\n')
 
       # ====== Routes =======================================================
       for version in [ 4, 6 ]:

@@ -51,10 +51,10 @@ for nodeTag in nodeTagsList:
          needsUpdate = False
 
 if oldDistribution != distribution:
-   print 'Update ' + nodeName + ': ' + oldDistribution + ' -> ' + distribution
+   print('Update ' + nodeName + ': ' + oldDistribution + ' -> ' + distribution)
    addOrUpdateNodeTag(node['node_id'], 'pldistro', distribution)
    getPLCServer().UpdateNode(getPLCAuthentication(),
       node['node_id'],
       { 'boot_state' : 'reinstall' })
 else:
-   print 'Keeping ' + nodeName + ': ' + oldDistribution
+   print('Keeping ' + nodeName + ': ' + oldDistribution)

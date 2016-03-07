@@ -725,7 +725,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
          for i in range(0, len(dnsForwarders)):
             try:
                address = unquote(dnsForwarders[i])
-               dnsForwarder = IPAddress(address)
+               dnsForwarder = ip_address(address)
                optionsConfFile.write(' ' + str(dnsForwarder) + ';')
 
             except Exception as e:

@@ -22,8 +22,7 @@
 import re;
 import os;
 
-# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPAddress, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
+from ipaddress import ip_address, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
 
 # NorNet
 from NorNetTools         import *;
@@ -141,7 +140,7 @@ if ntpServers != None:
          try:
             result = socket.getaddrinfo (ntpServer, 123, type, socket.SOCK_DGRAM)
             for resultItem in result:
-               ntpServerList.append(str(IPAddress(resultItem[4][0])))
+               ntpServerList.append(str(ip_address(resultItem[4][0])))
                success = True
          except:
             continue
