@@ -26,7 +26,7 @@ from sys import *
 
 
 if len(argv) != 4:
-   print 'Usage: ' + argv[0] + ' [Input] [Output] [Aspect|A4]'
+   print('Usage: ' + argv[0] + ' [Input] [Output] [Aspect|A4]')
    exit(1)
 
 inputFileName  = argv[1]
