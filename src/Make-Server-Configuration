@@ -149,13 +149,13 @@ if ntpServers != None:
          error('Unable to resolve NTP server name: ' + ntpServer)
    ntpServerList = sorted(set(ntpServerList))
 
-print('Node:        ' + hostName + ' . ' + domainName)
-print('Node Index:  ' + str(nodeIndex))
-print('Site Index:  ' + str(siteIndex))
-print('Interface:   ' + interfaceName)
-print('Bridge:      ' + str(bridgeInterface))
-print('Providers:   ' + str(providerList))
-print('NTP Servers: ' + str(ntpServerList))
+print(('Node:        ' + hostName + ' . ' + domainName))
+print(('Node Index:  ' + str(nodeIndex)))
+print(('Site Index:  ' + str(siteIndex)))
+print(('Interface:   ' + interfaceName))
+print(('Bridge:      ' + str(bridgeInterface)))
+print(('Providers:   ' + str(providerList)))
+print(('NTP Servers: ' + str(ntpServerList)))
 
 
 writeInterfaceConfiguration('.new', variant, interfaceName, controlBoxMode,
