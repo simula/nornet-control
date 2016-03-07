@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 #  =================================================================
@@ -41,7 +41,7 @@ import bz2
 import shutil
 import socket
 import psycopg2
-import ConfigParser
+import configparser
 
 # NorNet
 from NorNetSiteSetup import *;
@@ -203,11 +203,11 @@ for siteIndex in siteList:
    for providerIndex in providerList:
       provider = providerList[providerIndex]
 
-      addressV4 = IPv4Network(provider['provider_tunnelbox_ipv4'])
-      addressV6 = IPv6Network(provider['provider_tunnelbox_ipv6'])
+      addressV4 = IPv4Interface(provider['provider_tunnelbox_ipv4'])
+      addressV6 = IPv6Interface(provider['provider_tunnelbox_ipv6'])
 
       addressList = [ addressV4.ip ]
-      if addressV6 != IPv6Network('::/0'):
+      if addressV6 != IPv6Interface('::/0'):
          addressList.append(addressV6.ip)
 
       for address in addressList:
