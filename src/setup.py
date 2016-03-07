@@ -1,4 +1,4 @@
-#/usr/bin/python
+#/usr/bin/python3
 #
 # Python Setup
 # Copyright (C) 2012-2015 by Thomas Dreibholz

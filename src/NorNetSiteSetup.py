@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # NorNet Site Setup
@@ -27,8 +27,7 @@ import hashlib;
 import datetime;
 import time;
 
-# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddress import ip_network, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
 from NorNetTools         import *;
@@ -283,7 +282,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
       i = 0
       for provider in providerList:
          if i <= NorNet_MaxProviders:
-            providerName = unicode(provider[0])
+            providerName = str(provider[0])
             providerIndex = -1
             for p in NorNet_ProviderList:
                if NorNet_ProviderList[p][0] == providerName:
@@ -310,7 +309,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
                providerUpstream   = int(provider[7])
                providerDownstream = int(provider[8])
             except:
-               print('WARNING: Incomplete provider metadata: ' + str(provider) + '\n')
+               print(('WARNING: Incomplete provider metadata: ' + str(provider) + '\n'))
 
             if addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_index', str(providerIndex)) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_index" tag to site ' + siteName)
@@ -360,7 +359,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
       for i in range(0, NorNet_MaxNTPServers):
          if i >= len(ntpServers):
             break
-         if addOrUpdateSiteTag(siteID, 'nornet_site_ntp' + str(i), str(IPNetwork(ntpServers[i]).ip)) <= 0:
+         if addOrUpdateSiteTag(siteID, 'nornet_site_ntp' + str(i), str(ip_network(ntpServers[i]).ip)) <= 0:
             error('Unable to add "nornet_site_ntp' + str(i) + '" tag to site ' + siteName)
 
       # Write a PlanetLabConf file to set the NTP server of nodes at the site
@@ -372,7 +371,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
             plcSiteNTPConf.write('server ' + str(ntpAddress.ip) + "\n")
          plcSiteNTPConf.close()
       except:
-         print('WARNING: Unable to write ' + plcSiteNTPConfName)
+         print(('WARNING: Unable to write ' + plcSiteNTPConfName))
 
       # ====== Set internal interface =======================================
       if addOrUpdateSiteTag(siteID, 'nornet_site_tb_internal_interface', tbInternalInterface) <= 0:
@@ -644,7 +643,7 @@ def makeNorNetNode(fullSliceList,
       fileSource      = nmConfigName.replace('/var/www/html/', '')
       fileDestination = '/etc/sysconfig/nodemanager'
       confFileID = addOrUpdateConfFile({
-         'postinstall_cmd' : u'service nm restart',
+         'postinstall_cmd' : 'service nm restart',
          'dest'            : fileDestination,
          'source'          : fileSource})
       if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
@@ -655,7 +654,7 @@ def makeNorNetNode(fullSliceList,
          nmConfig.write('OPTIONS=""\n')
          nmConfig.close()
       except:
-         print('WARNING: Unable to write ' + nmConfigName)
+         print(('WARNING: Unable to write ' + nmConfigName))
 
       # ====== Add yum repositories =========================================
       yumRepoSourceFile = codecs.open('Repositories/nornet.repo', 'r', 'utf-8')
@@ -672,7 +671,7 @@ def makeNorNetNode(fullSliceList,
          yumRepo.write(yumRepoSource)
          yumRepo.close()
       except:
-         print('WARNING: Unable to write ' + yumRepoName)
+         print(('WARNING: Unable to write ' + yumRepoName))
 
       yumKeyName = '/var/www/html/PlanetLabConf/nornet.key'
       try:
@@ -680,39 +679,39 @@ def makeNorNetNode(fullSliceList,
          yumKey.write(yumKeySource)
          yumKey.close()
       except:
-         print('WARNING: Unable to write ' + yumRepoName)
+         print(('WARNING: Unable to write ' + yumRepoName))
 
       fileSource      = yumRepoName.replace('/var/www/html/', '')
       fileDestination = '/etc/yum.myplc.d/nornet.repo'
       confFileID = addOrUpdateConfFile({
-         'file_owner'        : u'root',
-         'postinstall_cmd'   : u'',
-         'error_cmd'         : u'',
-         'preinstall_cmd'    : u'',
+         'file_owner'        : 'root',
+         'postinstall_cmd'   : '',
+         'error_cmd'         : '',
+         'preinstall_cmd'    : '',
          'dest'              : fileDestination,
          'ignore_cmd_errors' : False,
          'enabled'           : True,
-         'file_permissions'  : u'644',
+         'file_permissions'  : '644',
          'source'            : fileSource,
          'always_update'     : False,
-         'file_group'        : u'root'})
+         'file_group'        : 'root'})
       if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
          error('Unable to add repository configuration file to node ' + nodeHostName)
 
       fileSource      = yumKeyName.replace('/var/www/html/', '')
       fileDestination = '/etc/pki/rpm-gpg/nornet.key'
       confFileID = addOrUpdateConfFile({
-         'file_owner'        : u'root',
-         'postinstall_cmd'   : u'',
-         'error_cmd'         : u'',
-         'preinstall_cmd'    : u'',
+         'file_owner'        : 'root',
+         'postinstall_cmd'   : '',
+         'error_cmd'         : '',
+         'preinstall_cmd'    : '',
          'dest'              : fileDestination,
          'ignore_cmd_errors' : False,
          'enabled'           : True,
-         'file_permissions'  : u'644',
+         'file_permissions'  : '644',
          'source'            : fileSource,
          'always_update'     : False,
-         'file_group'        : u'root'})
+         'file_group'        : 'root'})
       if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
          error('Unable to add repository configuration file to node ' + nodeHostName)
 
@@ -736,39 +735,39 @@ def makeNorNetNode(fullSliceList,
                proxyConf.write('setenv no_proxy "' + siteNorNetDomain + '"\n')
             proxyConf.close()
          except:
-            print('WARNING: Unable to write ' + proxyConfName)
+            print(('WARNING: Unable to write ' + proxyConfName))
 
          fileSource      = 'PlanetLabConf/proxy/proxy.' + shell + '.' + siteNorNetDomain
          fileDestination = '/etc/profile.d/proxy.' + shell
          confFileID = addOrUpdateConfFile({
-            'file_owner'        : u'root',
-            'postinstall_cmd'   : u'',
-            'error_cmd'         : u'',
-            'preinstall_cmd'    : u'',
+            'file_owner'        : 'root',
+            'postinstall_cmd'   : '',
+            'error_cmd'         : '',
+            'preinstall_cmd'    : '',
             'dest'              : fileDestination,
             'ignore_cmd_errors' : False,
             'enabled'           : True,
-            'file_permissions'  : u'644',
+            'file_permissions'  : '644',
             'source'            : fileSource,
             'always_update'     : False,
-            'file_group'        : u'root'})
+            'file_group'        : 'root'})
          if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
             error('Unable to add proxy.' + shell + ' configuration file to node ' + nodeHostName)
 
       # ====== Hack to handle openvswitch start/stop correctly ==============
       # See https://docs.google.com/a/simula.no/document/d/1WRZ7kN6KwZRaeNOi51-uNmintCVwdkzhM2W3To6uV_Y/edit?pli=1 .
       confFileID = addOrUpdateConfFile({
-         'file_owner'        : u'root',
-         'postinstall_cmd'   : u'/bin/systemctl reenable openvswitch.service',
-         'error_cmd'         : u'',
-         'preinstall_cmd'    : u'',
-         'dest'              : u'/lib/systemd/system/openvswitch.service',
+         'file_owner'        : 'root',
+         'postinstall_cmd'   : '/bin/systemctl reenable openvswitch.service',
+         'error_cmd'         : '',
+         'preinstall_cmd'    : '',
+         'dest'              : '/lib/systemd/system/openvswitch.service',
          'ignore_cmd_errors' : False,
          'enabled'           : True,
-         'file_permissions'  : u'644',
-         'source'            : u'PlanetLabConf/openvswitch/openvswitch.service',
+         'file_permissions'  : '644',
+         'source'            : 'PlanetLabConf/openvswitch/openvswitch.service',
          'always_update'     : False,
-         'file_group'        : u'root'})
+         'file_group'        : 'root'})
       if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
          error('Unable to add openvswitch.service configuration file to node ' + nodeHostName)
 
@@ -796,7 +795,7 @@ def makeNorNetNode(fullSliceList,
       for slice in fullSliceList:
          sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, newNode)
          if sliceNodeIndex != 0:
-            print('Updating ' + slice['slice_name'])
+            print(('Updating ' + slice['slice_name']))
             _updateSliceNodeNetConfig(slice, newNode, site, sliceNodeIndex)
 
       return newNode

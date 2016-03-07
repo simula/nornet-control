@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # NorNet Tools
@@ -20,10 +20,8 @@
 # Contact: dreibh@simula.no
 
 
-# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
-
-from socket import getaddrinfo, AF_INET, AF_INET6;
+from ipaddress import ip_address, ip_network, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from socket    import getaddrinfo, AF_INET, AF_INET6;
 
 import os;
 import re;
@@ -38,7 +36,7 @@ import string;
 
 # ###### Print log message ##################################################
 def log(logstring):
-   print('\x1b[32m' + datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + ': ' + logstring + '\x1b[0m');
+   print(('\x1b[32m' + datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + ': ' + logstring + '\x1b[0m'));
 
 
 # ###### Abort with error ###################################################
@@ -95,7 +93,7 @@ def removeComment(line):
 
 # ###### Filter for text ####################################################
 def filterForTextOnly(s):
-   return filter(lambda x: x in '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz,.:!? \t', s)
+   return [x for x in s if x in '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz,.:!? \t']
 
 
 # ###### Get tag value or return a default ##################################
@@ -149,7 +147,7 @@ def getLocalAddresses(version):
 def resolveHostname(name, protocol=0):
    try:
       result = getaddrinfo(name, 123, protocol)
-      return(IPAddress(result[0][4][0]))
+      return(ip_address(result[0][4][0]))
    except:
       return None
 
@@ -219,9 +217,9 @@ def getZoneForAddress(addressObject, prefix):
 # ###### Convert name to unicode, ASCII and punycode representations ########
 def makeNameFromUnicode(name, isDNSName = True):
    if isDNSName == True:
-      unicodeName = unicode(name).lower()
+      unicodeName = str(name).lower()
    else:
-      unicodeName = unicode(name)
+      unicodeName = str(name)
    punycodeName = unicodeName.encode("idna")
    asciiName    = ''
    for i in range(0, len(unicodeName)):
@@ -235,32 +233,32 @@ def makeNameFromUnicode(name, isDNSName = True):
            (unicodeName[i] == '-') or
            (unicodeName[i] == '.')):
          asciiName = asciiName + unicodeName[i]
-      elif ((unicodeName[i] == u'ä') or (unicodeName[i] == u'æ')):
+      elif ((unicodeName[i] == 'ä') or (unicodeName[i] == 'æ')):
          asciiName = asciiName + 'ae'
-      elif ((unicodeName[i] == u'ö') or (unicodeName[i] == u'ø')):
+      elif ((unicodeName[i] == 'ö') or (unicodeName[i] == 'ø')):
          asciiName = asciiName + 'oe'
-      elif (unicodeName[i] == u'ü'):
+      elif (unicodeName[i] == 'ü'):
          asciiName = asciiName + 'ue'
-      elif (unicodeName[i] == u'ß'):
+      elif (unicodeName[i] == 'ß'):
          asciiName = asciiName + 'ss'
-      elif (unicodeName[i] == u'å'):
+      elif (unicodeName[i] == 'å'):
          asciiName = asciiName + 'aa'
-      elif (unicodeName[i] == u'ã'):
+      elif (unicodeName[i] == 'ã'):
          asciiName = asciiName + 'a'
-      elif (unicodeName[i] == u'ô'):
+      elif (unicodeName[i] == 'ô'):
          asciiName = asciiName + 'o'
-      elif (unicodeName[i] == u'ñ'):
+      elif (unicodeName[i] == 'ñ'):
          asciiName = asciiName + 'n'
-      elif (unicodeName[i] == u'ž'):
+      elif (unicodeName[i] == 'ž'):
          asciiName = asciiName + 'z'
-      elif (unicodeName[i] == u'š'):
+      elif (unicodeName[i] == 'š'):
          asciiName = asciiName + 's'
-      elif (unicodeName[i] == u'ū'):
+      elif (unicodeName[i] == 'ū'):
          asciiName = asciiName + 'u'
-      elif ( (unicodeName[i] == u'č') or (unicodeName[i] == u'ć') or (unicodeName[i] == u'ç')):
+      elif ( (unicodeName[i] == 'č') or (unicodeName[i] == 'ć') or (unicodeName[i] == 'ç')):
          asciiName = asciiName + 'c'
-      elif ( (unicodeName[i] == u'é') or (unicodeName[i] == u'è') or \
-             (unicodeName[i] == u'ê') or (unicodeName[i] == u'ë')) :
+      elif ( (unicodeName[i] == 'é') or (unicodeName[i] == 'è') or \
+             (unicodeName[i] == 'ê') or (unicodeName[i] == 'ë')) :
          asciiName = asciiName + 'e'
       else:
          error('Unhandled character "' + unicodeName[i] + '" in name ' + unicodeName)
@@ -276,7 +274,7 @@ def makeNameFromUnicode(name, isDNSName = True):
 # ###### Make directory, if it is not yet existing ##########################
 def makeDir(path):
    try:
-      os.mkdir(path, 0755)
+      os.mkdir(path, 0o755)
    except OSError as e:
       if e.errno == errno.EEXIST and os.path.isdir(path):
          pass

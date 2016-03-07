@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # NorNet PLC Configuration
@@ -23,19 +23,11 @@ import re;
 import sys;
 import pwd;
 import codecs;
+import configparser;
+import io;
+import xmlrpc.client;
 
-import ConfigParser;
-import StringIO;
-
-
-# XML-RPC
-if sys.version_info < (3,0,0):
-   import xmlrpclib;
-else:
-   import xmlrpc.client;
-
-# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPAddress, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddress import ip_address, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
 from NorNetTools         import *;
@@ -143,7 +135,7 @@ def checkParameter(parameter, choices):
    try:
       value = NorNet_Configuration[parameter]
    except:
-       return u''
+       return ''
    for choice in choices:
       if value == choice:
          return value
@@ -152,10 +144,7 @@ def checkParameter(parameter, choices):
 
 # ###### Read configuration file ############################################
 def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
-   sys.stdout = codecs.getwriter('utf8')(sys.stdout)
-   sys.stderr = codecs.getwriter('utf8')(sys.stderr)
-   sys.stdin  = codecs.getreader('utf8')(sys.stdin)
-   iniString  = u'[root]\n'
+   iniString  = '[root]\n'
 
    # ====== Open constants file =============================================
    if quietMode == False:
@@ -191,13 +180,13 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
 
 
    # ====== Build the configuration table ===================================
-   parsedConfigFile = ConfigParser.RawConfigParser()
+   parsedConfigFile = configparser.RawConfigParser()
    parsedConfigFile.optionxform = str   # Make it case-sensitive!
-   parsedConfigFile.readfp(StringIO.StringIO(iniString))
+   parsedConfigFile.readfp(io.StringIO(iniString))
    for parameterName in parsedConfigFile.options('root'):
       parameterValue = parsedConfigFile.get('root', parameterName)
       if parameterValue.find('\n'):
-         parameterValue = unicode.strip(unquote(removeComment(unicode.replace(parameterValue, '\n', ' '))))
+         parameterValue = str.strip(unquote(removeComment(str.replace(parameterValue, '\n', ' '))))
       else:
          parameterValue = removeComment(parameterValue.rstrip('\n'))
       # print '<' + parameterName + '> = <' + parameterValue + '>'
@@ -300,7 +289,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
                (NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] > NorNet_MaxProviderIndex)):
             error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex must be in [' + str(NorNet_MinProviderIndex) + '-' + str(NorNet_MaxProviderIndex) + ']!')
 
-      if isinstance(NorNet_Configuration['NorNet_LocalNode_ControlBox'], unicode):
+      if isinstance(NorNet_Configuration['NorNet_LocalNode_ControlBox'], str):
          if NorNet_Configuration['NorNet_LocalNode_ControlBox'] == 'yes':
             NorNet_Configuration['NorNet_LocalNode_ControlBox'] = True
          elif NorNet_Configuration['NorNet_LocalNode_ControlBox'] == 'no':
@@ -326,7 +315,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
                if ((a1 < NorNet_MinSliceIndex) or (a1 > NorNet_MaxSliceIndex) or \
                    (a2 < NorNet_MinSliceIndex) or (a2 > NorNet_MaxSliceIndex) or (a2 < a1)):
                   error('NorNet_Slice_NodeIndexRange bounds must be in [' + str(NorNet_MaxSliceIndex) + '-' + str(NorNet_MaxSliceIndex) + ']!')
-               NorNet_Configuration['NorNet_Slice_NodeIndexRange'] = range(a1, a2)
+               NorNet_Configuration['NorNet_Slice_NodeIndexRange'] = list(range(a1, a2))
             else:
                error('NorNet_Slice_NodeIndexRange bounds must be range in form of \"start end\"!')
          except Exception as e:

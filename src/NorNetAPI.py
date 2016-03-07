@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # NorNet PLC API
@@ -24,15 +24,9 @@ import re;
 import sys;
 import pwd;
 import getpass;
+import xmlrpc.client;
 
-# XML-RPC
-if sys.version_info < (3,0,0):
-   import xmlrpclib;
-else:
-   import xmlrpc.client;
-
-# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPAddress, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddress import ip_address, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
 
 # NorNet
 from NorNetConfiguration import *;
@@ -62,10 +56,7 @@ def loginToPLC(overrideUser = None, quietMode = False):
       log('Logging into PLC ' + user + '/' + str(plcAddress) + ' ...')
    try:
       apiURL = 'https://[' + str(plcAddress) + ']/PLCAPI/'
-      if sys.version_info < (3,0,0):
-         plc_server = xmlrpclib.ServerProxy(apiURL, allow_none=True)
-      else:
-         plc_server = xmlrpc.client.ServerProxy(apiURL, allow_none=True)
+      plc_server = xmlrpc.client.ServerProxy(apiURL, allow_none=True)
 
       plc_authentication = {}
       plc_authentication['AuthMethod'] = 'password'
@@ -154,7 +145,7 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
             'site_index'                  : siteIndex,
             'site_short_name'             : siteAbbrev,
             'site_long_name'              : site['name'],
-            'site_utf8'                   : getTagValue(siteTagsList, 'nornet_site_utf8', unicode(site['name'])),
+            'site_utf8'                   : getTagValue(siteTagsList, 'nornet_site_utf8', str(site['name'])),
             'site_domain'                 : siteDomain,
             'site_latitude'               : site['latitude'],
             'site_longitude'              : site['longitude'],
@@ -328,7 +319,7 @@ def fetchNorNetNode(nodeNameToFind = None, site = None):
             'node_site_id'          : nodeSiteID,
             'node_index'            : nodeIndex,
             'node_name'             : node['hostname'],
-            'node_utf8'             : getTagValue(nodeTagsList, 'nornet_node_utf8', unicode(node['hostname'])),
+            'node_utf8'             : getTagValue(nodeTagsList, 'nornet_node_utf8', str(node['hostname'])),
             'node_nornet_interface' : nodeInterface,
             'node_model'            : node['model'],
             'node_type'             : 'NorNet Managed Node',
