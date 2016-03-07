@@ -26,7 +26,7 @@ import pwd;
 import getpass;
 import xmlrpc.client;
 
-from ipaddress import ip_address, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddress import ip_address, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
 
 # NorNet
 from NorNetConfiguration import *;
@@ -187,12 +187,12 @@ def getNorNetProvidersForSite(norNetSite):
          if providerIndex <= 0:
             continue
          providerInfo        = getNorNetProviderInfo(providerIndex)
-         providerTbIPv4      = IPv4Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv4', '0.0.0.0/0'))
+         providerTbIPv4      = IPv4Interface(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv4', '0.0.0.0/0'))
          providerGwIPv4      = IPv4Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_gateway_ipv4', '0.0.0.0'))
-         if not providerGwIPv4 in providerTbIPv4:
+         if not providerGwIPv4 in providerTbIPv4.network:
             error('Bad IPv4 network/gateway settings of provider ' + providerInfo[0] + \
                   ': ' + str(providerGwIPv4) + ' not in ' + str(providerGwIPv4))
-         providerTbIPv6      = IPv6Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::/0'))
+         providerTbIPv6      = IPv6Interface(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::/0'))
          providerGwIPv6      = IPv6Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_gateway_ipv6', '::'))
          try:
             providerType        = filterForTextOnly(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_type', ''))
@@ -202,7 +202,7 @@ def getNorNetProvidersForSite(norNetSite):
             providerType        = ''
             providerDownstream  = 0
             providerUpstream    = 0
-         if not providerGwIPv6 in providerTbIPv6:
+         if not providerGwIPv6 in providerTbIPv6.network:
             error('Bad IPv6 network/gateway settings of provider ' + providerInfo[0] + \
                   ': ' + str(providerGwIPv6) + ' not in ' + str(providerGwIPv6))
          providerTbInterface = getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_interface', '')

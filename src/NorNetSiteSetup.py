@@ -27,7 +27,7 @@ import hashlib;
 import datetime;
 import time;
 
-from ipaddress import ip_network, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddress import ip_interface, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
 
 # NorNet
 from NorNetTools         import *;
@@ -297,9 +297,9 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
                gotDefaultProvider = True
 
             providerInterface   = str(provider[1])
-            providerAddressIPv4 = IPv4Network(provider[2])
+            providerAddressIPv4 = IPv4Interface(provider[2])
             providerGatewayIPv4 = IPv4Address(provider[3])
-            providerAddressIPv6 = IPv6Network(provider[4])
+            providerAddressIPv6 = IPv6Interface(provider[4])
             providerGatewayIPv6 = IPv6Address(provider[5])
             providerType       = ''
             providerUpstream   = 0
@@ -359,7 +359,7 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
       for i in range(0, NorNet_MaxNTPServers):
          if i >= len(ntpServers):
             break
-         if addOrUpdateSiteTag(siteID, 'nornet_site_ntp' + str(i), str(ip_network(ntpServers[i]).ip)) <= 0:
+         if addOrUpdateSiteTag(siteID, 'nornet_site_ntp' + str(i), str(ip_interface(ntpServers[i]).ip)) <= 0:
             error('Unable to add "nornet_site_ntp' + str(i) + '" tag to site ' + siteName)
 
       # Write a PlanetLabConf file to set the NTP server of nodes at the site

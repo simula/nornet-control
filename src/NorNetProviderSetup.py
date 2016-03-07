@@ -21,7 +21,7 @@
 
 import hashlib;
 
-from ipaddress import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddress import IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
 
 # NorNet
 import NorNetConfiguration;
@@ -59,7 +59,7 @@ def makeNorNetIP(provider, site, node, version, sliceIndex = 0):
 
       a = IPv4Address('0.' + str(p) + '.' + str(s) + '.' + str(n))
       a = int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix']) | int(a)
-      return IPv4Network(str(IPv4Address(a)) + '/' + str(prefix))
+      return IPv4Interface(str(IPv4Address(a)) + '/' + str(prefix))
 
    # ====== IPv6 handling ===================================================
    else:
@@ -77,7 +77,7 @@ def makeNorNetIP(provider, site, node, version, sliceIndex = 0):
                       str.replace(hex(sliceIndex), '0x', '') + ':' + \
                       str.replace(hex(n), '0x', ''))
       a = IPv6Address(int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix']) | int(a))
-      return IPv6Network(str(a) + '/' + str(prefix))
+      return IPv6Interface(str(a) + '/' + str(prefix))
 
 
 # ###### Get NorNet information from address ################################
@@ -166,10 +166,10 @@ def makeNorNetTunnelIP(outgoingSite, outgoingProvider, incomingSite, incomingPro
       mask    = ~int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4TunnelPrefix'].netmask) & 0xffffffff
       prefix  = int(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4TunnelPrefix'])
       address = prefix | ((value & mask) | side)
-      return IPv4Network(str(IPv4Address(address)) + '/31')
+      return IPv4Interface(str(IPv4Address(address)) + '/31')
    else:
       address = IPv6Address(int(address) | (side + 1))
-      return IPv6Network(str(address) + '/112')
+      return IPv6Interface(str(address) + '/112')
 
 
 # ###### Get NorNet interface IPv4 address ##################################

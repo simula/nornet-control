@@ -22,7 +22,7 @@
 import re;
 import os;
 
-from ipaddress import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddress import IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
 
 # NorNet
 from NorNetTools         import *;

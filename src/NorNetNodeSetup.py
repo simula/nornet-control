@@ -27,7 +27,7 @@ import codecs;
 import socket;
 import platform;
 
-from ipaddress import ip_address, ip_network, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddress import ip_address, ip_interface, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
 
 # NorNet
 from NorNetConfiguration import *;

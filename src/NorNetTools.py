@@ -20,7 +20,7 @@
 # Contact: dreibh@simula.no
 
 
-from ipaddress import ip_address, ip_network, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddress import ip_address, ip_interface, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
 from socket    import getaddrinfo, AF_INET, AF_INET6;
 
 import os;

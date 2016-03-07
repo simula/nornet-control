@@ -23,7 +23,7 @@ import re;
 import os;
 
 # Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPAddress, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddr import IPAddress, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
 
 # NorNet
 from NorNetTools         import *;

@@ -1019,7 +1019,7 @@ def makeIPSECConfiguration(localSite):
 def makeRegistrarConfiguration(localSite):
    localSiteIndex       = localSite['site_index']
    localProviderList    = getNorNetProvidersForSite(localSite)
-   localAddresses       = [ IPv6Network('::1/128'), IPv4Network('127.0.0.1/32') ]
+   localAddresses       = [ IPv6Interface('::1/128'), IPv4Interface('127.0.0.1/32') ]
    centralSite          = fullSiteList[NorNet_SiteIndex_Central]
    centralSiteProviders = getNorNetProvidersForSite(centralSite)
 
@@ -1260,7 +1260,7 @@ def makeGRELinkLocal(networkID,
                      remoteProviderIndex, remoteSiteIndex):
    # Needs separate spaces for "gre" and "seks" interfaces!
    # This feature is provided by networkID.
-   result = IPv6Network('fe80::' + \
+   result = IPv6Interface('fe80::' + \
                         str.replace(hex(networkID),           '0x', '') + ':' + \
                         str.replace(hex(localProviderIndex),  '0x', '') + ':' + \
                         str.replace(hex(localSiteIndex),      '0x', '') + ':' + \
@@ -1360,14 +1360,14 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
       providerFile.write('PROVIDER_INTERNAL_TABLE_TOS_PREF='    + str(internalRoutingTableTOSPref)    + '\n')
       providerFile.write('PROVIDER_INTERNAL_TABLE_SOURCE_PREF=' + str(internalRoutingTableSourcePref) + '\n')
 
-      externalNetworkIPv4 = IPv4Network(str(localProvider['provider_tunnelbox_ipv4'].network) + '/' + \
+      externalNetworkIPv4 = IPv4Interface(str(localProvider['provider_tunnelbox_ipv4'].network) + '/' + \
                                         str(localProvider['provider_tunnelbox_ipv4'].prefixlen))
       providerFile.write('PROVIDER_EXTERNAL_NETWORK_IPv4="' + str(externalNetworkIPv4) + '"\n')
       providerFile.write('PROVIDER_EXTERNAL_GATEWAY_IPv4="' + str(localProvider['provider_gateway_ipv4']) + '"\n')
       providerFile.write('PROVIDER_EXTERNAL_TUNNELBOX_IPv4="' + str(localProvider['provider_tunnelbox_ipv4'].ip) + '"\n')
 
 
-      externalNetworkIPv6 = IPv6Network(str(localProvider['provider_tunnelbox_ipv6'].network) + '/' + \
+      externalNetworkIPv6 = IPv6Interface(str(localProvider['provider_tunnelbox_ipv6'].network) + '/' + \
                                         str(localProvider['provider_tunnelbox_ipv6'].prefixlen))
       if externalNetworkIPv6.prefixlen > 0:
          providerFile.write('PROVIDER_EXTERNAL_NETWORK_IPv6="' + str(externalNetworkIPv6) + '"\n')
@@ -1557,11 +1557,11 @@ def makeHiPerConTracerConfiguration(localSite):
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
 
-      addressV4 = IPv4Network(localProvider['provider_tunnelbox_ipv4'])
-      addressV6 = IPv6Network(localProvider['provider_tunnelbox_ipv6'])
+      addressV4 = IPv4Interface(localProvider['provider_tunnelbox_ipv4'])
+      addressV6 = IPv6Interface(localProvider['provider_tunnelbox_ipv6'])
 
       outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -source=' + str(addressV4.ip))
-      if addressV6 != IPv6Network('::/0'):
+      if addressV6 != IPv6Interface('::/0'):
          outputFile.write(' -source=' + str(addressV6.ip))
       outputFile.write('"\n')
    outputFile.write('\n')
@@ -1578,11 +1578,11 @@ def makeHiPerConTracerConfiguration(localSite):
       for remoteProviderIndex in remoteProviderList:
          remoteProvider = remoteProviderList[remoteProviderIndex]
 
-         addressV4 = IPv4Network(remoteProvider['provider_tunnelbox_ipv4'])
-         addressV6 = IPv6Network(remoteProvider['provider_tunnelbox_ipv6'])
+         addressV4 = IPv4Interface(remoteProvider['provider_tunnelbox_ipv4'])
+         addressV6 = IPv6Interface(remoteProvider['provider_tunnelbox_ipv6'])
 
          outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -destination=' + str(addressV4.ip))
-         if addressV6 != IPv6Network('::/0'):
+         if addressV6 != IPv6Interface('::/0'):
             outputFile.write(' -destination=' + str(addressV6.ip))
          outputFile.write('"\n')
 
