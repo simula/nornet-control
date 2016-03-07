@@ -35,10 +35,10 @@ nodeList = getPLCServer().GetNodes(getPLCAuthentication(),
               [ 'hostname', 'boot_state', 'run_level' ])
 
 for node in nodeList:
-   print node
+   print(node)
    if ((node['boot_state'] == 'boot') and
        (node['run_level'] == 'failboot')):
-      print "-> reinstall"
+      print("-> reinstall")
       getPLCServer().UpdateNode(getPLCAuthentication(),
          node['hostname'],
          { 'boot_state' : 'reinstall' })
