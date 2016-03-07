@@ -4,11 +4,16 @@ Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: https://www.nntb.no/
 Build-Depends: debhelper (>= 9),
+               dh-python,
                imagemagick,
                libfile-fcntllock-perl,
-               python3,
-               python3-psycopg2
-Standards-Version: 3.9.6
+               python (>= 2.6~),
+               python3 (>= 3.2~),
+               python3-psycopg2,
+               python3-setuptools,
+               python3-wand
+Standards-Version: 3.9.7
+X-Python3-Version: >= 3.2
 
 Package: nornet-management
 Architecture: any
@@ -121,8 +126,8 @@ Depends: autoconf,
          module-init-tools,
          pbuilder,
          pkg-config,
-         python-pythonmagick,
          python3-psycopg2,
+         python3-wand,
          quilt,
          r-base,
          rpm,
