@@ -850,11 +850,6 @@ activateProvider ()
       # 2. If TOS is set, select outgoing provider accordingly
       # 3. Otherwise, use source address to determine the outgoing provider.
 
-      # NOTE: Add NorNet IP range to the providers' routing tables as well:
-      #       Packets into the NorNet network should not be routed via these tables
-      #       (they will be encapsulated in the tunnel packets)
-      # -> necessary to answer ping to external ISP address from internal address (monitor)
-
       for externalAddress in $PROVIDER_EXTERNAL_TUNNELBOX_IPv4 $PROVIDER_EXTERNAL_TUNNELBOX_IPv6 ; do
          add-table-selector "$PROVIDER_EXTERNAL_TABLE" "$PROVIDER_EXTERNAL_TABLE_PREF" from "$externalAddress"
       done && \
@@ -864,8 +859,6 @@ activateProvider ()
          ip -6 route add "$PROVIDER_EXTERNAL_NETWORK_IPv6" dev "$PROVIDER_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" && \
          ip -6 route add default dev "$PROVIDER_INTERFACE" via "$PROVIDER_EXTERNAL_GATEWAY_IPv6" table "$PROVIDER_EXTERNAL_TABLE"
       fi && \
-      ip -4 route add "$NORNET_NETWORK_IPv4" dev "$NORNET_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" && \
-      ip -6 route add "$NORNET_NETWORK_IPv6" dev "$NORNET_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" && \
       for providerNetwork in $PROVIDER_INTERNAL_NETWORK_IPv4 $PROVIDER_INTERNAL_NETWORK_IPv6 $NORNET_TUNNEL_NETWORK_IPv4 $NORNET_TUNNEL_NETWORK_IPv6 ; do
          add-table-selector main "$PROVIDER_INTERNAL_TABLE_DEST_PREF" to "$providerNetwork"
       done && \
@@ -905,8 +898,6 @@ deactivateProvider ()
    if [[ "$2" =~ ^@ALL$|^${PROVIDER_SHORT_NAME}$|^${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME},|,${PROVIDER_SHORT_NAME}$ ]] ; then
       log-action "Deactivating provider $PROVIDER_LONG_NAME."
 
-      ip -4 route del "$NORNET_NETWORK_IPv4" dev "$NORNET_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" || true && \
-      ip -6 route del "$NORNET_NETWORK_IPv6" dev "$NORNET_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" || true && \
       ip -4 route del "$PROVIDER_EXTERNAL_NETWORK_IPv4" dev "$PROVIDER_INTERFACE" table "$PROVIDER_EXTERNAL_TABLE" || true && \
       ip -4 route del default dev "$PROVIDER_INTERFACE" via "$PROVIDER_EXTERNAL_GATEWAY_IPv4" table "$PROVIDER_EXTERNAL_TABLE" || true && \
       if [ "$PROVIDER_EXTERNAL_NETWORK_IPv6" != "" ] ; then
