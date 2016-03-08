@@ -19,6 +19,7 @@ while [ $# -ge 1 ] ; do
    machine="$1"
    shift
 
+   OLD_IFS=$IFS
    IFS=$'\n'
    disks=`find "$HOME/VirtualBox VMs/$machine/" -name "*.vdi" -or -name "*.vmdk" -or -name "*.raw" -or -name "*.img" -or -name "*.qcow2"`
    if [ "$disks" != "" ] ; then
@@ -47,7 +48,7 @@ while [ $# -ge 1 ] ; do
       <source file='$newDisk'/>
       <target dev='vd`printf "%1x" $device`' bus='virtio'/>
       <alias name='virtio-disk$diskNumber'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='`printf "%02x" $slot`' function='0x0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='`printf "0x%02x" $slot`' function='0x0'/>
     </disk>
 "
 
@@ -71,6 +72,8 @@ while [ $# -ge 1 ] ; do
       echo >&2 "ERROR: Disk of $machine not found!"
    fi
 
+   IFS=$OLD_IFS
+
    let vncPort=$vncPort+1
 done
 
@@ -78,5 +81,5 @@ echo "Defining VMs:"
 chown -R nornetpp:nornetpp $HOME/KVM
 cd $HOME/KVM
 for xml in $xmlList ; do
-   virsh define $xml || true
+   virsh define "$xml" || true
 done
