@@ -21,23 +21,27 @@
 SLICE=srl_test
 KEY=~/.ssh/test2
 
+
+function check-node ()
+{
+   local nodeName="$1"
+   if ! ping -c3 >/dev/null 2>&1 ; then
+      ssh -oStrictHostKeyChecking=no -oConnectTimeout=10 -i $KEY $SLICE@$nodeName echo "Node is OK" >$nodeName.log 2>&1
+      if [ "`head -n1 $nodeName.log`" = "Node is OK" ] ; then
+         echo -e "$site\tOK\t$nodeName"
+      else
+         echo -e "$site\tBAD\t$nodeName\t\"`head -n1 $nodeName.log | tr --delete '\n\r'`\""
+      fi
+   else
+      echo -e "$site\tUNREACHABLE\t$nodeName"
+   fi
+}
+
+
 ./Get-Nodes | awk '{ print $2 }' | xargs -n1 | (
    while read node ; do
       site=`echo "$node" | sed -e "s/^[a-z0-9]*\.//g"`
-      echo "Trying $node ..."
-      (
-         if ! ping -c3 >/dev/null 2>&1 ; then
-            result=`ssh -oStrictHostKeyChecking=no -oConnectTimeout=30 -i $KEY $SLICE@$node echo "Node is OK"`
-            if [ "$result" = "Node is OK" ] ; then
-               echo -e "$site\tOK\t$node"
-            else
-               echo -e "$site\tBAD\t$node"
-               echo "$result"
-            fi
-         else
-            echo -e "$site\tUNREACHABLE\t$node"
-         fi
-      ) &
+      check-node "$node" &
    done
    wait
 )
