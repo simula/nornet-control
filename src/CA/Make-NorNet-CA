@@ -1,0 +1,262 @@
+#!/bin/bash -e
+#
+# NorNet CA Setup
+# Copyright (C) 2015-2016 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+SERVER_DIRECTORY=NorNet-Servers   # <-- where to place server certificates
+CA_DIRECTORY=NorNet-CAs           # <-- where to place CAs
+CA_KEYLEN=16384
+CERT_KEYLEN=$(($CA_KEYLEN/2))
+
+CA_DAYS=3650     # 10 years
+CERT_DAYS=1825   # 5 years
+
+SUBJECTHEADER_SRL="/C=NO/ST=Akershus/L=Fornebu/O=Simula Research Laboratory/OU=Centre for Resilient Networks and Applications"
+SUBJECTHEADER_UDE="/C=DE/ST=Nordrhein-Westfalen/L=Essen/O=Universität Duisburg-Essen/OU=Institut für Experimentelle Mathematik"
+
+
+# ###### Make a CA ##########################################################
+make-ca ()
+{
+   EXTENSION="$1"
+   UPPERLEVEL="$2"
+   NAME="$3"
+   SUBJECT="$4"
+
+   echo ""
+   echo -e "\x1b[34m###### Creating CA $NAME ######\x1b[0m"
+   echo ""
+
+   mkdir -p -m 0700 \
+      $CA_DIRECTORY/$NAME \
+      $CA_DIRECTORY/$NAME/certs \
+      $CA_DIRECTORY/$NAME/crl \
+      $CA_DIRECTORY/$NAME/csr \
+      $CA_DIRECTORY/$NAME/newcerts \
+      $CA_DIRECTORY/$NAME/private \
+      $CA_DIRECTORY/$NAME/chains
+   if [ ! -e $CA_DIRECTORY/$NAME/index.txt ] ; then
+      touch $CA_DIRECTORY/$NAME/index.txt
+   fi
+   if [ ! -e $CA_DIRECTORY/$NAME/serial ] ; then
+      echo "2000" >$CA_DIRECTORY/$NAME/serial
+   fi
+   if [ ! -e $CA_DIRECTORY/$NAME/crlnumber ] ; then
+      echo "2000" >$CA_DIRECTORY/$NAME/crlnumber
+   fi
+
+   # ====== Create key ======================================================
+   if [ -e $CA_DIRECTORY/$NAME/private/$NAME.key ] ; then
+      echo >&2 "ERROR: Key $CA_DIRECTORY/$NAME/private/$NAME.key already exists!"
+      exit 1
+   fi
+   if [ ! -e $NAME.password ] ; then
+      echo >&2 "ERROR: Key $NAME.password does not exist!"
+      echo >&2 "Create this file containing the password on the first line!"
+      exit 1
+   fi
+   echo "- Creating key for $NAME"
+   openssl genrsa -aes256 \
+      -passout file:$NAME.password \
+      -out $CA_DIRECTORY/$NAME/private/$NAME.key \
+      $CA_KEYLEN
+
+   if [ "$UPPERLEVEL" = "root" ] ; then
+      # ====== Create top-level certificate =================================
+      env SAN="" openssl req -utf8 -new -days $CA_DAYS \
+         -x509 \
+         -config $NAME.config -extensions $EXTENSION \
+         -key $CA_DIRECTORY/$NAME/private/$NAME.key \
+         -passin file:$NAME.password \
+         -out $CA_DIRECTORY/$NAME/certs/$NAME.crt -outform PEM \
+         -subj "$SUBJECT"
+   else
+      # ====== Create signed certificate ====================================
+      echo "- Creating CSR for $NAME"
+      env SAN="" openssl req -utf8 -new \
+         -key $CA_DIRECTORY/$NAME/private/$NAME.key \
+         -passin file:$NAME.password \
+         -out $CA_DIRECTORY/$NAME/certs/$NAME.csr -days $CA_DAYS \
+         -config $NAME.config -extensions $EXTENSION \
+         -subj "$SUBJECT"
+
+      echo "- Letting $UPPERLEVEL issue CRT for $NAME"
+      env SAN="" openssl ca -days $CA_DAYS -batch -notext \
+         -config $UPPERLEVEL.config -extensions $EXTENSION \
+         -passin file:$UPPERLEVEL.password \
+         -in $CA_DIRECTORY/$NAME/certs/$NAME.csr \
+         -out $CA_DIRECTORY/$NAME/certs/$NAME.crt \
+         -subj "$SUBJECT"
+   fi
+
+   # ====== Write chain file ================================================
+   echo "- Writing chain to $NAME"
+   if [ "$UPPERLEVEL" = "root" ] ; then
+      cp $CA_DIRECTORY/$NAME/certs/$NAME.crt $CA_DIRECTORY/$NAME/chains/$NAME-chain.pem
+      openssl verify -verbose -CAfile $CA_DIRECTORY/$NAME/chains/$NAME-chain.pem $CA_DIRECTORY/$NAME/certs/$NAME.crt
+   else
+      (
+         cat $CA_DIRECTORY/$UPPERLEVEL/chains/$UPPERLEVEL-chain.pem
+         cat $CA_DIRECTORY/$NAME/certs/$NAME.crt
+      ) >$CA_DIRECTORY/$NAME/chains/$NAME-chain.pem
+      openssl verify -CAfile $CA_DIRECTORY/$UPPERLEVEL/chains/$UPPERLEVEL-chain.pem $CA_DIRECTORY/$NAME/certs/$NAME.crt
+   fi
+
+   # ====== Initialise CRL ==================================================
+   echo "- Initialising CRL for $NAME"
+   env SAN="" openssl ca -gencrl \
+      -config $NAME.config \
+      -passin file:$NAME.password \
+      -out $CA_DIRECTORY/$NAME/crl/$NAME.crl
+}
+
+
+# ###### Revoke a CA ########################################################
+revoke-ca ()
+{
+   UPPERLEVEL="$1"
+   NAME="$2"
+
+   echo ""
+   echo -e "\x1b[32m###### Revoking CA certificate $NAME ######\x1b[0m"
+   echo ""
+
+   if [ -e "$CA_DIRECTORY/$NAME/certs/$NAME.crt" ] ; then
+      env SAN="" openssl ca -gencrl \
+         -config $UPPERLEVEL.config \
+         -passin file:$UPPERLEVEL.password \
+         -revoke $CA_DIRECTORY/$NAME/certs/$NAME.crt || true
+      rm -f $CA_DIRECTORY/$NAME/private/$NAME.key
+   else
+      echo "Certificate does not exist: $CA_DIRECTORY/$NAME/certs/$NAME.crt"
+   fi
+}
+
+
+# ###### Replace a CA #######################################################
+replace-ca ()
+{
+   if [ -e "$CA_DIRECTORY/$3/certs/$3.crt" ] ; then
+      revoke-ca "$2" "$3"
+   fi
+   make-ca "$1" "$2" "$3" "$4"
+}
+
+
+# ###### Make a server certificate ##########################################
+make-server-certificate ()
+{
+   EXTENSION="$1"
+   UPPERLEVEL="$2"
+   NAME="$3"
+   SUBJECT="$4"
+   ALTNAME="$5"
+
+   echo ""
+   echo -e "\x1b[34m###### Creating certificate $NAME ######\x1b[0m"
+   echo ""
+
+   mkdir -p -m 0700 $SERVER_DIRECTORY/$NAME
+   if [ -e $SERVER_DIRECTORY/$NAME.key ] ; then
+      echo >&2 "ERROR: Key $SERVER_DIRECTORY/$NAME/$NAME.key already exists!"
+      exit 1
+   fi
+
+   # ====== Create key ======================================================
+   openssl genrsa -out $SERVER_DIRECTORY/$NAME/$NAME.key $CERT_KEYLEN
+
+   # ====== Create server certificate =======================================
+   # NOTE:
+   # SAN environment variable is used by config files for subjectAltName setting!
+
+   echo "- Creating CSR for $NAME"
+   env SAN="$ALTNAME" openssl req -new \
+      -config $UPPERLEVEL.config -extensions $EXTENSION \
+      -key $SERVER_DIRECTORY/$NAME/$NAME.key \
+      -out $SERVER_DIRECTORY/$NAME/$NAME.csr -days $CERT_DAYS -outform PEM \
+      -subj "$SUBJECT"
+
+   echo "- Letting $UPPERLEVEL issue CRT for $NAME"
+   env SAN="$ALTNAME" openssl ca \
+      -config $UPPERLEVEL.config -extensions $EXTENSION \
+      -passin file:$UPPERLEVEL.password \
+      -batch -notext \
+      -days $CERT_DAYS \
+      -in $SERVER_DIRECTORY/$NAME/$NAME.csr \
+      -out $CA_DIRECTORY/$UPPERLEVEL/certs/$NAME.crt \
+      -subj "$SUBJECT"
+   cp $CA_DIRECTORY/$UPPERLEVEL/certs/$NAME.crt $SERVER_DIRECTORY/$NAME/$NAME.crt
+
+   openssl verify -verbose -CAfile $CA_DIRECTORY/$UPPERLEVEL/chains/$UPPERLEVEL-chain.pem $SERVER_DIRECTORY/$NAME/$NAME.crt
+}
+
+
+# ###### Revoke a server certificate ########################################
+revoke-server-certificate ()
+{
+   UPPERLEVEL="$1"
+   NAME="$2"
+
+   echo ""
+   echo -e "\x1b[32m###### Revoking Certificate: $NAME ######\x1b[0m"
+   echo ""
+
+   if [ -e "$SERVER_DIRECTORY/$NAME/$NAME.crt" ] ; then
+      env SAN="" openssl ca -gencrl \
+         -config $UPPERLEVEL.config \
+         -passin file:$UPPERLEVEL.password \
+         -revoke $SERVER_DIRECTORY/$NAME/$NAME.crt || true
+   else
+      echo "Certificate does not exist: $SERVER_DIRECTORY/$NAME/$NAME.crt"
+   fi
+}
+
+
+# ###### Replace a server certificate #######################################
+replace-server-certificate ()
+{
+   if [ -e "$SERVER_DIRECTORY/$3/$3.crt" ] ; then
+      revoke-server-certificate "$2" "$3"
+   fi
+   make-server-certificate "$1" "$2" "$3" "$4" "$5"
+}
+
+
+# ###### NorNet CA ##########################################################
+# make-ca v3_ca              root             NorNet-CA-Level1     "$SUBJECTHEADER_SRL/CN=NorNet Level-1 CA"
+# --- revoke-ca NorNet-CA-Level1 NorNet-CA-Level2
+# make-ca v3_ca              NorNet-CA-Level1 NorNet-CA-Level2     "$SUBJECTHEADER_SRL/CN=NorNet Level-2 CA"
+# --- revoke-ca NorNet-CA-Level2 NorNet-CA-Simula
+# make-ca v3_leaf_ca NorNet-CA-Level2 NorNet-CA-Simula     "$SUBJECTHEADER_SRL/CN=*.simula.nornet"
+# --- revoke-ca NorNet-CA-Level2 NorNet-CA-UDE
+# make-ca v3_leaf_ca NorNet-CA-Level2 NorNet-CA-UDE        "$SUBJECTHEADER_UDE/CN=*.ude.nornet"
+
+
+# ###### NorNet Servers #####################################################
+# make-server-certificate server_cert NorNet-CA-Simula   monitor.simula.nornet \
+#    "$SUBJECTHEADER_SRL/CN=monitor.simula.nornet" "DNS:holmenkollen.simula.nornet"
+
+
+# ###### Test Setup #########################################################
+# replace-ca v3_intermediate_ca NorNet-CA-Level2 NorNet-CA-Test       "$SUBJECTHEADER_SRL/CN=*.test"
+# replace-ca v3_leaf_ca         NorNet-CA-Test   NorNet-CA-Test-Alpha "$SUBJECTHEADER_SRL/CN=*.alpha.test"
+
+CERT_KEYLEN=4096
+replace-server-certificate server_cert NorNet-CA-Test-Alpha   ullevaalseter.alpha.test   "$SUBJECTHEADER_SRL/CN=ullevaalseter.alpha.test" \
+   "DNS:ullevaalseter.alpha.test,DNS:plc.alpha.test,IP:11.254.1.2,IP:11.255.1.2,IP:fd00:cafe:0:ff01::2,IP:fd00:cafe:0:fe01::2,IP:10.1.1.219"

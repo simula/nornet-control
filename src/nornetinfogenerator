@@ -126,6 +126,9 @@ for siteIndex in siteList:
 
 for providerIndex in sorted(providerSet):
    provider = NorNet_ProviderList[providerIndex]
+   if provider == None:
+      sys.stderr.write('WARNING: No information about provider ' + str(providerIndex) + '!\n')
+      continue
 
    # ------ PostgreSQL has to UPSERT yet -> ensure that providers are there -
    try:

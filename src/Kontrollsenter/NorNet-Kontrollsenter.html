@@ -1,8 +1,29 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="no">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="nb_NO">
+
+<!--
+// NorNet Kontrollsenter
+// Copyright (C) 2015-2016 by Thomas Dreibholz
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+// Contact: dreibh@simula.no
+-->
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width" />
 <meta name="Author" content="Thomas Dreibholz" />
 <meta name="Description" content="NorNet-Kontrollsenter" />
 <meta name="Keywords" content="NorNet-Kontrollsenter, NorNet Project, NorNet Prosjekt, Simula Research Laboratory, Thomas Dreibholz" />
@@ -10,23 +31,25 @@
 
 <title>Velkommen til NorNet-Kontrollsenter på Simula, Fornebu</title>
 
+
+<link rel="stylesheet" href="http://openlayers.org/en/v3.14.0/css/ol.css" type="text/css" />
+<script src="http://openlayers.org/en/v3.14.1/build/ol.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="ol3-layerswitcher/src/ol3-layerswitcher.css" />
+<script src="ol3-layerswitcher/src/ol3-layerswitcher.js" type="text/javascript"></script>
+        
 <link rel="stylesheet" href="NorNet-Stylesheet.css" type="text/css" />
 <link rel="shortcut icon" href="/Artwork/Graphics/Icons/Icon-Tux.png" />
-
-<script src="https://code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
-<script src="http://openlayers.org/api/OpenLayers.js" type="text/javascript"></script>
-<script src="http://openweathermap.org/js/OWM.OpenLayers.1.3.8.js" type="text/javascript"></script>
-<script src="https://www.openstreetmap.org/openlayers/OpenStreetMap.js" type="text/javascript"></script>
-<script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false" type="text/javascript"></script>
 <script src="NorNet-Map.js" type="text/javascript"></script>
 <script src="NorNet-Kontrollsenter.js" type="text/javascript"></script>
+
 
 </head>
 
 <body>
 
 <div id="header" class="header">
- <h1 class="h1" style="margin: 0px; padding: 0px;" id="header.title">
+ <h1 id="header.title">
   <noscript>
    <h2 class="h2">NorNet Map requires JavaScript!</h2>
   </noscript>
@@ -35,18 +58,22 @@
 
 
 <div id="map_canvas" class="map"></div>
+<div id="popup" class="popup">
+ <a href="#" id="popup-closer" class="popup-closer">✖</a>
+ <div id="popup-content"></div>
+</div>
 
 <div id="sidebar" class="sidebar">
- <h2 class="h2" style="text-align: center;">
+ <h2 style="text-align: center;">
   <span id="languages" class="center">...</span>
   &nbsp;|&nbsp;
   <img class="selected" id="automode" onclick="setAutoMode(!autoMode);" src="/Artwork/Graphics/Control/AutoMode.png" alt="Auto Mode" height="21" />
  </h2>
  <hr />
 
-<!--  <h2 class="h2" id="sidebar.clock">Time</h2> -->
+<!--  <h2 id="sidebar.clock">Time</h2> -->
   <p class="center">
-  <object id="analog-clock" class="analog-clock" data="Clock/station-clock.svg" type="image/svg+xml">
+   <object id="analog-clock" class="analog-clock" data="Clock/station-clock.svg" type="image/svg+xml">
    <param name="dial"               value="din 41091.1"/>
    <param name="hourHand"           value="siemens"/>
    <param name="minuteHand"         value="siemens"/>
@@ -70,10 +97,10 @@
   </p>
  <hr />
 
- <h2><a class="h2" href="javascript:void(0)" onclick="zoomToDefaultLocation();"><span id="sidebar.sites">Sites</span></a></h2>
-  <h3 class="h3"><span id="sidebar.sites.problems.title">Problems</span></h3>
+ <h2><a href="javascript:void(0)" onclick="zoomToDefaultLocation();"><span id="sidebar.sites">Sites</span></a></h2>
+  <h3><span id="sidebar.sites.problems.title">Problems</span></h3>
    <span id="sidebar.sites.problems"></span>
-  <h3 class="h3"><span id="sidebar.sites.okay.title">Okay</span></h3>
+  <h3><span id="sidebar.sites.okay.title">Okay</span></h3>
    <span id="sidebar.sites.okay"></span>
 
 </div>

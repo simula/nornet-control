@@ -1,0 +1,17 @@
+#!/bin/bash
+
+
+sudo dpkg --configure -a
+sudo apt-get install -fy
+
+sudo apt-get install -y software-properties-common
+sudo apt-add-repository -y ppa:dreibh/ppa
+sudo apt-get update
+sudo apt-get dist-upgrade -y
+
+sudo apt-get install -fy
+sudo apt-get dist-upgrade -y
+
+sudo service nornet-tunnelbox configure
+
+sudo apt-get install -y linux-generic-lts-wily

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+export TMPDIR=/storage/tmp
+
+while [ $# -gt 0 ] ; do
+   disk="$1"
+   shift
+
+   echo -e "\x1b[34m`env LANG=C date +%FT%H:%M:%S`: ====== $disk ======\x1b[0m"
+   {
+     du -m "$disk" && \
+     virt-sparsify -q "$disk" "$disk.tmp" && \
+     mv "$disk.tmp" "$disk" && \
+     du -m "$disk"
+   } || echo "FAILED!"
+done

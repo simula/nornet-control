@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+export TMPDIR=/storage/tmp
+echo "Using TMPDIR=$TMPDIR ..."
+
+
+disks=`ls *.vdi | sort`
+n=0
+for disk in $disks ; do
+   old="$disk"
+   new="DH$n.raw"   # "`echo "$disk" | sed -e "s/.vdi$/.raw/g"`"
+   echo "env TMPDIR=$TMPDIR virt-sparsify $old --convert raw $new"
+   sudo env TMPDIR=$TMPDIR virt-sparsify $old --convert raw $new
+   let n=$n+1
+done

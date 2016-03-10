@@ -11,18 +11,6 @@ Build-Depends: debhelper (>= 9),
                python-support
 Standards-Version: 3.9.6
 
-Package: nornet-api
-Architecture: any
-Depends: python-ipaddr,
-         ${misc:Depends},
-         ${python:Depends},
-         ${shlibs:Depends}
-Description: NorNet API
- This package contains the NorNet Python API library. It contains functions
- to communicate with the central server (MyPLC), based on XMLRPC.
- .
- See https://www.nntb.no for details on NorNet!
-
 Package: nornet-management
 Architecture: any
 Depends: apport-retrace,
@@ -30,6 +18,7 @@ Depends: apport-retrace,
          apt-show-versions,
          autofs,
          bridge-utils,
+         btrfs-tools,
          colordiff,
          cron,
          cron-apt,
@@ -53,11 +42,12 @@ Depends: apport-retrace,
          lsb-base (>= 3.2-14),
          netperfmeter,
          nmap,
-         nornet-api,
          ntpdate,
          nttcp,
          python-software-properties,
+         reiserfsprogs,
          rsplib-tools,
+         secure-delete,
          smartmontools,
          snmp,
          sslscan,
@@ -73,7 +63,12 @@ Depends: apport-retrace,
          ${python:Depends},
          ${shlibs:Depends}
 Recommends: tshark
-Conflicts: landscape-common
+Conflicts: kdeconnect,
+           kdeconnect-plasma,
+           landscape-common,
+           minidlna,
+           tntnet,
+           webfs
 Replaces: landscape-common
 Description: NorNet Management Tools
  This metapackage contains basic software nor NorNet node management. The
@@ -142,6 +137,18 @@ Description: NorNet Development Tools
  .
  See https://www.nntb.no for details on NorNet!
 
+Package: nornet-api
+Architecture: any
+Depends: python-ipaddr,
+         ${misc:Depends},
+         ${python:Depends},
+         ${shlibs:Depends}
+Description: NorNet API
+ This package contains the NorNet Python API library. It contains functions
+ to communicate with the central server (MyPLC), based on XMLRPC.
+ .
+ See https://www.nntb.no for details on NorNet!
+
 Package: nornet-node
 Architecture: any
 Conflicts: miredo
@@ -192,8 +199,7 @@ Depends: arpwatch,
          traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: paris-traceroute,
-            tracebox
+Recommends: tracebox
 Description: NorNet Tunnelbox Control
  This package contains the scripts to configure the tunnelboxes of NorNet
  sites.
@@ -203,6 +209,7 @@ Description: NorNet Tunnelbox Control
 Package: nornet-filesrv
 Architecture: all
 Depends: nfs-kernel-server,
+         nornet-api,
          nornet-management,
          python (>= 2.7),
          python-adns,
@@ -227,15 +234,16 @@ Description: NorNet Artwork
 
 Package: nornet-monitor
 Architecture: all
-Conflicts: tntnet
 Depends: apache2,
          libapache2-mod-php5,
          nagios3,
          nagios3-doc,
+         nornet-api,
          nornet-artwork,
          nornet-management,
          postfix,
          python (>= 2.7),
+         wdg-html-validator,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Monitor
@@ -247,8 +255,9 @@ Description: NorNet Monitor
 Package: nornet-display
 Architecture: all
 Depends: firefox,
-         kdm,
+         kdm | sddm,
          kubuntu-desktop,
+         nornet-api,
          nornet-management,
          xserver-xorg-video-vmware,
          ${misc:Depends},
@@ -262,7 +271,8 @@ Description: NorNet Display
 
 Package: nornet-gatekeeper
 Architecture: all
-Depends: nornet-management,
+Depends: nornet-api,
+         nornet-management,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Gatekeeper
@@ -280,6 +290,7 @@ Depends: apache2,
          libgeo-ip-perl,
          libnet-dns-perl,
          libnet-ip-perl,
+         nornet-api,
          nornet-management,
          oxygen-icon-theme,
          wdg-html-validator,
@@ -312,7 +323,8 @@ Description: NorNet Wiki Server
 
 Package: nornet-timesrv
 Architecture: all
-Depends: nornet-management,
+Depends: nornet-api,
+         nornet-management,
          ntp,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -340,6 +352,7 @@ Depends: cfengine3,
          grub2-common | grub,
          libvirt-bin,
          nfs-common,
+         nornet-api,
          nornet-management,
          ntp,
          openssh-server,
