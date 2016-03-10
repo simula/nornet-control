@@ -8,7 +8,7 @@
   </resource>
   <os>
     <type arch='x86_64' machine='pc-i440fx-trusty'>hvm</type>
-    <boot dev='cdrom'/>
+    <boot dev='BOOTDEV'/>
   </os>
   <features>
     <acpi/>
