@@ -21,22 +21,36 @@
 SLICE=srl_test
 KEY=~/.ssh/test2
 
+unreachableIntro="\x1b[34m"
+goodIntro="\x1b[32m"
+badIntro="\x1b[31m"
+normalMode="\x1b[0m"
+connectTimeout=10
+
 
 function check-node ()
 {
    local nodeName="$1"
+
    if ! ping -c3 >/dev/null 2>&1 ; then
-      ssh -oStrictHostKeyChecking=no -oConnectTimeout=10 -i $KEY $SLICE@$nodeName echo "Node is OK" >$nodeName.log 2>&1
+      ssh -oStrictHostKeyChecking=no -oConnectTimeout=$connectTimeout -i $KEY $SLICE@$nodeName echo "Node is OK" >$nodeName.log 2>&1
       if [ "`head -n1 $nodeName.log`" = "Node is OK" ] ; then
-         echo -e "$site\tOK\t$nodeName"
+         echo -e "$goodIntro$site\tOK\t$nodeName$normalMode"
       else
-         echo -e "$site\tBAD\t$nodeName\t\"`head -n1 $nodeName.log | tr --delete '\n\r'`\""
+         echo -e "$badIntro$site\tBAD\t$nodeName\t\"`head -n1 $nodeName.log | tr --delete '\n\r'`\"$normalMode"
       fi
    else
-      echo -e "$site\tUNREACHABLE\t$nodeName"
+      echo -e "$unreachableIntro$site\tUNREACHABLE\t$nodeName$normalMode"
    fi
 }
 
+
+if [ "$1" = "-n" ] ; then
+   unreachableIntro=""
+   goodIntro=""
+   badIntro=""
+   normalMode=""
+fi
 
 ./Get-Nodes | awk '{ print $2 }' | xargs -n1 | (
    while read node ; do
@@ -44,6 +58,4 @@ function check-node ()
       check-node "$node" &
    done
    wait
-)
-
-echo "Done."
+) | sort -k2,2r -k1,1
