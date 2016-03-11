@@ -33,14 +33,19 @@ function check-node ()
    local nodeName="$1"
 
    if ping -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
-      ssh -oStrictHostKeyChecking=no -oConnectTimeout=$connectTimeout -i $KEY $SLICE@$nodeName echo "Node is OK" >$nodeName.log 2>&1
+      ssh -oStrictHostKeyChecking=no -oConnectTimeout=$connectTimeout -i $KEY $SLICE@$nodeName 'echo "Node is OK" ; uptime' >$nodeName.log 2>&1
       if [ "`head -n1 $nodeName.log`" = "Node is OK" ] ; then
-         echo -e "$goodIntro$site\tOK\t$nodeName$normalMode"
+         printf "$goodIntro%s\tOK\t%-30s\t\"%s\"$normalMode\n" \
+            "$site" "$nodeName" \
+            "`tail -n1 $nodeName.log | tr --delete '\n\r' | sed -e "s/^[ \t]*//g"`"
       else
-         echo -e "$badIntro$site\tBAD\t$nodeName\t\"`head -n1 $nodeName.log | tr --delete '\n\r'`\"$normalMode"
+         printf "$badIntro%s\tBAD\t%-30s\t\"%s\"$normalMode\n" \
+            "$site" "$nodeName" \
+            "`head -n1 $nodeName.log | tr --delete '\n\r'`"
       fi
    else
-      echo -e "$unreachableIntro$site\tNET\t$nodeName$normalMode"
+      printf "$unreachableIntro%s\tNET\t%-30s$normalMode\n" \
+         "$site" "$nodeName"
    fi
 }
 
