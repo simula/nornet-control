@@ -32,7 +32,7 @@ function check-node ()
 {
    local nodeName="$1"
 
-   if ! ping -c3 >/dev/null 2>&1 ; then
+   if ping -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
       ssh -oStrictHostKeyChecking=no -oConnectTimeout=$connectTimeout -i $KEY $SLICE@$nodeName echo "Node is OK" >$nodeName.log 2>&1
       if [ "`head -n1 $nodeName.log`" = "Node is OK" ] ; then
          echo -e "$goodIntro$site\tOK\t$nodeName$normalMode"
@@ -40,7 +40,7 @@ function check-node ()
          echo -e "$badIntro$site\tBAD\t$nodeName\t\"`head -n1 $nodeName.log | tr --delete '\n\r'`\"$normalMode"
       fi
    else
-      echo -e "$unreachableIntro$site\tUNREACHABLE\t$nodeName$normalMode"
+      echo -e "$unreachableIntro$site\tNET\t$nodeName$normalMode"
    fi
 }
 
