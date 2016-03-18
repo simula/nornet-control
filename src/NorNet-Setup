@@ -533,7 +533,7 @@ norNetSetup = [
    'site_longitude'    : 7.011656,
    'site_altitude'     : 120,
    'site_contacts'     : [ u'Adhari, Hakim: hakim.adhari@uni-due.de', u'Cosić, Nihad: nihad.cosic@uni-due.de' ],
-   'site_pcu'          : [ IPv4Address('132.252.156.12'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('132.252.152.73'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Deutsches Forschungsnetz', 'eth1',
