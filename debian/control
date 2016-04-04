@@ -8,8 +8,8 @@ Build-Depends: debhelper (>= 9),
                libfile-fcntllock-perl,
                python (>= 2.7),
                python-ipaddr,
-               python-support
-Standards-Version: 3.9.6
+               python-support | dh-python
+Standards-Version: 3.9.7
 
 Package: nornet-management
 Architecture: any
