@@ -7,8 +7,8 @@ ACCOUNTS="accounts.txt"
 #SLICENAME="as_tutorial"
 
 SITE="Simula Research Laboratory"
-DOMAIN="simula.nornet"
-SLICENAME="srl_tutorial"
+DOMAIN="haw.nornet"
+SLICENAME="haw_tutorial"
 
 SLICEDESC="This is a test slice for the NorNet tutorial sessions at the NNUW."
 SLICEURL="https://www.nntb.no"

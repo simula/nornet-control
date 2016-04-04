@@ -27,8 +27,10 @@ while [ $# -ge 1 ] ; do
 
       if [ -e "$HOME/ISOs/$machine.iso" ] ; then
          newCD="$HOME/ISOs/$machine.iso"
+         bootDevice="cdrom"
       else
          newCD=""
+         bootDevice="hd"
       fi
       echo "New CD: $newCD"
 
@@ -63,9 +65,14 @@ while [ $# -ge 1 ] ; do
              -e "s#CDROMIMAGE#$newCD#g" \
              -e "s/VNCADDRESS/$vncAddress/g" \
              -e "s/VNCPORT/$vncPort/g" \
+             -e "s/BOOTDEV/$bootDevice/g" \
              >$HOME/KVM/$machine.xml
       mkdir -p $HOME/KVM/$machine
-      ln "$disk" $HOME/KVM/$machine/DH0.vdi
+      diskNumber=0
+      for disk in $disks ; do
+         ln "$disk" $HOME/KVM/$machine/DH$diskNumber.vdi
+         let diskNumber=$diskNumber+1
+      done
       xmlList="$xmlList $HOME/KVM/$machine.xml"
 
    else

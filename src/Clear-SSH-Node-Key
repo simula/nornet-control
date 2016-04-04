@@ -1,0 +1,44 @@
+#!/bin/bash
+#
+# Remove SSH keys of all nodes (useful when they have updated)
+# Copyright (C) 2014-2016 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+while [ $# -ge 1 ] ; do
+   name="$1"
+   shift
+
+   fullName=`echo "$name" | sed -e "s/\./.all./"`
+   echo -e "\x1b[34mRemoving keys of $name ($fullName) ...\x1b[0m"
+   ipv4Addresses=`dig $fullName a +short`
+   ipv6Addresses=`dig $fullName aaaa +short`
+
+   hostList="$name $fullName"
+   for a in $ipv4Addresses $ipv6Addresses ; do
+      hostList="$hostList $a"
+   done
+
+   for a in $ipv4Addresses ; do
+      dnsName=`dig -x $a ptr +short`
+      hostList="$hostList $a `echo "$dnsName" | sed -e "s/\.$//g"`"
+   done
+
+   for host in $hostList ; do
+      echo "ssh-keygen -q -R $host"
+      ssh-keygen -q -R "$host" >/dev/null 2>&1
+   done
+done

@@ -1,0 +1,66 @@
+#!/bin/bash -e
+
+VIRTMANAGERDIR=~/src/virt-manager
+
+machines="
+10.1.1.254
+sognsvann.simula.nornet
+svartkulp.simula.nornet
+maridalsvannet.simula.nornet
+blanksjoe.simula.nornet
+tryvann.simula.nornet
+aaklungen.simula.nornet
+10.1.2.254
+langevann.uio.nornet
+kringla.uio.nornet
+smaavann.uio.nornet
+10.1.3.254
+fjellhallen.hig.nornet
+skibladner.hig.nornet
+toten.hig.nornet
+10.1.4.254
+ishav.uit.nornet
+polaria.uit.nornet
+tromsoebrua.uit.nornet
+10.1.5.254
+petroleum.uis.nornet
+bensin.uis.nornet
+diesel.uis.nornet
+10.1.6.254
+floeyfjellet.uib.nornet
+ulriken.uib.nornet
+damsgaardsfjellet.uib.nornet
+10.1.7.254
+wergeland.uia.nornet
+holberg.uia.nornet
+andersen.uia.nornet
+10.1.8.254
+fjellrev.unis.nornet
+hval.unis.nornet
+sel.unis.nornet
+10.1.9.254
+munkholmen.ntnu.nornet
+kristiansten.ntnu.nornet
+nidelva.ntnu.nornet
+10.1.10.254
+herjangsfjorden.hin.nornet
+skjomen.hin.nornet
+beisfjorden.hin.nornet
+10.1.11.254
+dalsbergstien.hioa.nornet
+holbergsplass.hioa.nornet
+pilestredet.hioa.nornet
+10.30.41.254
+10.80.88.254
+wenchang.hu.nornet
+qionghai.hu.nornet
+sanya.hu.nornet
+10.70.160.254
+10.90.100.254
+"
+
+cd $VIRTMANAGERDIR
+for machine in $machines ; do
+   echo ./virt-manager -c "qemu+ssh://nornetpp@$machine/system"
+   ./virt-manager -c "qemu+ssh://nornetpp@$machine/system"
+done
