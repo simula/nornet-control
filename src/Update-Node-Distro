@@ -46,6 +46,7 @@ if node == None:
 needsUpdate = False
 oldFCDistro = ''
 oldPLDistro = ''
+found       = 0
 
 nodeTagsList = fetchNodeTagsList(node['node_id'])
 for nodeTag in nodeTagsList:
@@ -53,10 +54,15 @@ for nodeTag in nodeTagsList:
       oldPLDistro = nodeTag['value']
       if oldPLDistro != pldistro:
          needsUpdate = True
+      found = found + 1
    elif nodeTag['tagname'] == 'fcdistro':
       oldFCDistro = nodeTag['value']
       if oldFCDistro != fcdistro:
          needsUpdate = True
+      found = found + 1
+
+if found < 2:
+   needsUpdate = True  # Not installed yet? -> Set tags!
 
 if needsUpdate == True:
    print 'Update ' + nodeName + ': ' + oldPLDistro + '-' + oldFCDistro + ' -> ' + pldistro + '-' + fcdistro
