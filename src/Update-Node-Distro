@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Find Nodes with Problems
-# Copyright (C) 2012-2015 by Thomas Dreibholz
+# Copyright (C) 2012-2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,10 +28,11 @@ from NorNetTools     import *;
 from NorNetAPI       import *;
 
 
-if len(sys.argv) < 3:
-   error('Usage: ' + sys.argv[0] + ' node distribution')
-nodeName     = sys.argv[1]
-distribution = sys.argv[2]
+if len(sys.argv) < 4:
+   error('Usage: ' + sys.argv[0] + ' node pldistro fcdistro')
+nodeName = sys.argv[1]
+pldistro = sys.argv[2]
+fcdistro = sys.argv[3]
 
 
 # ###### Main program #######################################################
@@ -42,19 +43,27 @@ if node == None:
    sys.stderr.write('ERROR: Node ' + nodeName + ' not found!')
    sys.exit(1)
 
-oldDistribution = ''
+needsUpdate = False
+oldFCDistro = ''
+oldPLDistro = ''
+
 nodeTagsList = fetchNodeTagsList(node['node_id'])
 for nodeTag in nodeTagsList:
    if nodeTag['tagname'] == 'pldistro':
-      oldDistribution = nodeTag['value']
-      if nodeTag['value'] == distribution:
-         needsUpdate = False
+      oldPLDistro = nodeTag['value']
+      if oldPLDistro != pldistro:
+         needsUpdate = True
+   elif nodeTag['tagname'] == 'fcdistro':
+      oldFCDistro = nodeTag['value']
+      if oldFCDistro != fcdistro:
+         needsUpdate = True
 
-if oldDistribution != distribution:
-   print 'Update ' + nodeName + ': ' + oldDistribution + ' -> ' + distribution
-   addOrUpdateNodeTag(node['node_id'], 'pldistro', distribution)
+if needsUpdate == True:
+   print 'Update ' + nodeName + ': ' + oldPLDistro + '-' + oldFCDistro + ' -> ' + pldistro + '-' + fcdistro
+   addOrUpdateNodeTag(node['node_id'], 'fcdistro', fcdistro)
+   addOrUpdateNodeTag(node['node_id'], 'pldistro', pldistro)
    getPLCServer().UpdateNode(getPLCAuthentication(),
       node['node_id'],
       { 'boot_state' : 'reinstall' })
 else:
-   print 'Keeping ' + nodeName + ': ' + oldDistribution
+   print 'Keeping ' + nodeName + ': ' + oldPLDistro + '-' + oldFCDistro
