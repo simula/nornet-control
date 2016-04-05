@@ -69,7 +69,8 @@ if needsUpdate == True:
    addOrUpdateNodeTag(node['node_id'], 'fcdistro', fcdistro)
    addOrUpdateNodeTag(node['node_id'], 'pldistro', pldistro)
    getPLCServer().UpdateNode(getPLCAuthentication(),
-      node['node_id'],
-      { 'boot_state' : 'reinstall' })
+      node['node_id'], { 'boot_state' : 'reinstall' })
 else:
    print 'Keeping ' + nodeName + ': ' + oldPLDistro + '-' + oldFCDistro
+   # getPLCServer().UpdateNode(getPLCAuthentication(),
+   #    node['node_id'], { 'boot_state' : 'boot' })
