@@ -450,6 +450,9 @@ norNetSetup = [
            IPv6Network('2001:700:700:22::60/64'), IPv6Address('2001:700:700:22::'),
            'fibre, business', 0, 0 ]
    ],
+   # Server #251: 128.39.120.63
+   # Server #252: 128.39.120.62
+   # Server #253: 128.39.120.61
    'site_nodes' : [
       [ 100, 1, u'hovedøya',    'dalsbergstien.hioa.nornet', 'vnc://dalsbergstien.hioa.nornet:5700' ],
       [ 101, 2, u'lindøya',     'dalsbergstien.hioa.nornet', 'vnc://dalsbergstien.hioa.nornet:5701' ],
