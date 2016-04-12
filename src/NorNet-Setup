@@ -449,6 +449,9 @@ norNetSetup = [
            IPv6Interface('2001:700:700:22::60/64'), IPv6Address('2001:700:700:22::'),
            'fibre, business', 0, 0 ]
    ],
+   # Server #251: 128.39.120.63
+   # Server #252: 128.39.120.62
+   # Server #253: 128.39.120.61
    'site_nodes' : [
       [ 100, 1, u'hovedøya',    'dalsbergstien.hioa.nornet', 'vnc://dalsbergstien.hioa.nornet:5700' ],
       [ 101, 2, u'lindøya',     'dalsbergstien.hioa.nornet', 'vnc://dalsbergstien.hioa.nornet:5701' ],
@@ -532,7 +535,7 @@ norNetSetup = [
    'site_longitude'    : 7.011656,
    'site_altitude'     : 120,
    'site_contacts'     : [ u'Adhari, Hakim: hakim.adhari@uni-due.de', u'Cosić, Nihad: nihad.cosic@uni-due.de' ],
-   'site_pcu'          : [ IPv4Address('132.252.156.12'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('132.252.152.73'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Deutsches Forschungsnetz', 'eth1',
@@ -771,7 +774,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 160,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Korea University',   # 고려대학교
    'site_short_name'   : 'KRU',
    'site_url'          : 'http://www.korea.ac.kr',
@@ -805,7 +808,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 120,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'Universidade Federal de São Carlos',
    'site_short_name'   : 'UFSCAR',
    'site_url'          : 'http://www.ufscar.br',

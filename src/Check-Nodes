@@ -21,25 +21,52 @@
 SLICE=srl_test
 KEY=~/.ssh/test2
 
+unreachableIntro="\x1b[34m"
+keyChangedIntro="\x1b[36m"
+goodIntro="\x1b[32m"
+badIntro="\x1b[31m"
+normalMode="\x1b[0m"
+connectTimeout=10
+
+
+function check-node ()
+{
+   local nodeName="$1"
+
+   if ping -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
+      env LANG=C ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -oConnectTimeout=$connectTimeout -i $KEY $SLICE@$nodeName 'echo "Node is OK" ; uptime' >$nodeName.log 2>&1
+      headline="`grep -v "^Warning: Permanently" $nodeName.log | head -n1 | tr --delete '\n\r'`"
+      if [ "$headline" = "Node is OK" ] ; then
+         printf "$goodIntro%s\tOK\t%-30s\t\"%s\"$normalMode\n" \
+            "$site" "$nodeName" \
+            "`tail -n1 $nodeName.log | tr --delete '\n\r' | sed -e "s/^[ \t]*//g"`"
+      elif [ "$headline" = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" ] ; then
+         printf "$keyChangedIntro%s\tKEY\t%-30s\t\"%s\"$normalMode\n" \
+            "$site" "$nodeName" "Key changed -> run script again!"
+         ./Clear-SSH-Node-Key $nodeName >/dev/null
+      else
+         printf "$badIntro%s\tBAD\t%-30s\t\"%s\"$normalMode\n" \
+            "$site" "$nodeName" \
+            "$headline"
+      fi
+   else
+      printf "$unreachableIntro%s\tNET\t%-30s$normalMode\n" \
+         "$site" "$nodeName"
+   fi
+}
+
+
+if [ "$1" = "-n" ] ; then
+   unreachableIntro=""
+   goodIntro=""
+   badIntro=""
+   normalMode=""
+fi
+
 ./Get-Nodes | awk '{ print $2 }' | xargs -n1 | (
    while read node ; do
       site=`echo "$node" | sed -e "s/^[a-z0-9]*\.//g"`
-      echo "Trying $node ..."
-      (
-         if ! ping -c3 >/dev/null 2>&1 ; then
-            result=`ssh -oStrictHostKeyChecking=no -oConnectTimeout=30 -i $KEY $SLICE@$node echo "Node is OK"`
-            if [ "$result" = "Node is OK" ] ; then
-               echo -e "$site\tOK\t$node"
-            else
-               echo -e "$site\tBAD\t$node"
-               echo "$result"
-            fi
-         else
-            echo -e "$site\tUNREACHABLE\t$node"
-         fi
-      ) &
+      check-node "$node" &
    done
    wait
-)
-
-echo "Done."
+) | sort -k2,2r -k1,1

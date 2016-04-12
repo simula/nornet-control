@@ -149,7 +149,7 @@ Index: cfengine3/tests/acceptance/01_vars/02_functions/network/selectservers.cf
 -
 -      # The first two hosts listen to port 80, the third does not listen
 -      # to port 80, the fourth does not even resolve
--      "hosts"     slist   => { "cfengine.com", "ntua.gr", "8.8.8.8", "inexistent-server" };
+-      "hosts"     slist   => { "cfengine.com", "www.ntua.gr", "8.8.8.8", "inexistent-server" };
 -      "retval"    int     => selectservers("@(hosts)","80","","","100","alive_servers");
 -}
 -
@@ -179,7 +179,7 @@ Index: cfengine3/tests/acceptance/01_vars/03_lists/016.cf
 ===================================================================
 --- cfengine3.orig/tests/acceptance/01_vars/03_lists/016.cf
 +++ /dev/null
-@@ -1,60 +0,0 @@
+@@ -1,56 +0,0 @@
 -##############################################################################
 -#
 -# Redmine #2936: Check that list variables under reserved scope expand
@@ -204,10 +204,6 @@ Index: cfengine3/tests/acceptance/01_vars/03_lists/016.cf
 -
 -bundle agent test
 -{
--  meta:
--      "test_suppress_fail" string => "hpux|windows|sunos_5_11",
--        meta => { "redmine4745", "redmine4963" };
--
 -files:
 -  "$(G.testfile).actual"
 -    create => "true",
@@ -244,7 +240,7 @@ Index: cfengine3/tests/acceptance/14_reports/00_output/002.cf
 ===================================================================
 --- cfengine3.orig/tests/acceptance/14_reports/00_output/002.cf
 +++ /dev/null
-@@ -1,47 +0,0 @@
+@@ -1,43 +0,0 @@
 -##############################################################################
 -#
 -# Redmine #2936: Check that list variables under reserved scope expand
@@ -266,10 +262,6 @@ Index: cfengine3/tests/acceptance/14_reports/00_output/002.cf
 -
 -bundle agent test
 -{
--  meta:
--      "test_suppress_fail" string => "hpux|windows|sunos_5_11",
--        meta => { "redmine4745", "redmine4963" };
--
 -  vars:
 -    "subout" string => execresult("$(sys.cf_agent) -Kf $(this.promise_filename).sub", "noshell");
 -}
@@ -292,42 +284,21 @@ Index: cfengine3/tests/acceptance/14_reports/00_output/002.cf
 -}
 -### PROJECT_ID: core
 -### CATEGORY_ID: 2
-Index: cfengine3/tests/acceptance/16_cf-serverd/01_start/004.cf
-===================================================================
---- cfengine3.orig/tests/acceptance/16_cf-serverd/01_start/004.cf
-+++ /dev/null
-@@ -1,19 +0,0 @@
--#
--body common control
--{
--      inputs => { "../../default.cf.sub", "./run_with_server.cf.sub" };
--      bundlesequence => { default("$(this.promise_filename)") };
--      version => "1.0";
--}
--
--bundle agent test
--{
--  methods:
--      "any" usebundle => dcs_fini("$(G.testdir)/destination_file");
--      "any" usebundle => file_make("$(G.testdir)/source_file",
--                                                 "This is the source file to copy $(sys.date) - always fresh");
--      "any" usebundle => generate_key;
--      "any" usebundle => start_server("lan_open");
--      "any" usebundle => run_test("$(this.promise_filename).sub");
--      "any" usebundle => stop_server("lan_open");
--}
 Index: cfengine3/tests/Makefile.am
 ===================================================================
 --- cfengine3.orig/tests/Makefile.am
 +++ cfengine3/tests/Makefile.am
-@@ -1 +1 @@
+@@ -21,4 +21,4 @@
+ # (COSL) may apply to this file if you as a licensee so wish it. See
+ # included file COSL.txt.
+ #
 -SUBDIRS = unit load acceptance
 +SUBDIRS = unit load
 Index: cfengine3/tests/unit/Makefile.am
 ===================================================================
 --- cfengine3.orig/tests/unit/Makefile.am
 +++ cfengine3/tests/unit/Makefile.am
-@@ -112,7 +112,6 @@ check_PROGRAMS = \
+@@ -140,7 +140,6 @@ check_PROGRAMS = \
  	files_interfaces_test \
  	refcount_test \
  	list_test \
@@ -335,11 +306,14 @@ Index: cfengine3/tests/unit/Makefile.am
  	cf_key_functions_test \
  	connection_management_test \
  	expand_test \
-@@ -195,8 +194,6 @@ list_test_SOURCES = list_test.c
+@@ -236,11 +235,6 @@ list_test_SOURCES = list_test.c
  
  refcount_test_SOURCES = refcount_test.c ../../libutils/refcount.c
  
 -buffer_test_SOURCES = buffer_test.c ../../libutils/buffer.c
+-# Workaround for object file basename conflicts, search the web for
+-# "automake created with both libtool and without"
+-buffer_test_CPPFLAGS = $(AM_CPPFLAGS)
 -
  csv_parser_test_SOURCES = csv_parser_test.c ../../libutils/csv_parser.c
  csv_parser_test_LDADD = libtest.la ../../libutils/libutils.la

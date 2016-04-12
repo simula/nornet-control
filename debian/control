@@ -6,8 +6,7 @@ Homepage: https://www.nntb.no/
 Build-Depends: debhelper (>= 9),
                imagemagick,
                libfile-fcntllock-perl,
-               python (>= 2.6~),
-               python-support,
+               python-support | dh-python,
                python3 (>= 3.2~),
                python3-setuptools
 Standards-Version: 3.9.7
@@ -121,7 +120,6 @@ Depends: autoconf,
          libsctp-dev,
          libtool,
          lua5.2,
-         module-init-tools,
          pbuilder,
          pkg-config,
          python3-psycopg2,

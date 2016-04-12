@@ -1,10 +1,20 @@
 #!/usr/bin/make -f
 # vim:noet:ts=4:sw=4:
 
-%:
-	dh $@ --with quilt
+MASTERFILES_TARBALL      = $(shell ls -1 masterfiles-*.tar.xz.base64 | head -n1)
+MASTERFILES_PATCH        := debian/patches/masterfiles
+MASTERFILES_TEMP_DATE    := $(shell date -u +%Y%m%d%H%M%S)
+MASTERFILES_TEMP_REVISION = $(shell cd $(MASTERFILES_GIT_CHECKOUT) 2>/dev/null && git rev-parse --short $(MASTERFILES_GIT_BRANCH))
+MASTERFILES_TEMP_VERSION  = $(MASTERFILES_TEMP_DATE)-$(MASTERFILES_TEMP_REVISION)
+MASTERFILES_TEMP_TARBALL  = masterfiles-$(MASTERFILES_TEMP_VERSION).tar.xz.base64
+MASTERFILES_GIT_REPO     := https://github.com/cfengine/masterfiles.git
+MASTERFILES_GIT_BRANCH   := 3.8.x
+MASTERFILES_GIT_CHECKOUT := masterfiles-checkout
 
-override_dh_auto_configure:
+%:
+	dh $@ --with quilt,python2
+
+override_dh_auto_configure: masterfiles/autogen.sh
 	dh_autoreconf
 	./configure 	--prefix=/usr \
 			--with-sql=yes \
@@ -27,14 +37,15 @@ override_dh_auto_configure:
 
 override_dh_clean:
 	dh_autoreconf_clean
-	dh_clean --exclude=#008.cf#
+	dh_clean --exclude=#008.cf# masterfiles-*.tar.xz.base64
+	rm -rf masterfiles $(MASTERFILES_GIT_CHECKOUT)
 
 override_dh_installchangelogs:
-	dh_installchangelogs --exclude=ChangeLog
+	dh_installchangelogs ChangeLog
 
 override_dh_auto_clean:
 	dh_auto_clean
-	dh_auto_clean -Dmasterfiles
+	if [ -d masterfiles ]; then dh_auto_clean -Dmasterfiles; fi
 
 override_dh_compress:
 	dh_compress -X.cf
@@ -55,4 +66,30 @@ override_dh_auto_install:
 	dh_auto_install -Dmasterfiles
 
 override_dh_install:
-	dh_install --exclude=examples --exclude=ChangeLog
+	dh_install --exclude=examples
+
+masterfiles/autogen.sh:
+	base64 -d < $(MASTERFILES_TARBALL) | tar xfJ -
+
+sync-masterfiles-repo:
+	if [ -d $(MASTERFILES_GIT_CHECKOUT) ]; then \
+		cd $(MASTERFILES_GIT_CHECKOUT) && git pull; \
+	else \
+		git clone -b $(MASTERFILES_GIT_BRANCH) $(MASTERFILES_GIT_REPO) $(MASTERFILES_GIT_CHECKOUT); \
+	fi
+
+$(MASTERFILES_GIT_CHECKOUT)/.git/FETCH_HEAD: sync-masterfiles-repo
+	@true
+
+create-masterfiles-tarball: $(MASTERFILES_TEMP_TARBALL)
+
+$(MASTERFILES_TEMP_TARBALL): $(MASTERFILES_GIT_CHECKOUT)/.git/FETCH_HEAD
+	cd $(MASTERFILES_GIT_CHECKOUT) && git archive --prefix=masterfiles/ --format=tar $(MASTERFILES_GIT_BRANCH) | xz -zc9 | base64 > ../$(MASTERFILES_TEMP_TARBALL)
+
+update-masterfiles-patch: $(MASTERFILES_PATCH)
+
+$(MASTERFILES_PATCH): $(MASTERFILES_TEMP_TARBALL)
+	diff -Nu /dev/null $(MASTERFILES_TEMP_TARBALL) | sed 's/^\+\+\+ \($(MASTERFILES_TEMP_TARBALL)\)/+++ a\/\1/g' >$(MASTERFILES_PATCH)
+	git commit -m"$(MASTERFILES_PATCH): Update with upstream masterfiles revision $(MASTERFILES_TEMP_REVISION)" $(MASTERFILES_PATCH)
+
+.PHONY: sync-masterfiles-repo create-masterfiles-tarball update-masterfiles-patch

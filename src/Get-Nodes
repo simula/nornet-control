@@ -48,4 +48,4 @@ for node in nodeList:
       if nodeTag['tagname'] == 'pldistro':
          nodePL = nodeTag['value']
 
-   print(str(nodeIndex) + ' ' + fill(nodeName,32) + ' ' + fill(nodeState,10) + ' ' + fill(nodeFC,4) + ' ' + fill(nodePL,6))
+   print(str(nodeIndex) + ' ' + fill(nodeName,32) + ' ' + fill(nodeState,10) + ' ' + fill(nodePL,6) + ' ' + fill(nodeFC,4))

@@ -13,38 +13,73 @@ vncPort=5700
 
 echo "VNC base: $vncAddress, port $vncPort"
 
+
 xmlList=""
 while [ $# -ge 1 ] ; do
    machine="$1"
    shift
 
-   echo "Machine: $machine"
-   disk=`find "$HOME/VirtualBox VMs/$machine/" -name "*.vdi"`
-   if [ "$disk" != "" ] ; then
-      echo "Disk: $disk"
+   OLD_IFS=$IFS
+   IFS=$'\n'
+   disks=`find "$HOME/VirtualBox VMs/$machine/" -name "*.vdi" -or -name "*.vmdk" -or -name "*.raw" -or -name "*.img" -or -name "*.qcow2"`
+   if [ "$disks" != "" ] ; then
+      echo "Disks: $disks"
 
-      newDisk="$HOME/KVM/$machine/DH0.vdi"
-      newCD="$HOME/ISOs/$machine.iso"
-
-      echo "New disk: $newDisk"
+      if [ -e "$HOME/ISOs/$machine.iso" ] ; then
+         newCD="$HOME/ISOs/$machine.iso"
+         bootDevice="cdrom"
+      else
+         newCD=""
+         bootDevice="hd"
+      fi
       echo "New CD: $newCD"
 
-      rm -rf $HOME/KVM/$machine.xml $HOME/KVM/$machine
 
-      sed <ResearchNode.xml \
-          -e "s/MACHINENAME/$machine/g" \
-          -e "s#DISKIMAGE#$newDisk#g" \
-          -e "s#CDROMIMAGE#$newCD#g" \
-          -e "s/VNCADDRESS/$vncAddress/g" \
-          -e "s/VNCPORT/$vncPort/g" \
-          >$HOME/KVM/$machine.xml
+      diskEntries=""
+      diskNumber=0
+      slot=8
+      device=0x0a
+
+      for disk in $disks ; do
+         newDisk="$HOME/KVM/$machine/DH$diskNumber.vdi"
+         diskType="`echo "$disk" | sed -e "s/^\(.*\.\)\([a-zA-Z0-9]*\)$/\2/g"`"
+
+         diskEntries="$diskEntries
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='$diskType' cache='none' io='native'/>
+      <source file='$newDisk'/>
+      <target dev='vd`printf "%1x" $device`' bus='virtio'/>
+      <alias name='virtio-disk$diskNumber'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='`printf "0x%02x" $slot`' function='0x0'/>
+    </disk>
+"
+
+         let slot=$slot+1
+         let device=$device+1
+         let diskNumber=$diskNumber+1
+      done
+
+      rm -rf $HOME/KVM/$machine.xml $HOME/KVM/$machine
+      awk -v r="$diskEntries" '{gsub(/PUT-DISKS-HERE/,r)}1' ResearchNode.xml | \
+         sed -e "s/MACHINENAME/$machine/g" \
+             -e "s#CDROMIMAGE#$newCD#g" \
+             -e "s/VNCADDRESS/$vncAddress/g" \
+             -e "s/VNCPORT/$vncPort/g" \
+             -e "s/BOOTDEV/$bootDevice/g" \
+             >$HOME/KVM/$machine.xml
       mkdir -p $HOME/KVM/$machine
-      ln "$disk" $HOME/KVM/$machine/DH0.vdi
+      diskNumber=0
+      for disk in $disks ; do
+         ln "$disk" $HOME/KVM/$machine/DH$diskNumber.vdi
+         let diskNumber=$diskNumber+1
+      done
       xmlList="$xmlList $HOME/KVM/$machine.xml"
 
    else
       echo >&2 "ERROR: Disk of $machine not found!"
    fi
+
+   IFS=$OLD_IFS
 
    let vncPort=$vncPort+1
 done
@@ -53,5 +88,5 @@ echo "Defining VMs:"
 chown -R nornetpp:nornetpp $HOME/KVM
 cd $HOME/KVM
 for xml in $xmlList ; do
-   virsh define $xml || true
+   virsh define "$xml" || true
 done

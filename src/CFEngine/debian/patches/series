@@ -1,3 +1,4 @@
+masterfiles
 redmine_6316
 clean_xml_output
 remove_man_errors
@@ -6,3 +7,4 @@ do_not_build_rpmver
 skip_tests_failing_in_chroot
 fix_kfreebsd_build
 disable_failing_test_on_sparc
+disable_failing_test_on_automated_virtual_machine_builders

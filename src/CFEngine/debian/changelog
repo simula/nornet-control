@@ -1,3 +1,61 @@
+cfengine3 (3.8.1-0~tj1) wily; urgency=medium
+
+  * Imported Upstream version 3.8.1
+
+ -- Tuomas Jormola <tj@solitudo.net>  Wed, 10 Feb 2016 23:32:59 +0200
+
+cfengine3 (3.8.0-0~tj3) wily; urgency=medium
+
+  * debian/control: Add build-depends for libcurl4-openssl-dev, libyaml-dev
+
+ -- Tuomas Jormola <tj@solitudo.net>  Tue, 08 Dec 2015 02:22:01 +0200
+
+cfengine3 (3.8.0-0~tj2) wily; urgency=medium
+
+  * Install ChangeLog
+
+ -- Tuomas Jormola <tj@solitudo.net>  Sat, 05 Dec 2015 21:53:38 +0200
+
+cfengine3 (3.8.0-0~tj1) wily; urgency=medium
+
+  * Imported Upstream version 3.8.0
+  * debian/patches/masterfiles: Update with upstream masterfiles revision ae160ec
+
+ -- Tuomas Jormola <tj@solitudo.net>  Sat, 05 Dec 2015 17:33:13 +0200
+
+cfengine3 (3.8.0~b1-0~tj1) wily; urgency=medium
+
+  * Imported Upstream version 3.8.0~b1
+  * debian/rules: Switch to branch 3.8.x for masterfiles
+  * debian/rules: Commit the masterfiles patch when updating from upstream Git
+  * debian/patches/masterfiles: Update with upstream masterfiles revision 6d16388
+
+ -- Tuomas Jormola <tj@solitudo.net>  Fri, 13 Nov 2015 15:35:00 +0200
+
+cfengine3 (3.7.1-0~tj1) wily; urgency=medium
+
+  * Imported Upstream version 3.7.1
+  * debian/rules: Add targets to update the masterfiles patch
+  * debian/patches/masterfiles: Update with upstream masterfiles revision 3c69a98
+  * debian/patches/clean_xml_output: Refresh patch
+
+ -- Tuomas Jormola <tj@solitudo.net>  Thu, 22 Oct 2015 15:38:52 +0300
+
+cfengine3 (3.7.0-2-0~tj2) vivid; urgency=medium
+
+  * Disable sysinfo unit test since it fails on some build servers
+
+ -- Tuomas Jormola <tj@solitudo.net>  Fri, 21 Aug 2015 12:16:26 +0300
+
+cfengine3 (3.7.0-2-0~tj1) vivid; urgency=medium
+
+  * Imported Upstream version 3.7.0-2
+  * Refreshed debian/patches
+  * Provide masterfiles as a patch, see Bug#561071
+  * Make cfengine3 package depend on Python
+
+ -- Tuomas Jormola <tj@solitudo.net>  Wed, 19 Aug 2015 17:01:03 +0300
+
 cfengine3 (3.6.2-4) unstable; urgency=medium
 
   * debian/patches:
