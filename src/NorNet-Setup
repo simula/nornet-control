@@ -613,8 +613,8 @@ norNetSetup = [
    'site_nodes' : [   # VMware cluster + physical machines
       [ 100, 1, u'vänern'           ],
       [ 101, 2, u'mariebergsskogen' ],
-      [ 102, 3, u'klarälven'        ]
-      #[ 103, 4, u'stenbron'         ]
+      [ 102, 3, u'klarälven'        ],
+      [ 103, 4, u'stenbron'         ]
    ] },
 
  # Hainan University (海南大学)
