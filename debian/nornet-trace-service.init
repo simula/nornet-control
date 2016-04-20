@@ -10,7 +10,7 @@
 ### END INIT INFO
 #
 # NorNet Trace Service
-# Copyright (C) 2014-2016 by Thomas Dreibholz
+# Copyright (C) 2014-2015 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ###### $0 $@ ######\x1b[0m" >>$
 case "$1" in
   start)
    echo -n "Starting $DESC: "
-   start-stop-daemon --start --background --make-pidfile --pidfile $PIDFILE --exec /bin/bash -- -c "exec $DAEMON -- $DAEMON_ARGS >>$LOGFILE 2>&1"
+   start-stop-daemon --start --background --make-pidfile --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_ARGS >>$LOGFILE 2>&1
    echo "$NAME."
    ;;
   stop)
