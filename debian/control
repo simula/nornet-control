@@ -358,7 +358,6 @@ Depends: cfengine3,
          python (>= 2.7),
          qemu-kvm,
          virtinst,
-         virtualbox-nornet-stable | virtualbox-nornet-testing | virtualbox-nornet-experimental | virtualbox,
          xauth,
          ${misc:Depends},
          ${shlibs:Depends}
