@@ -221,6 +221,11 @@ check_and_configure ()
             cp hipercontracer-config /etc/default/nornet-trace
             service nornet-trace-service restart >/dev/null || true
          fi
+      else
+         if [ -e /etc/init.d/nornet-trace-service ] ; then
+            # Ensure that trace service is running ...
+            service nornet-trace-service start >/dev/null || true
+         fi
       fi
 
       # ====== Collectd ping configuration ==================================
