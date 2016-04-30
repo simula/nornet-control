@@ -585,7 +585,7 @@ load-interface-configuration ()
       fi
    fi
    if [ "$TUNNEL_MTU" = "" ] ; then
-      TUNNEL_MTU=1500
+      TUNNEL_MTU=1452   # Probably a reasonable default.
    fi
 
    if ! is-ip-address "$TUNNEL_LOCAL_INNER_ADDRESS" ; then
