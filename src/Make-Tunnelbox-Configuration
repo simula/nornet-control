@@ -1424,7 +1424,7 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
                   tunnelOverhead = 20 + 8   # IPv4 + GRE[with key]
                else:
                   interfaceFile.write('INTERFACE_TYPE="seks"\n')
-                  tunnelOverhead = 40 + 8
+                  tunnelOverhead = 48   # Based on 1452 bytes MTU on IPv6-over-IPv6 tunnels by default.
 
                interfaceFile.write('INTERFACE_PROVIDER="' + str.lower(localProvider['provider_short_name']) + '"\n\n')
 
