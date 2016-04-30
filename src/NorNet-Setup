@@ -560,7 +560,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 43,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Universität Darmstadt',
    'site_short_name'   : 'TUDA',
    'site_url'          : 'https://www.deeds.informatik.tu-darmstadt.de',
