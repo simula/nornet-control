@@ -1344,7 +1344,8 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
       # ====== Generate provider configuration file =========================
       providerFile = codecs.open(str.lower(localProvider['provider_short_name']) + '.provider', 'w', 'utf-8')
       providerFile.write('PROVIDER_INDEX='                      + str(localProvider['provider_index']) + '\n')
-      providerFile.write('PROVIDER_INTERFACE="'                 + localProvider['provider_tunnelbox_interface']   + '"\n')
+      providerFile.write('PROVIDER_INTERFACE="'                 + localProvider['provider_tunnelbox_interface'] + '"\n')
+      providerFile.write('PROVIDER_MTU='                        + str(localProvider['provider_mtu']) + '\n')
       providerFile.write('PROVIDER_SHORT_NAME="'                + str.lower(localProvider['provider_short_name']) + '"\n')
       providerFile.write('PROVIDER_LONG_NAME="'                 + localProvider['provider_long_name']  + '"\n')
       providerFile.write('PROVIDER_TOS='                        + str(internalRoutingTableTOS)         + '\n')
@@ -1412,14 +1413,18 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
 
                # ====== Tunnel ==============================================
                needsLinkLocalAddress = True
+               tunnelOverhead        = None
                if ((version == 4) and (re.match('^gre', tunnel['tunnel_interface']))):
                   interfaceFile.write('INTERFACE_TYPE="gre"\n')
                   interfaceFile.write('GRE_KEY="' + hex(tunnel['tunnel_key']) + '"\n')
+                  tunnelOverhead = 20 + 8   # IPv4 + GRE[with key]
                elif ((version == 6) and (tunnel['tunnel_over_ipv4'] == True)):
                   interfaceFile.write('INTERFACE_TYPE="existing-gre"\n')
                   needsLinkLocalAddress = False
+                  tunnelOverhead = 20 + 8   # IPv4 + GRE[with key]
                else:
                   interfaceFile.write('INTERFACE_TYPE="seks"\n')
+                  tunnelOverhead = 48   # Based on 1452 bytes MTU on IPv6-over-IPv6 tunnels by default.
 
                interfaceFile.write('INTERFACE_PROVIDER="' + str.lower(localProvider['provider_short_name']) + '"\n\n')
 
@@ -1436,6 +1441,10 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
                interfaceFile.write('TUNNEL_LOCAL_INNER_ADDRESS="'  + str(tunnel['tunnel_local_inner_address'].ip)  + '"\n')
                interfaceFile.write('TUNNEL_REMOTE_INNER_ADDRESS="' + str(tunnel['tunnel_remote_inner_address'].ip) + '"\n')
                interfaceFile.write('TUNNEL_INNER_PREFIX='          + str(tunnel['tunnel_local_inner_address'].prefixlen) + '\n\n')
+
+               tunnelExternalMTU = min(localProvider['provider_mtu'], remoteProvider['provider_mtu'])
+               tunnelMTU = tunnelExternalMTU - tunnelOverhead
+               interfaceFile.write('TUNNEL_MTU=' + str(tunnelMTU) + '\n\n')
 
                # ====== Routing =============================================
                interfaceFile.write('REMOTE_SITE_NETWORK="'   + str(remoteNetwork)   + '"\n')
