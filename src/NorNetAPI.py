@@ -204,6 +204,8 @@ def getNorNetProvidersForSite(norNetSite):
          providerTbIPv6         = IPv6Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::/0'))
          providerGwIPv6         = IPv6Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_gateway_ipv6', '::'))
          providerMTU            = int(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_mtu', 1500))
+         if ((providerMTU < 1280) or (providerMTU > 9000)):
+            error('Bad MTU for provider: ' + str(provider))
          try:
             providerType        = filterForTextOnly(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_type', ''))
             providerDownstream  = int(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_downstream', 0))
