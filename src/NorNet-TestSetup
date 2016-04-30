@@ -54,10 +54,10 @@ norNetSetup = [
    'site_providers' : [
       [ u'Provider Eins', 'eth1', IPv4Network('172.16.1.2/24'),     IPv4Address('172.16.1.1'),
                                   IPv6Network('fd00:16:1::2/64'),   IPv6Address('fd00:16:1::1'),
-                                  'fibre, business', 0, 0 ],
+                                  1500, 'fibre, business', 0, 0 ],
       [ u'Provider Zwei', 'eth2', IPv4Network('172.17.1.2/24'),     IPv4Address('172.17.1.1'),
                                   IPv6Network('fd00:17:1::2/64'),   IPv6Address('fd00:17:1::1'),
-                                  'fibre, business', 0, 0 ]
+                                  1500, 'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'rekesmørbrød', '', 'physical' ],
@@ -83,10 +83,10 @@ norNetSetup = [
    'site_providers' : [
       [ u'Provider Eins', 'eth1', IPv4Network('172.16.2.2/24'),     IPv4Address('172.16.2.1'),
                                   IPv6Network('fd00:16:2::2/64'),   IPv6Address('fd00:16:2::1'),
-                                  'fibre, business', 0, 0 ],
+                                  1500, 'fibre, business', 0, 0 ],
       [ u'Provider Zwei', 'eth2', IPv4Network('172.17.2.2/24'),     IPv4Address('172.17.2.1'),
                                   IPv6Network('fd00:17:2::2/64'),   IPv6Address('fd00:17:2::1'),
-                                  'fibre, business', 0, 0 ]
+                                  1500, 'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'knäckebröd',   '', 'physical' ],
@@ -112,11 +112,11 @@ norNetSetup = [
    'site_providers' : [
       [ u'Provider Eins', 'eth1', IPv4Network('172.16.3.2/24'),     IPv4Address('172.16.3.1'),
                                   IPv6Network('fd00:16:3::2/64'),   IPv6Address('fd00:16:3::1'),
-                                  'fibre, business', 0, 0 ],
+                                  1500, 'fibre, business', 0, 0 ],
       [ u'Provider Zwei', 'eth2', IPv4Network('172.17.3.2/24'),     IPv4Address('172.17.3.1'),
                                   # IPv6Network('fd00:17:3::2/64'),   IPv6Address('fd00:17:3::1') ]
                                   IPv6Network('::/0'),  IPv6Address('::'),
-                                  'adsl, consumer', 3000, 384 ]
+                                  1492, 'adsl, consumer', 3000, 384 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'weißbier' ],
@@ -142,16 +142,16 @@ norNetSetup = [
    'site_providers' : [
       [ u'Provider Eins', 'eth1', IPv4Network('172.16.4.2/24'),     IPv4Address('172.16.4.1'),
                                   IPv6Network('fd00:16:4::2/64'),   IPv6Address('fd00:16:4::1'),
-                                  'fibre, business', 0, 0 ]
+                                  1500, 'fibre, business', 0, 0 ]
       #,
       #[ u'Provider Zwei', 'eth2', IPv4Network('172.17.4.2/24'),     IPv4Address('172.17.4.1'),
                                   # IPv6Network('fd00:17:4::2/64'),   IPv6Address('fd00:17:4::1') ]
                                   #IPv6Network('::/0'),  IPv6Address('::'),
-                                  #'fibre, consumer', 100000, 20000 ]
+                                  #1500, 'fibre, consumer', 100000, 20000 ]
       #,
       #[ u'Provider Drei', 'eth3', IPv4Network('172.18.4.2/24'),     IPv4Address('172.18.4.1'),
                                   #IPv6Network('fd00:18:4::2/64'),   IPv6Address('fd00:18:4::1'),
-                                  #'fibre, consumer', 100000, 20000 ]
+                                  #1500, 'fibre, consumer', 100000, 20000 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'kangaroo', 'belgrave.delta.test', 'vnc://belgrave..delta.test:5700' ],
@@ -181,7 +181,7 @@ norNetSetup = [
    'site_providers' : [
       [ u'Provider Eins', 'eth1', IPv4Network('172.16.5.2/24'),     IPv4Address('172.16.5.1'),
                                   IPv6Network('fd00:16:5::2/64'),   IPv6Address('fd00:16:5::1'),
-                                  'fibre, business', 0, 0 ]
+                                  1500, 'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'test1', 'sushi.epsilon.test', 'vnc://sushi.epsilon.test:5700' ],
