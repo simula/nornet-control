@@ -1,7 +1,7 @@
 #!/bin/bash
 # --------------- NorNet -- The Multi-Homing Testbed Project ----------------
 #
-# Copyright (C) 2012-2013 by Thomas Dreibholz
+# Copyright (C) 2012-2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -220,6 +220,11 @@ check_and_configure ()
             echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: HiPerConTracer configuration has been updated => restarting HiPerConTracer service ...\x1b[0m"
             cp hipercontracer-config /etc/default/nornet-trace
             service nornet-trace-service restart >/dev/null || true
+         fi
+      else
+         if [ -e /etc/init.d/nornet-trace-service ] ; then
+            # Ensure that trace service is running ...
+            service nornet-trace-service start >/dev/null || true
          fi
       fi
 

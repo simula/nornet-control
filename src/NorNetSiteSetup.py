@@ -103,6 +103,7 @@ def makeNorNetTagTypes():
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Address IPv6', 'nornet_site_tbp' + str(i) + '_address_ipv6', [ 'admin' ])
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv4', 'nornet_site_tbp' + str(i) + '_gateway_ipv4', [ 'admin' ])
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Gateway IPv6', 'nornet_site_tbp' + str(i) + '_gateway_ipv6', [ 'admin' ])
+      makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' MTU',          'nornet_site_tbp' + str(i) + '_mtu',          [ 'admin', 'tech' ])
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Type',         'nornet_site_tbp' + str(i) + '_type',         [ 'admin', 'tech' ])
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Downstream',   'nornet_site_tbp' + str(i) + '_downstream',   [ 'admin', 'tech' ])
       makeTagType('site/nornet', 'NorNet Site Tunnelbox Provider-' + str(i) + ' Upstream',     'nornet_site_tbp' + str(i) + '_upstream',     [ 'admin', 'tech' ])
@@ -301,15 +302,20 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
             providerGatewayIPv4 = IPv4Address(provider[3])
             providerAddressIPv6 = IPv6Interface(provider[4])
             providerGatewayIPv6 = IPv6Address(provider[5])
+            providerMTU        = 576
             providerType       = ''
             providerUpstream   = 0
             providerDownstream = 0
             try:
-               providerType       = provider[6]
-               providerUpstream   = int(provider[7])
-               providerDownstream = int(provider[8])
+               providerMTU        = int(provider[6])
+               providerType       = provider[7]
+               providerUpstream   = int(provider[8])
+               providerDownstream = int(provider[9])
             except:
-               print(('WARNING: Incomplete provider metadata: ' + str(provider) + '\n'))
+               error('Incomplete provider metadata: ' + str(provider))
+               
+            if ((providerMTU < 1280) or (providerMTU > 9000)):
+               error('Bad MTU for provider: ' + str(provider))
 
             if addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_index', str(providerIndex)) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_index" tag to site ' + siteName)
@@ -323,6 +329,8 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
                error('Unable to add "nornet_site_tbp' + str(i) + '_gateway_ipv4" tag to site ' + siteName)
             if addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_gateway_ipv6', str(providerGatewayIPv6)) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_gateway_ipv6" tag to site ' + siteName)
+            if addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_mtu', str(providerMTU)) <= 0:
+               error('Unable to add "nornet_site_tbp' + str(i) + '_mtu" tag to site ' + siteName)
             if addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_type', str(providerType)) <= 0:
                error('Unable to add "nornet_site_tbp' + str(i) + '_type" tag to site ' + siteName)
             if addOrUpdateSiteTag(siteID, 'nornet_site_tbp' + str(i) + '_downstream', str(providerDownstream)) <= 0:
