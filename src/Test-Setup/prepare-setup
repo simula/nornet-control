@@ -2,9 +2,9 @@
 cd ..
 ./User-Setup add --user=dreibh@simula.no --password=xs2nntbTEST "--title=Priv.-Doz. Dr." --firstname=Thomas --lastname=Dreibholz --url=https://www.nntb.no --pi --tech --user
 ./NorNet-TestSetup add ALL --user=dreibh@simula.no
-./Slice-Setup add --name=as_test      --own-addresses --user=plc-root@simula.nornet --user=dreibh@simula.no --permanent
-./Slice-Setup add --name=bs_multipath --own-addresses --user=plc-root@simula.nornet --user=dreibh@simula.no --permanent
-./Slice-Setup add --name=cs_rserpool  --own-addresses --user=plc-root@simula.nornet --user=dreibh@simula.no --permanent
+./Slice-Setup add --name=as_test      --own-addresses --user=plc-root@alpha.test --user=dreibh@simula.no --permanent
+./Slice-Setup add --name=bs_multipath --own-addresses --user=plc-root@alpha.test --user=dreibh@simula.no --permanent
+./Slice-Setup add --name=cs_rserpool  --own-addresses --user=plc-root@alpha.test --user=dreibh@simula.no --permanent
 
 # yum --releasever=19 install openssl openssl-libs glibc
   
