@@ -303,12 +303,12 @@ def makeNorNetSite(siteName, siteAbbrvName, siteEnabled, siteLoginBase, siteUrl,
             providerGatewayIPv4 = IPv4Address(provider[3])
             providerAddressIPv6 = IPv6Network(provider[4])
             providerGatewayIPv6 = IPv6Address(provider[5])
-            providerMTU        = 1500
+            providerMTU        = 576
             providerType       = ''
             providerUpstream   = 0
             providerDownstream = 0
             try:
-               providerType       = int(provider[6])
+               providerMTU        = int(provider[6])
                providerType       = provider[7]
                providerUpstream   = int(provider[8])
                providerDownstream = int(provider[9])
