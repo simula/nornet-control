@@ -1344,7 +1344,8 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
       # ====== Generate provider configuration file =========================
       providerFile = codecs.open(str.lower(localProvider['provider_short_name']) + '.provider', 'w', 'utf-8')
       providerFile.write('PROVIDER_INDEX='                      + str(localProvider['provider_index']) + '\n')
-      providerFile.write('PROVIDER_INTERFACE="'                 + localProvider['provider_tunnelbox_interface']   + '"\n')
+      providerFile.write('PROVIDER_INTERFACE="'                 + localProvider['provider_tunnelbox_interface'] + '"\n')
+      providerFile.write('PROVIDER_MTU='                        + str(localProvider['provider_mtu']) + '\n')
       providerFile.write('PROVIDER_SHORT_NAME="'                + str.lower(localProvider['provider_short_name']) + '"\n')
       providerFile.write('PROVIDER_LONG_NAME="'                 + localProvider['provider_long_name']  + '"\n')
       providerFile.write('PROVIDER_TOS='                        + str(internalRoutingTableTOS)         + '\n')
@@ -1436,6 +1437,9 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
                interfaceFile.write('TUNNEL_LOCAL_INNER_ADDRESS="'  + str(tunnel['tunnel_local_inner_address'].ip)  + '"\n')
                interfaceFile.write('TUNNEL_REMOTE_INNER_ADDRESS="' + str(tunnel['tunnel_remote_inner_address'].ip) + '"\n')
                interfaceFile.write('TUNNEL_INNER_PREFIX='          + str(tunnel['tunnel_local_inner_address'].prefixlen) + '\n\n')
+
+               minMTU = min(localProvider['provider_mtu'], remoteProvider['provider_mtu'])
+               interfaceFile.write('TUNNEL_MTU=' + str(minMTU) + '\n\n')
 
                # ====== Routing =============================================
                interfaceFile.write('REMOTE_SITE_NETWORK="'   + str(remoteNetwork)   + '"\n')
