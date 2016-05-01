@@ -212,7 +212,7 @@ Architecture: all
 Depends: nfs-kernel-server,
          nornet-api,
          nornet-management,
-         python-adns,
+         python3-adns,
          python3,
          tftpd-hpa,
          ${misc:Depends},
