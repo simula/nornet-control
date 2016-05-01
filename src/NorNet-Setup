@@ -51,39 +51,21 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett',  'eth1',
-<<<<<<< HEAD
            IPv4Interface('158.39.4.2/24'),                     IPv4Address('158.39.4.1'),
            IPv6Interface('2001:700:4100:4::2/64'),             IPv6Address('2001:700:4100:4::1'),
-           'fibre, business', 0, 0 ],
+           1500, 'fibre, business', 0, 0 ],
       [ u'Kvantel', 'eth2',
            IPv4Interface('77.88.71.151/26'),                   IPv4Address('77.88.71.133'),
            IPv6Interface('2a02:270:2014:111:77:88:71:151/64'), IPv6Address('2a02:270:2014:111::1'),
-           'fibre, business', 0, 0 ],
+           1500, 'fibre, business', 0, 0 ],
       [ u'Telenor', 'eth3',
            IPv4Interface('62.92.88.42/30'),                    IPv4Address('62.92.88.41'),
            IPv6Interface('::/0'),                              IPv6Address('::'),
-           'ADSL, consumer', 0, 0 ],
+           1492, 'ADSL, consumer', 0, 0 ],
       [ u'PowerTech', 'eth4',
            IPv4Interface('80.241.88.26/29'),                   IPv4Address('80.241.88.25'),
            IPv6Interface('2001:840:4ad5::34/64'),              IPv6Address('2001:840:4ad5::1'),
-           'ADSL, consumer', 0, 0 ]
-=======
-           IPv4Network('158.39.4.2/24'),                     IPv4Address('158.39.4.1'),
-           IPv6Network('2001:700:4100:4::2/64'),             IPv6Address('2001:700:4100:4::1'),
-           1500, 'fibre, business', 0, 0 ],
-      [ u'Kvantel', 'eth2',
-           IPv4Network('77.88.71.151/26'),                   IPv4Address('77.88.71.133'),
-           IPv6Network('2a02:270:2014:111:77:88:71:151/64'), IPv6Address('2a02:270:2014:111::1'),
-           1500, 'fibre, business', 0, 0 ],
-      [ u'Telenor', 'eth3',
-           IPv4Network('62.92.88.42/30'),                    IPv4Address('62.92.88.41'),
-           IPv6Network('::/0'),                              IPv6Address('::'),
-           1492, 'ADSL, consumer', 0, 0 ],
-      [ u'PowerTech', 'eth4',
-           IPv4Network('80.241.88.26/29'),                   IPv4Address('80.241.88.25'),
-           IPv6Network('2001:840:4ad5::34/64'),              IPv6Address('2001:840:4ad5::1'),
            1492, 'ADSL, consumer', 0, 0 ]
->>>>>>> master
    ],
    'site_nodes' : [
       [ 100,  1, u'akerbrygge',  'sognsvann.simula.nornet',      'vnc://sognsvann.simula.nornet:5700'      ],
@@ -123,16 +105,16 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
-           IPv4Network('129.240.66.74/29'),       IPv4Address('129.240.66.73'),
-           IPv6Network('2001:700:100:279::4/64'), IPv6Address('2001:700:100:279::1'),
+           IPv4Interface('129.240.66.74/29'),       IPv4Address('129.240.66.73'),
+           IPv6Interface('2001:700:100:279::4/64'), IPv6Address('2001:700:100:279::1'),
            1500, 'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
-           IPv4Network('195.159.158.198/30'),     IPv4Address('195.159.158.197'),
-           IPv6Network('2001:840:4abd::4/64'),    IPv6Address('2001:840:4abd::1'),
+           IPv4Interface('195.159.158.198/30'),     IPv4Address('195.159.158.197'),
+           IPv6Interface('2001:840:4abd::4/64'),    IPv6Address('2001:840:4abd::1'),
            1492, 'ADSL, consumer', 0, 0 ],
       [ u'Broadnet', 'eth3',
-           IPv4Network('85.252.121.218/30'),     IPv4Address('85.252.121.217'),
-           IPv6Network('::/0'),                   IPv6Address('::'),
+           IPv4Interface('85.252.121.218/30'),      IPv4Address('85.252.121.217'),
+           IPv6Interface('::/0'),                   IPv6Address('::'),
            1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
@@ -162,12 +144,12 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
-           IPv4Network('128.39.49.154/25'),         IPv4Address('128.39.49.129'),
-           IPv6Network('2001:700:1d00:18::154/64'), IPv6Address('2001:700:1d00:18::1'),
+           IPv4Interface('128.39.49.154/25'),         IPv4Address('128.39.49.129'),
+           IPv6Interface('2001:700:1d00:18::154/64'), IPv6Address('2001:700:1d00:18::1'),
            1500, 'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
-           IPv4Network('195.159.158.254/30'),       IPv4Address('195.159.158.253'),
-           IPv6Network('2001:840:490b::254/64'),    IPv6Address('2001:840:490b::1'),
+           IPv4Interface('195.159.158.254/30'),       IPv4Address('195.159.158.253'),
+           IPv6Interface('2001:840:490b::254/64'),    IPv6Address('2001:840:490b::1'),
            1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
@@ -197,16 +179,16 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
-           IPv4Network('129.242.157.228/28'),    IPv4Address('129.242.157.225'),
-           IPv6Network('::/0'),                  IPv6Address('::'),
+           IPv4Interface('129.242.157.228/28'),    IPv4Address('129.242.157.225'),
+           IPv6Interface('::/0'),                  IPv6Address('::'),
            1500, 'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
-           IPv4Network('195.159.158.162/30'),    IPv4Address('195.159.158.161'),
-           IPv6Network('2001:840:490c::162/64'), IPv6Address('2001:840:490c::1'),
+           IPv4Interface('195.159.158.162/30'),    IPv4Address('195.159.158.161'),
+           IPv6Interface('2001:840:490c::162/64'), IPv6Address('2001:840:490c::1'),
            1492, 'ADSL, consumer', 0, 0 ],
       [ u'Telenor', 'eth3',
-           IPv4Network('62.92.89.210/30'),       IPv4Address('62.92.89.209'),
-           IPv6Network('::/0'),                  IPv6Address('::'),
+           IPv4Interface('62.92.89.210/30'),       IPv4Address('62.92.89.209'),
+           IPv6Interface('::/0'),                  IPv6Address('::'),
            1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
@@ -236,16 +218,16 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
-           IPv4Network('152.94.120.6/24'),       IPv4Address('152.94.120.1'),
-           IPv6Network('::/0'),                  IPv6Address('::'),
+           IPv4Interface('152.94.120.6/24'),       IPv4Address('152.94.120.1'),
+           IPv6Interface('::/0'),                  IPv6Address('::'),
            1500, 'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
-           IPv4Network('195.159.158.210/30'),    IPv4Address('195.159.158.209'),
-           IPv6Network('2001:840:4908::210/64'), IPv6Address('2001:840:4908::1'),
+           IPv4Interface('195.159.158.210/30'),    IPv4Address('195.159.158.209'),
+           IPv6Interface('2001:840:4908::210/64'), IPv6Address('2001:840:4908::1'),
            1492, 'ADSL, consumer', 0, 0 ],
       [ u'Altibox', 'eth3',
-           IPv4Network('79.161.4.42/30'),        IPv4Address('79.161.4.41'),
-           IPv6Network('2a01:798:1:9::1/127'),   IPv6Address('2a01:798:1:9::'),
+           IPv4Interface('79.161.4.42/30'),        IPv4Address('79.161.4.41'),
+           IPv6Interface('2a01:798:1:9::1/127'),   IPv6Address('2a01:798:1:9::'),
            1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
@@ -275,12 +257,12 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
-           IPv4Network('158.37.6.195/26'),           IPv4Address('158.37.6.193'),
-           IPv6Network('2001:700:201:F002::195/64'), IPv6Address('2001:700:201:F002::1'),
+           IPv4Interface('158.37.6.195/26'),           IPv4Address('158.37.6.193'),
+           IPv6Interface('2001:700:201:F002::195/64'), IPv6Address('2001:700:201:F002::1'),
            1500, 'fibre, business', 0, 0 ],
       [ u'Bergenshalvøens Kommunale Kraftselskap', 'eth2',
-           IPv4Network('62.97.202.70/30'),           IPv4Address('62.97.202.69'),
-           IPv6Network('2A00:14D8:1001:556::2/126'), IPv6Address('2A00:14D8:1001:556::1'),
+           IPv4Interface('62.97.202.70/30'),           IPv4Address('62.97.202.69'),
+           IPv6Interface('2A00:14D8:1001:556::2/126'), IPv6Address('2A00:14D8:1001:556::1'),
            1500, 'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
@@ -315,16 +297,16 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
-           IPv4Network('158.36.50.178/29'),         IPv4Address('158.36.50.177'),
-           IPv6Network('2001:700:1500:c064::2/64'), IPv6Address('2001:700:1500:c064::1'),
+           IPv4Interface('158.36.50.178/29'),         IPv4Address('158.36.50.177'),
+           IPv6Interface('2001:700:1500:c064::2/64'), IPv6Address('2001:700:1500:c064::1'),
            1500, 'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
-           IPv4Network('195.159.203.50/30'),        IPv4Address('195.159.203.49'),
-           IPv6Network('2001:840:490a::50/64'),     IPv6Address('2001:840:490a::1'),
+           IPv4Interface('195.159.203.50/30'),        IPv4Address('195.159.203.49'),
+           IPv6Interface('2001:840:490a::50/64'),     IPv6Address('2001:840:490a::1'),
            1492, 'ADSL, consumer', 0, 0 ]
       #[ u'Broadnet', 'eth3',
-           #IPv4Network('193.69.209.10'),            IPv4Address('193.69.209.9'),
-           #IPv6Network('::/0'),                     IPv6Address('::'),
+           #IPv4Interface('193.69.209.10'),            IPv4Address('193.69.209.9'),
+           #IPv6Interface('::/0'),                     IPv6Address('::'),
            #1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
@@ -354,8 +336,8 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
-           IPv4Network('158.39.149.132/25'), IPv4Address('158.39.149.129'),
-           IPv6Network('::/0'),              IPv6Address('::'),
+           IPv4Interface('158.39.149.132/25'), IPv4Address('158.39.149.129'),
+           IPv6Interface('::/0'),              IPv6Address('::'),
            1500, 'fibre, business', 0, 0 ],
       [ u'Telenor', 'eth2',
            IPv4Interface('193.213.19.83/20'), IPv4Address('193.213.16.1'),
@@ -389,12 +371,12 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
-           IPv4Network('129.241.200.128/24'),        IPv4Address('129.241.200.1'),
-           IPv6Network('2001:700:300:2211::128/64'), IPv6Address('2001:700:300:2211::1'),
+           IPv4Interface('129.241.200.128/24'),        IPv4Address('129.241.200.1'),
+           IPv6Interface('2001:700:300:2211::128/64'), IPv6Address('2001:700:300:2211::1'),
            1500, 'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
-           IPv4Network('195.159.158.134/30'),        IPv4Address('195.159.158.133'),
-           IPv6Network('2001:840:490e::134/64'),     IPv6Address('2001:840:490e::1'),
+           IPv4Interface('195.159.158.134/30'),        IPv4Address('195.159.158.133'),
+           IPv6Interface('2001:840:490e::134/64'),     IPv6Address('2001:840:490e::1'),
            1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
@@ -424,16 +406,16 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
-           IPv4Network('158.39.93.231/27'),         IPv4Address('158.39.93.225'),
-           IPv6Network('2001:700:c00:150::231/64'), IPv6Address('2001:700:c00:150::1'),
+           IPv4Interface('158.39.93.231/27'),         IPv4Address('158.39.93.225'),
+           IPv6Interface('2001:700:c00:150::231/64'), IPv6Address('2001:700:c00:150::1'),
            1500, 'fibre, business', 0, 0 ],
       [ u'PowerTech', 'eth2',
-           IPv4Network('195.159.158.174/30'),       IPv4Address('195.159.158.173'),
-           IPv6Network('2001:840:490d::174/64'),    IPv6Address('2001:840:490d::1'),
+           IPv4Interface('195.159.158.174/30'),       IPv4Address('195.159.158.173'),
+           IPv6Interface('2001:840:490d::174/64'),    IPv6Address('2001:840:490d::1'),
            1492, 'ADSL, consumer', 0, 0 ],
       [ u'Broadnet', 'eth3',
-           IPv4Network('85.252.123.242/30'),        IPv4Address('85.252.123.241'),
-           IPv6Network('::/0'),                     IPv6Address('::'),
+           IPv4Interface('85.252.123.242/30'),        IPv4Address('85.252.123.241'),
+           IPv6Interface('::/0'),                     IPv6Address('::'),
            1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
@@ -463,8 +445,8 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
-           IPv4Network('128.39.120.60/23'),       IPv4Address('128.39.120.1'),
-           IPv6Network('2001:700:700:22::60/64'), IPv6Address('2001:700:700:22::'),
+           IPv4Interface('128.39.120.60/23'),       IPv4Address('128.39.120.1'),
+           IPv6Interface('2001:700:700:22::60/64'), IPv6Address('2001:700:700:22::'),
            1500, 'fibre, business', 0, 0 ]
    ],
    # Server #251: 128.39.120.63
@@ -500,8 +482,8 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Deutsches Forschungsnetz', 'eth1',
-           IPv4Network('131.246.112.120/24'),        IPv4Address('131.246.112.254'),
-           IPv6Network('2001:638:208:ef2d::120/64'), IPv6Address('2001:638:208:ef2d:0:ff:fe00:ffd'),
+           IPv4Interface('131.246.112.120/24'),        IPv4Address('131.246.112.254'),
+           IPv6Interface('2001:638:208:ef2d::120/64'), IPv6Address('2001:638:208:ef2d:0:ff:fe00:ffd'),
            1500, 'fibre, business', 0, 0 ],
    ],
    'site_nodes' : [
@@ -528,8 +510,8 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Deutsches Forschungsnetz', 'eth1',
-           IPv4Network('141.22.27.235/23'),    IPv4Address('141.22.26.1'),
-           IPv6Network('2001:4dd0:fe62::2/64'),IPv6Address('2001:4dd0:fe62::1'),
+           IPv4Interface('141.22.27.235/23'),    IPv4Address('141.22.26.1'),
+           IPv6Interface('2001:4dd0:fe62::2/64'),IPv6Address('2001:4dd0:fe62::1'),
            1500, 'fibre, business', 0, 0 ],
    ],
    'site_nodes' : [
@@ -557,12 +539,12 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Deutsches Forschungsnetz', 'eth1',
-           IPv4Network('132.252.152.105/24'),        IPv4Address('132.252.152.1'),
-           IPv6Network('2001:638:501:4ef2::105/64'), IPv6Address('2001:638:501:4ef2::1'),
+           IPv4Interface('132.252.152.105/24'),        IPv4Address('132.252.152.1'),
+           IPv6Interface('2001:638:501:4ef2::105/64'), IPv6Address('2001:638:501:4ef2::1'),
            1500, 'fibre, business', 0, 0 ],
       [ u'Versatel', 'eth2',
-           IPv4Network('89.246.242.228/29'), IPv4Address('89.246.242.225'),
-           IPv6Network('::/0'),              IPv6Address('::'),
+           IPv4Interface('89.246.242.228/29'), IPv4Address('89.246.242.225'),
+           IPv6Interface('::/0'),              IPv6Address('::'),
            1492, 'ADSL, consumer', 16000, 1000 ]
    ],
    'site_nodes' : [   # VMware cluster
@@ -577,7 +559,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 43,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Universität Darmstadt',
    'site_short_name'   : 'TUDA',
    'site_url'          : 'https://www.deeds.informatik.tu-darmstadt.de',
@@ -594,8 +576,8 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Deutsches Forschungsnetz', 'eth1',
-           IPv4Network('130.83.162.212/25'), IPv4Address('130.83.162.254'),
-           IPv6Network('::/0'),              IPv6Address('::'),
+           IPv4Interface('130.83.162.212/25'), IPv4Address('130.83.162.254'),
+           IPv6Interface('::/0'),              IPv6Address('::'),
            1500, 'fibre, business', 0, 0 ],
    ],
    'site_nodes' : [
@@ -623,8 +605,8 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Swedish University Network', 'eth1',
-           IPv4Network('193.10.227.85/29'), IPv4Address('193.10.227.81'),
-           IPv6Network('::/0'),             IPv6Address('::'),
+           IPv4Interface('193.10.227.85/29'), IPv4Address('193.10.227.81'),
+           IPv6Interface('::/0'),             IPv6Address('::'),
            1500, 'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [   # VMware cluster + physical machines
@@ -653,12 +635,12 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'China Education and Research Network', 'eth1',
-           IPv4Network('210.37.45.149/26'), IPv4Address('210.37.45.190'),
-           IPv6Network('::/0'),             IPv6Address('::'),
+           IPv4Interface('210.37.45.149/26'), IPv4Address('210.37.45.190'),
+           IPv6Interface('::/0'),             IPv6Address('::'),
            1500, 'fibre, business', 0, 0 ],
       [ u'China Unicom', 'eth2',
-           IPv4Network('113.59.104.58/29'), IPv4Address('113.59.104.62'),
-           IPv6Network('::/0'),             IPv6Address('::'),
+           IPv4Interface('113.59.104.58/29'), IPv4Address('113.59.104.62'),
+           IPv6Interface('::/0'),             IPv6Address('::'),
            1500, 'fibre, consumer', 0, 0 ]
    ],
    'site_nodes' : [
@@ -671,67 +653,67 @@ norNetSetup = [
    ] },
 
  # Qiongzhou University (琼州大学)
- { 'site_index'        : 89,
-   'site_enabled'      : False,
-   'site_long_name'    : u'Qiongzhou University',
-   'site_short_name'   : 'QU',
-   'site_url'          : 'http://www.qzu.edu.cn',
-   'site_domain'       : 'qu.nornet',
-   'site_city'         : 'Sanya',
-   'site_province'     : 'Hainan',
-   'site_country'      : 'China',
-   'site_country_code' : 'CN',
-   'site_latitude'     : 18.288405,
-   'site_longitude'    : 109.55445,
-   'site_altitude'     : 10,
-   'site_contacts'     : [ u'Yu, Shi Huan: H.Y.Shi@163.com', u'Fa, Fu: fufa@hainu.edu.cn', u'Zhou, Xing: xingzhou50@126.com' ],
-   'site_pcu'          : [ IPv4Address('222.17.128.252'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ u'China Education and Research Network', 'eth1',
-           IPv4Network('222.17.128.253/26'), IPv4Address('222.17.128.193'),
-           IPv6Network('::/0'),              IPv6Address('::'),
-           1500, 'fibre, business', 0, 0 ]
-   ],
-   'site_nodes' : [
-      # Naming scheme: places in Sanya
-      [ 100, 1, u'sanyabay',      'boating.qu.nornet',   'vnc://boating.qu.nornet:5700'   ],
-      [ 101, 2, u'luhuitou',      'boating.qu.nornet',   'vnc://boating.qu.nornet:5701'   ],
-      [ 102, 3, u'tianyahaijiao', 'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5700'  ],
-      [ 103, 4, u'qiongzhou',     'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5701'  ],
-      [ 104, 5, u'lizhigou',      'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5700' ],
-      [ 105, 6, u'haitangbay',    'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5701' ]
-   ] },
+ #{ 'site_index'        : 89,
+   #'site_enabled'      : False,
+   #'site_long_name'    : u'Qiongzhou University',
+   #'site_short_name'   : 'QU',
+   #'site_url'          : 'http://www.qzu.edu.cn',
+   #'site_domain'       : 'qu.nornet',
+   #'site_city'         : 'Sanya',
+   #'site_province'     : 'Hainan',
+   #'site_country'      : 'China',
+   #'site_country_code' : 'CN',
+   #'site_latitude'     : 18.288405,
+   #'site_longitude'    : 109.55445,
+   #'site_altitude'     : 10,
+   #'site_contacts'     : [ u'Yu, Shi Huan: H.Y.Shi@163.com', u'Fa, Fu: fufa@hainu.edu.cn', u'Zhou, Xing: xingzhou50@126.com' ],
+   #'site_pcu'          : [ IPv4Address('222.17.128.252'), 'pcu-root', 'a-secret-password' ],
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'China Education and Research Network', 'eth1',
+           #IPv4Interface('222.17.128.253/26'), IPv4Address('222.17.128.193'),
+           #IPv6Interface('::/0'),              IPv6Address('::'),
+           #1500, 'fibre, business', 0, 0 ]
+   #],
+   #'site_nodes' : [
+      ## Naming scheme: places in Sanya
+      #[ 100, 1, u'sanyabay',      'boating.qu.nornet',   'vnc://boating.qu.nornet:5700'   ],
+      #[ 101, 2, u'luhuitou',      'boating.qu.nornet',   'vnc://boating.qu.nornet:5701'   ],
+      #[ 102, 3, u'tianyahaijiao', 'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5700'  ],
+      #[ 103, 4, u'qiongzhou',     'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5701'  ],
+      #[ 104, 5, u'lizhigou',      'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5700' ],
+      #[ 105, 6, u'haitangbay',    'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5701' ]
+   #] },
 
  # Mongolian University of Science and Technology (Шинжлэх ухаан технологийн их сургууль)
- { 'site_index'        : 95,
-   'site_enabled'      : False,
-   'site_long_name'    : u'Mongolian Univeristy of Science and Technology',
-   'site_short_name'   : 'MUST',
-   'site_url'          : 'http://www.must.edu.mn',
-   'site_domain'       : 'must.nornet',
-   'site_city'         : 'Ulan Bator',
-   'site_province'     : 'Ulan Bator',
-   'site_country'      : 'Mongolia',
-   'site_country_code' : 'MN',
-   'site_latitude'     : 47.922041,
-   'site_longitude'    : 106.924384,
-   'site_altitude'     : 1350,
-   'site_contacts'     : [ u'Esbold, Unurkhaan: esbold98@gmail.com' ],
-   'site_pcu'          : [ IPv4Address('202.5.194.8'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ u'Erdemnet', 'eth0',   # << --- CHECK ME! ---
-           IPv4Network('202.5.194.9/24'), IPv4Address('202.5.194.2'),
-           IPv6Network('::/0'),           IPv6Address('::'),
-           1500, 'fibre, business', 0, 0 ]
-   ],
-   'site_nodes' : [
-      # Naming scheme: districts of Ulan Bator
-      # Baganuur, Bagakhangai, Bayangol, Bayanzürkh, Chingeltei, Khan Uul, Nalaikh, Songino Khairkhan, and Sükhbaatar
-      [ 100, 1, u'baganuur',    'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5700' ],
-      [ 101, 2, u'bagakhangai', 'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5701' ]
-   ] },
+ #{ 'site_index'        : 95,
+   #'site_enabled'      : False,
+   #'site_long_name'    : u'Mongolian Univeristy of Science and Technology',
+   #'site_short_name'   : 'MUST',
+   #'site_url'          : 'http://www.must.edu.mn',
+   #'site_domain'       : 'must.nornet',
+   #'site_city'         : 'Ulan Bator',
+   #'site_province'     : 'Ulan Bator',
+   #'site_country'      : 'Mongolia',
+   #'site_country_code' : 'MN',
+   #'site_latitude'     : 47.922041,
+   #'site_longitude'    : 106.924384,
+   #'site_altitude'     : 1350,
+   #'site_contacts'     : [ u'Esbold, Unurkhaan: esbold98@gmail.com' ],
+   #'site_pcu'          : [ IPv4Address('202.5.194.8'), 'pcu-root', 'a-secret-password' ],
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'Erdemnet', 'eth0',   # << --- CHECK ME! ---
+           #IPv4Interface('202.5.194.9/24'), IPv4Address('202.5.194.2'),
+           #IPv6Interface('::/0'),           IPv6Address('::'),
+           #1500, 'fibre, business', 0, 0 ]
+   #],
+   #'site_nodes' : [
+      ## Naming scheme: districts of Ulan Bator
+      ## Baganuur, Bagakhangai, Bayangol, Bayanzürkh, Chingeltei, Khan Uul, Nalaikh, Songino Khairkhan, and Sükhbaatar
+      #[ 100, 1, u'baganuur',    'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5700' ],
+      #[ 101, 2, u'bagakhangai', 'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5701' ]
+   #] },
 
  { 'site_index'        : 100,
    'site_enabled'      : True,
@@ -751,8 +733,8 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Kansas Research and Education Network', 'eth1',
-           IPv4Network('164.113.202.17/28'),        IPv4Address('164.113.202.30'),
-           IPv6Network('2001:49d0:3c00:6::17/64'),  IPv6Address('2001:49d0:3c00:6::1'),
+           IPv4Interface('164.113.202.17/28'),        IPv4Address('164.113.202.30'),
+           IPv6Interface('2001:49d0:3c00:6::17/64'),  IPv6Address('2001:49d0:3c00:6::1'),
            1500, 'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
@@ -762,34 +744,34 @@ norNetSetup = [
       #[ 103, 4, u'stull' ]
    ] },
 
- { 'site_index'        : 101,
-   'site_enabled'      : False,
-   'site_long_name'    : u'New York University',
-   'site_short_name'   : 'NYU',
-   'site_url'          : 'http://engineering.nyu.edu',
-   'site_domain'       : 'nyu.nornet',
-   'site_city'         : 'Brooklyn',
-   'site_province'     : 'New York',
-   'site_country'      : 'United States of America',
-   'site_country_code' : 'US',
-   'site_latitude'     : 40.694074,
-   'site_longitude'    :  -73.986932,
-   'site_altitude'     : 20,
-   'site_contacts'     : [ u'Rivera, Julio: jr847@nyu.edu', u'Cappos, Justin: jcappos@nyu.edu', u'Rafetseder, Albert: albert.rafetseder+nyu@univie.ac.at' ],
-   'site_pcu'          : [ IPv4Address('128.238.63.80'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ u'Lightower Fiber Networks', 'eth1',
-           IPv4Network('128.238.63.79/24'), IPv4Address('128.238.63.1'),
-           IPv6Network('::/0'),             IPv6Address('::'),
-           1500, 'fibre, business', 0, 0 ]
-   ],
-   'site_nodes' : [   # VMware cluster
-      [ 100, 1, u'brooklyn'  ],
-      [ 101, 2, u'manhattan' ],
-      [ 102, 3, u'bronx'     ],
-      [ 103, 4, u'queens'    ]
-   ] },
+ #{ 'site_index'        : 101,
+   #'site_enabled'      : False,
+   #'site_long_name'    : u'New York University',
+   #'site_short_name'   : 'NYU',
+   #'site_url'          : 'http://engineering.nyu.edu',
+   #'site_domain'       : 'nyu.nornet',
+   #'site_city'         : 'Brooklyn',
+   #'site_province'     : 'New York',
+   #'site_country'      : 'United States of America',
+   #'site_country_code' : 'US',
+   #'site_latitude'     : 40.694074,
+   #'site_longitude'    :  -73.986932,
+   #'site_altitude'     : 20,
+   #'site_contacts'     : [ u'Rivera, Julio: jr847@nyu.edu', u'Cappos, Justin: jcappos@nyu.edu', u'Rafetseder, Albert: albert.rafetseder+nyu@univie.ac.at' ],
+   #'site_pcu'          : [ IPv4Address('128.238.63.80'), 'pcu-root', 'a-secret-password' ],
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'Lightower Fiber Networks', 'eth1',
+           #IPv4Interface('128.238.63.79/24'), IPv4Address('128.238.63.1'),
+           #IPv6Interface('::/0'),             IPv6Address('::'),
+           #1500, 'fibre, business', 0, 0 ]
+   #],
+   #'site_nodes' : [   # VMware cluster
+      #[ 100, 1, u'brooklyn'  ],
+      #[ 101, 2, u'manhattan' ],
+      #[ 102, 3, u'bronx'     ],
+      #[ 103, 4, u'queens'    ]
+   #] },
 
  { 'site_index'        : 160,
    'site_enabled'      : True,
@@ -809,8 +791,8 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Korea Research Environment Open NETwork', 'eth1',
-           IPv4Network('203.230.60.125/26'), IPv4Address('203.230.60.65'),
-           IPv6Network('::/0'),              IPv6Address('::'),
+           IPv4Interface('203.230.60.125/26'), IPv4Address('203.230.60.65'),
+           IPv6Interface('::/0'),              IPv6Address('::'),
            1500, 'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
@@ -818,43 +800,43 @@ norNetSetup = [
       # Research nodes: stations in Seoul
       # Physical machines: rivers in Seoul
       [ 100, 1, u'yongsan', 'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5700' ],
-      [ 101, 2, u'mapo',    'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5701' ],
-      [ 102, 3, u'ichon',   'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5702' ],
-      [ 103, 4, u'gireum',  'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5703' ]
+      [ 101, 2, u'mapo',    'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5701' ]
+      #[ 102, 3, u'ichon',   'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5702' ],
+      #[ 103, 4, u'gireum',  'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5703' ],
       #[ 104, 5, u'aram',    'hangang.korea.nornet',   'vnc://hangang.korea.nornet:5700'   ],
       #[ 105, 6, u'geumho',  'hangang.korea.nornet',   'vnc://hangang.korea.nornet:5701'   ]
    ] },
 
- { 'site_index'        : 120,
-   'site_enabled'      : False,
-   'site_long_name'    : u'Universidade Federal de São Carlos',
-   'site_short_name'   : 'UFSCAR',
-   'site_url'          : 'http://www.ufscar.br',
-   'site_domain'       : 'ufscar.nornet',
-   'site_city'         : 'Sorocaba',
-   'site_province'     : 'São Paulo',
-   'site_country'      : 'Brazil',
-   'site_country_code' : 'BR',
-   'site_latitude'     : -21.980956,
-   'site_longitude'    : -47.883528,
-   'site_altitude'     : 50,
-   'site_contacts'     : [ u'Sandri, Marcus: mwws55@gmail.com', u'Verdi, Fábio Luciano: verdi@ufscar.br', u'Silva, Alan: alansilva@acm.org' ],
-   'site_pcu'          : [ IPv4Address('200.133.238.124'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ u'Rede Nacional de Ensino e Pesquisa', 'eth1',
-           IPv4Network('200.133.238.125/27'), IPv4Address('200.133.238.97'),
-           IPv6Network('::/0'),               IPv6Address('::'),
-           1500, 'fibre, business', 0, 0 ]
-      #[ u'Academic Network at São Paulo', 'eth2',
-           #IPv4Network('186.219.95.214/24'), IPv4Address('186.219.95.1'),
-           #IPv6Network('::/0'),              IPv6Address('::'),
+ #{ 'site_index'        : 120,
+   #'site_enabled'      : False,
+   #'site_long_name'    : u'Universidade Federal de São Carlos',
+   #'site_short_name'   : 'UFSCAR',
+   #'site_url'          : 'http://www.ufscar.br',
+   #'site_domain'       : 'ufscar.nornet',
+   #'site_city'         : 'Sorocaba',
+   #'site_province'     : 'São Paulo',
+   #'site_country'      : 'Brazil',
+   #'site_country_code' : 'BR',
+   #'site_latitude'     : -21.980956,
+   #'site_longitude'    : -47.883528,
+   #'site_altitude'     : 50,
+   #'site_contacts'     : [ u'Sandri, Marcus: mwws55@gmail.com', u'Verdi, Fábio Luciano: verdi@ufscar.br', u'Silva, Alan: alansilva@acm.org' ],
+   #'site_pcu'          : [ IPv4Address('200.133.238.124'), 'pcu-root', 'a-secret-password' ],
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'Rede Nacional de Ensino e Pesquisa', 'eth1',
+           #IPv4Interface('200.133.238.125/27'), IPv4Address('200.133.238.97'),
+           #IPv6Interface('::/0'),               IPv6Address('::'),
            #1500, 'fibre, business', 0, 0 ]
-   ],
-   'site_nodes' : [
-      [ 100, 1, u'soroc'   ],
-      [ 101, 2, u'lerisor' ]
-   ] },
+      ##[ u'Academic Network at São Paulo', 'eth2',
+           ##IPv4Interface('186.219.95.214/24'), IPv4Address('186.219.95.1'),
+           ##IPv6Interface('::/0'),              IPv6Address('::'),
+           ##1500, 'fibre, business', 0, 0 ]
+   #],
+   #'site_nodes' : [
+      #[ 100, 1, u'soroc'   ],
+      #[ 101, 2, u'lerisor' ]
+   #] },
 
  { 'site_index'        : 200,
    'site_enabled'      : True,
@@ -875,8 +857,8 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Australian Academic and Research Network', 'eth1',
-           IPv4Network('221.199.217.167/26'), IPv4Address('221.199.217.129'),
-           IPv6Network('::/0'),               IPv6Address('::'),
+           IPv4Interface('221.199.217.167/26'), IPv4Address('221.199.217.129'),
+           IPv6Interface('::/0'),               IPv6Address('::'),
            1500, 'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
