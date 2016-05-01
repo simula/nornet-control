@@ -187,12 +187,12 @@ def getNorNetProvidersForSite(norNetSite):
          if providerIndex <= 0:
             continue
          providerInfo           = getNorNetProviderInfo(providerIndex)
-         providerTbIPv4         = IPv4Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv4', '0.0.0.0/0'))
+         providerTbIPv4         = IPv4Interface(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv4', '0.0.0.0/0'))
          providerGwIPv4         = IPv4Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_gateway_ipv4', '0.0.0.0'))
          if not providerGwIPv4 in providerTbIPv4:
             error('Bad IPv4 network/gateway settings of provider ' + providerInfo[0] + \
                   ': ' + str(providerGwIPv4) + ' not in ' + str(providerGwIPv4))
-         providerTbIPv6         = IPv6Network(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::/0'))
+         providerTbIPv6         = IPv6Interface(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::/0'))
          providerGwIPv6         = IPv6Address(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_gateway_ipv6', '::'))
          providerMTU            = int(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_mtu', 1500))
          if ((providerMTU < 1280) or (providerMTU > 9000)):
