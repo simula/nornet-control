@@ -212,8 +212,8 @@ Architecture: all
 Depends: nfs-kernel-server,
          nornet-api,
          nornet-management,
-         python-adns,
          python3,
+         python3-adns,
          tftpd-hpa,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -360,7 +360,6 @@ Depends: cfengine3,
          python (>= 2.7),
          qemu-kvm,
          virtinst,
-         virtualbox-nornet-stable | virtualbox-nornet-testing | virtualbox-nornet-experimental | virtualbox,
          xauth,
          ${misc:Depends},
          ${shlibs:Depends}

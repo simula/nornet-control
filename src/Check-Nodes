@@ -34,7 +34,7 @@ function check-node ()
    local nodeName="$1"
 
    if ping -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
-      env LANG=C ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -oConnectTimeout=$connectTimeout -i $KEY $SLICE@$nodeName 'echo "Node is OK" ; uptime' >$nodeName.log 2>&1
+      env LANG=C timeout --signal=INT --kill-after=60s 55 ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -oConnectTimeout=$connectTimeout -i $KEY $SLICE@$nodeName 'echo "Node is OK" ; uptime' >$nodeName.log 2>&1
       headline="`grep -v "^Warning: Permanently" $nodeName.log | head -n1 | tr --delete '\n\r'`"
       if [ "$headline" = "Node is OK" ] ; then
          printf "$goodIntro%s\tOK\t%-30s\t\"%s\"$normalMode\n" \

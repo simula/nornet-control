@@ -248,6 +248,7 @@ make-tunnel ()
       ip $innerV6option addr add $innerLocalIP/$innerPrefixLength dev $interface   || success=0
    fi
    ip link set dev $interface up
+   ip link set dev $interface mtu $TUNNEL_MTU
    # Turn off Reverse Path filtering, since it prevents routing packets
    # from interface when this interface has no route to the source!
    # Also, do the same for ICMP Redirects.
@@ -548,6 +549,7 @@ load-interface-configuration ()
    INTERFACE_TYPE=
    GRE_KEY=
    INTERFACE_PROVIDER=
+   TUNNEL_MTU=
    TUNNEL_V6LINKLOCAL_ADDRESS=
    TUNNEL_LOCAL_OUTER_ADDRESS=
    TUNNEL_REMOTE_OUTER_ADDRESS=
@@ -581,6 +583,9 @@ load-interface-configuration ()
          echo 2>&1 "ERROR: Bad interface TUNNEL_OUTER_PREFIX setting in $INTERFACE: $TUNNEL_OUTER_PREFIX!"
          exit 1
       fi
+   fi
+   if [ "$TUNNEL_MTU" = "" ] ; then
+      TUNNEL_MTU=1452   # Probably a reasonable default.
    fi
 
    if ! is-ip-address "$TUNNEL_LOCAL_INNER_ADDRESS" ; then
