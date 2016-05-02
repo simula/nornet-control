@@ -6,9 +6,9 @@ Homepage: https://www.nntb.no/
 Build-Depends: debhelper (>= 9),
                imagemagick,
                libfile-fcntllock-perl,
-               python-support | dh-python,
-               python3 (>= 3.2~),
-               python3-setuptools
+               libpython3-all-dev,
+               python3,
+               python3-all
 Standards-Version: 3.9.7
 X-Python3-Version: >= 3.2
 Vcs-Git: https://github.com/simula/nornet-control.git
@@ -63,7 +63,7 @@ Depends: apport-retrace,
          whois,
          xmlstarlet,
          ${misc:Depends},
-         ${python:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Recommends: tshark
 Conflicts: kdeconnect,
@@ -88,7 +88,7 @@ Depends: fvwm,
          xserver-xorg,
          xterm,
          ${misc:Depends},
-         ${python:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet X11 Login
  This metapackage contains basic X11 software for NorNet systems. The
@@ -144,7 +144,7 @@ Package: nornet-api
 Architecture: any
 Depends: python3-ipaddr,
          ${misc:Depends},
-         ${python:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet API
  This package contains the NorNet Python API library. It contains functions
@@ -375,7 +375,7 @@ Package: nornet-trace-service
 Architecture: any
 Depends: hipercontracer,
          ${misc:Depends},
-         ${python:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet Trace Service
  NorNet Trace Service is the traceroute service for the NorNet testbed.

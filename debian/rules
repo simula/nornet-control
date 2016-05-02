@@ -21,6 +21,10 @@ override_dh_auto_install:
 	install -m 0755 debian/nornet-tunnelbox.ifupdown debian/nornet-tunnelbox/etc/network/if-up.d/nornet-tunnelbox
 	install -m 0755 debian/nornet-tunnelbox.ifupdown debian/nornet-tunnelbox/etc/network/if-down.d/nornet-tunnelbox
 
+override_dh_auto_clean:
+	dh_clean
+	rm -rf build
+
 # Use upstream ChangeLog for installation
 override_dh_installchangelogs:
 	dh_installchangelogs -k ChangeLog
