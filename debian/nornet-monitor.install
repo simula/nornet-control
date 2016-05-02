@@ -1,6 +1,8 @@
 Kontrollsenter/Clock/*.svg                /var/www/Kontrollsenter/Clock/
 Kontrollsenter/Forward-*.html             /var/www/Kontrollsenter
 Kontrollsenter/NorNet-*                   /var/www/Kontrollsenter
+Kontrollsenter/UnifrakturCook/*           /var/www/Kontrollsenter/UnifrakturCook/
+Kontrollsenter/UnifrakturCook/sources/    /var/www/Kontrollsenter/UnifrakturCook/sources/
 Make-Monitor-Configuration                /usr/bin
 Monitor/nornet-commands.cfg               /etc/nagios3
 Monitor/nornet-services.cfg               /etc/nagios3
