@@ -131,6 +131,16 @@ mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Flags
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Icons
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Markers
 
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook
+cp -r src/Kontrollsenter/UnifrakturCook/FontLog.txt              $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/
+cp -r src/Kontrollsenter/UnifrakturCook/OFL-FAQ.txt              $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/
+cp -r src/Kontrollsenter/UnifrakturCook/OFL.txt                  $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/
+cp -r src/Kontrollsenter/UnifrakturCook/UnifrakturCook-Light.ttf $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/
+cp -r src/Kontrollsenter/UnifrakturCook/UnifrakturCook.ttf       $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/sources
+cp -r src/Kontrollsenter/UnifrakturCook/sources/UnifrakturCook-Light.sfd $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/sources/
+cp -r src/Kontrollsenter/UnifrakturCook/sources/UnifrakturCook.sfd       $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/sources/
+
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Original
 cp -r src/Artwork/Sites/Original/*.jpeg $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Original/

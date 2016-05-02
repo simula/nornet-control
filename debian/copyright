@@ -7,7 +7,7 @@ Files: *
 Copyright: Copyright 2012-2016 Thomas Dreibholz
 License: GPL-3
 
-Files: Kontrollsenter/Clock
+Files: Kontrollsenter/Clock/*
 Copyright: Copyright 2012 Rüdiger Appel
 License: CC-BY
 
@@ -16,14 +16,16 @@ Copyright: Copyright Matt Walker
 License: MIT
 
 Files: Kontrollsenter/UnifrakturCook/*
-Copyright: Copyright 2009 Peter Wiegel
+Copyright:
+ Copyright 2009 Peter Wiegel
+ Copyright 2010 J. 'Mach' Wust
 License: SIL-OFL
 
-Files: Artwork/Graphics/*
+Files: Artwork/Graphics/*/*
 Copyright: Copyright Wikimedia Commons
 License: CC-BY-SA
 
-Files: Artwork/Sites/* is
+Files: Artwork/Sites/*/* is
 Copyright: See EXIF information!
 License: CC-BY-SA
 
