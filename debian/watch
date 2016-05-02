@@ -1,3 +1,3 @@
 version=3
-opts=filenamemangle=s/nornet-(\d\S*)\.tar\.gz/nornet-$1\.tar\.gz/ \
-  https://github.com/simula/nornet/archive nornet-(\d\S*)\.tar\.gz
+opts=filenamemangle=s/.+\/nornet-(\d\S*)\.tar\.gz/nornet-$1\.tar\.gz/ \
+  https://github.com/simula/nornet-control/tags .*/nornet-(\d\S*)\.tar\.gz
