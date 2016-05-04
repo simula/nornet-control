@@ -6,7 +6,7 @@ while [ "$1" != "" ] ; do
 
    echo "Converting $input to $output ..."
    convert -quiet "$input" -sample 1024x "$output-1024.png"
-   ./image-resize-with-cropping "$output-1024.png" "$output-1.5:1.png" 1.5
+   ../../../image-resize-with-cropping "$output-1024.png" "$output-1.5:1.png" 1.5
    convert -quiet "$output-1.5:1.png" -sample 96x64\! "$output"
    rm -f "$output-1.5:1.png" "$output-1024.png"
    shift

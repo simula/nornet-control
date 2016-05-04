@@ -1,8 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Make Node Configuration
-# Copyright (C) 2012-2013 by Thomas Dreibholz
+# Copyright (C) 2012-2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ def makeNTPConfiguration(fullSiteList, localSite, localNode):
             try:
                result = socket.getaddrinfo (ntpServerName, 123, type, socket.SOCK_DGRAM)
                for resultItem in result:
-                  ntpServerList.append(str(IPAddress(resultItem[4][0])))
+                  ntpServerList.append(str(ip_address(resultItem[4][0])))
                   success             = True
                   customNTPServerList = True
             except:
@@ -59,7 +59,7 @@ def makeNTPConfiguration(fullSiteList, localSite, localNode):
    else:
       if localSite != None:
          for i in range(0, NorNet_MaxNTPServers - 1):
-            ntpServer = IPAddress(getTagValue(localSite['site_tags'], 'nornet_site_ntp' + str(1 + i), '0.0.0.0'))
+            ntpServer = ip_address(getTagValue(localSite['site_tags'], 'nornet_site_ntp' + str(1 + i), '0.0.0.0'))
             if ntpServer != IPv4Address('0.0.0.0'):
                ntpServerList.append(str(ntpServer))
 
@@ -196,7 +196,7 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, name, descripti
 # ###### Main program #######################################################
 # ====== Handle arguments ===================================================
 if len(sys.argv) < 4:
-   error('Usage: ' + sys.argv[0] + ' FQDN Interface Debian|Fedora')
+   error('Usage: ' + sys.argv[0] + ' FQDN Interface Debian|Fedora|FreeBSD')
 fqdn          = sys.argv[1]
 interfaceName = sys.argv[2]
 distribution  = sys.argv[3]
@@ -208,8 +208,8 @@ fullSiteList = fetchNorNetSiteList(False)
 
 localNode = fetchNorNetNode(fqdn)
 if localNode == None:
-   print('Node ' + fqdn + ' is not in the database => just using INDEX ' + \
-         str(getLocalNodeIndex()) + ' from configuration file.')
+   print(('Node ' + fqdn + ' is not in the database => just using INDEX ' + \
+         str(getLocalNodeIndex()) + ' from configuration file.'))
    if getLocalNodeIndex() == None:
       error('NorNet_LocalNode_Index has not been set in configuration file!')
    if getLocalNodeNorNetInterface() == None:

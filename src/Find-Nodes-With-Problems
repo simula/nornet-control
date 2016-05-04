@@ -1,8 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Find Nodes with Problems
-# Copyright (C) 2012-2015 by Thomas Dreibholz
+# Copyright (C) 2012-2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,10 +35,10 @@ nodeList = getPLCServer().GetNodes(getPLCAuthentication(),
               [ 'hostname', 'boot_state', 'run_level' ])
 
 for node in nodeList:
-   print node
+   print(node)
    if ((node['boot_state'] == 'boot') and
        (node['run_level'] == 'failboot')):
-      print "-> reinstall"
+      print("-> reinstall")
       getPLCServer().UpdateNode(getPLCAuthentication(),
          node['hostname'],
          { 'boot_state' : 'reinstall' })

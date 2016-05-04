@@ -1,8 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # NorNet System Setup Commons
-# Copyright (C) 2014-2015 by Thomas Dreibholz
+# Copyright (C) 2014-2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,8 +22,7 @@
 import re;
 import os;
 
-# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddress import IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
 
 # NorNet
 from NorNetTools         import *;
@@ -130,7 +129,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                      metric = NorNet_RoutingMetric_DefaultProvider
                   addrOpts = ''
                   if version == 4:
-                     addrOpts = 'broadcast ' + str(address.broadcast)
+                     addrOpts = 'broadcast ' + str(address.network.broadcast_address)
 
                   if controlBoxMode == False:
                      network = 'default'
@@ -213,9 +212,9 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                      network = str(makeNorNetIP(0, 0, 0, version))
 
                   if version == 4:
-                     outputFile.write('\nIPADDR'  + str(addressNumber) + '=' + str(address.ip)        + '\n')
-                     outputFile.write('NETMASK'   + str(addressNumber) + '=' + str(address.netmask)   + '\n')
-                     outputFile.write('BROADCAST' + str(addressNumber) + '=' + str(address.broadcast) + '\n')
+                     outputFile.write('\nIPADDR'  + str(addressNumber) + '=' + str(address.ip)                        + '\n')
+                     outputFile.write('NETMASK'   + str(addressNumber) + '=' + str(address.network.netmask)           + '\n')
+                     outputFile.write('BROADCAST' + str(addressNumber) + '=' + str(address.network.broadcast_address) + '\n')
                      if providerIndex == defaultProviderIndex:
                         outputFile.write('DNS1=' + str(gateway.ip) + '\n')
                      routesIPv4.append([ str(network), str(gateway.ip), str(metric) ])
@@ -305,7 +304,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                         ipv6String = ''
                      outputFile.write('ifconfig_' + interfaceName + ipv6String + aliasString + '="inet6 ' +
                                       str(address.ip) + ' prefixlen ' +
-                                      str(address.prefixlen) + '"\n')
+                                      str(address.network.prefixlen) + '"\n')
 
       # ====== Routes =======================================================
       for version in [ 4, 6 ]:

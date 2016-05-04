@@ -1,8 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Get testbed configuration
-# Copyright (C) 2014 by Thomas Dreibholz
+# Copyright (C) 2014-2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 import os
 import sys
 import math
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import subprocess
 import re
 from sets import Set
@@ -195,9 +195,9 @@ class TableOutput:
 
    def makeSmiley(self, positive = True):
       if positive == True:
-         return u'☺'
+         return '☺'
       else:
-         return u'☹'
+         return '☹'
 
    def hasTableOfContents(self):
       return False
@@ -429,7 +429,7 @@ class LaTeXTableOutput(TableOutput):
    def makeURL(self, url, label):
       if self.useHpyerlinks == True:
          if url == label:
-            return '\url{' + url + '}'
+            return '\\url{' + url + '}'
          else:
             return '\href{' + url + '}{' + label + '}'
       else:
@@ -438,12 +438,12 @@ class LaTeXTableOutput(TableOutput):
    def makeImage(self, url, style):
       name      = self.dataDirectory + '/' + makeNameFromUnicode(os.path.basename(url), False)['ascii'].replace(' ', '_', 1000000000)
       extension = os.path.splitext(name)[1]
-      url       = urllib2.quote(url.encode('utf-8')).replace('https%3A', 'https:', 1)
+      url       = urllib.parse.quote(url.encode('utf-8')).replace('https%3A', 'https:', 1)
 
       if not os.path.exists(name):
          sys.stderr.write('Download: ' + url + ' -> ' + name + ' ...\n')
          try:
-            image = urllib2.urlopen(url)
+            image = urllib.request.urlopen(url)
          except:
             sys.stderr.write('ERROR: Failed to download ' + url + '!\n')
             return ''
@@ -470,7 +470,7 @@ class LaTeXTableOutput(TableOutput):
 
 
    def makeText(self, text):
-      return unicode.replace(text, u'_', u'\\_', 1000000000)
+      return str.replace(text, '_', '\\_', 1000000000)
 
    def makeSmiley(self, positive = True):
       if positive == True:
@@ -506,7 +506,7 @@ def makePseudoNode(nodeName, site, nodeIndex, model):
       'node_site_id'          : site['site_id'],
       'node_index'            : int(nodeIndex),
       'node_name'             : str.lower(dnsName['ascii'])    + '.' + site['site_domain'],
-      'node_utf8'             : unicode.lower(dnsName['utf8']) + '.' + site['site_domain'],
+      'node_utf8'             : str.lower(dnsName['utf8']) + '.' + site['site_domain'],
       'node_nornet_interface' : None,
       'node_model'            : model,
       'node_state'            : 'SLIVER',
@@ -608,7 +608,7 @@ sliceList = fetchNorNetSlice(None)
 
 # ====== Handle slices ======================================================
 if sliceList == None:
-   print 'ERROR: Slice list is empty?! Missing NorNet patch?'
+   print('ERROR: Slice list is empty?! Missing NorNet patch?')
    sys.exit(1)
 
 sliverNodeList = []
@@ -740,7 +740,7 @@ for siteIndex in sorted(siteIndexList):
             isp = isp + 1
 
    for i in range(isp + 1, maxISPs + 1):
-      output.cell(u'–')
+      output.cell('–')
 
    output.endRow()
 
@@ -887,17 +887,17 @@ for siteIndex in sorted(siteIndexList):
    siteLocation = siteLocation + '/' + siteCountry
 
 
-   sitePosition = unicode(abs(site['site_latitude']))
+   sitePosition = str(abs(site['site_latitude']))
    if site['site_latitude'] >= 0:
-      sitePosition = sitePosition + u'°N'
+      sitePosition = sitePosition + '°N'
    else:
-      sitePosition = sitePosition + u'°S'
+      sitePosition = sitePosition + '°S'
 
-   sitePosition = sitePosition + u' / ' + unicode(abs(site['site_longitude']))
+   sitePosition = sitePosition + ' / ' + str(abs(site['site_longitude']))
    if site['site_longitude'] >= 0:
-      sitePosition = sitePosition + u'°E'
+      sitePosition = sitePosition + '°E'
    else:
-      sitePosition = sitePosition + u'°W'
+      sitePosition = sitePosition + '°W'
 
    sitePosition = sitePosition + ' / ' + str(site['site_altitude']) + 'm'
 
@@ -946,7 +946,7 @@ for siteIndex in sorted(siteIndexList):
       [ 'City',         output.addToIndex(siteCity)     + siteCity     ],
       [ 'Province',     output.addToIndex(siteProvince) + output.makeImage(siteFlagURL + '/' + siteCountryCode + '-' + siteProvince + '.svg', 'height: 0.8em;') + siteProvince ],
       [ 'Country',      output.addToIndex(siteCountryCode, siteCountry, True) + output.addToIndex(siteCountry)  + output.makeImage(siteFlagURL + '/Flag-' + siteCountryCode + '.svg', 'height: 0.8em;') + siteCountry + ' (' + siteCountryCode + ')' ],
-      [ u'GPS/ГЛОНАСС', sitePosition ],
+      [ 'GPS/ГЛОНАСС', sitePosition ],
       [ 'Short Name',   output.addToIndex(site['site_short_name'], siteName, True) + site['site_short_name'] ],
       [ 'Domain',       output.addToIndex(site['site_domain']) + site['site_domain'] ],
       [ 'URL',          output.makeURL(site['site_url'], site['site_url']) ]
@@ -1182,8 +1182,8 @@ if showSlivers == True:
       sliceNumber = sliceNumber + 1
       output.beginRow()
       output.cell(str(sliceNumber), -1, 3)
-      output.cell(output.addToIndex(output.makeText(unicode(slice['slice_name']))) + output.addToIndex('Slice!' + output.makeText(unicode(slice['slice_name']))) + output.makeText(unicode(slice['slice_name'])), -1, 3)
-      output.cell(output.makeText(unicode(slice['slice_description'])), 2, -1, 'text-align: justify; width: 30em;')
+      output.cell(output.addToIndex(output.makeText(str(slice['slice_name']))) + output.addToIndex('Slice!' + output.makeText(str(slice['slice_name']))) + output.makeText(str(slice['slice_name'])), -1, 3)
+      output.cell(output.makeText(str(slice['slice_description'])), 2, -1, 'text-align: justify; width: 30em;')
       output.endRow()
 
       output.beginRow()
