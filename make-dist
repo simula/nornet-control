@@ -5,7 +5,7 @@
 
 CHANGELOG_HEADER="`head -n1 debian/changelog`"
 PACKAGE=`echo $CHANGELOG_HEADER | sed -e "s/(.*//" -e "s/ //g"`
-UPSTREAM_VERSION=`echo $CHANGELOG_HEADER | sed -e "s/[a-zA-Z0-9 ]*(//" -e "s/).*//" -e "s/[0-9]*$//" -e "s/ //g" -e "s/^[0-9]*://" -e "s/-[^ ]*$//g"`
+UPSTREAM_VERSION=`echo $CHANGELOG_HEADER | sed -e "s/[a-zA-Z0-9 \-]*(//" -e "s/).*//" -e "s/[0-9]*$//" -e "s/ //g" -e "s/^[0-9]*://" -e "s/-[^ ]*$//g"`
 
 echo "######################################################################"
 echo "CHANGELOG_HEADER:   $CHANGELOG_HEADER"
@@ -130,6 +130,16 @@ mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Control
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Flags
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Icons
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Markers
+
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook
+cp -r src/Kontrollsenter/UnifrakturCook/FontLog.txt              $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/
+cp -r src/Kontrollsenter/UnifrakturCook/OFL-FAQ.txt              $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/
+cp -r src/Kontrollsenter/UnifrakturCook/OFL.txt                  $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/
+cp -r src/Kontrollsenter/UnifrakturCook/UnifrakturCook-Light.ttf $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/
+cp -r src/Kontrollsenter/UnifrakturCook/UnifrakturCook.ttf       $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/
+mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/sources
+cp -r src/Kontrollsenter/UnifrakturCook/sources/UnifrakturCook-Light.sfd $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/sources/
+cp -r src/Kontrollsenter/UnifrakturCook/sources/UnifrakturCook.sfd       $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/sources/
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Original

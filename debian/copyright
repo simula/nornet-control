@@ -1,78 +1,81 @@
-This package was debianized by Thomas Dreibholz <dreibh@simula.no>
-on Fri, 20 Jul 2012 05:05:55 +0200.
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: nornet
+Upstream-Contact: Thomas Dreibholz <dreibh@simula.no>
+Source: https://www.nntb.no
 
-The original source can be found at:
-https://www.nntb.no/
+Files: *
+Copyright: Copyright 2012-2016 Thomas Dreibholz
+License: GPL-3
 
-NorNet Control is
+Files: Kontrollsenter/Clock/*
+Copyright: Copyright 2012 Rüdiger Appel
+License: CC-BY
 
-  Copyright (C) 2012-2015 Thomas Dreibholz
+Files: Kontrollsenter/ol3-layerswitcher/*
+Copyright: Copyright Matt Walker
+License: MIT
 
-License:
+Files: Kontrollsenter/UnifrakturCook/*
+Copyright:
+ Copyright 2009 Peter Wiegel
+ Copyright 2010 J. 'Mach' Wust
+License: SIL-OFL
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+Files: Artwork/Graphics/*/*
+Copyright: Copyright Wikimedia Commons
+License: CC-BY-SA
 
-  On Debian systems, the complete text of the GNU General
-  Public License can be found in `/usr/share/common-licenses/GPL-3'.
+Files: Artwork/Sites/*/*
+Copyright: See EXIF information!
+License: CC-BY-SA
 
+License: GPL-3
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License can be found in `/usr/share/common-licenses/GPL-3'.
 
-Kontrollsenter/Clock (SVG Railway Station Clock) is
+License: CC-BY
+ THE WORK (AS DEFINED BELOW) IS PROVIDED UNDER THE TERMS OF THIS CREATIVE
+ COMMONS PUBLIC LICENSE ("CCPL" OR "LICENSE"). THE WORK IS PROTECTED BY COPYRIGHT
+ AND/OR OTHER APPLICABLE LAW. ANY USE OF THE WORK OTHER THAN AS AUTHORIZED
+ UNDER THIS LICENSE OR COPYRIGHT LAW IS PROHIBITED.
+ .
+ BY EXERCISING ANY RIGHTS TO THE WORK PROVIDED HERE, YOU ACCEPT AND AGREE TO BE
+ BOUND BY THE TERMS OF THIS LICENSE. TO THE EXTENT THIS LICENSE MAY BE CONSIDERED
+ TO BE A CONTRACT, THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN
+ CONSIDERATION OF YOUR ACCEPTANCE OF SUCH TERMS AND CONDITIONS.
+ .
+ This license is also available at: https://spdx.org/licenses/CC-BY-3.0
 
- Copyright (C) 2012 Rüdiger Appel
+License: CC-BY-SA
+ THE WORK (AS DEFINED BELOW) IS PROVIDED UNDER THE TERMS OF THIS CREATIVE COMMONS PUBLIC LICENSE ("CCPL" OR "LICENSE"). THE WORK IS PROTECTED BY COPYRIGHT AND/OR OTHER APPLICABLE LAW. ANY USE OF THE WORK OTHER THAN AS AUTHORIZED UNDER THIS LICENSE OR COPYRIGHT LAW IS PROHIBITED.
+ .
+ BY EXERCISING ANY RIGHTS TO THE WORK PROVIDED HERE, YOU ACCEPT AND AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE. TO THE EXTENT THIS LICENSE MAY BE CONSIDERED TO BE A CONTRACT, THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEPTANCE OF SUCH TERMS AND CONDITIONS.
+ .
+ This license is also available at: https://spdx.org/licenses/CC-BY-SA-3.0
 
-License:
+License: MIT
+ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ .
+ This license is also available at: https://opensource.org/licenses/MIT
 
- Licensed under the creative common license.
-
-
-Kontrollsenter/ol3-layerswitcher/* is
-
- Copyright (C) Matt Walker
-
-License:
-
- MIT
-
-Kontrollsenter/UnifrakturCook/* is
-
- Copyright (C) 2009 Peter Wiegel
-
-License:
-
- SIL Open Font License (OFL)
-
-
-Artwork/Graphics/* is
-
- Wikimedia Commons
-
-License:
-
- Licensed under the creative common license.
-
-
-Artwork/Sites/* is
-
- See EXIF information!
-
-License:
-
- Licensed under the creative common license.
-
-
-The Debian/Ubuntu packaging is
-
-  Copyright (C) 2012-2014 Thomas Dreibholz
-
-License:
-
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  On Debian systems, the complete text of the GNU General
-  Public License can be found in `/usr/share/common-licenses/GPL-3'.
+License: SIL-OFL
+ This Font Software is licensed under the SIL Open Font License, Version 1.1.
+ .
+ This license is also available with a FAQ at: http://scripts.sil.org/OFL

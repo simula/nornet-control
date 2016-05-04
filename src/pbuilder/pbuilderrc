@@ -1,4 +1,4 @@
-DISTRIBUTION=precise
+DISTRIBUTION=trusty
 COMPONENTS="main universe"
 
 MIRRORSITE=http://no.archive.ubuntu.com/ubuntu/

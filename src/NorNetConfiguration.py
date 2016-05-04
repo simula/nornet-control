@@ -1,8 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # NorNet PLC Configuration
-# Copyright (C) 2012-2015 by Thomas Dreibholz
+# Copyright (C) 2012-2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,19 +23,11 @@ import re;
 import sys;
 import pwd;
 import codecs;
+import configparser;
+import io;
+import xmlrpc.client;
 
-import ConfigParser;
-import StringIO;
-
-
-# XML-RPC
-if sys.version_info < (3,0,0):
-   import xmlrpclib;
-else:
-   import xmlrpc.client;
-
-# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPAddress, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddress import ip_address, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
 
 # NorNet
 from NorNetTools         import *;
@@ -143,7 +135,7 @@ def checkParameter(parameter, choices):
    try:
       value = NorNet_Configuration[parameter]
    except:
-       return u''
+       return ''
    for choice in choices:
       if value == choice:
          return value
@@ -152,10 +144,7 @@ def checkParameter(parameter, choices):
 
 # ###### Read configuration file ############################################
 def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
-   sys.stdout = codecs.getwriter('utf8')(sys.stdout)
-   sys.stderr = codecs.getwriter('utf8')(sys.stderr)
-   sys.stdin  = codecs.getreader('utf8')(sys.stdin)
-   iniString  = u'[root]\n'
+   iniString  = '[root]\n'
 
    # ====== Open constants file =============================================
    if quietMode == False:
@@ -191,13 +180,13 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
 
 
    # ====== Build the configuration table ===================================
-   parsedConfigFile = ConfigParser.RawConfigParser()
+   parsedConfigFile = configparser.RawConfigParser()
    parsedConfigFile.optionxform = str   # Make it case-sensitive!
-   parsedConfigFile.readfp(StringIO.StringIO(iniString))
+   parsedConfigFile.readfp(io.StringIO(iniString))
    for parameterName in parsedConfigFile.options('root'):
       parameterValue = parsedConfigFile.get('root', parameterName)
       if parameterValue.find('\n'):
-         parameterValue = unicode.strip(unquote(removeComment(unicode.replace(parameterValue, '\n', ' '))))
+         parameterValue = str.strip(unquote(removeComment(str.replace(parameterValue, '\n', ' '))))
       else:
          parameterValue = removeComment(parameterValue.rstrip('\n'))
       # print '<' + parameterName + '> = <' + parameterValue + '>'
@@ -225,31 +214,31 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
 
    # ====== Check some important contents ===================================
    try:
-      NorNet_Configuration['NorNet_IPv4Prefix'] = IPv4Network(NorNet_Configuration['NorNet_IPv4Prefix'])
+      NorNet_Configuration['NorNet_IPv4Prefix'] = IPv4Interface(NorNet_Configuration['NorNet_IPv4Prefix'])
    except Exception as e:
       error('NorNet_IPv4Prefix setting "' + NorNet_Configuration['NorNet_IPv4Prefix'] + ' is invalid: ' + str(e))
-   if NorNet_Configuration['NorNet_IPv4Prefix'].prefixlen > 8:
+   if NorNet_Configuration['NorNet_IPv4Prefix'].network.prefixlen > 8:
       error('NorNet_IPv4Prefix must be at least a /8 network!')
 
    try:
-      NorNet_Configuration['NorNet_IPv6Prefix'] = IPv6Network(NorNet_Configuration['NorNet_IPv6Prefix'])
+      NorNet_Configuration['NorNet_IPv6Prefix'] = IPv6Interface(NorNet_Configuration['NorNet_IPv6Prefix'])
    except Exception as e:
       error('NorNet_IPv6Prefix setting "' + NorNet_Configuration['NorNet_IPv6Prefix'] + ' is invalid: ' + str(e))
-   if NorNet_Configuration['NorNet_IPv6Prefix'].prefixlen > 48:
+   if NorNet_Configuration['NorNet_IPv6Prefix'].network.prefixlen > 48:
       error('NorNet_IPv6Prefix must be at least a /48 network!')
 
    try:
-      NorNet_Configuration['NorNet_IPv4TunnelPrefix'] = IPv4Network(NorNet_Configuration['NorNet_IPv4TunnelPrefix'])
+      NorNet_Configuration['NorNet_IPv4TunnelPrefix'] = IPv4Interface(NorNet_Configuration['NorNet_IPv4TunnelPrefix'])
    except Exception as e:
       error('NorNet_IPv4TunnelPrefix setting "' + NorNet_Configuration['NorNet_IPv4TunnelPrefix'] + ' is invalid: ' + str(e))
-   if NorNet_Configuration['NorNet_IPv4TunnelPrefix'].prefixlen > 16:
+   if NorNet_Configuration['NorNet_IPv4TunnelPrefix'].network.prefixlen > 16:
       error('NorNet_IPv4TunnelPrefix must be at least a /16 network!')
 
    try:
-      NorNet_Configuration['NorNet_IPv6TunnelPrefix'] = IPv6Network(NorNet_Configuration['NorNet_IPv6TunnelPrefix'])
+      NorNet_Configuration['NorNet_IPv6TunnelPrefix'] = IPv6Interface(NorNet_Configuration['NorNet_IPv6TunnelPrefix'])
    except Exception as e:
       error('NorNet_IPv6TunnelPrefix setting "' + NorNet_Configuration['NorNet_IPv6TunnelPrefix'] + ' is invalid: ' + str(e))
-   if NorNet_Configuration['NorNet_IPv6TunnelPrefix'].prefixlen > 80:
+   if NorNet_Configuration['NorNet_IPv6TunnelPrefix'].network.prefixlen > 80:
       error('NorNet_IPv6TunnelPrefix must be at least a /80 network!')
 
    if includeAPIConfiguration == True:
@@ -300,7 +289,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
                (NorNet_Configuration['NorNet_LocalSite_DefaultProviderIndex'] > NorNet_MaxProviderIndex)):
             error('NorNet_IPv4Prefix NorNet_LocalSite_DefaultProviderIndex must be in [' + str(NorNet_MinProviderIndex) + '-' + str(NorNet_MaxProviderIndex) + ']!')
 
-      if isinstance(NorNet_Configuration['NorNet_LocalNode_ControlBox'], unicode):
+      if isinstance(NorNet_Configuration['NorNet_LocalNode_ControlBox'], str):
          if NorNet_Configuration['NorNet_LocalNode_ControlBox'] == 'yes':
             NorNet_Configuration['NorNet_LocalNode_ControlBox'] = True
          elif NorNet_Configuration['NorNet_LocalNode_ControlBox'] == 'no':
@@ -326,7 +315,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
                if ((a1 < NorNet_MinSliceIndex) or (a1 > NorNet_MaxSliceIndex) or \
                    (a2 < NorNet_MinSliceIndex) or (a2 > NorNet_MaxSliceIndex) or (a2 < a1)):
                   error('NorNet_Slice_NodeIndexRange bounds must be in [' + str(NorNet_MaxSliceIndex) + '-' + str(NorNet_MaxSliceIndex) + ']!')
-               NorNet_Configuration['NorNet_Slice_NodeIndexRange'] = range(a1, a2)
+               NorNet_Configuration['NorNet_Slice_NodeIndexRange'] = list(range(a1, a2))
             else:
                error('NorNet_Slice_NodeIndexRange bounds must be range in form of \"start end\"!')
          except Exception as e:

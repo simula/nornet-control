@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Find Nodes with Problems
@@ -65,12 +65,12 @@ if found < 2:
    needsUpdate = True  # Not installed yet? -> Set tags!
 
 if needsUpdate == True:
-   print 'Update ' + nodeName + ': ' + oldPLDistro + '-' + oldFCDistro + ' -> ' + pldistro + '-' + fcdistro
+   print('Update ' + nodeName + ': ' + oldPLDistro + '-' + oldFCDistro + ' -> ' + pldistro + '-' + fcdistro)
    addOrUpdateNodeTag(node['node_id'], 'fcdistro', fcdistro)
    addOrUpdateNodeTag(node['node_id'], 'pldistro', pldistro)
    getPLCServer().UpdateNode(getPLCAuthentication(),
       node['node_id'], { 'boot_state' : 'reinstall' })
 else:
-   print 'Keeping ' + nodeName + ': ' + oldPLDistro + '-' + oldFCDistro
+   print('Keeping ' + nodeName + ': ' + oldPLDistro + '-' + oldFCDistro)
    # getPLCServer().UpdateNode(getPLCAuthentication(),
    #    node['node_id'], { 'boot_state' : 'boot' })

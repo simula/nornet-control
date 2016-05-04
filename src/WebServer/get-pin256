@@ -1,8 +1,7 @@
 #!/bin/bash
-# $Id: clean-deb 2608 2011-11-23 07:52:38Z dreibh $
 #
-# Debian Packaging Scripts
-# Copyright (C) 2002-2016 by Thomas Dreibholz
+# TLS configuration helper script
+# Copyright (C) 2012-2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,12 +16,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Contact: dreibh@iem.uni-due.de
+# Contact: dreibh@simula.no
+#
 
-. ./debian.conf
+if [ $# -lt 1 ] ; then
+   echo >&2 "Usage: $0 certificate_file ..."
+   exit 1
+fi
 
-CHANGELOG_HEADER="`head -n1 debian/changelog`"
-PACKAGE=`echo $CHANGELOG_HEADER | sed -e "s/(.*//" -e "s/ //g"`
 
-rm -f *.deb *.dsc *.asc *.changes *.build *.upload *.tar.gz stamp-h* svn-commit* *~
-rm -rf $PACKAGE-* $PACKAGE"_"*
+publicKeyFile=`mktemp`
+while [ $# -gt 0 ] ; do
+   result=""
+
+   openssl x509 -pubkey <$1 >$publicKeyFile && \
+   result=`openssl pkey -pubin -outform der <$publicKeyFile | openssl dgst -sha256 -binary | base64` &&
+   echo "pin-sha256=\"$result\";"
+
+   shift
+done
+rm -f $publicKeyFile

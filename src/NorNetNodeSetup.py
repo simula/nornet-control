@@ -1,8 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # NorNet Node Setup
-# Copyright (C) 2012-2015 by Thomas Dreibholz
+# Copyright (C) 2012-2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,8 +27,7 @@ import codecs;
 import socket;
 import platform;
 
-# Needs package python-ipaddr (Fedora Core, Ubuntu, Debian)!
-from ipaddr import IPAddress, IPNetwork, IPv4Address, IPv4Network, IPv6Address, IPv6Network;
+from ipaddress import ip_address, ip_interface, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
 
 # NorNet
 from NorNetConfiguration import *;

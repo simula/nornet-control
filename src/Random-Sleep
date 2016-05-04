@@ -1,8 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Random Sleep
-# Copyright (C) 2013 by Thomas Dreibholz
+# Copyright (C) 2013-2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,11 +49,11 @@ for i in range(3, len(sys.argv)):
 sleepTime = random.uniform(minSleepTime, maxSleepTime)
 
 if not quietMode:
-   print datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + \
+   print(datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + \
          ': Sleeping random ' + str(sleepTime) + ' seconds out of range [' + \
-         str(minSleepTime) + ', ' + str(maxSleepTime) + '] ...'
+         str(minSleepTime) + ', ' + str(maxSleepTime) + '] ...')
 
 time.sleep(sleepTime)
 
 if not quietMode:
-   print datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + ': Woke up!'
+   print(datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + ': Woke up!')

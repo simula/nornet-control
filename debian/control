@@ -6,10 +6,11 @@ Homepage: https://www.nntb.no/
 Build-Depends: debhelper (>= 9),
                imagemagick,
                libfile-fcntllock-perl,
-               python (>= 2.7),
-               python-ipaddr,
-               python-support | dh-python
+               python3
 Standards-Version: 3.9.7
+X-Python3-Version: >= 3.2
+Vcs-Git: https://github.com/simula/nornet-control.git
+Vcs-Browser: https://github.com/simula/nornet-control/tags
 
 Package: nornet-management
 Architecture: any
@@ -44,12 +45,12 @@ Depends: apport-retrace,
          nmap,
          ntpdate,
          nttcp,
-         python-software-properties,
          reiserfsprogs,
          rsplib-tools,
          secure-delete,
          smartmontools,
          snmp,
+         software-properties-common,
          sslscan,
          subnetcalc,
          tftp,
@@ -60,7 +61,7 @@ Depends: apport-retrace,
          whois,
          xmlstarlet,
          ${misc:Depends},
-         ${python:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Recommends: tshark
 Conflicts: kdeconnect,
@@ -85,7 +86,7 @@ Depends: fvwm,
          xserver-xorg,
          xterm,
          ${misc:Depends},
-         ${python:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet X11 Login
  This metapackage contains basic X11 software for NorNet systems. The
@@ -121,7 +122,8 @@ Depends: autoconf,
          lua5.2,
          pbuilder,
          pkg-config,
-         python-pythonmagick,
+         python3-psycopg2,
+         python3-wand,
          quilt,
          r-base,
          rpm,
@@ -138,9 +140,9 @@ Description: NorNet Development Tools
 
 Package: nornet-api
 Architecture: any
-Depends: python-ipaddr,
+Depends: python3-ipaddr,
          ${misc:Depends},
-         ${python:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet API
  This package contains the NorNet Python API library. It contains functions
@@ -210,8 +212,8 @@ Architecture: all
 Depends: nfs-kernel-server,
          nornet-api,
          nornet-management,
-         python (>= 2.7),
-         python-adns,
+         python3,
+         python3-adns,
          tftpd-hpa,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -371,7 +373,7 @@ Package: nornet-trace-service
 Architecture: any
 Depends: hipercontracer,
          ${misc:Depends},
-         ${python:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet Trace Service
  NorNet Trace Service is the traceroute service for the NorNet testbed.
