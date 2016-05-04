@@ -49,11 +49,11 @@ for i in range(3, len(sys.argv)):
 sleepTime = random.uniform(minSleepTime, maxSleepTime)
 
 if not quietMode:
-   print datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + \
+   print(datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + \
          ': Sleeping random ' + str(sleepTime) + ' seconds out of range [' + \
-         str(minSleepTime) + ', ' + str(maxSleepTime) + '] ...'
+         str(minSleepTime) + ', ' + str(maxSleepTime) + '] ...')
 
 time.sleep(sleepTime)
 
 if not quietMode:
-   print datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + ': Woke up!'
+   print(datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + ': Woke up!')
