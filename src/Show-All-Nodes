@@ -35,4 +35,4 @@ nodeList = getPLCServer().GetNodes(getPLCAuthentication(),
               [ 'hostname', 'boot_state', 'run_level' ])
 
 for node in nodeList:
-   print node['hostname']
+   print(node['hostname'])
