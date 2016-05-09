@@ -6,7 +6,7 @@ Homepage: https://www.nntb.no/
 Build-Depends: debhelper (>= 9),
                imagemagick,
                libfile-fcntllock-perl,
-               python3
+               python3-all
 Standards-Version: 3.9.7
 X-Python3-Version: >= 3.2
 Vcs-Git: https://github.com/simula/nornet-control.git
