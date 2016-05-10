@@ -140,8 +140,7 @@ Description: NorNet Development Tools
 
 Package: nornet-api
 Architecture: any
-Depends: python3-ipaddr,
-         ${misc:Depends},
+Depends: ${misc:Depends},
          ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet API
