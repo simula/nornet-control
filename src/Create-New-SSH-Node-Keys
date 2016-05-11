@@ -52,17 +52,70 @@ mkdir $BACKUP_DIRECTORY/
 find . -maxdepth 1 -name "ssh_host_*_key*" | xargs -n1 -i§ --no-run-if-empty mv § $BACKUP_DIRECTORY/
 find . -maxdepth 1 -name "moduli*"         | xargs -n1 -i§ --no-run-if-empty mv § $BACKUP_DIRECTORY/
 cp sshd_config $BACKUP_DIRECTORY/
+cp ssh_config  $BACKUP_DIRECTORY/
 
-echo "Generating moduli, step 1 ..."
-time ssh-keygen -G moduli.candidates -b $RSA_BITS
-echo "Generating moduli, step 2 ..."
-time ssh-keygen -T moduli -f moduli.candidates
 
-echo "Generating ED25519 key ..."
-time ssh-keygen -N "" -t ed25519 -f ssh_host_ed25519_key
-echo "Generating ED25519 key ..."
-time ssh-keygen -N "" -t ecdsa -b $ECDSA_BITS -f ssh_host_ecdsa_key
-echo "Generating RSA key ..."
-time ssh-keygen -N "" -t rsa -b $RSA_BITS -f ssh_host_rsa_key
+# ====== Create new keys ====================================================
+# echo "Generating moduli, step 1 ..."
+# time ssh-keygen -G moduli.candidates -b $RSA_BITS
+# echo "Generating moduli, step 2 ..."
+# time ssh-keygen -T moduli -f moduli.candidates
+#
+# echo "Generating ED25519 key ..."
+# time ssh-keygen -N "" -t ed25519 -f ssh_host_ed25519_key
+# echo "Generating ED25519 key ..."
+# time ssh-keygen -N "" -t ecdsa -b $ECDSA_BITS -f ssh_host_ecdsa_key
+# echo "Generating RSA key ..."
+# time ssh-keygen -N "" -t rsa -b $RSA_BITS -f ssh_host_rsa_key
+#
+# echo "Done!"
 
-echo "Done!"
+
+# ====== Suggested sshd_config and ssh_config updates =======================
+cat <<EOF
+Protocol 2
+
+# Check supported algorithms with "ssh -Q cipher|kex|key|mac"!
+HostKeyAlgorithms         ssh-ed25519-cert-v01@openssh.com,ssh-ed25519,ssh-ed25519,ssh-rsa-cert-v01@openssh.com,ssh-rsa
+PubkeyAcceptedKeyTypes    ssh-ed25519-cert-v01@openssh.com,ssh-ed25519,ssh-rsa-cert-v01@openssh.com,ssh-rsa
+HostbasedAcceptedKeyTypes ssh-ed25519-cert-v01@openssh.com,ssh-ed25519,ssh-rsa-cert-v01@openssh.com,ssh-rsa
+Ciphers                   aes256-gcm@openssh.com,chacha20-poly1305@openssh.com
+MACs                      hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com
+KexAlgorithms             curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
+
+UsePAM                    yes
+X11Forwarding             yes
+TCPKeepAlive              yes
+ClientAliveInterval       60
+ClientAliveCountMax       3
+
+AcceptEnv                 LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDENTIFICATION LC_ALL LANGUAGE XMODIFIERS
+
+Subsystem sftp /usr/lib/openssh/sftp-server
+EOF >sshd_config.suggested
+
+cat <<EOF
+Protocol 2
+
+# Check supported algorithms with "ssh -Q cipher|kex|key|mac"!
+Ciphers                   aes256-gcm@openssh.com,chacha20-poly1305@openssh.com
+MACs                      hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com
+
+VerifyHostKeyDNS          ask
+HashKnownHosts            yes
+GSSAPIAuthentication      yes
+GSSAPIDelegateCredentials no
+
+TCPKeepAlive              yes
+ServerAliveInterval       30
+ServerAliveCountMax       3
+
+SendEnv                   LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDENTIFICATION LC_ALL LANGUAGE XMODIFIERS
+EOF >ssh_config.suggested
+
+
+# ====== Make sshd_config and ssh_config updates ============================
+echo "Suggested sshd_config change:"
+if colordiff sshd_config sshd_config.suggested ; then
+   echo -en "\x1b[33mReplace sshd_config? [yes/no]?\x1b[0m "
+fi
