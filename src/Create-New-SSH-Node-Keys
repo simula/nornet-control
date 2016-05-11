@@ -19,7 +19,7 @@
 # Contact: dreibh@simula.no
 
 RSA_BITS=16384
-MODULI_BITS=4096
+MODULI_BITS=8192
 ECDSA_BITS=521
 
 
@@ -51,16 +51,17 @@ echo "Making backup in $BACKUP_DIRECTORY ..."
 cd /etc/ssh
 mkdir $BACKUP_DIRECTORY/
 find . -maxdepth 1 -name "ssh_host_*_key*" | xargs -n1 -i§ --no-run-if-empty mv § $BACKUP_DIRECTORY/
-find . -maxdepth 1 -name "moduli*"         | xargs -n1 -i§ --no-run-if-empty mv § $BACKUP_DIRECTORY/
+find . -maxdepth 1 -name "moduli*"         | xargs -n1 -i§ --no-run-if-empty cp § $BACKUP_DIRECTORY/
 cp sshd_config $BACKUP_DIRECTORY/
 cp ssh_config  $BACKUP_DIRECTORY/
 
 
 # ====== Create new keys ====================================================
-echo "Generating moduli, step 1 ..."
-time ssh-keygen -G moduli.candidates -b $MODULI_BITS
-echo "Generating moduli, step 2 ..."
-time ssh-keygen -T moduli -f moduli.candidates
+#rm -f moduli.candidates moduli
+#echo "Generating moduli, step 1 ..."
+#time ssh-keygen -G moduli.candidates -b $MODULI_BITS
+#echo "Generating moduli, step 2 ..."
+#time ssh-keygen -T moduli -f moduli.candidates
 
 echo "Generating ED25519 key ..."
 time ssh-keygen -N "" -t ed25519 -f ssh_host_ed25519_key
