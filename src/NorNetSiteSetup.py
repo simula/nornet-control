@@ -486,9 +486,9 @@ def _updateNorNetInterfaces(node, site, norNetInterface):
                   interface['type']       = 'ipv4'
                   interface['method']     = 'static'
                   interface['ip']         = str(ifIPv4.ip)
+                  interface['network']    = str(ifIPv4.network.network_address)
                   interface['netmask']    = str(ifIPv4.netmask)
-                  interface['network']    = str(ifIPv4.network)
-                  interface['broadcast']  = str(ifIPv4.broadcast)
+                  interface['broadcast']  = str(ifIPv4.network.broadcast_address)
                   interface['gateway']    = str(ifGatewayIPv4.ip)
                   interface['is_primary'] = True
                   interface['dns1']       = str(ifGatewayIPv4.ip)   # The tunnelbox is also the DNS server
@@ -778,6 +778,13 @@ def makeNorNetNode(fullSliceList,
          'file_group'        : 'root'})
       if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
          error('Unable to add openvswitch.service configuration file to node ' + nodeHostName)
+
+      confFiles = getPLCServer().GetConfFiles(getPLCAuthentication(),
+                                              { 'source' : 'PlanetLabConf/openvswitch/openvswitch.service'},
+                                              [ 'conf_file_id' ])
+      if len(confFiles) == 0:
+         print('Removing configuration file ' + str(confFiles))
+         return getPLCServer().DeleteConfFile(getPLCAuthentication(), confFiles)
 
       # ====== Add node to PCU ==============================================
       if pcuID > 0:

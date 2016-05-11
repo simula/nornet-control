@@ -83,7 +83,7 @@ def makeNorNetIP(provider, site, node, version, sliceIndex = 0):
 # ###### Get NorNet information from address ################################
 def getNorNetInformationForAddress(address):
    norNetInformation = None
-   if address in ip_network(NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix']):
+   if address in NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix'].network:
       a = int(address)
       b = int((a >> 64) & 0xffffffff)
       norNetInformation = {
@@ -94,7 +94,7 @@ def getNorNetInformationForAddress(address):
          'vnet_index':     (b & 0x000000ff)
       }
 
-   if address in ip_network(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix']):
+   if address in NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix'].network:
       a = int(address)
       norNetInformation = {
          'address':        address,
@@ -111,12 +111,12 @@ def getNorNetInformationForAddress(address):
 def getMyNorNetInformation():
    localAddressList = getLocalAddresses(6)
    for address in localAddressList:
-      if address in ip_network(NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix']):
+      if address in NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix'].network:
          return getNorNetInformationForAddress(address)
 
    localAddressList = getLocalAddresses(4)
    for address in localAddressList:
-      if address in ip_network(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix']):
+      if address in NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix'].network:
          return getNorNetInformationForAddress(address)
 
    return None
