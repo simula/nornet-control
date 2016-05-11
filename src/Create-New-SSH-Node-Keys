@@ -19,6 +19,7 @@
 # Contact: dreibh@simula.no
 
 RSA_BITS=16384
+MODULI_BITS=4096
 ECDSA_BITS=521
 
 
@@ -57,7 +58,7 @@ cp ssh_config  $BACKUP_DIRECTORY/
 
 # ====== Create new keys ====================================================
 echo "Generating moduli, step 1 ..."
-time ssh-keygen -G moduli.candidates -b $RSA_BITS
+time ssh-keygen -G moduli.candidates -b $MODULI_BITS
 echo "Generating moduli, step 2 ..."
 time ssh-keygen -T moduli -f moduli.candidates
 
