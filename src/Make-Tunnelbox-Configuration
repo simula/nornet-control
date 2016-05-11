@@ -22,6 +22,8 @@
 import sys
 import re
 import subprocess
+import base64
+import hashlib
 
 # NorNet
 from NorNetTools         import *;
@@ -253,6 +255,50 @@ def writeLOC(siteZoneFile, name, localSite):
                         5, 25))
 
 
+# ###### Make SHA-1 fingerprint #############################################
+def makeFingerprintSHA1(string):
+   fp = hashlib.sha1()
+   fp.update(string)
+   return fp.hexdigest()
+
+
+# ###### Make SHA-256 fingerprint ###########################################
+def makeFingerprintSHA256(string):
+   fp = hashlib.sha256()
+   fp.update(string)
+   return fp.hexdigest()
+
+
+# ###### Write SSHFP RR #####################################################
+# According to RFC 4255 and RFC 6594
+def writeSSHFP(siteZoneFile, name, publicKey):
+   if publicKey != None:
+      publicKeyType = -1
+
+      # publicKey is like "ssh-rsa AAAA....."
+      keyParameters = re.search(r'''^([^ ]+)\s+([^ ]+)''', publicKey)
+      if keyParameters != None:
+         if keyParameters.group(1) == 'ssh-rsa':
+            publicKeyType = 1
+         elif keyParameters.group(1) == 'ssh-dsa':
+            publicKeyType = 2
+         elif keyParameters.group(1) == 'ssh-ecdsa':
+            publicKeyType = 3
+         elif keyParameters.group(1) == 'ssh-ed25519':
+            publicKeyType = 4
+         else:
+            log('WARNING: Bad public key type "' + keyParameters.group(1) + ' -> skipping!')
+
+      if publicKeyType > 0:
+         decodedPublicKey = base64.b64decode(keyParameters.group(2))
+         print(name, makeFingerprintSHA1(decodedPublicKey))
+         print(name, makeFingerprintSHA256(decodedPublicKey))
+         writeRR(siteZoneFile, name, 'SSHFP',
+                 str(publicKeyType) + ' 1 ( ' + makeFingerprintSHA1(decodedPublicKey) + ' )')
+         writeRR(siteZoneFile, name, 'SSHFP',
+                 str(publicKeyType) + ' 2 ( ' + makeFingerprintSHA256(decodedPublicKey) + ' )')
+
+
 # ###### Write zone configuration ###########################################
 def writeZone(outputFile, zone, zoneFileName, masterSite):
    outputFile.write('zone "' + zone + '" IN {\n')
@@ -303,6 +349,7 @@ def makeNodeForDNS(nodeName, site, nodeIndex, model, type, options):
       'node_state'            : 'MANUAL',
       'node_v4only'           : v4Only,
       'node_v6only'           : v6Only,
+      'node_ssh_rsa_key'      : None,
       'node_tags'             : []
    }
    return norNetNode
@@ -455,18 +502,18 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
                                                          str.lower(localProvider['provider_short_name']), siteFQDN))
                # ====== Hostname for current provider's address =============
                elif phase == 2:
+                  nameToWrite = addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN)
                   if includeNodeIP(node, localSite, localProviderIndex, version):
-                     writeRR(siteZoneFile,
-                             addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN),
-                             rrTypeForAddress(nodeAddress),
-                             str(nodeAddress.ip))
+                     writeRR(siteZoneFile, nameToWrite,
+                             rrTypeForAddress(nodeAddress), str(nodeAddress.ip))
                   if version == 6:   # Just add entry once!
-                     writeRR(siteZoneFile,
-                             addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN),
+                     writeRR(siteZoneFile, nameToWrite,
                              'HINFO', '"' + node['node_model'] + '/' + localProvider['provider_long_name'] + '" "' + node['node_type'] + '"')
-                     writeLOC(siteZoneFile,
-                              addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN),
-                              localSite)
+                     writeLOC(siteZoneFile, nameToWrite, localSite)
+                     writeSSHFP(siteZoneFile, nameToWrite, node['node_ssh_rsa_key'])
+
+                  writeSSHFP(siteZoneFile, str(nodeAddress.ip), node['node_ssh_rsa_key'])
+
                # ====== Hostname with *all* addresses =======================
                else:
                   if includeNodeIP(node, localSite, localProviderIndex, version):
@@ -482,6 +529,9 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, 
                      writeLOC(siteZoneFile,
                               addProviderToName(node['node_name'] + '.', 'all', siteFQDN),
                               localSite)
+                     writeSSHFP(siteZoneFile,
+                                addProviderToName(node['node_name'] + '.', 'all', siteFQDN),
+                                node['node_ssh_rsa_key'])
 
       # ====== Add aliases =========================================
       aliasList = []

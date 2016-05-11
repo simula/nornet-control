@@ -302,7 +302,7 @@ def fetchNorNetNode(nodeNameToFind = None, site = None):
    try:
       norNetNodeList = []
       fullNodeList   = plc_server.GetNodes(plc_authentication, filter,
-                                           ['node_id', 'site_id', 'hostname', 'model', 'boot_state'])
+                                           ['node_id', 'site_id', 'hostname', 'model', 'boot_state', 'ssh_rsa_key'])
       for node in fullNodeList:
          nodeID       = int(node['node_id'])
          nodeSiteID   = int(node['site_id'])
@@ -328,6 +328,7 @@ def fetchNorNetNode(nodeNameToFind = None, site = None):
             'node_model'            : node['model'],
             'node_type'             : 'NorNet Managed Node',
             'node_state'            : node['boot_state'],
+            'node_ssh_rsa_key'      : node['ssh_rsa_key'],
             'node_v4only'           : 0,
             'node_v6only'           : 0,
             'node_tags'             : nodeTagsList
