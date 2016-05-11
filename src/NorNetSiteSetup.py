@@ -779,6 +779,13 @@ def makeNorNetNode(fullSliceList,
       if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
          error('Unable to add openvswitch.service configuration file to node ' + nodeHostName)
 
+      confFiles = getPLCServer().GetConfFiles(getPLCAuthentication(),
+                                              { 'source' : 'PlanetLabConf/openvswitch/openvswitch.service'},
+                                              [ 'conf_file_id' ])
+      if len(confFiles) == 0:
+         print('Removing configuration file ' + str(confFiles))
+         return getPLCServer().DeleteConfFile(getPLCAuthentication(), confFiles)
+
       # ====== Add node to PCU ==============================================
       if pcuID > 0:
          oldPCUID = lookupPCUIDforNode(nodeID)
