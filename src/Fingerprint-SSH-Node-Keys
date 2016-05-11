@@ -47,13 +47,13 @@ def makeFingerprintSHA256(string):
 
 for phase in [ 1, 2, 3, 4 ] :
    if phase == 1:
-      sys.stdout.write('DNS Configuration:\n')
-   elif phase == 2:
-      sys.stdout.write('Keys:\n')
-   elif phase == 3:
       sys.stdout.write('MD5:\n')
-   elif phase == 4:
+   elif phase == 2:
       sys.stdout.write('SHA-256:\n')
+   elif phase == 3:
+      sys.stdout.write('Keys:\n')
+   elif phase == 4:
+      sys.stdout.write('DNS Configuration:\n')
 
    for name in [ '/etc/ssh/ssh_host_ed25519_key.pub',
                  '/etc/ssh/ssh_host_rsa_key.pub',
