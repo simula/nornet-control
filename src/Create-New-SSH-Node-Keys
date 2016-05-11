@@ -18,7 +18,7 @@
 #
 # Contact: dreibh@simula.no
 
-RSA_BITS=2048
+RSA_BITS=16384
 ECDSA_BITS=521
 
 
@@ -56,19 +56,19 @@ cp ssh_config  $BACKUP_DIRECTORY/
 
 
 # ====== Create new keys ====================================================
-# echo "Generating moduli, step 1 ..."
-# time ssh-keygen -G moduli.candidates -b $RSA_BITS
-# echo "Generating moduli, step 2 ..."
-# time ssh-keygen -T moduli -f moduli.candidates
-#
-# echo "Generating ED25519 key ..."
-# time ssh-keygen -N "" -t ed25519 -f ssh_host_ed25519_key
-# echo "Generating ED25519 key ..."
-# time ssh-keygen -N "" -t ecdsa -b $ECDSA_BITS -f ssh_host_ecdsa_key
-# echo "Generating RSA key ..."
-# time ssh-keygen -N "" -t rsa -b $RSA_BITS -f ssh_host_rsa_key
-#
-# echo "Done!"
+echo "Generating moduli, step 1 ..."
+time ssh-keygen -G moduli.candidates -b $RSA_BITS
+echo "Generating moduli, step 2 ..."
+time ssh-keygen -T moduli -f moduli.candidates
+
+echo "Generating ED25519 key ..."
+time ssh-keygen -N "" -t ed25519 -f ssh_host_ed25519_key
+echo "Generating ED25519 key ..."
+time ssh-keygen -N "" -t ecdsa -b $ECDSA_BITS -f ssh_host_ecdsa_key
+echo "Generating RSA key ..."
+time ssh-keygen -N "" -t rsa -b $RSA_BITS -f ssh_host_rsa_key
+
+echo "Done!"
 
 
 # ====== Suggested sshd_config and ssh_config updates =======================
