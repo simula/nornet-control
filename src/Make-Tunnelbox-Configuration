@@ -283,11 +283,12 @@ def writeSSHFP(siteZoneFile, name, publicKeys):
    if publicKeys != None:
       publicKeyType = -1
 
-      allPublicKeys = {}
-      if not isinstance(publicKeys, dict):
-         allPublicKeys = { publicKeys }
+      allPublicKeys = []
+      if not isinstance(publicKeys, list):
+         allPublicKeys = [ publicKeys ]
       else:
-         allPublicKeys =  publicKeys
+         for publicKey in publicKeys:
+            allPublicKeys.append(unquote(publicKey))
 
       for publicKey in allPublicKeys:
          # publicKey is like "ssh-rsa AAAA....."
@@ -295,14 +296,14 @@ def writeSSHFP(siteZoneFile, name, publicKeys):
          if keyParameters != None:
             if keyParameters.group(1) == 'ssh-rsa':
                publicKeyType = 1
-            elif keyParameters.group(1) == 'ssh-dsa':
+            elif keyParameters.group(1) == 'ssh-dss':
                publicKeyType = 2
             elif keyParameters.group(1) == 'ssh-ecdsa':
                publicKeyType = 3
             elif keyParameters.group(1) == 'ssh-ed25519':
                publicKeyType = 4
             else:
-               log('WARNING: Bad public key type "' + keyParameters.group(1) + ' -> skipping!')
+               log('WARNING: Bad public key type "' + keyParameters.group(1) + '" -> skipping!')
 
          if publicKeyType > 0:
             decodedPublicKey = base64.b64decode(keyParameters.group(2))
@@ -1757,6 +1758,13 @@ if fullSliceList != None:
 else:
    log('WARNING: There are no slices! Is the user role correct?')
 
+# ====== Set SSH public keys ================================================
+for additionalNode in additionalNodes:
+   additionalNodeIndex = additionalNode['node_index']
+   try:
+      additionalNode['node_ssh_rsa_key'] = sshKeys[additionalNodeIndex]
+   except:
+      continue
 
 # ====== Create Bind configuration ==========================================
 makeBindConfiguration(fullSiteList, siteNodeList, fullSliceList, localSite,
