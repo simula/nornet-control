@@ -144,7 +144,7 @@ printf "Used Memory:      %5d MiB of %5d MiB (%5d MiB free)\n" ${memoryUsed} ${m
 printf "Used Swap:        %5d MiB of %5d MiB (%5d MiB free)\n" ${swapUsed} ${swapTotal} ${swapFree}
 echo "Used Diskspace:   ${diskRoot} on /, ${diskHome} on /home"
 
-keys=`find /etc/ssh -name "ssh_host_*.pub" | sort`
+keys=`find /etc/ssh -maxdepth 1 -name "ssh_host_*.pub" | sort`
 firstKey=1
 for key in $keys ; do
    if [ $firstKey -eq 1 ] ; then
