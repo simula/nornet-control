@@ -49,6 +49,14 @@ def getLocalNodeAliasesString(nodeIndex):
       return ''
 
 
+# ###### Get local node SSH keys string #####################################
+def getLocalNodeSSHKeysString(nodeIndex):
+   try:
+      return str(NorNet_Configuration['NorNet_LocalSite_SSHKeys' + str(nodeIndex)])
+   except:
+      return ''
+
+
 # ###### Get DHCPD node configuration string ################################
 def getLocalSiteDHCPServerDynamicConfigurationString():
    try:
@@ -271,32 +279,39 @@ def makeFingerprintSHA256(string):
 
 # ###### Write SSHFP RR #####################################################
 # According to RFC 4255 and RFC 6594
-def writeSSHFP(siteZoneFile, name, publicKey):
-   if publicKey != None:
+def writeSSHFP(siteZoneFile, name, publicKeys):
+   if publicKeys != None:
       publicKeyType = -1
 
-      # publicKey is like "ssh-rsa AAAA....."
-      keyParameters = re.search(r'''^([^ ]+)\s+([^ ]+)''', publicKey)
-      if keyParameters != None:
-         if keyParameters.group(1) == 'ssh-rsa':
-            publicKeyType = 1
-         elif keyParameters.group(1) == 'ssh-dsa':
-            publicKeyType = 2
-         elif keyParameters.group(1) == 'ssh-ecdsa':
-            publicKeyType = 3
-         elif keyParameters.group(1) == 'ssh-ed25519':
-            publicKeyType = 4
-         else:
-            log('WARNING: Bad public key type "' + keyParameters.group(1) + ' -> skipping!')
+      allPublicKeys = {}
+      if not isinstance(publicKeys, dict):
+         allPublicKeys = { publicKeys }
+      else:
+         allPublicKeys =  publicKeys
 
-      if publicKeyType > 0:
-         decodedPublicKey = base64.b64decode(keyParameters.group(2))
-         print(name, makeFingerprintSHA1(decodedPublicKey))
-         print(name, makeFingerprintSHA256(decodedPublicKey))
-         writeRR(siteZoneFile, name, 'SSHFP',
-                 str(publicKeyType) + ' 1 ( ' + makeFingerprintSHA1(decodedPublicKey) + ' )')
-         writeRR(siteZoneFile, name, 'SSHFP',
-                 str(publicKeyType) + ' 2 ( ' + makeFingerprintSHA256(decodedPublicKey) + ' )')
+      for publicKey in allPublicKeys:
+         # publicKey is like "ssh-rsa AAAA....."
+         keyParameters = re.search(r'''^([^ ]+)\s+([^ ]+)''', publicKey)
+         if keyParameters != None:
+            if keyParameters.group(1) == 'ssh-rsa':
+               publicKeyType = 1
+            elif keyParameters.group(1) == 'ssh-dsa':
+               publicKeyType = 2
+            elif keyParameters.group(1) == 'ssh-ecdsa':
+               publicKeyType = 3
+            elif keyParameters.group(1) == 'ssh-ed25519':
+               publicKeyType = 4
+            else:
+               log('WARNING: Bad public key type "' + keyParameters.group(1) + ' -> skipping!')
+
+         if publicKeyType > 0:
+            decodedPublicKey = base64.b64decode(keyParameters.group(2))
+            # print(name, makeFingerprintSHA1(decodedPublicKey))
+            # print(name, makeFingerprintSHA256(decodedPublicKey))
+            writeRR(siteZoneFile, name, 'SSHFP',
+                    str(publicKeyType) + ' 1 ( ' + makeFingerprintSHA1(decodedPublicKey) + ' )')
+            writeRR(siteZoneFile, name, 'SSHFP',
+                    str(publicKeyType) + ' 2 ( ' + makeFingerprintSHA256(decodedPublicKey) + ' )')
 
 
 # ###### Write zone configuration ###########################################
@@ -383,7 +398,8 @@ def includeNodeIP(node, localSite, providerIndex, version):
 
 
 # ###### Generate hosts configuration #######################################
-def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList, localSite, hostName, additionalNodes, aliases):
+def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
+                          localSite, hostName, additionalNodes, aliases):
    localSiteIndex    = localSite['site_index']
    localProviderList = getNorNetProvidersForSite(localSite)
    siteFQDN          = localSite['site_domain'] + '.'
@@ -1689,6 +1705,7 @@ makeFirewallConfiguration(fullSiteList, localSite)
 # ====== Prepare additional nodes for DNS configuration =====================
 additionalNodes = []
 aliases = {}
+sshKeys = {}
 for i in range(NorNet_MinNodeIndex, NorNet_MaxNodeIndex + 1):
    # ====== Handle nodes ====================================================
    nodeConfiguration = getLocalNodeConfigurationString(i)
@@ -1714,6 +1731,13 @@ for i in range(NorNet_MinNodeIndex, NorNet_MaxNodeIndex + 1):
       if len(parameters) > 0:
          aliases[i] = parameters
 
+   # ====== Handle SSH public keys ==========================================
+   nodeSSHKeys = getLocalNodeSSHKeysString(i)
+   if nodeSSHKeys != '':
+      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeSSHKeys)
+      if len(parameters) > 0:
+         sshKeys[i] = parameters
+
 # ====== Handle slices ======================================================
 if fullSliceList != None:
    for slice in fullSliceList:
@@ -1736,7 +1760,8 @@ else:
 
 # ====== Create Bind configuration ==========================================
 makeBindConfiguration(fullSiteList, siteNodeList, fullSliceList, localSite,
-                      getHostnameFromFQDN(getLocalNodeHostname()), additionalNodes, aliases)
+                      getHostnameFromFQDN(getLocalNodeHostname()), additionalNodes,
+                      aliases)
 
 
 # ====== DHCP daemon configuration ==========================================
