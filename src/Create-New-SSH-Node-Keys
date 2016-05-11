@@ -72,7 +72,7 @@ cp ssh_config  $BACKUP_DIRECTORY/
 
 
 # ====== Suggested sshd_config and ssh_config updates =======================
-cat <<EOF
+cat >sshd_config.suggested <<EOF
 Protocol 2
 
 # Check supported algorithms with "ssh -Q cipher|kex|key|mac"!
@@ -92,9 +92,9 @@ ClientAliveCountMax       3
 AcceptEnv                 LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDENTIFICATION LC_ALL LANGUAGE XMODIFIERS
 
 Subsystem sftp /usr/lib/openssh/sftp-server
-EOF >sshd_config.suggested
+EOF
 
-cat <<EOF
+cat >ssh_config.suggested <<EOF
 Protocol 2
 
 # Check supported algorithms with "ssh -Q cipher|kex|key|mac"!
@@ -111,11 +111,24 @@ ServerAliveInterval       30
 ServerAliveCountMax       3
 
 SendEnv                   LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDENTIFICATION LC_ALL LANGUAGE XMODIFIERS
-EOF >ssh_config.suggested
+EOF
 
 
 # ====== Make sshd_config and ssh_config updates ============================
 echo "Suggested sshd_config change:"
-if colordiff sshd_config sshd_config.suggested ; then
+if ! colordiff sshd_config sshd_config.suggested ; then
    echo -en "\x1b[33mReplace sshd_config? [yes/no]?\x1b[0m "
+   read -er applyChanges
+   if [ "$applyChanges" = "yes" -o "$applyChanges" = "y" ] ; then
+      cp sshd_config.suggested sshd_config
+   fi
+fi
+
+echo "Suggested ssh_config change:"
+if ! colordiff ssh_config ssh_config.suggested ; then
+   echo -en "\x1b[33mReplace ssh_config? [yes/no]?\x1b[0m "
+   read -er applyChanges
+   if [ "$applyChanges" = "yes" -o "$applyChanges" = "y" ] ; then
+      cp ssh_config.suggested ssh_config
+   fi
 fi
