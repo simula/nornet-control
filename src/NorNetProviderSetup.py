@@ -21,7 +21,7 @@
 
 import hashlib;
 
-from ipaddress import IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
+from ipaddress import ip_network, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
 
 # NorNet
 import NorNetConfiguration;
@@ -83,7 +83,7 @@ def makeNorNetIP(provider, site, node, version, sliceIndex = 0):
 # ###### Get NorNet information from address ################################
 def getNorNetInformationForAddress(address):
    norNetInformation = None
-   if NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix'].Contains(address):
+   if address in ip_network(NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix']):
       a = int(address)
       b = int((a >> 64) & 0xffffffff)
       norNetInformation = {
@@ -94,7 +94,7 @@ def getNorNetInformationForAddress(address):
          'vnet_index':     (b & 0x000000ff)
       }
 
-   if NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix'].Contains(address):
+   if address in ip_network(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix']):
       a = int(address)
       norNetInformation = {
          'address':        address,
@@ -111,12 +111,12 @@ def getNorNetInformationForAddress(address):
 def getMyNorNetInformation():
    localAddressList = getLocalAddresses(6)
    for address in localAddressList:
-      if NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix'].Contains(address):
+      if address in ip_network(NorNetConfiguration.NorNet_Configuration['NorNet_IPv6Prefix']):
          return getNorNetInformationForAddress(address)
 
    localAddressList = getLocalAddresses(4)
    for address in localAddressList:
-      if NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix'].Contains(address):
+      if address in ip_network(NorNetConfiguration.NorNet_Configuration['NorNet_IPv4Prefix']):
          return getNorNetInformationForAddress(address)
 
    return None
