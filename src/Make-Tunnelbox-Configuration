@@ -278,7 +278,7 @@ def makeFingerprintSHA256(string):
 
 
 # ###### Write SSHFP RR #####################################################
-# According to RFC 4255 and RFC 6594
+# According to RFC 4255, RFC 6594 and RFC 7479
 def writeSSHFP(siteZoneFile, name, publicKeys):
    if publicKeys != None:
       publicKeyType = -1
