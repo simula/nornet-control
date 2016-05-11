@@ -18,9 +18,8 @@
 #
 # Contact: dreibh@simula.no
 
-
 RSA_BITS=2048
-
+ECDSA_BITS=521
 
 
 show-keys ()
@@ -49,20 +48,21 @@ BACKUP_DIRECTORY="backup-`env LANG=C date +%FT%H:%M:%S`"
 
 echo "Making backup in $BACKUP_DIRECTORY ..."
 cd /etc/ssh
-mkdir $BACKUP_DIRECTORY
-mv ssh_host_key* $BACKUP_DIRECTORY/
-mv moduli        $BACKUP_DIRECTORY/
-cp sshd_config   $BACKUP_DIRECTORY/
+mkdir $BACKUP_DIRECTORY/
+find . -maxdepth 1 -name "ssh_host_*_key*" | xargs -n1 -i§ --no-run-if-empty mv § $BACKUP_DIRECTORY/
+find . -maxdepth 1 -name "moduli*"         | xargs -n1 -i§ --no-run-if-empty mv § $BACKUP_DIRECTORY/
+cp sshd_config $BACKUP_DIRECTORY/
 
 echo "Generating moduli, step 1 ..."
-ssh-keygen -G
+time ssh-keygen -G moduli.candidates -b $RSA_BITS
 echo "Generating moduli, step 2 ..."
-ssh-keygen -T
+time ssh-keygen -T moduli -f moduli.candidates
+
 echo "Generating ED25519 key ..."
-ssh-keygen -N "" -t ed25519          -f ssh_host_ed25519_key
+time ssh-keygen -N "" -t ed25519 -f ssh_host_ed25519_key
 echo "Generating ED25519 key ..."
-ssh-keygen -N "" -t ecdsa -b 521     -f ssh_host_ecdsa_key
+time ssh-keygen -N "" -t ecdsa -b $ECDSA_BITS -f ssh_host_ecdsa_key
 echo "Generating RSA key ..."
-ssh-keygen -N "" -t rsa -b $RSA_BITS -f ssh_host_rsa_key
+time ssh-keygen -N "" -t rsa -b $RSA_BITS -f ssh_host_rsa_key
 
 echo "Done!"
