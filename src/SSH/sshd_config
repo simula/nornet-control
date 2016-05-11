@@ -8,12 +8,12 @@ Ciphers                   aes256-gcm@openssh.com,chacha20-poly1305@openssh.com
 MACs                      hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com
 KexAlgorithms             curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
 
-UsePAM              yes
-X11Forwarding       yes
-TCPKeepAlive        yes
-ClientAliveInterval 60
-ClientAliveCountMax 3
+UsePAM                    yes
+X11Forwarding             yes
+TCPKeepAlive              yes
+ClientAliveInterval       60
+ClientAliveCountMax       3
 
-AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDENTIFICATION LC_ALL LANGUAGE
+AcceptEnv                 LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDENTIFICATION LC_ALL LANGUAGE XMODIFIERS
 
 Subsystem sftp /usr/lib/openssh/sftp-server
