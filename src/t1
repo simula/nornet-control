@@ -1,0 +1,68 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
+
+import sys
+import re
+import base64
+import hashlib
+import socket
+
+
+# ###### Make SHA-1 fingerprint #############################################
+def makeFingerprintSHA1(string):
+   fp = hashlib.sha1()
+   fp.update(string)
+   return fp.hexdigest()
+
+# ###### Make SHA-256 fingerprint ###########################################
+def makeFingerprintSHA256(string):
+   fp = hashlib.sha256()
+   fp.update(string)
+   return fp.hexdigest()
+
+
+for phase in [ 1, 2 ] :
+   for name in [ '/etc/ssh/ssh_host_ed25519_key.pub',
+                 '/etc/ssh/ssh_host_rsa_key.pub',
+                 #'/etc/ssh/ssh_host_ecdsa_key.pub',
+                 #'/etc/ssh/ssh_host_dsa_key.pub'
+               ]:
+
+      publicKey = None
+      try:
+         f = open(name, 'r')
+         publicKey = f.read()
+      except:
+         continue
+
+      if publicKey != None:
+         keyParameters = re.search(r'''^([^ ]+)\s+([^ ]+)''', publicKey)
+         if keyParameters != None:
+            if phase == 1:
+               if keyParameters.group(1) == 'ssh-rsa':
+                  publicKeyType = 1
+               elif keyParameters.group(1) == 'ssh-dss':
+                  publicKeyType = 2
+               elif keyParameters.group(1) == 'ecdsa-sha2-nistp256':
+                  publicKeyType = 3
+               elif keyParameters.group(1) == 'ssh-ed25519':
+                  publicKeyType = 4
+               else:
+                  print('WARNING: Bad public key type "' + keyParameters.group(1) + '" -> skipping!')
+
+               if publicKeyType > 0:
+                  decodedPublicKey = base64.b64decode(keyParameters.group(2))
+
+                  sys.stdout.write(socket.getfqdn() + '\t' + 'SSHFP' + '\t' + str(publicKeyType) +
+                                   ' 1 ( ' + makeFingerprintSHA1(decodedPublicKey) + ' )\n')
+                  sys.stdout.write(socket.getfqdn() + '\t' + 'SSHFP' + '\t' + str(publicKeyType) +
+                                   ' 2 ( ' + makeFingerprintSHA256(decodedPublicKey) + ' )\n')
+
+               else:
+                  print('Unknown key type ' + keyParameters.group(1))
+
+            elif phase == 2:
+               sys.stdout.write('"' + keyParameters.group(1) + ' ' + keyParameters.group(2) + '"\t')
+
+   sys.stdout.write('\n')
