@@ -763,28 +763,31 @@ def makeNorNetNode(fullSliceList,
             error('Unable to add proxy.' + shell + ' configuration file to node ' + nodeHostName)
 
       # ====== Hack to handle openvswitch start/stop correctly ==============
+      # !!! NOTE: This is obsolete now! !!!
       # See https://docs.google.com/a/simula.no/document/d/1WRZ7kN6KwZRaeNOi51-uNmintCVwdkzhM2W3To6uV_Y/edit?pli=1 .
-      confFileID = addOrUpdateConfFile({
-         'file_owner'        : 'root',
-         'postinstall_cmd'   : '/bin/systemctl reenable openvswitch.service',
-         'error_cmd'         : '',
-         'preinstall_cmd'    : '',
-         'dest'              : '/lib/systemd/system/openvswitch.service',
-         'ignore_cmd_errors' : False,
-         'enabled'           : True,
-         'file_permissions'  : '644',
-         'source'            : 'PlanetLabConf/openvswitch/openvswitch.service',
-         'always_update'     : False,
-         'file_group'        : 'root'})
-      if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
-         error('Unable to add openvswitch.service configuration file to node ' + nodeHostName)
+      # confFileID = addOrUpdateConfFile({
+      #    'file_owner'        : 'root',
+      #    'postinstall_cmd'   : '/bin/systemctl reenable openvswitch.service',
+      #    'error_cmd'         : '',
+      #    'preinstall_cmd'    : '',
+      #    'dest'              : '/lib/systemd/system/openvswitch.service',
+      #    'ignore_cmd_errors' : False,
+      #    'enabled'           : True,
+      #    'file_permissions'  : '644',
+      #    'source'            : 'PlanetLabConf/openvswitch/openvswitch.service',
+      #    'always_update'     : False,
+      #    'file_group'        : 'root'})
+      # if getPLCServer().AddConfFileToNode(getPLCAuthentication(), confFileID, nodeID) != 1:
+      #    error('Unable to add openvswitch.service configuration file to node ' + nodeHostName)
 
+      # Obsolete => get rid of the file, if it is still existing!
       confFiles = getPLCServer().GetConfFiles(getPLCAuthentication(),
                                               { 'source' : 'PlanetLabConf/openvswitch/openvswitch.service'},
                                               [ 'conf_file_id' ])
-      if len(confFiles) == 0:
-         print('Removing configuration file ' + str(confFiles))
-         return getPLCServer().DeleteConfFile(getPLCAuthentication(), confFiles)
+      if len(confFiles) != 0:
+         print('Removing configuration file ' + str(confFiles[0]['conf_file_id']))
+         if getPLCServer().DeleteConfFile(getPLCAuthentication(), confFiles[0]['conf_file_id']) != 1:
+            error('Unable to remove obsolete openvswitch script!')
 
       # ====== Add node to PCU ==============================================
       if pcuID > 0:
