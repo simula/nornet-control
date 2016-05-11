@@ -1,6 +1,23 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
+# Extract SSH public key fingerprints for DNS configuration
+# Copyright (C) 2016 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
 
 import sys
 import re
@@ -23,10 +40,15 @@ def makeFingerprintSHA256(string):
 
 
 for phase in [ 1, 2 ] :
+   if phase == 1:
+      sys.stdout.write('DNS Configuration:\n')
+   elif phase == 2:
+      sys.stdout.write('Keys:\n')
+
    for name in [ '/etc/ssh/ssh_host_ed25519_key.pub',
                  '/etc/ssh/ssh_host_rsa_key.pub',
-                 #'/etc/ssh/ssh_host_ecdsa_key.pub',
-                 #'/etc/ssh/ssh_host_dsa_key.pub'
+                 '/etc/ssh/ssh_host_ecdsa_key.pub',
+                 '/etc/ssh/ssh_host_dsa_key.pub'
                ]:
 
       publicKey = None
@@ -63,6 +85,6 @@ for phase in [ 1, 2 ] :
                   print('Unknown key type ' + keyParameters.group(1))
 
             elif phase == 2:
-               sys.stdout.write('"' + keyParameters.group(1) + ' ' + keyParameters.group(2) + '"\t')
+               sys.stdout.write('"' + keyParameters.group(1) + ' ' + keyParameters.group(2) + '"\n')
 
    sys.stdout.write('\n')
