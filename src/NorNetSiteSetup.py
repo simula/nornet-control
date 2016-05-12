@@ -486,8 +486,8 @@ def _updateNorNetInterfaces(node, site, norNetInterface):
                   interface['type']       = 'ipv4'
                   interface['method']     = 'static'
                   interface['ip']         = str(ifIPv4.ip)
+                  interface['network']    = str(ifIPv4.network.network_address)
                   interface['netmask']    = str(ifIPv4.netmask)
-                  interface['network']    = str(ifIPv4.network)
                   interface['broadcast']  = str(ifIPv4.network.broadcast_address)
                   interface['gateway']    = str(ifGatewayIPv4.ip)
                   interface['is_primary'] = True
