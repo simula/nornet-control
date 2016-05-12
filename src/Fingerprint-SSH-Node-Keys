@@ -45,7 +45,7 @@ def makeFingerprintSHA256(string):
    return fp.hexdigest()
 
 
-for phase in [ 1, 2, 3, 4 ] :
+for phase in [ 1, 2, 3, 4, 5 ] :
    if phase == 1:
       sys.stdout.write('MD5:\n')
    elif phase == 2:
@@ -54,6 +54,9 @@ for phase in [ 1, 2, 3, 4 ] :
       sys.stdout.write('Keys:\n')
    elif phase == 4:
       sys.stdout.write('DNS Configuration:\n')
+   elif phase == 5:
+      sys.stdout.write('NorNet Configuration:\n')
+      sys.stdout.write('NorNet_LocalSite_SSHKeys=\'\n')
 
    for name in [ '/etc/ssh/ssh_host_ed25519_key.pub',
                  '/etc/ssh/ssh_host_rsa_key.pub',
@@ -103,5 +106,10 @@ for phase in [ 1, 2, 3, 4 ] :
 
             elif phase == 3:
                sys.stdout.write('"' + keyParameters.group(1) + ' ' + keyParameters.group(2) + '"\n')
+            elif phase == 5:
+               sys.stdout.write(' "' + keyParameters.group(1) + ' ' + keyParameters.group(2) + '"\n')
 
-   sys.stdout.write('\n')
+   if phase == 5:
+      sys.stdout.write('\'\n')
+   else:
+      sys.stdout.write('\n')
