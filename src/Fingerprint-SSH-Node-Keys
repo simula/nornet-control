@@ -1,0 +1,115 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
+# Extract SSH public key fingerprints for DNS configuration
+# Copyright (C) 2016 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+import sys
+import re
+import base64
+import hashlib
+import socket
+
+
+# ###### Make MD-5 fingerprint ##############################################
+def makeFingerprintMD5(string):
+   fp = hashlib.md5()
+   fp.update(string)
+   return fp.hexdigest()
+
+# ###### Make SHA-1 fingerprint #############################################
+def makeFingerprintSHA1(string):
+   fp = hashlib.sha1()
+   fp.update(string)
+   return fp.hexdigest()
+
+# ###### Make SHA-256 fingerprint ###########################################
+def makeFingerprintSHA256(string):
+   fp = hashlib.sha256()
+   fp.update(string)
+   return fp.hexdigest()
+
+
+for phase in [ 1, 2, 3, 4, 5 ] :
+   if phase == 1:
+      sys.stdout.write('MD5:\n')
+   elif phase == 2:
+      sys.stdout.write('SHA-256:\n')
+   elif phase == 3:
+      sys.stdout.write('Keys:\n')
+   elif phase == 4:
+      sys.stdout.write('DNS Configuration:\n')
+   elif phase == 5:
+      sys.stdout.write('NorNet Configuration:\n')
+      sys.stdout.write('NorNet_LocalSite_SSHKeys<NUMBER>=\'\n')
+
+   for name in [ '/etc/ssh/ssh_host_ed25519_key.pub',
+                 '/etc/ssh/ssh_host_rsa_key.pub',
+                 '/etc/ssh/ssh_host_ecdsa_key.pub',
+                 '/etc/ssh/ssh_host_dsa_key.pub'
+               ]:
+
+      publicKey = None
+      try:
+         f = open(name, 'r')
+         publicKey = f.read()
+      except:
+         continue
+
+      if publicKey != None:
+         keyParameters = re.search(r'''^([^ ]+)\s+([^ ]+)''', publicKey)
+         if keyParameters != None:
+            if ((phase == 4) or (phase == 1) or (phase == 2)):
+               if keyParameters.group(1) == 'ssh-rsa':
+                  publicKeyType = 1
+               elif keyParameters.group(1) == 'ssh-dss':
+                  publicKeyType = 2
+               elif re.match('^ecdsa-', keyParameters.group(1)):
+                  publicKeyType = 3
+               elif keyParameters.group(1) == 'ssh-ed25519':
+                  publicKeyType = 4
+               else:
+                  print('WARNING: Bad public key type "' + keyParameters.group(1) + '" -> skipping!')
+
+               if publicKeyType > 0:
+                  decodedPublicKey = base64.b64decode(keyParameters.group(2))
+
+                  if phase == 4:
+                     sys.stdout.write(socket.getfqdn() + '\t' + 'SSHFP\tIN' + '\t' + str(publicKeyType) +
+                                      ' 1 ( ' + makeFingerprintSHA1(decodedPublicKey) + ' )\n')
+                     sys.stdout.write(socket.getfqdn() + '\t' + 'SSHFP\tIN' + '\t' + str(publicKeyType) +
+                                      ' 2 ( ' + makeFingerprintSHA256(decodedPublicKey) + ' )\n')
+
+                  elif phase == 1:
+                     sys.stdout.write(makeFingerprintMD5(decodedPublicKey) + '\t' + name + '\n')
+                  elif phase == 2:
+                     sys.stdout.write(makeFingerprintSHA256(decodedPublicKey) + '\t' + name + '\n')
+
+
+               else:
+                  print('Unknown key type ' + keyParameters.group(1))
+
+            elif phase == 3:
+               sys.stdout.write('"' + keyParameters.group(1) + ' ' + keyParameters.group(2) + '"\n')
+            elif phase == 5:
+               sys.stdout.write(' "' + keyParameters.group(1) + ' ' + keyParameters.group(2) + '"\n')
+
+   if phase == 5:
+      sys.stdout.write('\'\n')
+   else:
+      sys.stdout.write('\n')
