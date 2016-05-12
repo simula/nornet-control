@@ -125,6 +125,8 @@ if ! colordiff sshd_config sshd_config.suggested ; then
    if [ "$applyChanges" = "yes" -o "$applyChanges" = "y" ] ; then
       cp sshd_config.suggested sshd_config
    fi
+else
+   echo "Skipped!"
 fi
 
 echo "Suggested ssh_config change:"
@@ -134,4 +136,6 @@ if ! colordiff ssh_config ssh_config.suggested ; then
    if [ "$applyChanges" = "yes" -o "$applyChanges" = "y" ] ; then
       cp ssh_config.suggested ssh_config
    fi
+else
+   echo "Skipped!"
 fi
