@@ -23,6 +23,7 @@ MODULI_BITS=8192
 ECDSA_BITS=521
 
 
+# ###### Show host key fingerprints #########################################
 show-keys ()
 {
    keys=`find /etc/ssh -name "ssh_host_*.pub" | sort`
@@ -39,6 +40,9 @@ show-keys ()
 }
 
 
+cd /etc/ssh
+
+
 # ====== Create new keys ====================================================
 echo -en "\x1b[33mRemove existing SSH host keys and generate new ones? [yes/no]?\x1b[0m "
 read -er applyChanges
@@ -46,7 +50,6 @@ if [ "$applyChanges" = "yes" -o "$applyChanges" = "y" ] ; then
    BACKUP_DIRECTORY="backup-`env LANG=C date +%FT%H:%M:%S`"
 
    echo "Making backup in $BACKUP_DIRECTORY ..."
-   cd /etc/ssh
    mkdir $BACKUP_DIRECTORY/
    find . -maxdepth 1 -name "ssh_host_*_key*" | xargs -n1 -i§ --no-run-if-empty mv § $BACKUP_DIRECTORY/
    find . -maxdepth 1 -name "moduli*"         | xargs -n1 -i§ --no-run-if-empty cp § $BACKUP_DIRECTORY/
@@ -124,9 +127,9 @@ if ! colordiff sshd_config sshd_config.suggested ; then
    read -er applyChanges
    if [ "$applyChanges" = "yes" -o "$applyChanges" = "y" ] ; then
       cp sshd_config.suggested sshd_config
+   else
+      echo "Skipped!"
    fi
-else
-   echo "Skipped!"
 fi
 
 echo "Suggested ssh_config change:"
@@ -135,7 +138,7 @@ if ! colordiff ssh_config ssh_config.suggested ; then
    read -er applyChanges
    if [ "$applyChanges" = "yes" -o "$applyChanges" = "y" ] ; then
       cp ssh_config.suggested ssh_config
+   else
+      echo "Skipped!"
    fi
-else
-   echo "Skipped!"
 fi
