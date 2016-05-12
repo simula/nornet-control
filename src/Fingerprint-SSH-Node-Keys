@@ -76,7 +76,7 @@ for phase in [ 1, 2, 3, 4 ] :
                   publicKeyType = 1
                elif keyParameters.group(1) == 'ssh-dss':
                   publicKeyType = 2
-               elif keyParameters.group(1) == 'ecdsa-sha2-nistp256':
+               elif re.match('^ecdsa-', keyParameters.group(1)):
                   publicKeyType = 3
                elif keyParameters.group(1) == 'ssh-ed25519':
                   publicKeyType = 4
