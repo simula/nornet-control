@@ -56,7 +56,7 @@ for phase in [ 1, 2, 3, 4, 5 ] :
       sys.stdout.write('DNS Configuration:\n')
    elif phase == 5:
       sys.stdout.write('NorNet Configuration:\n')
-      sys.stdout.write('NorNet_LocalSite_SSHKeys=\'\n')
+      sys.stdout.write('NorNet_LocalSite_SSHKeys<NUMBER>=\'\n')
 
    for name in [ '/etc/ssh/ssh_host_ed25519_key.pub',
                  '/etc/ssh/ssh_host_rsa_key.pub',
