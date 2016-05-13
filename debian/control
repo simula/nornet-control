@@ -174,8 +174,6 @@ Description: NorNet Node Control
 
 Package: nornet-tunnelbox
 Architecture: any
-Replaces: nornet-routing
-Conflicts: nornet-routing
 Depends: arpwatch,
          bind9,
          collectd,
@@ -188,7 +186,7 @@ Depends: arpwatch,
          netstat-nat,
          nornet-api,
          nornet-management,
-         nornet-node,
+         nornet-node | nornet-server,
          nornet-trace-service,
          ntp,
          python (>= 2.7),
