@@ -235,7 +235,7 @@ fi
 if [ "$Variant" != "FreeBSD" ] ; then
    sudo updatedb
 else
-   sudo -u nobody /usr/libexec/locate.updatedb
+   sudo /etc/periodic/weekly/310.locate
    if [ -x /usr/local/bin/geoipupdate.sh ] ; then
       sudo /usr/local/bin/geoipupdate.sh
    fi
