@@ -145,6 +145,8 @@ elif [ "$Variant" = "Fedora" ] ; then
    wait
    cat /tmp/install.log
    sudo yum clean all
+elif [ "$Variant" = "FreeBSD" ] ; then
+   sudo pkg clean all -y
 fi
 
 # ====== Remove obsolete kernel packages ====================================
