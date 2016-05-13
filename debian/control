@@ -151,7 +151,8 @@ Description: NorNet API
 
 Package: nornet-node
 Architecture: any
-Conflicts: miredo
+Conflicts: miredo,
+           nornet-server
 Depends: cfengine3,
          grub2-common | grub,
          nfs-common,
@@ -346,6 +347,7 @@ Description: NorNet Database
 
 Package: nornet-server
 Architecture: all
+Conflicts: nornet-node
 Depends: cfengine3,
          grub2-common | grub,
          libvirt-bin,
