@@ -52,6 +52,7 @@ if [ "$applyChanges" = "yes" -o "$applyChanges" = "y" ] ; then
    echo "Making backup in $BACKUP_DIRECTORY ..."
    mkdir $BACKUP_DIRECTORY/
    find . -maxdepth 1 -name "ssh_host_*_key*" | xargs -n1 -I § -r mv § $BACKUP_DIRECTORY/
+   find . -maxdepth 1 -name "ssh_host_key*"   | xargs -n1 -I § -r mv § $BACKUP_DIRECTORY/
    find . -maxdepth 1 -name "moduli*"         | xargs -n1 -I § -r cp § $BACKUP_DIRECTORY/
    cp sshd_config $BACKUP_DIRECTORY/
    cp ssh_config  $BACKUP_DIRECTORY/
