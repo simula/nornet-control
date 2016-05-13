@@ -97,8 +97,13 @@ ClientAliveCountMax       3
 
 AcceptEnv                 LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDENTIFICATION LC_ALL LANGUAGE XMODIFIERS
 
-Subsystem sftp /usr/lib/openssh/sftp-server
 EOF
+for sftp in /usr/lib/openssh/sftp-server /usr/libexec/sftp-server ; do
+   if [ -e "$sftp" ] ; then
+      echo "Subsystem sftp $sftp" >>sshd_config.suggested
+      break
+   fi
+done
 
 cat >ssh_config.suggested <<EOF
 Protocol 2
