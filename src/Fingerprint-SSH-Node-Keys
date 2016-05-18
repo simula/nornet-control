@@ -89,7 +89,7 @@ for phase in [ 1, 2, 3, 4, 5, 6 ] :
                   print('WARNING: Bad public key type "' + keyParameters.group(1) + '" -> skipping!')
 
                if publicKeyType > 0:
-                  decodedPublicKey = base64.b64decode(keyParameters.group(2))
+                  decodedPublicKey = base64.b64decode(bytes(keyParameters.group(2), 'utf-8'))
 
                   if phase == 1:
                      sys.stdout.write(makeFingerprintMD5(decodedPublicKey) + '\t' + name + '\n')
