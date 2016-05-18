@@ -45,7 +45,7 @@ def makeFingerprintSHA256(string):
    return fp.hexdigest()
 
 
-for phase in [ 1, 2, 3, 4, 5 ] :
+for phase in [ 1, 2, 3, 4, 5, 6 ] :
    if phase == 1:
       sys.stdout.write('MD5:\n')
    elif phase == 2:
@@ -55,6 +55,8 @@ for phase in [ 1, 2, 3, 4, 5 ] :
    elif phase == 4:
       sys.stdout.write('DNS Configuration:\n')
    elif phase == 5:
+      sys.stdout.write(socket.getfqdn() + ':\n')
+   elif phase == 6:
       sys.stdout.write('NorNet Configuration:\n')
       sys.stdout.write('NorNet_LocalSite_SSHKeys<NUMBER>=\'\n')
 
@@ -74,7 +76,7 @@ for phase in [ 1, 2, 3, 4, 5 ] :
       if publicKey != None:
          keyParameters = re.search(r'''^([^ ]+)\s+([^ ]+)''', publicKey)
          if keyParameters != None:
-            if ((phase == 4) or (phase == 1) or (phase == 2)):
+            if ((phase == 4) or (phase == 5) or (phase == 1) or (phase == 2)):
                if keyParameters.group(1) == 'ssh-rsa':
                   publicKeyType = 1
                elif keyParameters.group(1) == 'ssh-dss':
@@ -89,16 +91,22 @@ for phase in [ 1, 2, 3, 4, 5 ] :
                if publicKeyType > 0:
                   decodedPublicKey = base64.b64decode(keyParameters.group(2))
 
-                  if phase == 4:
+                  if phase == 1:
+                     sys.stdout.write(makeFingerprintMD5(decodedPublicKey) + '\t' + name + '\n')
+                  elif phase == 2:
+                     sys.stdout.write(makeFingerprintSHA256(decodedPublicKey) + '\t' + name + '\n')
+
+                  elif phase == 4:
                      sys.stdout.write(socket.getfqdn() + '\t' + 'SSHFP\tIN' + '\t' + str(publicKeyType) +
                                       ' 1 ( ' + makeFingerprintSHA1(decodedPublicKey) + ' )\n')
                      sys.stdout.write(socket.getfqdn() + '\t' + 'SSHFP\tIN' + '\t' + str(publicKeyType) +
                                       ' 2 ( ' + makeFingerprintSHA256(decodedPublicKey) + ' )\n')
 
-                  elif phase == 1:
-                     sys.stdout.write(makeFingerprintMD5(decodedPublicKey) + '\t' + name + '\n')
-                  elif phase == 2:
-                     sys.stdout.write(makeFingerprintSHA256(decodedPublicKey) + '\t' + name + '\n')
+                  elif phase == 5:
+                     sys.stdout.write('SSHFP\t' + str(publicKeyType) +
+                                      ' 1\t' + makeFingerprintSHA1(decodedPublicKey) + '\n')
+                     sys.stdout.write('SSHFP\t' + str(publicKeyType) +
+                                      ' 2\t' + makeFingerprintSHA256(decodedPublicKey) + '\n')
 
 
                else:
@@ -106,10 +114,12 @@ for phase in [ 1, 2, 3, 4, 5 ] :
 
             elif phase == 3:
                sys.stdout.write('"' + keyParameters.group(1) + ' ' + keyParameters.group(2) + '"\n')
-            elif phase == 5:
+            elif phase == 6:
                sys.stdout.write(' "' + keyParameters.group(1) + ' ' + keyParameters.group(2) + '"\n')
 
    if phase == 5:
-      sys.stdout.write('\'\n')
+      sys.stdout.write('\n')
+   elif phase == 6:
+      sys.stdout.write(' \'\n')
    else:
       sys.stdout.write('\n')
