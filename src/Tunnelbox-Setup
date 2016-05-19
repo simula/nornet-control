@@ -282,23 +282,31 @@ show-tunnel ()
    # echo -en "Pinging $innerRemoteIP (peer on interface $interface) ..."
 
    success=0
-   echo -n " ."
+   echo -n " "
    if [[ "$innerRemoteIP" =~ : ]] ; then
       ping6 -w3 -c1 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && \
+      echo -n "·" && \
+      ping6 -w3 -c1 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && \
       if [ "$tunnelbox" != "" ] ; then
-         echo -n "."
+         echo -n "*"
          ping6 -w3 -c1 -i0.2 -q $tunnelbox -I $innerLocalIP >/dev/null 2>&1
+         echo -n "·"
+         ping6 -s1500 -w3 -c1 -i0.2 -q $tunnelbox -I $innerLocalIP >/dev/null 2>&1
       fi && \
       success=1
    else
       ping -w3 -c1 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && \
+      echo -n "·" && \
+      ping -s1500 -w3 -c1 -i0.2 -q $innerRemoteIP -I $innerLocalIP >/dev/null 2>&1 && \
       if [ "$tunnelbox" != "" ] ; then
-         echo -n "."
+         echo -n "*"
          ping -w3 -c1 -i0.2 -q $tunnelbox -I $innerLocalIP >/dev/null 2>&1
+         echo -n "·"
+         ping -s1500 -w3 -c1 -i0.2 -q $tunnelbox -I $innerLocalIP >/dev/null 2>&1
       fi && \
       success=1
    fi
-   echo -n "."
+   echo -n "*"
 
    if [ $success -eq 1 ] ; then
       return 0
