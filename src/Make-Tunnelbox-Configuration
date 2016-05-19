@@ -1467,7 +1467,7 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
                interfaceFile = codecs.open(tunnel['tunnel_interface'] + '.interface' + str(version), 'w', 'utf-8')
                interfaceFile.write('INTERFACE_DESCRIPTION="' + \
                   localProvider['provider_long_name'] + ' (' + str(localProvider['provider_index']) + ') -> ' + \
-                  remoteSite['site_long_name'] + ' (' + str(remoteSite['site_index']) + ') / ' + \
+                  remoteSite['site_utf8'] + ' (' + str(remoteSite['site_index']) + ') / ' + \
                   remoteProvider['provider_long_name'] + ' (' + str(remoteProvider['provider_index']) + ')"\n')
 
                # ====== Tunnel ==============================================
