@@ -513,6 +513,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
                                writeRR(siteZoneFile, 'tftp.' + siteFQDN, 'CNAME',
                                        addProviderToName(node['node_name'] + '.',
                                                          str.lower(localProvider['provider_short_name']), siteFQDN))
+
                # ====== Hostname for current provider's address =============
                elif phase == 2:
                   nameToWrite = addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN)
@@ -524,8 +525,6 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
                              'HINFO', '"' + node['node_model'] + '/' + localProvider['provider_long_name'] + '" "' + node['node_type'] + '"')
                      writeLOC(siteZoneFile, nameToWrite, localSite)
                      writeSSHFP(siteZoneFile, nameToWrite, node['node_ssh_rsa_key'])
-
-                  writeSSHFP(siteZoneFile, str(nodeAddress.ip), node['node_ssh_rsa_key'])
 
                # ====== Hostname with *all* addresses =======================
                else:
