@@ -4,11 +4,28 @@ while [ $# -gt 0 ] ; do
    echo "Handling $1 ..."
    (
       #echo "service nm restart"
-      echo "yum install -y nornet-nn"
+      #echo "NodeUpdate.py"
       #echo "uname -a"
       #echo "yum clean all"
       #echo "NodeUpdate.py"
-   ) | sudo ssh -o StrictHostKeyChecking=no -i /etc/planetlab/root_ssh_key.rsa root@$1 &
+
+      cat <<EOF
+      NodeUpdate.py
+
+      kernel=\$(uname -r)
+      echo "K=\$kernel"
+      if [ "\$kernel" = "4.1.10-200.fc23.x86_64" ] ; then
+         echo "OLD KERNEL -> Reboot!"
+         rpm -ehv kernel-core-4.1.10-200.fc23.x86_64 kernel-4.1.10-200.fc23.x86_64 kernel-modules-4.1.10-200.fc23.x86_64 kernel-modules-extra-4.1.10-200.fc23.x86_64
+         reboot
+      else
+         echo "Different kernel!"
+         rpm -ehv kernel-core-4.1.10-200.fc23.x86_64 kernel-4.1.10-200.fc23.x86_64 kernel-modules-4.1.10-200.fc23.x86_64 kernel-modules-extra-4.1.10-200.fc23.x86_64
+      fi
+      echo "NodeUpdate.py"
+EOF
+
+   ) | sudo ssh -4 -o StrictHostKeyChecking=no -i /etc/planetlab/root_ssh_key.rsa root@$1 &
    shift
 done
 wait
