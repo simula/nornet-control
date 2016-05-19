@@ -281,8 +281,6 @@ def makeFingerprintSHA256(string):
 # According to RFC 4255, RFC 6594 and RFC 7479
 def writeSSHFP(siteZoneFile, name, publicKeys):
    if publicKeys != None:
-      publicKeyType = -1
-
       allPublicKeys = []
       if not isinstance(publicKeys, list):
          allPublicKeys = [ publicKeys ]
@@ -291,6 +289,7 @@ def writeSSHFP(siteZoneFile, name, publicKeys):
             allPublicKeys.append(unquote(publicKey))
 
       for publicKey in allPublicKeys:
+         publicKeyType = -1
          # publicKey is like "ssh-rsa AAAA....."
          keyParameters = re.search(r'''^([^ ]+)\s+([^ ]+)''', publicKey)
          if keyParameters != None:
@@ -306,7 +305,7 @@ def writeSSHFP(siteZoneFile, name, publicKeys):
                log('WARNING: Bad public key type "' + keyParameters.group(1) + '" -> skipping!')
 
          if publicKeyType > 0:
-            decodedPublicKey = base64.b64decode(keyParameters.group(2))
+            decodedPublicKey = base64.b64decode(bytes(keyParameters.group(2), 'utf-8'))
             # print(name, makeFingerprintSHA1(decodedPublicKey))
             # print(name, makeFingerprintSHA256(decodedPublicKey))
             writeRR(siteZoneFile, name, 'SSHFP',
@@ -446,10 +445,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
       writeRR(siteZoneFile, 'proxy.' + siteFQDN, 'CNAME', hostNameForDefaultProvider)
 
    # ====== Prepare the list of hosts =======================================
-   fullNodeList.append(makeNodeForDNS(hostName, localSite, NorNet_NodeIndex_Tunnelbox,
-                       'Amiga 6000', 'NorNet Tunnelbox', []))
    fullNodeList = fullNodeList + additionalNodes
-
    # Sort by node index
    fullNodeList.sort(key = lambda x: x['node_index'])
 
@@ -1704,7 +1700,10 @@ makeFirewallConfiguration(fullSiteList, localSite)
 
 
 # ====== Prepare additional nodes for DNS configuration =====================
-additionalNodes = []
+localHostName   = getHostnameFromFQDN(getLocalNodeHostname())
+additionalNodes = [ makeNodeForDNS(localHostName,
+                                   localSite, NorNet_NodeIndex_Tunnelbox,
+                                   'Amiga 6000', 'NorNet Tunnelbox', []) ]
 aliases = {}
 sshKeys = {}
 for i in range(NorNet_MinNodeIndex, NorNet_MaxNodeIndex + 1):
@@ -1739,6 +1738,7 @@ for i in range(NorNet_MinNodeIndex, NorNet_MaxNodeIndex + 1):
       if len(parameters) > 0:
          sshKeys[i] = parameters
 
+
 # ====== Handle slices ======================================================
 if fullSliceList != None:
    for slice in fullSliceList:
@@ -1768,8 +1768,7 @@ for additionalNode in additionalNodes:
 
 # ====== Create Bind configuration ==========================================
 makeBindConfiguration(fullSiteList, siteNodeList, fullSliceList, localSite,
-                      getHostnameFromFQDN(getLocalNodeHostname()), additionalNodes,
-                      aliases)
+                      localHostName, additionalNodes, aliases)
 
 
 # ====== DHCP daemon configuration ==========================================
