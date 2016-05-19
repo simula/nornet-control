@@ -554,6 +554,7 @@ load-interface-configuration ()
    INTERFACE_TYPE=
    GRE_KEY=
    INTERFACE_PROVIDER=
+   TUNNEL_IS_ENABLED=
    TUNNEL_MTU=
    TUNNEL_V6LINKLOCAL_ADDRESS=
    TUNNEL_LOCAL_OUTER_ADDRESS=
@@ -591,6 +592,9 @@ load-interface-configuration ()
    fi
    if [ "$TUNNEL_MTU" = "" ] ; then
       TUNNEL_MTU=1452   # Probably a reasonable default.
+   fi
+   if [ "$TUNNEL_IS_ENABLED" = "" ] ; then
+      TUNNEL_IS_ENABLED=1   # No information -> just assume it is enabled.
    fi
 
    if ! is-ip-address "$TUNNEL_LOCAL_INNER_ADDRESS" ; then
@@ -707,9 +711,14 @@ checkInterface ()
 {
    load-interface-configuration "$1" -active-dir-first
    if [[ "$2" =~ ^@ALL$|^${INTERFACE_PROVIDER}$|^${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER},|,${INTERFACE_PROVIDER}$ ]] ; then
-      log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
-      echo -en "\n$TUNNEL_LOCAL_INNER_ADDRESS -> $TUNNEL_REMOTE_INNER_ADDRESS [$TUNNEL_LOCAL_OUTER_ADDRESS -> $TUNNEL_REMOTE_OUTER_ADDRESS] to $REMOTE_SITE_TUNNELBOX"
-      show-tunnel "$INTERFACE_NAME" "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" "$INTERFACE_DESCRIPTION" "$REMOTE_SITE_TUNNELBOX" && \
+      if [ $TUNNEL_IS_ENABLED -ne 0 ] ; then
+         log-action "$INTERFACE_NAME [$INTERFACE_DESCRIPTION]"
+         echo -en "\n$TUNNEL_LOCAL_INNER_ADDRESS -> $TUNNEL_REMOTE_INNER_ADDRESS [$TUNNEL_LOCAL_OUTER_ADDRESS -> $TUNNEL_REMOTE_OUTER_ADDRESS] to $REMOTE_SITE_TUNNELBOX"
+         show-tunnel "$INTERFACE_NAME" "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" "$INTERFACE_DESCRIPTION" "$REMOTE_SITE_TUNNELBOX"
+      else
+         echo -en "\x1b[36m`date +%FT%H:%M:%S`: $INTERFACE_NAME [$INTERFACE_DESCRIPTION]\x1b[0m"
+         echo -en "\n\x1b[37m☓ $TUNNEL_LOCAL_INNER_ADDRESS -> $TUNNEL_REMOTE_INNER_ADDRESS [$TUNNEL_LOCAL_OUTER_ADDRESS -> $TUNNEL_REMOTE_OUTER_ADDRESS] to $REMOTE_SITE_TUNNELBOX\x1b[0m"
+      fi && \
       log-result $RESULT_GOOD || log-result $RESULT_BAD
    fi
 }
