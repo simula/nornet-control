@@ -1501,6 +1501,14 @@ def makeTunnelboxConfiguration(fullSiteList, localSite):
                interfaceFile.write('TUNNEL_REMOTE_INNER_ADDRESS="' + str(tunnel['tunnel_remote_inner_address'].ip) + '"\n')
                interfaceFile.write('TUNNEL_INNER_PREFIX='          + str(tunnel['tunnel_local_inner_address'].network.prefixlen) + '\n\n')
 
+               # ====== Tunnel enabled? =====================================
+               if ((localSite['site_enabled'] == False) or
+                   (remoteSite['site_enabled'] == False)):
+                  interfaceFile.write('TUNNEL_IS_ENABLED=0\n')
+               else:
+                  interfaceFile.write('TUNNEL_IS_ENABLED=1\n')
+
+               # ====== Tunnel MTU ==========================================
                tunnelExternalMTU = min(localProvider['provider_mtu'], remoteProvider['provider_mtu'])
                tunnelMTU = tunnelExternalMTU - tunnelOverhead
                interfaceFile.write('TUNNEL_MTU=' + str(tunnelMTU) + '\n\n')
