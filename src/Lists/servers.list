@@ -16,6 +16,8 @@ holstein.simula.nornet
 
 plc.simula.nornet
 nfs.simula.nornet
+monitor.simula.nornet
+display.simula.nornet
 www.simula.nornet
 webtest.simula.nornet
 wiki.simula.nornet
