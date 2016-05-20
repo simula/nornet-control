@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Remove SSH keys of a nodes
+# Add SSH keys of nodes
 # Copyright (C) 2014-2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,14 @@
 #
 # Contact: dreibh@simula.no
 
+USER=nornetpp
+
 while [ $# -ge 1 ] ; do
    name="$1"
    shift
 
    fullName=`echo "$name" | sed -e "s/\./.all./"`
-   echo -e "\x1b[34mRemoving keys of $name ($fullName) ...\x1b[0m"
+   echo -e "\x1b[34mAdding keys of $name ($fullName) ...\x1b[0m"
    ipv4Addresses=`dig $fullName a +short`
    ipv6Addresses=`dig $fullName aaaa +short`
 
@@ -38,7 +40,9 @@ while [ $# -ge 1 ] ; do
    done
 
    for host in $hostList ; do
-      echo "ssh-keygen -q -R $host"
-      ssh-keygen -q -R "$host" >/dev/null 2>&1
+      echo "Processing: $host"
+      # ssh-keygen -q -R "$host"
+      ssh -oVerifyHostKeyDNS=yes -oStrictHostKeyChecking=no -oPasswordAuthentication=no -oConnectTimeout=30 $USER@$host hostname
    done
+   wait
 done
