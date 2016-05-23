@@ -25,7 +25,6 @@ import math
 import urllib.request, urllib.error, urllib.parse
 import subprocess
 import re
-from sets import Set
 
 # NorNet
 from NorNetSiteSetup import *;
@@ -684,8 +683,8 @@ output.endRow()
 activeSites          = 0
 numInterfacesIPv4    = 0
 numInterfacesIPv6    = 0
-activeSitesISPs      = Set([])
-activeSitesCountries = Set([])
+activeSitesISPs      = set([])
+activeSitesCountries = set([])
 for siteIndex in sorted(siteIndexList):
    site         = siteList[siteIndex]
    siteTagsList = site['site_tags']
@@ -908,7 +907,7 @@ for siteIndex in sorted(siteIndexList):
    if showContacts == True:
       contacts = site['site_contacts']
       if len(contacts) > 0:
-         output.write('Contacts:\n')
+         output.write('<p>Contacts:</p>\n')
          output.beginEnumeration()
          for contact in contacts:
             found = re.match(r'(.*): ([a-zA-Z0-9\.]+@[a-zA-Z0-9\.]+)', contact)

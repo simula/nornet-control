@@ -198,7 +198,7 @@ def getNorNetProvidersForSite(norNetSite):
          if ((providerMTU < 1280) or (providerMTU > 9000)):
             error('Bad MTU for provider: ' + str(provider))
          try:
-            providerType        = filterForTextOnly(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_type', ''))
+            providerType        = str(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_type', ''))
             providerDownstream  = int(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_downstream', 0))
             providerUpstream    = int(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_upstream', 0))
          except:
