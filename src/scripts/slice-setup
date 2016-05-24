@@ -1,0 +1,5 @@
+#!/bin/bash
+
+./Slice-Setup add --name=srl_test --own-addresses --permanent --maxnodespersite=9999
+./Slice-Setup add --name=tuda_sereon --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=kubidem@deeds.informatik.tu-darmstadt.de
+./Slice-Setup add --name=hu_zhoufeng --own-addresses --permanent --maxnodespersite=4 --user=dreibh@simula.no  --user=969493314@qq.com
