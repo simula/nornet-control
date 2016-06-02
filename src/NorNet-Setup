@@ -692,7 +692,7 @@ norNetSetup = [
    #'site_short_name'   : 'HKC',
    #'site_url'          : 'http://www.hkc.edu.cn/',
    #'site_domain'       : 'hkc.nornet',
-   #'site_city'         : 'Haikou',
+   #'site_city'         : 'Guilinyang',
    #'site_province'     : 'Hainan',
    #'site_country'      : 'China',
    #'site_country_code' : 'CN',
