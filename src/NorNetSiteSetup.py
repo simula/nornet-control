@@ -910,7 +910,7 @@ def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScrip
                                                [ 'slice_id', 'node_ids', 'name', 'description', 'url', 'initscript_code', 'expires' ])
       try:
          sliceID = int(existingSlice[0]['slice_id'])
-         print(existingSlice)
+         # print(existingSlice)
          if sliceUrl == None:
             sliceUrl = existingSlice[0]['url']
          if sliceDescription == None:
