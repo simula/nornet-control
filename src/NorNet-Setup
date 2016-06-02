@@ -616,6 +616,39 @@ norNetSetup = [
       [ 103, 4, u'stenbron'         ]
    ] },
 
+ # Qiongzhou University (琼州大学)
+ #{ 'site_index'        : 87,
+   #'site_enabled'      : False,
+   #'site_long_name'    : u'Qiongzhou University',
+   #'site_short_name'   : 'QU',
+   #'site_url'          : 'http://www.qzu.edu.cn',
+   #'site_domain'       : 'qu.nornet',
+   #'site_city'         : 'Sanya',
+   #'site_province'     : 'Hainan',
+   #'site_country'      : 'China',
+   #'site_country_code' : 'CN',
+   #'site_latitude'     : 18.288405,
+   #'site_longitude'    : 109.55445,
+   #'site_altitude'     : 10,
+   #'site_contacts'     : [ u'Yu, Shi Huan: H.Y.Shi@163.com', u'Fa, Fu: fufa@hainu.edu.cn', u'Zhou, Xing: xingzhou50@126.com' ],
+   #'site_pcu'          : [ IPv4Address('222.17.128.252'), 'pcu-root', 'a-secret-password' ],
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'China Education and Research Network', 'eth1',
+           #IPv4Interface('222.17.128.253/26'), IPv4Address('222.17.128.193'),
+           #IPv6Interface('::/0'),              IPv6Address('::'),
+           #1500, 'fibre, business', 0, 0 ]
+   #],
+   #'site_nodes' : [
+      ## Naming scheme: places in Sanya
+      #[ 100, 1, u'sanyabay',      'boating.qu.nornet',   'vnc://boating.qu.nornet:5700'   ],
+      #[ 101, 2, u'luhuitou',      'boating.qu.nornet',   'vnc://boating.qu.nornet:5701'   ],
+      #[ 102, 3, u'tianyahaijiao', 'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5700'  ],
+      #[ 103, 4, u'qiongzhou',     'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5701'  ],
+      #[ 104, 5, u'lizhigou',      'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5700' ],
+      #[ 105, 6, u'haitangbay',    'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5701' ]
+   #] },
+
  # Hainan University (海南大学)
  { 'site_index'        : 88,
    'site_enabled'      : True,
@@ -652,37 +685,37 @@ norNetSetup = [
       [ 105, 6, u'yalongbay', 'sanya.hu.nornet',    'vnc://sanya.hu.nornet:5701'    ]    # This place has beautiful beach and tropical forest park
    ] },
 
- # Qiongzhou University (琼州大学)
+ # Haikou College of Economics (海口经济学院)
  #{ 'site_index'        : 89,
    #'site_enabled'      : False,
-   #'site_long_name'    : u'Qiongzhou University',
-   #'site_short_name'   : 'QU',
-   #'site_url'          : 'http://www.qzu.edu.cn',
-   #'site_domain'       : 'qu.nornet',
-   #'site_city'         : 'Sanya',
+   #'site_long_name'    : u'Haikou College of Economics',
+   #'site_short_name'   : 'HKC',
+   #'site_url'          : 'http://www.hkc.edu.cn/',
+   #'site_domain'       : 'hkc.nornet',
+   #'site_city'         : 'Haikou',
    #'site_province'     : 'Hainan',
    #'site_country'      : 'China',
    #'site_country_code' : 'CN',
-   #'site_latitude'     : 18.288405,
-   #'site_longitude'    : 109.55445,
+   #'site_latitude'     : 19.9665,
+   #'site_longitude'    : 110.486431,
    #'site_altitude'     : 10,
-   #'site_contacts'     : [ u'Yu, Shi Huan: H.Y.Shi@163.com', u'Fa, Fu: fufa@hainu.edu.cn', u'Zhou, Xing: xingzhou50@126.com' ],
-   #'site_pcu'          : [ IPv4Address('222.17.128.252'), 'pcu-root', 'a-secret-password' ],
+   #'site_contacts'     : [ u'Fa, Fu: fufa@hainu.edu.cn', u'Zhou, Xing: xingzhou50@126.com' ],
+   #'site_pcu'          : [ IPv4Address('1.1.1.3'), 'pcu-root', 'a-secret-password' ],
    #'site_nornet_if'    : 'eth0',
    #'site_providers' : [
       #[ u'China Education and Research Network', 'eth1',
-           #IPv4Interface('222.17.128.253/26'), IPv4Address('222.17.128.193'),
-           #IPv6Interface('::/0'),              IPv6Address('::'),
+           #IPv4Interface('1.1.1.2/26'), IPv4Address('1.1.1.1'),
+           #IPv6Interface('::/0'),       IPv6Address('::'),
            #1500, 'fibre, business', 0, 0 ]
    #],
    #'site_nodes' : [
       ## Naming scheme: places in Sanya
-      #[ 100, 1, u'sanyabay',      'boating.qu.nornet',   'vnc://boating.qu.nornet:5700'   ],
-      #[ 101, 2, u'luhuitou',      'boating.qu.nornet',   'vnc://boating.qu.nornet:5701'   ],
-      #[ 102, 3, u'tianyahaijiao', 'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5700'  ],
-      #[ 103, 4, u'qiongzhou',     'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5701'  ],
-      #[ 104, 5, u'lizhigou',      'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5700' ],
-      #[ 105, 6, u'haitangbay',    'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5701' ]
+      #[ 100, 1, u'sanyabay',      'boating.hkc.nornet',   'vnc://boating.hkc.nornet:5700'   ],
+      #[ 101, 2, u'luhuitou',      'boating.hkc.nornet',   'vnc://boating.hkc.nornet:5701'   ],
+      #[ 102, 3, u'tianyahaijiao', 'lingshui.hkc.nornet',  'vnc://lingshui.hkc.nornet:5700'  ],
+      #[ 103, 4, u'qiongzhou',     'lingshui.hkc.nornet',  'vnc://lingshui.hkc.nornet:5701'  ],
+      #[ 104, 5, u'lizhigou',      'wuzhishan.hkc.nornet', 'vnc://wuzhishan.hkc.nornet:5700' ],
+      #[ 105, 6, u'haitangbay',    'wuzhishan.hkc.nornet', 'vnc://wuzhishan.hkc.nornet:5701' ]
    #] },
 
  # Mongolian University of Science and Technology (Шинжлэх ухаан технологийн их сургууль)
