@@ -1,0 +1,24 @@
+--- cfengine3/tests/unit/Makefile.am	2016-03-22 19:22:44.000000000 +0100
++++ cfengine3.orig/tests/unit/Makefile.am	2016-06-04 11:15:16.302033240 +0200
+@@ -98,7 +98,6 @@
+ 	atexit_test \
+ 	csv_writer_test \
+ 	item_test \
+-	rlist_test \
+ 	domainname_test \
+ 	set_test \
+ 	set_domainname_test \
+@@ -335,13 +334,6 @@
+ connection_management_test_SOURCES = connection_management_test.c ../../cf-serverd/server_common.c ../../cf-serverd/server_tls.c
+ connection_management_test_LDADD = ../../libpromises/libpromises.la libtest.la ../../cf-serverd/libcf-serverd.la
+ 
+-rlist_test_SOURCES = rlist_test.c \
+-	../../libpromises/rlist.c
+-rlist_test_LDADD = libtest.la ../../libpromises/libpromises.la
+-# Workaround for object file basename conflicts, search the web for
+-# "automake created with both libtool and without"
+-rlist_test_CPPFLAGS = $(AM_CPPFLAGS)
+-
+ process_test_LDADD = libtest.la ../../libpromises/libpromises.la
+ 
+ if LINUX

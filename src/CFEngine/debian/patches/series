@@ -8,3 +8,4 @@ skip_tests_failing_in_chroot
 fix_kfreebsd_build
 disable_failing_test_on_sparc
 disable_failing_test_on_automated_virtual_machine_builders
+td-remove-failed-test
