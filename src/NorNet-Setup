@@ -675,7 +675,7 @@ norNetSetup = [
            IPv6Interface('::/0'),               IPv6Address('::'),
            1500, 'fibre, business', 0, 0 ],
       [ u'China Education and Research Network', 'eth1',
-           IPv4Interface('210.37.80.163/25'), IPv4Address('210.37.80.254'),
+           IPv4Interface('210.37.80.162/25'), IPv4Address('210.37.80.254'),
            IPv6Interface('::/0'),             IPv6Address('::'),
            1500, 'fibre, business', 0, 0 ]
    ],
