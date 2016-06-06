@@ -684,7 +684,7 @@ norNetSetup = [
    'site_nodes' : [
       # Naming scheme: places in Sanya
       [ 100, 1, u'huoshankou',  'huoshankou.hkc.nornet',    'vnc://baoting.hkc.nornet:5700'   ],
-      [ 101, 2, u'dongzhaigong','dongzhaigong.hkc.nornet',  'vnc://baoting.hkc.nornet:5701'   ],
+      [ 101, 2, u'dongzhaigang','dongzhaigang.hkc.nornet',  'vnc://baoting.hkc.nornet:5701'   ],
       [ 102, 3, u'wanlvyuan',   'wanlvyuan.hkc.nornet',     'vnc://lingshui.hkc.nornet:5700'  ],
       [ 103, 4, u'baishamen',   'baishamen.hkc.nornet',     'vnc://lingshui.hkc.nornet:5701'  ],
       [ 104, 5, u'guanlanhu',   'guanlanhu.hkc.nornet',     'vnc://wuzhishan.hkc.nornet:5700' ],
