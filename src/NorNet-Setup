@@ -616,39 +616,6 @@ norNetSetup = [
       [ 103, 4, u'stenbron'         ]
    ] },
 
- # Qiongzhou University (琼州大学)
- #{ 'site_index'        : 87,
-   #'site_enabled'      : False,
-   #'site_long_name'    : u'Qiongzhou University',
-   #'site_short_name'   : 'QU',
-   #'site_url'          : 'http://www.qzu.edu.cn',
-   #'site_domain'       : 'qu.nornet',
-   #'site_city'         : 'Sanya',
-   #'site_province'     : 'Hainan',
-   #'site_country'      : 'China',
-   #'site_country_code' : 'CN',
-   #'site_latitude'     : 18.288405,
-   #'site_longitude'    : 109.55445,
-   #'site_altitude'     : 10,
-   #'site_contacts'     : [ u'Yu, Shi Huan: H.Y.Shi@163.com', u'Fa, Fu: fufa@hainu.edu.cn', u'Zhou, Xing: xingzhou50@126.com' ],
-   #'site_pcu'          : [ IPv4Address('222.17.128.252'), 'pcu-root', 'a-secret-password' ],
-   #'site_nornet_if'    : 'eth0',
-   #'site_providers' : [
-      #[ u'China Education and Research Network', 'eth1',
-           #IPv4Interface('222.17.128.253/26'), IPv4Address('222.17.128.193'),
-           #IPv6Interface('::/0'),              IPv6Address('::'),
-           #1500, 'fibre, business', 0, 0 ]
-   #],
-   #'site_nodes' : [
-      ## Naming scheme: places in Sanya
-      #[ 100, 1, u'sanyabay',      'baoting.qu.nornet',   'vnc://baoting.qu.nornet:5700'   ],
-      #[ 101, 2, u'luhuitou',      'baoting.qu.nornet',   'vnc://baoting.qu.nornet:5701'   ],
-      #[ 102, 3, u'tianyahaijiao', 'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5700'  ],
-      #[ 103, 4, u'qiongzhou',     'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5701'  ],
-      #[ 104, 5, u'lizhigou',      'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5700' ],
-      #[ 105, 6, u'haitangbay',    'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5701' ]
-   #] },
-
  # Hainan University (海南大学)
  { 'site_index'        : 88,
    'site_enabled'      : True,
@@ -722,36 +689,6 @@ norNetSetup = [
       [ 105, 6, u'haitangbay',    'wuzhishan.hkc.nornet', 'vnc://wuzhishan.hkc.nornet:5701' ]
    ] },
 
- # Mongolian University of Science and Technology (Шинжлэх ухаан технологийн их сургууль)
- #{ 'site_index'        : 95,
-   #'site_enabled'      : False,
-   #'site_long_name'    : u'Mongolian Univeristy of Science and Technology',
-   #'site_short_name'   : 'MUST',
-   #'site_url'          : 'http://www.must.edu.mn',
-   #'site_domain'       : 'must.nornet',
-   #'site_city'         : 'Ulan Bator',
-   #'site_province'     : 'Ulan Bator',
-   #'site_country'      : 'Mongolia',
-   #'site_country_code' : 'MN',
-   #'site_latitude'     : 47.922041,
-   #'site_longitude'    : 106.924384,
-   #'site_altitude'     : 1350,
-   #'site_contacts'     : [ u'Esbold, Unurkhaan: esbold98@gmail.com' ],
-   #'site_pcu'          : [ IPv4Address('202.5.194.8'), 'pcu-root', 'a-secret-password' ],
-   #'site_nornet_if'    : 'eth0',
-   #'site_providers' : [
-      #[ u'Erdemnet', 'eth0',   # << --- CHECK ME! ---
-           #IPv4Interface('202.5.194.9/24'), IPv4Address('202.5.194.2'),
-           #IPv6Interface('::/0'),           IPv6Address('::'),
-           #1500, 'fibre, business', 0, 0 ]
-   #],
-   #'site_nodes' : [
-      ## Naming scheme: districts of Ulan Bator
-      ## Baganuur, Bagakhangai, Bayangol, Bayanzürkh, Chingeltei, Khan Uul, Nalaikh, Songino Khairkhan, and Sükhbaatar
-      #[ 100, 1, u'baganuur',    'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5700' ],
-      #[ 101, 2, u'bagakhangai', 'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5701' ]
-   #] },
-
  { 'site_index'        : 100,
    'site_enabled'      : True,
    'site_long_name'    : u'The University of Kansas',
@@ -780,35 +717,6 @@ norNetSetup = [
       #[ 102, 3, u'williamstown' ],
       #[ 103, 4, u'stull' ]
    ] },
-
- #{ 'site_index'        : 101,
-   #'site_enabled'      : False,
-   #'site_long_name'    : u'New York University',
-   #'site_short_name'   : 'NYU',
-   #'site_url'          : 'http://engineering.nyu.edu',
-   #'site_domain'       : 'nyu.nornet',
-   #'site_city'         : 'Brooklyn',
-   #'site_province'     : 'New York',
-   #'site_country'      : 'United States of America',
-   #'site_country_code' : 'US',
-   #'site_latitude'     : 40.694074,
-   #'site_longitude'    :  -73.986932,
-   #'site_altitude'     : 20,
-   #'site_contacts'     : [ u'Rivera, Julio: jr847@nyu.edu', u'Cappos, Justin: jcappos@nyu.edu', u'Rafetseder, Albert: albert.rafetseder+nyu@univie.ac.at' ],
-   #'site_pcu'          : [ IPv4Address('128.238.63.80'), 'pcu-root', 'a-secret-password' ],
-   #'site_nornet_if'    : 'eth0',
-   #'site_providers' : [
-      #[ u'Lightower Fiber Networks', 'eth1',
-           #IPv4Interface('128.238.63.79/24'), IPv4Address('128.238.63.1'),
-           #IPv6Interface('::/0'),             IPv6Address('::'),
-           #1500, 'fibre, business', 0, 0 ]
-   #],
-   #'site_nodes' : [   # VMware cluster
-      #[ 100, 1, u'brooklyn'  ],
-      #[ 101, 2, u'manhattan' ],
-      #[ 102, 3, u'bronx'     ],
-      #[ 103, 4, u'queens'    ]
-   #] },
 
  { 'site_index'        : 160,
    'site_enabled'      : True,
@@ -844,6 +752,127 @@ norNetSetup = [
       #[ 105, 6, u'geumho',  'hangang.korea.nornet',   'vnc://hangang.korea.nornet:5701'   ]
    ] },
 
+ { 'site_index'        : 200,
+   'site_enabled'      : True,
+   'site_long_name'    : u'National ICT Australia',
+   'site_short_name'   : 'NICTA',
+   'site_url'          : 'https://www.nicta.com.au',
+   'site_domain'       : 'nicta.nornet',
+   'site_city'         : 'Sydney',
+   'site_province'     : 'New South Wales',
+   'site_country'      : 'Australia',
+   'site_country_code' : 'AU',
+   'site_latitude'     : -33.895430,
+   'site_longitude'    : 151.197021,
+   'site_altitude'     : 15,
+   'site_contacts'     : [ u'Mehani, Olivier: olivier.mehani@nicta.com.au',
+                           u'Rakotoarivelo, Thierry: Thierry.Rakotoarivelo@nicta.com.au' ],
+   'site_pcu'          : [ IPv4Address('221.199.217.168'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Australian Academic and Research Network', 'eth1',
+           IPv4Interface('221.199.217.167/26'), IPv4Address('221.199.217.129'),
+           IPv6Interface('::/0'),               IPv6Address('::'),
+           1500, 'fibre, business', 0, 0 ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, u'coogee' ],
+      [ 101, 2, u'bondi'  ]
+   ] }
+
+
+ # Qiongzhou University (琼州大学)
+ #{ 'site_index'        : 87,
+   #'site_enabled'      : False,
+   #'site_long_name'    : u'Qiongzhou University',
+   #'site_short_name'   : 'QU',
+   #'site_url'          : 'http://www.qzu.edu.cn',
+   #'site_domain'       : 'qu.nornet',
+   #'site_city'         : 'Sanya',
+   #'site_province'     : 'Hainan',
+   #'site_country'      : 'China',
+   #'site_country_code' : 'CN',
+   #'site_latitude'     : 18.288405,
+   #'site_longitude'    : 109.55445,
+   #'site_altitude'     : 10,
+   #'site_contacts'     : [ u'Yu, Shi Huan: H.Y.Shi@163.com', u'Fa, Fu: fufa@hainu.edu.cn', u'Zhou, Xing: xingzhou50@126.com' ],
+   #'site_pcu'          : [ IPv4Address('222.17.128.252'), 'pcu-root', 'a-secret-password' ],
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'China Education and Research Network', 'eth1',
+           #IPv4Interface('222.17.128.253/26'), IPv4Address('222.17.128.193'),
+           #IPv6Interface('::/0'),              IPv6Address('::'),
+           #1500, 'fibre, business', 0, 0 ]
+   #],
+   #'site_nodes' : [
+      ## Naming scheme: places in Sanya
+      #[ 100, 1, u'sanyabay',      'baoting.qu.nornet',   'vnc://baoting.qu.nornet:5700'   ],
+      #[ 101, 2, u'luhuitou',      'baoting.qu.nornet',   'vnc://baoting.qu.nornet:5701'   ],
+      #[ 102, 3, u'tianyahaijiao', 'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5700'  ],
+      #[ 103, 4, u'qiongzhou',     'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5701'  ],
+      #[ 104, 5, u'lizhigou',      'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5700' ],
+      #[ 105, 6, u'haitangbay',    'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5701' ]
+   #] },
+
+ # Mongolian University of Science and Technology (Шинжлэх ухаан технологийн их сургууль)
+ #{ 'site_index'        : 95,
+   #'site_enabled'      : False,
+   #'site_long_name'    : u'Mongolian Univeristy of Science and Technology',
+   #'site_short_name'   : 'MUST',
+   #'site_url'          : 'http://www.must.edu.mn',
+   #'site_domain'       : 'must.nornet',
+   #'site_city'         : 'Ulan Bator',
+   #'site_province'     : 'Ulan Bator',
+   #'site_country'      : 'Mongolia',
+   #'site_country_code' : 'MN',
+   #'site_latitude'     : 47.922041,
+   #'site_longitude'    : 106.924384,
+   #'site_altitude'     : 1350,
+   #'site_contacts'     : [ u'Esbold, Unurkhaan: esbold98@gmail.com' ],
+   #'site_pcu'          : [ IPv4Address('202.5.194.8'), 'pcu-root', 'a-secret-password' ],
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'Erdemnet', 'eth0',   # << --- CHECK ME! ---
+           #IPv4Interface('202.5.194.9/24'), IPv4Address('202.5.194.2'),
+           #IPv6Interface('::/0'),           IPv6Address('::'),
+           #1500, 'fibre, business', 0, 0 ]
+   #],
+   #'site_nodes' : [
+      ## Naming scheme: districts of Ulan Bator
+      ## Baganuur, Bagakhangai, Bayangol, Bayanzürkh, Chingeltei, Khan Uul, Nalaikh, Songino Khairkhan, and Sükhbaatar
+      #[ 100, 1, u'baganuur',    'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5700' ],
+      #[ 101, 2, u'bagakhangai', 'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5701' ]
+   #] },
+
+ #{ 'site_index'        : 101,
+   #'site_enabled'      : False,
+   #'site_long_name'    : u'New York University',
+   #'site_short_name'   : 'NYU',
+   #'site_url'          : 'http://engineering.nyu.edu',
+   #'site_domain'       : 'nyu.nornet',
+   #'site_city'         : 'Brooklyn',
+   #'site_province'     : 'New York',
+   #'site_country'      : 'United States of America',
+   #'site_country_code' : 'US',
+   #'site_latitude'     : 40.694074,
+   #'site_longitude'    :  -73.986932,
+   #'site_altitude'     : 20,
+   #'site_contacts'     : [ u'Rivera, Julio: jr847@nyu.edu', u'Cappos, Justin: jcappos@nyu.edu', u'Rafetseder, Albert: albert.rafetseder+nyu@univie.ac.at' ],
+   #'site_pcu'          : [ IPv4Address('128.238.63.80'), 'pcu-root', 'a-secret-password' ],
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'Lightower Fiber Networks', 'eth1',
+           #IPv4Interface('128.238.63.79/24'), IPv4Address('128.238.63.1'),
+           #IPv6Interface('::/0'),             IPv6Address('::'),
+           #1500, 'fibre, business', 0, 0 ]
+   #],
+   #'site_nodes' : [   # VMware cluster
+      #[ 100, 1, u'brooklyn'  ],
+      #[ 101, 2, u'manhattan' ],
+      #[ 102, 3, u'bronx'     ],
+      #[ 103, 4, u'queens'    ]
+   #] },
+
  #{ 'site_index'        : 120,
    #'site_enabled'      : False,
    #'site_long_name'    : u'Universidade Federal de São Carlos',
@@ -875,33 +904,6 @@ norNetSetup = [
       #[ 101, 2, u'lerisor' ]
    #] },
 
- { 'site_index'        : 200,
-   'site_enabled'      : True,
-   'site_long_name'    : u'National ICT Australia',
-   'site_short_name'   : 'NICTA',
-   'site_url'          : 'https://www.nicta.com.au',
-   'site_domain'       : 'nicta.nornet',
-   'site_city'         : 'Sydney',
-   'site_province'     : 'New South Wales',
-   'site_country'      : 'Australia',
-   'site_country_code' : 'AU',
-   'site_latitude'     : -33.895430,
-   'site_longitude'    : 151.197021,
-   'site_altitude'     : 15,
-   'site_contacts'     : [ u'Mehani, Olivier: olivier.mehani@nicta.com.au',
-                           u'Rakotoarivelo, Thierry: Thierry.Rakotoarivelo@nicta.com.au' ],
-   'site_pcu'          : [ IPv4Address('221.199.217.168'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ u'Australian Academic and Research Network', 'eth1',
-           IPv4Interface('221.199.217.167/26'), IPv4Address('221.199.217.129'),
-           IPv6Interface('::/0'),               IPv6Address('::'),
-           1500, 'fibre, business', 0, 0 ]
-   ],
-   'site_nodes' : [
-      [ 100, 1, u'coogee' ],
-      [ 101, 2, u'bondi'  ]
-   ] }
 
       #[ 100, 1, u'lutefisk'     ],
       #[ 101, 2, u'pinnekjøtt'   ],
