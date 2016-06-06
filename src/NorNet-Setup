@@ -654,7 +654,7 @@ norNetSetup = [
 
  # Haikou College of Economics (海口经济学院)
  { 'site_index'        : 89,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Haikou College of Economics',
    'site_short_name'   : 'HKC',
    'site_url'          : 'http://www.hkc.edu.cn/',
