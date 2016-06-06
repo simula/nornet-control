@@ -666,7 +666,9 @@ norNetSetup = [
    'site_latitude'     : 19.9665,
    'site_longitude'    : 110.486431,
    'site_altitude'     : 10,
-   'site_contacts'     : [ u'Chen Xianjung: hingini@126.com', u'Fa, Fu: fufa@hainu.edu.cn', u'Zhou, Xing: xingzhou50@126.com' ],
+   'site_contacts'     : [ u'Chen Xianjun: hingini@126.com',
+                           u'Fa, Fu: fufa@hainu.edu.cn',
+                           u'Zhou, Xing: xingzhou50@126.com' ],
    'site_pcu'          : [ IPv4Address('202.100.206.164'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
