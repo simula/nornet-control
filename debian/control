@@ -359,6 +359,7 @@ Depends: cfengine3,
          python (>= 2.7),
          qemu-kvm,
          virtinst,
+         virt-manager,
          xauth,
          ${misc:Depends},
          ${shlibs:Depends}
