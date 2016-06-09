@@ -33,19 +33,12 @@ from NorNetAPI       import *;
 loginToPLC(quietMode = True)
 
 userList = fetchNorNetUser(None)
-for user in userList:
-   print(user)
-   #userIndex = user['user_index']
-   #userName  = user['user_name']
-   #userState = user['user_state']
-
-   #userFC = 'NA'
-   #userPL = 'NA'
-   #userTagsList = fetchUserTagsList(user['user_id'])
-   #for userTag in userTagsList:
-      #if userTag['tagname'] == 'fcdistro':
-         #userFC = userTag['value']
-      #if userTag['tagname'] == 'pldistro':
-         #userPL = userTag['value']
-
-   #print(str(userIndex) + ' ' + fill(userName,32) + ' ' + fill(userState,10) + ' ' + fill(userPL,6) + ' ' + fill(userFC,4))
+for userID in userList:
+   user = userList[userID]
+   # print(user)
+   
+   print('{:32} {:1}, {:1}'.format(
+      user['user_email'],
+      user['user_last_name'],
+      user['user_first_name']
+   ))
