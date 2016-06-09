@@ -47,8 +47,7 @@ nodeList = fetchNorNetNode(None)
 for node in nodeList:
    if node['node_id'] in slice['slice_node_ids']:
       # print(node)
-      nodeIndex = node['node_index']
       nodeName  = node['node_name']
       nodeState = node['node_state']
 
-      print(str(nodeIndex) + ' ' + fill(nodeName,32) + ' ' + fill(nodeState,10))
+      print(fill(nodeName,32) + ' ' + fill(nodeState,10))
