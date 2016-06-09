@@ -63,6 +63,7 @@ cp src/Set-OVF-Type $PACKAGE-$UPSTREAM_VERSION
 cp src/Reset-Networking $PACKAGE-$UPSTREAM_VERSION
 cp src/Check-Research-Node $PACKAGE-$UPSTREAM_VERSION
 cp src/Get-Nodes $PACKAGE-$UPSTREAM_VERSION
+cp src/Get-Users $PACKAGE-$UPSTREAM_VERSION
 cp src/Get-Sites $PACKAGE-$UPSTREAM_VERSION
 cp src/Get-NorNet-Configuration $PACKAGE-$UPSTREAM_VERSION
 cp src/nornetinfogenerator $PACKAGE-$UPSTREAM_VERSION
