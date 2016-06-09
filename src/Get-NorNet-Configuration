@@ -804,7 +804,7 @@ output.endRow()
 
 output.beginRow()
 output.cell('Total IPv4 Tunnels', -1, -1, 'text-align: left;')
-output.cell(str(numInterfacesIPv4 * (numInterfacesIPv4 -1) / 2))
+output.cell(str(int(numInterfacesIPv4 * (numInterfacesIPv4 -1) / 2)))
 output.endRow()
 
 output.beginRow()
@@ -814,7 +814,7 @@ output.endRow()
 
 output.beginRow()
 output.cell('Total IPv6 Tunnels', -1, -1, 'text-align: left;')
-output.cell(str(numInterfacesIPv6 * (numInterfacesIPv6 - 1) / 2))
+output.cell(str(int(numInterfacesIPv6 * (numInterfacesIPv6 - 1) / 2)))
 output.endRow()
 
 output.beginRow()
