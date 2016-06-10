@@ -1,0 +1,8 @@
+#!/bin/bash
+
+VMs="dingo.simula.nornet wombat.uia.nornet koala.ntnu.nornet wallaby.uib.nornet redback.hin.nornet meilan.hu.nornet"
+for vm in $VMs ; do
+   echo "Copying to $vm ..."
+   rsync -Pav --delete ~/src/linux*.deb nornetpp@$vm:kernel/ &
+done
+wait
