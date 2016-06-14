@@ -131,7 +131,7 @@ Depends: autoconf,
          yum-utils,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommands: python3-wand
+Recommends: python3-wand
 Description: NorNet Development Tools
  This metapackage contains basic software nor NorNet development. The
  software installed provides a common working environment.
@@ -358,8 +358,8 @@ Depends: cfengine3,
          openssh-server,
          python (>= 2.7),
          qemu-kvm,
-         virtinst,
          virt-manager,
+         virtinst,
          xauth,
          ${misc:Depends},
          ${shlibs:Depends}
