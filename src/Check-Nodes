@@ -58,14 +58,30 @@ function check-node ()
 }
 
 
-if [ "$1" = "-n" ] ; then
-   unreachableIntro=""
-   goodIntro=""
-   badIntro=""
-   normalMode=""
+program="$0"
+if [ $# -ge 1 ] ; then
+   SLICE="$1"
+   shift
+fi
+if [ $# -ge 1 ] ; then
+   KEY="$1"
+   shift
 fi
 
-./Get-Nodes | awk '{ print $2 }' | xargs -n1 | (
+while [ $# -gt 0 ] ; do
+   if [ "$1" = "-n" ] ; then
+      unreachableIntro=""
+      goodIntro=""
+      badIntro=""
+      normalMode=""
+   else
+      echo >&2 "Usage: $program  [slice] [-n]"
+   fi
+   shift
+done
+
+
+./Get-Slice-Nodes "$SLICE" | awk '{ print $1 }' | xargs -n1 | (
    while read node ; do
       site=`echo "$node" | sed -e "s/^[a-z0-9]*\.//g"`
       check-node "$node" &
