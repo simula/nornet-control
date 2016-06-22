@@ -1,0 +1,39 @@
+#!/bin/bash
+
+slice="srl_mptcp"
+# node="bymarka.ntnu.nornet"
+key="/home/dreibh/.ssh/test2"
+
+RPM="nornet-nn-0.4.8~rc4-1.noarch.rpm"
+
+nodes=`../Get-Slice-Nodes $slice | awk '{ print $1 }'`
+
+
+cd ~/tmp
+rm -f $RPM
+wget --quiet https://packages.nntb.no/nornet-applications/fedora/23/x86_64/RPMS/$RPM
+
+
+echo "Copying ..."
+for node in $nodes ; do
+   rsync -Pa --quiet $RPM $slice@$node:/tmp/ &
+done
+wait
+
+
+echo "Installing ..."
+for node in $nodes ; do
+   (
+      echo "######## N=$node ########"
+      ssh -i $key $slice@$node "
+         cd /tmp
+         # sudo rm -f /var/lib/rpm/.rpm.lock
+         sudo rpm -Ui --quiet $RPM
+         sudo rpm --import /etc/pki/rpm-gpg/nornet.key
+         rm -f $RPM $RPM.*
+         # sudo dnf install netperfmeter -y --best --quiet
+         # sudo dnf upgrade -y --best
+   "
+   )
+done
+wait
