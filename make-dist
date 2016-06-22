@@ -62,6 +62,8 @@ cp src/Convert-HDD-Images $PACKAGE-$UPSTREAM_VERSION
 cp src/Set-OVF-Type $PACKAGE-$UPSTREAM_VERSION
 cp src/Reset-Networking $PACKAGE-$UPSTREAM_VERSION
 cp src/Check-Research-Node $PACKAGE-$UPSTREAM_VERSION
+cp src/Check-Nodes $PACKAGE-$UPSTREAM_VERSION
+cp src/Check-Nodes-Loop $PACKAGE-$UPSTREAM_VERSION
 cp src/Get-Nodes $PACKAGE-$UPSTREAM_VERSION
 cp src/Get-Slice-Nodes $PACKAGE-$UPSTREAM_VERSION
 cp src/Get-Users $PACKAGE-$UPSTREAM_VERSION

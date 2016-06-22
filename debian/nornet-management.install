@@ -1,6 +1,10 @@
 Auto-Update-Keys                        /usr/bin
 Create-New-SSH-Node-Keys                /usr/bin
 Fingerprint-SSH-Node-Keys               /usr/bin
+Check-Nodes                             /usr/bin
+Check-Nodes-Loop                        /usr/bin
+Get-Slice-Nodes                         /usr/bin
+Get-Users                               /usr/bin
 Get-Nodes                               /usr/bin
 Get-NorNet-Configuration                /usr/bin
 Get-Sites                               /usr/bin
