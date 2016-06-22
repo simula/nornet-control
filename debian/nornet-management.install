@@ -8,6 +8,7 @@ Get-Users                               /usr/bin
 Get-Nodes                               /usr/bin
 Get-NorNet-Configuration                /usr/bin
 Get-Sites                               /usr/bin
+Get-Slices                              /usr/bin
 Interface-Setup                         /sbin
 Node-Setup                              /usr/bin
 Probe-Endpoint-Setup                    /usr/bin
