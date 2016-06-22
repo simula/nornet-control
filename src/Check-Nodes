@@ -68,6 +68,11 @@ if [ $# -ge 1 ] ; then
    shift
 fi
 
+if [ ! -e $KEY ] ; then
+   echo >&2 "ERROR: SSH private key $KEY not found!"
+   exit 1
+fi
+
 while [ $# -gt 0 ] ; do
    if [ "$1" = "-n" ] ; then
       unreachableIntro=""
