@@ -307,20 +307,13 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
             error('NorNet_IPv4Prefix NorNet_LocalNode_Index must be in [' + str(NorNet_MinNodeIndex) + '-' + str(NorNet_MinNodeIndex) + ']!')
 
       if NorNet_Configuration['NorNet_Slice_NodeIndexRange'] != None:
-         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', NorNet_Configuration['NorNet_Slice_NodeIndexRange'])
          try:
-            if len(parameters) == 2:
-               a1 = int(unquote(parameters[0]))
-               a2 = int(unquote(parameters[1]))
-               if ((a1 < NorNet_MinSliceIndex) or (a1 > NorNet_MaxSliceIndex) or \
-                   (a2 < NorNet_MinSliceIndex) or (a2 > NorNet_MaxSliceIndex) or (a2 < a1)):
-                  error('NorNet_Slice_NodeIndexRange bounds must be in [' + str(NorNet_MaxSliceIndex) + '-' + str(NorNet_MaxSliceIndex) + ']!')
-               NorNet_Configuration['NorNet_Slice_NodeIndexRange'] = list(range(a1, a2))
-            else:
-               error('NorNet_Slice_NodeIndexRange bounds must be range in form of \"start end\"!')
+            NorNet_Configuration['NorNet_Slice_NodeIndexRange'] = \
+               parseNumberSetFromRangesString(NorNet_Configuration['NorNet_Slice_NodeIndexRange'],
+                                              NorNet_MinSliceIndex, NorNet_MaxSliceIndex)
+            # print(NorNet_Configuration['NorNet_Slice_NodeIndexRange'])
          except Exception as e:
             error('Bad configuration "' + NorNet_Configuration['NorNet_Slice_NodeIndexRange'] + '" for NorNet_Slice_NodeIndexRange: ' + str(e))
-
 
 
 # ###### Get central site's domain name #####################################

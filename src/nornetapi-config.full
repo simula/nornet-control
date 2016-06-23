@@ -74,7 +74,7 @@ NorNet_LocalNode_ControlBox='no'
 
 # ###### PLC configuration ##################################################
 # Node index range for slices
-NorNet_Slice_NodeIndexRange="120 199"
+NorNet_Slice_NodeIndexRange="120-199,80-89"
 
 
 # ###### NorNet Tunnelbox configuration #####################################

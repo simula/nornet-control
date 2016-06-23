@@ -91,6 +91,32 @@ def removeComment(line):
    return line
 
 
+# ###### Parse value ranges, e.g. "80-99,115-229", and return set ###########
+def parseNumberSetFromRangesString(inputString, minValue, maxValue):
+  numberSet = set()
+  tokens = [ entry.strip() for entry in inputString.split(',') ]
+  for token in tokens:
+     rangeToken = [ int(rangeEntry.strip()) for rangeEntry in token.split('-') ]
+     if len(rangeToken) == 1:
+        # ------ Input is a single value ------------------------------------
+        value = int(rangeToken[0])
+        if ((value < minValue) or (value > maxValue)):
+           raise ValueError('Value ' + str(value) + ' is not in range [' + str(minValue) + ', ' + str(maxValue) + ']!')
+        numberSet.add(value)
+
+     elif len(rangeToken) > 1:
+        # ------ Input is a range -------------------------------------------
+        rangeToken.sort()
+        first = rangeToken[0]
+        last  = rangeToken[len(rangeToken) - 1]
+        for value in range(first, last+1):
+           if ((value < minValue) or (value > maxValue)):
+              raise ValueError('Value ' + str(value) + ' is not in range [' + str(minValue) + ', ' + str(maxValue) + ']!')
+           numberSet.add(value)
+
+  return numberSet
+
+
 # ###### Get tag value or return a default ##################################
 def getTagValue(tagList, tagName, default):
    for tag in tagList:
