@@ -82,9 +82,8 @@ norNetSetup = [
       [ 111, 12, u'ullern',      'aaklungen.simula.nornet',      'vnc://aaklungen.simula.nornet:5701'      ],
 
       # --- Test only! ---
-      #[ 117, 18, u'vmtest1'     ],
-      #[ 118, 19, u'vmtest2'     ],
-      [ 119, 20, u'test'        ]
+      # [ 113, 20, u'test1' ],
+      # [ 114, 20, u'test2' ]
    ] },
 
  { 'site_index'        : 2,
