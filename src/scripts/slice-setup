@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ../Slice-Setup add --name=srl_test  --own-addresses --permanent --maxnodespersite=9999 --user=dreibh@simula.no
-../Slice-Setup add --name=srl_mptcp --own-addresses --permanent --maxnodespersite=2    --user=dreibh@simula.no
+../Slice-Setup add --name=srl_mptcp --own-addresses --permanent --maxnodespersite=4    --user=dreibh@simula.no
 
 ../Slice-Setup add --name=uib_mptcp --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=k.b.i@lyse.net --user=dse075@student.uib.no
 
-../Slice-Setup add --name=tuda_sereon --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=kubidem@deeds.informatik.tu-darmstadt.de
+../Slice-Setup add --name=tuda_sereon --own-addresses --permanent --maxnodespersite=6 --user=dreibh@simula.no --user=kubidem@deeds.informatik.tu-darmstadt.de
 
 ../Slice-Setup add --name=ude_multipath    --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=hakim.adhari@uni-due.de
 ../Slice-Setup add --name=ude_delaytest    --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=hakim.adhari@uni-due.de --user=tobias.cloosters@stud.uni-due.de
