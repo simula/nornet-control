@@ -1788,10 +1788,6 @@ for additionalNode in additionalNodes:
    except:
       continue
 
-# ====== Create Bind configuration ==========================================
-makeBindConfiguration(fullSiteList, siteNodeList, fullSliceList, localSite,
-                      localHostName, additionalNodes, aliases)
-
 
 # ====== DHCP daemon configuration ==========================================
 dynamicStart         = 0
@@ -1809,6 +1805,14 @@ if ((dynamicConfiguration != None) and (dynamicConfiguration != '')):
    if ((dynamicStart <= NorNet_MinNodeIndex) or (dynamicStart > NorNet_MaxNodeIndex) or
        (dynamicEnd <= NorNet_MinNodeIndex) or (dynamicEnd > NorNet_MaxNodeIndex)):
       error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange node range indexes')
+
+   j = 1
+   for i in range(dynamicStart, dynamicEnd + 1):
+      additionalNodes.append(makeNodeForDNS('dhcp{:02d}'.format(j), localSite, i,
+                                            'NorNet Node', 'DHCP, entry ' + str(j),
+                                            'def-v4only'))
+      j = j + 1
+
 
 staticList = []
 for i in range(NorNet_MinNodeIndex + 1, NorNet_MaxNodeIndex + 1):
@@ -1837,6 +1841,12 @@ for i in range(NorNet_MinNodeIndex + 1, NorNet_MaxNodeIndex + 1):
       }
       staticList.append(staticEntry)
 
+
+# ====== Create Bind configuration ==========================================
+makeBindConfiguration(fullSiteList, siteNodeList, fullSliceList, localSite,
+                      localHostName, additionalNodes, aliases)
+
+# ====== Create other configurations ========================================
 makeHiPerConTracerConfiguration(localSite)
 #makeIPSECConfiguration(localSite)
 makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
