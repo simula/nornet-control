@@ -36,18 +36,6 @@ from NorNetProviderSetup import *;
 
 
 
-# ###### Add or update site tag #############################################
-def addOrUpdateInitScript(initScript):
-   filter = {
-      'name' : initScript['name']
-   }
-   tags = getPLCServer().GetInitScripts(getPLCAuthentication(), filter, ['initscript_id'])
-   if len(tags) == 0:
-      return getPLCServer().AddInitScript(getPLCAuthentication(), initScript)
-   else:
-      return getPLCServer().UpdateInitScript(getPLCAuthentication(), tags[0]['initscript_id'], initScript)
-
-
 # ###### Create tag type ####################################################
 def makeTagType(category, description, tagName, roles = []):
    found = getPLCServer().GetTagTypes(getPLCAuthentication(), tagName, ['tag_type_id'])
@@ -59,22 +47,6 @@ def makeTagType(category, description, tagName, roles = []):
       getPLCServer().AddTagType(getPLCAuthentication(), tagType)
    for role in roles:
       getPLCServer().AddRoleToTagType(getPLCAuthentication(), role, tagName)
-
-
-# ###### Replace string in init script by code to create file ###############
-def replaceInInitScript(initScriptCode, label, localFileName, remoteFileName):
-   localFile = codecs.open(localFileName, 'r', 'utf-8')
-   localFileContents = localFile.read()
-   localFile.close()
-
-   replaceString = 'cat >' + remoteFileName + ' <<\'END-OF-FILE-MARKER\'\n' + \
-                   localFileContents + '\n' + \
-                   'END-OF-FILE-MARKER\n'
-
-   newCode = initScriptCode.replace(label, replaceString)
-   if newCode == initScriptCode:
-      error('Something is wrong with the init script: ' + label + ' not found!')
-   return newCode
 
 
 # ###### Create NorNet tag types ############################################
@@ -147,28 +119,6 @@ def makeNorNetTagTypes():
 
    makeTagType('slice/network', 'Placeholder for interface information while we wait for VirtualInterface objects in PLCAPI', 'interface')
    getPLCServer().AddRoleToTagType(getPLCAuthentication(), 'admin', 'interface')
-
-   # ====== Add init scripts ================================================
-   try:
-      initScriptFile = codecs.open('nornet-slice-initscript', 'r', 'utf-8')
-      initScriptCode = initScriptFile.read()
-      initScriptFile.close()
-   except:
-      error('Cannot read nornet-slice-initscript')
-
-   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FC-FILE', 'Repositories/fedora.repo', '/etc/yum.repos.d/fedora.repo')
-   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FU-FILE', 'Repositories/fedora-updates.repo', '/etc/yum.repos.d/fedora-updates.repo')
-   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-FT-FILE', 'Repositories/fedora-updates-testing.repo', '/etc/yum.repos.d/fedora-updates-testing.repo')
-
-   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-REPO-NN-FILE', 'Repositories/nornet.repo', '/etc/yum.repos.d/nornet.repo')
-   initScriptCode = replaceInInitScript(initScriptCode, 'INLINE-KEY-NN-FILE',  'Repositories/nornet.key',  '/etc/pki/rpm-gpg/nornet.key')
-
-   initScript = {}
-   initScript['name']    = 'nornet_slice_initscript'
-   initScript['enabled'] = True
-   initScript['script']  = initScriptCode
-   addOrUpdateInitScript(initScript)
-   # print(initScriptCode)
 
 
 # ###### Remove NorNet site #################################################
@@ -895,7 +845,7 @@ def addOrUpdateSliceTag(sliceID, node, tagName, tagValue):
 
 
 # ###### Create NorNet slice ################################################
-def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScript, expirationTime, fcDistro = None, plDistro = None):
+def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, expirationTime, fcDistro = None, plDistro = None):
    try:
       # ====== Add slice =====================================================
       log('Adding slice ' + sliceName + ' ...')
@@ -929,7 +879,6 @@ def makeNorNetSlice(sliceName, ownAddress, sliceDescription, sliceUrl, initScrip
       # UpdateSlice() may only have certain fields. Therefore, initialize
       # "slice" object again, with only the allowed fields included.
       slice = {}
-      slice['initscript']  = initScript
       slice['description'] = sliceDescription
       slice['url']         = sliceUrl
       if expirationTime == 0:
