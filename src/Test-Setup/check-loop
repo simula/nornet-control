@@ -1,0 +1,3 @@
+#!/bin/bash
+
+../Check-Nodes-Loop 60 as_test ~/.ssh/id_rsa
