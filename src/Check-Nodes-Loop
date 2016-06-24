@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 #
 # Regularly check whether login to test slice is possible
 # Copyright (C) 2016 by Thomas Dreibholz
