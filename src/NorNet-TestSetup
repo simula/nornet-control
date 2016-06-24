@@ -123,7 +123,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 4,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'Delta Site',
    'site_short_name'   : 'DS',
    'site_url'          : 'http://www.delta.test',
