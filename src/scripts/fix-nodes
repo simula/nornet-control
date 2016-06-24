@@ -14,13 +14,15 @@ while [ $# -gt 0 ] ; do
 
       kernel=\$(uname -r)
       echo "K=\$kernel"
-      if [ "\$kernel" = "4.1.23-200.fc23.x86_64" ] ; then
-         echo "OLD KERNEL -> Reboot!"
-         rpm -ehv kernel-core-4.1.23-200.fc23.x86_64 kernel-4.1.23-200.fc23.x86_64 kernel-modules-4.1.23-200.fc23.x86_64 kernel-modules-extra-4.1.23-200.fc23.x86_64
-         reboot
-      else
-         echo "Different kernel!"
-         rpm -ehv kernel-core-4.1.23-200.fc23.x86_64 kernel-4.1.23-200.fc23.x86_64 kernel-modules-4.1.23-200.fc23.x86_64 kernel-modules-extra-4.1.23-200.fc23.x86_64
+      if [ -e "/boot/vmlinuz-4.1.27-888.fc23.x86_64" ] ; then
+         if [ "\$kernel" = "4.1.24-8800.fc23.x86_64" ] ; then
+            echo "OLD KERNEL -> Reboot!"
+            rpm -ehv kernel-core-4.1.24-8800.fc23.x86_64 kernel-4.1.24-8800.fc23.x86_64 kernel-modules-4.1.24-8800.fc23.x86_64 kernel-modules-extra-4.1.24-8800.fc23.x86_64
+            reboot
+         else
+            echo "Different kernel!"
+            rpm -ehv kernel-core-4.1.24-8800.fc23.x86_64 kernel-4.1.24-8800.fc23.x86_64 kernel-modules-4.1.24-8800.fc23.x86_64 kernel-modules-extra-4.1.24-8800.fc23.x86_64
+         fi
       fi
       echo "NodeUpdate.py"
 EOF
