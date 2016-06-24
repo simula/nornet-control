@@ -1,0 +1,13 @@
+#!/bin/bash
+
+../Get-Nodes | awk '{ print $2 }' | sort | (
+   while read node ; do
+      # echo "Handling $node ..."
+      (
+       ssh -4 -o StrictHostKeyChecking=no -i /home/dreibh/.ssh/test2 srl_test@$node '
+          if ps ax | grep /usr/sbin/lxcsu-internal | grep -v grep ; then hostname ; fi
+       ' || true
+      ) &
+   done
+)
+wait
