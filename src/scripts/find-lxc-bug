@@ -1,0 +1,13 @@
+#!/bin/bash
+
+../Get-Nodes | awk '{ print $2 }' | grep -v ".tuda.nornet$" | sort | (
+   while read node ; do
+      # echo "Handling $node ..."
+      (
+       ssh -4 -o StrictHostKeyChecking=no -i /home/dreibh/.ssh/test2 srl_test@$node '
+          if ps ax | grep " \[kworker.*\]" | grep -v grep >/dev/null ; then echo -en "\x1b[34m" ; hostname ; echo -en "\x1b[0m" ; fi
+       ' || true
+      ) &
+   done
+)
+wait
