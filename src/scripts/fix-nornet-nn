@@ -4,7 +4,7 @@ slice="srl_mptcp"
 # node="bymarka.ntnu.nornet"
 key="/home/dreibh/.ssh/test2"
 
-RPM="nornet-nn-0.4.8~rc4-1.noarch.rpm"
+RPM="nornet-nn-0.4.8-1.noarch.rpm"
 
 nodes=`../Get-Slice-Nodes $slice | awk '{ print $1 }'`
 
@@ -25,7 +25,7 @@ echo "Installing ..."
 for node in $nodes ; do
    (
       echo "######## N=$node ########"
-      ssh -i $key $slice@$node "
+      ssh -4 -o StrictHostKeyChecking=no -i $key $slice@$node "
          cd /tmp
          # sudo rm -f /var/lib/rpm/.rpm.lock
          sudo rpm -Ui --quiet $RPM

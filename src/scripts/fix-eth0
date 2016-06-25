@@ -13,7 +13,7 @@ while [ $# -gt 0 ] ; do
          done
 EOF
 
-   ) | sudo ssh -4 -o StrictHostKeyChecking=no -i /etc/planetlab/root_ssh_key.rsa root@$1 &
+   ) | sudo ssh -4 -i /etc/planetlab/root_ssh_key.rsa root@$1 &
    shift
 done
 wait
