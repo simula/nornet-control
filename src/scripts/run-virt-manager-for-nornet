@@ -57,6 +57,10 @@ qionghai.hu.nornet
 sanya.hu.nornet
 10.70.160.254
 10.90.100.254
+10.82.89.1
+wuzhishan.hkc.nornet
+lingshui.hkc.nornet
+baoting.hkc.nornet
 "
 
 cd $VIRTMANAGERDIR
