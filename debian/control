@@ -6,7 +6,7 @@ Homepage: https://www.nntb.no/
 Build-Depends: debhelper (>= 9),
                imagemagick,
                libfile-fcntllock-perl,
-               python3
+               python3-all
 Standards-Version: 3.9.7
 X-Python3-Version: >= 3.2
 Vcs-Git: https://github.com/simula/nornet-control.git
@@ -57,6 +57,7 @@ Depends: apport-retrace,
          traceroute,
          tree,
          update-motd,
+         virt-what,
          vlan,
          whois,
          xmlstarlet,
@@ -123,7 +124,6 @@ Depends: autoconf,
          pbuilder,
          pkg-config,
          python3-psycopg2,
-         python3-wand,
          quilt,
          r-base,
          rpm,
@@ -132,6 +132,7 @@ Depends: autoconf,
          yum-utils,
          ${misc:Depends},
          ${shlibs:Depends}
+Recommends: python3-wand
 Description: NorNet Development Tools
  This metapackage contains basic software nor NorNet development. The
  software installed provides a common working environment.
@@ -140,8 +141,7 @@ Description: NorNet Development Tools
 
 Package: nornet-api
 Architecture: any
-Depends: python3-ipaddr,
-         ${misc:Depends},
+Depends: ${misc:Depends},
          ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet API
@@ -152,7 +152,8 @@ Description: NorNet API
 
 Package: nornet-node
 Architecture: any
-Conflicts: miredo
+Conflicts: miredo,
+           nornet-server
 Depends: cfengine3,
          grub2-common | grub,
          nfs-common,
@@ -175,11 +176,8 @@ Description: NorNet Node Control
 
 Package: nornet-tunnelbox
 Architecture: any
-Replaces: nornet-routing
-Conflicts: nornet-routing
 Depends: arpwatch,
          bind9,
-         collectd,
          conntrack,
          ifupdown,
          iptables-persistent,
@@ -189,8 +187,7 @@ Depends: arpwatch,
          netstat-nat,
          nornet-api,
          nornet-management,
-         nornet-node,
-         nornet-trace-service,
+         nornet-node | nornet-server,
          ntp,
          python (>= 2.7),
          radvd,
@@ -200,7 +197,9 @@ Depends: arpwatch,
          traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: tracebox
+Recommends: collectd,
+            nornet-trace-service,
+            tracebox
 Description: NorNet Tunnelbox Control
  This package contains the scripts to configure the tunnelboxes of NorNet
  sites.
@@ -257,7 +256,7 @@ Package: nornet-display
 Architecture: all
 Depends: firefox,
          kdm | sddm,
-         kubuntu-desktop,
+         kubuntu-desktop | neon-desktop,
          nornet-api,
          nornet-management,
          xserver-xorg-video-vmware,
@@ -349,6 +348,7 @@ Description: NorNet Database
 
 Package: nornet-server
 Architecture: all
+Conflicts: nornet-node
 Depends: cfengine3,
          grub2-common | grub,
          libvirt-bin,
@@ -359,6 +359,7 @@ Depends: cfengine3,
          openssh-server,
          python (>= 2.7),
          qemu-kvm,
+         virt-manager,
          virtinst,
          xauth,
          ${misc:Depends},

@@ -1,7 +1,0 @@
-#!/bin/sh
-
-./Get-Nodes | awk '{ print $2 }' >nodes.list
-
-echo "#!/bin/sh"
-cat nodes.list | xargs -n1 -i§ echo 'ssh -oStrictHostKeyChecking=no -i /etc/planetlab/root_ssh_key.rsa root@§ hostname &'
-echo "wait"

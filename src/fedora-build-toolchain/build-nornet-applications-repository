@@ -26,8 +26,12 @@ SOURCES="$HOME/src"
 REPOSITORIES="$HOME/repos/nornet-applications"
 DISTRIBUTIONS="fedora-23-x86_64 fedora-23-i386"
 
-PACKAGES="bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
-#PACKAGES="libvirt"
+PACKAGES="nornet_nn bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
+
+
+# ====== BibTeXConv =======================================
+nornet_nn_DIR="nornet-nn"
+nornet_nn_REPO="git://github.com/dreibh/nornet-nn.git"
 
 
 # ====== BibTeXConv =======================================
@@ -120,12 +124,14 @@ for package in $PACKAGES ; do
       eval "package_dir=\$${package}_DIR"
       echo -e "\x1b[1;32m`date +%FT%H:%M:%S`: Creating RPMs for $package ...\x1b[0m"
 
-      ./clean-deb
+      if [ -e ./clean-deb ] ; then
+         ./clean-deb
+      fi
       ./make-rpm $DISTRIBUTIONS
 
       # ====== Build RPMs ===================================================
       for distribution in $DISTRIBUTIONS ; do
-         rpms=`find /var/lib/mock/$distribution/result -name "$package*.rpm" || true`
+         rpms=`find /var/lib/mock/$distribution/result -name "${package_dir}*.rpm" || true`
          if [ "$rpms" == "" ] ; then
             echo >&2 "ERROR: Cannot find RPMs for package $package in /var/lib/mock/$distribution/result!"
             exit 1

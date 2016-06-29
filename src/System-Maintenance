@@ -145,6 +145,8 @@ elif [ "$Variant" = "Fedora" ] ; then
    wait
    cat /tmp/install.log
    sudo yum clean all
+elif [ "$Variant" = "FreeBSD" ] ; then
+   sudo pkg clean all -y
 fi
 
 # ====== Remove obsolete kernel packages ====================================
@@ -235,7 +237,7 @@ fi
 if [ "$Variant" != "FreeBSD" ] ; then
    sudo updatedb
 else
-   sudo -u nobody /usr/libexec/locate.updatedb
+   sudo /etc/periodic/weekly/310.locate
    if [ -x /usr/local/bin/geoipupdate.sh ] ; then
       sudo /usr/local/bin/geoipupdate.sh
    fi

@@ -1,0 +1,40 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
+# Get all slices
+# Copyright (C) 2016 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+import re;
+import os;
+
+# NorNet
+from NorNetSiteSetup import *;
+from NorNetTools     import *;
+from NorNetAPI       import *;
+
+
+
+# ###### Main program #######################################################
+loginToPLC(quietMode = True)
+
+sliceList = fetchNorNetSlice(None)
+for slice in sliceList:
+   # print(slice)
+   sliceName  = slice['slice_name']
+
+   print(sliceName)

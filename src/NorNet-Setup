@@ -82,9 +82,8 @@ norNetSetup = [
       [ 111, 12, u'ullern',      'aaklungen.simula.nornet',      'vnc://aaklungen.simula.nornet:5701'      ],
 
       # --- Test only! ---
-      #[ 117, 18, u'vmtest1'     ],
-      #[ 118, 19, u'vmtest2'     ],
-      [ 119, 20, u'test'        ]
+      # [ 113, 20, u'test1' ],
+      # [ 114, 20, u'test2' ]
    ] },
 
  { 'site_index'        : 2,
@@ -652,8 +651,168 @@ norNetSetup = [
       [ 105, 6, u'yalongbay', 'sanya.hu.nornet',    'vnc://sanya.hu.nornet:5701'    ]    # This place has beautiful beach and tropical forest park
    ] },
 
+ # Haikou College of Economics (海口经济学院)
+ { 'site_index'        : 89,
+   'site_enabled'      : True,
+   'site_long_name'    : u'Haikou College of Economics',
+   'site_short_name'   : 'HKC',
+   'site_url'          : 'http://www.hkc.edu.cn/',
+   'site_domain'       : 'hkc.nornet',
+   'site_city'         : 'Guilinyang',
+   'site_province'     : 'Hainan',
+   'site_country'      : 'China',
+   'site_country_code' : 'CN',
+   'site_latitude'     : 19.9665,
+   'site_longitude'    : 110.486431,
+   'site_altitude'     : 10,
+   'site_contacts'     : [ u'Chen Xianjun: hingini@126.com',
+                           u'Fa, Fu: fufa@hainu.edu.cn',
+                           u'Zhou, Xing: xingzhou50@126.com' ],
+   'site_pcu'          : [ IPv4Address('202.100.206.164'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'China Telecom', 'eth1',
+           IPv4Interface('202.100.206.163/28'), IPv4Address('202.100.206.161'),
+           IPv6Interface('::/0'),               IPv6Address('::'),
+           1500, 'fibre, business', 0, 0 ],
+      [ u'China Education and Research Network', 'eth2',
+           IPv4Interface('210.37.80.162/25'), IPv4Address('210.37.80.254'),
+           IPv6Interface('::/0'),             IPv6Address('::'),
+           1500, 'fibre, business', 0, 0 ]
+   ],
+   'site_nodes' : [
+      # Naming scheme: places in Sanya
+      [ 100, 1, u'huoshankou',  'huoshankou.hkc.nornet',    'vnc://baoting.hkc.nornet:5700'   ],
+      [ 101, 2, u'dongzhaigang','dongzhaigang.hkc.nornet',  'vnc://baoting.hkc.nornet:5701'   ],
+      [ 102, 3, u'wanlvyuan',   'wanlvyuan.hkc.nornet',     'vnc://lingshui.hkc.nornet:5700'  ],
+      [ 103, 4, u'baishamen',   'baishamen.hkc.nornet',     'vnc://lingshui.hkc.nornet:5701'  ],
+      [ 104, 5, u'guanlanhu',   'guanlanhu.hkc.nornet',     'vnc://wuzhishan.hkc.nornet:5700' ],
+      [ 105, 6, u'hongshulin',  'hongshulin.hkc.nornet',    'vnc://wuzhishan.hkc.nornet:5701' ]
+   ] },
+
+ { 'site_index'        : 100,
+   'site_enabled'      : True,
+   'site_long_name'    : u'The University of Kansas',
+   'site_short_name'   : 'KU',
+   'site_url'          : 'http://www.ittc.ku.edu',
+   'site_domain'       : 'ku.nornet',
+   'site_city'         : 'Lawrence',
+   'site_province'     : 'Kansas',
+   'site_country'      : 'United States of America',
+   'site_country_code' : 'US',
+   'site_latitude'     : 38.952,
+   'site_longitude'    : -95.264,
+   'site_altitude'     : 300,
+   'site_contacts'     : [ u'Gangadhar, Siddharth: siddharth@ittc.ku.edu', u'Fleming, Brad: bdfleming@kanren.net', u'Sterbenz, James P.G.: jpgs@ittc.ku.edu' ],
+   'site_pcu'          : [ IPv4Address('164.113.202.19'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Kansas Research and Education Network', 'eth1',
+           IPv4Interface('164.113.202.17/28'),        IPv4Address('164.113.202.30'),
+           IPv6Interface('2001:49d0:3c00:6::17/64'),  IPv6Address('2001:49d0:3c00:6::1'),
+           1500, 'fibre, business', 0, 0 ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, u'watson',  'oread.ku.nornet', 'vnc://oread.ku.nornet:5700' ],
+      [ 101, 2, u'clinton', 'oread.ku.nornet', 'vnc://oread.ku.nornet:5701' ]
+      #[ 102, 3, u'williamstown' ],
+      #[ 103, 4, u'stull' ]
+   ] },
+
+ { 'site_index'        : 101,
+   'site_enabled'      : False,
+   'site_long_name'    : u'New York University',
+   'site_short_name'   : 'NYU',
+   'site_url'          : 'http://engineering.nyu.edu',
+   'site_domain'       : 'nyu.nornet',
+   'site_city'         : 'Brooklyn',
+   'site_province'     : 'New York',
+   'site_country'      : 'United States of America',
+   'site_country_code' : 'US',
+   'site_latitude'     : 40.694074,
+   'site_longitude'    :  -73.986932,
+   'site_altitude'     : 20,
+   'site_contacts'     : [ u'Rivera, Julio: jr847@nyu.edu', u'Cappos, Justin: jcappos@nyu.edu', u'Rafetseder, Albert: albert.rafetseder+nyu@univie.ac.at' ],
+   'site_pcu'          : [ IPv4Address('128.238.63.80'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Lightower Fiber Networks', 'eth1',
+           IPv4Interface('128.238.63.79/24'), IPv4Address('128.238.63.1'),
+           IPv6Interface('::/0'),             IPv6Address('::'),
+           1500, 'fibre, business', 0, 0 ]
+   ],
+   'site_nodes' : [   # VMware cluster
+      [ 100, 1, u'bronx'     ],
+      [ 101, 2, u'brooklyn'  ],
+      [ 102, 3, u'manhattan' ],
+      [ 103, 4, u'queens'    ]
+   ] },
+
+ { 'site_index'        : 160,
+   'site_enabled'      : True,
+   'site_long_name'    : u'Korea University',   # 고려대학교
+   'site_short_name'   : 'KRU',
+   'site_url'          : 'http://www.korea.ac.kr',
+   'site_domain'       : 'korea.nornet',
+   'site_city'         : 'Seoul',
+   'site_province'     : 'Seoul',
+   'site_country'      : 'South Korea',
+   'site_country_code' : 'KR',
+   'site_latitude'     : 37.585175,
+   'site_longitude'    : 127.028460,
+   'site_altitude'     : 50,
+   'site_contacts'     : [ u'Hwang, Jae Hyun: jh.hwang@alcatel-lucent.com', u'Walid, Anwar: anwar@research.bell-labs.com' ],
+   'site_pcu'          : [ IPv4Address('203.230.60.126'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Korea Research Environment Open NETwork', 'eth1',
+           IPv4Interface('203.230.60.125/26'), IPv4Address('203.230.60.65'),
+           IPv6Interface('::/0'),              IPv6Address('::'),
+           1500, 'fibre, business', 0, 0 ]
+   ],
+   'site_nodes' : [
+      # Naming schemes:
+      # Research nodes: stations in Seoul
+      # Physical machines: rivers in Seoul
+      [ 100, 1, u'yongsan', 'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5700' ],
+      [ 101, 2, u'mapo',    'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5701' ]
+      #[ 102, 3, u'ichon',   'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5702' ],
+      #[ 103, 4, u'gireum',  'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5703' ],
+      #[ 104, 5, u'aram',    'hangang.korea.nornet',   'vnc://hangang.korea.nornet:5700'   ],
+      #[ 105, 6, u'geumho',  'hangang.korea.nornet',   'vnc://hangang.korea.nornet:5701'   ]
+   ] },
+
+ { 'site_index'        : 200,
+   'site_enabled'      : True,
+   'site_long_name'    : u'National ICT Australia',
+   'site_short_name'   : 'NICTA',
+   'site_url'          : 'https://www.nicta.com.au',
+   'site_domain'       : 'nicta.nornet',
+   'site_city'         : 'Sydney',
+   'site_province'     : 'New South Wales',
+   'site_country'      : 'Australia',
+   'site_country_code' : 'AU',
+   'site_latitude'     : -33.895430,
+   'site_longitude'    : 151.197021,
+   'site_altitude'     : 15,
+   'site_contacts'     : [ u'Mehani, Olivier: olivier.mehani@nicta.com.au',
+                           u'Rakotoarivelo, Thierry: Thierry.Rakotoarivelo@nicta.com.au' ],
+   'site_pcu'          : [ IPv4Address('221.199.217.168'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Australian Academic and Research Network', 'eth1',
+           IPv4Interface('221.199.217.167/26'), IPv4Address('221.199.217.129'),
+           IPv6Interface('::/0'),               IPv6Address('::'),
+           1500, 'fibre, business', 0, 0 ]
+   ],
+   'site_nodes' : [
+      [ 100, 1, u'coogee' ],
+      [ 101, 2, u'bondi'  ]
+   ] }
+
+
  # Qiongzhou University (琼州大学)
- #{ 'site_index'        : 89,
+ #{ 'site_index'        : 87,
    #'site_enabled'      : False,
    #'site_long_name'    : u'Qiongzhou University',
    #'site_short_name'   : 'QU',
@@ -677,8 +836,8 @@ norNetSetup = [
    #],
    #'site_nodes' : [
       ## Naming scheme: places in Sanya
-      #[ 100, 1, u'sanyabay',      'boating.qu.nornet',   'vnc://boating.qu.nornet:5700'   ],
-      #[ 101, 2, u'luhuitou',      'boating.qu.nornet',   'vnc://boating.qu.nornet:5701'   ],
+      #[ 100, 1, u'sanyabay',      'baoting.qu.nornet',   'vnc://baoting.qu.nornet:5700'   ],
+      #[ 101, 2, u'luhuitou',      'baoting.qu.nornet',   'vnc://baoting.qu.nornet:5701'   ],
       #[ 102, 3, u'tianyahaijiao', 'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5700'  ],
       #[ 103, 4, u'qiongzhou',     'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5701'  ],
       #[ 104, 5, u'lizhigou',      'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5700' ],
@@ -715,98 +874,6 @@ norNetSetup = [
       #[ 101, 2, u'bagakhangai', 'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5701' ]
    #] },
 
- { 'site_index'        : 100,
-   'site_enabled'      : True,
-   'site_long_name'    : u'The University of Kansas',
-   'site_short_name'   : 'KU',
-   'site_url'          : 'http://www.ittc.ku.edu',
-   'site_domain'       : 'ku.nornet',
-   'site_city'         : 'Lawrence',
-   'site_province'     : 'Kansas',
-   'site_country'      : 'United States of America',
-   'site_country_code' : 'US',
-   'site_latitude'     : 38.952,
-   'site_longitude'    : -95.264,
-   'site_altitude'     : 300,
-   'site_contacts'     : [ u'Gangadhar, Siddharth: siddharth@ittc.ku.edu', u'Fleming, Brad: bdfleming@kanren.net', u'Sterbenz, James P.G.: jpgs@ittc.ku.edu' ],
-   'site_pcu'          : [ IPv4Address('164.113.202.19'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ u'Kansas Research and Education Network', 'eth1',
-           IPv4Interface('164.113.202.17/28'),        IPv4Address('164.113.202.30'),
-           IPv6Interface('2001:49d0:3c00:6::17/64'),  IPv6Address('2001:49d0:3c00:6::1'),
-           1500, 'fibre, business', 0, 0 ]
-   ],
-   'site_nodes' : [
-      [ 100, 1, u'watson',  'oread.ku.nornet', 'vnc://oread.ku.nornet:5700' ],
-      [ 101, 2, u'clinton', 'oread.ku.nornet', 'vnc://oread.ku.nornet:5701' ]
-      #[ 102, 3, u'williamstown' ],
-      #[ 103, 4, u'stull' ]
-   ] },
-
- #{ 'site_index'        : 101,
-   #'site_enabled'      : False,
-   #'site_long_name'    : u'New York University',
-   #'site_short_name'   : 'NYU',
-   #'site_url'          : 'http://engineering.nyu.edu',
-   #'site_domain'       : 'nyu.nornet',
-   #'site_city'         : 'Brooklyn',
-   #'site_province'     : 'New York',
-   #'site_country'      : 'United States of America',
-   #'site_country_code' : 'US',
-   #'site_latitude'     : 40.694074,
-   #'site_longitude'    :  -73.986932,
-   #'site_altitude'     : 20,
-   #'site_contacts'     : [ u'Rivera, Julio: jr847@nyu.edu', u'Cappos, Justin: jcappos@nyu.edu', u'Rafetseder, Albert: albert.rafetseder+nyu@univie.ac.at' ],
-   #'site_pcu'          : [ IPv4Address('128.238.63.80'), 'pcu-root', 'a-secret-password' ],
-   #'site_nornet_if'    : 'eth0',
-   #'site_providers' : [
-      #[ u'Lightower Fiber Networks', 'eth1',
-           #IPv4Interface('128.238.63.79/24'), IPv4Address('128.238.63.1'),
-           #IPv6Interface('::/0'),             IPv6Address('::'),
-           #1500, 'fibre, business', 0, 0 ]
-   #],
-   #'site_nodes' : [   # VMware cluster
-      #[ 100, 1, u'brooklyn'  ],
-      #[ 101, 2, u'manhattan' ],
-      #[ 102, 3, u'bronx'     ],
-      #[ 103, 4, u'queens'    ]
-   #] },
-
- { 'site_index'        : 160,
-   'site_enabled'      : True,
-   'site_long_name'    : u'Korea University',   # 고려대학교
-   'site_short_name'   : 'KRU',
-   'site_url'          : 'http://www.korea.ac.kr',
-   'site_domain'       : 'korea.nornet',
-   'site_city'         : 'Seoul',
-   'site_province'     : 'Seoul',
-   'site_country'      : 'South Korea',
-   'site_country_code' : 'KR',
-   'site_latitude'     : 37.585175,
-   'site_longitude'    : 127.028460,
-   'site_altitude'     : 50,
-   'site_contacts'     : [ u'Hwang, Jae Hyun: jh.hwang@alcatel-lucent.com', u'Walid, Anwar: anwar@research.bell-labs.com' ],
-   'site_pcu'          : [ IPv4Address('203.230.60.126'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ u'Korea Research Environment Open NETwork', 'eth1',
-           IPv4Interface('203.230.60.125/26'), IPv4Address('203.230.60.65'),
-           IPv6Interface('::/0'),              IPv6Address('::'),
-           1500, 'fibre, business', 0, 0 ]
-   ],
-   'site_nodes' : [
-      # Naming schemes:
-      # Research nodes: stations in Seoul
-      # Physical machines: rivers in Seoul
-      [ 100, 1, u'yongsan', 'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5700' ],
-      [ 101, 2, u'mapo',    'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5701' ]
-      #[ 102, 3, u'ichon',   'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5702' ],
-      #[ 103, 4, u'gireum',  'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5703' ],
-      #[ 104, 5, u'aram',    'hangang.korea.nornet',   'vnc://hangang.korea.nornet:5700'   ],
-      #[ 105, 6, u'geumho',  'hangang.korea.nornet',   'vnc://hangang.korea.nornet:5701'   ]
-   ] },
-
  #{ 'site_index'        : 120,
    #'site_enabled'      : False,
    #'site_long_name'    : u'Universidade Federal de São Carlos',
@@ -838,33 +905,6 @@ norNetSetup = [
       #[ 101, 2, u'lerisor' ]
    #] },
 
- { 'site_index'        : 200,
-   'site_enabled'      : True,
-   'site_long_name'    : u'National ICT Australia',
-   'site_short_name'   : 'NICTA',
-   'site_url'          : 'https://www.nicta.com.au',
-   'site_domain'       : 'nicta.nornet',
-   'site_city'         : 'Sydney',
-   'site_province'     : 'New South Wales',
-   'site_country'      : 'Australia',
-   'site_country_code' : 'AU',
-   'site_latitude'     : -33.895430,
-   'site_longitude'    : 151.197021,
-   'site_altitude'     : 15,
-   'site_contacts'     : [ u'Mehani, Olivier: olivier.mehani@nicta.com.au',
-                           u'Rakotoarivelo, Thierry: Thierry.Rakotoarivelo@nicta.com.au' ],
-   'site_pcu'          : [ IPv4Address('221.199.217.168'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ u'Australian Academic and Research Network', 'eth1',
-           IPv4Interface('221.199.217.167/26'), IPv4Address('221.199.217.129'),
-           IPv6Interface('::/0'),               IPv6Address('::'),
-           1500, 'fibre, business', 0, 0 ]
-   ],
-   'site_nodes' : [
-      [ 100, 1, u'coogee' ],
-      [ 101, 2, u'bondi'  ]
-   ] }
 
       #[ 100, 1, u'lutefisk'     ],
       #[ 101, 2, u'pinnekjøtt'   ],
@@ -983,9 +1023,8 @@ fullSliceList = fetchNorNetSliceList()
 
 
 # ====== Some server settings ===============================================
-# norNetInformation = getNorNetInformationForAddress(getPLCAddress())
 norNetInformation = getMyNorNetInformation()
-print(norNetInformation)
+# print(norNetInformation)
 ntpServerNames = [ 'ntp1.ptb.de', 'ntp2.ptb.de', 'ntp3.ptb.de',   # The PTB servers (very reliable sources)
                    'ntp1.uio.no', 'ntp2.uio.no' ]                 # UiO (nearby)
 

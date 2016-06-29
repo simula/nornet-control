@@ -1,0 +1,48 @@
+.\" Get Nodes
+.\" Copyright (C) 2016 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd June 29, 2016
+.Dt Clear-SSH-Node-Key 1
+.Os Clear-SSH-Node-Key
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Clear-SSH-Node-Key
+.Nd Removes the SSH public keys of NorNet nodes from known_hosts.
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Clear-SSH-Node-Key
+.Op node
+.Op ...
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Clear-SSH-Node-Key
+removes the SSH public keys of given NorNet nodes from known_hosts.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+.Bl -tag -width indent
+.It node
+The name of the node.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Clear-SSH-Node-Key bessungen.tuda.nornet
+.It Clear-SSH-Node-Key bessungen.tuda.nornet woogsviertel.tuda.nornet
+.El

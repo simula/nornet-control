@@ -1,0 +1,33 @@
+#!/bin/bash
+
+while [ $# -gt 0 ] ; do
+   echo "Handling $1 ..."
+   (
+      #echo "service nm restart"
+      #echo "NodeUpdate.py"
+      #echo "uname -a"
+      #echo "yum clean all"
+      #echo "NodeUpdate.py"
+
+      cat <<EOF
+      NodeUpdate.py
+
+      kernel=\$(uname -r)
+      echo "K=\$kernel"
+      if [ -e "/boot/vmlinuz-4.1.27-888.fc23.x86_64" ] ; then
+         if [ "\$kernel" = "4.1.24-8800.fc23.x86_64" ] ; then
+            echo "OLD KERNEL -> Reboot!"
+            rpm -ehv kernel-core-4.1.24-8800.fc23.x86_64 kernel-4.1.24-8800.fc23.x86_64 kernel-modules-4.1.24-8800.fc23.x86_64 kernel-modules-extra-4.1.24-8800.fc23.x86_64 # transforward-0.1-4.1.24.8800.fc23.9.nornet.x86_64
+            reboot
+         else
+            echo "Different kernel!"
+            rpm -ehv kernel-core-4.1.24-8800.fc23.x86_64 kernel-4.1.24-8800.fc23.x86_64 kernel-modules-4.1.24-8800.fc23.x86_64 kernel-modules-extra-4.1.24-8800.fc23.x86_64 # transforward-0.1-4.1.24.8800.fc23.9.nornet.x86_64
+         fi
+      fi
+      echo "NodeUpdate.py"
+EOF
+
+   ) | sudo ssh -4 -o StrictHostKeyChecking=no -i /etc/planetlab/root_ssh_key.rsa root@$1 &
+   shift
+done
+wait

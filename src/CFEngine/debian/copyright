@@ -1,5 +1,4 @@
-Format-Specification:
-    http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=196
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Maintainer: Mark Burgess <Mark.Burgess@iu.hio.no>
 Upstream-Source: http://www.cfengine.org/download.php
 Upstream-Name: cfengine

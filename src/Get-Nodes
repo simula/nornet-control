@@ -34,7 +34,7 @@ loginToPLC(quietMode = True)
 
 nodeList = fetchNorNetNode(None)
 for node in nodeList:
-   #print node
+   #print(node)
    nodeIndex = node['node_index']
    nodeName  = node['node_name']
    nodeState = node['node_state']

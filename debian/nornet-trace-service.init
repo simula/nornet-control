@@ -38,9 +38,14 @@ DAEMON_ARGS=""
 test -x $DAEMON || exit 0
 
 
-# Include nornet-trace defaults if available
+# Get configuration:
+# First, set default (if available).
 if [ -f /etc/default/nornet-trace ] ; then
    . /etc/default/nornet-trace
+fi
+# Then, apply local settings (if available).
+if [ -f /etc/nornet/nornet-trace.local ] ; then
+   . /etc/nornet/nornet-trace.local
 fi
 
 # Load the VERBOSE setting and other rcS variables

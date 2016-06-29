@@ -1,0 +1,19 @@
+#!/bin/bash
+
+while [ $# -gt 0 ] ; do
+   echo "Handling $1 ..."
+   (
+
+      cat <<EOF
+         cd /vservers
+         slices=\`find . -maxdepth 1 -type d -name "*_*" | xargs -n1 basename\`
+         for slice in \$slices ; do
+            echo "S=\$slice"
+            /usr/sbin/lxcsu -r srl_test /sbin/ifup eth0 || true
+         done
+EOF
+
+   ) | sudo ssh -4 -i /etc/planetlab/root_ssh_key.rsa root@$1 &
+   shift
+done
+wait

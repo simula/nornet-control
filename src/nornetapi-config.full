@@ -74,7 +74,7 @@ NorNet_LocalNode_ControlBox='no'
 
 # ###### PLC configuration ##################################################
 # Node index range for slices
-NorNet_Slice_NodeIndexRange="120 199"
+NorNet_Slice_NodeIndexRange="120-199,80-89"
 
 
 # ###### NorNet Tunnelbox configuration #####################################
@@ -174,3 +174,4 @@ NorNet_LocalSite_Alias50='"test" "köln" "rekesmørbrød"'
 NorNet_LocalSite_Node51='"nordmarka"           "Amiga 9000" "NorNet Development Node"'
 NorNet_LocalSite_Node55='"frognerseteren"      "Amiga 9000" "NorNet Development Node"'
 NorNet_LocalSite_Node56='"voksenkollen"        "Amiga 9000" "NorNet Development Node"'
+NorNet_LocalSite_SSHKeys56='"ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFXJxzd1o29kbcC92gjfilAGO60gTKQvmoI9pOrkimzkFBNn0J7hoBP0sZALG8voAkud47xSZbEWXtoyRkuxlDw=" "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC8x0xgXAARx6WXe7ks2w8lMlGToGVCFphtcFm8k3edx4EWHP8cydezbIFJhNpN4r8Y5HSbY2HDjG29GZoM+P2V9Erigh4Rbkpy2Y+z7Kn9bNIEPXkl/E1EQNnllnfvqflgJx5W9+hlFK9AIaHHdhW3kmi+AUez6NImafmQBPfhbWStXCm3MQTXij37gKgD5XgYlkpOUgECwMK1W7GPdJg5CiBRwpTNAQOv5D7hxKrwHObe3w9ceLhTNwbHQGEVuASsuR3Xuq4wDikk66SSUP0gb6XywgrbyJ1RTkys1dNOI4gPJueXMh9AdLKSNi4vMMo4djZtcx2unlqoQ5WS+nhH"'

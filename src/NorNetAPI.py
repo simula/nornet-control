@@ -198,7 +198,7 @@ def getNorNetProvidersForSite(norNetSite):
          if ((providerMTU < 1280) or (providerMTU > 9000)):
             error('Bad MTU for provider: ' + str(provider))
          try:
-            providerType        = filterForTextOnly(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_type', ''))
+            providerType        = str(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_type', ''))
             providerDownstream  = int(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_downstream', 0))
             providerUpstream    = int(getTagValue(siteTagsList, 'nornet_site_tbp' + str(i) + '_upstream', 0))
          except:
@@ -302,7 +302,7 @@ def fetchNorNetNode(nodeNameToFind = None, site = None):
    try:
       norNetNodeList = []
       fullNodeList   = plc_server.GetNodes(plc_authentication, filter,
-                                           ['node_id', 'site_id', 'hostname', 'model', 'boot_state'])
+                                           ['node_id', 'site_id', 'hostname', 'model', 'boot_state', 'ssh_rsa_key'])
       for node in fullNodeList:
          nodeID       = int(node['node_id'])
          nodeSiteID   = int(node['site_id'])
@@ -328,6 +328,7 @@ def fetchNorNetNode(nodeNameToFind = None, site = None):
             'node_model'            : node['model'],
             'node_type'             : 'NorNet Managed Node',
             'node_state'            : node['boot_state'],
+            'node_ssh_rsa_key'      : node['ssh_rsa_key'],
             'node_v4only'           : 0,
             'node_v6only'           : 0,
             'node_tags'             : nodeTagsList
@@ -500,6 +501,8 @@ def fetchNorNetSlice(sliceNameToFind):
 
          norNetSliceList.append(norNetSlice)
 
+      if len(norNetSliceList) == 0:
+         return None
       return(norNetSliceList)
 
    except Exception as e:

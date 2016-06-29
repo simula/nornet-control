@@ -25,7 +25,6 @@ import math
 import urllib.request, urllib.error, urllib.parse
 import subprocess
 import re
-from sets import Set
 
 # NorNet
 from NorNetSiteSetup import *;
@@ -684,8 +683,8 @@ output.endRow()
 activeSites          = 0
 numInterfacesIPv4    = 0
 numInterfacesIPv6    = 0
-activeSitesISPs      = Set([])
-activeSitesCountries = Set([])
+activeSitesISPs      = set([])
+activeSitesCountries = set([])
 for siteIndex in sorted(siteIndexList):
    site         = siteList[siteIndex]
    siteTagsList = site['site_tags']
@@ -805,7 +804,7 @@ output.endRow()
 
 output.beginRow()
 output.cell('Total IPv4 Tunnels', -1, -1, 'text-align: left;')
-output.cell(str(numInterfacesIPv4 * (numInterfacesIPv4 -1) / 2))
+output.cell(str(int(numInterfacesIPv4 * (numInterfacesIPv4 -1) / 2)))
 output.endRow()
 
 output.beginRow()
@@ -815,7 +814,7 @@ output.endRow()
 
 output.beginRow()
 output.cell('Total IPv6 Tunnels', -1, -1, 'text-align: left;')
-output.cell(str(numInterfacesIPv6 * (numInterfacesIPv6 - 1) / 2))
+output.cell(str(int(numInterfacesIPv6 * (numInterfacesIPv6 - 1) / 2)))
 output.endRow()
 
 output.beginRow()
@@ -908,7 +907,7 @@ for siteIndex in sorted(siteIndexList):
    if showContacts == True:
       contacts = site['site_contacts']
       if len(contacts) > 0:
-         output.write('Contacts:\n')
+         output.write('<p>Contacts:</p>\n')
          output.beginEnumeration()
          for contact in contacts:
             found = re.match(r'(.*): ([a-zA-Z0-9\.]+@[a-zA-Z0-9\.]+)', contact)

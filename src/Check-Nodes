@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Check whether login to test slice is possible
+# Check whether login to slice is possible
 # Copyright (C) 2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
@@ -26,17 +26,33 @@ keyChangedIntro="\x1b[36m"
 goodIntro="\x1b[32m"
 badIntro="\x1b[31m"
 normalMode="\x1b[0m"
+
 connectTimeout=10
+sshOptions="-oVerifyHostKeyDNS=no -oHostKeyAlgorithms=ssh-rsa -oStrictHostKeyChecking=no -oPasswordAuthentication=no -oConnectTimeout=$connectTimeout"
 
 
 function check-node ()
 {
    local nodeName="$1"
 
-   if ping -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
-      env LANG=C timeout --signal=INT --kill-after=60s 55 ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -oConnectTimeout=$connectTimeout -i $KEY $SLICE@$nodeName 'echo "Node is OK" ; uptime' >$nodeName.log 2>&1
+   if /bin/ping -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
+
+      env LANG=C timeout --signal=INT --kill-after=60s 55 ssh $sshOptions -i $KEY $SLICE@$nodeName '
+         if [ ! -e /etc/yum.repos.d/nornet.repo ] ; then
+            echo "WARNING: NO-NORNET-REPO"
+         fi
+         if ! sudo ping -q -c5 -i0.3 tunnelbox >/dev/null 2>&1 ; then
+            echo "FAILED: PING4-TUNNELBOX"
+         fi
+         if ! sudo ping6 -q -c5 -i0.3 tunnelbox >/dev/null 2>&1 ; then
+            echo "FAILED: PING6-TUNNELBOX"
+         fi
+         echo "Node is UP"
+         echo "`uname -r`, `uptime`"
+      ' >$nodeName.log 2>&1
+
       headline="`grep -v "^Warning: Permanently" $nodeName.log | head -n1 | tr --delete '\n\r'`"
-      if [ "$headline" = "Node is OK" ] ; then
+      if [ "$headline" = "Node is UP" ] ; then
          printf "$goodIntro%s\tOK\t%-30s\t\"%s\"$normalMode\n" \
             "$site" "$nodeName" \
             "`tail -n1 $nodeName.log | tr --delete '\n\r' | sed -e "s/^[ \t]*//g"`"
@@ -56,14 +72,35 @@ function check-node ()
 }
 
 
-if [ "$1" = "-n" ] ; then
-   unreachableIntro=""
-   goodIntro=""
-   badIntro=""
-   normalMode=""
+program="$0"
+if [ $# -ge 1 ] ; then
+   SLICE="$1"
+   shift
+fi
+if [ $# -ge 1 ] ; then
+   KEY="$1"
+   shift
 fi
 
-./Get-Nodes | awk '{ print $2 }' | xargs -n1 | (
+if [ ! -e $KEY ] ; then
+   echo >&2 "ERROR: SSH private key $KEY not found!"
+   exit 1
+fi
+
+while [ $# -gt 0 ] ; do
+   if [ "$1" = "-n" ] ; then
+      unreachableIntro=""
+      goodIntro=""
+      badIntro=""
+      normalMode=""
+   else
+      echo >&2 "Usage: $program  [slice] [-n]"
+   fi
+   shift
+done
+
+
+./Get-Slice-Nodes "$SLICE" | awk '{ print $1 }' | xargs -n1 | (
    while read node ; do
       site=`echo "$node" | sed -e "s/^[a-z0-9]*\.//g"`
       check-node "$node" &

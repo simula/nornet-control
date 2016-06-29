@@ -1,0 +1,16 @@
+[Unit]
+Description=Open vSwitch
+Before=network.target
+After=syslog.target
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/rm -f /etc/openvswitch/conf.db
+ExecStart=/usr/share/openvswitch/scripts/openvswitch.init start
+# Systemd should make sure the network is shut down already
+ExecStop=/bin/systemctl stop network.service
+ExecStop=/usr/share/openvswitch/scripts/openvswitch.init stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,39 @@
+#!/bin/bash
+
+../Slice-Setup add --name=srl_test  --own-addresses --permanent --maxnodespersite=9999 --user=dreibh@simula.no
+../Slice-Setup add --name=srl_mptcp --own-addresses --permanent --maxnodespersite=4    --user=dreibh@simula.no
+
+../Slice-Setup add --name=srl_netperformance --own-addresses --permanent --maxnodespersite=2   --user=dreibh@simula.no --user=pratikt@ifi.uio.no
+../Slice-Setup add --name=srl_queuing        --own-addresses --permanent --maxnodespersite=2   --user=dreibh@simula.no --user=kargar@simula.no
+../Slice-Setup add --name=srl_nndemo         --own-addresses --permanent --maxnodespersite=2   --user=dreibh@simula.no --user=henrikvs@ifi.uio.no
+../Slice-Setup add --name=srl_thuen          --own-addresses --permanent --maxnodespersite=4   --user=dreibh@simula.no --user=andreasthuen@gmail.com
+../Slice-Setup add --name=srl_seattle        --own-addresses --permanent --maxnodespersite=2   --user=dreibh@simula.no --user=albert.rafetseder+nyu@univie.ac.at
+../Slice-Setup add --name=srl_cps            --own-addresses --permanent --maxnodespersite=2   --user=dreibh@simula.no --user=dipesh@simula.no
+
+../Slice-Setup add --name=uib_mptcp   --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=k.b.i@lyse.net --user=dse075@student.uib.no
+
+../Slice-Setup add --name=haw_cmt     --own-addresses --permanent --maxnodespersite=4 --user=dreibh@simula.no --user=hauke.buhr@haw-hamburg.de --user=denis.lugowski@haw-hamburg.de --user=martin.becke@haw-hamburg.de
+
+../Slice-Setup add --name=tuda_sereon --own-addresses --permanent --maxnodespersite=6 --user=dreibh@simula.no --user=kubidem@deeds.informatik.tu-darmstadt.de
+
+../Slice-Setup add --name=ntnu_test   --own-addresses --permanent --maxnodespersite=9999 --user=dreibh@simula.no --user=sune.jakobsson@gmail.com
+
+../Slice-Setup add --name=ude_multipath    --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=hakim.adhari@uni-due.de
+../Slice-Setup add --name=ude_delaytest    --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=hakim.adhari@uni-due.de --user=tobias.cloosters@stud.uni-due.de
+
+../Slice-Setup add --name=kau_multipath     --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=per.hurtig@kau.se --user=johan.eklund@kau.se --user=stefan.alfredsson@kau.se
+../Slice-Setup add --name=kau_mptcpsecurity --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zeeshan.afzal@kau.se
+
+../Slice-Setup add --name=hu_multipath     --own-addresses --permanent --maxnodespersite=6 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn
+../Slice-Setup add --name=hu_jerry         --own-addresses --permanent --maxnodespersite=1 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn # --user=arnoldjerry52@gmail.com
+../Slice-Setup add --name=hu_zhoufeng      --own-addresses --permanent --maxnodespersite=4 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=969493314@qq.com 
+../Slice-Setup add --name=hu_hanbaokuang   --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=1521793003@qq.com
+../Slice-Setup add --name=hu_jiangshuihong --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=75154166@qq.com
+../Slice-Setup add --name=hu_tanqilin      --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=447542994@qq.com
+../Slice-Setup add --name=hu_kunwang       --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=780952372@qq.com
+../Slice-Setup add --name=hu_yuyintan      --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=tanyuyin@hainu.edu.cn
+../Slice-Setup add --name=hu_fufa          --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn
+../Slice-Setup add --name=hu_xingzhou      --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn
+../Slice-Setup add --name=hu_chengxi       --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=391204334@qq.com
+
+# ../Slice-Setup add --name=hu_ --own-addresses --permanent --maxnodespersite=4 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=
