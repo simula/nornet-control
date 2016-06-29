@@ -158,12 +158,11 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
          if answer[0] == 0:
             # print i,hostName,answer[3][0]
             successfulNameResolutions = successfulNameResolutions + 1
-            nodeName = str(i)
-            nodeLink = getHostnameFromFQDN(str(answer[3][0]))
-            linkName = getHostnameFromFQDN(str(answer[3][0]))
-            makeSymlink(nodeLink, nodeName)
+            nodeNumber = str(i)
+            nodeName = getHostnameFromFQDN(answer[3][0].decode('utf-8'))
+            makeSymlink(nodeName, nodeNumber)
             try:
-               obsoleteNodes.remove(nodeLink)
+               obsoleteNodes.remove(nodeName)
             except:
                pass
 
