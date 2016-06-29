@@ -187,7 +187,6 @@ Depends: arpwatch,
          nornet-api,
          nornet-management,
          nornet-node | nornet-server,
-         nornet-trace-service,
          ntp,
          python (>= 2.7),
          radvd,
@@ -198,7 +197,8 @@ Depends: arpwatch,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: collectd,
-            tracebox
+            tracebox,
+            nornet-trace-service
 Description: NorNet Tunnelbox Control
  This package contains the scripts to configure the tunnelboxes of NorNet
  sites.
