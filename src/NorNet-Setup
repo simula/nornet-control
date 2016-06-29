@@ -719,6 +719,35 @@ norNetSetup = [
       #[ 103, 4, u'stull' ]
    ] },
 
+ { 'site_index'        : 101,
+   'site_enabled'      : False,
+   'site_long_name'    : u'New York University',
+   'site_short_name'   : 'NYU',
+   'site_url'          : 'http://engineering.nyu.edu',
+   'site_domain'       : 'nyu.nornet',
+   'site_city'         : 'Brooklyn',
+   'site_province'     : 'New York',
+   'site_country'      : 'United States of America',
+   'site_country_code' : 'US',
+   'site_latitude'     : 40.694074,
+   'site_longitude'    :  -73.986932,
+   'site_altitude'     : 20,
+   'site_contacts'     : [ u'Rivera, Julio: jr847@nyu.edu', u'Cappos, Justin: jcappos@nyu.edu', u'Rafetseder, Albert: albert.rafetseder+nyu@univie.ac.at' ],
+   'site_pcu'          : [ IPv4Address('128.238.63.80'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Lightower Fiber Networks', 'eth1',
+           IPv4Interface('128.238.63.79/24'), IPv4Address('128.238.63.1'),
+           IPv6Interface('::/0'),             IPv6Address('::'),
+           1500, 'fibre, business', 0, 0 ]
+   ],
+   'site_nodes' : [   # VMware cluster
+      [ 100, 1, u'bronx'     ],
+      [ 101, 2, u'brooklyn'  ],
+      [ 102, 3, u'manhattan' ],
+      [ 103, 4, u'queens'    ]
+   ] },
+
  { 'site_index'        : 160,
    'site_enabled'      : True,
    'site_long_name'    : u'Korea University',   # 고려대학교
@@ -843,35 +872,6 @@ norNetSetup = [
       ## Baganuur, Bagakhangai, Bayangol, Bayanzürkh, Chingeltei, Khan Uul, Nalaikh, Songino Khairkhan, and Sükhbaatar
       #[ 100, 1, u'baganuur',    'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5700' ],
       #[ 101, 2, u'bagakhangai', 'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5701' ]
-   #] },
-
- #{ 'site_index'        : 101,
-   #'site_enabled'      : False,
-   #'site_long_name'    : u'New York University',
-   #'site_short_name'   : 'NYU',
-   #'site_url'          : 'http://engineering.nyu.edu',
-   #'site_domain'       : 'nyu.nornet',
-   #'site_city'         : 'Brooklyn',
-   #'site_province'     : 'New York',
-   #'site_country'      : 'United States of America',
-   #'site_country_code' : 'US',
-   #'site_latitude'     : 40.694074,
-   #'site_longitude'    :  -73.986932,
-   #'site_altitude'     : 20,
-   #'site_contacts'     : [ u'Rivera, Julio: jr847@nyu.edu', u'Cappos, Justin: jcappos@nyu.edu', u'Rafetseder, Albert: albert.rafetseder+nyu@univie.ac.at' ],
-   #'site_pcu'          : [ IPv4Address('128.238.63.80'), 'pcu-root', 'a-secret-password' ],
-   #'site_nornet_if'    : 'eth0',
-   #'site_providers' : [
-      #[ u'Lightower Fiber Networks', 'eth1',
-           #IPv4Interface('128.238.63.79/24'), IPv4Address('128.238.63.1'),
-           #IPv6Interface('::/0'),             IPv6Address('::'),
-           #1500, 'fibre, business', 0, 0 ]
-   #],
-   #'site_nodes' : [   # VMware cluster
-      #[ 100, 1, u'brooklyn'  ],
-      #[ 101, 2, u'manhattan' ],
-      #[ 102, 3, u'bronx'     ],
-      #[ 103, 4, u'queens'    ]
    #] },
 
  #{ 'site_index'        : 120,
