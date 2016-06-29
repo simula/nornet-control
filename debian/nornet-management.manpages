@@ -1,6 +1,7 @@
 Auto-Update-Keys.1
 Check-Nodes.1
 Check-Nodes-Loop.1
+Clear-SSH-Node-Key.1
 Create-New-SSH-Node-Keys.1
 Fingerprint-SSH-Node-Keys.1
 Get-Nodes.1

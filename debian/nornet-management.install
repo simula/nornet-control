@@ -1,6 +1,7 @@
 Auto-Update-Keys                        /usr/bin
 Check-Nodes                             /usr/bin
 Check-Nodes-Loop                        /usr/bin
+Clear-SSH-Node-Key                      /usr/bin
 Create-New-SSH-Node-Keys                /usr/bin
 Fingerprint-SSH-Node-Keys               /usr/bin
 Get-Nodes                               /usr/bin

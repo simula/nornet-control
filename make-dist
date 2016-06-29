@@ -64,6 +64,7 @@ cp src/Reset-Networking $PACKAGE-$UPSTREAM_VERSION
 cp src/Check-Research-Node $PACKAGE-$UPSTREAM_VERSION
 cp src/Check-Nodes $PACKAGE-$UPSTREAM_VERSION
 cp src/Check-Nodes-Loop $PACKAGE-$UPSTREAM_VERSION
+cp src/Clear-SSH-Node-Key $PACKAGE-$UPSTREAM_VERSION
 cp src/Get-Nodes $PACKAGE-$UPSTREAM_VERSION
 cp src/Get-Slice-Nodes $PACKAGE-$UPSTREAM_VERSION
 cp src/Get-Users $PACKAGE-$UPSTREAM_VERSION
