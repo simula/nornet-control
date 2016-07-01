@@ -681,13 +681,13 @@ norNetSetup = [
            1500, 'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
-      # Naming scheme: places in Sanya
-      [ 100, 1, u'huoshankou',  'huoshankou.hkc.nornet',    'vnc://baoting.hkc.nornet:5700'   ],
-      [ 101, 2, u'dongzhaigang','dongzhaigang.hkc.nornet',  'vnc://baoting.hkc.nornet:5701'   ],
-      [ 102, 3, u'wanlvyuan',   'wanlvyuan.hkc.nornet',     'vnc://lingshui.hkc.nornet:5700'  ],
-      [ 103, 4, u'baishamen',   'baishamen.hkc.nornet',     'vnc://lingshui.hkc.nornet:5701'  ],
-      [ 104, 5, u'guanlanhu',   'guanlanhu.hkc.nornet',     'vnc://wuzhishan.hkc.nornet:5700' ],
-      [ 105, 6, u'hongshulin',  'hongshulin.hkc.nornet',    'vnc://wuzhishan.hkc.nornet:5701' ]
+      # Naming scheme: places in Hainan
+      [ 100, 1, u'huoshankou',   'huoshankou.hkc.nornet',   'vnc://wuzhishan.hkc.nornet:5700' ],
+      [ 101, 2, u'dongzhaigang', 'dongzhaigang.hkc.nornet', 'vnc://wuzhishan.hkc.nornet:5701' ],
+      [ 102, 3, u'wanlvyuan',    'wanlvyuan.hkc.nornet',    'vnc://lingshui.hkc.nornet:5700'  ],
+      [ 103, 4, u'baishamen',    'baishamen.hkc.nornet',    'vnc://lingshui.hkc.nornet:5701'  ],
+      [ 104, 5, u'guanlanhu',    'guanlanhu.hkc.nornet',    'vnc://baoting.hkc.nornet:5700'   ],
+      [ 105, 6, u'hongshulin',   'hongshulin.hkc.nornet',   'vnc://baoting.hkc.nornet:5701'   ]
    ] },
 
  { 'site_index'        : 100,
