@@ -183,6 +183,9 @@ class TableOutput:
          opts = opts + ' style="' + style + '"'
       return '<img src="' + url + '"' + opts + ' alt="" />'
 
+   def makeParagraph(self, text):
+      return '<p>' + text + '</p>\n'
+
    def makeText(self, text):
       return text
 
@@ -446,7 +449,7 @@ class LaTeXTableOutput(TableOutput):
          except:
             sys.stderr.write('ERROR: Failed to download ' + url + '!\n')
             return ''
-         output = open(name, 'w')
+         output = open(name, 'wb')
          output.write(image.read())
          output.close()
 
@@ -470,6 +473,9 @@ class LaTeXTableOutput(TableOutput):
 
    def makeText(self, text):
       return str.replace(text, '_', '\\_', 1000000000)
+
+   def makeParagraph(self, text):
+      return text
 
    def makeSmiley(self, positive = True):
       if positive == True:
@@ -907,7 +913,7 @@ for siteIndex in sorted(siteIndexList):
    if showContacts == True:
       contacts = site['site_contacts']
       if len(contacts) > 0:
-         output.write('<p>Contacts:</p>\n')
+         output.write(output.makeParagraph('Contacts:'))
          output.beginEnumeration()
          for contact in contacts:
             found = re.match(r'(.*): ([a-zA-Z0-9\.]+@[a-zA-Z0-9\.]+)', contact)
