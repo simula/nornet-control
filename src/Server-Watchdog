@@ -45,7 +45,7 @@ for vsystem in $VSYSTEMS ; do
                 echo "WATCHDOG_MAXFAILURES=\"15\""
                 echo "WATCHDOG_MAXFINALTRIALS=\"15\""
                 echo "WATCHDOG_FAILCOUNT_FILE=\"/usr/local/share/nornet-server/nornet-server-watchdog-$NAME.failcount\""
-                echo "WATCHDOG_FAILURE_ACTION=\"service nornet-server restart \\\"$NAME\\\"\" ; rm -f \"$WATCHDOG_FAILCOUNT_FILE\""
+                echo "WATCHDOG_FAILURE_ACTION=\"/usr/sbin/service nornet-server restart \\\"$NAME\\\"\" ; rm -f \"$WATCHDOG_FAILCOUNT_FILE\""
                 echo "WATCHDOG_FAILURE_FINAL=\"\""
                 echo "WATCHDOG_LOOPMODE=1"
                 cat "$vsystem"
