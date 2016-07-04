@@ -244,7 +244,7 @@ check_and_configure ()
 
 # ###### Main program #######################################################
 (
-   flock -n 200 || { echo "Lock not available." ; exit 1 ; }
+   flock -n 200 || { echo "Lock not available." ; exit 0 ; }
    (
       case "$ACTION" in
       start|stop|restart)
