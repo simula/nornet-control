@@ -89,7 +89,34 @@ fi
 # ====== System update ======================================================
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing updates ...\x1b[0m"
 if [ "$Variant" = "Debian" ] ; then
-   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get dist-upgrade -y -q >/tmp/install.log 2>&1 &
+   # ------ Download --------------------------------------
+   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get dist-upgrade -yd -q >/tmp/install.log 2>&1 &
+   wait
+
+   # ------ Update special packages -----------------------
+   for package in nornet-server nornet-tunnelbox ; do
+      if dpkg -l $package >/dev/null 2>&1 ; then
+         if [ "`find /var/cache/apt/archives/ -name "$package*.deb"`" != "" ] ; then
+            echo "Updating $package package ..."
+            # Do not restart the service on update, in order to avoid
+            # unnecessary downtime. Needs a manual restart, if necessary!
+            (
+               echo "#!/bin/sh"
+               echo "exit 101"
+            ) | sudo tee /usr/sbin/policy-rc.d >/dev/null
+            sudo chmod +x /usr/sbin/policy-rc.d
+            sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install --only-upgrade $package -y -q >>/tmp/install.log 2>&1 &
+            wait
+            echo "Updated $package package."
+         fi
+      fi
+   done
+
+   # Ensure to remove modified policy-rc.d!
+   sudo rm -f /usr/sbin/policy-rc.d
+
+   # ------ Update the rest -------------------------------
+   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get dist-upgrade -y -q >>/tmp/install.log 2>&1 &
    wait
    cat /tmp/install.log
 elif [ "$Variant" = "Fedora" ] ; then
