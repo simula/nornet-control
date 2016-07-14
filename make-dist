@@ -29,7 +29,6 @@ cp src/*-config* $PACKAGE-$UPSTREAM_VERSION
 cp src/*-constants $PACKAGE-$UPSTREAM_VERSION
 cp src/*-authorized_keys $PACKAGE-$UPSTREAM_VERSION
 cp src/*-config.example $PACKAGE-$UPSTREAM_VERSION
-cp src/rt_tables.example $PACKAGE-$UPSTREAM_VERSION
 
 cp src/Random-Sleep $PACKAGE-$UPSTREAM_VERSION
 cp src/Tunnelbox-Setup $PACKAGE-$UPSTREAM_VERSION
