@@ -170,7 +170,7 @@ Depends: cfengine3,
          ${shlibs:Depends}
 Recommends: nornet-ca,
             open-vm-tools,
-            virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental | virtualbox-guest-utils
+            virtualbox-guest-utils | virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental
 Description: NorNet Node Control
  This package contains the scripts to configure a generic node on a NorNet
  site.
@@ -183,7 +183,7 @@ Depends: arpwatch,
          bind9,
          conntrack,
          ifupdown,
-         iptables-persistent,
+         iptables-persistent | netfilter-persistent,
          iputils-ping,
          iputils-tracepath,
          isc-dhcp-server,

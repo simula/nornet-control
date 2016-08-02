@@ -149,8 +149,14 @@ check_and_configure ()
          needsFirewallUpdate=1
       fi
       if [ $needsFirewallUpdate -ne 0 ] ; then
-         echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Firewall configuration has been updated => restarting iptables-persistent service ...\x1b[0m"
-         service iptables-persistent restart || true
+         echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Firewall configuration has been updated => restarting netfilter-persistent service ...\x1b[0m"
+         if [ -e /etc/init.d/netfilter-persistent ] ; then
+            service netfilter-persistent restart || true
+         elif [ -e /etc/init.d/iptables-persistent ] ; then
+            service iptables-persistent restart || true
+         else
+            echo "ERROR: What is the name of the netfilter-persistent service?"
+         fi
       fi
 
       # ====== Apply DNS update =============================================
