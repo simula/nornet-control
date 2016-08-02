@@ -25,11 +25,11 @@ import os
 from ipaddress import IPv4Address, IPv4Interface, IPv6Address, IPv6Interface
 
 # NorNet
-from NorNetTools         import *;
-from NorNetConfiguration import *;
-from NorNetAPI           import *;
-from NorNetProviderSetup import *;
-from NorNetNodeSetup     import *;
+from NorNetTools         import *
+from NorNetConfiguration import *
+from NorNetAPI           import *
+from NorNetProviderSetup import *
+from NorNetNodeSetup     import *
 
 
 # ###### Write hostname file ################################################

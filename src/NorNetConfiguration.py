@@ -30,8 +30,8 @@ import xmlrpc.client
 from ipaddress import ip_address, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface
 
 # NorNet
-from NorNetTools         import *;
-from NorNetProviderSetup import *;
+from NorNetTools         import *
+from NorNetProviderSetup import *
 
 
 
