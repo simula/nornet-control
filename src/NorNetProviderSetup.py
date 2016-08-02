@@ -19,13 +19,13 @@
 #
 # Contact: dreibh@simula.no
 
-import hashlib;
+import hashlib
 
-from ipaddress import IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
+from ipaddress import IPv4Address, IPv4Interface, IPv6Address, IPv6Interface
 
 # NorNet
-import NorNetConfiguration;
-from NorNetTools import *;
+import NorNetConfiguration
+from NorNetTools import *
 
 
 
