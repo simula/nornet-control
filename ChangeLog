@@ -1,3 +1,34 @@
+commit d31fdf805ea4496e245aeaceeea4d6cc904b6126
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 2 13:57:06 2016 +0200
+
+    Some more clean-ups.
+
+commit cd47c3b429ded497c25099b9d89968380d29de00
+Merge: 32cbd06 c2c0efb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 2 13:55:46 2016 +0200
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit c2c0efb0b482c5a7f2b0038b730a6e96159dedd6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 2 13:55:36 2016 +0200
+
+    Some clean-ups.
+
+commit 32cbd061fa550d98736320b4d782534cc8c1c385
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 2 13:54:54 2016 +0200
+
+    Fixed warning for deprecated re.split() usage.
+
+commit 587dd21f4785c578e02e5ac30e8c984bbc6a1ff4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 2 09:23:36 2016 +0200
+
+    Updated ChangeLog.
+
 commit a0ecd417ac6a0b0eb82c51ce7423de0da6de7310
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Thu Jul 14 11:26:44 2016 +0200
