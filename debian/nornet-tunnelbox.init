@@ -195,15 +195,23 @@ check_and_configure ()
       # ====== Apply Squid server update ====================================
       rm -f squid-config
       mv updated-tunnelbox-config/squid-config .
-      if needs_update squid-config /etc/squid3/squid.conf $1 ; then
+      if [ -e /etc/squid/squid.conf ] ; then
+         squidDirectory=/etc/squid
+      elif [ -e /etc/squid3/squid.conf ] ; then
+         squidDirectory=/etc/squid3
+      else
+         echo "ERROR: What is the name of the Squid directory?"
+      fi
+
+      if needs_update squid-config $squidDirectory/squid.conf $1 ; then
          echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Squid server configuration has been updated => restarting Squid service ...\x1b[0m"
-         cp squid-config /etc/squid3/squid.conf
+         cp squid-config $squidDirectory/squid.conf
          if [ -e /etc/init.d/squid ] ; then
             service squid restart >/dev/null || true
          elif [ -e /etc/init.d/squid3 ] ; then
             service squid3 restart >/dev/null || true
          else
-            echo "ERROR: How is the name of the Squid service?"
+            echo "ERROR: What is the name of the Squid service?"
          fi
       fi
 
