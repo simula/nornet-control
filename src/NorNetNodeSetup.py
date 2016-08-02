@@ -19,21 +19,21 @@
 #
 # Contact: dreibh@simula.no
 
-import sys;
-import re;
-import hashlib;
-import datetime;
-import codecs;
-import socket;
-import platform;
+import sys
+import re
+import hashlib
+import datetime
+import codecs
+import socket
+import platform
 
-from ipaddress import ip_address, ip_interface, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
+from ipaddress import ip_address, ip_interface, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface
 
 # NorNet
-from NorNetConfiguration import *;
-from NorNetTools         import *;
-from NorNetAPI           import *;
-from NorNetProviderSetup import *;
+from NorNetConfiguration import *
+from NorNetTools         import *
+from NorNetAPI           import *
+from NorNetProviderSetup import *
 
 
 

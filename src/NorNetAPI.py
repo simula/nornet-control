@@ -20,18 +20,18 @@
 # Contact: dreibh@simula.no
 
 
-import re;
-import sys;
-import pwd;
-import getpass;
-import xmlrpc.client;
+import re
+import sys
+import pwd
+import getpass
+import xmlrpc.client
 
-from ipaddress import ip_address, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
+from ipaddress import ip_address, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface
 
 # NorNet
-from NorNetConfiguration import *;
-from NorNetTools         import *;
-from NorNetProviderSetup import *;
+from NorNetConfiguration import *
+from NorNetTools         import *
+from NorNetProviderSetup import *
 
 
 
