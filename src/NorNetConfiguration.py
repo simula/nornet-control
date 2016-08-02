@@ -19,15 +19,15 @@
 #
 # Contact: dreibh@simula.no
 
-import re;
-import sys;
-import pwd;
-import codecs;
-import configparser;
-import io;
-import xmlrpc.client;
+import shlex
+import sys
+import pwd
+import codecs
+import configparser
+import io
+import xmlrpc.client
 
-from ipaddress import ip_address, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
+from ipaddress import ip_address, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface
 
 # NorNet
 from NorNetTools         import *;
@@ -198,7 +198,8 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
    # ====== Build provider table ============================================
    for providerIndex in range(NorNet_MinProviderIndex - 1, NorNet_MaxProviderIndex + 1):
       try:
-         provider = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', NorNet_Configuration['NorNet_Provider' + str(providerIndex)])
+         providerConfig = NorNet_Configuration['NorNet_Provider' + str(providerIndex)]
+         provider = shlex.split(providerConfig)
       except:
          provider = None
       if provider != None:
