@@ -921,7 +921,6 @@ def makeSquidConfiguration(nodeName, localSite):
    else:
       outputFile.write('# acl manager proto cache_object\n')
    outputFile.write('acl localhost src 127.0.0.1/32 ::1\n')
-   outputFile.write('acl to_localhost dst 127.0.0.0/8 0.0.0.0/32 ::1\n')
    outputFile.write('# ' + localSite['site_long_name'] + ' site:\n')
    providerList = getNorNetProvidersForSite(localSite)
    for providerIndex in providerList:
@@ -958,7 +957,7 @@ def makeSquidConfiguration(nodeName, localSite):
    outputFile.write('http_port 3128\n')
    if getSquidTransparentProxy() == 'on':
       outputFile.write('http_port 3129 transparent\n')
-   outputFile.write('extension_methods REPORT MERGE MKACTIVITY CHECKOUT PROPFIND\n\n')
+   # outputFile.write('extension_methods REPORT MERGE MKACTIVITY CHECKOUT PROPFIND\n\n')
 
    outputFile.write('# Improve privacy:\n')
    outputFile.write('request_header_access User-Agent deny all\n')
