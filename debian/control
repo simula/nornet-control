@@ -196,13 +196,13 @@ Depends: arpwatch,
          radvd,
          snmpd,
          squid3,
-         stab,
          traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: nornet-trace-service
 Suggests: collectd,
-          tracebox
+          tracebox,
+          stab
 Description: NorNet Tunnelbox Control
  This package contains the scripts to configure the tunnelboxes of NorNet
  sites.
