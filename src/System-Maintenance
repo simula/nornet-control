@@ -169,7 +169,7 @@ if [ "$Variant" = "Debian" ] ; then
    cat /tmp/install.log
 
    # ------ Purge all previously-removed packages ---------
-   dpkg --get-selections | awk '$2=="deinstall" { print $1 }' | xargs --no-run-if-empty sudo apt-get purge -y >/tmp/install.log 2>&1 &
+   dpkg --get-selections | awk '$2=="deinstall" { print $1 }' | xargs --no-run-if-empty sudo DEBIAN_FRONTEND=noninteractive apt-get purge -y >/tmp/install.log 2>&1 &
    wait
    cat /tmp/install.log
 
