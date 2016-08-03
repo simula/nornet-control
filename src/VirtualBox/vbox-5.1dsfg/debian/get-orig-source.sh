@@ -2,8 +2,18 @@
 
 set -ex
 
+if [ $# -ne 2 ]; then
+  echo "Error: 2 parameters are required."
+  exit 1
+fi
+
+if [ "$1" != "--upstream-version" ]; then
+  echo "Error: First parameter needs to be --upstream-version."
+  exit 1
+fi
+
 UPSTREAM_VERSION=$2
-ORIG_TARBALL=$3
+ORIG_TARBALL=`readlink -e ../`/VirtualBox-${UPSTREAM_VERSION}.tar.bz2
 
 REAL_TARBALL=`readlink -f ${ORIG_TARBALL}`
 
@@ -48,5 +58,5 @@ rm -rf ${ORIG_TARBALL_DIR}/src/VBox/HostDrivers/Support/win/winstub.com
 
 tar --exclude .svn --exclude '.git*' --exclude debian --directory ${WORKING_DIR} -cJf ${DEST_TARBALL_NAME} ${ORIG_TARBALL_DIR_STRIP} || exit 1
 rm -rf ${ORIG_TARBALL_DIR}
-echo "Done, now you can run git-import-orig ${DEST_TARBALL_NAME}"
+echo "Done, now you can run gbp import-orig ${DEST_TARBALL_NAME}"
 exit 0

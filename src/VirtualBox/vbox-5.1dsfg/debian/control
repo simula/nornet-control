@@ -1,20 +1,21 @@
-Source: virtualbox-nornet-experimental
+Source: virtualbox
 Section: contrib/misc
 Priority: optional
-Maintainer: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Maintainer: Debian Virtualbox Team <pkg-virtualbox-devel@lists.alioth.debian.org>
 Uploaders: Ritesh Raj Sarraf <rrs@debian.org>,
            Gianfranco Costamagna <locutusofborg@debian.org>
 Build-Depends: bzip2,
-               debhelper (>= 9),
+               debhelper (>= 9.20160114~),
                default-jdk,
-               dh-python | python-support,
+               dh-python,
+               dh-systemd (>=1.5),
                dkms (>= 2.1.1.1),
                docbook-xml,
                docbook-xsl,
                dpkg-dev (>= 1.15.6~),
                g++-multilib,
                genisoimage,
-               gsoap,
+               gsoap (>= 2.8.16),
                iasl,
                imagemagick,
                kbuild (>= 1:0.1.9998svn2695),
@@ -30,9 +31,9 @@ Build-Depends: bzip2,
                libpixman-1-dev,
                libpng-dev,
                libpulse-dev,
-               libqt4-dev (>= 4.4.0),
-               libqt4-network (>= 4.4.0),
-               libqt4-opengl-dev (>= 4.4.0),
+               libqt5x11extras5-dev,
+               libqt5opengl5-dev,
+               qttools5-dev-tools,
                libsdl1.2-dev,
                libssl-dev,
                libvncserver-dev,
@@ -45,6 +46,7 @@ Build-Depends: bzip2,
                libxi-dev,
                libxinerama-dev,
                libxml2-dev,
+               libxml2-utils,
                libxmu-dev,
                libxrandr-dev,
                libxrender-dev,
@@ -65,43 +67,18 @@ Build-Depends: bzip2,
                xserver-xorg-dev,
                xsltproc,
                yasm (>= 0.7.0),
-               zlib1g-dev,
-         libqt5core5a-dev (>= 5.5.0),
-         libqt5gui5-dev (>= 5.3.0) | libqt5gui5-gles-dev (>= 5.3.0),
-         libqt5opengl5-dev (>= 5.0.2) | libqt5opengl5-gles-dev (>= 5.0.2),
-         libqt5printsupport5-dev (>= 5.0.2),
-         libqt5widgets5-dev (>= 5.2.0),
-         libqt5x11extras5-dev (>= 5.1.0)
-Recommends: binutils,
-            gcc,
-            kmod | kldutils | module-init-tools,
-            libasound2,
-            libgl1,
-            libpulse0,
-            libsdl-ttf2.0-0,
-            linux-headers-generic | linux-headers-generic-pae | linux-headers-686-pae | linux-headers-amd64 | linux-headers-2.6-686 | linux-headers-2.6-amd64 | linux-headers,
-            linux-image,
-            make | build-essential | dpkg-dev,
-            pdf-viewer
+               zlib1g-dev
 X-Python-Version: >= 2.5
-Standards-Version: 3.9.6
+Standards-Version: 3.9.8
 Homepage: http://www.virtualbox.org/
-Vcs-Git: git://anonscm.debian.org/pkg-virtualbox/virtualbox.git
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-virtualbox/virtualbox.git
+Vcs-Git: https://anonscm.debian.org/git/pkg-virtualbox/virtualbox.git
+Vcs-Browser: https://anonscm.debian.org/cgit/pkg-virtualbox/virtualbox.git
 
-Package: virtualbox-qt-nornet-experimental
-Replaces: virtualbox-qt,
-          virtualbox-qt-nornet-stable,
-          virtualbox-qt-nornet-testing
-Conflicts: virtualbox-qt,
-           virtualbox-qt-nornet-stable,
-           virtualbox-qt-nornet-testing
+Package: virtualbox-qt
 Architecture: amd64 i386
-Pre-Depends: dpkg (>= 1.15.6~)
-Depends: virtualbox-nornet-experimental (= ${binary:Version}),
-         ${misc:Depends},
-         ${shlibs:Depends}
-Breaks: virtualbox-nornet-experimental (<< 4.1.6-dfsg-2~)
+Depends: virtualbox (= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends}
+Breaks: virtualbox (<< 4.1.6-dfsg-2~)
+Replaces: virtualbox (<< 4.1.6-dfsg-2~)
 Description: x86 virtualization solution - Qt based user interface
  VirtualBox is a free x86 virtualization solution allowing a wide range
  of x86 operating systems such as Windows, DOS, BSD or Linux to run on a
@@ -109,16 +86,16 @@ Description: x86 virtualization solution - Qt based user interface
  .
  This package provides the Qt based graphical user interface for VirtualBox.
 
-Package: virtualbox-nornet-experimental
-Provides: virtualbox
-Replaces: virtualbox,
-          virtualbox-2.0,
-          virtualbox-2.1,
-          virtualbox-2.2,
-          virtualbox-3.0,
-          virtualbox-4.2,
-          virtualbox-nornet-stable,
-          virtualbox-nornet-testing
+Package: virtualbox
+Architecture: amd64 i386
+Depends: adduser,
+         procps,
+         virtualbox-dkms (>= ${source:Version}) | virtualbox-source (>= ${source:Version}) | virtualbox-modules,
+         ${misc:Depends},
+         ${python:Depends},
+         ${shlibs:Depends}
+Recommends: virtualbox-qt (= ${binary:Version}), ${shlibs:Recommends}
+Suggests: vde2, virtualbox-guest-additions-iso
 Conflicts: virtualbox-2.0,
            virtualbox-2.1,
            virtualbox-2.2,
@@ -129,71 +106,34 @@ Conflicts: virtualbox-2.0,
            virtualbox-4.1,
            virtualbox-4.2,
            virtualbox-4.3,
-           virtualbox-5.0
-Architecture: amd64 i386
-Pre-Depends: dpkg (>= 1.15.6~)
-Depends: adduser, ${misc:Depends}, ${python:Depends}, ${shlibs:Depends}
-Recommends: virtualbox-dkms-nornet-experimental (= ${source:Version}) | virtualbox-source-nornet-experimental (= ${source:Version}),
-            virtualbox-qt-nornet-experimental (= ${binary:Version}),
-            ${shlibs:Recommends}
-Suggests: vde2, virtualbox-guest-additions-iso
+           virtualbox-5.0,
+           virtualbox-5.1,
 Description: x86 virtualization solution - base binaries
  VirtualBox is a free x86 virtualization solution allowing a wide range
  of x86 operating systems such as Windows, DOS, BSD or Linux to run on a
  Linux system.
  .
- This package provides the binaries for VirtualBox. Either the virtualbox-dkms-nornet-experimental
- or the virtualbox-source-nornet-experimental package is also required in order to compile the
+ This package provides the binaries for VirtualBox. Either the virtualbox-dkms
+ or the virtualbox-source package is also required in order to compile the
  kernel modules needed for virtualbox. A graphical user interface for
  VirtualBox is provided by the package virtualbox-qt.
 
-Package: virtualbox-dbg-nornet-experimental
-Replaces: virtualbox-dbg,
-          virtualbox-dbg-nornet-stable,
-          virtualbox-dbg-nornet-testing
-Conflicts: virtualbox-dbg,
-           virtualbox-dbg-nornet-stable,
-           virtualbox-dbg-nornet-testing
-Section: contrib/debug
-Priority: extra
-Architecture: amd64 i386
-Pre-Depends: dpkg (>= 1.15.6~)
-Depends: virtualbox-nornet-experimental (= ${binary:Version}) | virtualbox-guest-utils-nornet-experimental (= ${binary:Version}),
-         ${misc:Depends}
-Description: x86 virtualization solution - debugging symbols
- VirtualBox is a free x86 virtualization solution allowing a wide range
- of x86 operating systems such as Windows, DOS, BSD or Linux to run on a
- Linux system.
- .
- This package provides the debugging symbols for VirtualBox.
-
-Package: virtualbox-dkms-nornet-experimental
-Replaces: virtualbox-dkms,
-          virtualbox-dkms-nornet-stable,
-          virtualbox-dkms-nornet-testing
-Conflicts: virtualbox-dkms,
-           virtualbox-dkms-nornet-stable,
-           virtualbox-dkms-nornet-testing
+Package: virtualbox-dkms
 Section: contrib/kernel
 Architecture: all
-Pre-Depends: dpkg (>= 1.15.6~)
-Depends: virtualbox-nornet-experimental (>= ${source:Version}), ${misc:Depends}
+Depends: ${misc:Depends}
+Recommends: virtualbox (>= ${source:Version})
+Provides: virtualbox-modules
 Description: x86 virtualization solution - kernel module sources for dkms
  VirtualBox is a free x86 virtualization solution allowing a wide range
  of x86 operating systems such as Windows, DOS, BSD or Linux to run on a
  Linux system.
  .
- This package provides the source code for the virtualbox-nornet-experimental kernel module to be
+ This package provides the source code for the virtualbox kernel module to be
  build with dkms. Kernel sources or headers are required to compile this
  module.
 
-Package: virtualbox-source-nornet-experimental
-Replaces: virtualbox-source,
-          virtualbox-source-nornet-stable,
-          virtualbox-source-nornet-testing
-Conflicts: virtualbox-source,
-           virtualbox-source-nornet-stable,
-           virtualbox-source-nornet-testing
+Package: virtualbox-source
 Section: contrib/kernel
 Architecture: all
 Depends: build-essential,
@@ -202,27 +142,24 @@ Depends: build-essential,
          kbuild,
          module-assistant,
          ${misc:Depends}
+Recommends: virtualbox (>= ${source:Version})
 Description: x86 virtualization solution - kernel module source
  VirtualBox is a free x86 virtualization solution allowing a wide range
  of x86 operating systems such as Windows, DOS, BSD or Linux to run on a
  Linux system.
  .
- This package provides the source code for the virtualbox-nornet-experimental kernel module.
- The virtualbox-nornet-experimental package is also required in order to make use of these
+ This package provides the source code for the virtualbox kernel module.
+ The virtualbox package is also required in order to make use of these
  modules. Kernel sources or headers are required to compile this module.
+ .
+ The source is placed under /usr/src, and after decompression it can
+ be built to produce a virtualbox-modules-_KVERS_ providing
+ "virtualbox-modules" package.
 
-Package: virtualbox-guest-dkms-nornet-experimental
-Replaces: virtualbox-guest-dkms,
-          virtualbox-guest-dkms-nornet-stable,
-          virtualbox-guest-dkms-nornet-testing
-Conflicts: virtualbox-guest-dkms,
-           virtualbox-guest-dkms-nornet-stable,
-           virtualbox-guest-dkms-nornet-testing
+Package: virtualbox-guest-dkms
 Section: contrib/kernel
 Architecture: all
-Pre-Depends: dpkg (>= 1.15.6~)
-Depends: virtualbox-guest-utils-nornet-experimental (>= ${source:Version}),
-         ${misc:Depends}
+Depends: virtualbox-guest-utils (>= ${source:Version}), ${misc:Depends}
 XB-Modaliases: ${modaliases}
 Provides: virtualbox-guest-modules
 Description: x86 virtualization solution - guest addition module source for dkms
@@ -230,17 +167,11 @@ Description: x86 virtualization solution - guest addition module source for dkms
  of x86 operating systems such as Windows, DOS, BSD or Linux to run on a
  Linux system.
  .
- This package provides the source code for the virtualbox-nornet-experimental guest addition kernel
+ This package provides the source code for the virtualbox guest addition kernel
  modules to be build with dkms. Kernel sources or headers are required to
  compile these modules.
 
-Package: virtualbox-guest-source-nornet-experimental
-Replaces: virtualbox-guest-source,
-          virtualbox-guest-source-nornet-stable,
-          virtualbox-guest-source-nornet-testing
-Conflicts: virtualbox-guest-source,
-           virtualbox-guest-source-nornet-stable,
-           virtualbox-guest-source-nornet-testing
+Package: virtualbox-guest-source
 Section: contrib/kernel
 Architecture: all
 Depends: build-essential,
@@ -254,23 +185,21 @@ Description: x86 virtualization solution - guest addition module source
  of x86 operating systems such as Windows, DOS, BSD or Linux to run on a
  Linux system.
  .
- This package provides the source code for the virtualbox-nornet-experimental guest addition kernel
- modules. The virtualbox-guest-utils-nornet-experimental package is also required in order to
+ This package provides the source code for the virtualbox guest addition kernel
+ modules. The virtualbox-guest-utils package is also required in order to
  make use of these modules. Kernel sources or headers are required to compile
  these modules.
+ .
+ The source is placed under /usr/src, and after decompression it can
+ be built to produce a virtualbox-guest-modules-_KVERS_ providing
+ "virtualbox-guest-modules" package.
 
-Package: virtualbox-guest-x11-nornet-experimental
-Replaces: virtualbox-guest-x11,
-          virtualbox-guest-x11-nornet-stable,
-          virtualbox-guest-x11-nornet-testing
-Conflicts: virtualbox-guest-x11,
-           virtualbox-guest-x11-nornet-stable,
-           virtualbox-guest-x11-nornet-testing
+Package: virtualbox-guest-x11
 Section: contrib/x11
 Architecture: amd64 i386
-Pre-Depends: dpkg (>= 1.15.6~)
 Depends: libnotify-bin,
-         virtualbox-guest-utils-nornet-experimental (= ${binary:Version}),
+         x11-xserver-utils,
+         virtualbox-guest-utils (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends},
          ${xserver:Depends}
@@ -285,19 +214,11 @@ Description: x86 virtualization solution - X11 guest utilities
  are meant to be run inside the virtual machine.
  They provide closer integration and improve the interactive performance.
 
-Package: virtualbox-guest-utils-nornet-experimental
-Provides: virtualbox-guest-utils
-Replaces: virtualbox-guest-utils,
-          virtualbox-guest-utils-nornet-stable,
-          virtualbox-guest-utils-nornet-testing
-Conflicts: virtualbox-guest-utils,
-           virtualbox-guest-utils-nornet-stable,
-           virtualbox-guest-utils-nornet-testing
+Package: virtualbox-guest-utils
 Architecture: amd64 i386
-Pre-Depends: dpkg (>= 1.15.6~)
 Depends: adduser, pciutils, ${misc:Depends}, ${shlibs:Depends}
-Recommends: virtualbox-guest-dkms-nornet-experimental (= ${source:Version}) | virtualbox-guest-source-nornet-experimental (= ${source:Version}) | virtualbox-guest-modules,
-            virtualbox-guest-x11-nornet-experimental (= ${binary:Version})
+Recommends: virtualbox-guest-dkms (= ${source:Version}) | virtualbox-guest-source (= ${source:Version}) | virtualbox-guest-modules,
+            virtualbox-guest-x11 (= ${binary:Version})
 Description: x86 virtualization solution - non-X11 guest utilities
  VirtualBox is a free x86 virtualization solution allowing a wide range
  of x86 operating systems such as Windows, DOS, BSD or Linux to run on a

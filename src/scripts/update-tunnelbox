@@ -17,14 +17,44 @@
 # sudo apt-get install -y linux-generic-lts-wily
 
 
-sudo apt-add-repository -y -s ppa:dreibh/ppa
-sudo apt-get update
-sudo apt-get install -y nornet-ca
+find /etc/apt/ -name "*.save" -or -name "*.distUpgrade" -or -name "*~" | xargs --no-run-if-empty sudo rm -f && \
+find /etc/apt/sources.list.d -name "dreibh-ppa-*"  | xargs --no-run-if-empty sudo rm -f && \
+sudo apt-add-repository -y -s ppa:dreibh/ppa && \
+sudo apt-get update && \
+sudo apt-get install -y nornet-ca && \
 sudo apt-get dist-upgrade -y
 
-sudo apt-get purge -y 'virtualbox.*' tracebox stab
+sudo apt-get purge -y 'virtualbox.*' tracebox stab && \
 sudo apt-get install -y virtualbox-guest-utils
 
+
+
 sudo rm -rf /etc/squid3/
-sudo rm -rf /var/lib/dhcp/
-sudo rm -f /var/run/dhcp-server/dhcpd.pid
+
+
+# sudo rm -rf /var/lib/dhcp /run/dhcp-server
+# sudo apt-get install --reinstall isc-dhcp-server
+#
+# apt-show-versions | grep isc-dhcp-server
+#
+# sudo service isc-dhcp-server start
+# sleep 3
+# sudo service isc-dhcp-server status
+# tail -n20 /var/log/syslog.1
+# sudo service isc-dhcp-server stop
+#
+# ls -al /var/lib/dhcp
+# sudo chmod 664 /var/lib/dhcp/*.leases
+# sudo chown root:dhcpd -R /var/lib/dhcp
+# sudo chmod 775 /var/lib/dhcp
+# ls -al /var/lib/dhcp
+#
+# ls -al /run/dhcp-server
+# sudo chmod 775 /run/dhcp-server
+# sudo chown root:dhcpd -R /run/dhcp-server
+# ls -al /run/dhcp-server
+#
+# sudo service isc-dhcp-server start
+# sleep 3
+# sudo service isc-dhcp-server status
+# tail -n20 /var/log/syslog.1
