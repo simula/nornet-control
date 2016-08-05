@@ -19,14 +19,15 @@
 #
 # Contact: dreibh@simula.no
 
-import sys;
-import time;
-import adns;
+import shlex
+import sys
+import time
+import adns
 
 # NorNet
-from NorNetConfiguration import *;
-from NorNetAPI           import *;
-from NorNetNodeSetup     import *;
+from NorNetConfiguration import *
+from NorNetAPI           import *
+from NorNetNodeSetup     import *
 
 
 
@@ -204,7 +205,7 @@ fullSiteList = fetchNorNetSiteList(False)
 rwSystemList = []
 rwSystems = getFileServRWSystemsConfigurationString()
 if rwSystems != None:
-   parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', rwSystems)
+   parameters = shlex.split(rwSystems)
    for i in range(0, len(parameters)):
       name = unquote(parameters[i])
       # print i, name

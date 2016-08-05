@@ -21,15 +21,16 @@
 
 import sys
 import re
+import shlex
 import subprocess
 import base64
 import hashlib
 
 # NorNet
-from NorNetTools         import *;
-from NorNetConfiguration import *;
-from NorNetAPI           import *;
-from NorNetNodeSetup     import *;
+from NorNetTools         import *
+from NorNetConfiguration import *
+from NorNetAPI           import *
+from NorNetNodeSetup     import *
 
 
 
@@ -781,7 +782,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
 
    dnsForwardersString = getLocalSiteDNSForwardersString()
    if ((dnsForwardersString != None) and (dnsForwardersString != '')):
-      dnsForwarders = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', getLocalSiteDNSForwardersString())
+      dnsForwarders = shlex.split(getLocalSiteDNSForwardersString())
       if len(dnsForwarders) > 0:
          optionsConfFile.write("\tforwarders         {")
          for i in range(0, len(dnsForwarders)):
@@ -1181,7 +1182,7 @@ def makeFirewallConfiguration(fullSiteList, localSite):
    dnatOptions       = []
    dnatOptionsString = getLocalSiteDNATOptionsString()
    if ((dnatOptionsString != None) and (dnatOptionsString != '')):
-      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', dnatOptionsString)
+      parameters = shlex.split(dnatOptionsString)
       for i in range(0, len(parameters)):
          try:
             options = unquote(parameters[i]).split()
@@ -1221,7 +1222,7 @@ def makeFirewallConfiguration(fullSiteList, localSite):
       natBlacklist       = []
       natBlacklistString = getCentralSiteBlacklistString()
       if ((natBlacklistString != None) and (natBlacklistString != '')):
-         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', natBlacklistString)
+         parameters = shlex.split(natBlacklistString)
          for i in range(0, len(parameters)):
             try:
                natBlacklist.append(ip_interface(parameters[i]))
@@ -1244,7 +1245,7 @@ def makeFirewallConfiguration(fullSiteList, localSite):
       sourceNatRangeString = getCentralSiteNATRangeString()
       sourceNatRange       = None
       if ((sourceNatRangeString != None) and (sourceNatRangeString != '')):
-         parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', sourceNatRangeString)
+         parameters = shlex.split(sourceNatRangeString)
          try:
             if len(parameters) == 1:
                a1 = IPv4Address(unquote(parameters[0]))
@@ -1731,7 +1732,7 @@ for i in range(NorNet_MinNodeIndex, NorNet_MaxNodeIndex + 1):
    nodeConfiguration = getLocalNodeConfigurationString(i)
    if nodeConfiguration != '':
       # print i,nodeConfiguration
-      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeConfiguration)
+      parameters = shlex.split(nodeConfiguration)
       if len(parameters) < 3:
          error('Bad configuration "' + nodeConfiguration + '" for NorNet_LocalSite_Node' + str(i))
 
@@ -1747,14 +1748,14 @@ for i in range(NorNet_MinNodeIndex, NorNet_MaxNodeIndex + 1):
    # ====== Handle aliases ==================================================
    nodeAliases = getLocalNodeAliasesString(i)
    if nodeAliases != '':
-      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeAliases)
+      parameters = shlex.split(nodeAliases)
       if len(parameters) > 0:
          aliases[i] = parameters
 
    # ====== Handle SSH public keys ==========================================
    nodeSSHKeys = getLocalNodeSSHKeysString(i)
    if nodeSSHKeys != '':
-      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', nodeSSHKeys)
+      parameters = shlex.split(nodeSSHKeys)
       if len(parameters) > 0:
          sshKeys[i] = parameters
 
@@ -1793,7 +1794,7 @@ dynamicStart         = 0
 dynamicEnd           = 0
 dynamicConfiguration = getLocalSiteDHCPServerDynamicConfigurationString()
 if ((dynamicConfiguration != None) and (dynamicConfiguration != '')):
-   parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', dynamicConfiguration)
+   parameters = shlex.split(dynamicConfiguration)
    if len(parameters) < 2:
       error('Bad configuration "' + dynamicConfiguration + '" for NorNet_LocalSite_DHCPServer_DynamicRange')
    try:
@@ -1818,7 +1819,7 @@ for i in range(NorNet_MinNodeIndex + 1, NorNet_MaxNodeIndex + 1):
    staticConfiguration = getLocalSiteDHCPServerStaticConfigurationString(i)
    if staticConfiguration != '':
       # print i, staticConfiguration
-      parameters = re.split(r'''[ ]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', staticConfiguration)
+      parameters = shlex.split(staticConfiguration)
       if len(parameters) < 1:
          error('Bad configuration "' + staticConfiguration + '" for NorNet_LocalSite_DHCPServer_Static' + str(i))
 
