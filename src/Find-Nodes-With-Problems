@@ -19,12 +19,12 @@
 #
 # Contact: dreibh@simula.no
 
-import re;
-import os;
+import re
+import os
 
 # NorNet
-from NorNetTools import *;
-from NorNetAPI   import *;
+from NorNetTools import *
+from NorNetAPI   import *
 
 
 # ###### Main program #######################################################

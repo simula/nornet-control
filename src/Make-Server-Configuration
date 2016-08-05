@@ -19,18 +19,18 @@
 #
 # Contact: dreibh@simula.no
 
-import re;
-import os;
+import re
+import os
 
-from ipaddress import ip_address, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
+from ipaddress import ip_address, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface
 
 # NorNet
-from NorNetTools         import *;
-from NorNetConfiguration import *;
-from NorNetAPI           import *;
-from NorNetProviderSetup import *;
-from NorNetNodeSetup     import *;
-from SysSetupCommons     import *;
+from NorNetTools         import *
+from NorNetConfiguration import *
+from NorNetAPI           import *
+from NorNetProviderSetup import *
+from NorNetNodeSetup     import *
+from SysSetupCommons     import *
 
 
 # ###### Write NTP configuration file ##############################################

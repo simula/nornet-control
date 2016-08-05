@@ -19,10 +19,10 @@
 #
 # Contact: dreibh@simula.no
 
-import time;
+import time
 
 # NorNet
-from NorNetAPI import *;
+from NorNetAPI import *
 
 
 # ###### Main program #######################################################

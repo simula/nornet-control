@@ -19,10 +19,10 @@
 #
 # Contact: dreibh@simula.no
 
-import sys;
-import time;
-import datetime;
-import random;
+import sys
+import time
+import datetime
+import random
 
 
 # ###### Main program #######################################################

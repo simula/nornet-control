@@ -19,8 +19,8 @@
 #
 # Contact: dreibh@simula.no
 
-import sys;
-import xmlrpc.client;
+import sys
+import xmlrpc.client
 
 
 # ###### Main program #######################################################

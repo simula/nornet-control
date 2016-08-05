@@ -19,13 +19,13 @@
 #
 # Contact: dreibh@simula.no
 
-import sys;
+import sys
 
 # NorNet
-from NorNetConfiguration import *;
-from NorNetAPI           import *;
-from NorNetNodeSetup     import *;
-from SysSetupCommons     import *;
+from NorNetConfiguration import *
+from NorNetAPI           import *
+from NorNetNodeSetup     import *
+from SysSetupCommons     import *
 
 
 

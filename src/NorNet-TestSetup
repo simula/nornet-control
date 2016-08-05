@@ -19,17 +19,17 @@
 #
 # Contact: dreibh@simula.no
 
-import re;
-import os;
-import base64;
+import re
+import os
+import base64
 
-from ipaddress import IPv4Address, IPv4Interface, IPv6Address, IPv6Interface;
+from ipaddress import IPv4Address, IPv4Interface, IPv6Address, IPv6Interface
 
 # NorNet
-from NorNetTools         import *;
-from NorNetAPI           import *;
-from NorNetProviderSetup import *;
-from NorNetSiteSetup     import *;
+from NorNetTools         import *
+from NorNetAPI           import *
+from NorNetProviderSetup import *
+from NorNetSiteSetup     import *
 
 
 norNetSetup = [

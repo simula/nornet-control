@@ -19,13 +19,13 @@
 #
 # Contact: dreibh@simula.no
 
-import re;
-import os;
+import re
+import os
 
 # NorNet
-from NorNetSiteSetup import *;
-from NorNetTools     import *;
-from NorNetAPI       import *;
+from NorNetSiteSetup import *
+from NorNetTools     import *
+from NorNetAPI       import *
 
 
 if len(sys.argv) < 4:
