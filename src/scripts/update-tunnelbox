@@ -28,7 +28,7 @@ sudo apt-get purge -y 'virtualbox.*' tracebox stab && \
 sudo apt-get install -y virtualbox-guest-utils
 
 
-
+sudo rm -f /etc/init.d/hipercontracer
 sudo rm -rf /etc/squid3/
 
 
