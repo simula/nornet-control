@@ -22,10 +22,13 @@ find /etc/apt/sources.list.d -name "dreibh-ppa-*"  | xargs --no-run-if-empty sud
 sudo apt-add-repository -y -s ppa:dreibh/ppa && \
 sudo apt-get update && \
 sudo apt-get install -y nornet-ca && \
-sudo apt-get dist-upgrade -y
-
+sudo apt-get dist-upgrade -y && \
 sudo apt-get purge -y 'virtualbox.*' tracebox stab && \
 sudo apt-get install -y virtualbox-guest-utils
+
+
+sudo apt-get install -y ubuntu-server && \
+sudo apt-get remove -y open-vm-tools
 
 
 sudo rm -f /etc/init.d/hipercontracer
