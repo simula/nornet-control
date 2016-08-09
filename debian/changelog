@@ -1,3 +1,9 @@
+nornet (1.0.6-1ubuntu1) trusty; urgency=high
+
+  * New release.
+
+ -- Thomas Dreibholz <dreibh@simula.no>  Tue, 09 Aug 2016 08:08:08 +0800
+
 nornet (1.0.5-1ubuntu1) trusty; urgency=high
 
   * New release.
