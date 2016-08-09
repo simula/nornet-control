@@ -143,9 +143,7 @@ Description: NorNet Development Tools
 
 Package: nornet-api
 Architecture: any
-Depends: ${misc:Depends},
-         ${python3:Depends},
-         ${shlibs:Depends}
+Depends: ${misc:Depends}, ${python3:Depends}, ${shlibs:Depends}
 Description: NorNet API
  This package contains the NorNet Python API library. It contains functions
  to communicate with the central server (MyPLC), based on XMLRPC.
@@ -154,8 +152,7 @@ Description: NorNet API
 
 Package: nornet-node
 Architecture: any
-Conflicts: miredo,
-           nornet-server
+Conflicts: miredo, nornet-server
 Depends: cfengine3,
          grub2-common | grub,
          nfs-common,
@@ -200,9 +197,7 @@ Depends: arpwatch,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: nornet-trace-service
-Suggests: collectd,
-          stab,
-          tracebox
+Suggests: collectd, stab, tracebox
 Description: NorNet Tunnelbox Control
  This package contains the scripts to configure the tunnelboxes of NorNet
  sites.
@@ -227,8 +222,7 @@ Description: NorNet File Server
 
 Package: nornet-artwork
 Architecture: all
-Depends: ${misc:Depends},
-         ${shlibs:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: NorNet Artwork
  This package contains some images for the monitor server
  on a NorNet central site.
@@ -274,10 +268,7 @@ Description: NorNet Display
 
 Package: nornet-gatekeeper
 Architecture: all
-Depends: nornet-api,
-         nornet-management,
-         ${misc:Depends},
-         ${shlibs:Depends}
+Depends: nornet-api, nornet-management, ${misc:Depends}, ${shlibs:Depends}
 Description: NorNet Gatekeeper
  This package contains the packages to set up a gatekeeper station for the
  project presentation. It is in fact just a node with a dependency on the
@@ -326,11 +317,7 @@ Description: NorNet Wiki Server
 
 Package: nornet-timesrv
 Architecture: all
-Depends: nornet-api,
-         nornet-management,
-         ntp,
-         ${misc:Depends},
-         ${shlibs:Depends}
+Depends: nornet-api, nornet-management, ntp, ${misc:Depends}, ${shlibs:Depends}
 Description: NorNet Time Server
  This package contains the packages to set up an NTP server.
  .
@@ -338,10 +325,7 @@ Description: NorNet Time Server
 
 Package: nornet-database
 Architecture: all
-Depends: postgresql,
-         postgresql-contrib,
-         ${misc:Depends},
-         ${shlibs:Depends}
+Depends: postgresql, postgresql-contrib, ${misc:Depends}, ${shlibs:Depends}
 Description: NorNet Database
  This package contains the packages to set up a database station for
  experiment results collection. It is in fact just a node with a
@@ -367,7 +351,7 @@ Depends: cfengine3,
          xauth,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: nornet-ca
+Recommends: nornet-ca, ubuntu-server
 Description: NorNet Server
  This package contains the scripts to configure a generic server system
  to host NorNet virtual machines.
@@ -376,10 +360,7 @@ Description: NorNet Server
 
 Package: nornet-trace-service
 Architecture: any
-Depends: hipercontracer,
-         ${misc:Depends},
-         ${python3:Depends},
-         ${shlibs:Depends}
+Depends: hipercontracer, ${misc:Depends}, ${python3:Depends}, ${shlibs:Depends}
 Description: NorNet Trace Service
  NorNet Trace Service is the traceroute service for the NorNet testbed.
  It performs regular traceroute/traceroute6 runs among all sites and
