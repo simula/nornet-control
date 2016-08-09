@@ -28,7 +28,7 @@ PACKAGE="cfengine3"
 PACKAGE_DISTRIBUTION="precise"
 
 # ====== Update changelog header from Config.kmk version ====================
-PLAIN_VERSION=`grep "^AM_INIT_AUTOMAKE" configure.ac  | sed -e "s/.*(.*,[ \t]*//g" -e "s/[,~].*//g" -e "s/).*//g" -e "s/[ \t]//g"`
+PLAIN_VERSION=`grep "^AM_INIT_AUTOMAKE" configure.ac  | sed -e "s/.*(.*,[ \t]*//g" -e "s/[,~].*//g" -e "s/).*//g" -e "s/[ \t]//g" -e "s/cfversion/$EXPLICIT_VERSION/g"`
 PACKAGE_VERISON="${PLAIN_VERSION}${BUILD_VERSION_IDENTIFIER}"
 
 
