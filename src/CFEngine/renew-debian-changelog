@@ -52,7 +52,10 @@ echo -e "\x1b[34m###############################################################
 # ------ Change configure.ac ------------------------------------------------
 OUTPUT_VERSION=`echo $CHANGELOG_HEADER | sed -e "s/[a-Z0-9 ]*(//" -e "s/).*//" -e "s/[0-9]*$]//" -e "s/ //g"`
 # echo O=$OUTPUT_VERSION
-sed -e "s/AM_INIT_AUTOMAKE(.*)/AM_INIT_AUTOMAKE($PACKAGE, $PACKAGE_VERISON)/g" <configure.ac >configure.ac.new
+sed \
+ -e "s/AM_INIT_AUTOMAKE(.*)/AM_INIT_AUTOMAKE($PACKAGE, $PACKAGE_VERISON)/g" \
+ -e "s/m4_define(.cfversion_from_detect., .*$/m4_define([cfversion_from_detect], [$PACKAGE_VERISON])/g" \
+ <configure.ac >configure.ac.new
 
 
 # ====== Apply changes ======================================================
