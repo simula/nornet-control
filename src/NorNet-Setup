@@ -68,8 +68,8 @@ norNetSetup = [
            1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100,  1, u'akerbrygge',  'sognsvann.simula.nornet',      'vnc://sognsvann.simula.nornet:5700'      ],
-      [ 101,  2, u'bygdøy',      'sognsvann.simula.nornet',      'vnc://sognsvann.simula.nornet:5701'      ],
+      [ 100,  1, u'akerbrygge',  'sognsvann.simula.nornet',      'vnc://sognsvann.simula.nornet:5900'      ],
+      [ 101,  2, u'bygdøy',      'sognsvann.simula.nornet',      'vnc://sognsvann.simula.nornet:5901'      ],
       [ 102,  3, u'tullinløkka', 'svartkulp.simula.nornet',      'vnc://svartkulp.simula.nornet:5700'      ],
       [ 103,  4, u'frogner',     'svartkulp.simula.nornet',      'vnc://svartkulp.simula.nornet:5701'      ],
       [ 104,  5, u'nordberg',    'maridalsvannet.simula.nornet', 'vnc://maridalsvannet.simula.nornet:5700' ],
@@ -761,7 +761,7 @@ norNetSetup = [
    'site_latitude'     : 37.585175,
    'site_longitude'    : 127.028460,
    'site_altitude'     : 50,
-   'site_contacts'     : [ u'Hwang, Jae Hyun: jh.hwang@alcatel-lucent.com', u'Walid, Anwar: anwar@research.bell-labs.com' ],
+   'site_contacts'     : [ u'Hwang, Jae Hyun: bekind@gmail.com', u'Walid, Anwar: anwar@research.bell-labs.com' ],
    'site_pcu'          : [ IPv4Address('203.230.60.126'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [

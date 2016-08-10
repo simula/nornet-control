@@ -23,7 +23,8 @@ sudo apt-add-repository -y -s ppa:dreibh/ppa && \
 sudo apt-get update && \
 sudo apt-get install -y nornet-ca && \
 sudo apt-get dist-upgrade -y && \
-sudo apt-get purge -y 'virtualbox.*' tracebox stab && \
+sudo rm -rf /var/lib/cfengine3 /var/log/cfengine3 && \
+sudo apt-get purge -y 'virtualbox.*' tracebox stab collectd cfengine3 && \
 sudo apt-get install -y virtualbox-guest-utils
 
 
@@ -33,6 +34,9 @@ sudo apt-get remove -y open-vm-tools
 
 sudo rm -f /etc/init.d/hipercontracer
 sudo rm -rf /etc/squid3/
+
+
+# sudo apt-get install -y linux-headers-3.2.0-107-generic linux-image-3.2.0-107-generic
 
 
 # sudo rm -rf /var/lib/dhcp /run/dhcp-server
