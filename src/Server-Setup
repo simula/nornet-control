@@ -409,6 +409,7 @@ else
 
    if [ "$Variant" != "FreeBSD" ] ; then
       sysctl -f
+      sysctl -f /etc/sysctl.d/90-nornet.conf
    fi
    if [ "$Variant" = "Fedora" ] ; then
       chkconfig network on
