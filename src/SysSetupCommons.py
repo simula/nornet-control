@@ -64,6 +64,7 @@ def writeHosts(outputName, hostName, domainName):
 def writeSysctlConfiguration(outputName, interfaceName):
    interfaceTag = interfaceName.replace(".", "/")
    outputFile = codecs.open(outputName, 'w', 'utf-8')
+   writeAutoConfigInformation(outputFile)
 
    outputFile.write('# Disable IPv6 auto-config on NorNet interface:\n')
    outputFile.write('net.ipv6.conf.' + interfaceTag + '.use_tempaddr=0\n')
