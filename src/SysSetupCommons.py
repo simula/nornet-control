@@ -57,12 +57,20 @@ def writeHosts(outputName, hostName, domainName):
 def writeSysctlConfiguration(outputName, interfaceName):
    interfaceTag = interfaceName.replace(".", "/")
    outputFile = codecs.open(outputName, 'w', 'utf-8')
+
    outputFile.write('# Disable IPv6 auto-config on NorNet interface:\n')
    outputFile.write('net.ipv6.conf.' + interfaceTag + '.use_tempaddr=0\n')
    outputFile.write('net.ipv6.conf.' + interfaceTag + '.autoconf=0\n')
    outputFile.write('net.ipv6.conf.' + interfaceTag + '.accept_ra=0\n')
+
    outputFile.write('# Enable TCP ECN:\n')
    outputFile.write('net.ipv4.tcp_ecn=1\n')
+
+   outputFile.write('# Prevent blocking in case of kernel issues:\n')
+   # Reboot in case of kernel panic after 10s.
+   # "INFO: task <name> blocked for more than 120 seconds." causes kernel panic.
+   outputFile.write('kernel.panic=10\n')
+   outputFile.write('kernel.hung_task_panic=1\n')
    outputFile.close()
 
 
