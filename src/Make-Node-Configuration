@@ -236,6 +236,7 @@ fullUserList = fetchNorNetUserList()
 
 writeHostname('hostname-config', localNode['node_name'], localSite['site_domain'])
 writeHosts('hosts-config', localNode['node_name'], localSite['site_domain'])
+writeSysctlConfiguration('sysctl-config', getLocalNodeNorNetInterface())
 
 writeInterfaceConfiguration('', distribution, interfaceName,
                             NorNet_Configuration['NorNet_LocalNode_ControlBox'],

@@ -178,6 +178,11 @@ check_and_configure ()
       echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Hosts file has been updated => installing it ...\x1b[0m"
       cp hosts-config /etc/hosts
    fi
+   if needs_update sysctl-config /etc/sysctl.d/90-nornet $1 ; then
+      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: SysCtl file has been updated => installing it ...\x1b[0m"
+      cp sysctl-config /etc/sysctl.d/90-nornet
+      sudo sysctl -f /etc/sysctl.d/90-nornet
+   fi
    if needs_update ntp-config /etc/ntp.conf $1 ; then
       echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: NTP configuration has been updated => restarting NTP service ...\x1b[0m"
       cp ntp-config /etc/ntp.conf

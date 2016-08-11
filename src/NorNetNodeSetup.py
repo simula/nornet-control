@@ -34,14 +34,8 @@ from NorNetConfiguration import *
 from NorNetTools         import *
 from NorNetAPI           import *
 from NorNetProviderSetup import *
+from SysSetupCommons     import *
 
-
-
-# ###### Write Automatic Configuration Information ##########################
-def writeAutoConfigInformation(outputFile, comment='#'):
-   outputFile.write(comment + ' ################ AUTOMATICALLY-GENERATED FILE! ################\n')
-   outputFile.write(comment + ' #### Changes will be overwritten by NorNet config scripts! ####\n')
-   outputFile.write(comment + ' ################ AUTOMATICALLY-GENERATED FILE! ################\n\n')
 
 
 # ###### Generate NFS daemon configuration ##################################

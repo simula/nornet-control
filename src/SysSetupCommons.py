@@ -32,6 +32,13 @@ from NorNetProviderSetup import *
 from NorNetNodeSetup     import *
 
 
+# ###### Write Automatic Configuration Information ##########################
+def writeAutoConfigInformation(outputFile, comment='#'):
+   outputFile.write(comment + ' ################ AUTOMATICALLY-GENERATED FILE! ################\n')
+   outputFile.write(comment + ' #### Changes will be overwritten by NorNet config scripts! ####\n')
+   outputFile.write(comment + ' ################ AUTOMATICALLY-GENERATED FILE! ################\n\n')
+
+
 # ###### Write hostname file ################################################
 def writeHostname(outputName, hostName, domainName):
    outputFile = codecs.open(outputName, 'w', 'utf-8')
@@ -63,16 +70,21 @@ def writeSysctlConfiguration(outputName, interfaceName):
    outputFile.write('net.ipv6.conf.' + interfaceTag + '.autoconf=0\n')
    outputFile.write('net.ipv6.conf.' + interfaceTag + '.accept_ra=0\n')
 
-   outputFile.write('# Enable TCP ECN:\n')
+   outputFile.write('\n# Disable redirects:\n')
+   outputFile.write('net.ipv4.conf.all.accept_redirects=0\n')
+   outputFile.write('net.ipv4.conf.all.secure_redirects=0\n')
+   outputFile.write('net.ipv6.conf.all.accept_redirects=0\n')
+
+   outputFile.write('\n# Enable TCP ECN:\n')
    outputFile.write('net.ipv4.tcp_ecn=1\n')
 
-   outputFile.write('# Prevent blocking in case of kernel issues:\n')
+   outputFile.write('\n# Prevent blocking in case of kernel issues:\n')
    # Reboot in case of kernel panic after 10s.
    # "INFO: task <name> blocked for more than 120 seconds." causes kernel panic.
    outputFile.write('kernel.panic=10\n')
    outputFile.write('kernel.hung_task_panic=1\n')
 
-   outputFile.write('# Reduce blocking problems:\n')
+   outputFile.write('\n# Reduce blocking problems:\n')
    # References:
    # - https://www.blackmoreops.com/2014/09/22/linux-kernel-panic-issue-fix-hung_task_timeout_secs-blocked-120-seconds-problem/
    # - http://blog.ronnyegner-consulting.de/2011/10/13/info-task-blocked-for-more-than-120-seconds/comment-page-1/
