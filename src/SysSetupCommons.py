@@ -71,6 +71,14 @@ def writeSysctlConfiguration(outputName, interfaceName):
    # "INFO: task <name> blocked for more than 120 seconds." causes kernel panic.
    outputFile.write('kernel.panic=10\n')
    outputFile.write('kernel.hung_task_panic=1\n')
+
+   outputFile.write('# Reduce blocking problems:\n')
+   # References:
+   # - https://www.blackmoreops.com/2014/09/22/linux-kernel-panic-issue-fix-hung_task_timeout_secs-blocked-120-seconds-problem/
+   # - http://blog.ronnyegner-consulting.de/2011/10/13/info-task-blocked-for-more-than-120-seconds/comment-page-1/
+   outputFile.write('vm.dirty_background_ratio=5\n')   # Default: 10
+   outputFile.write('vm.dirty_ratio=10\n')             # Default: 20
+
    outputFile.close()
 
 
