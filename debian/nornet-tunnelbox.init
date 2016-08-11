@@ -212,10 +212,10 @@ check_and_configure ()
       if needs_update squid-config $squidDirectory/squid.conf $1 ; then
          echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Squid server configuration has been updated => restarting Squid service ...\x1b[0m"
          cp squid-config $squidDirectory/squid.conf
-         if [ -e /etc/init.d/squid ] ; then
+         if [ -e /etc/squid/squid.conf ] ; then
             service squid restart >/dev/null || true
-         elif [ -e /etc/init.d/squid3 ] ; then
-            service squid3 restart >/dev/null || true
+         elif [ -e /etc/squid3/squid.conf ] ; then
+            service squid3 restart >/dev/null || service squid restart >/dev/null || true
          else
             echo "ERROR: What is the name of the Squid service?"
          fi
