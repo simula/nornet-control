@@ -694,7 +694,7 @@ norNetSetup = [
    'site_enabled'      : True,
    'site_long_name'    : u'The University of Kansas',
    'site_short_name'   : 'KU',
-   'site_url'          : 'http://www.ittc.ku.edu',
+   'site_url'          : 'https://www.ittc.ku.edu',
    'site_domain'       : 'ku.nornet',
    'site_city'         : 'Lawrence',
    'site_province'     : 'Kansas',
@@ -752,7 +752,7 @@ norNetSetup = [
    'site_enabled'      : True,
    'site_long_name'    : u'Korea University',   # 고려대학교
    'site_short_name'   : 'KRU',
-   'site_url'          : 'http://www.korea.ac.kr',
+   'site_url'          : 'https://www.korea.ac.kr',
    'site_domain'       : 'korea.nornet',
    'site_city'         : 'Seoul',
    'site_province'     : 'Seoul',
