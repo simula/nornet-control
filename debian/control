@@ -290,6 +290,7 @@ Architecture: all
 Depends: apache2,
          awstats,
          geoip-database-contrib,
+         libapache2-mod-php | libapache2-mod-php5,
          libgeo-ip-perl,
          libnet-dns-perl,
          libnet-ip-perl,
@@ -299,6 +300,8 @@ Depends: apache2,
          wdg-html-validator,
          ${misc:Depends},
          ${shlibs:Depends}
+Recommends: php-mysql | php5-mysql,
+            php-ssh2 | libssh2-php
 Description: NorNet Web Server
  This package contains the packages to set up a web server station for the
  project presentation. It is in fact just a node with a dependency on the
@@ -309,7 +312,7 @@ Description: NorNet Web Server
 Package: nornet-wikisrv
 Architecture: all
 Depends: imagemagick,
-         libapache2-mod-php5,
+         libapache2-mod-php | libapache2-mod-php5,
          mediawiki,
          mediawiki-extensions,
          nornet-websrv,
