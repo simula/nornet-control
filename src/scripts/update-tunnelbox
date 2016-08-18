@@ -24,7 +24,7 @@ sudo apt-get update && \
 sudo apt-get install -y nornet-ca && \
 sudo apt-get dist-upgrade -y && \
 sudo rm -rf /var/lib/cfengine3 /var/log/cfengine3 && \
-sudo apt-get purge -y 'virtualbox.*' tracebox stab collectd cfengine3 && \
+sudo apt-get purge -y 'virtualbox.*' tracebox stab collectd cfengine3 biosdevname && \
 sudo apt-get install -y virtualbox-guest-utils
 
 
