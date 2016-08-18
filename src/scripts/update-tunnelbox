@@ -17,6 +17,10 @@
 # sudo apt-get install -y linux-generic-lts-wily
 
 
+sudo apt-get purge   -y 'libvirt.*' apparmor apparmor-profiles apparmor-profiles-extra && \
+sudo apt-get install -y libvirt-bin apparmor apparmor-profiles nornet-server ubuntu-server
+
+
 find /etc/apt/ -name "*.save" -or -name "*.distUpgrade" -or -name "*~" | xargs --no-run-if-empty sudo rm -f && \
 find /etc/apt/sources.list.d -name "dreibh-ppa-*"  | xargs --no-run-if-empty sudo rm -f && \
 sudo apt-add-repository -y -s ppa:dreibh/ppa && \
@@ -30,6 +34,8 @@ sudo apt-get install -y virtualbox-guest-utils
 
 sudo apt-get install -y ubuntu-server && \
 sudo apt-get remove -y open-vm-tools
+
+
 
 
 sudo rm -f /etc/init.d/hipercontracer
