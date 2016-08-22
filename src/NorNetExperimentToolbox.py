@@ -76,10 +76,12 @@ def makeAddress(site, node, provider, ipVersion, slice):
       address        = makeNorNetIP(provider['provider_index'], site['site_index'], node['node_index'],
                                     ipVersion, sliceNodeIndex).ip
    else:
-      if ipVersion == 4:
+      if ((ipVersion == 4) or (ipVersion == 46)):
          address = IPv4Address('0.0.0.0')
-      else:
+      elif ipVersion == 6:
          address = IPv6Address('::')
+      else:
+         raise Exception('Invalid setting for ipVersion!')
 
    return address
 
@@ -91,8 +93,12 @@ def makePort(portBase, site, node, provider, ipVersion, slice):
    else:
       port = portBase
 
-   if ipVersion != 4:
+   if ipVersion == 6:
       port = port + 500
+   elif ipVersion == 46:
+      port = port + 600
+   elif ipVersion != 4:
+      raise Exception('Invalid setting for ipVersion!')
 
    return port
 
@@ -116,7 +122,7 @@ def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, sl
       '-verbosity=0 ' + \
       '-pathmgr=' + pathMgr
 
-   for ipVersion in [ 4, 6 ]:
+   for ipVersion in [ 4, 6, 46 ]:
       localAddress = makeAddress(localSite, node, None, ipVersion, slice)
       localPort    = makePort(portBase, localSite, node, None, ipVersion, slice)
       cmdLine = cmdLine + ' ; ( nohup netperfmeter ' + str(localPort) + ' ' + \
@@ -126,13 +132,18 @@ def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, sl
 
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
-      for ipVersion in [ 4, 6 ]:
+      for ipVersion in [ 4, 6, 46 ]:
          localAddress = makeAddress(localSite, node, localProvider, ipVersion, slice)
          localPort    = makePort(portBase, localSite, node, localProvider, ipVersion, slice)
 
+         if ipVersion != 6:
+            v6Options = ''
+         else:
+            v6Options = '-v6only'
+
          cmdLine = cmdLine + ' ; ( nohup netperfmeter ' + str(localPort) + ' ' + \
             '-local=[' + str(localAddress) + '] ' + \
-            passiveSideOptions + ' ' +\
+            v6Options + ' ' + passiveSideOptions + ' ' + \
             '>>' + measurementName + '/NetPerfMeter-' + node['node_name'] + '.log 2>&1 & )'
 
    result = runOverSSH(sshPrivateKey, node, slice, cmdLine, True)
@@ -147,7 +158,6 @@ def stopServer(measurementName, sshPrivateKey, node, slice):
 
 # ###### Test installation of custom NetPerfMeter ###########################
 def testCustomNetPerfMeter(sshPrivateKey, nodes, slice):
-   processes = []
    for node in nodes:
       sys.stderr.write(node['node_name'] + "-> ")
       cmdLine = 'uname -a && cd src/netperfmeter && git pull'
@@ -155,19 +165,30 @@ def testCustomNetPerfMeter(sshPrivateKey, nodes, slice):
       if newProcess != None:
          newProcess.wait()            
 
-   for process in processes:
-      process.wait()
-
 
 # ###### Install custom NetPerfMeter from Git sources #######################
 def installCustomNetPerfMeter(sshPrivateKey, nodes, slice):
    processes = []
    for node in nodes:
       sys.stderr.write(node['node_name'] + "-> ")
-      cmdLine = 'sudo dnf install -y autoconf automake libtool gcc-c++ make glib2-devel bzip2-devel lksctp-tools-devel valgrind-devel ; sudo dnf upgrade -y --exclude=kernel*; sudo -u ' + slice['slice_name'] + ' mkdir -p ~/src && cd ~/src && git config --global http.proxy proxy.`hostname -d`:3128 && if [ -e netperfmeter ] ; then cd netperfmeter && git pull ; else git clone https://github.com/dreibh/netperfmeter.git && cd netperfmeter ; fi && ./bootstrap && ./configure --prefix=/usr && make && sudo make install'
+
+      cmdLine = """
+sudo dnf install -y autoconf automake libtool gcc-c++ make glib2-devel bzip2-devel lksctp-tools-devel valgrind-devel ; \\
+sudo dnf upgrade -y --exclude=kernel* ; \\
+sudo -u """ + slice['slice_name'] + """ mkdir -p ~/src && cd src/ && \\
+git config --global http.proxy proxy.`hostname -d`:3128 && \\
+if [ -e netperfmeter ] ; then
+   cd netperfmeter && git pull
+else
+   git clone https://github.com/dreibh/netperfmeter.git && \\
+   cd netperfmeter
+fi && \
+./bootstrap && ./configure --prefix=/usr && make && sudo make install"""
+
       newProcess = runOverSSH(sshPrivateKey, node, slice, cmdLine, True)         
       if newProcess != None:
-         newProcess.wait()            
+         # newProcess.wait()
+         processes.append(newProcess)
 
    for process in processes:
       process.wait()
