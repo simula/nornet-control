@@ -76,9 +76,9 @@ def makeAddress(site, node, provider, ipVersion, slice):
       address        = makeNorNetIP(provider['provider_index'], site['site_index'], node['node_index'],
                                     ipVersion, sliceNodeIndex).ip
    else:
-      if ((ipVersion == 4) or (ipVersion == 46)):
+      if ipVersion == 4:
          address = IPv4Address('0.0.0.0')
-      elif ipVersion == 6:
+      elif ((ipVersion == 6) or (ipVersion == 46)):
          address = IPv6Address('::')
       else:
          raise Exception('Invalid setting for ipVersion!')
@@ -111,7 +111,6 @@ def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, sl
    localSite          = getNorNetSiteOfNode(fullSiteList, node)
    localProviderList  = getNorNetProvidersForSite(localSite)
 
-   print('\x1b[33m >Initialise passive side, next is cmdLine< \x1b[0m')
    cmdLine = 'pkill netperfmeter ; rm -rf ' + measurementName + ' ; mkdir ' + measurementName
    
    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
