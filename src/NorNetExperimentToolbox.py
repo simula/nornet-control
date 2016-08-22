@@ -94,7 +94,7 @@ def makePort(portBase, site, node, provider, ipVersion, slice):
       port = portBase
 
    if ipVersion == 6:
-      port = port + 500
+      port = port + 300
    elif ipVersion == 46:
       port = port + 600
    elif ipVersion != 4:
@@ -120,16 +120,24 @@ def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, sl
    passiveSideOptions = \
       '-rcvbuf=16000000 -sndbuf=16000000 ' + \
       '-verbosity=0 ' + \
-      '-pathmgr=' + pathMgr
+      '-pathmgr='     + pathMgr
 
+   # ------ Bind to ANY address ---------------------------------------------
    for ipVersion in [ 4, 6, 46 ]:
       localAddress = makeAddress(localSite, node, None, ipVersion, slice)
       localPort    = makePort(portBase, localSite, node, None, ipVersion, slice)
-      cmdLine = cmdLine + ' ; ( nohup netperfmeter ' + str(localPort) + ' ' + \
+
+      if ipVersion != 6:
+         v6Options = ''
+      else:
+         v6Options = '-v6only '
+
+      cmdLine = cmdLine + ' ; \\\n( nohup netperfmeter ' + str(localPort) + ' ' + \
          '-local=[' + str(localAddress) + '] ' + \
-         passiveSideOptions + ' ' +\
+         v6Options + passiveSideOptions + ' '  + \
          '>>' + measurementName + '/NetPerfMeter-' + node['node_name'] + '.log 2>&1 & )'
 
+   # ------ Bind to specific address ----------------------------------------
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
       for ipVersion in [ 4, 6, 46 ]:
@@ -139,11 +147,11 @@ def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, sl
          if ipVersion != 6:
             v6Options = ''
          else:
-            v6Options = '-v6only'
+            v6Options = '-v6only '
 
-         cmdLine = cmdLine + ' ; ( nohup netperfmeter ' + str(localPort) + ' ' + \
+         cmdLine = cmdLine + ' ; \\\n( nohup netperfmeter ' + str(localPort) + ' ' + \
             '-local=[' + str(localAddress) + '] ' + \
-            v6Options + ' ' + passiveSideOptions + ' ' + \
+            v6Options + passiveSideOptions + ' '  + \
             '>>' + measurementName + '/NetPerfMeter-' + node['node_name'] + '.log 2>&1 & )'
 
    result = runOverSSH(sshPrivateKey, node, slice, cmdLine, True)
