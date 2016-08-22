@@ -18,40 +18,67 @@
 #
 # Contact: dreibh@simula.no
 
+
+# ====== Repository clean =================================
 git clean -x -d -f
 cp $HOME/kernel-config .config
 
-# ====== Fix PIE compile problem for GCC 6.x ======
-cat >Makefile.patch <<EOF
-diff --git a/Makefile b/Makefile
-index 137679c..ce0c477 100644
---- a/Makefile
-+++ b/Makefile
-@@ -611,6 +611,12 @@ include arch/\$(SRCARCH)/Makefile
- 
- KBUILD_CFLAGS  += \$(call cc-option,-fno-delete-null-pointer-checks,)
- 
-+# force no-pie for distro compilers that enable pie by default
-+KBUILD_CFLAGS += \$(call cc-option, -fno-pie)
-+KBUILD_CFLAGS += \$(call cc-option, -no-pie)
-+KBUILD_AFLAGS += \$(call cc-option, -fno-pie)
-+KBUILD_CPPFLAGS += \$(call cc-option, -fno-pie)
-+
- ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
- KBUILD_CFLAGS  += -Os \$(call cc-disable-warning,maybe-uninitialized,)
- else
-EOF
 
-git checkout Makefile
-patch -p1 <Makefile.patch
+# # ====== Fix PIE compile problem for GCC 6.x ============
+# cat >Makefile.patch <<EOF
+# diff --git a/Makefile b/Makefile
+# index 137679c..ce0c477 100644
+# --- a/Makefile
+# +++ b/Makefile
+# @@ -611,6 +611,12 @@ include arch/\$(SRCARCH)/Makefile
+#  
+#  KBUILD_CFLAGS  += \$(call cc-option,-fno-delete-null-pointer-checks,)
+#  
+# +# force no-pie for distro compilers that enable pie by default
+# +KBUILD_CFLAGS += \$(call cc-option, -fno-pie)
+# +KBUILD_CFLAGS += \$(call cc-option, -no-pie)
+# +KBUILD_AFLAGS += \$(call cc-option, -fno-pie)
+# +KBUILD_CPPFLAGS += \$(call cc-option, -fno-pie)
+# +
+#  ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+#  KBUILD_CFLAGS  += -Os \$(call cc-disable-warning,maybe-uninitialized,)
+#  else
+# EOF
+# 
+# git checkout Makefile
+# patch -p1 <Makefile.patch
 
+
+# ====== Clean ============================================
 make-kpkg --rootcmd fakeroot clean
+
+
+# ====== Version check ====================================
+make kernelrelease
+
+if [ "`make kernelrelease`" != "`make kernelversion`" ] ; then
+   echo >&2 "ERROR: Versioning issues - packaging will not work properly!"
+   echo "Version  `make kernelversion`"
+   echo "Release: `make kernelrelease`"
+   exit 1
+fi
+
+# make kernelversion >include/config/kernel.release
+# make kernelversion >.kernelrelease
+
+
+# if [ ! -e $HOME/src/kernel-package ] ; then
+#    echo >&2 "ERROR: $HOME/src/kernel-package does not exist!"
+#    exit 1
+# fi
+
 make-kpkg --rootcmd fakeroot \
    --stem linux \
-   --initrd --overlay-dir $HOME/src/kernel-package/kernel \
-   --revision "888"
+   --initrd  \
+   --revision 8
    # --append-to-version "-mptcp"   #  --revision "3000"
 
+#    --overlay-dir $HOME/src/kernel-package \
 # \   buildpackage
 
 
@@ -72,3 +99,8 @@ dpkg-buildpackage -S -us -uc -k"${MAINTAINER}" -rfakeroot -I.git -I.gitignore -i
 test ! -f scripts/package/builddeb.kpkg-dist ||   mv -f scripts/package/builddeb.kpkg-dist scripts/package/builddeb
 test ! -f scripts/package/Makefile.kpkg-dist ||   mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
 rm -f stamp-building
+
+
+## ?????????????????
+make kernelversion
+make kernelrelease
