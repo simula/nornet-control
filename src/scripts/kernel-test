@@ -99,8 +99,3 @@ dpkg-buildpackage -S -us -uc -k"${MAINTAINER}" -rfakeroot -I.git -I.gitignore -i
 test ! -f scripts/package/builddeb.kpkg-dist ||   mv -f scripts/package/builddeb.kpkg-dist scripts/package/builddeb
 test ! -f scripts/package/Makefile.kpkg-dist ||   mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
 rm -f stamp-building
-
-
-## ?????????????????
-make kernelversion
-make kernelrelease
