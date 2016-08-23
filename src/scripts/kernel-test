@@ -94,7 +94,7 @@ test ! -e scripts/package/Makefile ||              \
 
 export MAINTAINER="Thomas Dreibholz <dreibh@iem.uni-due.de>"
 export CONCURRENCY_LEVEL=`getconf _NPROCESSORS_ONLN`
-dpkg-buildpackage -S -us -uc -k"${MAINTAINER}" -rfakeroot -I.git -I.gitignore -i'\.git.*'
+dpkg-buildpackage -S -sa -k"${MAINTAINER}" -rfakeroot -I.git -I.gitignore -i'\.git.*'
 
 test ! -f scripts/package/builddeb.kpkg-dist ||   mv -f scripts/package/builddeb.kpkg-dist scripts/package/builddeb
 test ! -f scripts/package/Makefile.kpkg-dist ||   mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
