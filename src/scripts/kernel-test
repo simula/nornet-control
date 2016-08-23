@@ -67,15 +67,16 @@ fi
 # make kernelversion >.kernelrelease
 
 
-# if [ ! -e $HOME/src/kernel-package ] ; then
-#    echo >&2 "ERROR: $HOME/src/kernel-package does not exist!"
-#    exit 1
-# fi
+if [ ! -e $HOME/src/kernel-package ] ; then
+   echo >&2 "ERROR: $HOME/src/kernel-package does not exist!"
+   exit 1
+fi
 
 make-kpkg --rootcmd fakeroot \
+   --overlay-dir $HOME/src/kernel-package \
    --stem linux \
    --initrd  \
-   --revision 8
+   --revision 8 \
    # --append-to-version "-mptcp"   #  --revision "3000"
 
 #    --overlay-dir $HOME/src/kernel-package \
