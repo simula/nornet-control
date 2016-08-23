@@ -313,10 +313,10 @@ Package: nornet-wikisrv
 Architecture: all
 Depends: imagemagick,
          libapache2-mod-php | libapache2-mod-php5,
-         mediawiki,
-         mediawiki-extensions,
          nornet-websrv,
-         php5-intl,
+         php-mysql | php5-mysql,
+         php-mbstring,
+         php-xml,
          postfix,
          ${misc:Depends},
          ${shlibs:Depends}
