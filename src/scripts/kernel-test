@@ -67,13 +67,19 @@ fi
 # make kernelversion >.kernelrelease
 
 
-if [ ! -e $HOME/src/kernel-package ] ; then
-   echo >&2 "ERROR: $HOME/src/kernel-package does not exist!"
+# ====== "Kernel Package" =================================
+# Using the Git version here.
+# NOTE: kernel-package/kernel (sub-directory!) corresponds to
+#       /usr/share/kernel-package
+if [ ! -e $HOME/src/kernel-package -o ! -e $HOME/src/kernel-package/kernel ] ; then
+   echo >&2 "ERROR: $HOME/src/kernel-package or $HOME/src/kernel-package/kernel does not exist!"
+   echo >&2 "Use: git clone https://github.com/dreibh/kernel-package.git $HOME/src/kernel-package"
    exit 1
 fi
 
+
 make-kpkg --rootcmd fakeroot \
-   --overlay-dir $HOME/src/kernel-package \
+   --overlay-dir $HOME/src/kernel-package/kernel \
    --stem linux \
    --initrd  \
    --revision 8 \
