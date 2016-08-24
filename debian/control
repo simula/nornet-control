@@ -238,7 +238,7 @@ Description: NorNet Artwork
 Package: nornet-monitor
 Architecture: all
 Depends: apache2,
-         libapache2-mod-php5,
+         libapache2-mod-php | libapache2-mod-php5,
          nagios3,
          nagios3-doc,
          nornet-api,
