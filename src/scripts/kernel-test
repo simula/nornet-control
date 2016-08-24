@@ -19,7 +19,7 @@
 # Contact: dreibh@simula.no
 
 
-# ====== Repository clean =================================
+# ====== Repository cleaning ==============================
 git clean -x -d -f
 cp $HOME/kernel-config .config
 
@@ -49,17 +49,11 @@ cp $HOME/kernel-config .config
 # patch -p1 <Makefile.patch
 
 
-# ====== Clean ============================================
-make-kpkg --rootcmd fakeroot clean
-
-
 # ====== Version check ====================================
-make kernelrelease
-
+echo "Kernel Version  `make kernelversion`"
+echo "Kernel Release: `make kernelrelease`"
 if [ "`make kernelrelease`" != "`make kernelversion`" ] ; then
    echo >&2 "ERROR: Versioning issues - packaging will not work properly!"
-   echo "Version  `make kernelversion`"
-   echo "Release: `make kernelrelease`"
    exit 1
 fi
 
@@ -78,14 +72,18 @@ if [ ! -e $HOME/src/kernel-package -o ! -e $HOME/src/kernel-package/kernel ] ; t
 fi
 
 
-make-kpkg --rootcmd fakeroot \
-   --overlay-dir $HOME/src/kernel-package/kernel \
-   --stem linux \
-   --initrd  \
-   --revision 8 \
-   # --append-to-version "-mptcp"   #  --revision "3000"
+# ====== Clean ============================================
+$HOME/src/kernel-package/make-kpkg --rootcmd fakeroot clean
 
-#    --overlay-dir $HOME/src/kernel-package \
+
+# ====== Create source package ============================
+$HOME/src/kernel-package/make-kpkg --rootcmd fakeroot \
+   --overlay-dir $HOME/src/kernel-package/kernel \
+   --stem linux-custom \
+   --initrd  \
+   --revision 8
+
+# --append-to-version "-custom"
 # \   buildpackage
 
 
