@@ -246,7 +246,6 @@ Depends: apache2,
          nornet-management,
          postfix,
          python (>= 2.7),
-         wdg-html-validator,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Monitor
@@ -297,7 +296,6 @@ Depends: apache2,
          nornet-api,
          nornet-management,
          oxygen-icon-theme,
-         wdg-html-validator,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: php-mysql | php5-mysql,
