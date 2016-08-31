@@ -63,18 +63,56 @@ git clean -x -d -f
 
 cp -r ~/src/ubuntu-xenial/debian .
 cp -r ~/src/ubuntu-xenial/debian.master .
-# # cp -r ~/src/ubuntu-trusty/debian.xenial .
+
+cp -r ~/src/ubuntu-xenial/spl .
+cp -r ~/src/ubuntu-xenial/zfs .
+cp -r ~/src/ubuntu-xenial/ubuntu .
+cp -r ~/src/ubuntu-xenial/tools/hv/*.8 tools/hv/
 
 rm -rf debian.master/abi
 
 # # cp .config debian.master/config/config.common.ubuntu
 # # cp $HOME/kernel-config debian.master/config/config.common.ubuntu
 
+# !!!! UBUNTU WILY 4.2 KERNEL CONFIG !!!!
+# cp ~/src/ubuntu-wily/debian.master/config/config.common.ubuntu debian.master/config/config.common.ubuntu
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 (
    cat ~/src/planetlab-kernel/config-planetlab
 
    # /tmp/buildd/linux-4.1.31.0003/debian/build/build-generic
+   # make silentoldconfig
    cat <<EOF
+
+# # --- with wily config ---
+# CONFIG_RCU_BOOST=n
+# CONFIG_RCU_USER_QS=n
+# CONFIG_RCU_FANOUT=64
+# CONFIG_RCU_FANOUT_LEAF=16
+# CONFIG_RCU_FANOUT_EXACT=n
+# CONFIG_RCU_FAST_NO_HZ=n
+# CONFIG_RCU_KTHREAD_PRIO=0
+#
+# CONFIG_NFC_ST21NFCB=n
+# CONFIG_ZRAM_DEBUG=n
+# CONFIG_SND_HDA_INPUT_JACK=n
+# CONFIG_SND_SOC_HDMI_CODEC=n
+# CONFIG_DT3155_CCIR=y
+# CONFIG_DT3155_STREAMING=y
+#
+# CONFIG_UNISYS_VISORUTIL=y
+# CONFIG_UNISYS_VISORCHANNEL=y
+# CONFIG_UNISYS_VISORCHIPSET=m
+# CONFIG_UNISYS_UISLIB=m
+# CONFIG_UNISYS_VIRTPCI=m
+# CONFIG_UNISYS_VIRTHBA=m
+# CONFIG_I2O=n
+# CONFIG_SUNRPC_XPRT_RDMA_CLIENT=m
+# CONFIG_SUNRPC_XPRT_RDMA_SERVER=m
+# # ---
+
+# --- with xenial config ---
 CONFIG_RCU_BOOST=n
 CONFIG_RCU_USER_QS=n
 CONFIG_RCU_FANOUT=64
@@ -86,13 +124,14 @@ CONFIG_RCU_NOCB_CPU=n
 
 CONFIG_MICROCODE_EARLY=y
 CONFIG_NETFILTER_NETLINK_QUEUE_CT=n
-CONFIG_NFC_NCI_SPI=n
+CONFIG_NFC_NCI_SPI=y
 CONFIG_NFC_ST21NFCB=n
 CONFIG_ZRAM_DEBUG=n
+CONFIG_IIO_BUFFER_CB=y
 
 CONFIG_B43_PCMCIA=n
-CONFIG_SCSI_MPT2SAS_LOGGING=m
-CONFIG_SCSI_MPT3SAS_LOGGING=m
+CONFIG_SCSI_MPT2SAS_LOGGING=n
+CONFIG_SCSI_MPT3SAS_LOGGING=n
 CONFIG_IP1000=m
 CONFIG_INPUT_MAX77843_HAPTIC=m
 CONFIG_GPIO_IT8761E=m
@@ -106,11 +145,44 @@ CONFIG_SCSI_MPT3SAS_LOGGING=n
 
 CONFIG_DRM_I915_KMS=y
 CONFIG_DRM_I915_FBDEV=y
-CONFIG_DRM_I915_PRELIMINARY_HW_SUPPORT=n
+
+CONFIG_SND_HDA_INPUT_JACK=n
+CONFIG_SND_SOC_HDMI_CODEC=n
+
+CONFIG_USB_OTG_FSM=n
+CONFIG_USB_FUSBH200_HCD=m
+CONFIG_USB_DWC3_DEBUG=n
+CONFIG_MMC_CLKGATE=n
+
+CONFIG_LEDS_PM8941_WLED=m
+CONFIG_EDAC_MCE_INJ=n
+CONFIG_COMEDI_UNIOXX5=m
+CONFIG_FB_SM7XX=m
+CONFIG_FT1000=m
+CONFIG_FT1000_USB=y
+CONFIG_FT1000_PCMCIA=y
+
+CONFIG_DT3155_CCIR=y
+CONFIG_DT3155_STREAMING=y
+
+CONFIG_USB_WPAN_HCD=m
+CONFIG_UNISYS_VISORUTIL=y
+CONFIG_UNISYS_VISORCHANNEL=y
+CONFIG_UNISYS_VISORCHIPSET=m
+CONFIG_UNISYS_UISLIB=m
+CONFIG_UNISYS_VIRTPCI=m
+CONFIG_UNISYS_VIRTHBA=m
+CONFIG_I2O=n
+CONFIG_EXT4_USE_FOR_EXT23=y
+CONFIG_SUNRPC_XPRT_RDMA_CLIENT=m
+CONFIG_SUNRPC_XPRT_RDMA_SERVER=m
+CONFIG_RCU_CPU_STALL_INFO=y
+CONFIG_SECURITY_YAMA_STACKED=n
+CONFIG_DEFAULT_SECURITY_APPARMOR=y
+CONFIG_DEFAULT_SECURITY_YAMA=n
 
 EOF
 ) >>debian.master/config/config.common.ubuntu
-# # cat ~/src/planetlab-kernel/config-planetlab >>debian.xenial/config/config.common.ubuntu
 
 
 cat >debian.master/changelog <<EOF
