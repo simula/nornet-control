@@ -50,6 +50,9 @@ cp $HOME/kernel-config .config
 
 
 # ====== Version check ====================================
+# NOTE: work around <version>+ issue
+echo "" >.scmversion
+
 echo "Kernel Version  `make kernelversion`"
 echo "Kernel Release: `make kernelrelease`"
 if [ "`make kernelrelease`" != "`make kernelversion`" ] ; then
@@ -79,7 +82,7 @@ $HOME/src/kernel-package/make-kpkg --rootcmd fakeroot \
    --overlay-dir $HOME/src/kernel-package/kernel \
    --stem linux \
    --initrd  \
-   --revision 15 \
+   --revision 16 \
    debian
 
 #    --append-to-version "-custom" \
