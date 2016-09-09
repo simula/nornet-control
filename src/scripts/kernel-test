@@ -21,19 +21,27 @@
 
 # ====== Repository cleaning ==============================
 git clean -x -d -f
+rm -rf debian   # It is *not* deleted by "git clean", due to .gitignore!
 cp $HOME/kernel-config .config
 
 
-# # ====== Fix PIE compile problem for GCC 6.x ============
+# # ====== Ubuntu Yakkety ===================================
+# cat $HOME/kernel-config | sed \
+#    -e "s/^.*CONFIG_CC_STACKPROTECTOR_NONE.*$/CONFIG_CC_STACKPROTECTOR_NONE=y/g" \
+#    -e "s/^.*CONFIG_CC_STACKPROTECTOR_REGULAR.*$/CONFIG_CC_STACKPROTECTOR_REGULAR=n/g" \
+#    -e "s/^.*CONFIG_CC_STACKPROTECTOR_STRONG.*$/CONFIG_CC_STACKPROTECTOR_STRONG=n/g" \
+# >.config
+#
+# # ====== Fix PIE compile problem for GCC 6.x ==============
 # cat >Makefile.patch <<EOF
 # diff --git a/Makefile b/Makefile
 # index 137679c..ce0c477 100644
 # --- a/Makefile
 # +++ b/Makefile
 # @@ -611,6 +611,12 @@ include arch/\$(SRCARCH)/Makefile
-#  
+#
 #  KBUILD_CFLAGS  += \$(call cc-option,-fno-delete-null-pointer-checks,)
-#  
+#
 # +# force no-pie for distro compilers that enable pie by default
 # +KBUILD_CFLAGS += \$(call cc-option, -fno-pie)
 # +KBUILD_CFLAGS += \$(call cc-option, -no-pie)
@@ -44,13 +52,14 @@ cp $HOME/kernel-config .config
 #  KBUILD_CFLAGS  += -Os \$(call cc-disable-warning,maybe-uninitialized,)
 #  else
 # EOF
-# 
+#
 # git checkout Makefile
 # patch -p1 <Makefile.patch
 
 
 # ====== Version check ====================================
 # NOTE: work around <version>+ issue
+# The kernel release is computed by scripts/setlocalversion
 echo "" >.scmversion
 
 echo "Kernel Version  `make kernelversion`"
@@ -82,13 +91,18 @@ $HOME/src/kernel-package/make-kpkg --rootcmd fakeroot \
    --overlay-dir $HOME/src/kernel-package/kernel \
    --stem linux \
    --initrd  \
-   --revision 16 \
+   --revision 26.0.mptcp \
    debian
 
 #    --append-to-version "-custom" \
 
 
 echo 'Building Package' >stamp-building
+
+# !!!!!!!!!!!!
+# https://linuxconfig.org/building-kernels-the-debian-way
+cp include/generated/utsrelease.h include/linux/
+# !!!!!!!!!!!!
 
 export MAINTAINER="Thomas Dreibholz <dreibh@iem.uni-due.de>"
 dpkg-buildpackage -S -sa -k"${MAINTAINER}" -rfakeroot -I.git -I.gitignore -i'\.git.*'
