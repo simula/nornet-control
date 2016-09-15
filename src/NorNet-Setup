@@ -571,11 +571,11 @@ norNetSetup = [
    'site_longitude'    : 8.654673,
    'site_altitude'     : 50,
    'site_contacts'     : [ u'Demir, Kubilay: kubidem@deeds.informatik.tu-darmstadt.de' ],
-   'site_pcu'          : [ IPv4Address('130.83.162.212'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('130.83.162.211'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Deutsches Forschungsnetz', 'eth1',
-           IPv4Interface('130.83.162.211/25'), IPv4Address('130.83.162.254'),
+           IPv4Interface('130.83.162.212/25'), IPv4Address('130.83.162.254'),
            IPv6Interface('::/0'),              IPv6Address('::'),
            1500, 'fibre, business', 0, 0 ],
    ],
