@@ -1,0 +1,13 @@
+#!/bin/sh
+
+ip addr add 10.1.1.38/24 dev eth0
+ip route add default via 10.1.1.1 dev eth0
+ip route add 10.1.1.0/24 scope link dev eth0  table 1
+ip route add default via 10.1.1.1   dev eth0  table 1
+
+ip addr add 10.0.3.15/24 dev eth1
+ip route add 10.0.3.0/24 scope link  dev eth1 table 2
+ip route add default via 10.0.3.2    dev eth1 table 2
+
+ip rule add from 10.1.1.15  table 1
+ip rule add from 10.0.3.15  table 2
