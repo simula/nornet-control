@@ -21,6 +21,7 @@
 SLICE=srl_test
 KEY=~/.ssh/test2
 
+disabledIntro="\x1b[37m"
 unreachableIntro="\x1b[34m"
 keyChangedIntro="\x1b[36m"
 goodIntro="\x1b[32m"
@@ -100,10 +101,15 @@ while [ $# -gt 0 ] ; do
 done
 
 
-./Get-Slice-Nodes "$SLICE" | awk '{ print $1 }' | xargs -n1 | (
-   while read node ; do
+./Get-Slice-Nodes "$SLICE" | (
+   while read node status ; do
       site=`echo "$node" | sed -e "s/^[a-z0-9]*\.//g"`
-      check-node "$node" &
+      if [ "$status" != "disabled" ] ; then
+         check-node "$node" &
+      else
+         printf "$disabledIntro%s\tN/A\t%-30s$normalMode\n" \
+            "$site" "$node"
+      fi
    done
    wait
 ) | sort -k2,2r -k1,1
