@@ -916,7 +916,7 @@ for siteIndex in sorted(siteIndexList):
          output.write(output.makeParagraph('Contacts:'))
          output.beginEnumeration()
          for contact in contacts:
-            found = re.match(r'(.*): ([a-zA-Z0-9\.]+@[a-zA-Z0-9\.]+)', contact)
+            found = re.match(r'(.*): ([a-zA-Z0-9\.]+@[a-zA-Z0-9\.-]+)', contact)
             if found:
                contactMail       = found.group(2)
                contactFullName   = found.group(1)
