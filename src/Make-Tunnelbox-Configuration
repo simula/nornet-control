@@ -534,10 +534,12 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
                      writeRR(siteZoneFile, nameToWrite,
                              rrTypeForAddress(nodeAddress), str(nodeAddress.ip))
                   if version == 6:   # Just add entry once!
-                     writeRR(siteZoneFile, nameToWrite,
-                             'HINFO', '"' + node['node_model'] + '/' + localProvider['provider_long_name'] + '" "' + node['node_type'] + '"')
-                     writeLOC(siteZoneFile, nameToWrite, localSite)
-                     writeSSHFP(siteZoneFile, nameToWrite, node['node_ssh_rsa_key'])
+                     if (includeNodeIP(node, localSite, localProviderIndex, 4) or
+                         includeNodeIP(node, localSite, localProviderIndex, 6)):
+                        writeRR(siteZoneFile, nameToWrite,
+                                'HINFO', '"' + node['node_model'] + '/' + localProvider['provider_long_name'] + '" "' + node['node_type'] + '"')
+                        writeLOC(siteZoneFile, nameToWrite, localSite)
+                        writeSSHFP(siteZoneFile, nameToWrite, node['node_ssh_rsa_key'])
 
                # ====== Hostname with *all* addresses =======================
                else:
