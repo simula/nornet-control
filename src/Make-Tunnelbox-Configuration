@@ -1830,7 +1830,7 @@ if ((dynamicConfiguration != None) and (dynamicConfiguration != '')):
          dhcpName = 'dhcp{:02d}'.format(j)
       # print("D=",i - dynamicStart,dhcpName)
       additionalNodes.append(makeNodeForDNS(dhcpName, localSite, i,
-                                            'NorNet Node', 'DHCP, entry ' + str(j),
+                                            'NorNet Node', 'DHCP, dynamic entry ' + str(j) + '/' + str(dynamicEnd + 1 - dynamicStart),
                                             [ 'def-v4only' ]))
       j = j + 1
 
