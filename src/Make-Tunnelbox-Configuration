@@ -637,11 +637,12 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
                                       str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain'])  + '.'
                   writeRR(siteZoneFile, localName,
                           rrTypeForAddress(localTunnelIP), str(localTunnelIP.ip))
-                  writeRR(siteZoneFile, localName,
-                          'HINFO', '"Tunnel Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '" ' +
-                          '"Remote Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '"')
-                  writeLOC(siteZoneFile, localName, localSite)
-                  siteZoneFile.write('\n')
+
+               writeRR(siteZoneFile, localName,
+                       'HINFO', '"Tunnel Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '" ' +
+                       '"Remote Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '"')
+               writeLOC(siteZoneFile, localName, localSite)
+               siteZoneFile.write('\n')
 
    siteZoneFile.close()
 
