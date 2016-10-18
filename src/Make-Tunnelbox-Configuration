@@ -186,7 +186,7 @@ def coordinateToDMS(coordinate, hemisphereTypes = 'NS'):
 
    m       = (coordinate % 1) * 60
    minutes = int(m)
-   seconds = (m % 1) * 60
+   seconds = round((m % 1) * 60, 3)
 
    return(str(degrees) + ' ' + str(minutes) + ' ' + str(seconds) + ' ' + hemisphere)
 
@@ -350,10 +350,14 @@ def makeNodeForDNS(nodeName, site, nodeIndex, model, type, options):
          v4Only = 1
       elif option == 'def-v4only':
          v4Only = 2
-      if option == 'v6only':
+      elif option == 'v6only':
          v6Only = 1
       elif option == 'def-v6only':
          v6Only = 2
+      elif option == 'slice':
+         pass
+      else:
+         print('NOTE: Ignoring unknown option: ' + option)
    norNetNode = {
       'node_site_id'          : site['site_id'],
       'node_index'            : nodeIndex,
@@ -1773,7 +1777,7 @@ if fullSliceList != None:
                                        getNorNetSiteOfNode(fullSiteList, node),
                                        node['node_index'],
                                        node['node_model'], 'Slice ' + slice['slice_name'],
-                                      'slice')
+                                      [ 'slice' ])
             # Add a pseudo entry to create a slice address later
             sliceNode['pseudo_slice_node_index'] = getSliceNodeIndexOfNorNetSlice(slice, node)
             sliceNode['node_ssh_rsa_key']        = node['node_ssh_rsa_key']
@@ -1811,7 +1815,7 @@ if ((dynamicConfiguration != None) and (dynamicConfiguration != '')):
    for i in range(dynamicStart, dynamicEnd + 1):
       additionalNodes.append(makeNodeForDNS('dhcp{:02d}'.format(j), localSite, i,
                                             'NorNet Node', 'DHCP, entry ' + str(j),
-                                            'def-v4only'))
+                                            [ 'def-v4only' ]))
       j = j + 1
 
 
