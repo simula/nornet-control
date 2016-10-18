@@ -186,7 +186,7 @@ def coordinateToDMS(coordinate, hemisphereTypes = 'NS'):
 
    m       = (coordinate % 1) * 60
    minutes = int(m)
-   seconds = (m % 1) * 60
+   seconds = round((m % 1) * 60, 3)
 
    return(str(degrees) + ' ' + str(minutes) + ' ' + str(seconds) + ' ' + hemisphere)
 
