@@ -1,0 +1,7 @@
+#!/bin/bash
+
+nslint -c /etc/bind/named.conf 2>&1 | \
+   grep -v "^nslint: multiple " | \
+   grep -v loc | \
+   grep -v sshfp | \
+   grep -vE "Missing \"ptr\": (.*)\.all\."
