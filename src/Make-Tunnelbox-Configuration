@@ -596,10 +596,12 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
                           'CNAME',
                           addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN))
 
-               writeRR(siteZoneFile,
-                       addProviderToName(punycodeName + '.', str.lower(localProvider['provider_short_name']), siteFQDN),
-                       'CNAME',
-                       addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN))
+               if (includeNodeIP(node, localSite, localProviderIndex, 4) or
+                   includeNodeIP(node, localSite, localProviderIndex, 6)):
+                  writeRR(siteZoneFile,
+                          addProviderToName(punycodeName + '.', str.lower(localProvider['provider_short_name']), siteFQDN),
+                          'CNAME',
+                          addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN))
 
             writeRR(siteZoneFile,
                     addProviderToName(punycodeName + '.', 'all', siteFQDN),
