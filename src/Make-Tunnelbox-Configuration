@@ -1824,14 +1824,22 @@ if ((dynamicConfiguration != None) and (dynamicConfiguration != '')):
 
    j = 1
    for i in range(dynamicStart, dynamicEnd + 1):
+      simpleDhcpName = 'dhcp{:02d}'.format(j)
       try:
-         dhcpName = dynamicNodeNames[i - dynamicStart]
+         dhcpName = dynamicNodeNames[j - 1]
       except:
-         dhcpName = 'dhcp{:02d}'.format(j)
+         dhcpName = simpleDhcpName
+
+      if i in aliases:
+         error('Alias set for DHCP entry ' + str(i))
+      if getLocalNodeConfigurationString(i) != '':
+         error('Node set for DHCP entry ' + str(i))
+
       # print("D=",i - dynamicStart,dhcpName)
       additionalNodes.append(makeNodeForDNS(dhcpName, localSite, i,
                                             'NorNet Node', 'DHCP, dynamic entry ' + str(j) + '/' + str(dynamicEnd + 1 - dynamicStart),
                                             [ 'def-v4only' ]))
+      aliases[i] = [ simpleDhcpName ]
       j = j + 1
 
 
