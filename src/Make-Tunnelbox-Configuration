@@ -67,6 +67,14 @@ def getLocalSiteDHCPServerDynamicConfigurationString():
 
 
 # ###### Get DHCPD node configuration string ################################
+def getLocalSiteDHCPServerDynamicNodeNamesString():
+   try:
+      return str(NorNet_Configuration['NorNet_LocalSite_DHCPServer_NodeNames'])
+   except:
+      return ''
+
+
+# ###### Get DHCPD node configuration string ################################
 def getLocalSiteDHCPServerStaticConfigurationString(nodeIndex):
    try:
       return str(NorNet_Configuration['NorNet_LocalSite_DHCPServer_Static' + str(nodeIndex)])
@@ -1777,7 +1785,7 @@ if fullSliceList != None:
                                        getNorNetSiteOfNode(fullSiteList, node),
                                        node['node_index'],
                                        node['node_model'], 'Slice ' + slice['slice_name'],
-                                      [ 'slice' ])
+                                       [ 'slice' ])
             # Add a pseudo entry to create a slice address later
             sliceNode['pseudo_slice_node_index'] = getSliceNodeIndexOfNorNetSlice(slice, node)
             sliceNode['node_ssh_rsa_key']        = node['node_ssh_rsa_key']
@@ -1798,6 +1806,7 @@ for additionalNode in additionalNodes:
 dynamicStart         = 0
 dynamicEnd           = 0
 dynamicConfiguration = getLocalSiteDHCPServerDynamicConfigurationString()
+dynamicNodeNames     = shlex.split(getLocalSiteDHCPServerDynamicNodeNamesString())
 if ((dynamicConfiguration != None) and (dynamicConfiguration != '')):
    parameters = shlex.split(dynamicConfiguration)
    if len(parameters) < 2:
@@ -1813,7 +1822,12 @@ if ((dynamicConfiguration != None) and (dynamicConfiguration != '')):
 
    j = 1
    for i in range(dynamicStart, dynamicEnd + 1):
-      additionalNodes.append(makeNodeForDNS('dhcp{:02d}'.format(j), localSite, i,
+      try:
+         dhcpName = dynamicNodeNames[i - dynamicStart]
+      except:
+         dhcpName = 'dhcp{:02d}'.format(j)
+      # print("D=",i - dynamicStart,dhcpName)
+      additionalNodes.append(makeNodeForDNS(dhcpName, localSite, i,
                                             'NorNet Node', 'DHCP, entry ' + str(j),
                                             [ 'def-v4only' ]))
       j = j + 1

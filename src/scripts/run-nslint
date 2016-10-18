@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# node=`hostname -f`
+# site=`echo "$node" | sed -e "s/^[a-z0-9]*\.//g"`
+
 nslint -c /etc/bind/named.conf 2>&1 | \
    grep -v "^nslint: multiple " | \
    grep -v loc | \
