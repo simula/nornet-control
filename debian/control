@@ -199,7 +199,8 @@ Depends: arpwatch,
          traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: nornet-trace-service
+Recommends: nornet-trace-service,
+            nslint
 Suggests: collectd,
           stab,
           tracebox
