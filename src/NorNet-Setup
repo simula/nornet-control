@@ -811,6 +811,37 @@ norNetSetup = [
    ] }
 
 
+ # Laboratoire d'Informatique de Grenoble (LIG)
+ #{ 'site_index'        : 64,
+   #'site_enabled'      : False,
+   #'site_long_name'    : u'Laboratoire d'Informatique de Grenoble',
+   #'site_short_name'   : 'LIG',
+   #'site_url'          : 'https://www.liglab.fr',
+   #'site_domain'       : 'lig.nornet',
+   #'site_city'         : 'Grenoble',
+   #'site_province'     : 'Isère',
+   #'site_country'      : 'France',
+   #'site_country_code' : 'FR',
+   #'site_latitude'     : xxxx,
+   #'site_longitude'    : xxxx,
+   #'site_altitude'     : 100,
+   #'site_contacts'     : [ u'Jonglez, Baptiste: baptiste.jonglez@imag.fr' ],
+   #'site_pcu'          : [ IPv4Address('a.a.a.a'), 'pcu-root', 'a-secret-password' ],
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'China Education and Research Network', 'eth1',
+           #IPv4Interface('a.a.a.a/26'), IPv4Address('a.a.a.a'),
+           #IPv6Interface('::/0'),       IPv6Address('::'),
+           #1500, 'fibre, business', 0, 0 ]
+   #],
+   #'site_nodes' : [
+      ## Naming scheme: places in Sanya
+      #[ 100, 1, u'', '.lig.nornet' ],
+      #[ 101, 2, u'', '.lig.nornet' ],
+      #[ 102, 3, u'', '.lig.nornet' ],
+      #[ 103, 4, u'', '.lig.nornet' ]
+   #] },
+
  # Qiongzhou University (琼州大学)
  #{ 'site_index'        : 87,
    #'site_enabled'      : False,
