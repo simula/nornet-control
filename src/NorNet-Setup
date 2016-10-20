@@ -826,8 +826,8 @@ norNetSetup = [
    'site_latitude'     : -33.895430,
    'site_longitude'    : 151.197021,
    'site_altitude'     : 15,
-   'site_contacts'     : [ u'Mehani, Olivier: olivier.mehani@nicta.com.au',
-                           u'Rakotoarivelo, Thierry: Thierry.Rakotoarivelo@nicta.com.au' ],
+   'site_contacts'     : [ u'Jourjon, Guillaume: Guillaume.Jourjon@data61.csiro.au',
+                           u'Kaafar, Dali: Dali.Kaafar@data61.csiro.au' ],
    'site_pcu'          : [ IPv4Address('221.199.217.168'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
