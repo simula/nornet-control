@@ -630,7 +630,7 @@ norNetSetup = [
    'site_longitude'    : 5.76709,
    'site_altitude'     : 213,
    'site_contacts'     : [ u'Jonglez, Baptiste: baptiste.jonglez@imag.fr', u'Heusse, Martin: martin.heusse@imag.fr' ],
-   'site_pcu'          : [ IPv4Address('192.0.2.3'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('192.0.2.3'), 'pcu-root', 'a-secret-password' ],   # chamrousse.lig.nornet
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Reseau National de Communications Electroniques', 'eth1',
@@ -640,10 +640,10 @@ norNetSetup = [
    ],
    'site_nodes' : [
       # Naming scheme: places in Grenoble
-      [ 100, 1, u'.lig.nornet' ],
-      [ 101, 2, u'.lig.nornet' ],
-      [ 102, 3, u'.lig.nornet' ],
-      [ 103, 4, u'.lig.nornet' ]
+      [ 100, 1, u'moucherotte.lig.nornet' ],
+      [ 101, 2, u'taillefer.lig.nornet' ],
+      [ 102, 3, u'chamechaude.lig.nornet' ],
+      [ 103, 4, u'crolles.lig.nornet' ]
    ] },
 
  # Hainan University (海南大学)
