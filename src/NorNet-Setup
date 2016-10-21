@@ -640,10 +640,10 @@ norNetSetup = [
    ],
    'site_nodes' : [
       # Naming scheme: places in Grenoble
-      [ 100, 1, u'moucherotte.lig.nornet' ],
-      [ 101, 2, u'taillefer.lig.nornet' ],
-      [ 102, 3, u'chamechaude.lig.nornet' ],
-      [ 103, 4, u'crolles.lig.nornet' ]
+      [ 100, 1, u'moucherotte' ],
+      [ 101, 2, u'taillefer'   ],
+      [ 102, 3, u'chamechaude' ],
+      [ 103, 4, u'crolles'     ]
    ] },
 
  # Hainan University (海南大学)
