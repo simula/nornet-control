@@ -43,7 +43,7 @@ NorNet_Provider30='"Deutsches Forschungsnetz"                        "DFN"      
 NorNet_Provider31='"Versatel"                                        "Versatel"   "https://www.versatel.de"'
 NorNet_Provider32='"Deutsche Telekom"                                "DTAG"       "https://www.telekom.de"'
 # ------ France -----------------------------------------------------------------------------------
-NorNet_Provider40='"Reseau National de Communications Electroniques" "RENATER"    "https://www.renater.fr"'
+NorNet_Provider40='"Reseau National de Communications Électroniques" "RENATER"    "https://www.renater.fr"'
 # ------ Spain -----------------------------------------------------------------------------------
 NorNet_Provider50='"Interconexión de los Recursos InformáticoS"      "RedIRIS"    "https://www.rediris.es"'
 # ------ United Kingdom ---------------------------------------------------------------------------

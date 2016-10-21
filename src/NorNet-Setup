@@ -633,7 +633,7 @@ norNetSetup = [
    'site_pcu'          : [ IPv4Address('192.0.2.3'), 'pcu-root', 'a-secret-password' ],   # chamrousse.lig.nornet
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ u'Reseau National de Communications Electroniques', 'eth1',
+      [ u'Reseau National de Communications Électroniques', 'eth1',
            IPv4Interface('192.0.2.2/24'), IPv4Address('192.0.2.1'),
            IPv6Interface('::/0'),         IPv6Address('::'),
            1500, 'fibre, business', 0, 0 ]
