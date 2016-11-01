@@ -665,8 +665,8 @@ norNetSetup = [
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'China Education and Research Network', 'eth1',
-           IPv4Interface('210.37.45.149/26'), IPv4Address('210.37.45.190'),
-           IPv6Interface('::/0'),             IPv6Address('::'),
+           IPv4Interface('210.37.45.149/26'),           IPv4Address('210.37.45.190'),
+           IPv6Interface('2001:250:3801:71::149/64'),   IPv6Address('2001:250:3801:71::1'),
            1500, 'fibre, business', 0, 0 ],
       [ u'China Unicom', 'eth2',
            IPv4Interface('113.59.104.58/29'), IPv4Address('113.59.104.62'),
