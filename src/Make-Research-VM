@@ -60,7 +60,7 @@ fi
 
 CPUS="1"
 VRAM="16"
-
+DISK_OPTIONS="--nonrotational on --discard on"
 
 if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
    VBoxManage unregistervm "$VM_NAME" --delete || true
@@ -68,12 +68,13 @@ if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_Virtualizatio
    VBoxManage createvm --register --name "$VM_NAME" --ostype Fedora_64
    VBoxManage modifyvm "$VM_NAME" --cpus "$CPUS" \
                                  --memory "$MEMORY_SIZE" --vram "$VRAM" \
+                                 --audio none \
                                  --rtcuseutc on --firmware bios --chipset piix3 --acpi on --ioapic on \
                                  --hwvirtex on --pae on --boot1 dvd --boot2 disk --boot3 none --boot4 none
    VBoxManage modifyvm "$VM_NAME" --nic1 bridged --nictype1 virtio --bridgeadapter1 eth0 \
                                   --cableconnected1 on --macaddress1 auto --nicpromisc1 allow-all
-   VBoxManage storagectl "$VM_NAME" --name "SCSI Controller" --add scsi --controller LSILogic
-   VBoxManage storageattach "$VM_NAME" --storagectl "SCSI Controller" --port 0 --device 0 --type dvddrive \
+   VBoxManage storagectl "$VM_NAME" --name "Storage Controller" --add sata --portcount 4
+   VBoxManage storageattach "$VM_NAME" --storagectl "Storage Controller" --port 0 --device 0 --type dvddrive \
                                        --medium "$ISO_NAME"
    vboxVariant="Standard"
    if [ "$VARIANT" = "fixed" ] ; then
@@ -81,8 +82,9 @@ if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_Virtualizatio
    fi
    VBoxManage createhd --filename "$HOME/VirtualBox VMs/$VM_NAME/DH0.vdi" --size "$DISK_SIZE" --format vdi \
                                                                           --variant "$VARIANT"
-   VBoxManage storageattach "$VM_NAME" --storagectl "SCSI Controller" --port 1 --device 0 --type hdd \
-                                       --medium "$HOME/VirtualBox VMs/$VM_NAME/DH0.vdi"
+   VBoxManage storageattach "$VM_NAME" --storagectl "Storage Controller" --port 1 --device 0 --type hdd \
+                                       --medium "$HOME/VirtualBox VMs/$VM_NAME/DH0.vdi" \
+                                        $DISK_OPTIONS
 
 elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
    let DISK_SIZE=$4
