@@ -1,0 +1,7 @@
+#!/bin/sh
+
+../Check-Nodes srl_test ~/.ssh/test2 \
+   boao.hu.nornet             nanshan.hu.nornet \
+   nordlys.unis.nornet        snoeflak.unis.nornet \
+   altenessen.ude.nornet      borbeck.ude.nornet \
+   akerbrygge.simula.nornet   solvang.simula.nornet
