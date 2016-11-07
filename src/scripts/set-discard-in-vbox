@@ -1,8 +1,9 @@
 #!/bin/bash
 
 while [ $# -gt 0 ] ; do
-   echo "$1 ..."
+   echo "===== $1 ... ====="
    sed -e 's/nonrotational="true" type="HardDisk"/nonrotational="true" discard="true" type="HardDisk"/g' -i $1
+   grep 'discard="true"' $1
    shift
 done
 
