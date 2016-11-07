@@ -37,34 +37,40 @@ function check-node ()
    local nodeName="$1"
 
    if /bin/ping -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
+      if /bin/ping6 -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
 
-      env LANG=C timeout --signal=INT --kill-after=60s 55 ssh $sshOptions -i $KEY $SLICE@$nodeName '
-         if [ ! -e /etc/yum.repos.d/nornet.repo ] ; then
-            echo "WARNING: NO-NORNET-REPO"
-         fi
-         if ! sudo ping -q -c5 -i0.3 tunnelbox >/dev/null 2>&1 ; then
-            echo "FAILED: PING4-TUNNELBOX"
-         fi
-         if ! sudo ping6 -q -c5 -i0.3 tunnelbox >/dev/null 2>&1 ; then
-            echo "FAILED: PING6-TUNNELBOX"
-         fi
-         echo "Node is UP"
-         echo "`uname -r`, `uptime`"
-      ' >$nodeName.log 2>&1
+         env LANG=C timeout --signal=INT --kill-after=60s 55 ssh $sshOptions -i $KEY $SLICE@$nodeName '
+            if [ ! -e /etc/yum.repos.d/nornet.repo ] ; then
+               echo "WARNING: NO-NORNET-REPO"
+            fi
+            if ! sudo ping -q -c5 -i0.3 tunnelbox >/dev/null 2>&1 ; then
+               echo "FAILED: PING4-TUNNELBOX"
+            fi
+            if ! sudo ping6 -q -c5 -i0.3 tunnelbox >/dev/null 2>&1 ; then
+               echo "FAILED: PING6-TUNNELBOX"
+            fi
+            echo "Node is UP"
+            echo "`uname -r`, `uptime`"
+         ' >$nodeName.log 2>&1
 
-      headline="`grep -v "^Warning: Permanently" $nodeName.log | head -n1 | tr --delete '\n\r'`"
-      if [ "$headline" = "Node is UP" ] ; then
-         printf "$goodIntro%s\tOK\t%-30s\t\"%s\"$normalMode\n" \
-            "$site" "$nodeName" \
-            "`tail -n1 $nodeName.log | tr --delete '\n\r' | sed -e "s/^[ \t]*//g"`"
-      elif [ "$headline" = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" ] ; then
-         printf "$keyChangedIntro%s\tKEY\t%-30s\t\"%s\"$normalMode\n" \
-            "$site" "$nodeName" "Key changed -> run script again!"
-         ./Clear-SSH-Node-Key $nodeName >/dev/null
+         headline="`grep -v "^Warning: Permanently" $nodeName.log | head -n1 | tr --delete '\n\r'`"
+         if [ "$headline" = "Node is UP" ] ; then
+            printf "$goodIntro%s\tOK\t%-30s\t\"%s\"$normalMode\n" \
+               "$site" "$nodeName" \
+               "`tail -n1 $nodeName.log | tr --delete '\n\r' | sed -e "s/^[ \t]*//g"`"
+         elif [ "$headline" = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" ] ; then
+            printf "$keyChangedIntro%s\tKEY\t%-30s\t\"%s\"$normalMode\n" \
+               "$site" "$nodeName" "Key changed -> run script again!"
+            ./Clear-SSH-Node-Key $nodeName >/dev/null
+         else
+            printf "$badIntro%s\tBAD\t%-30s\t\"%s\"$normalMode\n" \
+               "$site" "$nodeName" \
+               "$headline"
+         fi
+
       else
-         printf "$badIntro%s\tBAD\t%-30s\t\"%s\"$normalMode\n" \
-            "$site" "$nodeName" \
-            "$headline"
+         printf "$unreachableIntro%s\tNET6\t%-30s$normalMode\n" \
+            "$site" "$nodeName"
       fi
    else
       printf "$unreachableIntro%s\tNET\t%-30s$normalMode\n" \
