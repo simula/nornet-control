@@ -88,20 +88,24 @@ if [ ! -e $KEY ] ; then
    exit 1
 fi
 
+
+nodeList=""
 while [ $# -gt 0 ] ; do
    if [ "$1" = "-n" ] ; then
       unreachableIntro=""
       goodIntro=""
       badIntro=""
       normalMode=""
+   elif [[ "$1" =~ ^-.*$ ]] ; then
+      echo >&2 "Usage: $program [slice] [SSH_private_key] [-n] [node ...]"
+      exit 1
    else
-      echo >&2 "Usage: $program  [slice] [-n]"
+      nodeList="$nodeList $1"
    fi
    shift
 done
 
-
-./Get-Slice-Nodes "$SLICE" | (
+if [ "$nodeList" = "" ] ; then ./Get-Slice-Nodes "$SLICE" ; else echo "$nodeList" | xargs -n1 ; fi | (
    while read node status ; do
       site=`echo "$node" | sed -e "s/^[a-z0-9]*\.//g"`
       if [ "$status" != "disabled" ] ; then

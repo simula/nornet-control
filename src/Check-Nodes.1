@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd June 22, 2016
+.Dd November 7, 2016
 .Dt Check-Nodes 1
 .Os Check-Nodes
 .\" ###### Name #############################################################
@@ -29,11 +29,13 @@
 .Nm Check-Nodes
 .Op slice
 .Op SSH_private_key
+.Op node ...
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
 .Nm Check-Nodes
 tries to log into nodes of given slice and run some basic tests to check
-usability.
+usability. If no node names are provided, all nodes of the given slice are
+checked.
 .Pp
 .\" ###### Arguments ########################################################
 .Sh ARGUMENTS
@@ -42,6 +44,8 @@ usability.
 This is the name of the slice to check.
 .It SSH_private_key
 This is the path for the SSH private key to use for login.
+.It node
+Node name to check.
 .El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
