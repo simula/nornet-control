@@ -369,9 +369,9 @@ Depends: grub2-common | grub,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: cfengine3,
+            lm-sensors,
             nornet-ca,
-            ubuntu-server,
-            lm-sensors
+            ubuntu-server
 Description: NorNet Server
  This package contains the scripts to configure a generic server system
  to host NorNet virtual machines.
