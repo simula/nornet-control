@@ -25,11 +25,11 @@ while [ $# -gt 0 ] ; do
       if [ -e "/boot/vmlinuz-$NEW.x86_64" ] ; then
          if [ "\$kernel" = "$OLD.x86_64" ] ; then
             echo "OLD KERNEL -> Reboot!"
-            rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64
+            rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64 transforward-*-$old.*.nornet
             reboot
          else
             echo "Different kernel!"
-            rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64
+            rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64 transforward-*-$old.*.nornet
          fi
       fi
       echo "NodeUpdate.py"
