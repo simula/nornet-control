@@ -15,7 +15,7 @@ while [ $# -gt 0 ] ; do
       #echo "NodeUpdate.py"
 
       cat <<EOF
-      NodeUpdate.py
+      # NodeUpdate.py
 
       dnf clean all
       dnf install -y kernel-core-$NEW.x86_64 kernel-$NEW.x86_64 kernel-modules-$NEW.x86_64 kernel-modules-extra-$NEW.x86_64 transforward
@@ -26,13 +26,12 @@ while [ $# -gt 0 ] ; do
          if [ "\$kernel" = "$OLD.x86_64" ] ; then
             echo "OLD KERNEL -> Reboot!"
             rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64 transforward-*-$old.*.nornet
-            reboot
+            # reboot
          else
             echo "Different kernel!"
             rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64 transforward-*-$old.*.nornet
          fi
       fi
-      echo "NodeUpdate.py"
 EOF
 
    ) | sudo ssh -4 -o StrictHostKeyChecking=no -i /etc/planetlab/root_ssh_key.rsa root@$1 &
