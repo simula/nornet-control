@@ -1,7 +1,9 @@
 #!/bin/bash
 
 NEW="4.1.35-888.fc23"
-OLD="4.1.27-888.fc23"
+OLD="4.1.32-888.fc23"
+
+old=`echo "$OLD" | sed -e "s/-/./g"`
 
 while [ $# -gt 0 ] ; do
    echo "Handling $1 ..."
@@ -15,7 +17,8 @@ while [ $# -gt 0 ] ; do
       cat <<EOF
       NodeUpdate.py
 
-      dnf install -y kernel-core-$NEW.x86_64 kernel-$NEW.x86_64 kernel-modules-$NEW.x86_64 kernel-modules-extra-$NEW.x86_64
+      dnf clean all
+      dnf install -y kernel-core-$NEW.x86_64 kernel-$NEW.x86_64 kernel-modules-$NEW.x86_64 kernel-modules-extra-$NEW.x86_64 transforward
 
       kernel=\$(uname -r)
       echo "K=\$kernel"
