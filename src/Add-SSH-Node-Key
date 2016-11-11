@@ -42,7 +42,7 @@ while [ $# -ge 1 ] ; do
    for host in $hostList ; do
       echo "Processing: $host"
       # ssh-keygen -q -R "$host"
-      ssh -oVerifyHostKeyDNS=yes -oStrictHostKeyChecking=no -oPreferredAuthentications=publickey -oPasswordAuthentication=no -oConnectTimeout=30 $USER@$host hostname
+      ssh -oVerifyHostKeyDNS=no -oStrictHostKeyChecking=no -oPreferredAuthentications=publickey -oPasswordAuthentication=no -oConnectTimeout=30 $USER@$host hostname
    done
    wait
 done
