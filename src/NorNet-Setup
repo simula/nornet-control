@@ -580,10 +580,10 @@ norNetSetup = [
            1500, 'fibre, business', 0, 0 ],
    ],
    'site_nodes' : [
-      [ 100, 1, u'woogsviertel',     'herrngarten.tuda.nornet', 'vnc://herrngarten.tuda.nornet:5700' ],
-      [ 101, 2, u'edelsteinviertel', 'herrngarten.tuda.nornet', 'vnc://herrngarten.tuda.nornet:5701' ],
-      [ 102, 3, u'verlegerviertel',  'lichtwiese.tuda.nornet',  'vnc://lichtwiese.tuda.nornet:5700'  ],
-      [ 103, 4, u'bessungen',        'lichtwiese.tuda.nornet',  'vnc://lichtwiese.tuda.nornet:5701'  ]
+      [ 100, 1, u'woogsviertel'     ],
+      [ 101, 2, u'edelsteinviertel' ],
+      [ 102, 3, u'verlegerviertel'  ],
+      [ 103, 4, u'bessungen'        ]
    ] },
 
  { 'site_index'        : 30,
