@@ -25,6 +25,7 @@ from NorNetTools     import *
 from NorNetAPI       import *
 
 
+# ###### Get IP address of control box ######################################
 def getControlBoxForSite(siteID):
    for node in nodeList:
       if node['node_site_id'] == siteID:
@@ -33,8 +34,8 @@ def getControlBoxForSite(siteID):
          pcu = getPLCServer().GetPCUs(getPLCAuthentication(), { 'pcu_id' : pcuID }, [ 'ip' ])
          if len(pcu) > 0:
             return IPv4Address(pcu[0]['ip'])
-         else:
-            print('ERROR: No control box address. Needs to access PLC as admin!')
+         #else:
+            #print('ERROR: No control box address. Needs to access PLC as admin!')
 
    return IPv4Address('0.0.0.0')
 
@@ -53,9 +54,10 @@ for siteIndex in sorted(siteList):
    siteName  = site['site_utf8']
    siteTags  = site['site_tags']
 
-   tunnelboxIP  = IPv4Interface(getTagValue(siteTags, 'nornet_site_tbp0_address_ipv4', None)).ip
-   controlboxIP = getControlBoxForSite(site['site_id'])
+   tunnelboxIPext = IPv4Interface(getTagValue(siteTags, 'nornet_site_tbp0_address_ipv4', None)).ip
+   tunnelboxIPint = makeNorNetIP(site['site_default_provider_index'], siteIndex, NorNet_NodeIndex_Tunnelbox, 4).ip
+   controlboxIP   = getControlBoxForSite(site['site_id'])
 
-   print(str(n) + '\t' + str(siteIndex) + '\t' + str(tunnelboxIP) + '\t' + str(controlboxIP) + '\t"' + siteName + '\"')
+   print(str(n) + '\t' + str(siteIndex) + '\t' + str(tunnelboxIPint) + '\t' + str(tunnelboxIPext) + '\t' + str(controlboxIP) + '\t"' + siteName + '\"')
 
    n = n + 1
