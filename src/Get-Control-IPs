@@ -1,0 +1,61 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
+# Get all sites
+# Copyright (C) 2012-2016 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+# NorNet
+from NorNetSiteSetup import *
+from NorNetTools     import *
+from NorNetAPI       import *
+
+
+def getControlBoxForSite(siteID):
+   for node in nodeList:
+      if node['node_site_id'] == siteID:
+         pcuID = lookupPCUIDforNode(node['node_id'])
+
+         pcu = getPLCServer().GetPCUs(getPLCAuthentication(), { 'pcu_id' : pcuID }, [ 'ip' ])
+         if len(pcu) > 0:
+            return IPv4Address(pcu[0]['ip'])
+         else:
+            print('ERROR: No control box address. Needs to access PLC as admin!')
+
+   return IPv4Address('0.0.0.0')
+
+
+# ###### Main program #######################################################
+loginToPLC(quietMode = True)
+
+nodeList = fetchNorNetNode(None)
+siteList = fetchNorNetSite(None)
+
+n=1
+for siteIndex in sorted(siteList):
+   site = siteList[siteIndex]
+   #print site
+   siteIndex = site['site_index']
+   siteName  = site['site_utf8']
+   siteTags  = site['site_tags']
+
+   tunnelboxIP  = IPv4Interface(getTagValue(siteTags, 'nornet_site_tbp0_address_ipv4', None)).ip
+   controlboxIP = getControlBoxForSite(site['site_id'])
+
+   print(str(n) + '\t' + str(siteIndex) + '\t' + str(tunnelboxIP) + '\t' + str(controlboxIP) + '\t"' + siteName + '\"')
+
+   n = n + 1

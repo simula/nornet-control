@@ -238,7 +238,7 @@ def getNorNetProvidersForSite(norNetSite):
 def lookupPCUIDforNode(nodeID):
    try:
       pcu = plc_server.GetNodes(plc_authentication,
-                               { 'node_id' : nodeID }, ['pcu_ids'])
+                                { 'node_id' : nodeID }, ['pcu_ids'])
       if len(pcu) > 0:
          pcuID = int(pcu[0]['pcu_ids'][0])
          return(pcuID)
@@ -253,7 +253,7 @@ def lookupPCUIDforNode(nodeID):
 def lookupPCUID(pcuName):
    try:
       pcu = plc_server.GetPCUs(plc_authentication,
-                               {'hostname': pcuName}, ['pcu_id'])
+                               { 'hostname': pcuName }, ['pcu_id'])
       pcuID = int(pcu[0]['pcu_id'])
       return(pcuID)
 
@@ -265,7 +265,7 @@ def lookupPCUID(pcuName):
 def lookupNodeID(nodeName):
    try:
       node = plc_server.GetNodes(plc_authentication,
-                                 {'hostname': nodeName}, ['node_id'])
+                                 { 'hostname': nodeName }, ['node_id'])
       nodeID = int(node[0]['node_id'])
       return(nodeID)
 
