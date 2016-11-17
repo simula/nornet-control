@@ -3,6 +3,7 @@
 NEW="4.1.35-888.fc23"
 OLD="4.1.32-888.fc23"
 
+new=`echo "$NEW" | sed -e "s/-/./g"`
 old=`echo "$OLD" | sed -e "s/-/./g"`
 
 while [ $# -gt 0 ] ; do
@@ -18,18 +19,18 @@ while [ $# -gt 0 ] ; do
       # NodeUpdate.py
 
       dnf clean all
-      dnf install -y kernel-core-$NEW.x86_64 kernel-$NEW.x86_64 kernel-modules-$NEW.x86_64 kernel-modules-extra-$NEW.x86_64 transforward
+      dnf install -y kernel-core-$NEW.x86_64 kernel-$NEW.x86_64 kernel-modules-$NEW.x86_64 kernel-modules-extra-$NEW.x86_64 transforward-\*-$new.\*.nornet
 
       kernel=\$(uname -r)
       echo "K=\$kernel"
       if [ -e "/boot/vmlinuz-$NEW.x86_64" ] ; then
          if [ "\$kernel" = "$OLD.x86_64" ] ; then
             echo "OLD KERNEL -> Reboot!"
-            rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64 transforward-*-$old.*.nornet
+            rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64 transforward-\*-$old.\*.nornet
             # reboot
          else
             echo "Different kernel!"
-            rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64 transforward-*-$old.*.nornet
+            rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64 transforward-\*-$old.\*.nornet
          fi
       fi
 EOF
