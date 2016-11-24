@@ -1,3 +1,3 @@
 #!/bin/sh
-echo "Connecting to 210.37.45.148 ..."
-ssh -C nornetpp@210.37.45.148
+echo "Connecting to Control Box of Universität Darmstadt (130.83.162.211) ..."
+ssh -C nornetpp@130.83.162.211

@@ -31,9 +31,8 @@ Build-Depends: bzip2,
                libpixman-1-dev,
                libpng-dev,
                libpulse-dev,
-               libqt5x11extras5-dev,
                libqt5opengl5-dev,
-               qttools5-dev-tools,
+               libqt5x11extras5-dev,
                libsdl1.2-dev,
                libssl-dev,
                libvncserver-dev,
@@ -57,6 +56,10 @@ Build-Depends: bzip2,
                makeself,
                module-assistant,
                python-dev (>= 2.6.6-3~),
+               qtbase5-dev,
+               qtbase5-dev-tools,
+               qtchooser,
+               qttools5-dev-tools,
                texlive-fonts-extra,
                texlive-fonts-recommended,
                texlive-latex-extra,
@@ -107,7 +110,7 @@ Conflicts: virtualbox-2.0,
            virtualbox-4.2,
            virtualbox-4.3,
            virtualbox-5.0,
-           virtualbox-5.1,
+           virtualbox-5.1
 Description: x86 virtualization solution - base binaries
  VirtualBox is a free x86 virtualization solution allowing a wide range
  of x86 operating systems such as Windows, DOS, BSD or Linux to run on a
@@ -198,8 +201,8 @@ Package: virtualbox-guest-x11
 Section: contrib/x11
 Architecture: amd64 i386
 Depends: libnotify-bin,
-         x11-xserver-utils,
          virtualbox-guest-utils (= ${binary:Version}),
+         x11-xserver-utils,
          ${misc:Depends},
          ${shlibs:Depends},
          ${xserver:Depends}
