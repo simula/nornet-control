@@ -24,6 +24,7 @@ while [ $# -ge 1 ] ; do
    name="$1"
    shift
 
+   (
    fullName=`echo "$name" | sed -e "s/\./.all./"`
    echo -e "\x1b[34mAdding keys of $name ($fullName) ...\x1b[0m"
    ipv4Addresses=`dig $fullName a +short`
@@ -44,5 +45,6 @@ while [ $# -ge 1 ] ; do
       # ssh-keygen -q -R "$host"
       ssh -oVerifyHostKeyDNS=no -oStrictHostKeyChecking=no -oPreferredAuthentications=publickey -oPasswordAuthentication=no -oConnectTimeout=30 $USER@$host hostname
    done
-   wait
+   ) &
 done
+wait

@@ -11,6 +11,7 @@ while [ $# -gt 0 ] ; do
       su -
       dnf -q clean all
       dnf -q install -y virt-what
+      # dnf -q upgrade -y
 EOF
 
    ) | ssh -4 -o StrictHostKeyChecking=no -i $KEY $SLIVER@$1 &
