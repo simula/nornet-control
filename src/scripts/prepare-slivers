@@ -1,0 +1,20 @@
+#!/bin/bash
+
+SLIVER=srl_test
+KEY=~/.ssh/demo-user
+
+
+while [ $# -gt 0 ] ; do
+   echo "Handling $1 ..."
+   (
+      cat <<EOF
+      su -
+      dnf -q clean all
+      dnf -q install -y virt-what
+      # dnf -q upgrade -y
+EOF
+
+   ) | ssh -4 -o StrictHostKeyChecking=no -i $KEY $SLIVER@$1 &
+   shift
+done
+wait
