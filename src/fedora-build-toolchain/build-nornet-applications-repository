@@ -24,7 +24,7 @@ HOME="/home/nornetpp"
 
 SOURCES="$HOME/src"
 REPOSITORIES="$HOME/repos/nornet-applications"
-DISTRIBUTIONS="fedora-24-x86_64" # fedora-24-i386 fedora-23-x86_64 fedora-23-i386"
+DISTRIBUTIONS="fedora-25-x86_64 fedora-25-i386 fedora-24-x86_64 fedora-24-i386 fedora-23-x86_64 fedora-23-i386"
 
 PACKAGES="libusrsctp"
 #nornet_nn bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
