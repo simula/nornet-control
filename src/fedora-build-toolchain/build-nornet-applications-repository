@@ -26,13 +26,12 @@ SOURCES="$HOME/src"
 REPOSITORIES="$HOME/repos/nornet-applications"
 DISTRIBUTIONS="fedora-25-x86_64 fedora-25-i386 fedora-24-x86_64 fedora-24-i386 fedora-23-x86_64 fedora-23-i386"
 
-PACKAGES="libneat libusrsctp"   # nornet_nn bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
+PACKAGES="libneat libusrsctp nornet_nn bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
 
 
-# ====== BibTeXConv =======================================
+# ====== NorNet-NN ========================================
 nornet_nn_DIR="nornet-nn"
 nornet_nn_REPO="git://github.com/dreibh/nornet-nn.git"
-
 
 # ====== BibTeXConv =======================================
 bibtexconv_DIR="bibtexconv"
