@@ -70,16 +70,16 @@ norNetSetup = [
    'site_nodes' : [
       [ 100,  1, u'akerbrygge',  'sognsvann.simula.nornet',      'vnc://sognsvann.simula.nornet:5900'      ],
       [ 101,  2, u'bygdøy',      'sognsvann.simula.nornet',      'vnc://sognsvann.simula.nornet:5901'      ],
-      [ 102,  3, u'tullinløkka', 'svartkulp.simula.nornet',      'vnc://svartkulp.simula.nornet:5700'      ],
-      [ 103,  4, u'frogner',     'svartkulp.simula.nornet',      'vnc://svartkulp.simula.nornet:5701'      ],
-      [ 104,  5, u'nordberg',    'maridalsvannet.simula.nornet', 'vnc://maridalsvannet.simula.nornet:5700' ],
-      [ 105,  6, u'solvang',     'maridalsvannet.simula.nornet', 'vnc://maridalsvannet.simula.nornet:5701' ],
-      [ 106,  7, u'nordreaker',  'blanksjoe.simula.nornet',      'vnc://blanksjoe.simula.nornet:5700'      ],
-      [ 107,  8, u'vestreaker',  'blanksjoe.simula.nornet',      'vnc://blanksjoe.simula.nornet:5701'      ],
-      [ 108,  9, u'skøyen' ,     'tryvann.simula.nornet',        'vnc://tryvann.simula.nornet:5700'        ],
-      [ 109, 10, u'vækerø',      'tryvann.simula.nornet',        'vnc://tryvann.simula.nornet:5701'        ],
-      [ 110, 11, u'akerselva',   'aaklungen.simula.nornet',      'vnc://aaklungen.simula.nornet:5700'      ],
-      [ 111, 12, u'ullern',      'aaklungen.simula.nornet',      'vnc://aaklungen.simula.nornet:5701'      ],
+      [ 102,  3, u'tullinløkka', 'svartkulp.simula.nornet',      'vnc://svartkulp.simula.nornet:5900'      ],
+      [ 103,  4, u'frogner',     'svartkulp.simula.nornet',      'vnc://svartkulp.simula.nornet:5901'      ],
+      [ 104,  5, u'nordberg',    'maridalsvannet.simula.nornet', 'vnc://maridalsvannet.simula.nornet:5900' ],
+      [ 105,  6, u'solvang',     'maridalsvannet.simula.nornet', 'vnc://maridalsvannet.simula.nornet:5901' ],
+      [ 106,  7, u'nordreaker',  'blanksjoe.simula.nornet',      'vnc://blanksjoe.simula.nornet:5900'      ],
+      [ 107,  8, u'vestreaker',  'blanksjoe.simula.nornet',      'vnc://blanksjoe.simula.nornet:5901'      ],
+      [ 108,  9, u'skøyen' ,     'tryvann.simula.nornet',        'vnc://tryvann.simula.nornet:5900'        ],
+      [ 109, 10, u'vækerø',      'tryvann.simula.nornet',        'vnc://tryvann.simula.nornet:5901'        ],
+      [ 110, 11, u'akerselva',   'aaklungen.simula.nornet',      'vnc://aaklungen.simula.nornet:5900'      ],
+      [ 111, 12, u'ullern',      'aaklungen.simula.nornet',      'vnc://aaklungen.simula.nornet:5901'      ],
 
       # --- Test only! ---
       # [ 113, 20, u'test1' ],
@@ -117,11 +117,11 @@ norNetSetup = [
            1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'bjørvika', 'langevann.uio.nornet', 'vnc://langevann.uio.nornet:5700' ],
-      [ 101, 2, u'ekeberg',  'langevann.uio.nornet', 'vnc://langevann.uio.nornet:5701' ],
-      [ 102, 3, u'furuset',  'kringla.uio.nornet',   'vnc://kringla.uio.nornet:5700'   ],
-      [ 103, 4, u'grefsen',  'kringla.uio.nornet',   'vnc://kringla.uio.nornet:5701'   ],
-      [ 104, 5, u'helsfyr',  'smaavann.uio.nornet',  'vnc://smaavann.uio.nornet:5700'  ],
+      [ 100, 1, u'bjørvika', 'langevann.uio.nornet', 'vnc://langevann.uio.nornet:5900' ],
+      [ 101, 2, u'ekeberg',  'langevann.uio.nornet', 'vnc://langevann.uio.nornet:5901' ],
+      [ 102, 3, u'furuset',  'kringla.uio.nornet',   'vnc://kringla.uio.nornet:5900'   ],
+      [ 103, 4, u'grefsen',  'kringla.uio.nornet',   'vnc://kringla.uio.nornet:5901'   ],
+      [ 104, 5, u'helsfyr',  'smaavann.uio.nornet',  'vnc://smaavann.uio.nornet:5900'  ],
       [ 105, 6, u'tøyen',    'smaavann.uio.nornet',  'vnc://smaavann.uio.nornet: 5701' ]
    ] },
 
@@ -152,12 +152,12 @@ norNetSetup = [
            1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'kapp',      'fjellhallen.hig.nornet', 'vnc://fjellhallen.hig.nornet:5700' ],
-      [ 101, 2, u'eina',      'fjellhallen.hig.nornet', 'vnc://fjellhallen.hig.nornet:5701' ],
-      [ 102, 3, u'raufoss',   'skibladner.hig.nornet',  'vnc://skibladner.hig.nornet:5700'  ],
-      [ 103, 4, u'reinsvoll', 'skibladner.hig.nornet',  'vnc://skibladner.hig.nornet:5701'  ],
-      [ 104, 5, u'skreia',    'toten.hig.nornet',       'vnc://toten.hig.nornet:5700'       ],
-      [ 105, 6, u'lena',      'toten.hig.nornet',       'vnc://toten.hig.nornet:5701'       ]
+      [ 100, 1, u'kapp',      'fjellhallen.hig.nornet', 'vnc://fjellhallen.hig.nornet:5900' ],
+      [ 101, 2, u'eina',      'fjellhallen.hig.nornet', 'vnc://fjellhallen.hig.nornet:5901' ],
+      [ 102, 3, u'raufoss',   'skibladner.hig.nornet',  'vnc://skibladner.hig.nornet:5900'  ],
+      [ 103, 4, u'reinsvoll', 'skibladner.hig.nornet',  'vnc://skibladner.hig.nornet:5901'  ],
+      [ 104, 5, u'skreia',    'toten.hig.nornet',       'vnc://toten.hig.nornet:5900'       ],
+      [ 105, 6, u'lena',      'toten.hig.nornet',       'vnc://toten.hig.nornet:5901'       ]
    ] },
 
  { 'site_index'        : 4,
@@ -191,12 +191,12 @@ norNetSetup = [
            1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'amundsen',    'ishav.uit.nornet',       'vnc://ishav.uit.nornet:5700'       ],
-      [ 101, 2, u'nansen',      'ishav.uit.nornet',       'vnc://ishav.uit.nornet:5701'       ],
-      [ 102, 3, u'aunegården',  'polaria.uit.nornet',     'vnc://polaria.uit.nornet:5700'     ],
-      [ 103, 4, u'skarven',     'polaria.uit.nornet',     'vnc://polaria.uit.nornet:5701'     ],
-      [ 104, 5, u'arctandria',  'tromsoebrua.uit.nornet', 'vnc://tromsoebrua.uit.nornet:5700' ],
-      [ 105, 6, u'kongsbakken', 'tromsoebrua.uit.nornet', 'vnc://tromsoebrua.uit.nornet:5701' ]
+      [ 100, 1, u'amundsen',    'ishav.uit.nornet',       'vnc://ishav.uit.nornet:5900'       ],
+      [ 101, 2, u'nansen',      'ishav.uit.nornet',       'vnc://ishav.uit.nornet:5901'       ],
+      [ 102, 3, u'aunegården',  'polaria.uit.nornet',     'vnc://polaria.uit.nornet:5900'     ],
+      [ 103, 4, u'skarven',     'polaria.uit.nornet',     'vnc://polaria.uit.nornet:5901'     ],
+      [ 104, 5, u'arctandria',  'tromsoebrua.uit.nornet', 'vnc://tromsoebrua.uit.nornet:5900' ],
+      [ 105, 6, u'kongsbakken', 'tromsoebrua.uit.nornet', 'vnc://tromsoebrua.uit.nornet:5901' ]
    ] },
 
  { 'site_index'        : 5,
@@ -230,12 +230,12 @@ norNetSetup = [
            1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'mosterøy',  'petroleum.uis.nornet', 'vnc://petroleum.uis.nornet:5700' ],
-      [ 101, 2, u'klosterøy', 'petroleum.uis.nornet', 'vnc://petroleum.uis.nornet:5701' ],
-      [ 102, 3, u'askje',     'bensin.uis.nornet',    'vnc://bensin.uis.nornet:5700'    ],
-      [ 103, 4, u'sokn',      'bensin.uis.nornet',    'vnc://bensin.uis.nornet:5701'    ],
-      [ 104, 5, u'rennesoey', 'diesel.uis.nornet',    'vnc://diesel.uis.nornet:5700'    ],
-      [ 105, 6, u'fjøløy',    'diesel.uis.nornet',    'vnc://diesel.uis.nornet:5701'    ]
+      [ 100, 1, u'mosterøy',  'petroleum.uis.nornet', 'vnc://petroleum.uis.nornet:5900' ],
+      [ 101, 2, u'klosterøy', 'petroleum.uis.nornet', 'vnc://petroleum.uis.nornet:5901' ],
+      [ 102, 3, u'askje',     'bensin.uis.nornet',    'vnc://bensin.uis.nornet:5900'    ],
+      [ 103, 4, u'sokn',      'bensin.uis.nornet',    'vnc://bensin.uis.nornet:5901'    ],
+      [ 104, 5, u'rennesoey', 'diesel.uis.nornet',    'vnc://diesel.uis.nornet:5900'    ],
+      [ 105, 6, u'fjøløy',    'diesel.uis.nornet',    'vnc://diesel.uis.nornet:5901'    ]
    ] },
 
  { 'site_index'        : 6,
@@ -265,12 +265,12 @@ norNetSetup = [
            1500, 'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'fløibanen',        'floeyfjellet.uib.nornet',      'vnc://floeyfjellet.uib.nornet:5700'      ],
-      [ 101, 2, u'fisketorget',      'floeyfjellet.uib.nornet',      'vnc://floeyfjellet.uib.nornet:5701'      ],
-      [ 102, 3, u'ulriksbanen',      'ulriken.uib.nornet',           'vnc://ulriken.uib.nornet:5700'           ],
-      [ 103, 4, u'lungegårdsvannet', 'ulriken.uib.nornet',           'vnc://ulriken.uib.nornet:5701'           ],
-      [ 104, 5, u'bergenhus',        'damsgaardsfjellet.uib.nornet', 'vnc://damsgaardsfjellet.uib.nornet:5700' ],
-      [ 105, 6, u'sverresborg',      'damsgaardsfjellet.uib.nornet', 'vnc://damsgaardsfjellet.uib.nornet:5701' ],
+      [ 100, 1, u'fløibanen',        'floeyfjellet.uib.nornet',      'vnc://floeyfjellet.uib.nornet:5900'      ],
+      [ 101, 2, u'fisketorget',      'floeyfjellet.uib.nornet',      'vnc://floeyfjellet.uib.nornet:5901'      ],
+      [ 102, 3, u'ulriksbanen',      'ulriken.uib.nornet',           'vnc://ulriken.uib.nornet:5900'           ],
+      [ 103, 4, u'lungegårdsvannet', 'ulriken.uib.nornet',           'vnc://ulriken.uib.nornet:5901'           ],
+      [ 104, 5, u'bergenhus',        'damsgaardsfjellet.uib.nornet', 'vnc://damsgaardsfjellet.uib.nornet:5900' ],
+      [ 105, 6, u'sverresborg',      'damsgaardsfjellet.uib.nornet', 'vnc://damsgaardsfjellet.uib.nornet:5901' ],
    ] },
 
  # ====== Universitetet i Agder =============================================
@@ -309,12 +309,12 @@ norNetSetup = [
            #1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'julenisse',    'wergeland.uia.nornet', 'vnc://wergeland.uia.nornet:5700' ],
-      [ 101, 2, u'fjøsnisse',    'wergeland.uia.nornet', 'vnc://wergeland.uia.nornet:5701' ],
-      [ 102, 3, u'gårdsnisse',   'holberg.uia.nornet',   'vnc://holberg.uia.nornet:5700'   ],
-      [ 103, 4, u'hagenisse',    'holberg.uia.nornet',   'vnc://holberg.uia.nornet:5701'   ],
-      [ 104, 5, u'skipsnisse',   'andersen.uia.nornet',  'vnc://andersen.uia.nornet:5700'  ],
-      [ 105, 6, u'heinzelnisse', 'andersen.uia.nornet',  'vnc://andersen.uia.nornet:5701'  ]
+      [ 100, 1, u'julenisse',    'wergeland.uia.nornet', 'vnc://wergeland.uia.nornet:5900' ],
+      [ 101, 2, u'fjøsnisse',    'wergeland.uia.nornet', 'vnc://wergeland.uia.nornet:5901' ],
+      [ 102, 3, u'gårdsnisse',   'holberg.uia.nornet',   'vnc://holberg.uia.nornet:5900'   ],
+      [ 103, 4, u'hagenisse',    'holberg.uia.nornet',   'vnc://holberg.uia.nornet:5901'   ],
+      [ 104, 5, u'skipsnisse',   'andersen.uia.nornet',  'vnc://andersen.uia.nornet:5900'  ],
+      [ 105, 6, u'heinzelnisse', 'andersen.uia.nornet',  'vnc://andersen.uia.nornet:5901'  ]
    ] },
 
  { 'site_index'        : 8,
@@ -344,12 +344,12 @@ norNetSetup = [
            1500, 'fibre, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'snøflak',       'fjellrev.unis.nornet', 'vnc://fjellrev.unis.nornet:5700'  ],
-      [ 101, 2, u'isbre',         'fjellrev.unis.nornet', 'vnc://fjellrev.unis.nornet:5701'  ],
-      [ 102, 3, u'nordlys',       'hval.unis.nornet',     'vnc://hval.unis.nornet:5700'      ],
-      [ 103, 4, u'midnattssol',   'hval.unis.nornet',     'vnc://hval.unis.nornet:5701'      ],
-      [ 104, 5, u'adventfjorden', 'sel.unis.nornet',      'vnc://sel.unis.nornet:5700'       ],
-      [ 105, 6, u'isfjorden',     'sel.unis.nornet',      'vnc://sel.unis.nornet:5701'       ]
+      [ 100, 1, u'snøflak',       'fjellrev.unis.nornet', 'vnc://fjellrev.unis.nornet:5900'  ],
+      [ 101, 2, u'isbre',         'fjellrev.unis.nornet', 'vnc://fjellrev.unis.nornet:5901'  ],
+      [ 102, 3, u'nordlys',       'hval.unis.nornet',     'vnc://hval.unis.nornet:5900'      ],
+      [ 103, 4, u'midnattssol',   'hval.unis.nornet',     'vnc://hval.unis.nornet:5901'      ],
+      [ 104, 5, u'adventfjorden', 'sel.unis.nornet',      'vnc://sel.unis.nornet:5900'       ],
+      [ 105, 6, u'isfjorden',     'sel.unis.nornet',      'vnc://sel.unis.nornet:5901'       ]
    ] },
 
  { 'site_index'        : 9,
@@ -379,12 +379,12 @@ norNetSetup = [
            1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'bybro',      'munkholmen.ntnu.nornet',   'vnc://munkholmen.ntnu.nornet:5700'   ],
-      [ 101, 2, u'bakklandet', 'munkholmen.ntnu.nornet',   'vnc://munkholmen.ntnu.nornet:5701'   ],
-      [ 102, 3, u'byåsen',     'kristiansten.ntnu.nornet', 'vnc://kristiansten.ntnu.nornet:5700' ],
-      [ 103, 4, u'lerkendal',  'kristiansten.ntnu.nornet', 'vnc://kristiansten.ntnu.nornet:5701' ],
-      [ 104, 5, u'bymarka',    'nidelva.ntnu.nornet',      'vnc://nidelva.ntnu.nornet:5700'      ],
-      [ 105, 6, u'heimdal',    'nidelva.ntnu.nornet',      'vnc://nidelva.ntnu.nornet:5701'      ]
+      [ 100, 1, u'bybro',      'munkholmen.ntnu.nornet',   'vnc://munkholmen.ntnu.nornet:5900'   ],
+      [ 101, 2, u'bakklandet', 'munkholmen.ntnu.nornet',   'vnc://munkholmen.ntnu.nornet:5901'   ],
+      [ 102, 3, u'byåsen',     'kristiansten.ntnu.nornet', 'vnc://kristiansten.ntnu.nornet:5900' ],
+      [ 103, 4, u'lerkendal',  'kristiansten.ntnu.nornet', 'vnc://kristiansten.ntnu.nornet:5901' ],
+      [ 104, 5, u'bymarka',    'nidelva.ntnu.nornet',      'vnc://nidelva.ntnu.nornet:5900'      ],
+      [ 105, 6, u'heimdal',    'nidelva.ntnu.nornet',      'vnc://nidelva.ntnu.nornet:5901'      ]
    ] },
 
  { 'site_index'        : 10,
@@ -418,12 +418,12 @@ norNetSetup = [
            1492, 'ADSL, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'storsteinsfjellet', 'herjangsfjorden.hin.nornet', 'vnc://herjangsfjorden.hin.nornet:5700' ],
-      [ 101, 2, u'nihkevarri',        'herjangsfjorden.hin.nornet', 'vnc://herjangsfjorden.hin.nornet:5701' ],
-      [ 102, 3, u'beisfjordtøtta',    'skjomen.hin.nornet',         'vnc://skjomen.hin.nornet:5700'         ],
-      [ 103, 4, u'rombakstøtta',      'skjomen.hin.nornet',         'vnc://skjomen.hin.nornet:5701'         ],
-      [ 104, 5, u'bjørnfjell',        'beisfjorden.hin.nornet',     'vnc://beisfjorden.hin.nornet:5700'     ],
-      [ 105, 6, u'fagernesfjellet',   'beisfjorden.hin.nornet',     'vnc://beisfjorden.hin.nornet:5701'     ]
+      [ 100, 1, u'storsteinsfjellet', 'herjangsfjorden.hin.nornet', 'vnc://herjangsfjorden.hin.nornet:5900' ],
+      [ 101, 2, u'nihkevarri',        'herjangsfjorden.hin.nornet', 'vnc://herjangsfjorden.hin.nornet:5901' ],
+      [ 102, 3, u'beisfjordtøtta',    'skjomen.hin.nornet',         'vnc://skjomen.hin.nornet:5900'         ],
+      [ 103, 4, u'rombakstøtta',      'skjomen.hin.nornet',         'vnc://skjomen.hin.nornet:5901'         ],
+      [ 104, 5, u'bjørnfjell',        'beisfjorden.hin.nornet',     'vnc://beisfjorden.hin.nornet:5900'     ],
+      [ 105, 6, u'fagernesfjellet',   'beisfjorden.hin.nornet',     'vnc://beisfjorden.hin.nornet:5901'     ]
    ] },
 
  { 'site_index'        : 11,
@@ -452,15 +452,15 @@ norNetSetup = [
    # Server #252: 128.39.120.62
    # Server #253: 128.39.120.61
    'site_nodes' : [
-      [ 100, 1, u'hovedøya',    'dalsbergstien.hioa.nornet', 'vnc://dalsbergstien.hioa.nornet:5700' ],
-      [ 101, 2, u'lindøya',     'dalsbergstien.hioa.nornet', 'vnc://dalsbergstien.hioa.nornet:5701' ],
-      [ 102, 3, u'nakholmen',   'dalsbergstien.hioa.nornet', 'vnc://dalsbergstien.hioa.nornet:5702' ],
-      [ 103, 4, u'gressholmen', 'holbergsplass.hioa.nornet', 'vnc://holbergsplass.hioa.nornet:5700' ],
-      [ 104, 5, u'bleikøya',    'holbergsplass.hioa.nornet', 'vnc://holbergsplass.hioa.nornet:5701' ],
-      [ 105, 6, u'langøyene',   'holbergsplass.hioa.nornet', 'vnc://holbergsplass.hioa.nornet:5702' ],
-      [ 106, 7, u'heggholmen',  'pilestredet.hioa.nornet',   'vnc:/pilestredet.hioa.nornet/:5700'   ],
-      [ 107, 8, u'rambergøya',  'pilestredet.hioa.nornet',   'vnc://pilestredet.hioa.nornet:5701'   ],
-      [ 108, 9, u'vippetangen', 'pilestredet.hioa.nornet',   'vnc://pilestredet.hioa.nornet:5702'   ]
+      [ 100, 1, u'hovedøya',    'dalsbergstien.hioa.nornet', 'vnc://dalsbergstien.hioa.nornet:5900' ],
+      [ 101, 2, u'lindøya',     'dalsbergstien.hioa.nornet', 'vnc://dalsbergstien.hioa.nornet:5901' ],
+      [ 102, 3, u'nakholmen',   'dalsbergstien.hioa.nornet', 'vnc://dalsbergstien.hioa.nornet:5902' ],
+      [ 103, 4, u'gressholmen', 'holbergsplass.hioa.nornet', 'vnc://holbergsplass.hioa.nornet:5900' ],
+      [ 104, 5, u'bleikøya',    'holbergsplass.hioa.nornet', 'vnc://holbergsplass.hioa.nornet:5901' ],
+      [ 105, 6, u'langøyene',   'holbergsplass.hioa.nornet', 'vnc://holbergsplass.hioa.nornet:5902' ],
+      [ 106, 7, u'heggholmen',  'pilestredet.hioa.nornet',   'vnc:/pilestredet.hioa.nornet/:5900'   ],
+      [ 107, 8, u'rambergøya',  'pilestredet.hioa.nornet',   'vnc://pilestredet.hioa.nornet:5901'   ],
+      [ 108, 9, u'vippetangen', 'pilestredet.hioa.nornet',   'vnc://pilestredet.hioa.nornet:5902'   ]
    ] },
 
  { 'site_index'        : 40,
@@ -514,10 +514,10 @@ norNetSetup = [
            1500, 'fibre, business', 0, 0 ],
    ],
    'site_nodes' : [
-      [ 100, 1, u'reeperbahn',      'stpauli.haw.nornet',      'vnc://stpauli.haw.nornet:5700'      ],
-      [ 101, 2, u'grossefreiheit',  'stpauli.haw.nornet',      'vnc://stpauli.haw.nornet:5701'      ],
-      [ 102, 3, u'herbertstraße',   'wilhelmsburg.haw.nornet', 'vnc://wilhelmsburg.haw.nornet:5700' ]
-      # [ 103, 4, u'spielbudenplatz', 'wilhelmsburg.haw.nornet', 'vnc://wilhelmsburg.haw.nornet:5701' ],
+      [ 100, 1, u'reeperbahn',      'stpauli.haw.nornet',      'vnc://stpauli.haw.nornet:5900'      ],
+      [ 101, 2, u'grossefreiheit',  'stpauli.haw.nornet',      'vnc://stpauli.haw.nornet:5901'      ],
+      [ 102, 3, u'herbertstraße',   'wilhelmsburg.haw.nornet', 'vnc://wilhelmsburg.haw.nornet:5900' ]
+      # [ 103, 4, u'spielbudenplatz', 'wilhelmsburg.haw.nornet', 'vnc://wilhelmsburg.haw.nornet:5901' ],
    ] },
 
  { 'site_index'        : 42,
@@ -674,12 +674,12 @@ norNetSetup = [
            1500, 'fibre, consumer', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'longlou',   'wenchang.hu.nornet', 'vnc://wenchang.hu.nornet:5700' ],   # Wenchang Satellite Launch Center/WSLC
-      [ 101, 2, u'bamenbay',  'wenchang.hu.nornet', 'vnc://wenchang.hu.nornet:5701' ],   # This place is mangrove forests.
-      [ 102, 3, u'boao',      'qionghai.hu.nornet', 'vnc://qionghai.hu.nornet:5700' ],   # This is the permanent address of Boao forum for asia.
-      [ 103, 4, u'wanqun',    'qionghai.hu.nornet', 'vnc://qionghai.hu.nornet:5701' ],   # Wan-ch'uan River，Wanquan River before and called the white river.
-      [ 104, 5, u'nanshan',   'sanya.hu.nornet',    'vnc://sanya.hu.nornet:5700'    ],   # Nanshan Buddhism Cultural Park is a display of traditional Chinese Buddhist culture
-      [ 105, 6, u'yalongbay', 'sanya.hu.nornet',    'vnc://sanya.hu.nornet:5701'    ]    # This place has beautiful beach and tropical forest park
+      [ 100, 1, u'longlou',   'wenchang.hu.nornet', 'vnc://wenchang.hu.nornet:5900' ],   # Wenchang Satellite Launch Center/WSLC
+      [ 101, 2, u'bamenbay',  'wenchang.hu.nornet', 'vnc://wenchang.hu.nornet:5901' ],   # This place is mangrove forests.
+      [ 102, 3, u'boao',      'qionghai.hu.nornet', 'vnc://qionghai.hu.nornet:5900' ],   # This is the permanent address of Boao forum for asia.
+      [ 103, 4, u'wanqun',    'qionghai.hu.nornet', 'vnc://qionghai.hu.nornet:5901' ],   # Wan-ch'uan River，Wanquan River before and called the white river.
+      [ 104, 5, u'nanshan',   'sanya.hu.nornet',    'vnc://sanya.hu.nornet:5900'    ],   # Nanshan Buddhism Cultural Park is a display of traditional Chinese Buddhist culture
+      [ 105, 6, u'yalongbay', 'sanya.hu.nornet',    'vnc://sanya.hu.nornet:5901'    ]    # This place has beautiful beach and tropical forest park
    ] },
 
  # Haikou College of Economics (海口经济学院)
@@ -713,12 +713,12 @@ norNetSetup = [
    ],
    'site_nodes' : [
       # Naming scheme: places in Hainan
-      [ 100, 1, u'huoshankou',   'huoshankou.hkc.nornet',   'vnc://wuzhishan.hkc.nornet:5700' ],
-      [ 101, 2, u'dongzhaigang', 'dongzhaigang.hkc.nornet', 'vnc://wuzhishan.hkc.nornet:5701' ],
-      [ 102, 3, u'wanlvyuan',    'wanlvyuan.hkc.nornet',    'vnc://lingshui.hkc.nornet:5700'  ],
-      [ 103, 4, u'baishamen',    'baishamen.hkc.nornet',    'vnc://lingshui.hkc.nornet:5701'  ],
-      [ 104, 5, u'guanlanhu',    'guanlanhu.hkc.nornet',    'vnc://baoting.hkc.nornet:5700'   ],
-      [ 105, 6, u'hongshulin',   'hongshulin.hkc.nornet',   'vnc://baoting.hkc.nornet:5701'   ]
+      [ 100, 1, u'huoshankou',   'huoshankou.hkc.nornet',   'vnc://wuzhishan.hkc.nornet:5900' ],
+      [ 101, 2, u'dongzhaigang', 'dongzhaigang.hkc.nornet', 'vnc://wuzhishan.hkc.nornet:5901' ],
+      [ 102, 3, u'wanlvyuan',    'wanlvyuan.hkc.nornet',    'vnc://lingshui.hkc.nornet:5900'  ],
+      [ 103, 4, u'baishamen',    'baishamen.hkc.nornet',    'vnc://lingshui.hkc.nornet:5901'  ],
+      [ 104, 5, u'guanlanhu',    'guanlanhu.hkc.nornet',    'vnc://baoting.hkc.nornet:5900'   ],
+      [ 105, 6, u'hongshulin',   'hongshulin.hkc.nornet',   'vnc://baoting.hkc.nornet:5901'   ]
    ] },
 
  { 'site_index'        : 100,
@@ -744,8 +744,8 @@ norNetSetup = [
            1500, 'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
-      [ 100, 1, u'watson',  'oread.ku.nornet', 'vnc://oread.ku.nornet:5700' ],
-      [ 101, 2, u'clinton', 'oread.ku.nornet', 'vnc://oread.ku.nornet:5701' ]
+      [ 100, 1, u'watson',  'oread.ku.nornet', 'vnc://oread.ku.nornet:5900' ],
+      [ 101, 2, u'clinton', 'oread.ku.nornet', 'vnc://oread.ku.nornet:5901' ]
       #[ 102, 3, u'williamstown' ],
       #[ 103, 4, u'stull' ]
    ] },
@@ -805,12 +805,12 @@ norNetSetup = [
       # Naming schemes:
       # Research nodes: stations in Seoul
       # Physical machines: rivers in Seoul
-      [ 100, 1, u'yongsan', 'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5700' ],
-      [ 101, 2, u'mapo',    'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5701' ]
-      #[ 102, 3, u'ichon',   'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5702' ],
-      #[ 103, 4, u'gireum',  'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5703' ],
-      #[ 104, 5, u'aram',    'hangang.korea.nornet',   'vnc://hangang.korea.nornet:5700'   ],
-      #[ 105, 6, u'geumho',  'hangang.korea.nornet',   'vnc://hangang.korea.nornet:5701'   ]
+      [ 100, 1, u'yongsan', 'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5900' ],
+      [ 101, 2, u'mapo',    'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5901' ]
+      #[ 102, 3, u'ichon',   'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5902' ],
+      #[ 103, 4, u'gireum',  'gwanaksan.korea.nornet', 'vnc://gwanaksan.korea.nornet:5903' ],
+      #[ 104, 5, u'aram',    'hangang.korea.nornet',   'vnc://hangang.korea.nornet:5900'   ],
+      #[ 105, 6, u'geumho',  'hangang.korea.nornet',   'vnc://hangang.korea.nornet:5901'   ]
    ] },
 
  { 'site_index'        : 200,
@@ -867,12 +867,12 @@ norNetSetup = [
    #],
    #'site_nodes' : [
       ## Naming scheme: places in Sanya
-      #[ 100, 1, u'sanyabay',      'baoting.qu.nornet',   'vnc://baoting.qu.nornet:5700'   ],
-      #[ 101, 2, u'luhuitou',      'baoting.qu.nornet',   'vnc://baoting.qu.nornet:5701'   ],
-      #[ 102, 3, u'tianyahaijiao', 'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5700'  ],
-      #[ 103, 4, u'qiongzhou',     'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5701'  ],
-      #[ 104, 5, u'lizhigou',      'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5700' ],
-      #[ 105, 6, u'haitangbay',    'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5701' ]
+      #[ 100, 1, u'sanyabay',      'baoting.qu.nornet',   'vnc://baoting.qu.nornet:5900'   ],
+      #[ 101, 2, u'luhuitou',      'baoting.qu.nornet',   'vnc://baoting.qu.nornet:5901'   ],
+      #[ 102, 3, u'tianyahaijiao', 'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5900'  ],
+      #[ 103, 4, u'qiongzhou',     'lingshui.qu.nornet',  'vnc://lingshui.qu.nornet:5901'  ],
+      #[ 104, 5, u'lizhigou',      'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5900' ],
+      #[ 105, 6, u'haitangbay',    'wuzhishan.qu.nornet', 'vnc://wuzhishan.qu.nornet:5901' ]
    #] },
 
  # Mongolian University of Science and Technology (Шинжлэх ухаан технологийн их сургууль)
@@ -901,8 +901,8 @@ norNetSetup = [
    #'site_nodes' : [
       ## Naming scheme: districts of Ulan Bator
       ## Baganuur, Bagakhangai, Bayangol, Bayanzürkh, Chingeltei, Khan Uul, Nalaikh, Songino Khairkhan, and Sükhbaatar
-      #[ 100, 1, u'baganuur',    'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5700' ],
-      #[ 101, 2, u'bagakhangai', 'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5701' ]
+      #[ 100, 1, u'baganuur',    'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5900' ],
+      #[ 101, 2, u'bagakhangai', 'genghiskhan.must.nornet', 'vnc://genghiskhan.must.nornet:5901' ]
    #] },
 
  #{ 'site_index'        : 120,
