@@ -67,6 +67,14 @@ def getLocalSiteDHCPServerDynamicConfigurationString():
 
 
 # ###### Get DHCPD node configuration string ################################
+def getLocalSiteDHCPServerDynamicNodeNamesString():
+   try:
+      return str(NorNet_Configuration['NorNet_LocalSite_DHCPServer_NodeNames'])
+   except:
+      return ''
+
+
+# ###### Get DHCPD node configuration string ################################
 def getLocalSiteDHCPServerStaticConfigurationString(nodeIndex):
    try:
       return str(NorNet_Configuration['NorNet_LocalSite_DHCPServer_Static' + str(nodeIndex)])
@@ -186,7 +194,7 @@ def coordinateToDMS(coordinate, hemisphereTypes = 'NS'):
 
    m       = (coordinate % 1) * 60
    minutes = int(m)
-   seconds = (m % 1) * 60
+   seconds = round((m % 1) * 60, 3)
 
    return(str(degrees) + ' ' + str(minutes) + ' ' + str(seconds) + ' ' + hemisphere)
 
@@ -350,10 +358,14 @@ def makeNodeForDNS(nodeName, site, nodeIndex, model, type, options):
          v4Only = 1
       elif option == 'def-v4only':
          v4Only = 2
-      if option == 'v6only':
+      elif option == 'v6only':
          v6Only = 1
       elif option == 'def-v6only':
          v6Only = 2
+      elif option == 'slice':
+         pass
+      else:
+         print('NOTE: Ignoring unknown option: ' + option)
    norNetNode = {
       'node_site_id'          : site['site_id'],
       'node_index'            : nodeIndex,
@@ -522,10 +534,12 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
                      writeRR(siteZoneFile, nameToWrite,
                              rrTypeForAddress(nodeAddress), str(nodeAddress.ip))
                   if version == 6:   # Just add entry once!
-                     writeRR(siteZoneFile, nameToWrite,
-                             'HINFO', '"' + node['node_model'] + '/' + localProvider['provider_long_name'] + '" "' + node['node_type'] + '"')
-                     writeLOC(siteZoneFile, nameToWrite, localSite)
-                     writeSSHFP(siteZoneFile, nameToWrite, node['node_ssh_rsa_key'])
+                     if (includeNodeIP(node, localSite, localProviderIndex, 4) or
+                         includeNodeIP(node, localSite, localProviderIndex, 6)):
+                        writeRR(siteZoneFile, nameToWrite,
+                                'HINFO', '"' + node['node_model'] + '/' + localProvider['provider_long_name'] + '" "' + node['node_type'] + '"')
+                        writeLOC(siteZoneFile, nameToWrite, localSite)
+                        writeSSHFP(siteZoneFile, nameToWrite, node['node_ssh_rsa_key'])
 
                # ====== Hostname with *all* addresses =======================
                else:
@@ -581,7 +595,9 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
                           punycodeName + '.',
                           'CNAME',
                           addProviderToName(node['node_name'] + '.', str.lower(localProvider['provider_short_name']), siteFQDN))
-               else:
+
+               if (includeNodeIP(node, localSite, localProviderIndex, 4) or
+                   includeNodeIP(node, localSite, localProviderIndex, 6)):
                   writeRR(siteZoneFile,
                           addProviderToName(punycodeName + '.', str.lower(localProvider['provider_short_name']), siteFQDN),
                           'CNAME',
@@ -637,11 +653,12 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
                                       str.lower(localProvider['provider_short_name'])  + '.' + str.lower(localSite['site_domain'])  + '.'
                   writeRR(siteZoneFile, localName,
                           rrTypeForAddress(localTunnelIP), str(localTunnelIP.ip))
-                  writeRR(siteZoneFile, localName,
-                          'HINFO', '"Tunnel Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '" ' +
-                          '"Remote Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '"')
-                  writeLOC(siteZoneFile, localName, localSite)
-                  siteZoneFile.write('\n')
+
+               writeRR(siteZoneFile, localName,
+                       'HINFO', '"Tunnel Endpoint at ' + localSite['site_long_name'] + '/' + localProvider['provider_long_name'] + '" ' +
+                       '"Remote Endpoint at ' + remoteSite['site_long_name'] + '/' + remoteProvider['provider_long_name'] + '"')
+               writeLOC(siteZoneFile, localName, localSite)
+               siteZoneFile.write('\n')
 
    siteZoneFile.close()
 
@@ -1679,6 +1696,27 @@ def makeHiPerConTracerConfiguration(localSite):
    outputFile.close()
 
 
+# ###########################################################################
+# #### Fling Configuration                                               ####
+# ###########################################################################
+
+
+# ###### Generate Fling daemon configuration ################################
+def makeFlingConfiguration(localSite):
+   localProviderList = getNorNetProvidersForSite(localSite)
+
+   log('Making Fling configuration for ' + localSite['site_long_name'] + ' ...')
+   outputFile = codecs.open('fling-config', 'w', 'utf-8')
+
+   outputFile.write('DAEMON_ARGS="-H 77.88.71.145 -T 4 -D 3600 -i')
+   for localProviderIndex in localProviderList:
+      localProvider = localProviderList[localProviderIndex]
+      outputFile.write(' ' + localProvider['provider_tunnelbox_interface'])
+   outputFile.write('"\n')
+
+   outputFile.close()
+
+
 
 # ###########################################################################
 # #### Main program                                                      ####
@@ -1772,7 +1810,7 @@ if fullSliceList != None:
                                        getNorNetSiteOfNode(fullSiteList, node),
                                        node['node_index'],
                                        node['node_model'], 'Slice ' + slice['slice_name'],
-                                      'slice')
+                                       [ 'slice' ])
             # Add a pseudo entry to create a slice address later
             sliceNode['pseudo_slice_node_index'] = getSliceNodeIndexOfNorNetSlice(slice, node)
             sliceNode['node_ssh_rsa_key']        = node['node_ssh_rsa_key']
@@ -1793,6 +1831,7 @@ for additionalNode in additionalNodes:
 dynamicStart         = 0
 dynamicEnd           = 0
 dynamicConfiguration = getLocalSiteDHCPServerDynamicConfigurationString()
+dynamicNodeNames     = shlex.split(getLocalSiteDHCPServerDynamicNodeNamesString())
 if ((dynamicConfiguration != None) and (dynamicConfiguration != '')):
    parameters = shlex.split(dynamicConfiguration)
    if len(parameters) < 2:
@@ -1808,9 +1847,22 @@ if ((dynamicConfiguration != None) and (dynamicConfiguration != '')):
 
    j = 1
    for i in range(dynamicStart, dynamicEnd + 1):
-      additionalNodes.append(makeNodeForDNS('dhcp{:02d}'.format(j), localSite, i,
-                                            'NorNet Node', 'DHCP, entry ' + str(j),
-                                            'def-v4only'))
+      simpleDhcpName = 'dhcp{:02d}'.format(j)
+      try:
+         dhcpName = dynamicNodeNames[j - 1]
+      except:
+         dhcpName = simpleDhcpName
+
+      if i in aliases:
+         error('Alias set for DHCP entry ' + str(i))
+      if getLocalNodeConfigurationString(i) != '':
+         error('Node set for DHCP entry ' + str(i))
+
+      # print("D=",i - dynamicStart,dhcpName)
+      additionalNodes.append(makeNodeForDNS(dhcpName, localSite, i,
+                                            'NorNet Node', 'DHCP, dynamic entry ' + str(j) + '/' + str(dynamicEnd + 1 - dynamicStart),
+                                            [ 'def-v4only' ]))
+      aliases[i] = [ simpleDhcpName ]
       j = j + 1
 
 
@@ -1848,6 +1900,7 @@ makeBindConfiguration(fullSiteList, siteNodeList, fullSliceList, localSite,
 
 # ====== Create other configurations ========================================
 makeHiPerConTracerConfiguration(localSite)
+makeFlingConfiguration(localSite)
 #makeIPSECConfiguration(localSite)
 makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
 makeRADVDConfiguration(localSite)

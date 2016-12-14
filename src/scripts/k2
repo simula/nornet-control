@@ -1,0 +1,219 @@
+#!/bin/bash -e
+#
+# Kernel Test Script
+# Copyright (C) 2016 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+export MAINTAINER="Thomas Dreibholz <dreibh@simula.no>"
+
+
+# ====== Repository cleaning ==============================
+git clean -x -d -f
+# cp $HOME/kernel-config .config
+
+
+# # ====== Fix PIE compile problem for GCC 6.x ============
+# cat >Makefile.patch <<EOF
+# diff --git a/Makefile b/Makefile
+# index 137679c..ce0c477 100644
+# --- a/Makefile
+# +++ b/Makefile
+# @@ -611,6 +611,12 @@ include arch/\$(SRCARCH)/Makefile
+#
+#  KBUILD_CFLAGS  += \$(call cc-option,-fno-delete-null-pointer-checks,)
+#
+# +# force no-pie for distro compilers that enable pie by default
+# +KBUILD_CFLAGS += \$(call cc-option, -fno-pie)
+# +KBUILD_CFLAGS += \$(call cc-option, -no-pie)
+# +KBUILD_AFLAGS += \$(call cc-option, -fno-pie)
+# +KBUILD_CPPFLAGS += \$(call cc-option, -fno-pie)
+# +
+#  ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+#  KBUILD_CFLAGS  += -Os \$(call cc-disable-warning,maybe-uninitialized,)
+#  else
+# EOF
+#
+# git checkout Makefile
+# patch -p1 <Makefile.patch
+
+
+# # ====== Version check ====================================
+# echo "Kernel Version  `make kernelversion`"
+# echo "Kernel Release: `make kernelrelease`"
+# if [ "`make kernelrelease`" != "`make kernelversion`" ] ; then
+#    echo >&2 "ERROR: Versioning issues - packaging will not work properly!"
+#    exit 1
+# fi
+
+
+cp -r ~/src/ubuntu-xenial/debian .
+cp -r ~/src/ubuntu-xenial/debian.master .
+
+cp -r ~/src/ubuntu-xenial/spl .
+cp -r ~/src/ubuntu-xenial/zfs .
+cp -r ~/src/ubuntu-xenial/ubuntu .
+
+for hvName in hv_kvp_daemon.8 lsvmbus lsvmbus.8 Makefile ; do
+   cp -r ~/src/ubuntu-xenial/tools/hv/$hvName tools/hv/
+done
+
+
+# https://wiki.ubuntu.com/Kernel/Handbook/ReleaseManagement/MaintainingRelease
+rm -rf debian.master/abi
+# debian/scripts/misc/getabis 4.1.31 0.0
+# exit 1
+
+
+# # cp .config debian.master/config/config.common.ubuntu
+# # cp $HOME/kernel-config debian.master/config/config.common.ubuntu
+
+# !!!! UBUNTU WILY 4.2 KERNEL CONFIG !!!!
+# cp ~/src/ubuntu-wily/debian.master/config/config.common.ubuntu debian.master/config/config.common.ubuntu
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+(
+   cat ~/src/planetlab-kernel/config-planetlab
+
+   # /tmp/buildd/linux-4.1.31.0003/debian/build/build-generic
+   # make silentoldconfig
+   cat <<EOF
+
+# # --- with wily config ---
+# CONFIG_RCU_BOOST=n
+# CONFIG_RCU_USER_QS=n
+# CONFIG_RCU_FANOUT=64
+# CONFIG_RCU_FANOUT_LEAF=16
+# CONFIG_RCU_FANOUT_EXACT=n
+# CONFIG_RCU_FAST_NO_HZ=n
+# CONFIG_RCU_KTHREAD_PRIO=0
+#
+# CONFIG_NFC_ST21NFCB=n
+# CONFIG_ZRAM_DEBUG=n
+# CONFIG_SND_HDA_INPUT_JACK=n
+# CONFIG_SND_SOC_HDMI_CODEC=n
+# CONFIG_DT3155_CCIR=y
+# CONFIG_DT3155_STREAMING=y
+#
+# CONFIG_UNISYS_VISORUTIL=y
+# CONFIG_UNISYS_VISORCHANNEL=y
+# CONFIG_UNISYS_VISORCHIPSET=m
+# CONFIG_UNISYS_UISLIB=m
+# CONFIG_UNISYS_VIRTPCI=m
+# CONFIG_UNISYS_VIRTHBA=m
+# CONFIG_I2O=n
+# CONFIG_SUNRPC_XPRT_RDMA_CLIENT=m
+# CONFIG_SUNRPC_XPRT_RDMA_SERVER=m
+# # ---
+
+# --- with xenial config ---
+CONFIG_RCU_BOOST=n
+CONFIG_RCU_USER_QS=n
+CONFIG_RCU_FANOUT=64
+CONFIG_RCU_FANOUT_LEAF=16
+CONFIG_RCU_FANOUT_EXACT=n
+CONFIG_RCU_FAST_NO_HZ=n
+CONFIG_RCU_KTHREAD_PRIO=0
+CONFIG_RCU_NOCB_CPU=n
+
+CONFIG_MICROCODE_EARLY=y
+CONFIG_NETFILTER_NETLINK_QUEUE_CT=n
+CONFIG_NFC_NCI_SPI=y
+CONFIG_NFC_ST21NFCB=n
+CONFIG_ZRAM_DEBUG=n
+CONFIG_IIO_BUFFER_CB=y
+
+CONFIG_B43_PCMCIA=n
+CONFIG_SCSI_MPT2SAS_LOGGING=n
+CONFIG_SCSI_MPT3SAS_LOGGING=n
+CONFIG_IP1000=m
+CONFIG_INPUT_MAX77843_HAPTIC=m
+CONFIG_GPIO_IT8761E=m
+CONFIG_BATTERY_BQ27x00=m
+CONFIG_BATTERY_BQ27X00_I2C=y
+CONFIG_BATTERY_BQ27X00_PLATFORM=y
+CONFIG_REGULATOR_MAX77843=m
+
+CONFIG_SCSI_MPT2SAS_LOGGING=n
+CONFIG_SCSI_MPT3SAS_LOGGING=n
+
+CONFIG_DRM_I915_KMS=y
+CONFIG_DRM_I915_FBDEV=y
+
+CONFIG_SND_HDA_INPUT_JACK=n
+CONFIG_SND_SOC_HDMI_CODEC=n
+
+CONFIG_USB_OTG_FSM=n
+CONFIG_USB_FUSBH200_HCD=m
+CONFIG_USB_DWC3_DEBUG=n
+CONFIG_MMC_CLKGATE=n
+
+CONFIG_LEDS_PM8941_WLED=m
+CONFIG_EDAC_MCE_INJ=n
+CONFIG_COMEDI_UNIOXX5=m
+CONFIG_FB_SM7XX=m
+CONFIG_FT1000=m
+CONFIG_FT1000_USB=y
+CONFIG_FT1000_PCMCIA=y
+
+CONFIG_DT3155_CCIR=y
+CONFIG_DT3155_STREAMING=y
+
+CONFIG_USB_WPAN_HCD=m
+CONFIG_UNISYS_VISORUTIL=y
+CONFIG_UNISYS_VISORCHANNEL=y
+CONFIG_UNISYS_VISORCHIPSET=m
+CONFIG_UNISYS_UISLIB=m
+CONFIG_UNISYS_VIRTPCI=m
+CONFIG_UNISYS_VIRTHBA=m
+CONFIG_I2O=n
+CONFIG_EXT4_USE_FOR_EXT23=y
+CONFIG_SUNRPC_XPRT_RDMA_CLIENT=m
+CONFIG_SUNRPC_XPRT_RDMA_SERVER=m
+CONFIG_RCU_CPU_STALL_INFO=y
+CONFIG_SECURITY_YAMA_STACKED=n
+CONFIG_DEFAULT_SECURITY_APPARMOR=y
+CONFIG_DEFAULT_SECURITY_YAMA=n
+
+EOF
+) >>debian.master/config/config.common.ubuntu
+
+
+cat >debian.master/changelog <<EOF
+linux (4.1.32-1.1) xenial; urgency=low
+
+  * This is a dummy changelog for packages generated by kernel-package. At
+    some point, there shall be hooks for the user to substitute a
+    changelog entry, but currently this is just a stub.
+
+ -- $MAINTAINER  `env LANG=C date +"%a, %d %b %Y %H:%M:%S %z"`
+EOF
+# # cp debian.master/changelog debian.xenial/changelog
+
+# ------ Trusty onkly ------
+sed \
+   -e 's/ <!stage1>//g' \
+   -e '/^Build-Profiles:/ d' \
+   -i debian.master/control.stub.in debian.master/control.d/flavour-control.stub debian/control
+
+
+fakeroot debian/rules insertchanges
+fakeroot debian/rules clean
+# !!!!!!
+cd debian.master/abi && ln -s 4.1.32-1.1 4.1.32-0.0 && cd ../..
+# !!!!!!
+dpkg-buildpackage -S -v4.1.32-1.1 -k"${MAINTAINER}" -rfakeroot -I.git -I.gitignore -i'\.git.*'

@@ -1,4 +1,4 @@
-DISTRIBUTION=trusty
+DISTRIBUTION=xenial
 COMPONENTS="main universe"
 
 MIRRORSITE=http://no.archive.ubuntu.com/ubuntu/
@@ -9,15 +9,18 @@ OTHERMIRROR="deb http://ppa.launchpad.net/dreibh/ubuntu $DISTRIBUTION main"
 
 
 # NOTE: To create the base installation, run:
-# sudo pbuilder create --debootstrapopts --variant=buildd --keyring /etc/apt/trusted.gpg
+# sudo rm -f /etc/apt/pbuilder-trusted.gpg
+# find /etc/apt/trusted.gpg.d/ -name "*.gpg" | xargs --no-run-if-empty -n1 sudo apt-key --keyring /etc/apt/pbuilder-trusted.gpg add
+# sudo pbuilder create --debootstrapopts --variant=buildd --keyring /etc/apt/pbuilder-trusted.gpg
 
 # NOTE: Upon changes, run:
 # sudo pbuilder update --override-config
 
 
 # Trust
-APTKEYRINGS=( '/etc/apt/trusted.gpg' )
-DEBOOTSTRAPOPTS=( '--variant=buildd' '--keyring' '/etc/apt/trusted.gpg' )
+APTKEYRINGS=( "/etc/apt/trusted.gpg" )
+DEBOOTSTRAP="debootstrap"
+DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/etc/apt/trusted.gpg")
 # NOTE: pbuilder seems to ignore these settings!
 # Then, ALLOWUNTRUSTED=yes "solves" the problem to build VirtualBox (needs kbuild).
 # This is, of course, not a good solution!
@@ -26,6 +29,12 @@ DEBOOTSTRAPOPTS=( '--variant=buildd' '--keyring' '/etc/apt/trusted.gpg' )
 # Turn OFF ccache! It will not work properly!
 CCACHEDIR=
 
+# Multi-core: set concurrency level. The packaging scripts will handle it properly:
+cores=`getconf _NPROCESSORS_ONLN`
+export CONCURRENCY_LEVEL=${cores}
+export DEB_BUILD_OPTIONS="parallel=${cores}"
+# This will not work (unlimited number of processes for kernel build!):
+# !!! DO NOT USE !!! DEBBUILDOPTS="-j${cores}"
 
 # =================================================================
 

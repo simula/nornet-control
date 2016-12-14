@@ -10,6 +10,8 @@
 ../Slice-Setup add --name=srl_seattle        --own-addresses --permanent --maxnodespersite=2   --user=dreibh@simula.no --user=albert.rafetseder+nyu@univie.ac.at
 ../Slice-Setup add --name=srl_cps            --own-addresses --permanent --maxnodespersite=2   --user=dreibh@simula.no --user=dipesh@simula.no
 
+../Slice-Setup add --name=uio_fling          --own-addresses --permanent --maxnodespersite=2   --user=dreibh@simula.no --user=dipesh@simula.no --user=michawe@ifi.uio.no --user=runabk@ifi.uio.no --user=ahmed@simula.no
+
 ../Slice-Setup add --name=uib_mptcp   --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=k.b.i@lyse.net --user=dse075@student.uib.no
 
 ../Slice-Setup add --name=haw_cmt     --own-addresses --permanent --maxnodespersite=4 --user=dreibh@simula.no --user=hauke.buhr@haw-hamburg.de --user=denis.lugowski@haw-hamburg.de --user=martin.becke@haw-hamburg.de

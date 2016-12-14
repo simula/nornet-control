@@ -18,57 +18,93 @@
 #
 # Contact: dreibh@simula.no
 
+
+# ====== Repository cleaning ==============================
 git clean -x -d -f
+rm -rf debian   # It is *not* deleted by "git clean", due to .gitignore!
 cp $HOME/kernel-config .config
 
-# ====== Fix PIE compile problem for GCC 6.x ======
-cat >Makefile.patch <<EOF
-diff --git a/Makefile b/Makefile
-index 137679c..ce0c477 100644
---- a/Makefile
-+++ b/Makefile
-@@ -611,6 +611,12 @@ include arch/\$(SRCARCH)/Makefile
- 
- KBUILD_CFLAGS  += \$(call cc-option,-fno-delete-null-pointer-checks,)
- 
-+# force no-pie for distro compilers that enable pie by default
-+KBUILD_CFLAGS += \$(call cc-option, -fno-pie)
-+KBUILD_CFLAGS += \$(call cc-option, -no-pie)
-+KBUILD_AFLAGS += \$(call cc-option, -fno-pie)
-+KBUILD_CPPFLAGS += \$(call cc-option, -fno-pie)
-+
- ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
- KBUILD_CFLAGS  += -Os \$(call cc-disable-warning,maybe-uninitialized,)
- else
-EOF
 
-git checkout Makefile
-patch -p1 <Makefile.patch
+# # ====== Ubuntu Yakkety ===================================
+# cat $HOME/kernel-config | sed \
+#    -e "s/^.*CONFIG_CC_STACKPROTECTOR_NONE.*$/CONFIG_CC_STACKPROTECTOR_NONE=y/g" \
+#    -e "s/^.*CONFIG_CC_STACKPROTECTOR_REGULAR.*$/CONFIG_CC_STACKPROTECTOR_REGULAR=n/g" \
+#    -e "s/^.*CONFIG_CC_STACKPROTECTOR_STRONG.*$/CONFIG_CC_STACKPROTECTOR_STRONG=n/g" \
+# >.config
+#
+# # ====== Fix PIE compile problem for GCC 6.x ==============
+# cat >Makefile.patch <<EOF
+# diff --git a/Makefile b/Makefile
+# index 137679c..ce0c477 100644
+# --- a/Makefile
+# +++ b/Makefile
+# @@ -611,6 +611,12 @@ include arch/\$(SRCARCH)/Makefile
+#
+#  KBUILD_CFLAGS  += \$(call cc-option,-fno-delete-null-pointer-checks,)
+#
+# +# force no-pie for distro compilers that enable pie by default
+# +KBUILD_CFLAGS += \$(call cc-option, -fno-pie)
+# +KBUILD_CFLAGS += \$(call cc-option, -no-pie)
+# +KBUILD_AFLAGS += \$(call cc-option, -fno-pie)
+# +KBUILD_CPPFLAGS += \$(call cc-option, -fno-pie)
+# +
+#  ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+#  KBUILD_CFLAGS  += -Os \$(call cc-disable-warning,maybe-uninitialized,)
+#  else
+# EOF
+#
+# git checkout Makefile
+# patch -p1 <Makefile.patch
 
-make-kpkg --rootcmd fakeroot clean
-make-kpkg --rootcmd fakeroot \
+
+# ====== Version check ====================================
+# NOTE: work around <version>+ issue
+# The kernel release is computed by scripts/setlocalversion
+echo "" >.scmversion
+
+echo "Kernel Version  `make kernelversion`"
+echo "Kernel Release: `make kernelrelease`"
+if [ "`make kernelrelease`" != "`make kernelversion`" ] ; then
+   echo >&2 "ERROR: Versioning issues - packaging will not work properly!"
+   exit 1
+fi
+
+
+# ====== "Kernel Package" =================================
+# Using the Git version here.
+# NOTE: kernel-package/kernel (sub-directory!) corresponds to
+#       /usr/share/kernel-package
+if [ ! -e $HOME/src/kernel-package -o ! -e $HOME/src/kernel-package/kernel ] ; then
+   echo >&2 "ERROR: $HOME/src/kernel-package or $HOME/src/kernel-package/kernel does not exist!"
+   echo >&2 "Use: git clone https://github.com/dreibh/kernel-package.git $HOME/src/kernel-package"
+   exit 1
+fi
+
+
+# ====== Clean ============================================
+$HOME/src/kernel-package/make-kpkg --rootcmd fakeroot \
+   --overlay-dir $HOME/src/kernel-package/kernel \
+   clean
+
+# ====== Create source package ============================
+$HOME/src/kernel-package/make-kpkg --rootcmd fakeroot \
+   --overlay-dir $HOME/src/kernel-package/kernel \
    --stem linux \
-   --initrd --overlay-dir $HOME/src/kernel-package/kernel \
-   --revision "888"
-   # --append-to-version "-mptcp"   #  --revision "3000"
+   --initrd  \
+   --revision 26.0.mptcp \
+   debian
 
-# \   buildpackage
-
-
-debian/rules debian/stamp/pre-config-common
+#    --append-to-version "-custom" \
 
 
 echo 'Building Package' >stamp-building
-test ! -e scripts/package/builddeb || mv -f scripts/package/builddeb scripts/package/builddeb.kpkg-dist
-test ! -e scripts/package/Makefile ||              \
-    test -f scripts/package/Makefile.kpkg-dist ||  \
-    (mv -f scripts/package/Makefile scripts/package/Makefile.kpkg-dist && \
-       (echo "# Dummy file "; echo "help:") >  scripts/package/Makefile)
+
+# !!!!!!!!!!!!
+# https://linuxconfig.org/building-kernels-the-debian-way
+cp include/generated/utsrelease.h include/linux/
+# !!!!!!!!!!!!
 
 export MAINTAINER="Thomas Dreibholz <dreibh@iem.uni-due.de>"
-export CONCURRENCY_LEVEL=`getconf _NPROCESSORS_ONLN`
-dpkg-buildpackage -S -us -uc -k"${MAINTAINER}" -rfakeroot -I.git -I.gitignore -i'\.git.*'
+dpkg-buildpackage -S -sa -k"${MAINTAINER}" -rfakeroot -I.git -I.gitignore -i'\.git.*'
 
-test ! -f scripts/package/builddeb.kpkg-dist ||   mv -f scripts/package/builddeb.kpkg-dist scripts/package/builddeb
-test ! -f scripts/package/Makefile.kpkg-dist ||   mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
 rm -f stamp-building

@@ -96,6 +96,8 @@ NorNet_LocalSite_TBDefaultProviderIPv4='128.39.36.143'
 
 # DHCP Configuration:
 NorNet_LocalSite_DHCPServer_Dynamic='"40" "49"'
+NorNet_LocalSite_DHCPServer_NodeNames='beige blå brun fiolett grønn grå gul hvit kaki nøttebrun oransje rosa rød svart turkis asurblå cyanblå himmelblå indigoblå karmosinrød magentarød midnattsblå sandbrun stålblå tomatrød'
+# NorNet_LocalSite_DHCPServer_NodeNames='elefant fisk fugl hest hund katt kenguru koala løve mus orm tiger'
 
 NorNet_LocalSite_DHCPServer_Static200='"f0:de:f1:11:22:33"'
 NorNet_LocalSite_DHCPServer_Static201='"f0:de:f1:aa:bb:cc" "pxe-boot.img"'

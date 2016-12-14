@@ -24,15 +24,14 @@ HOME="/home/nornetpp"
 
 SOURCES="$HOME/src"
 REPOSITORIES="$HOME/repos/nornet-applications"
-DISTRIBUTIONS="fedora-23-x86_64 fedora-23-i386"
+DISTRIBUTIONS="fedora-25-x86_64 fedora-25-i386 fedora-24-x86_64 fedora-24-i386 fedora-23-x86_64 fedora-23-i386"
 
-PACKAGES="nornet_nn bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
+PACKAGES="libneat libusrsctp nornet_nn bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
 
 
-# ====== BibTeXConv =======================================
+# ====== NorNet-NN ========================================
 nornet_nn_DIR="nornet-nn"
 nornet_nn_REPO="git://github.com/dreibh/nornet-nn.git"
-
 
 # ====== BibTeXConv =======================================
 bibtexconv_DIR="bibtexconv"
@@ -57,6 +56,14 @@ subnetcalc_REPO="git://github.com/dreibh/subnetcalc.git"
 # ====== TSCTP ============================================
 tsctp_DIR="tsctp"
 tsctp_REPO="git://github.com/dreibh/tsctp.git"
+
+# ====== libusrsctp =======================================
+libusrsctp_DIR="libusrsctp"
+libusrsctp_REPO="git://github.com/dreibh/usrsctp.git@dreibh/rpm-packaging"
+
+# ====== libneat =======================================
+libneat_DIR="libneat"
+libneat_REPO="git://github.com/NEAT-project/neat.git@dreibh/rpm-packaging"
 
 # ====== libvirt ==========================================
 # libvirt_DIR="`pwd`/libvirt"
@@ -106,8 +113,12 @@ for package in $PACKAGES ; do
 
 
    # ====== Clone ===========================================================
-   package_repo=""
-   eval "package_repo=\$${package}_REPO"
+   eval "package_repo_with_tag=\$${package}_REPO"
+   package_repo=`echo "$package_repo_with_tag" | sed -e "s/@.*$//g"`
+   package_repo_tag=`echo "$package_repo_with_tag" | sed -e "s/^.*@//g"`
+   if [ "$package_repo" == "$package_repo_tag" ] ; then
+      package_repo_tag="master"
+   fi
    if [ "$package_repo" == "" ] ; then
       echo >&2 "ERROR: Invalid repoectory given in ${package}_REPO!"
       exit 1
@@ -119,6 +130,7 @@ for package in $PACKAGES ; do
    # ====== Build ===========================================================
    (
       cd "$package_dir"
+      git checkout $package_repo_tag
 
       # ====== Build SRPM ===================================================
       eval "package_dir=\$${package}_DIR"

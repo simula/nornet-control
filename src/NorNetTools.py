@@ -250,7 +250,7 @@ def makeNameFromUnicode(name, isDNSName = True):
             (unicodeName[i] <= 'Z')) or
            ((unicodeName[i] >= '0') and
             (unicodeName[i] <= '9')) or
-           ((isDNSName == False) and (unicodeName[i] == ' ')) or
+           ((isDNSName == False) and ((unicodeName[i] == ' ') or (unicodeName[i] == '\''))) or
            (unicodeName[i] == '-') or
            (unicodeName[i] == '.')):
          asciiName = asciiName + unicodeName[i]

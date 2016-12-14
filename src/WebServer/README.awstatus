@@ -1,0 +1,5 @@
+AWStats full regeneration of results:
+
+Remove /var/lib/awstats/*
+
+sudo /usr/lib/cgi-bin/awstats.pl -update -config="packages.nntb.no" -LogFile="/usr/share/awstats/tools/logresolvemerge.pl -/var/log/apache2/access.log* |"

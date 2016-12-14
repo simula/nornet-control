@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "Connecting to Tunnelbox of Universitetet i Tromsø (129.242.157.228) ..."
+ssh -C nornetpp@129.242.157.228
