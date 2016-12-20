@@ -632,6 +632,7 @@ norNetSetup = [
    'site_contacts'     : [ u'Jonglez, Baptiste: baptiste.jonglez@imag.fr', u'Heusse, Martin: martin.heusse@imag.fr' ],
    'site_pcu'          : [ IPv4Address('129.88.12.254'), 'pcu-root', 'a-secret-password' ],   # lig-chamrousse-nornet.imag.fr
    'site_nornet_if'    : 'eth0',
+   # DNS: 152.77.1.22 195.83.24.30 2001:660:5301:12::4 2001:660:5301:12::7 2001:660:5301:1e::101
    'site_providers' : [
       [ u'Reseau National de Communications Électroniques', 'eth1',   # lig-grenoble-nornet.imag.fr
            IPv4Interface('129.88.12.160/25'),         IPv4Address('129.88.12.254'),
