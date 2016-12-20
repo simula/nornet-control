@@ -630,12 +630,12 @@ norNetSetup = [
    'site_longitude'    : 5.76709,
    'site_altitude'     : 213,
    'site_contacts'     : [ u'Jonglez, Baptiste: baptiste.jonglez@imag.fr', u'Heusse, Martin: martin.heusse@imag.fr' ],
-   'site_pcu'          : [ IPv4Address('192.0.2.3'), 'pcu-root', 'a-secret-password' ],   # chamrousse.lig.nornet
+   'site_pcu'          : [ IPv4Address('129.88.12.254'), 'pcu-root', 'a-secret-password' ],   # lig-chamrousse-nornet.imag.fr
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
-      [ u'Reseau National de Communications Électroniques', 'eth1',
-           IPv4Interface('192.0.2.2/24'), IPv4Address('192.0.2.1'),
-           IPv6Interface('::/0'),         IPv6Address('::'),
+      [ u'Reseau National de Communications Électroniques', 'eth1',   # lig-grenoble-nornet.imag.fr
+           IPv4Interface('129.88.12.160/25'),         IPv4Address('129.88.12.254'),
+           IPv6Interface('2001:660:5301:72::160/64'), IPv6Address('2001:660:5301:72::fe'),
            1500, 'fibre, business', 0, 0 ]
    ],
    'site_nodes' : [
