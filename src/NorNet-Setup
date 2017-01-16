@@ -617,7 +617,7 @@ norNetSetup = [
 
  # Laboratoire d'Informatique de Grenoble (LIG)
  { 'site_index'        : 64,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u"Laboratoire d'Informatique de Grenoble",
    'site_short_name'   : 'LIG',
    'site_url'          : 'https://www.liglab.fr',
