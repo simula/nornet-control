@@ -37,5 +37,6 @@
 ../Slice-Setup add --name=hu_fufa          --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn
 ../Slice-Setup add --name=hu_xingzhou      --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn
 ../Slice-Setup add --name=hu_chengxi       --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=391204334@qq.com
+../Slice-Setup add --name=hu_yulilioa       --own-addresses --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=1333760123@163.com
 
 # ../Slice-Setup add --name=hu_ --own-addresses --permanent --maxnodespersite=4 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=
