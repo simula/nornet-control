@@ -24,9 +24,18 @@ HOME="/home/nornetpp"
 
 SOURCES="$HOME/src"
 REPOSITORIES="$HOME/repos/nornet-applications"
-DISTRIBUTIONS="fedora-25-x86_64 fedora-25-i386 fedora-24-x86_64 fedora-24-i386 fedora-23-x86_64 fedora-23-i386"
+FEDORAS="25 24 23"   # rawhide
+ARCHS="x86_64 i386"
 
-PACKAGES="libneat libusrsctp nornet_nn bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
+DISTRIBUTIONS=""
+for fedora in $FEDORAS ; do
+   for arch in $ARCHS ; do
+      DISTRIBUTIONS="fedora-$fedora-$arch $DISTRIBUTIONS"
+   done
+done
+
+#PACKAGES="libusrsctp"
+PACKAGES="libusrsctp libneat nornet_nn bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
 
 
 # ====== NorNet-NN ========================================
@@ -59,11 +68,12 @@ tsctp_REPO="git://github.com/dreibh/tsctp.git"
 
 # ====== libusrsctp =======================================
 libusrsctp_DIR="libusrsctp"
-libusrsctp_REPO="git://github.com/dreibh/usrsctp.git@dreibh/rpm-packaging"
+#libusrsctp_REPO="git://github.com/dreibh/usrsctp.git@dreibh/rpm-packaging"
+libusrsctp_REPO="git://github.com/dreibh/usrsctp.git@dreibh/usrsctpForNeat-packaging"
 
 # ====== libneat =======================================
 libneat_DIR="libneat"
-libneat_REPO="git://github.com/NEAT-project/neat.git@dreibh/rpm-packaging"
+libneat_REPO="git://github.com/NEAT-project/neat.git@dreibh/neat-socketapi"
 
 # ====== libvirt ==========================================
 # libvirt_DIR="`pwd`/libvirt"
