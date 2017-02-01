@@ -276,6 +276,8 @@ def makeNameFromUnicode(name, isDNSName = True):
          asciiName = asciiName + 's'
       elif (unicodeName[i] == 'ū'):
          asciiName = asciiName + 'u'
+      elif (unicodeName[i] == '`'):
+         asciiName = asciiName + '`'
       elif ( (unicodeName[i] == 'č') or (unicodeName[i] == 'ć') or (unicodeName[i] == 'ç')):
          asciiName = asciiName + 'c'
       elif ( (unicodeName[i] == 'é') or (unicodeName[i] == 'è') or \
