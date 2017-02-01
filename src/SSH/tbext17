@@ -1,3 +1,3 @@
 #!/bin/sh
-echo "Connecting to Tunnelbox of Hainan University (210.37.45.149) ..."
-ssh -C nornetpp@210.37.45.149
+echo "Connecting to Tunnelbox of Laboratoire d'Informatique de Grenoble (129.88.12.160) ..."
+ssh -C nornetpp@129.88.12.160
