@@ -28,7 +28,7 @@ goodIntro="\x1b[32m"
 badIntro="\x1b[31m"
 normalMode="\x1b[0m"
 
-connectTimeout=10
+connectTimeout=60
 sshOptions="-oVerifyHostKeyDNS=no -oHostKeyAlgorithms=ssh-rsa -oStrictHostKeyChecking=no -oPasswordAuthentication=no -oConnectTimeout=$connectTimeout"
 
 
