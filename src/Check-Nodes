@@ -28,7 +28,9 @@ goodIntro="\x1b[32m"
 badIntro="\x1b[31m"
 normalMode="\x1b[0m"
 
-connectTimeout=60
+connectTimeout=15
+sigkillTimeout=60
+sigintTimeout=55
 sshOptions="-oVerifyHostKeyDNS=no -oHostKeyAlgorithms=ssh-rsa -oStrictHostKeyChecking=no -oPasswordAuthentication=no -oConnectTimeout=$connectTimeout"
 
 
@@ -39,18 +41,19 @@ function check-node ()
    if /bin/ping -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
       if /bin/ping6 -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
 
-         env LANG=C timeout --signal=INT --kill-after=60s 55 ssh $sshOptions -i $KEY $SLICE@$nodeName '
+         env LANG=C timeout --signal=INT --kill-after=${sigkillTimeout}s ${sigintTimeout} ssh $sshOptions -i $KEY $SLICE@$nodeName '
             if [ ! -e /etc/yum.repos.d/nornet.repo ] ; then
                echo "WARNING: NO-NORNET-REPO"
             fi
-            if ! sudo ping -q -c5 -i0.3 tunnelbox >/dev/null 2>&1 ; then
+            domainName=`hostname -d`
+            if ! sudo ping -q -c5 -i0.3 tunnelbox.${domainName} >/dev/null 2>&1 ; then
                echo "FAILED: PING4-TUNNELBOX"
             fi
-            if ! sudo ping6 -q -c5 -i0.3 tunnelbox >/dev/null 2>&1 ; then
+            if ! sudo ping6 -q -c5 -i0.3 tunnelbox.${domainName} >/dev/null 2>&1 ; then
                echo "FAILED: PING6-TUNNELBOX"
             fi
             echo "Node is UP"
-            echo "`uname -r`, `uptime`"
+            echo "`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\1 \2/g"`, `uname -r`, `uptime`"
          ' >$nodeName.log 2>&1
 
          headline="`grep -v "^Warning: Permanently" $nodeName.log | head -n1 | tr --delete '\n\r'`"

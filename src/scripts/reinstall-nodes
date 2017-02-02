@@ -1,0 +1,13 @@
+#!/bin/bash
+
+while [ $# -gt 0 ] ; do
+   echo "Handling $1 ..."
+   ../Update-Node-State $1 reinstall && \
+   (
+      cat <<EOF
+      reboot
+EOF
+   ) | sudo ssh -4 -o StrictHostKeyChecking=no -i /etc/planetlab/root_ssh_key.rsa -i /etc/planetlab/debug_ssh_key.rsa root@$1 &
+   shift
+done
+wait
