@@ -53,7 +53,7 @@ function check-node ()
                echo "FAILED: PING6-TUNNELBOX"
             fi
             echo "Node is UP"
-            echo "`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\1 \2/g"`, `uname -r`, `uptime`"
+            echo "`cat /etc/fedora-release | sed -e "s/^\(.*\) release \([0-9]*\) (\(.*\))$/\1 \2/g"`: `uname -r`, `uptime`"
          ' >$nodeName.log 2>&1
 
          headline="`grep -v "^Warning: Permanently" $nodeName.log | head -n1 | tr --delete '\n\r'`"
@@ -61,9 +61,9 @@ function check-node ()
             printf "$goodIntro%s\tOK\t%-30s\t\"%s\"$normalMode\n" \
                "$site" "$nodeName" \
                "`tail -n1 $nodeName.log | tr --delete '\n\r' | sed -e "s/^[ \t]*//g"`"
-         elif [ "$headline" = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" ] ; then
+         elif [[ "$headline" =~ ^(@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|Warning: the RSA host key for ) ]] ; then
             printf "$keyChangedIntro%s\tKEY\t%-30s\t\"%s\"$normalMode\n" \
-               "$site" "$nodeName" "Key changed -> run script again!"
+               "$site" "$nodeName" "Key changed -> run script again! ($headline)"
             ./Clear-SSH-Node-Key $nodeName >/dev/null
          else
             printf "$badIntro%s\tBAD\t%-30s\t\"%s\"$normalMode\n" \
