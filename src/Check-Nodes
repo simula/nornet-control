@@ -38,8 +38,8 @@ function check-node ()
 {
    local nodeName="$1"
 
-   if /bin/ping -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
-      if /bin/ping6 -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
+   if ping -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
+      if ping6 -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
 
          env LANG=C timeout --signal=INT --kill-after=${sigkillTimeout}s ${sigintTimeout} ssh $sshOptions -i $KEY $SLICE@$nodeName '
             if [ ! -e /etc/yum.repos.d/nornet.repo ] ; then
