@@ -1,7 +1,7 @@
 #!/bin/bash
 
-NEW="4.1.35-888.fc23"
-OLD="4.1.32-888.fc23"
+NEW="4.1.38-889.fc24"
+OLD="4.1.35-889.fc24"
 
 new=`echo "$NEW" | sed -e "s/-/./g"`
 old=`echo "$OLD" | sed -e "s/-/./g"`
@@ -16,21 +16,28 @@ while [ $# -gt 0 ] ; do
       #echo "NodeUpdate.py"
 
       cat <<EOF
-      # NodeUpdate.py
-
-      dnf clean all
+      #  Work-around for "sliver without active eth0":
+      cd /vservers
+      find -maxdepth 1 -name "[a-z0-9]*" -type d -printf "%f\n" | xargs -n1 -i§ lxcsu § 'echo "§" && ifconfig eth0 | grep "inet " || ( echo "SOMETHING IS WRONG in §!" && sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth0 )'
+      service nm restart
+      
+      # Install updates
+      NodeUpdate.py
+      
+      # Ensure kernel is up to date
       dnf install -y kernel-core-$NEW.x86_64 kernel-$NEW.x86_64 kernel-modules-$NEW.x86_64 kernel-modules-extra-$NEW.x86_64 transforward-\*-$new.\*.nornet
 
+      # Get rid of obsolete kernel
       kernel=\$(uname -r)
       echo "K=\$kernel"
       if [ -e "/boot/vmlinuz-$NEW.x86_64" ] ; then
          if [ "\$kernel" = "$OLD.x86_64" ] ; then
             echo "OLD KERNEL -> Reboot!"
-            rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64 transforward-\*-$old.\*.nornet
-            # reboot
+            rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64   # transforward-\*-$old.\*.nornet
+            reboot
          else
             echo "Different kernel!"
-            rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64 transforward-\*-$old.\*.nornet
+            rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64   # transforward-\*-$old.\*.nornet
          fi
       fi
 EOF
