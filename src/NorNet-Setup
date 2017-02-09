@@ -615,6 +615,37 @@ norNetSetup = [
       [ 103, 4, u'stenbron'         ]
    ] },
 
+ # Universidad de Castilla-La Mancha (UCLM)
+ { 'site_index'        : 60,
+   'site_enabled'      : False,
+   'site_long_name'    : u"Universidad de Castilla-La Mancha",
+   'site_short_name'   : 'UCLM',
+   'site_url'          : 'https://www.uclm.es',
+   'site_domain'       : 'uclm.nornet',
+   'site_city'         : 'Albacete',
+   'site_province'     : 'Castilla-La Mancha',
+   'site_country'      : 'Spain',
+   'site_country_code' : 'ES',
+   'site_latitude'     : 38.97868186998078,
+   'site_longitude'    : -1.8570595979690552,
+   'site_altitude'     : 100,
+   'site_contacts'     : [ u'Escudero Sahuquillo, Jesús: jesus.escudero@uclm.es', u'Orozco Barbosa, Luis: luis.orozco@uclm.es' ],
+   'site_pcu'          : [ IPv4Address('132.252.150.151'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Interconexión de los Recursos InformáticoS', 'eth1',
+           IPv4Interface('132.252.150.152/24'), IPv4Address('132.252.150.1'),
+           IPv6Interface('::/0'),               IPv6Address('::'),
+           1500, 'fibre, business', 0, 0 ]
+   ],
+   'site_nodes' : [
+      # Naming scheme: parts of Albacete
+      [ 100, 1, u'sanpedro'    ],
+      [ 101, 2, u'sanjuan'     ],
+      [ 102, 3, u'santateresa' ],
+      [ 103, 4, u'elpilar'     ]
+   ] },
+
  # Laboratoire d'Informatique de Grenoble (LIG)
  { 'site_index'        : 64,
    'site_enabled'      : True,
@@ -840,6 +871,36 @@ norNetSetup = [
    'site_nodes' : [
       [ 100, 1, u'coogee' ],
       [ 101, 2, u'bondi'  ]
+   ] },
+
+ { 'site_index'        : 201,
+   'site_enabled'      : False,
+   'site_long_name'    : u'University of Sydney',
+   'site_short_name'   : 'USyd',
+   'site_url'          : 'https://sydney.edu.au',
+   'site_domain'       : 'sydney.nornet',
+   'site_city'         : 'Sydney',
+   'site_province'     : 'New South Wales',
+   'site_country'      : 'Australia',
+   'site_country_code' : 'AU',
+   'site_latitude'     : -33.88811,
+   'site_longitude'    : 151.19417,
+   'site_altitude'     : 15,
+   'site_contacts'     : [ u'Holz, Ralph: ralph.holz@sydney.edu.au' ],
+   'site_pcu'          : [ IPv4Address('132.252.150.153'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Australian Academic and Research Network', 'eth1',
+           IPv4Interface('132.252.150.154/24'), IPv4Address('132.252.150.1'),
+           IPv6Interface('::/0'),               IPv6Address('::'),
+           1500, 'fibre, business', 0, 0 ]
+   ],
+   'site_nodes' : [
+      # Naming scheme: parts of Sydney around the University of Sydney
+      [ 100, 1, u'darlington'  ],
+      [ 101, 2, u'camperdown'  ],
+      [ 102, 3, u'ultimo'      ],
+      [ 103, 4, u'chippendale' ]
    ] }
 
 
