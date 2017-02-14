@@ -1,18 +1,16 @@
 #!/bin/bash -e
 
-. ./accounts.conf
-
 ACCOUNTS="accounts.txt"
 
-#ORGANISATION="Alpha Site"
+#SITE="Alpha Site"
 #DOMAIN="alpha.test"
-#SLICE="as_tutorial"
+#SLICENAME="as_tutorial"
 
-ORGANISATION="Simula Research Laboratory"
+SITE="Simula Research Laboratory"
 DOMAIN="simula.nornet"
-SLICE="srl_tutorial"
+SLICENAME="srl_tutorial"
 
-SLICEDESC="This is a test slice for the NorNet tutorial session."
+SLICEDESC="This is a temporary slice for the NorNet tutorial session."
 SLICEURL="https://www.nntb.no"
 
 action=""
@@ -42,7 +40,7 @@ IFS=$'\t'
             else
                echo "WARNING: $uname has no key ($keyName not found)!"
             fi
-            ../User-Setup add "--user=$uname" "--password=$passwd" "--site=$ORGANISATION" "--firstname=$gname" "--lastname=$fname" --user "$publicKeyArg"
+            ../User-Setup add "--user=$uname" "--password=$passwd" "--site=$SITE" "--firstname=$gname" "--lastname=$fname" --user "$publicKeyArg"
             userArgs="$userArgs --user=$uname"
 
          elif [ "$1" = "remove" ] ; then
@@ -53,11 +51,11 @@ IFS=$'\t'
    done
 
    if [ "$action" = "add" ] ; then
-      echo -e "\x1b[34mAdding slice $SLICE ...\x1b[0m"
-      echo $userArgs | xargs ../Slice-Setup add "--name=$SLICE" --own-addresses "--description=$SLICEDESC" --maxnodespersite=999999
+      echo -e "\x1b[34mAdding slice $SLICENAME ...\x1b[0m"
+      echo $userArgs | xargs ../Slice-Setup add "--name=$SLICENAME" --own-addresses "--description=$SLICEDESC" --maxnodespersite=999999
    elif [ "$1" = "remove" ] ; then
-      echo -e "\x1b[34mRemoving slice $SLICE ...\x1b[0m"
-      ../Slice-Setup remove "--name=$SLICE"
+      echo -e "\x1b[34mRemoving slice $SLICENAME ...\x1b[0m"
+      ../Slice-Setup remove "--name=$SLICENAME"
    fi
 
 ) <$ACCOUNTS
