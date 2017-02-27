@@ -71,10 +71,10 @@ if [ "$Variant" = "Debian" ] ; then
    sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq
 elif [ "$Variant" = "FreeBSD" ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Updating package repositories ...\x1b[0m"
-   sudo freebsd-update fetch
-   sudo pkg update
+   sudo env PAGER=cat freebsd-update fetch
+   sudo env ASSUME_ALWAYS_YES=yes pkg update
    if [ -e /usr/sbin/portsnap ] ; then
-      sudo portsnap fetch
+      sudo portsnap -I fetch
    fi
 fi
 
@@ -124,7 +124,7 @@ elif [ "$Variant" = "Fedora" ] ; then
    wait
    cat /tmp/install.log
 elif [ "$Variant" = "FreeBSD" ] ; then
-   ( sudo freebsd-update install ; sudo pkg upgrade -y ; if [ -e /usr/sbin/portsnap ] ; then sudo portsnap update ; fi ) >/tmp/install.log 2>&1 &
+   ( sudo freebsd-update install ; sudo env ASSUME_ALWAYS_YES=yes pkg upgrade -y ; if [ -e /usr/sbin/portsnap ] ; then sudo portsnap -I update ; fi ) >/tmp/install.log 2>&1 &
    wait
    cat /tmp/install.log
 fi
@@ -184,7 +184,7 @@ elif [ "$Variant" = "Fedora" ] ; then
    cat /tmp/install.log
    sudo yum clean all
 elif [ "$Variant" = "FreeBSD" ] ; then
-   sudo pkg clean all -y
+   sudo env ASSUME_ALWAYS_YES=yes pkg clean all -y
 fi
 
 # ====== Remove obsolete kernel packages ====================================
