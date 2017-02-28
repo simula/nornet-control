@@ -406,7 +406,8 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Interface('158.39.93.231/27'),         IPv4Address('158.39.93.225'),
-           IPv6Interface('2001:700:c00:150::231/64'), IPv6Address('2001:700:c00:150::1'),
+           # IPv6Interface('2001:700:c00:150::231/64'), IPv6Address('2001:700:c00:150::1'),
+           IPv6Interface('::/0'),                     IPv6Address('::'),
            1500, 'fibre, research', 100000, 100000 ],
       [ u'PowerTech', 'eth2',
            IPv4Interface('195.159.158.174/30'),       IPv4Address('195.159.158.173'),
