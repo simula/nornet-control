@@ -753,7 +753,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 101,
-   'site_enabled'      : False,
+   'site_enabled'      : True,
    'site_long_name'    : u'New York University',
    'site_short_name'   : 'NYU',
    'site_url'          : 'http://engineering.nyu.edu',
@@ -816,7 +816,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 200,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'National ICT Australia',
    'site_short_name'   : 'NICTA',
    'site_url'          : 'https://www.nicta.com.au',
