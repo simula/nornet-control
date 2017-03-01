@@ -214,6 +214,9 @@ if [ "$Variant" = "Debian" ] ; then
             elif [[ $line =~ ^(linux-image-${kernelType}-lts-|linux-image-extra-${kernelType}-lts-|linux-headers-${kernelType}-lts-).*$ ]] ; then
                #echo >&2 "LTS meta: $line"
                true
+            elif [[ $line =~ ^(linux-image-${kernelType}-hwe-|linux-image-extra-${kernelType}-hwe-|linux-headers-${kernelType}-hwe-).*$ ]] ; then
+               #echo >&2 "LTS meta: $line"
+               true
             else
                echo -n "${line} "
             fi
