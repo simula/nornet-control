@@ -331,10 +331,17 @@ if [ -e /etc/ntp.conf ] ; then
    done
 
    # 1. Try ntp1.uio.no via IPv6 (2001:700:100:2::6) first.
-   # 2. Try PTB's server.
+   # 2. Try UiO's servers first, then PTB.
    # 3. Try noeyaktig.simula.nornet, via IPv6 and IPv4.
    # 4. Try Simula tunnelbox.
-   sudo ntpdate 2001:700:100:2::6 || sudo ntpdate ntp1.ptb.de || sudo ntpdate 2001:700:4100:101::fa || sudo ntpdate 10.1.1.250 || sudo ntpdate 10.1.1.1
+   sudo ntpdate 2001:700:100:2::6 || \
+      sudo ntpdate ntp2.uio.no || \
+      sudo ntpdate ntp1.uio.no || \
+      sudo ntpdate ntp2.ptb.de || \
+      sudo ntpdate ntp1.ptb.de || \
+      sudo ntpdate 2001:700:4100:101::fa || \
+      sudo ntpdate 10.1.1.250 || \
+      sudo ntpdate 10.1.1.1
 
    # Write time to hardware clock
    if [ "$Variant" != "FreeBSD" ] ; then
