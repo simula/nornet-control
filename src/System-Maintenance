@@ -240,7 +240,7 @@ if [ "$Variant" = "Debian" ] ; then
    fi
 
    echo -e "To be removed:\x1b[31m"
-   echo "$toBeRemoved" | xargs -n1 | grep -v ".*+$" | sort
+   echo "$toBeRemoved" | xargs -n1 | grep -v ".*+$" | sort -u
    echo -en "\x1b[0m"
 
    if [ $INTERACTIVE_KERNEL_REMOVAL -eq 0 ] ; then
