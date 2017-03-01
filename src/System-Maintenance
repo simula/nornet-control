@@ -306,6 +306,13 @@ if [ -e /etc/init.d/autofs ] ; then
    sudo service autofs start >/dev/null 2>&1 || true
 fi
 
+# ====== SSD trimming =======================================================
+if [ -e /sbin/fstrim -o  -e /usr/sbin/fstrim ] ; then
+   echo -e "\x1b[34m`date +%FT%H:%M:%S`: Running fstrim ...\x1b[0m"
+   sudo fstrim -a -v 2>/dev/null || ( sudo fstrim -v / && sudo fstrim -v /home ) || true
+fi
+
+
 # ====== Fix time ===========================================================
 if [ -e /etc/ntp.conf ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Synchronising system time ...\x1b[0m"
