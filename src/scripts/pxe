@@ -1,0 +1,9 @@
+default menu.c32
+
+menu title NorNet PXE Main menu
+
+label GParted Live
+        menu label GParted Live (i386)
+        kernel vmlinuz
+        append initrd=initrd.img boot=live config components union=overlay username=user noswap noeject ip= vga=788 fetch=http://128.39.37.176/gparted/filesystem.squashfs
+        # append initrd=initrd.img boot=live config components union=overlay username=user noswap noeject ip= vga=788 fetch=http://10.1.4.251/gparted/filesystem.squashfs
