@@ -340,7 +340,8 @@ norNetSetup = [
            1500, 'fibre, research', 100000, 100000 ],
       [ u'Telenor', 'eth2',
            IPv4Interface('193.213.19.83/20'),        IPv4Address('193.213.16.1'),
-           IPv6Interface('2001:4610:a:38::ed34/64'), IPv6Address('2001:4610:a:38::1'),
+           # IPv6Interface('2001:4610:a:38::ed34/64'), IPv6Address('2001:4610:a:38::1'),
+           IPv6Interface('::/0'),                    IPv6Address('::'),
            1500, 'fibre, consumer', 10000, 10000 ]
    ],
    'site_nodes' : [
