@@ -1,73 +1,14 @@
 #!/bin/bash
 
-
-# sudo dpkg --configure -a
-# sudo apt-get install -fy
-#
-# sudo apt-get install -y software-properties-common
-# sudo apt-add-repository -y ppa:dreibh/ppa
-# sudo apt-get update
-# sudo apt-get dist-upgrade -y
-#
-# sudo apt-get install -fy
-# sudo apt-get dist-upgrade -y
-#
-# sudo service nornet-tunnelbox configure
-#
-# sudo apt-get install -y linux-generic-lts-wily
-
-
-sudo apt-get purge   -y 'libvirt.*' apparmor apparmor-profiles apparmor-profiles-extra && \
-sudo apt-get install -y libvirt-bin apparmor apparmor-profiles nornet-server ubuntu-server
-
-
 find /etc/apt/ -name "*.save" -or -name "*.distUpgrade" -or -name "*~" | xargs --no-run-if-empty sudo rm -f && \
 find /etc/apt/sources.list.d -name "dreibh-ppa-*"  | xargs --no-run-if-empty sudo rm -f && \
+sudo rm -f /etc/apt/apt.conf.d/50unattended-upgrades.ucf-old && \
+sudo rm -f /etc/apt/apt.conf.d/50unattended-upgrades.ucf-dist && \
 sudo apt-add-repository -y -s ppa:dreibh/ppa && \
-sudo apt-get update && \
-sudo apt-get install -y nornet-ca && \
-sudo apt-get dist-upgrade -y && \
-sudo rm -rf /var/lib/cfengine3 /var/log/cfengine3 && \
-sudo apt-get purge -y 'virtualbox.*' paris-traceroute tracebox stab collectd cfengine3 biosdevname && \
-sudo apt-get install -y virtualbox-guest-utils
-
-
-sudo apt-get install -y ubuntu-server && \
-sudo apt-get remove -y open-vm-tools
-
-
-
-
-sudo rm -f /etc/init.d/hipercontracer
-sudo rm -rf /etc/squid3/
-
-
-# sudo apt-get install -y linux-headers-3.2.0-107-generic linux-image-3.2.0-107-generic
-
-
-# sudo rm -rf /var/lib/dhcp /run/dhcp-server
-# sudo apt-get install --reinstall isc-dhcp-server
-#
-# apt-show-versions | grep isc-dhcp-server
-#
-# sudo service isc-dhcp-server start
-# sleep 3
-# sudo service isc-dhcp-server status
-# tail -n20 /var/log/syslog.1
-# sudo service isc-dhcp-server stop
-#
-# ls -al /var/lib/dhcp
-# sudo chmod 664 /var/lib/dhcp/*.leases
-# sudo chown root:dhcpd -R /var/lib/dhcp
-# sudo chmod 775 /var/lib/dhcp
-# ls -al /var/lib/dhcp
-#
-# ls -al /run/dhcp-server
-# sudo chmod 775 /run/dhcp-server
-# sudo chown root:dhcpd -R /run/dhcp-server
-# ls -al /run/dhcp-server
-#
-# sudo service isc-dhcp-server start
-# sleep 3
-# sudo service isc-dhcp-server status
-# tail -n20 /var/log/syslog.1
+sudo apt-get -o Acquire::ForceIPv4=true update && \
+sudo apt-get -o Acquire::ForceIPv4=true  dist-upgrade -y && \
+sudo service nornet-tunnelbox configure || true && \
+sudo apt-get -o Acquire::ForceIPv4=true  install -y linux-generic-hwe-16.04 && \
+sudo apt-get remove -y linux-*-generic-lts-xenial && \
+sudo apt-get purge -y 'virtualbox.*' paris-traceroute tracebox stab collectd cfengine3 && \
+sudo apt autoremove -y
