@@ -10,5 +10,6 @@ sudo apt-get -o Acquire::ForceIPv4=true  dist-upgrade -y && \
 sudo service nornet-tunnelbox configure || true && \
 sudo apt-get -o Acquire::ForceIPv4=true  install -y linux-generic-hwe-16.04 && \
 sudo apt-get remove -y linux-*-generic-lts-xenial && \
+sudo rm -rf /var/lib/cfengine3 /var/log/cfengine3 && \
 sudo apt-get purge -y 'virtualbox.*' paris-traceroute tracebox stab collectd cfengine3 && \
 sudo apt autoremove -y

@@ -168,8 +168,8 @@ Depends: grub2-common | grub,
          snmpd,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: cfengine3,
-            nornet-ca,
+Suggests: cfengine3
+Recommends: nornet-ca,
             open-vm-tools,
             virtualbox-guest-utils | virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental
 Description: NorNet Node Control
@@ -369,8 +369,8 @@ Depends: grub2-common | grub,
          xauth,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: cfengine3,
-            lm-sensors,
+Suggests: cfengine3
+Recommends: lm-sensors,
             nornet-ca,
             ubuntu-server
 Description: NorNet Server
