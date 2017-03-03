@@ -34,8 +34,8 @@ for fedora in $FEDORAS ; do
    done
 done
 
-#PACKAGES="libusrsctp"
-PACKAGES="libusrsctp libneat nornet_nn bibtexconv fractgen netperfmeter rsplib subnetcalc tsctp"
+#PACKAGES="hipercontracer"
+PACKAGES="libusrsctp libneat nornet_nn bibtexconv fractgen netperfmeter hipercontracer rsplib subnetcalc tsctp"
 
 
 # ====== NorNet-NN ========================================
@@ -53,6 +53,10 @@ fractgen_REPO="git://github.com/dreibh/fractgen.git"
 # ====== NetPerfMeter =====================================
 netperfmeter_DIR="netperfmeter"
 netperfmeter_REPO="git://github.com/dreibh/netperfmeter.git"
+
+# ====== HiPerConTracer ===================================
+hipercontracer_DIR="hipercontracer"
+hipercontracer_REPO="git://github.com/dreibh/hipercontracer.git"
 
 # ====== rsplib ===========================================
 rsplib_DIR="rsplib"
