@@ -341,7 +341,8 @@ if [ -e /etc/ntp.conf ] ; then
       sudo ntpdate ntp1.ptb.de || \
       sudo ntpdate 2001:700:4100:101::fa || \
       sudo ntpdate 10.1.1.250 || \
-      sudo ntpdate 10.1.1.1
+      sudo ntpdate 10.1.1.1 || \
+      true
 
    # Write time to hardware clock
    if [ "$Variant" != "FreeBSD" ] ; then
