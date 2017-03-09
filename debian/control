@@ -65,9 +65,7 @@ Depends: apport-retrace,
          ${python3:Depends},
          ${shlibs:Depends}
 Recommends: tshark
-Conflicts: kdeconnect,
-           kdeconnect-plasma,
-           landscape-common,
+Conflicts: landscape-common,
            minidlna,
            tntnet,
            webfs
