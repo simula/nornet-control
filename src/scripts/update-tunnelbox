@@ -14,3 +14,5 @@ sudo rm -rf /var/lib/cfengine3 /var/log/cfengine3 && \
 sudo apt-get purge -y 'virtualbox.*' paris-traceroute tracebox stab collectd cfengine3 && \
 sudo apt autoremove -y && \
 sudo swapoff -a
+
+sudo apt install -y virtualbox-guest-utils
