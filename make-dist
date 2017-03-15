@@ -86,6 +86,7 @@ cp src/XDM/Xresources $PACKAGE-$UPSTREAM_VERSION/XDM/
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/background
 cp src/Background/*.png $PACKAGE-$UPSTREAM_VERSION/background/
+cp src/Background/*.xcf $PACKAGE-$UPSTREAM_VERSION/background/
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/grub
 cp src/grub/*_theme $PACKAGE-$UPSTREAM_VERSION/grub/
