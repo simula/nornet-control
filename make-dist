@@ -97,7 +97,8 @@ SPLASH_DIMENSIONS=1024x768
 DESKTOP_DIMENSIONS_LIST="1024x768 1920x1080"
 QUALITY=92.5
 
-convert -background Gold -fill "#02266b" -font Helvetica-Bold -pointsize 24 -gravity Center -size ${SPLASH_WIDTH}x42 \
+splashWidth=`echo "$SPLASH_DIMENSIONS" | sed -e "s/^\([0-9]*\)x\(.*\)$/\1/g"`
+convert -background Gold -fill "#02266b" -font Helvetica-Bold -pointsize 24 -gravity Center -size ${splashWidth}x42 \
    caption:"`cat $PACKAGE-$UPSTREAM_VERSION/nornet-version`" \
    "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png"
 

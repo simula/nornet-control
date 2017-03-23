@@ -1,3 +1,4 @@
+Artwork/Desktop/*.jpeg             /var/www/Artwork/Desktop/
 Artwork/Graphics/Backgrounds/*.png /var/www/Artwork/Graphics/Backgrounds/
 Artwork/Graphics/Control/*.png     /var/www/Artwork/Graphics/Control/
 Artwork/Graphics/Flags/*.png       /var/www/Artwork/Graphics/Flags/
@@ -7,4 +8,3 @@ Artwork/Graphics/Markers/*.svg     /var/www/Artwork/Graphics/Markers/
 Artwork/Sites/Large/*.jpeg         /var/www/Artwork/Sites/Large/
 Artwork/Sites/Original/*.jpeg      /var/www/Artwork/Sites/Original/
 Artwork/Sites/Small/*.jpeg         /var/www/Artwork/Sites/Small/
-Artwork/Desktop/*.jpeg             /var/www/Artwork/Desktop/
