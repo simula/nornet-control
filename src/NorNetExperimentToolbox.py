@@ -93,12 +93,15 @@ def makePort(portBase, site, node, provider, ipVersion, slice):
    else:
       port = portBase
 
-   if ipVersion == 6:
-      port = port + 300
-   elif ipVersion == 46:
-      port = port + 600
+   if ipVersion == 46:
+      port = port + 3000
+   elif ipVersion == 6:
+      port = port + 6000
    elif ipVersion != 4:
       raise Exception('Invalid setting for ipVersion!')
+
+   if port > 65535:
+      raise Exception('Port > 65535. Use a smaller port base setting!')
 
    return port
 
@@ -122,7 +125,7 @@ def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, sl
       '-pathmgr='     + pathMgr
 
    # ------ Bind to ANY address ---------------------------------------------
-   for ipVersion in [ 4, 6, 46 ]:
+   for ipVersion in [ 4, 46, 6 ]:
       localAddress = makeAddress(localSite, node, None, ipVersion, slice)
       localPort    = makePort(portBase, localSite, node, None, ipVersion, slice)
 
@@ -132,6 +135,7 @@ def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, sl
          v6Options = '-v6only '
 
       cmdLine = cmdLine + ' ; \\\n( nohup netperfmeter ' + str(localPort) + ' ' + \
+         '-controllocal=[::] ' + \
          '-local=[' + str(localAddress) + '] ' + \
          v6Options + passiveSideOptions + ' '  + \
          '>>' + measurementName + '/NetPerfMeter-' + node['node_name'] + '.log 2>&1 & )'
@@ -139,7 +143,7 @@ def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, sl
    # ------ Bind to specific address ----------------------------------------
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
-      for ipVersion in [ 4, 6, 46 ]:
+      for ipVersion in [ 4, 46, 6 ]:
          localAddress = makeAddress(localSite, node, localProvider, ipVersion, slice)
          localPort    = makePort(portBase, localSite, node, localProvider, ipVersion, slice)
 
@@ -149,6 +153,7 @@ def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, sl
             v6Options = '-v6only '
 
          cmdLine = cmdLine + ' ; \\\n( nohup netperfmeter ' + str(localPort) + ' ' + \
+            '-controllocal=[::] ' + \
             '-local=[' + str(localAddress) + '] ' + \
             v6Options + passiveSideOptions + ' '  + \
             '>>' + measurementName + '/NetPerfMeter-' + node['node_name'] + '.log 2>&1 & )'
