@@ -172,7 +172,7 @@ function showAddresses ()
       fi
 
       # ====== Print addresses ========================================
-      echo -n "   `printf "%-9s" "${interface}:"` "
+      echo -n "   `printf "%-14s" "${interface}:"` "
       if [ "$addressListIPv4" != "" ] ; then
          for address in $addressListIPv4 ; do
             echo -n "$address   "
@@ -181,7 +181,7 @@ function showAddresses ()
          echo -n "(No IPv4)"
       fi
       for address in $addressListIPv6 ; do
-         echo -en "\n             $address "
+         echo -en "\n                  $address "
       done
 
       echo ""
@@ -190,7 +190,7 @@ function showAddresses ()
 
 
 if [ "$system" == "Linux" ] ; then
-   allInterfaces=`ip link show 2>/dev/null | awk '/^([0-9]*:) ([a-zA-Z0-9\-@]+):/ { print $2 }' | sed -e "s/@.*//" -e "s/:$//" | sort`
+   allInterfaces=`ip link show 2>/dev/null | awk '/^([0-9]*:) ([a-zA-Z0-9\-\.@]+):/ { print $2 }' | sed -e "s/@.*//" -e "s/:$//" | sort`
    for interface in $allInterfaces ; do
       # ====== Only show non-tunnel interfaces =================================
       if [ "`ip tunnel show $interface 2>/dev/null`" == "" -a \
