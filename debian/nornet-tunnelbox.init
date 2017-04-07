@@ -264,6 +264,21 @@ check_and_configure ()
          fi
       fi
 
+      rm -f fling-server-config
+      mv updated-tunnelbox-config/fling-server-config .
+      if needs_update fling-server-config /etc/default/nornet-fling $1 ; then
+         if [ -e /etc/init.d/nornet-fling-server-service ] ; then
+            echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Fling configuration has been updated => restarting Fling service ...\x1b[0m"
+            cp fling-server-config /etc/default/nornet-fling
+            service nornet-fling-server-service restart >/dev/null || true
+         fi
+      else
+         if [ -e /etc/init.d/nornet-fling-server-service ] ; then
+            # Ensure that trace service is running ...
+            service nornet-fling-server-service start >/dev/null || true
+         fi
+      fi
+
       # ====== Collectd ping configuration ==================================
       find . -maxdepth 1 -name "collectd-tb-ping-*"|xargs --no-run-if-empty rm -f
       mv updated-tunnelbox-config/collectd-tb-ping* .
