@@ -1,0 +1,15 @@
+Begin4
+Title:          nornet
+Version:        1.1.9
+Entered-date:   2017-04-10
+Description:    NorNet is a testbed for multi-homed systems. This package
+                contains the management software for the testbed's
+                infrastructure.
+Keywords:       NorNet, Multi-Homing, Testbed, Routing, Management
+Author:         dreibh@simula.no (Thomas Dreibholz)
+Maintained-by:  dreibh@simula.no (Thomas Dreibholz)
+Primary-site:   https://www.nntb.no
+Original-site:  https://www.nntb.no
+Platforms:      Linux
+Copying-policy: GPL
+End
