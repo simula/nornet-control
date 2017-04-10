@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
 # System Maintenance
-# Copyright (C) 2013-2016 by Thomas Dreibholz
+# Copyright (C) 2013-2017 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,13 +20,15 @@
 
 INTERACTIVE_KERNEL_REMOVAL=0
 DONT_TOUCH_GRUB=0
-KEEP_INTERFACE_MAPPINGS=0
+KEEP_INTERFACE_MAPPINGS=1
 UPGRADE_VIRTUALBOX=0
 while [ $# -gt 0 ] ; do
    if [ "$1" = "-interactive-kernel-removal" -o "$1" = "-k" ] ; then
       INTERACTIVE_KERNEL_REMOVAL=1
    elif [ "$1" = "-dont-touch-grub" -o "$1" = "-g" ] ; then
-      KEEP_INTERFACE_MAPPINGS=1
+      DONT_TOUCH_GRUB=1
+   elif [ "$1" = "-dont-keep-interface-mappings" -o "$1" = "-M" ] ; then
+      KEEP_INTERFACE_MAPPINGS=0
    elif [ "$1" = "-keep-interface-mappings" -o "$1" = "-m" ] ; then
       KEEP_INTERFACE_MAPPINGS=1
    elif [ "$1" = "-upgrade-virtualbox" -o "$1" = "-v" ] ; then

@@ -1,5 +1,5 @@
 .\" NorNet System-Maintenance
-.\" Copyright (C) 2013 by Thomas Dreibholz
+.\" Copyright (C) 2013-2017 by Thomas Dreibholz
 .\"
 .\" This program is free software: you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd June 5, 2013
+.Dd April 10, 2017
 .Dt System-Maintenance 1
 .Os System-Maintenance
 .\" ###### Name #############################################################
@@ -56,13 +56,12 @@ The following options are available:
 Remove obsolete kernels interactively.
 .It Fl dont-touch-grub|-g
 Do not update Grub installation.
-.It Fl keep-interface-mappings|-m
-Do not delete network interface mapping rules
+.It Fl dont-keep-interface-mappings|-M
+Delete network interface mapping rules
 (/etc/udev/rules.d/70-persistent-net.rules), if eth0 does not exist. This is
 useful for cloned virtual machines, where the new machine gets net MAC
 addresses. By deleting the mappings, the interfaces should be renamed
-beginning from eth0 during the next boot. This option deactivates this
-functionality.
+beginning from eth0 during the next boot.
 .It Fl upgrade-virtualbox|-v
 If set, and if VirtualBox or its guest utilities are installed in the plain
 Ubuntu/Debian variant, it is tried to upgrade these packages to the
