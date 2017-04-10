@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
 # Check status of virtual system
-# Copyright (C) 2013-2016 by Thomas Dreibholz
+# Copyright (C) 2013-2017 by Thomas Dreibholz
 # Copyright (C) 2014 by Forough Golkar <forough.golkar87@gmail.com>
 # Copyright (C) 2013 by Nima Fallah Darya <nima.darya@gmail.com>
 #
