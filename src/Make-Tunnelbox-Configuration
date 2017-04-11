@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Make Tunnelbox Configuration
-# Copyright (C) 2012-2016 by Thomas Dreibholz
+# Copyright (C) 2012-2017 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -1712,6 +1712,23 @@ def makeFlingConfiguration(localSite):
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
       outputFile.write(' ' + localProvider['provider_tunnelbox_interface'])
+   outputFile.write('"\n')
+
+   outputFile.close()
+
+
+   log('Making Fling Server configuration for ' + localSite['site_long_name'] + ' ...')
+   outputFile = codecs.open('fling-server-config', 'w', 'utf-8')
+
+   outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -H 77.88.71.145 -a tcp -i')
+   for localProviderOnlyDefault in [ True, False ]:
+      for localProviderIndex in localProviderList:
+         if ( ((localProviderOnlyDefault == True)  and (localProviderIndex == localSite['site_default_provider_index'])) or \
+              ((localProviderOnlyDefault == False) and (localProviderIndex != localSite['site_default_provider_index'])) ):
+
+            localProvider = localProviderList[localProviderIndex]
+            outputFile.write(' ' + localProvider['provider_tunnelbox_interface'])
+
    outputFile.write('"\n')
 
    outputFile.close()

@@ -1,5 +1,5 @@
 .\" NorNet System-Maintenance
-.\" Copyright (C) 2013 by Thomas Dreibholz
+.\" Copyright (C) 2013-2017 by Thomas Dreibholz
 .\"
 .\" This program is free software: you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd June 5, 2013
+.Dd April 10, 2017
 .Dt System-Maintenance 1
 .Os System-Maintenance
 .\" ###### Name #############################################################
@@ -29,8 +29,7 @@
 .Nm System-Maintenance
 .Op Fl interactive-kernel-removal|-k
 .Op Fl dont-touch-grub|-g
-.Op Fl keep-interface-mappings|-m
-.Op Fl upgrade-virtualbox|-v
+.Op Fl dont-keep-interface-mappings|-m
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
 .Nm System-Maintenance
@@ -39,12 +38,11 @@ These tasks are:
 .Bl -tag -width indent
 .It Ensuring that all packages are configured (dpkg --configure -a),
 .It Updating the package repositories,
-.It Upgrading VirtualBox to NorNet stable variant (only on request by option!),
 .It Removing obsolete kernels,
 .It Installing all available package updates,
 .It Auto-removing unused packages,
 .It Ensuring that Grub (the bootloader) is installed and up-to-date,
-.It Delete network interface mapping (see below),
+.It Delete network interface mapping (only on request by option, see below),
 .It Updating package and file search caches.
 .El
 .Pp
@@ -56,21 +54,16 @@ The following options are available:
 Remove obsolete kernels interactively.
 .It Fl dont-touch-grub|-g
 Do not update Grub installation.
-.It Fl keep-interface-mappings|-m
-Do not delete network interface mapping rules
+.It Fl dont-keep-interface-mappings|-M
+Delete network interface mapping rules
 (/etc/udev/rules.d/70-persistent-net.rules), if eth0 does not exist. This is
 useful for cloned virtual machines, where the new machine gets net MAC
 addresses. By deleting the mappings, the interfaces should be renamed
-beginning from eth0 during the next boot. This option deactivates this
-functionality.
-.It Fl upgrade-virtualbox|-v
-If set, and if VirtualBox or its guest utilities are installed in the plain
-Ubuntu/Debian variant, it is tried to upgrade these packages to the
-corresponding nornet-stable variant.
+beginning from eth0 during the next boot.
 .El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
 .It System-Maintenance
-.It System-Maintenance -upgrade-virtualbox
+.It System-Maintenance -dont-keep-interface-mappings
 .El

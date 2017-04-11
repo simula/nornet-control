@@ -1,7 +1,7 @@
 #!/bin/bash
 # --------------- NorNet -- The Multi-Homing Testbed Project ----------------
 #
-# Copyright (C) 2012-2016 by Thomas Dreibholz
+# Copyright (C) 2012-2017 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -261,6 +261,21 @@ check_and_configure ()
          if [ -e /etc/init.d/nornet-fling-service ] ; then
             # Ensure that trace service is running ...
             service nornet-fling-service start >/dev/null || true
+         fi
+      fi
+
+      rm -f fling-server-config
+      mv updated-tunnelbox-config/fling-server-config .
+      if needs_update fling-server-config /etc/default/nornet-fling-server $1 ; then
+         if [ -e /etc/init.d/nornet-fling-server-service ] ; then
+            echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Fling configuration has been updated => restarting Fling Server service ...\x1b[0m"
+            cp fling-server-config /etc/default/nornet-fling-server
+            service nornet-fling-server-service restart >/dev/null || true
+         fi
+      else
+         if [ -e /etc/init.d/nornet-fling-server-service ] ; then
+            # Ensure that trace service is running ...
+            service nornet-fling-server-service start >/dev/null || true
          fi
       fi
 
