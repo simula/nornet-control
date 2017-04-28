@@ -20,7 +20,7 @@
 #
 
 if [ $# -lt 2 ] ; then
-   echo >&2 "Usage: $0 file_name_prefix rsa|dsa|ec|keyexchange"
+   echo >&2 "Usage: $0 file_name_prefix rsa|ec|keyexchange"
    exit 1
 fi
 PREFIX="$1"
@@ -35,11 +35,17 @@ HASH_PARAM="-sha512"
 
 # Create key
 if [ "$TYPE" = "rsa" ] ; then
-   openssl genrsa -out $PREFIX.key $KEYLEN
-elif [ "$TYPE" = "dsa" ] ; then
-   openssl dsaparam -genkey 8192 -out $PREFIX.key
+   if [ ! -e $PREFIX.key ] ; then
+      openssl genrsa -out $PREFIX.key $KEYLEN
+   else
+      echo "NOTE: Using existing key $PREFIX.key!"
+   fi
 elif [ "$TYPE" = "ec" ] ; then
-   openssl ecparam -name $CURVE -genkey -out $PREFIX.key
+   if [ ! -e $PREFIX.key ] ; then
+      openssl ecparam -name $CURVE -genkey -out $PREFIX.key
+   else
+      echo "NOTE: Using existing key $PREFIX.key!"
+   fi
 elif [ "$TYPE" = "keyexchange" ] ; then
    # Key exchange parameters
    openssl ecparam -name $CURVE -out $PREFIX.ecparam
@@ -52,9 +58,10 @@ fi
 
 
 # Create certificate signing request (CSR)
-openssl req -config $1.config -new -utf8 $HASH_PARAM -outform PEM \
+openssl req -config $1.config -new -utf8 $HASH_PARAM -outform DER \
+            -reqexts SAN \
             -key "$PREFIX.key" -out "$PREFIX.csr"
-openssl req -noout -text -in "$PREFIX.csr"
+openssl req -noout -text -inform DER -in "$PREFIX.csr"
 
 # Create certificate (CRT)
 openssl req -config $1.config -new -utf8 $HASH_PARAM -x509 -days $DAYS \
