@@ -85,65 +85,31 @@ cp src/XDM/Xsetup     $PACKAGE-$UPSTREAM_VERSION/XDM/
 cp src/XDM/Xresources $PACKAGE-$UPSTREAM_VERSION/XDM/
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/background
+mkdir $PACKAGE-$UPSTREAM_VERSION/background/original
+cp src/background/Input/* $PACKAGE-$UPSTREAM_VERSION/background/original/
 cp src/background/*.png $PACKAGE-$UPSTREAM_VERSION/background/
-cp src/background/*.xcf $PACKAGE-$UPSTREAM_VERSION/background/
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/grub
 cp src/grub/*_theme $PACKAGE-$UPSTREAM_VERSION/grub/
 cp src/grub/grub-defaults $PACKAGE-$UPSTREAM_VERSION/grub/
 
 # ~~~~~~ Image conversion ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SPLASH_DIMENSIONS=1024x768
-DESKTOP_DIMENSIONS_LIST="1024x768 1920x1080"
-QUALITY=92.5
+cd src/background
+./make-desktop
+./make-bootsplash "../../$PACKAGE-$UPSTREAM_VERSION/nornet-version"
+cd ../..
 
-splashWidth=`echo "$SPLASH_DIMENSIONS" | sed -e "s/^\([0-9]*\)x\(.*\)$/\1/g"`
-convert -background Gold -fill "#02266b" -font Helvetica-Bold -pointsize 24 -gravity Center -size ${splashWidth}x42 \
-   caption:"`cat $PACKAGE-$UPSTREAM_VERSION/nornet-version`" \
-   "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png"
-
-for name in Management1 PLC1 Node1 Node2 Tunnelbox1 Monitor1 Display1 Server1 FileSrv1 Development1 Gatekeeper1 WebSrv1 WikiSrv1 Database1 TimeSrv1 ; do
-   (
-      echo "Processing $name ..."
-
-      # ~~~~~~ Boot splash ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      aspectRatio=`echo "$SPLASH_DIMENSIONS" | sed -e "s/x/\//g" | bc -l`
-      src/image-resize-with-cropping \
-         src/background/original/Background-${name}.jpeg \
-         src/background/Splash-${name}.png \
-         $aspectRatio && \
-      convert -size ${SPLASH_DIMENSIONS} xc:skyblue \
-          \( src/background/Splash-${name}.png -resize ${SPLASH_DIMENSIONS} \) -gravity center -composite \
-          \( $PACKAGE-$UPSTREAM_VERSION/background/NorNet-InformationText.png -resize ${SPLASH_DIMENSIONS} \) -gravity center -composite \
-          \( "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png" \) -gravity South -composite \
-          -quality ${QUALITY} \
-          $PACKAGE-$UPSTREAM_VERSION/grub/Splash-${name}-${SPLASH_DIMENSIONS}.jpeg
-      exiftool -q -overwrite_original -Copyright="Copyright `date '+%Y'` by Thomas Dreibholz" \
-          $PACKAGE-$UPSTREAM_VERSION/grub/Splash-${name}-${SPLASH_DIMENSIONS}.jpeg && \
-      rm src/background/Splash-${name}.png
-
-      # ~~~~~~ Desktop background ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      for desktopDimensions in $DESKTOP_DIMENSIONS_LIST ; do
-         aspectRatio=`echo "$desktopDimensions" | sed -e "s/x/\//g" | bc -l`
-         src/image-resize-with-cropping \
-            src/background/original/Background-${name}.jpeg \
-            src/background/Desktop-${name}.png \
-            $aspectRatio && \
-         convert -size ${desktopDimensions} xc:skyblue \
-            \( src/background/Desktop-${name}.png -resize ${desktopDimensions} \) -gravity center -composite \
-            \( $PACKAGE-$UPSTREAM_VERSION/background/NorNet-InformationText.png -resize ${desktopDimensions} \) -gravity center -composite \
-            -interlace line -quality ${QUALITY} \
-            $PACKAGE-$UPSTREAM_VERSION/background/Desktop-${name}-${desktopDimensions}.jpeg && \
-         exiftool -q -overwrite_original -Copyright="Copyright `date '+%Y'` by Thomas Dreibholz" \
-            $PACKAGE-$UPSTREAM_VERSION/background/Desktop-${name}-${desktopDimensions}.jpeg && \
-         rm src/background/Desktop-${name}.png
-      done
-
-   ) &
-   
+desktopFiles=`find src/background/Output/Desktop-with-Logo/ -maxdepth 1 -name "*.jpeg" -or -name "*.png"`
+for desktopFile in $desktopFiles ; do
+   targetName=`basename "$desktopFile" | sed -e "s/\-plain\-/-/g"`
+   cp $desktopFile "$PACKAGE-$UPSTREAM_VERSION/background/Desktop-${targetName}"
 done
-wait
-rm -f "$PACKAGE-$UPSTREAM_VERSION/grub/caption.png"
+
+splashFiles=`find src/background/Output/Splash/ -maxdepth 1 -name "*.jpeg" -or -name "*.png"`
+for splashFile in $splashFiles ; do
+   targetName=`basename "$splashFile"`
+   cp $splashFile "$PACKAGE-$UPSTREAM_VERSION/grub/Splash-${targetName}"
+done
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/pbuilder

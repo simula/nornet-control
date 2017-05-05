@@ -1,3 +1,2 @@
-background/NorNet-Background[0-9]*-[0-9]*x[0-9]*.png /usr/share/nornet/background
 grub/??_nornet_display_theme                         /etc/grub.d
 grub/Splash-Display1-1024x768.jpeg                   /boot
