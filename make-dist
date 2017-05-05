@@ -203,6 +203,7 @@ cp -r src/Artwork/Graphics/Markers/*.svg $PACKAGE-$UPSTREAM_VERSION/Artwork/Grap
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Desktop
 mv $PACKAGE-$UPSTREAM_VERSION/background/Desktop-*.jpeg $PACKAGE-$UPSTREAM_VERSION/Artwork/Desktop/
+mv $PACKAGE-$UPSTREAM_VERSION/background/Desktop-*.png  $PACKAGE-$UPSTREAM_VERSION/Artwork/Desktop/
 # ---------------------------------------------------------
 
 tar czvf $PACKAGE-$UPSTREAM_VERSION.tar.gz $PACKAGE-$UPSTREAM_VERSION

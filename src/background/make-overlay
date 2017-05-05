@@ -26,7 +26,7 @@ OUTPUT="$1"
 WIDTH="$2"
 HEIGHT="$3"
 
-prefix="XX"
+prefix="NorNet"
 
 # ------ Proportions --------------------------------------------------------
 titleWidth=0.50      # of Width

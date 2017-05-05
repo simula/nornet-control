@@ -1,4 +1,5 @@
 Artwork/Desktop/*.jpeg             /var/www/Artwork/Desktop/
+Artwork/Desktop/*.png              /var/www/Artwork/Desktop/
 Artwork/Graphics/Backgrounds/*.png /var/www/Artwork/Graphics/Backgrounds/
 Artwork/Graphics/Control/*.png     /var/www/Artwork/Graphics/Control/
 Artwork/Graphics/Flags/*.png       /var/www/Artwork/Graphics/Flags/
