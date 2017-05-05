@@ -1,0 +1,50 @@
+#!/bin/bash -e
+#
+# NorNet Core Logo Text Script
+# Copyright (C) 2017 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY# without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@iem.uni-due.de
+
+MAKE_LOGO=./Make-Logo
+
+prefix="NorNet"
+
+logoFont="Eras"   # "DejaVu Sans Bold"
+otherFont="Eras"
+
+logoTitle="NorNet"
+logoSubtitle="https://www.nntb.no"
+logoName="NorNet Core"
+logoAffiliation="Simula Research Laboratory"
+logoURL="https://www.simula.no"
+
+# ------ Labels -------------------------------------------------------------
+$MAKE_LOGO ${prefix}-Title.png       "$logoTitle"       1024 30 "Golden"            "$logoFont"   &
+$MAKE_LOGO ${prefix}-Subtitle.png    "$logoSubtitle"     256 20 "Golden"            "$otherFont"  &
+$MAKE_LOGO ${prefix}-URL.png         "$logoURL"          256 10 "Brushed Aluminium" "$otherFont"  &
+$MAKE_LOGO ${prefix}-Name.png        "$logoName"         256 10 "Golden"            "$otherFont"  &
+$MAKE_LOGO ${prefix}-Affiliation.png "$logoAffiliation"  256 10 "Golden"            "$otherFont"  &
+
+# ------ Host Name ----------------------------------------------------------
+# logoHost="østhorn.nntb.no"
+# $MAKE_LOGO ${prefix}-hostname.png "$logoHost" 256 10 "Brushed Aluminium" "Comic Sans MS"  &
+
+# # ------ UTF-8 Tests --------------------------------------------------------
+# $MAKE_LOGO ${prefix}-Name-CN.png "托马斯博士"   256 10 "Golden" "$otherFont"  &
+# ar="توماس ترايبهولس"
+# $MAKE_LOGO ${prefix}-Name-AR.png "$ar"        256 10 "Golden" "$otherFont"  &
+
+wait
