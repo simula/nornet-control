@@ -159,12 +159,17 @@ mkdir $PACKAGE-$UPSTREAM_VERSION/Monitor
 cp src/Monitor/*.cfg $PACKAGE-$UPSTREAM_VERSION/Monitor/
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/WebServer
-cp src/WebServer/000-*.conf $PACKAGE-$UPSTREAM_VERSION/WebServer/
-cp src/WebServer/*-awstats.conf $PACKAGE-$UPSTREAM_VERSION/WebServer/
-cp src/WebServer/make-certificate $PACKAGE-$UPSTREAM_VERSION/WebServer/
-cp src/WebServer/make-cipher-suites $PACKAGE-$UPSTREAM_VERSION/WebServer/
-cp src/WebServer/favicon.ico $PACKAGE-$UPSTREAM_VERSION/WebServer/
-cp src/WebServer/nntb.config $PACKAGE-$UPSTREAM_VERSION/WebServer/
+cp src/WebServer/000-*.conf               $PACKAGE-$UPSTREAM_VERSION/WebServer/
+cp src/WebServer/*-awstats.conf           $PACKAGE-$UPSTREAM_VERSION/WebServer/
+cp src/WebServer/make-cipher-suites       $PACKAGE-$UPSTREAM_VERSION/WebServer/
+cp src/WebServer/make-certificate         $PACKAGE-$UPSTREAM_VERSION/WebServer/
+cp src/WebServer/sign-certificate         $PACKAGE-$UPSTREAM_VERSION/WebServer/
+cp src/WebServer/get-pin256               $PACKAGE-$UPSTREAM_VERSION/WebServer/
+cp src/WebServer/favicon.ico              $PACKAGE-$UPSTREAM_VERSION/WebServer/
+cp src/WebServer/www.nntb.no.config       $PACKAGE-$UPSTREAM_VERSION/WebServer/
+cp src/WebServer/wiki.nntb.no.config      $PACKAGE-$UPSTREAM_VERSION/WebServer/
+cp src/WebServer/benlomond.nntb.no.config $PACKAGE-$UPSTREAM_VERSION/WebServer/
+cp src/WebServer/packages.nntb.no.config  $PACKAGE-$UPSTREAM_VERSION/WebServer/
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock
 cp -r src/Kontrollsenter/Clock/station-clock.svg $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock/

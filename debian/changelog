@@ -1,8 +1,8 @@
-nornet (1.1.11~rc1-1ubuntu1) xenial; urgency=high
+nornet (1.1.11~rc1.1-1ubuntu1) xenial; urgency=high
 
   * New release.
 
- -- Thomas Dreibholz <dreibh@simula.no>  Fri, 28 Apr 2017 08:08:08 +0800
+ -- Thomas Dreibholz <dreibh@simula.no>  Fri, 05 May 2017 08:08:08 +0800
 
 nornet (1.1.10-1ubuntu1) xenial; urgency=high
 
