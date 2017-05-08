@@ -23,57 +23,57 @@ mkdir $PACKAGE-$UPSTREAM_VERSION || exit 1
 # ---------------------------------------------------------
 mkdir $PACKAGE-$UPSTREAM_VERSION/src
 cp NEWS README BUGS COPYING ChangeLog *.lsm $PACKAGE-$UPSTREAM_VERSION
-cp src/*.py $PACKAGE-$UPSTREAM_VERSION
-cp src/*.[0-9] $PACKAGE-$UPSTREAM_VERSION
-cp src/*-config* $PACKAGE-$UPSTREAM_VERSION
-cp src/*-constants $PACKAGE-$UPSTREAM_VERSION
-cp src/*-authorized_keys $PACKAGE-$UPSTREAM_VERSION
-cp src/*-config.example $PACKAGE-$UPSTREAM_VERSION
+cp src/*.py                       $PACKAGE-$UPSTREAM_VERSION
+cp src/*.[0-9]                    $PACKAGE-$UPSTREAM_VERSION
+cp src/*-config*                  $PACKAGE-$UPSTREAM_VERSION
+cp src/*-constants                $PACKAGE-$UPSTREAM_VERSION
+cp src/*-authorized_keys          $PACKAGE-$UPSTREAM_VERSION
+cp src/*-config.example           $PACKAGE-$UPSTREAM_VERSION
 
-cp src/Random-Sleep $PACKAGE-$UPSTREAM_VERSION
-cp src/Tunnelbox-Setup $PACKAGE-$UPSTREAM_VERSION
-cp src/Probe-Interface-Setup $PACKAGE-$UPSTREAM_VERSION
-cp src/Probe-Endpoint-Setup $PACKAGE-$UPSTREAM_VERSION
-cp src/Watchdog $PACKAGE-$UPSTREAM_VERSION
-cp src/Server-Watchdog $PACKAGE-$UPSTREAM_VERSION
-cp src/System-Backup $PACKAGE-$UPSTREAM_VERSION
-cp src/System-Info $PACKAGE-$UPSTREAM_VERSION
-cp src/System-Maintenance $PACKAGE-$UPSTREAM_VERSION
-cp src/Start-VSystem $PACKAGE-$UPSTREAM_VERSION
-cp src/Stop-VSystem $PACKAGE-$UPSTREAM_VERSION
-cp src/Check-VSystem $PACKAGE-$UPSTREAM_VERSION
-cp src/Show-VSystems $PACKAGE-$UPSTREAM_VERSION
-cp src/Make-VSystem-Template $PACKAGE-$UPSTREAM_VERSION
-cp src/Backup-VSystem $PACKAGE-$UPSTREAM_VERSION
-cp src/Reset-VSystem $PACKAGE-$UPSTREAM_VERSION
-cp src/Backup-All-VSystems $PACKAGE-$UPSTREAM_VERSION
-cp src/Auto-Update-BootCD $PACKAGE-$UPSTREAM_VERSION
-cp src/Auto-Update-Keys $PACKAGE-$UPSTREAM_VERSION
-cp src/Change-VSystem-CDImage $PACKAGE-$UPSTREAM_VERSION
-cp src/check_* $PACKAGE-$UPSTREAM_VERSION
-cp src/Make-*-Configuration $PACKAGE-$UPSTREAM_VERSION
-cp src/Tunnelbox-NAT-Helper $PACKAGE-$UPSTREAM_VERSION
+cp src/Random-Sleep               $PACKAGE-$UPSTREAM_VERSION
+cp src/Tunnelbox-Setup            $PACKAGE-$UPSTREAM_VERSION
+cp src/Probe-Interface-Setup      $PACKAGE-$UPSTREAM_VERSION
+cp src/Probe-Endpoint-Setup       $PACKAGE-$UPSTREAM_VERSION
+cp src/Watchdog                   $PACKAGE-$UPSTREAM_VERSION
+cp src/Server-Watchdog            $PACKAGE-$UPSTREAM_VERSION
+cp src/System-Backup              $PACKAGE-$UPSTREAM_VERSION
+cp src/System-Info                $PACKAGE-$UPSTREAM_VERSION
+cp src/System-Maintenance         $PACKAGE-$UPSTREAM_VERSION
+cp src/Start-VSystem              $PACKAGE-$UPSTREAM_VERSION
+cp src/Stop-VSystem               $PACKAGE-$UPSTREAM_VERSION
+cp src/Check-VSystem              $PACKAGE-$UPSTREAM_VERSION
+cp src/Show-VSystems              $PACKAGE-$UPSTREAM_VERSION
+cp src/Make-VSystem-Template      $PACKAGE-$UPSTREAM_VERSION
+cp src/Backup-VSystem             $PACKAGE-$UPSTREAM_VERSION
+cp src/Reset-VSystem              $PACKAGE-$UPSTREAM_VERSION
+cp src/Backup-All-VSystems        $PACKAGE-$UPSTREAM_VERSION
+cp src/Auto-Update-BootCD         $PACKAGE-$UPSTREAM_VERSION
+cp src/Auto-Update-Keys           $PACKAGE-$UPSTREAM_VERSION
+cp src/Change-VSystem-CDImage     $PACKAGE-$UPSTREAM_VERSION
+cp src/check_*                    $PACKAGE-$UPSTREAM_VERSION
+cp src/Make-*-Configuration       $PACKAGE-$UPSTREAM_VERSION
+cp src/Tunnelbox-NAT-Helper       $PACKAGE-$UPSTREAM_VERSION
 cp src/Tunnelbox-Bootstrap-Helper $PACKAGE-$UPSTREAM_VERSION
-cp src/Interface-Setup $PACKAGE-$UPSTREAM_VERSION
-cp src/Server-Setup $PACKAGE-$UPSTREAM_VERSION
-cp src/Node-Setup $PACKAGE-$UPSTREAM_VERSION
-cp src/Convert-HDD-Images $PACKAGE-$UPSTREAM_VERSION
-cp src/Set-OVF-Type $PACKAGE-$UPSTREAM_VERSION
-cp src/Reset-Networking $PACKAGE-$UPSTREAM_VERSION
-cp src/Check-Research-Node $PACKAGE-$UPSTREAM_VERSION
-cp src/Check-Nodes $PACKAGE-$UPSTREAM_VERSION
-cp src/Check-Nodes-Loop $PACKAGE-$UPSTREAM_VERSION
-cp src/Clear-SSH-Node-Key $PACKAGE-$UPSTREAM_VERSION
-cp src/Get-Nodes $PACKAGE-$UPSTREAM_VERSION
-cp src/Get-Slice-Nodes $PACKAGE-$UPSTREAM_VERSION
-cp src/Get-Users $PACKAGE-$UPSTREAM_VERSION
-cp src/Get-Sites $PACKAGE-$UPSTREAM_VERSION
-cp src/Get-Slices $PACKAGE-$UPSTREAM_VERSION
-cp src/Get-NorNet-Configuration $PACKAGE-$UPSTREAM_VERSION
-cp src/nornetinfogenerator $PACKAGE-$UPSTREAM_VERSION
-cp src/Test-NTP-Configuration $PACKAGE-$UPSTREAM_VERSION
-cp src/Fingerprint-SSH-Node-Keys $PACKAGE-$UPSTREAM_VERSION
-cp src/Create-New-SSH-Node-Keys $PACKAGE-$UPSTREAM_VERSION
+cp src/Interface-Setup            $PACKAGE-$UPSTREAM_VERSION
+cp src/Server-Setup               $PACKAGE-$UPSTREAM_VERSION
+cp src/Node-Setup                 $PACKAGE-$UPSTREAM_VERSION
+cp src/Convert-HDD-Images         $PACKAGE-$UPSTREAM_VERSION
+cp src/Set-OVF-Type               $PACKAGE-$UPSTREAM_VERSION
+cp src/Reset-Networking           $PACKAGE-$UPSTREAM_VERSION
+cp src/Check-Research-Node        $PACKAGE-$UPSTREAM_VERSION
+cp src/Check-Nodes                $PACKAGE-$UPSTREAM_VERSION
+cp src/Check-Nodes-Loop           $PACKAGE-$UPSTREAM_VERSION
+cp src/Clear-SSH-Node-Key         $PACKAGE-$UPSTREAM_VERSION
+cp src/Get-Nodes                  $PACKAGE-$UPSTREAM_VERSION
+cp src/Get-Slice-Nodes            $PACKAGE-$UPSTREAM_VERSION
+cp src/Get-Users                  $PACKAGE-$UPSTREAM_VERSION
+cp src/Get-Sites                  $PACKAGE-$UPSTREAM_VERSION
+cp src/Get-Slices                 $PACKAGE-$UPSTREAM_VERSION
+cp src/Get-NorNet-Configuration   $PACKAGE-$UPSTREAM_VERSION
+cp src/nornetinfogenerator        $PACKAGE-$UPSTREAM_VERSION
+cp src/Test-NTP-Configuration     $PACKAGE-$UPSTREAM_VERSION
+cp src/Fingerprint-SSH-Node-Keys  $PACKAGE-$UPSTREAM_VERSION
+cp src/Create-New-SSH-Node-Keys   $PACKAGE-$UPSTREAM_VERSION
 
 echo "NorNet $UPSTREAM_VERSION, packaged `env LANG=en date`" >$PACKAGE-$UPSTREAM_VERSION/nornet-version
 
@@ -139,7 +139,8 @@ cp src/WebServer/packages.nntb.no.config  $PACKAGE-$UPSTREAM_VERSION/WebServer/
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock
 cp -r src/Kontrollsenter/Clock/station-clock.svg $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock/
-cp -r src/Kontrollsenter/Clock/License.pdf $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock/
+cp -r src/Kontrollsenter/Clock/License.pdf       $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/Clock/
+
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/ol3-layerswitcher/
 mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/ol3-layerswitcher/src/
 cp -r src/Kontrollsenter/ol3-layerswitcher/src/ol3-layerswitcher.js  $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/ol3-layerswitcher/src/
@@ -162,44 +163,27 @@ mkdir $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/sources
 cp -r src/Kontrollsenter/UnifrakturCook/sources/UnifrakturCook-Light.sfd $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/sources/
 cp -r src/Kontrollsenter/UnifrakturCook/sources/UnifrakturCook.sfd       $PACKAGE-$UPSTREAM_VERSION/Kontrollsenter/UnifrakturCook/sources/
 
+
+# ~~~~~~ Image conversion ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd src/Artwork/Sites
+./make-site-images
+cd ../../..
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Original
 cp -r src/Artwork/Sites/Original/*.jpeg $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Original/
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Small
+cp -r src/Artwork/Sites/Small/*.jpeg $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Small/
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Large
-inputFiles=`find $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Original/ -name "*.jpeg" -printf '%p\n'`
-
-OIFS=$IFS
-IFS='
-'
-cores=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || grep -c ^processor /compat/linux/proc/cpuinfo 2>/dev/null || echo "1" )
-processes=0
-for inputFile in $inputFiles ; do
-   outputFileSmall="`echo "$inputFile" | sed -e "s/\/Original\//\/Small\//g"`"
-   outputFileLarge="`echo "$inputFile" | sed -e "s/\/Original\//\/Large\//g"`"
-   inputFileTMP="$inputFile.tmp.png"
-   echo "Converting $inputFile ..."
-   (
-      src/image-resize-with-cropping "$inputFile" "$inputFileTMP" 1.333333
-      convert "$inputFileTMP" -resize 512x  -interlace line -quality 92.5 "$outputFileSmall"
-      convert "$inputFileTMP" -resize 2048x -interlace line -quality 92.5 "$outputFileLarge"
-      rm -f "$inputFileTMP"
-   ) &
-   let processes=$processes+1
-   if [ $processes -ge $cores ] ; then
-      wait
-      processes=0
-   fi
-done
-wait
-IFS=$OIFS
+cp -r src/Artwork/Sites/Large/*.jpeg $PACKAGE-$UPSTREAM_VERSION/Artwork/Sites/Large/
 
 cp -r src/Artwork/Graphics/Backgrounds/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Backgrounds/
-cp -r src/Artwork/Graphics/Control/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Control/
-cp -r src/Artwork/Graphics/Flags/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Flags/
-cp -r src/Artwork/Graphics/Flags/*.svg $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Flags/
-cp -r src/Artwork/Graphics/Icons/*.png $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Icons/
-cp -r src/Artwork/Graphics/Markers/*.svg $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Markers/
+cp -r src/Artwork/Graphics/Control/*.png     $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Control/
+cp -r src/Artwork/Graphics/Flags/*.png       $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Flags/
+cp -r src/Artwork/Graphics/Flags/*.svg       $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Flags/
+cp -r src/Artwork/Graphics/Icons/*.png       $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Icons/
+cp -r src/Artwork/Graphics/Markers/*.svg     $PACKAGE-$UPSTREAM_VERSION/Artwork/Graphics/Markers/
 
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Desktop
 mv $PACKAGE-$UPSTREAM_VERSION/background/Desktop-*.jpeg $PACKAGE-$UPSTREAM_VERSION/Artwork/Desktop/
