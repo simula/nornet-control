@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+env LANG=en date >date.txt
+./make-logo-texts
+./make-desktop
+./make-bootsplash date.txt 

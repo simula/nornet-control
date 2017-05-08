@@ -27,9 +27,9 @@ otherFont="Eras"
 
 logoTitle="NorNet"
 logoSubtitle="https://www.nntb.no"
-logoName="NorNet Core"
+logoName="Thomas Dreibholz (托马斯博士)"   # "NorNet Core"
 logoAffiliation="Simula Research Laboratory"
-logoURL="https://www.simula.no"
+logoURL="dreibh@simula.no"   # "https://www.simula.no"
 
 # ------ Labels -------------------------------------------------------------
 $MAKE_LOGO ${prefix}-Title.png       "$logoTitle"       1024 30 "Golden"            "$logoFont"   &

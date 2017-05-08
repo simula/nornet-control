@@ -58,5 +58,5 @@ OUTPUTFILENAME="$2"
 )
 (gimp-quit TRUE)
 EOF
-) | env LANG=C gimp -i -n -s -b - 2>/dev/null
-identify "$OUTPUTFILENAME"
+) | env LANG=C gimp --new-instance --no-interface --no-splash --batch - 2>/dev/null | \
+       ( grep -vE "^ts>|^Copyright|^Welcome|^$" || true )

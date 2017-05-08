@@ -34,7 +34,7 @@ subtitleWidth=0.65   # of Width
 nameHeight=0.035     # of Height
 titleBorder=0.60     # of Name Height
 nameBorder=0.35      # of Name Height
-indent=0.05          # of Height
+indent=0.06          # of Height
 logoWidth=0.475      # of Title Width
 
 

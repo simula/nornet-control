@@ -48,6 +48,49 @@ fi
 
 # ====== Call Gimp ==========================================================
 ( cat <<EOF
+
+; script-fu-glossy-logo copied from /usr/share/gimp/2.0/scripts/glossy.scm:
+; The only difference is that gimp-display-new is commented out for non-GUI run.
+(define (script-fu-glossy-logo2 text
+                               size
+                               font
+                               blend-gradient-text
+                               blend-gradient-text-reverse
+                               blend-gradient-outline
+                               blend-gradient-outline-reverse
+                               grow-size
+                               bg-color
+                               use-pattern-text
+                               pattern-text
+                               use-pattern-outline
+                               pattern-outline
+                               use-pattern-overlay
+                               pattern-overlay
+                               noninteractive
+                               shadow-toggle
+                               s-offset-x
+                               s-offset-y)
+  (let* (
+        (img (car (gimp-image-new 256 256 RGB)))
+        (text-layer (car (gimp-text-fontname img -1 0 0 text 30 TRUE size PIXELS font)))
+        )
+    (gimp-image-undo-disable img)
+    (apply-glossy-logo-effect img text-layer
+                              blend-gradient-text
+                              blend-gradient-text-reverse
+                              blend-gradient-outline
+                              blend-gradient-outline-reverse
+                              grow-size bg-color
+                              use-pattern-text pattern-text
+                              use-pattern-outline pattern-outline
+                              use-pattern-overlay pattern-overlay
+                              noninteractive shadow-toggle
+                              s-offset-x s-offset-y)
+    (gimp-image-undo-enable img)
+    ; (gimp-display-new img)   ; !!! Do not show result!
+  )
+)
+
 (let*
    ((fileName    "$FILENAME")
     (logoText    "$CONTENT")
@@ -55,7 +98,7 @@ fi
     (fontSize     $FONTSIZE)
     (borderSize   $BORDERSIZE)
     (colorScheme "$COLORSCHEME")
-    (image (car (script-fu-glossy-logo logoText fontSize fontName colorScheme FALSE colorScheme FALSE borderSize "white" FALSE "Electric Blue" FALSE "Electric Blue" FALSE "Parque #1" TRUE TRUE 8 8)))
+    (image (car (script-fu-glossy-logo2 logoText fontSize fontName colorScheme FALSE colorScheme FALSE borderSize "white" FALSE "Electric Blue" FALSE "Electric Blue" FALSE "Parque #1" TRUE TRUE 8 8)))
     (drawable (car (gimp-image-get-active-layer image)))
     (layers (gimp-image-get-layers image))
     (num-layers (car layers))
@@ -75,4 +118,5 @@ fi
 )
 (gimp-quit TRUE)
 EOF
-) | gimp -n -s -b - 2>/dev/null
+) | env LANG=C gimp --new-instance --no-interface --no-splash --batch - 2>/dev/null | \
+       ( grep -vE "^ts>|^Copyright|^Welcome|^$" || true )

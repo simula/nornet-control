@@ -29,7 +29,7 @@ MAKE_CROPPED=../image-resize-with-cropping
 MAKEFILE="Makefile.desktop"
 INPUTS=`find Input/ -maxdepth 1 -name "*.[pP][nN][gG]" -or -name "*.jpeg" -or -name "*.[jJ][pP][gG]"`
 DOMAIN=".simula.nornet"
-DIMENSIONS="1920x1200 1024x768"
+DIMENSIONS="1920x1200 1920x1080 1024x768"
 VARIANTS="plain"   # oil mosaic"
 JPEG_QUALITY=92.5
 
@@ -60,7 +60,7 @@ for input in $INPUTS ; do
          echo "Output/Text/${hostname}.png:"
          echo -e "\t@echo \"Making label Output/Text/${hostname}.png ...\""
          echo -e "\t@\$(MAKE_LOGO) \"Output/Text/${hostname}.png\" \\"
-         echo -e "\t   \"$hostname\" 256 10 \"Brushed Aluminium\" \"Comic Sans MS\" >/dev/null"
+         echo -e "\t   \"$hostname\" 256 10 \"Brushed Aluminium\" \"Comic Sans MS\""
          echo ""
       ) >>$MAKEFILE
    fi
@@ -104,7 +104,7 @@ for dimensions in $DIMENSIONS ; do
                echo -e "\t@\$(MAKE_PAINTING) \\"
                echo -e "\t   ${input} \\"
                echo -e "\t   Output/tmp/${output}-tmp2.png \\"
-               echo -e "\t   32 >/dev/null"
+               echo -e "\t   32"
                echo -e "\t@\$(MAKE_CROPPED) \\"
                echo -e "\t   Output/tmp/${output}-tmp2.png \\"
                echo -e "\t   Output/tmp/${output}-tmp.png \\"
@@ -115,7 +115,7 @@ for dimensions in $DIMENSIONS ; do
                (
                   echo -e "\t@\$(MAKE_MOSAIC) ${input} \\"
                   echo -e "\t   Output/tmp/${output}-tmp2.png \\"
-                  echo -e "\t   24 4 4 hexagons rough >/dev/null"
+                  echo -e "\t   24 4 4 hexagons rough"
                   echo -e "\t@\$(MAKE_CROPPED) \\"
                   echo -e "\t   Output/tmp/${output}-tmp2.png \\"
                   echo -e "\t   Output/tmp/${output}-tmp.png \\"
@@ -125,7 +125,7 @@ for dimensions in $DIMENSIONS ; do
             # ------ Plain --------------------------------------------------
             elif [ "$variant" = "plain" ] ; then
                if [ "$outputFormat" = "png" ] ; then
-                  echo -e "\t@\$(MAKE_BACKGROUND) ${input} Output/tmp/${output}-tmp2.png >/dev/null"
+                  echo -e "\t@\$(MAKE_BACKGROUND) ${input} Output/tmp/${output}-tmp2.png"
                else
                   echo -e "\t@rm -f Output/tmp/${output}-tmp2.png"
                   echo -e "\t@ln ${input} Output/tmp/${output}-tmp2.png   # No color conversion for pictures!"

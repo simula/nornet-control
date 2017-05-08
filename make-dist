@@ -95,6 +95,7 @@ cp src/grub/grub-defaults $PACKAGE-$UPSTREAM_VERSION/grub/
 
 # ~~~~~~ Image conversion ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 cd src/background
+./make-logo-texts
 ./make-desktop
 ./make-bootsplash "../../$PACKAGE-$UPSTREAM_VERSION/nornet-version"
 cd ../..
