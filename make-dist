@@ -188,6 +188,12 @@ cp -r src/Artwork/Graphics/Markers/*.svg     $PACKAGE-$UPSTREAM_VERSION/Artwork/
 mkdir $PACKAGE-$UPSTREAM_VERSION/Artwork/Desktop
 mv $PACKAGE-$UPSTREAM_VERSION/background/Desktop-*.jpeg $PACKAGE-$UPSTREAM_VERSION/Artwork/Desktop/
 mv $PACKAGE-$UPSTREAM_VERSION/background/Desktop-*.png  $PACKAGE-$UPSTREAM_VERSION/Artwork/Desktop/
+cp src/background/Output/Desktop-with-Logo/Background1-plain-1600x1200.png     $PACKAGE-$UPSTREAM_VERSION/background/NorNet-Background1-4x3.png
+cp src/background/Output/Desktop-with-Logo/Background1-plain-1920x1080.png     $PACKAGE-$UPSTREAM_VERSION/background/NorNet-Background1-16x9.png
+cp src/background/Output/Desktop-with-Logo/Background1-plain-1920x1200.png     $PACKAGE-$UPSTREAM_VERSION/background/NorNet-Background1-16x10.png
+cp src/background/Output/Desktop-without-Logo/Background1-plain-1600x1200.png  $PACKAGE-$UPSTREAM_VERSION/background/NorNet-Background1-without-Logo-4x3.png
+cp src/background/Output/Desktop-without-Logo/Background1-plain-1920x1080.png  $PACKAGE-$UPSTREAM_VERSION/background/NorNet-Background1-without-Logo-16x9.png
+cp src/background/Output/Desktop-without-Logo/Background1-plain-1920x1200.png  $PACKAGE-$UPSTREAM_VERSION/background/NorNet-Background1-without-Logo-16x10.png
 # ---------------------------------------------------------
 
 tar czvf $PACKAGE-$UPSTREAM_VERSION.tar.gz $PACKAGE-$UPSTREAM_VERSION
