@@ -1,8 +1,0 @@
-#!/bin/bash
-
-while [ "$1" != "" ] ; do
-   echo "$1 ..."
-   convert "$1" -interlace line -resize 3072x -quality 95 "tmp-$1.jpeg" && mv "tmp-$1.jpeg" "$1"
-   shift
-done
-

@@ -1,0 +1,83 @@
+#!/bin/bash -e
+#
+# NorNet Core Site Image Script
+# Copyright (C) 2017 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY# without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@iem.uni-due.de
+
+MAKE_CROPPED=../../image-resize-with-cropping
+
+MAKEFILE="Makefile.site-images"
+INPUTS=`find Original/ -maxdepth 1 -name "*.[pP][nN][gG]" -or -name "*.jpeg" -or -name "*.[jJ][pP][gG]"`
+WIDTH_LARGE=1980
+WIDTH_SMALL=512
+JPEG_QUALITY=92.5
+
+
+# ====== Initialize Makefile ================================================
+rm -f $MAKEFILE
+(
+   echo "MAKE_CROPPED := $MAKE_CROPPED"
+   echo ""
+   echo -e "all:\tdirectories all-images"
+   echo ""
+   echo "directories:"
+   echo -e "\t@mkdir -p Small/ Large/ tmp/"
+   echo ""
+) >$MAKEFILE
+
+
+# ====== Make images ========================================================
+OIFS=$IFS
+IFS='
+'
+for inputFile in $INPUTS ; do
+   # NOTE: The challenge here is that Makefile requires file names with
+   # spaces to be escaped ("\ "). Using quotes will not work!
+   originalFile="`echo "$inputFile" | sed -e "s/ /\\\\\\ /g"`"
+   outputFileSmall="`echo "$inputFile" | sed -e "s/Original\//Small\//g" -e "s/ /\\\\\\ /g"`"
+   outputFileLarge="`echo "$inputFile" | sed -e "s/Original\//Large\//g" -e "s/ /\\\\\\ /g"`"
+   inputFileTMP="`echo "$inputFile" | sed -e "s/Original\//tmp\//g" -e "s/ /\\\\\\ /g"`"
+
+   (      
+      echo -e "${inputFileTMP}:\t${originalFile}"
+      echo -e "\t@\$(MAKE_CROPPED) ${originalFile} ${inputFileTMP} 1.333333"
+      echo ""
+
+      echo -e "${outputFileSmall}:\t${inputFileTMP}"
+      echo -e "\t@echo \"Making small image ${outputFileSmall} ...\""
+      echo -e "\t@convert ${inputFileTMP} -resize ${WIDTH_SMALL}x -interlace line -quality 92.5 ${outputFileSmall}"
+      echo ""
+
+      echo -e "${outputFileLarge}:\t${inputFileTMP}"
+      echo -e "\t@echo \"Making large image ${outputFileLarge} ...\""
+      echo -e "\t@convert ${inputFileTMP} -resize ${WIDTH_LARGE}x -interlace line -quality 92.5 ${outputFileLarge}"
+      echo ""      
+   ) >>$MAKEFILE
+
+   allImages="$allImages ${outputFileSmall} ${outputFileLarge}"
+done
+IFS=$OIFS
+
+(
+   echo -e "\nall-images:\t$allImages"
+   echo ""
+) >>$MAKEFILE
+
+
+# ====== Make everything ====================================================
+cores=`getconf _NPROCESSORS_ONLN`
+make -j${cores} -f $MAKEFILE
