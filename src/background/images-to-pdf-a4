@@ -1,0 +1,14 @@
+#!/bin/bash
+
+../image-resize-with-cropping Output/Desktop-with-Logo/Background1-plain-2970x2100.png x1.png A4 &
+../image-resize-with-cropping Output/Text/Overlay-2970x2100.png x2.png A4 &
+wait
+
+
+# DIN A4: 210 mm × 297 mm
+
+convert \
+ -page 2970x2100 -gravity center -units PixelsPerCentimeter -density 100x100 -resize 2970x2100 -compress lossless \
+ x2.png x2.png \
+ x.pdf
+identify x.pdf
