@@ -29,7 +29,7 @@ MAKE_CROPPED=../image-resize-with-cropping
 MAKEFILE="Makefile.desktop"
 INPUTS=`find Input/ -maxdepth 1 -name "*.[pP][nN][gG]" -or -name "*.jpeg" -or -name "*.[jJ][pP][gG]"`
 DOMAIN=".simula.nornet"
-DIMENSIONS="1920x1200 1920x1080 1600x1200 1024x768"
+DIMENSIONS="2970x2100 1920x1200 1920x1080 1600x1200 1024x768"
 VARIANTS="plain"   # oil mosaic"
 JPEG_QUALITY=92.5
 

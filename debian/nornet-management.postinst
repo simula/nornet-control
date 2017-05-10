@@ -6,8 +6,12 @@ case "$1" in
    configure)
       update-grub
       Auto-Update-Keys
-      ln -sf /usr/bin/System-Info /etc/update-motd.d/55-nornet-management
-      /usr/sbin/update-motd 2>/dev/null || true
+      if [ -e /etc/update-motd.d ] ; then
+         ln -sf /usr/bin/System-Info /etc/update-motd.d/55-nornet-management
+      fi
+      if [ -e /usr/sbin/update-motd ] ; then
+         /usr/sbin/update-motd 2>/dev/null || true
+      fi
       ;;
 esac
 
