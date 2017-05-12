@@ -20,23 +20,29 @@
 # Contact: dreibh@simula.no
 #
 
-from wand.image import Image
-from math import *
-from sys import *
+import sys
+import math
+import wand
+import wand.image
 
 
-if len(argv) != 4:
-   print(('Usage: ' + argv[0] + ' [Input] [Output] [Aspect|A4]'))
+if len(sys.argv) != 4:
+   print(('Usage: ' + sys.argv[0] + ' [Input] [Output] [Aspect|A4]'))
    exit(1)
 
-inputFileName  = argv[1]
-outputFileName = argv[2]
-if ((argv[3] == 'A4') or (argv[3] == 'a4')):
-   outputAspect = sqrt(2)
+inputFileName  = sys.argv[1]
+outputFileName = sys.argv[2]
+if ((sys.argv[3] == 'A4') or (sys.argv[3] == 'a4')):
+   outputAspect = math.sqrt(2)
 else:
-   outputAspect = float(argv[3])
+   outputAspect = float(sys.argv[3])
 
-image       = Image(filename=inputFileName)
+try:
+   image = wand.image.Image(filename=inputFileName)
+except Exception:
+   sys.stderr.write('ERROR: Unable to open file ' + inputFileName + '!\n')
+   sys.exit(1)
+
 inputWidth  = 0.0 + image.width    # Use float!
 inputHeight = 0.0 + image.height   # Use float!
 inputAspect = inputWidth / inputHeight      # => result is also float!
