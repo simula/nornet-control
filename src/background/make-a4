@@ -1,0 +1,5 @@
+#!/bin/sh
+
+./images-to-pdf-a4 NorNet-A4.pdf \
+   Output/Desktop-with-Logo/Background1-plain-2970x2100.png \
+   Output/Text/Overlay-2970x2100.png
