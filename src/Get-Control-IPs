@@ -41,23 +41,58 @@ def getControlBoxForSite(siteID):
 
 
 # ###### Main program #######################################################
+publicIPTable = False
+i = 1
+while i < len(sys.argv):
+   if sys.argv[i] == '-public-ip-table':
+      publicIPTable = True
+   i = i + 1   
+
+
 loginToPLC(quietMode = True)
 
 nodeList = fetchNorNetNode(None)
 siteList = fetchNorNetSite(None)
 
-n=1
-for siteIndex in sorted(siteList):
-   site = siteList[siteIndex]
-   #print site
-   siteIndex = site['site_index']
-   siteName  = site['site_utf8']
-   siteTags  = site['site_tags']
 
-   tunnelboxIPext = IPv4Interface(getTagValue(siteTags, 'nornet_site_tbp0_address_ipv4', None)).ip
-   tunnelboxIPint = makeNorNetIP(site['site_default_provider_index'], siteIndex, NorNet_NodeIndex_Tunnelbox, 4).ip
-   controlboxIP   = getControlBoxForSite(site['site_id'])
+if publicIPTable == False:
+   n=1
+   for siteIndex in sorted(siteList):
+      site = siteList[siteIndex]
+      siteIndex = site['site_index']
+      siteName  = site['site_utf8']
+      siteTags  = site['site_tags']
 
-   print(str(n) + '\t' + str(siteIndex) + '\t' + str(tunnelboxIPint) + '\t' + str(tunnelboxIPext) + '\t' + str(controlboxIP) + '\t"' + siteName + '\"')
+      tunnelboxIPext = IPv4Interface(getTagValue(siteTags, 'nornet_site_tbp0_address_ipv4', None)).ip
+      tunnelboxIPint = makeNorNetIP(site['site_default_provider_index'], siteIndex, NorNet_NodeIndex_Tunnelbox, 4).ip
+      controlboxIP   = getControlBoxForSite(site['site_id'])
 
-   n = n + 1
+      print(str(n) + '\t' + str(siteIndex) + '\t' + str(tunnelboxIPint) + '\t' + str(tunnelboxIPext) + '\t' + str(controlboxIP) + '\t"' + siteName + '\"')
+
+      n = n + 1
+
+
+else:
+   for siteIndex in sorted(siteList):
+      site = siteList[siteIndex]
+      siteIndex    = site['site_index']
+      siteName     = site['site_utf8']
+      siteTags     = site['site_tags']
+      providerList = getNorNetProvidersForSite(siteList[siteIndex])
+
+      for i in range(0, NorNet_MaxProviders):
+         providerIndex = int(getTagValue(siteTags, 'nornet_site_tbp' + str(i) + '_index', '-1'))
+         if providerIndex <= 0:
+            continue
+         provider = providerList[providerIndex]
+         providerName = provider['provider_long_name']
+         providerTbIPv4 = IPv4Interface(getTagValue(siteTags, 'nornet_site_tbp' + str(i) + '_address_ipv4', '0.0.0.0/0'))
+         if providerTbIPv4 != IPv4Interface('0.0.0.0/0'):
+            print('"' + siteName + '"\t"' + providerName + '"\t' + '"Tunnelbox"\t' + str(providerTbIPv4.ip))
+         providerTbIPv6 = IPv6Interface(getTagValue(siteTags, 'nornet_site_tbp' + str(i) + '_address_ipv6', '::/0'))
+         if providerTbIPv6 != IPv6Interface('::/0'):
+            print('"' + siteName + '"\t"' + providerName + '"\t' + '"Tunnelbox"\t' + str(providerTbIPv6.ip))
+
+      controlboxIP = getControlBoxForSite(site['site_id'])
+      if controlboxIP != IPv4Address('0.0.0.0'):
+         print('"' + siteName + '"\t"' + providerName + '"\t' + '"Control Box"\t' + str(controlboxIP))
