@@ -22,7 +22,7 @@ MAKE_LOGO=./Make-Logo
 
 prefix="NorNet"
 
-logoFont="Eras"   # "DejaVu Sans Bold"
+logoFont="DejaVu Sans Bold"
 otherFont="Eras"
 
 logoTitle="NorNet"
