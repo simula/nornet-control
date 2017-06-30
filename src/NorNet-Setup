@@ -541,7 +541,8 @@ norNetSetup = [
    'site_providers' : [
       [ u'Deutsches Forschungsnetz', 'eth1',
            IPv4Interface('132.252.152.105/24'),        IPv4Address('132.252.152.1'),
-           IPv6Interface('2001:638:501:4ef2::105/64'), IPv6Address('2001:638:501:4ef2::1'),
+           IPv6Interface('::/0'),                      IPv6Address('::'),
+           #IPv6Interface('2001:638:501:4ef2::105/64'), IPv6Address('2001:638:501:4ef2::1'),
            1500, 'fibre, research', 1000000, 1000000 ]
       #[ u'Versatel', 'eth2',
       #     IPv4Interface('89.246.242.228/29'), IPv4Address('89.246.242.225'),
