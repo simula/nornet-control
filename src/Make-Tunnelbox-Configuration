@@ -1708,7 +1708,7 @@ def makeFlingConfiguration(localSite):
    log('Making Fling configuration for ' + localSite['site_long_name'] + ' ...')
    outputFile = codecs.open('fling-config', 'w', 'utf-8')
 
-   outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -H 77.88.71.145 -T 4 -D 30 -i')
+   outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -H 77.88.71.145 -T 4 -D 5 -i')
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
       outputFile.write(' ' + localProvider['provider_tunnelbox_interface'])
