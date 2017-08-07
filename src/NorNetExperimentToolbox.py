@@ -221,7 +221,7 @@ def installCustomNetPerfMeter(sshPrivateKey, nodes, slice):
       sys.stderr.write(node['node_name'] + "-> ")
 
       cmdLine = """
-sudo dnf install -y autoconf automake libtool gcc-c++ make glib2-devel bzip2-devel lksctp-tools-devel valgrind-devel ; \\
+sudo dnf install -y cmake gcc-c++ make glib2-devel bzip2-devel lksctp-tools-devel valgrind-devel ; \\
 sudo dnf upgrade -y --exclude=kernel* ; \\
 sudo -u """ + slice['slice_name'] + """ mkdir -p ~/src && cd src/ && \\
 git config --global http.proxy proxy.`hostname -d`:3128 && \\
@@ -231,7 +231,7 @@ else
    git clone https://github.com/dreibh/netperfmeter.git && \\
    cd netperfmeter
 fi && \
-./bootstrap && ./configure --prefix=/usr && make && sudo make install"""
+./autogen.sh && sudo make install"""
 
       newProcess = runOverSSH(sshPrivateKey, node, slice, cmdLine, True)         
       if newProcess != None:
