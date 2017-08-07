@@ -106,6 +106,31 @@ def makePort(portBase, site, node, provider, ipVersion, slice):
    return port
 
 
+# ###### Create NorNetNode structure for non-NorNet node ####################  
+def makePseudoNode(fullSiteList, 
+                   fqdn      = getLocalNodeHostname(), 
+                   nodeIndex = getLocalNodeIndex()): 
+   hostName   = getHostnameFromFQDN(fqdn) 
+   siteDomain = getDomainFromFQDN(fqdn) 
+   site       = getNorNetSiteOfDomain(fullSiteList, siteDomain) 
+   if site == None: 
+      error('Domain ' + siteDomain + ' not found!') 
+ 
+   norNetNode = { 
+         'node_site_id'          : site['site_id'], 
+         'node_index'            : nodeIndex,   
+         'node_name'             : str.lower(hostName) + '.' + site['site_domain'], 
+         'node_utf8'             : str.lower(hostName) + '.' + site['site_domain'], 
+         'node_nornet_interface' : None, 
+         'node_model'            : 'Unknown', 
+         'node_type'             : 'Node', 
+         'node_state'            : 'MANUAL', 
+         'node_ssh_rsa_key'      : None, 
+         'node_tags'             : [] 
+   } 
+   return norNetNode 
+
+
 # ###### Start server instances #############################################
 # Different instances (with different ports) for:
 # - ANY address (0.0.0.0/::)
