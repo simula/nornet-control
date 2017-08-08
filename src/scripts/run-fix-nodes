@@ -1,0 +1,3 @@
+#!/bin/bash
+
+../Get-Nodes | awk '{ print $2 }' | xargs ./fix-nodes

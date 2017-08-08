@@ -42,6 +42,7 @@ PLDISTRO="nornet"
 ../Slice-Setup add --name=hu_xingzhou        --own-addresses --fcdistro=$FCDISTRO --pldistro=$PLDISTRO --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn
 ../Slice-Setup add --name=hu_chengxi         --own-addresses --fcdistro=$FCDISTRO --pldistro=$PLDISTRO --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=391204334@qq.com
 ../Slice-Setup add --name=hu_yuliliao        --own-addresses --fcdistro=$FCDISTRO --pldistro=$PLDISTRO --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=1333760123@163.com
+../Slice-Setup add --name=hu_yu              --own-addresses --fcdistro=$FCDISTRO --pldistro=$PLDISTRO --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=zhouxing@hainu.edu.cn --user=fufa@hainu.edu.cn --user=287168219@qq.com
 
 ../Slice-Setup add --name=lig_dnslocal        --own-addresses --fcdistro=$FCDISTRO --pldistro=$PLDISTRO --permanent --maxnodespersite=6 --user=dreibh@simula.no --user=baptiste.jonglez@imag.fr
 ../Slice-Setup add --name=lig_dnsremote       --own-addresses --fcdistro=$FCDISTRO --pldistro=$PLDISTRO --permanent --maxnodespersite=2 --user=dreibh@simula.no --user=baptiste.jonglez@imag.fr
