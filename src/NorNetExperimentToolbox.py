@@ -32,11 +32,16 @@ def setGlobalVariable(variable, value):
 
 
 # ###### Invoke command #####################################################
-def runLocal(cmdLine):
+def runLocal(cmdLine, async = False):
    print('\x1b[33m' + cmdLine + '\x1b[0m')
-   result = subprocess.call(cmdLine, shell=True)
-   if result != 0:
-      print('\x1b[31;1m========== WARNING: result=' + str(result) + ' ==========\x1b[0m')
+   if async == False:
+      result = subprocess.call(cmdLine, shell=True)
+      if result != 0:
+         print('\x1b[31;1m========== WARNING: result=' + str(result) + ' ==========\x1b[0m')
+      return result
+   else:
+      newProcess = subprocess.Popen(cmdLine, shell=True)
+      return newProcess
 
 
 # ###### Invoke command on node via SSH #####################################
@@ -61,7 +66,7 @@ def runOverSSH(sshPrivateKey, node, slice, cmdLine, async = False):
 
 # ###### Copy directory with RSync from node ################################
 def copyFromNodeOverRSync(sshPrivateKey, node, slice, directory):
-   rsyncCall = [ '/usr/bin/rsync', '-e', 'ssh -oStrictHostKeyChecking=no -4 -i ' + sshPrivateKey, '-av', '-q', slice['slice_name'] + '@' + node['node_name'] + ':' + directory + '/', directory + '/' ]
+   rsyncCall = [ '/usr/bin/rsync', '-e', 'ssh -4 -i ' + sshPrivateKey, '-av', '-q', slice['slice_name'] + '@' + node['node_name'] + ':' + directory + '/', directory + '/' ]
    print('\x1b[33m' + str(rsyncCall) + '\x1b[0m')
    result = subprocess.call(rsyncCall)
    if result != 0:
@@ -72,9 +77,15 @@ def copyFromNodeOverRSync(sshPrivateKey, node, slice, directory):
 # Gets slice's address, nor 0.0.0.0/:: if no provider is given
 def makeAddress(site, node, provider, ipVersion, slice):
    if provider != None:
-      sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
-      address        = makeNorNetIP(provider['provider_index'], site['site_index'], node['node_index'],
-                                    ipVersion, sliceNodeIndex).ip
+      if node['node_state'] != 'MANUAL':
+         # This is a slice!
+         sliceNodeIndex = getSliceNodeIndexOfNorNetSlice(slice, node)
+      else:
+         # The node is actually a pseudo-node, created with makePseudoNode()
+         sliceNodeIndex = node['node_index']
+
+      address = makeNorNetIP(provider['provider_index'], site['site_index'], node['node_index'],
+                             ipVersion, sliceNodeIndex).ip
    else:
       if ipVersion == 4:
          address = IPv4Address('0.0.0.0')
@@ -104,6 +115,31 @@ def makePort(portBase, site, node, provider, ipVersion, slice):
       raise Exception('Port > 65535. Use a smaller port base setting!')
 
    return port
+
+
+# ###### Create NorNetNode structure for non-NorNet node ####################  
+def makePseudoNode(fullSiteList,
+                   fqdn      = getLocalNodeHostname(),
+                   nodeIndex = getLocalNodeIndex()):
+   hostName   = getHostnameFromFQDN(fqdn)
+   siteDomain = getDomainFromFQDN(fqdn)
+   site       = getNorNetSiteOfDomain(fullSiteList, siteDomain)
+   if site == None:
+      error('Domain ' + siteDomain + ' not found!')
+
+   norNetNode = {
+         'node_site_id'          : site['site_id'],
+         'node_index'            : nodeIndex,
+         'node_name'             : str.lower(hostName) + '.' + site['site_domain'],
+         'node_utf8'             : str.lower(hostName) + '.' + site['site_domain'],
+         'node_nornet_interface' : None,
+         'node_model'            : 'Unknown',
+         'node_type'             : 'Node',
+         'node_state'            : 'MANUAL',
+         'node_ssh_rsa_key'      : None,
+         'node_tags'             : []
+   }
+   return norNetNode
 
 
 # ###### Start server instances #############################################
@@ -185,7 +221,7 @@ def installCustomNetPerfMeter(sshPrivateKey, nodes, slice):
       sys.stderr.write(node['node_name'] + "-> ")
 
       cmdLine = """
-sudo dnf install -y autoconf automake libtool gcc-c++ make glib2-devel bzip2-devel lksctp-tools-devel valgrind-devel ; \\
+sudo dnf install -y cmake gcc-c++ make glib2-devel bzip2-devel lksctp-tools-devel valgrind-devel ; \\
 sudo dnf upgrade -y --exclude=kernel* ; \\
 sudo -u """ + slice['slice_name'] + """ mkdir -p ~/src && cd src/ && \\
 git config --global http.proxy proxy.`hostname -d`:3128 && \\
@@ -195,7 +231,7 @@ else
    git clone https://github.com/dreibh/netperfmeter.git && \\
    cd netperfmeter
 fi && \
-./bootstrap && ./configure --prefix=/usr && make && sudo make install"""
+./autogen.sh && sudo make install"""
 
       newProcess = runOverSSH(sshPrivateKey, node, slice, cmdLine, True)         
       if newProcess != None:
