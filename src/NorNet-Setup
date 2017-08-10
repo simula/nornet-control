@@ -828,7 +828,7 @@ norNetSetup = [
    'site_longitude'    : 127.028460,
    'site_altitude'     : 50,
    'site_contacts'     : [ u'Hwang, Jae Hyun: bekind@gmail.com' ],
-   'site_pcu'          : [ IPv4Address('203.230.60.126'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('203.230.60.124'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Korea Research Environment Open NETwork', 'eth1',
