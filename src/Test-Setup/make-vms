@@ -13,8 +13,10 @@ for iso in $ISOs ;do
    name=`echo "$iso" | sed -e "s/.*\///g" -e "s/-x86_64-.*\.iso$//g" -e "s/.iso$//g"`
    site=`echo "$name" | sed -e "s/\.test-x86_64.*$//g" -e "s/\.test$//g" -e "s/^.*\.//g" -e "s/\b\(.\)/\u\1/g"`
    net="TestNetwork-${site}"
-   echo "====== Create: $name in network $net ======"
+   vm="TEST-${site}-${name}"
+   echo "====== Create: $vm -> $name in network $net ======"
 
-   ../Make-Research-VM "$name" "$iso" $VM_MEMORY $VM_DISK $VM_DISK_TYPE
-   VBoxManage modifyvm "$name" --nic1 intnet --intnet1 "$net"
+   
+   ../Make-Research-VM "$vm" "$iso" $VM_MEMORY $VM_DISK $VM_DISK_TYPE
+   VBoxManage modifyvm "$vm" --nic1 intnet --intnet1 "$net"
 done
