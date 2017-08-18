@@ -1,3 +1,4 @@
 #!/bin/sh -e
 
 sudo vacuumdb --user postgres --analyze --full planetlab5
+sudo vacuumdb --user postgres --analyze --full drupal
