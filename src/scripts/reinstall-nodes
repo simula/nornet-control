@@ -2,9 +2,11 @@
 
 while [ $# -gt 0 ] ; do
    echo "Handling $1 ..."
-   ../Update-Node-State $1 reinstall
-#   && ./reboot-nodes $1 &
-
+   (
+      ../Clear-SSH-Node-Key $1 >/dev/null 2>/dev/null
+      ../Update-Node-State $1 reinstall && ./reboot-nodes $1
+      ../Clear-SSH-Node-Key $1
+   ) &
    shift
 done
 wait
