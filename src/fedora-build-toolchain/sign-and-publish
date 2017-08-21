@@ -21,14 +21,14 @@
 
 # ---------------------------------------------------------
 KEY_ID="dreibh@simula.no"
-SOURCE="nornetpp@cromwell.simula.nornet:repos/"
-DESTINATION="nordmarka:/nfs/adm/packages/"
+SOURCE="nornetpp@cromwell.simula.nornet:repos/nornet-applications/"
+DESTINATION="nordmarka:/nfs/adm/packages/nornet-applications/"
 # ---------------------------------------------------------
 
 
 # ====== Fetch packages =====================================================
 echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Fetching packages from $SOURCE ...\x1b[0m"
-TEMPDIR="$HOME/tmp/repos/"
+TEMPDIR="$HOME/tmp/nornet-applications/"
 mkdir -p -m 755 "$TEMPDIR"
 rsync -av --delete "$SOURCE" "$TEMPDIR"
 
@@ -36,7 +36,7 @@ rsync -av --delete "$SOURCE" "$TEMPDIR"
 # ====== Sign packages ======================================================
 PACKAGES=`find "$TEMPDIR" -name "*.rpm"`
 if [ "$PACKAGES" != "" ] ; then
-   echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Signning packages ...\x1b[0m"
+   echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Signing packages ...\x1b[0m"
    rpmsign --key-id=$KEY_ID --resign $PACKAGES
 
    echo -e "\x1b[1;34m`date +%FT%H:%M:%S`: Updating repositories ...\x1b[0m"
