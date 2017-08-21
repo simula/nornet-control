@@ -23,6 +23,12 @@ KERNEL_DEBS=~/tmp/new-kernel
 KERNEL_REPO=~/tmp/nornet-kernel/ubuntu/
 PUBLISH_REPO=/nfs/adm/packages/nornet-kernel/ubuntu/
 
+
+# How to add repository:
+# sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys DF605BB0760F2D65
+# sudo apt-add-repository -s https://packages.nntb.no/nornet-kernel/ubuntu/
+
+
 mkdir -p $KERNEL_REPO
 mkdir -p $KERNEL_REPO/conf
 cp distributions $KERNEL_REPO/conf
