@@ -246,7 +246,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                      outputFile.write('BROADCAST' + str(addressNumber) + '=' + str(address.network.broadcast_address) + '\n')
                      if providerIndex == defaultProviderIndex:
                         outputFile.write('DNS1=' + str(gateway.ip) + '\n')
-                     routesIPv4.append([ str(network), str(gateway.ip), str(metric) ])
+                     routesIPv4.append([ str(network), str(gateway.ip), str(metric), str(address.ip) ])
 
                   elif version == 6:
                      if providerIndex == defaultProviderIndex:
@@ -257,7 +257,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
 
                      else:
                         secondariesIPv6.append(address)
-                     routesIPv6.append([ str(network), str(gateway.ip), str(metric) ])
+                     routesIPv6.append([ str(network), str(gateway.ip), str(metric), str(address.ip) ])
 
                   addressNumber = addressNumber + 1
 
@@ -277,12 +277,12 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
       # ====== Write routes files ===========================================
       routesIPv4File = codecs.open('route' + suffix, 'w', 'utf-8')
       for route in routesIPv4:
-         routesIPv4File.write(route[0] + ' via ' + route[1] + ' metric ' + route[2] + '\n')
+         routesIPv4File.write(route[0] + ' via ' + route[1] + ' src ' + route[3] + ' metric ' + route[2] + '\n')
       routesIPv4File.close()
 
       routesIPv6File = codecs.open('route6' + suffix, 'w', 'utf-8')
       for route in routesIPv6:
-         routesIPv6File.write(route[0] + ' via ' + route[1] + ' metric ' + route[2] + '\n')
+         routesIPv6File.write(route[0] + ' via ' + route[1] + ' src ' + route[3] + ' metric ' + route[2] + '\n')
       routesIPv6File.close()
 
 
