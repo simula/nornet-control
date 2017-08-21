@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+KERNEL_DEBS=~/tmp/new-kernel
+KERNEL_REPO=~/tmp/nornet-kernel/ubuntu/
+PUBLISH_REPO=/nfs/adm/packages/nornet-kernel/ubuntu/
+
+mkdir -p $KERNEL_REPO
+mkdir -p $KERNEL_REPO/conf
+cp distributions $KERNEL_REPO/conf
+
+cd $KERNEL_REPO
+reprepro -C main includedeb xenial $KERNEL_DEBS/*.deb
+
+mkdir -p $PUBLISH_REPO/
+rsync -Pav --delete $KERNEL_REPO/ $PUBLISH_REPO/
