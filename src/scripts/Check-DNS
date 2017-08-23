@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DNS="10.1.1.1"
-HOST="www.heise.de"
+HOST="mirror.onelab.eu"
 EXPECTED=`dig $HOST a +short`
 
 
@@ -11,7 +11,6 @@ while [ true ] ; do
    echo >&2 -en "`env LANG=C date` ($ok good, $bad bad): "
 
    result=`dig $HOST a +short @$DNS`
-
 
    if [ "$result" = "$EXPECTED" ] ; then
       echo >&2 "OK"
