@@ -25,7 +25,7 @@ while [ $# -gt 0 ] ; do
       NodeUpdate.py
       
       # Ensure kernel is up to date
-      dnf install -y kernel-core-$NEW.x86_64 kernel-$NEW.x86_64 kernel-modules-$NEW.x86_64 kernel-modules-extra-$NEW.x86_64 transforward-\*-$new.\*.nornet
+      dnf install -y kernel-core-$NEW.x86_64 kernel-$NEW.x86_64 kernel-modules-$NEW.x86_64 kernel-modules-extra-$NEW.x86_64 transforward
 
       # Get rid of obsolete kernel
       kernel=\$(uname -r)
