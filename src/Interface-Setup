@@ -131,7 +131,7 @@ elif [ "$state" = "up" ] ; then
          source=`echo "$1" | sed -e "s/\/[0-9]*$//g"`
          shift ; shift ; shift ; shift ; shift
          /bin/echo "Adding $address, route to $network src $source via $gateway with metric $metric ..."
-         /sbin/ip addr add "$address" dev "$interface" $options || /bin/echo "ERROR: Failed to add address" || true
+         /sbin/ip addr add "$address" dev "$interface" valid_lft forever nodad $options || /bin/echo "ERROR: Failed to add address" || true
          /sbin/ip route add "$network" via "$gateway" dev "$interface" src "$source" metric "$metric" || /bin/echo "ERROR: Failed to add route" || true
       done
 
