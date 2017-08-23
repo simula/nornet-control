@@ -19,7 +19,7 @@
 # Contact: dreibh@simula.no
 #
 
-KERNEL_DEBS=~/tmp/new-kernel
+KERNEL_DEBS=~/src
 KERNEL_REPO=~/tmp/nornet-kernel/ubuntu/
 PUBLISH_REPO=/nfs/adm/packages/nornet-kernel/ubuntu/
 
