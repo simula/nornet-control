@@ -212,7 +212,25 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
    elif variant == 'Fedora':
       outputFile = codecs.open('ifcfg' + suffix, 'w', 'utf-8')
 
+      # ------ Interface is bridged ----------------------------
+      bridgeTo = None
+      if bridgeInterface != None:
+         bridgeTo      = interfaceName
+         interfaceName = bridgeInterface
+ 
+         outputFile.write('DEVICE=' + bridgeTo + '\n')
+         outputFile.write('ONBOOT=yes\n')
+         outputFile.write('BOOTPROTO=none\n')
+         outputFile.write('NM_CONTROLLED=no\n')
+         outputFile.write('BRIDGE=' + interfaceName + '\n')
+         outputFile.close()
+
+         outputFile = codecs.open('ifcfg-bridge' + suffix, 'w', 'utf-8')
+      # --------------------------------------------------------
+
       outputFile.write('DEVICE=' + interfaceName + '\n')
+      if bridgeTo != None:
+         outputFile.write('TYPE=Bridge\n')
       outputFile.write('ONBOOT=yes\n')
       outputFile.write('BOOTPROTO=static\n')
       outputFile.write('NM_CONTROLLED=no\n')

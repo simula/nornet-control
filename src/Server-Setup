@@ -259,13 +259,26 @@ elif [ "$Variant" = "Fedora" ] ; then
       echo "------ /etc/sysconfig/network-scripts/ifcfg-$InterfaceName:"
       colordiff /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ifcfg.new
    fi
-   if [ -e route.new -a  -e /etc/sysconfig/network-scripts/route-$InterfaceName ] ; then
-      echo "------ /etc/sysconfig/network-scripts/route-$InterfaceName:"
-      colordiff /etc/sysconfig/network-scripts/route-$InterfaceName route.new
-   fi
-   if [ -e route6.new -a  -e /etc/sysconfig/network-scripts/route6-$InterfaceName ] ; then
-      echo "------ /etc/sysconfig/network-scripts/route6-$InterfaceName:"
-      colordiff /etc/sysconfig/network-scripts/route6-$InterfaceName route6.new
+   if [ -e ifcfg-bridge.new -a  -e /etc/sysconfig/network-scripts/ifcfg-$BridgeName ] ; then
+      echo "------ /etc/sysconfig/network-scripts/ifcfg-$BridgeName:"
+      colordiff /etc/sysconfig/network-scripts/ifcfg-$BridgeName ifcfg-bridge.new
+      if [ -e route.new -a  -e /etc/sysconfig/network-scripts/route-$BridgeName ] ; then
+         echo "------ /etc/sysconfig/network-scripts/route-$BridgeName:"
+         colordiff /etc/sysconfig/network-scripts/route-$BridgeName route.new
+      fi
+      if [ -e route6.new -a  -e /etc/sysconfig/network-scripts/route6-$BridgeName ] ; then
+         echo "------ /etc/sysconfig/network-scripts/route6-$BridgeName:"
+         colordiff /etc/sysconfig/network-scripts/route6-$BridgeName route6.new
+      fi
+   else
+      if [ -e route.new -a  -e /etc/sysconfig/network-scripts/route-$InterfaceName ] ; then
+         echo "------ /etc/sysconfig/network-scripts/route-$InterfaceName:"
+         colordiff /etc/sysconfig/network-scripts/route-$InterfaceName route.new
+      fi
+      if [ -e route6.new -a  -e /etc/sysconfig/network-scripts/route6-$InterfaceName ] ; then
+         echo "------ /etc/sysconfig/network-scripts/route6-$InterfaceName:"
+         colordiff /etc/sysconfig/network-scripts/route6-$InterfaceName route6.new
+      fi
    fi
 elif [ "$Variant" = "FreeBSD" ] ; then
    echo "------ /etc/resolv.conf:"
@@ -378,16 +391,35 @@ else
       if [ -e /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ] ; then
          cp /etc/sysconfig/network-scripts/ifcfg-$InterfaceName /etc/sysconfig/network-scripts/ifcfg-$InterfaceName~
       fi
-      if [ -e /etc/sysconfig/network-scripts/route-$InterfaceName ] ; then
-         cp /etc/sysconfig/network-scripts/route-$InterfaceName /etc/sysconfig/network-scripts/route-$InterfaceName~
-      fi
-      if [ -e /etc/sysconfig/network-scripts/route6-$InterfaceName ] ; then
-         cp /etc/sysconfig/network-scripts/route6-$InterfaceName /etc/sysconfig/network-scripts/route6-$InterfaceName~
+      if [ "$BridgeName" != "" ] ; then
+         if [ -e /etc/sysconfig/network-scripts/ifcfg-$BridgeName ] ; then
+            cp /etc/sysconfig/network-scripts/ifcfg-$BridgeName /etc/sysconfig/network-scripts/ifcfg-$BridgeName~
+         fi
+         if [ -e /etc/sysconfig/network-scripts/route-$BridgeName ] ; then
+            cp /etc/sysconfig/network-scripts/route-$BridgeName /etc/sysconfig/network-scripts/route-$BridgeName~
+         fi
+         if [ -e /etc/sysconfig/network-scripts/route6-$BridgeName ] ; then
+            cp /etc/sysconfig/network-scripts/route6-$BridgeName /etc/sysconfig/network-scripts/route6-$BridgeName~
+         fi
+      else
+         if [ -e /etc/sysconfig/network-scripts/route-$InterfaceName ] ; then
+            cp /etc/sysconfig/network-scripts/route-$InterfaceName /etc/sysconfig/network-scripts/route-$InterfaceName~
+         fi
+         if [ -e /etc/sysconfig/network-scripts/route6-$InterfaceName ] ; then
+            cp /etc/sysconfig/network-scripts/route6-$InterfaceName /etc/sysconfig/network-scripts/route6-$InterfaceName~
+         fi
       fi
       rm -f /etc/sysconfig/network-scripts/ifcfg-$InterfaceName* >/dev/null 2>&1 || true
       cp ifcfg.new /etc/sysconfig/network-scripts/ifcfg-$InterfaceName
-      cp route.new /etc/sysconfig/network-scripts/route-$InterfaceName
-      cp route6.new /etc/sysconfig/network-scripts/route6-$InterfaceName
+      if [ "$BridgeName" != "" ] ; then
+         rm -f /etc/sysconfig/network-scripts/ifcfg-$BridgeName* >/dev/null 2>&1 || true
+         cp ifcfg-bridge.new /etc/sysconfig/network-scripts/ifcfg-$BridgeName
+         cp route.new  /etc/sysconfig/network-scripts/route-$BridgeName
+         cp route6.new /etc/sysconfig/network-scripts/route6-$BridgeName
+      else
+         cp route.new  /etc/sysconfig/network-scripts/route-$InterfaceName
+         cp route6.new /etc/sysconfig/network-scripts/route6-$InterfaceName
+      fi
    elif [ "$Variant" = "FreeBSD" ] ; then
       cp rc.conf.updated /etc/rc.conf
 
@@ -439,7 +471,7 @@ else
       systemctl start sshd.service
    fi
 fi
-rm -f hostname.new hosts.new ntp.new modules.new rcS.new sysctl.new interfaces.new ifcfg.new route.new route6.new auto.master auto.nfs
+rm -f hostname.new hosts.new ntp.new modules.new rcS.new sysctl.new interfaces.new ifcfg.new ifcfg-bridge.new route.new route6.new auto.master auto.nfs
 
 # Store parameters for later re-run.
 echo "$AllParameters" >$LAST_PARAMETERS_FILE
