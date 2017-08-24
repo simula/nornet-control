@@ -414,11 +414,12 @@ make-route ()
    local destination="$2"         # Destination network
    local interface="$3"           # Output interface
    local nextHop="$4"             # Next hop
-   shift ; shift ; shift ; shift
+   local source="$5"              # Preferred source address
+   shift ; shift ; shift ; shift ; shift
    local miscOptions="$@"         # Misc options
 
-   # echo ip route add $destination via $nextHop dev $interface table $tableID $miscOptions
-   ip route add $destination via $nextHop dev $interface table $tableID $miscOptions
+   # echo ip route add $destination via $nextHop dev $interface src $source table $tableID $miscOptions
+   ip route add $destination via $nextHop dev $interface src $source table $tableID $miscOptions
 }
 
 
@@ -656,14 +657,14 @@ activateInterface ()
       make-tunnel "$INTERFACE_NAME" "$GRE_KEY" \
          "$TUNNEL_LOCAL_OUTER_ADDRESS" "$TUNNEL_REMOTE_OUTER_ADDRESS" \
          "$TUNNEL_LOCAL_INNER_ADDRESS" "$TUNNEL_REMOTE_INNER_ADDRESS" "$TUNNEL_INNER_PREFIX" "$options" && \
-      make-route "$ROUTING_TABLE" "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" && \
-      make-route main             "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC"
+      make-route "$ROUTING_TABLE" "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" "$TUNNEL_LOCAL_INNER_ADDRESS" && \
+      make-route main             "$REMOTE_SITE_NETWORK" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" "$TUNNEL_LOCAL_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC"
       if [ $TUNNEL_IS_DEFAULT_ROUTE -eq 1 ] ; then
-         make-route "$ROUTING_TABLE" default "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS"
+         make-route "$ROUTING_TABLE" default "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" "$TUNNEL_LOCAL_INNER_ADDRESS"
       fi && \
       if [ "$ADDITIONAL_STATIC_ROUTES" != "" ] ; then
          for additionalRoute in $ADDITIONAL_STATIC_ROUTES ; do
-            make-route main "$additionalRoute" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC"
+            make-route main "$additionalRoute" "$INTERFACE_NAME" "$TUNNEL_REMOTE_INNER_ADDRESS" "$TUNNEL_LOCAL_INNER_ADDRESS" metric "$REMOTE_SITE_METRIC"
          done
       fi && \
       cp "$CONFIG_DIRECTORY/$INTERFACE" "$ACTIVE_DIRECTORY/$INTERFACE" && \
