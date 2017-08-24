@@ -216,10 +216,16 @@ echo "------ BEGIN OF DIFFS ------"
 if [ "$Variant" != "FreeBSD" ] ; then
    echo "------ /etc/hostname:"
    colordiff /etc/hostname hostname.new
-   echo "------ /etc/modules:"
-   colordiff /etc/modules modules.new
-   echo "------ /etc/default/rcS:"
-   colordiff /etc/default/rcS rcS.new
+   if [ -e /etc/modules ] ; then
+      echo "------ /etc/modules:"
+      colordiff /etc/modules modules.new
+   else
+      cat modules.new
+   fi
+   if [ -e /etc/default/rcS ] ; then
+      echo "------ /etc/default/rcS:"
+      colordiff /etc/default/rcS rcS.new
+   fi
    echo "------ /etc/sysctl.d/90-nornet.conf:"
    if [ -e /etc/sysctl.d/90-nornet.conf ] ; then
       colordiff /etc/sysctl.d/90-nornet.conf sysctl.new
@@ -259,16 +265,16 @@ elif [ "$Variant" = "Fedora" ] ; then
       echo "------ /etc/sysconfig/network-scripts/ifcfg-$InterfaceName:"
       colordiff /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ifcfg.new
    fi
-   if [ -e ifcfg-bridge.new -a  -e /etc/sysconfig/network-scripts/ifcfg-$BridgeName ] ; then
-      echo "------ /etc/sysconfig/network-scripts/ifcfg-$BridgeName:"
-      colordiff /etc/sysconfig/network-scripts/ifcfg-$BridgeName ifcfg-bridge.new
-      if [ -e route.new -a  -e /etc/sysconfig/network-scripts/route-$BridgeName ] ; then
-         echo "------ /etc/sysconfig/network-scripts/route-$BridgeName:"
-         colordiff /etc/sysconfig/network-scripts/route-$BridgeName route.new
+   if [ -e ifcfg-bridge.new -a  -e /etc/sysconfig/network-scripts/ifcfg-$BridgeInterface ] ; then
+      echo "------ /etc/sysconfig/network-scripts/ifcfg-$BridgeInterface:"
+      colordiff /etc/sysconfig/network-scripts/ifcfg-$BridgeInterface ifcfg-bridge.new
+      if [ -e route.new -a  -e /etc/sysconfig/network-scripts/route-$BridgeInterface ] ; then
+         echo "------ /etc/sysconfig/network-scripts/route-$BridgeInterface:"
+         colordiff /etc/sysconfig/network-scripts/route-$BridgeInterface route.new
       fi
-      if [ -e route6.new -a  -e /etc/sysconfig/network-scripts/route6-$BridgeName ] ; then
-         echo "------ /etc/sysconfig/network-scripts/route6-$BridgeName:"
-         colordiff /etc/sysconfig/network-scripts/route6-$BridgeName route6.new
+      if [ -e route6.new -a  -e /etc/sysconfig/network-scripts/route6-$BridgeInterface ] ; then
+         echo "------ /etc/sysconfig/network-scripts/route6-$BridgeInterface:"
+         colordiff /etc/sysconfig/network-scripts/route6-$BridgeInterface route6.new
       fi
    else
       if [ -e route.new -a  -e /etc/sysconfig/network-scripts/route-$InterfaceName ] ; then
@@ -391,15 +397,15 @@ else
       if [ -e /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ] ; then
          cp /etc/sysconfig/network-scripts/ifcfg-$InterfaceName /etc/sysconfig/network-scripts/ifcfg-$InterfaceName~
       fi
-      if [ "$BridgeName" != "" ] ; then
-         if [ -e /etc/sysconfig/network-scripts/ifcfg-$BridgeName ] ; then
-            cp /etc/sysconfig/network-scripts/ifcfg-$BridgeName /etc/sysconfig/network-scripts/ifcfg-$BridgeName~
+      if [ "$BridgeInterface" != "" ] ; then
+         if [ -e /etc/sysconfig/network-scripts/ifcfg-$BridgeInterface ] ; then
+            cp /etc/sysconfig/network-scripts/ifcfg-$BridgeInterface /etc/sysconfig/network-scripts/ifcfg-$BridgeInterface~
          fi
-         if [ -e /etc/sysconfig/network-scripts/route-$BridgeName ] ; then
-            cp /etc/sysconfig/network-scripts/route-$BridgeName /etc/sysconfig/network-scripts/route-$BridgeName~
+         if [ -e /etc/sysconfig/network-scripts/route-$BridgeInterface ] ; then
+            cp /etc/sysconfig/network-scripts/route-$BridgeInterface /etc/sysconfig/network-scripts/route-$BridgeInterface~
          fi
-         if [ -e /etc/sysconfig/network-scripts/route6-$BridgeName ] ; then
-            cp /etc/sysconfig/network-scripts/route6-$BridgeName /etc/sysconfig/network-scripts/route6-$BridgeName~
+         if [ -e /etc/sysconfig/network-scripts/route6-$BridgeInterface ] ; then
+            cp /etc/sysconfig/network-scripts/route6-$BridgeInterface /etc/sysconfig/network-scripts/route6-$BridgeInterface~
          fi
       else
          if [ -e /etc/sysconfig/network-scripts/route-$InterfaceName ] ; then
@@ -411,11 +417,11 @@ else
       fi
       rm -f /etc/sysconfig/network-scripts/ifcfg-$InterfaceName* >/dev/null 2>&1 || true
       cp ifcfg.new /etc/sysconfig/network-scripts/ifcfg-$InterfaceName
-      if [ "$BridgeName" != "" ] ; then
-         rm -f /etc/sysconfig/network-scripts/ifcfg-$BridgeName* >/dev/null 2>&1 || true
-         cp ifcfg-bridge.new /etc/sysconfig/network-scripts/ifcfg-$BridgeName
-         cp route.new  /etc/sysconfig/network-scripts/route-$BridgeName
-         cp route6.new /etc/sysconfig/network-scripts/route6-$BridgeName
+      if [ "$BridgeInterface" != "" ] ; then
+         rm -f /etc/sysconfig/network-scripts/ifcfg-$BridgeInterface* >/dev/null 2>&1 || true
+         cp ifcfg-bridge.new /etc/sysconfig/network-scripts/ifcfg-$BridgeInterface
+         cp route.new  /etc/sysconfig/network-scripts/route-$BridgeInterface
+         cp route6.new /etc/sysconfig/network-scripts/route6-$BridgeInterface
       else
          cp route.new  /etc/sysconfig/network-scripts/route-$InterfaceName
          cp route6.new /etc/sysconfig/network-scripts/route6-$InterfaceName
