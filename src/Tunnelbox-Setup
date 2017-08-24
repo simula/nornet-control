@@ -236,16 +236,16 @@ make-tunnel ()
    #       Solution: Add new link-local address (unique) and remove automatically-generated one.
    if [ "$v6linklocal" != "" ] ; then
       ADDRESSES=`ip -6 addr show dev $interface | awk '/[ \t]*inet6 [0-9a-fA-F:]*\/[0-9]+ scope [l]/ { print $2 }'`
-      ip -6 addr add dev $interface $v6linklocal
+      ip -6 addr add $v6linklocal dev $interface valid_lft forever nodad
       for address in $ADDRESSES ; do
          ip -6 addr del $address dev $interface   # Get rid of the automatically-generated address(es).
       done
    fi
    # Configure an address and turn the interface up
    if [ "$innerV6option" = "" ] ; then
-      ip addr add $innerLocalIP peer $innerRemoteIP dev $interface || success=0
+      ip addr add $innerLocalIP peer $innerRemoteIP dev $interface valid_lft forever nodad || success=0
    else
-      ip $innerV6option addr add $innerLocalIP/$innerPrefixLength dev $interface   || success=0
+      ip $innerV6option addr add $innerLocalIP/$innerPrefixLength dev $interface valid_lft forever nodad || success=0
    fi
    ip link set dev $interface up
    ip link set dev $interface mtu $TUNNEL_MTU
@@ -342,7 +342,7 @@ make-address ()
    fi
 
    remove-address $interface $address
-   ip $v6option addr add $address dev $interface
+   ip $v6option addr add $address dev $interface valid_lft forever nodad
    ip link set up dev eth0
 }
 
