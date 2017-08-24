@@ -394,6 +394,7 @@ else
          fi
       fi
    elif [ "$Variant" = "Fedora" ] ; then
+      cp sysctl.new /etc/sysctl.d/90-nornet.conf
       if [ -e /etc/sysconfig/network-scripts/ifcfg-$InterfaceName ] ; then
          cp /etc/sysconfig/network-scripts/ifcfg-$InterfaceName /etc/sysconfig/network-scripts/ifcfg-$InterfaceName~
       fi
