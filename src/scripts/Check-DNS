@@ -1,24 +1,52 @@
 #!/bin/bash
+#
+# DNS Check Script
+# Copyright (C) 2017 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
 
 DNS="10.1.1.1"
 HOST="mirror.onelab.eu"
+SLEEP_TIME=5
 EXPECTED=`dig $HOST a +short`
 
 
 ok=0
 bad=0
+runs=0
 while [ true ] ; do
-   echo >&2 -en "`env LANG=C date` ($ok good, $bad bad): "
 
+   let runs=$runs+1
    result=`dig $HOST a +short @$DNS`
-
+   
    if [ "$result" = "$EXPECTED" ] ; then
-      echo >&2 "OK"
+      echo >&2 -n "."
+      note=""
       let ok=$ok+1
    else
-      echo >&2 "BAD: $result"
+      note="BAD: $result"
       let bad=$bad+1
+      runs=100
    fi
 
-   sleep 10
+   if [ $runs -ge 100 -o "$note" != "" ] ; then
+      echo >&2 -en "\n`env LANG=C date` ($ok good, $bad bad): $note"
+      runs=0
+   fi
+   
+   sleep $SLEEP_TIME
 done
