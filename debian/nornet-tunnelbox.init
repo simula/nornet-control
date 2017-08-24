@@ -85,6 +85,8 @@ needs_update ()
       return 0
    elif ! diff -q "$1" "$2" ; then
       # Target differs => update needed!
+      # md5sum    "$1" "$2"
+      # colordiff "$1" "$2"
       return 0
    fi
    return 1
@@ -162,22 +164,30 @@ check_and_configure ()
       # ====== Apply DNS update =============================================
       rm -f zones.conf *.db
       mv updated-tunnelbox-config/named.conf.options updated-tunnelbox-config/zones.conf updated-tunnelbox-config/*.db .
-      find /etc/bind -name zones.conf | xargs --no-run-if-empty rm -f
-      find /etc/bind -name "*.db" | xargs --no-run-if-empty rm -f
-      cp named.conf.options zones.conf *.db /etc/bind/
-      if [ ! -e /var/cache/bind/slaves ] ; then
-         mkdir /var/cache/bind/slaves
-      fi
-      chown bind:bind /var/cache/bind/slaves
-      if [ -e /etc/bind/named.conf ] ; then
-         if [ `grep "include \"/etc/bind/zones.conf\";" /etc/bind/named.conf | wc --lines` -eq 0 ] ; then
-            echo "include \"/etc/bind/zones.conf\";"  >>/etc/bind/named.conf
+      
+      # Compare existing and new configuration. Ignore lines with "; Serial",
+      # since they are always updated by Make-Tunnelbox-Configuration.
+      oldDnsFilesSum=`ls /etc/bind/named.conf.options /etc/bind/zones.conf /etc/bind/*.db | xargs cat | grep -v "; Serial" | md5sum`
+      newDnsFilesSum=`ls           named.conf.options           zones.conf           *.db | xargs cat | grep -v "; Serial" | md5sum`
+      # echo "old=$oldDnsFilesSum new=$newDnsFilesSum  $1"
+      if [ "$1" = "-update-all" -o "$oldDnsFilesSum" != "$newDnsFilesSum" ] ; then
+         find /etc/bind -name zones.conf | xargs --no-run-if-empty rm -f
+         find /etc/bind -name "*.db" | xargs --no-run-if-empty rm -f
+         cp named.conf.options zones.conf *.db /etc/bind/
+         if [ ! -e /var/cache/bind/slaves ] ; then
+            mkdir /var/cache/bind/slaves
          fi
-      else
-         echo "/etc/bind/named.conf does not exist! Something is going wrong ..."
+         chown bind:bind /var/cache/bind/slaves
+         if [ -e /etc/bind/named.conf ] ; then
+            if [ `grep "include \"/etc/bind/zones.conf\";" /etc/bind/named.conf | wc --lines` -eq 0 ] ; then
+               echo "include \"/etc/bind/zones.conf\";"  >>/etc/bind/named.conf
+            fi
+         else
+            echo "/etc/bind/named.conf does not exist! Something is going wrong ..."
+         fi
+         echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Reloading DNS server configuration ...\x1b[0m"
+         service bind9 reload >/dev/null || true
       fi
-      echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Reloading DNS server configuration ...\x1b[0m"
-      service bind9 reload >/dev/null || true
 
       # ====== Apply DHCP server update =====================================
       rm -f dhcpd-config
@@ -252,9 +262,9 @@ check_and_configure ()
       rm -f fling-config
       mv updated-tunnelbox-config/fling-config .
       if needs_update fling-config /etc/default/nornet-fling $1 ; then
+         cp fling-config /etc/default/nornet-fling
          if [ -e /etc/init.d/nornet-fling-service ] ; then
             echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Fling configuration has been updated => restarting Fling service ...\x1b[0m"
-            cp fling-config /etc/default/nornet-fling
             service nornet-fling-service restart >/dev/null || true
          fi
       else
@@ -267,9 +277,9 @@ check_and_configure ()
       rm -f fling-server-config
       mv updated-tunnelbox-config/fling-server-config .
       if needs_update fling-server-config /etc/default/nornet-fling-server $1 ; then
+         cp fling-server-config /etc/default/nornet-fling-server
          if [ -e /etc/init.d/nornet-fling-server-service ] ; then
             echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Fling configuration has been updated => restarting Fling Server service ...\x1b[0m"
-            cp fling-server-config /etc/default/nornet-fling-server
             service nornet-fling-server-service restart >/dev/null || true
          fi
       else
