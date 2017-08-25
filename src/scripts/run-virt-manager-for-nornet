@@ -57,14 +57,17 @@ qionghai.hu.nornet
 sanya.hu.nornet
 10.70.160.254
 10.90.100.254
-10.82.89.1
+10.82.89.254
 wuzhishan.hkc.nornet
 lingshui.hkc.nornet
 baoting.hkc.nornet
+stpauli.haw.nornet
+203.230.60.124
+164.113.202.18
 "
 
 cd $VIRTMANAGERDIR
 for machine in $machines ; do
-   echo ./virt-manager -c "qemu+ssh://nornetpp@$machine/system"
-   ./virt-manager -c "qemu+ssh://nornetpp@$machine/system"
+   echo virt-manager -c "qemu+ssh://nornetpp@$machine/system"
+   virt-manager -c "qemu+ssh://nornetpp@$machine/system"
 done
