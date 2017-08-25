@@ -1,0 +1,16 @@
+#!/bin/bash
+
+while [ $# -gt 0 ] ; do
+   echo "Handling $1 ..."
+   (
+
+      cat <<EOF
+      # Fix overwritten sysctl settings:
+      # !!! Check /var/www/html/PlanetLabConf/sysctl.conf on PLC !!!
+      service nornet-research-node status
+EOF
+
+   ) | sudo ssh -4 -oVerifyHostKeyDNS=no -oStrictHostKeyChecking=no -i /etc/planetlab/root_ssh_key.rsa root@$1 &
+   shift
+done
+wait
