@@ -53,7 +53,7 @@ def runOverSSH(sshPrivateKey, node, slice, cmdLine, async = False):
       sys.stderr.write('#####################################################\n')
       sys.exit(1)
 
-   sshCall = [ '/usr/bin/ssh' , '-4', '-i', sshPrivateKey, slice['slice_name'] + '@' + node['node_name'] , '-oStrictHostKeyChecking=no', '-oConnectTimeout=30', '-oBatchMode=yes', cmdLine ]
+   sshCall = [ '/usr/bin/ssh' , '-4', '-i', sshPrivateKey, slice['slice_name'] + '@' + node['node_name'] , '-oVerifyHostKeyDNS=no', '-oStrictHostKeyChecking=no', '-oConnectTimeout=30', '-oBatchMode=yes', cmdLine ]
    print('\x1b[34m' + slice['slice_name'] + '@' + node['node_name'] + '> ' + '\x1b[33m' + cmdLine + '\x1b[0m')
    if async == False:
       result = subprocess.call(sshCall, shell=False)
@@ -66,7 +66,7 @@ def runOverSSH(sshPrivateKey, node, slice, cmdLine, async = False):
 
 # ###### Copy directory with RSync from node ################################
 def copyFromNodeOverRSync(sshPrivateKey, node, slice, directory):
-   rsyncCall = [ '/usr/bin/rsync', '-e', 'ssh -4 -i ' + sshPrivateKey, '-av', '-q', slice['slice_name'] + '@' + node['node_name'] + ':' + directory + '/', directory + '/' ]
+   rsyncCall = [ '/usr/bin/rsync', '-e', 'ssh -oVerifyHostKeyDNS=no -4 -i ' + sshPrivateKey, '-av', '-q', slice['slice_name'] + '@' + node['node_name'] + ':' + directory + '/', directory + '/' ]
    print('\x1b[33m' + str(rsyncCall) + '\x1b[0m')
    result = subprocess.call(rsyncCall)
    if result != 0:
@@ -193,6 +193,10 @@ def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, sl
             '-local=[' + str(localAddress) + '] ' + \
             v6Options + passiveSideOptions + ' '  + \
             '>>' + measurementName + '/NetPerfMeter-' + node['node_name'] + '.log 2>&1 & )'
+
+   # ------ Wait 10s and display contents of log, to check for problems -----
+   cmdLine = cmdLine + '&& sleep 10 && cat ' + \
+                measurementName + '/NetPerfMeter-' + node['node_name'] + '.log'
 
    result = runOverSSH(sshPrivateKey, node, slice, cmdLine, True)
    return result
