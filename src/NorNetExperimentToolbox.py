@@ -194,6 +194,10 @@ def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, sl
             v6Options + passiveSideOptions + ' '  + \
             '>>' + measurementName + '/NetPerfMeter-' + node['node_name'] + '.log 2>&1 & )'
 
+   # ------ Wait 10s and display contents of log, to check for problems -----
+   cmdLine = cmdLine + '&& sleep 10 && cat ' + \
+                measurementName + '/NetPerfMeter-' + node['node_name'] + '.log'
+
    result = runOverSSH(sshPrivateKey, node, slice, cmdLine, True)
    return result
 
