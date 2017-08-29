@@ -1,0 +1,11 @@
+#!/bin/sh
+
+(
+   while [ $# -gt 0 ] ; do
+      sudo ssh -4 -oPreferredAuthentications=publickey -oVerifyHostKeyDNS=no -oStrictHostKeyChecking=no -oConnectTimeout=15 -i /etc/planetlab/debug_ssh_key.rsa $1 \
+         echo -en "$1:   " \; ls --block-size=M -l '/tmp/mnt/sysimg/boot*.bz2' | head -n1 &
+#         echo -en "$1:   " \; du -schk '/tmp/mnt/sysimg/boot*.bz2' | head -n1 &
+      shift
+   done
+   wait
+) | sort
