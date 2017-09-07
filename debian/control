@@ -164,7 +164,8 @@ Package: nornet-node
 Architecture: any
 Conflicts: miredo,
            nornet-server
-Depends: grub2-common | grub,
+Depends: fail2ban,
+         grub2-common | grub,
          nfs-common,
          nornet-api,
          nornet-management,
@@ -362,7 +363,8 @@ Description: NorNet Database
 Package: nornet-server
 Architecture: all
 Conflicts: nornet-node
-Depends: grub2-common | grub,
+Depends: fail2ban,
+         grub2-common | grub,
          libvirt-bin,
          nfs-common,
          nornet-api,
