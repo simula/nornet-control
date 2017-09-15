@@ -1,0 +1,25 @@
+#!/bin/bash
+
+i=1
+(
+   while [ $i -lt 255 ] ; do
+      (
+         ip=10.1.1.$i
+         name=`dig +short -x $ip`
+         if [ "$name" == "" ] ; then
+            name="(unnamed)"
+         fi
+         name2=`echo "$name" | sed -e "s/\.uninett//g" -e "s/\.$//g"`
+         
+         status="INACTIVE"
+         if ping -q -c3 -W2 $ip >/dev/null 2>&1 ; then
+            status="ACTIVE"
+         fi
+
+         printf "%03d: %-44s %-12s\n" "$i" "$name2" "$status"
+      ) &
+
+      let i=$i+1
+   done
+) | sort
+wait
