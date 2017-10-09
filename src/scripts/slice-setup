@@ -12,7 +12,7 @@ PLDISTRO="nornet"
 ../Slice-Setup add --name=srl_thuen          --own-addresses --fcdistro=$FCDISTRO --pldistro=$PLDISTRO --permanent --maxnodespersite=4   --user=dreibh@simula.no --user=andreasthuen@gmail.com
 ../Slice-Setup add --name=srl_seattle        --own-addresses --fcdistro=$FCDISTRO --pldistro=$PLDISTRO --permanent --maxnodespersite=4   --user=dreibh@simula.no --user=albert.rafetseder+nyu@univie.ac.at
 ../Slice-Setup add --name=srl_cps            --own-addresses --fcdistro=$FCDISTRO --pldistro=$PLDISTRO --permanent --maxnodespersite=2   --user=dreibh@simula.no --user=dipesh@simula.no
-../Slice-Setup add --name=srl_sards          --own-addresses --fcdistro=$FCDISTRO --pldistro=$PLDISTRO --permanent --maxnodespersite=2   --user=dreibh@simula.no --user=eirikrosnes@simula.no --user=maximiliano.vela@hotmail.com
+../Slice-Setup add --name=srl_sards          --own-addresses --fcdistro=$FCDISTRO --pldistro=$PLDISTRO --permanent --maxnodespersite=999 --user=dreibh@simula.no --user=eirikrosnes@simula.no --user=maximiliano.vela@hotmail.com
 
 ../Slice-Setup add --name=uio_fling          --own-addresses --fcdistro=$FCDISTRO --pldistro=$PLDISTRO --permanent --maxnodespersite=2   --user=dreibh@simula.no --user=dipesh@simula.no --user=michawe@ifi.uio.no --user=runabk@ifi.uio.no --user=ahmed@simula.no
 
