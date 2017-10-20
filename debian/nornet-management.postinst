@@ -4,7 +4,6 @@ set -e
 
 case "$1" in
    configure)
-      update-grub || true
       Auto-Update-Keys
       if [ -e /etc/update-motd.d ] ; then
          ln -sf /usr/bin/System-Info /etc/update-motd.d/55-nornet-management
@@ -12,6 +11,7 @@ case "$1" in
       if [ -e /usr/sbin/update-motd ] ; then
          /usr/sbin/update-motd 2>/dev/null || true
       fi
+      update-grub || true
       ;;
 esac
 
