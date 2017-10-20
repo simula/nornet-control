@@ -5,7 +5,7 @@ set -e
 case "$1" in
    configure)
       cp /etc/nornet/grub-defaults /etc/default/grub
-      update-grub
+      update-grub || true
       ;;
 esac
 

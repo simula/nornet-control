@@ -5,7 +5,7 @@ set -e
 case "$1" in
    remove|purge|abort-install)
       rm -f /etc/grub.d/??_nornet_display_theme
-      update-grub
+      update-grub || true
       ;;
 esac
 

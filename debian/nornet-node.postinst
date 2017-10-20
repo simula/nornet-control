@@ -5,11 +5,11 @@ set -e
 case "$1" in
    configure)
       cp /etc/nornet/grub-defaults /etc/default/grub
-      update-grub
-      
+      update-grub || true
+
       # Get rid of snmpd's stupid "error on subcontainer 'ia_addr' insert (-1)" errors in syslog.
       sed </etc/default/snmpd -e "s/SNMPDOPTS='-Lsd /SNMPDOPTS='-LS6d /g" -e "s/TRAPDOPTS='-Lsd /TRAPDOPTS='-LS6d /g" >/etc/default/snmpd.new && \
-      
+
       mv /etc/default/snmpd.new /etc/default/snmpd
       ;;
 esac

@@ -4,7 +4,7 @@ set -e
 
 case "$1" in
    configure)
-      update-grub
+      update-grub || true
       Auto-Update-Keys
       if [ -e /etc/update-motd.d ] ; then
          ln -sf /usr/bin/System-Info /etc/update-motd.d/55-nornet-management
