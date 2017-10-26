@@ -17,6 +17,7 @@ Architecture: any
 Depends: apt-file,
          apt-show-versions,
          autofs,
+         bash-completion,
          bridge-utils,
          btrfs-tools,
          bwm-ng,
