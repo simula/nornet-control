@@ -22,6 +22,13 @@ RSA_BITS=16384
 MODULI_BITS=8192
 ECDSA_BITS=521
 
+YES_TO_ALL=0
+applyChanges=""
+if [ "$1" == "-yes-to-all-i-am-really-sure" ] ; then
+   YES_TO_ALL=1
+   applyChanges="yes"
+fi
+
 
 # ###### Show host key fingerprints #########################################
 show-keys ()
@@ -44,8 +51,10 @@ cd /etc/ssh
 
 
 # ====== Create new keys ====================================================
-echo -en "\x1b[33mRemove existing SSH host keys and generate new ones? [yes/no]?\x1b[0m "
-read -er applyChanges
+if [ $YES_TO_ALL -ne 1 ] ; then
+   echo -en "\x1b[33mRemove existing SSH host keys and generate new ones? [yes/no]?\x1b[0m "
+   read -er applyChanges
+fi
 if [ "$applyChanges" = "yes" -o "$applyChanges" = "y" ] ; then
    BACKUP_DIRECTORY="backup-`env LANG=C date +%FT%H:%M:%S`"
 
@@ -136,8 +145,10 @@ EOF
 # ====== Make sshd_config and ssh_config updates ============================
 echo "Suggested sshd_config change:"
 if ! colordiff sshd_config sshd_config.suggested ; then
-   echo -en "\x1b[33mReplace sshd_config? [yes/no]?\x1b[0m "
-   read -er applyChanges
+   if [ $YES_TO_ALL -ne 1 ] ; then
+      echo -en "\x1b[33mReplace sshd_config? [yes/no]?\x1b[0m "
+      read -er applyChanges
+   fi
    if [ "$applyChanges" = "yes" -o "$applyChanges" = "y" ] ; then
       cp sshd_config.suggested sshd_config
    else
@@ -147,8 +158,10 @@ fi
 
 echo "Suggested ssh_config change:"
 if ! colordiff ssh_config ssh_config.suggested ; then
-   echo -en "\x1b[33mReplace ssh_config? [yes/no]?\x1b[0m "
-   read -er applyChanges
+   if [ $YES_TO_ALL -ne 1 ] ; then
+      echo -en "\x1b[33mReplace ssh_config? [yes/no]?\x1b[0m "
+      read -er applyChanges
+   fi
    if [ "$applyChanges" = "yes" -o "$applyChanges" = "y" ] ; then
       cp ssh_config.suggested ssh_config
    else
