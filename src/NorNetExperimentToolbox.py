@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # NorNet Experiment Toolbox
-# Copyright (C) 2016 by Thomas Dreibholz
+# Copyright (C) 2016-2018 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ def makePort(portBase, site, node, provider, ipVersion, slice):
    return port
 
 
-# ###### Create NorNetNode structure for non-NorNet node ####################  
+# ###### Create NorNetNode structure for non-NorNet node ####################
 def makePseudoNode(fullSiteList,
                    fqdn      = getLocalNodeHostname(),
                    nodeIndex = getLocalNodeIndex()):
@@ -151,7 +151,7 @@ def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, sl
    localProviderList  = getNorNetProvidersForSite(localSite)
 
    cmdLine = 'pkill netperfmeter ; rm -rf ' + measurementName + ' ; mkdir ' + measurementName
-   
+
    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    # !!! Setting initial rcvbuf/sndbuf here! !!!
    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -213,9 +213,9 @@ def testCustomNetPerfMeter(sshPrivateKey, nodes, slice):
    for node in nodes:
       sys.stderr.write(node['node_name'] + "-> ")
       cmdLine = 'uname -a && cd src/netperfmeter && git pull'
-      newProcess = runOverSSH(sshPrivateKey, node, slice, cmdLine, True)         
+      newProcess = runOverSSH(sshPrivateKey, node, slice, cmdLine, True)
       if newProcess != None:
-         newProcess.wait()            
+         newProcess.wait()
 
 
 # ###### Install custom NetPerfMeter from Git sources #######################
@@ -237,7 +237,7 @@ else
 fi && \
 ./autogen.sh && sudo make install"""
 
-      newProcess = runOverSSH(sshPrivateKey, node, slice, cmdLine, True)         
+      newProcess = runOverSSH(sshPrivateKey, node, slice, cmdLine, True)
       if newProcess != None:
          # newProcess.wait()
          processes.append(newProcess)
