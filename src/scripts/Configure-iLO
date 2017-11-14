@@ -47,7 +47,7 @@ if [ $INSTALL_TOOLS -eq 1 ] ; then
    TOOLS="cpqacuxe_9.40.2-2._amd64.deb hpssaducli-2.40-13.0_amd64.deb hp-health_10.60-1842.10_amd64.deb hponcfg_4.6.0.5-23._amd64.deb hpsmh_7.6.1-9.1-1._amd64.deb"
    for tool in $TOOLS ; do
       if [ ! -e $tool ] ; then
-         wget "http://downloads.linux.hp.com/SDR/repo/mcp/ubuntu/pool/non-free/$tool"
+         wget "https://downloads.linux.HPE.com/SDR/repo/mcp/ubuntu/pool/non-free/$tool"
       fi
    done
    dpkg -i $TOOLS
