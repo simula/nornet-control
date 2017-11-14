@@ -44,7 +44,7 @@ if [ $INSTALL_TOOLS -eq 1 ] ; then
    apt-get install -y libc6-i386 lib32gcc1 xsltproc
    mkdir -p $HOME/hp-tools
    cd $HOME/hp-tools
-   TOOLS="cpqacuxe_9.40.2-2._amd64.deb hpssaducli-2.0-16.0_amd64.deb hp-health_10.0.0.1.3-4._amd64.deb hponcfg_4.4.0.8-2._amd64.deb hpsmh_7.3.2-1.5-2._amd64.deb"
+   TOOLS="cpqacuxe_9.40.2-2._amd64.deb hpssaducli-2.40-13.0_amd64.deb hp-health_10.60-1842.10_amd64.deb hponcfg_4.6.0.5-23._amd64.deb hpsmh_7.6.1-9.1-1._amd64.deb"
    for tool in $TOOLS ; do
       if [ ! -e $tool ] ; then
          wget "http://downloads.linux.hp.com/SDR/repo/mcp/ubuntu/pool/non-free/$tool"
@@ -90,7 +90,7 @@ fi
 NEW_SNMP_CONFIGURATION=/root/snmp.xml
 OLD_ILO_CONFIGURATION=/root/old-ilo-configuration.xml
 NEW_ILO_CONFIGURATION=/root/new-ilo-configuration.xml
-   
+
 cat >$NEW_SNMP_CONFIGURATION <<EOF
 <RIBCL VERSION="2.0">
   <LOGIN USER_LOGIN="Administrator" PASSWORD="password">
@@ -119,7 +119,7 @@ sed \
    -e "s/^\(.*<DNS_NAME VALUE = \"\).*\(\"\/>\)$/\1$NODE_HOSTNAME\2/g" \
    -e "s/^\(.*<DOMAIN_NAME VALUE = \"\).*\(\"\/>\)$/\1$NODE_DOMAINNAME\2/g" \
    < $OLD_ILO_CONFIGURATION >$NEW_ILO_CONFIGURATION
-   
+
 
 # ====== Check and apply changes ============================================
 echo -e "\x1b[34mSettings difference to running configuration:\x1b[0m"
