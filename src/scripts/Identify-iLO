@@ -19,7 +19,10 @@
 # Contact: dreibh@simula.no
 
 
-printf "%-24s\t%-16s\t%-20s\t%s\n" "FQDN" "Host" "Domain" "SerialNo"
+if [ "$1" != "-no-header" ] ; then
+   printf "%-32s %-24s %-20s %s\n" "FQDN" "Host" "Domain" "SerialNo"
+fi
+
 (
    while [ $# -gt 0 ] ; do
       fqdn="$1"
@@ -27,11 +30,13 @@ printf "%-24s\t%-16s\t%-20s\t%s\n" "FQDN" "Host" "Domain" "SerialNo"
       (
          host=`echo "$fqdn" | sed -e "s/^\([a-zA-Z0-9-]*\)\(.*\)$/\1/g"`
          domain=`echo "$fqdn" | sed -e "s/^\([a-zA-Z0-9-]*\.\)\(.*\)$/\2/g"`
-#          wget -q --no-check-certificate -O$fqdn.out "https://$fqdn/xmldata?item=all"
+         wget -q --no-check-certificate --timeout=30 -O$fqdn.out "https://$fqdn/xmldata?item=all"
          sbsn=`xml_grep "SBSN" $fqdn.out --text_only`
-         printf "%-24s\t%-16s\t%-20s\t%s\n" "$fqdn" "$host" $domain "$sbsn"
+         if [ "$sbsn" == "" ] ; then
+            sbsn="?"
+         fi
+         printf "%-32s %-24s %-20s %s\n" "$fqdn" "$host" $domain "$sbsn"
       ) &
-      wait
    done
-) | sort -k2
-
+   wait
+) | sort -k3,3
