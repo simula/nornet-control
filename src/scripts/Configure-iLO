@@ -37,6 +37,10 @@ while [ "$1" != "" ] ; do
    shift
 done
 
+if [ ! -e ~/.ilo-key ] ; then
+   echo >&2 "ERROR: ~/.ilo-key not found!"
+   exit 1
+fi
 
 # ====== Download and install HP tools ======================================
 if [ $INSTALL_TOOLS -eq 1 ] ; then
@@ -100,9 +104,20 @@ cat >$NEW_SNMP_CONFIGURATION <<EOF
        <RIB_TRAPS VALUE="Y"/>
     </MOD_SNMP_IM_SETTINGS>
     <MOD_GLOBAL_SETTINGS>
-     <TELNET_ENABLE VALUE="Y"/>
+     <TELNET_ENABLE VALUE="N"/>
+     <ENFORCE_AES VALUE="Y"/>
     </MOD_GLOBAL_SETTINGS>
+    <LICENSE>
+     <ACTIVATE KEY="`cat ~/.ilo-key | tr -d '-'`"/>
+    </LICENSE>
+    <IMPORT_SSH_KEY>
+-----BEGIN SSH KEY-----
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDODvIna1FXADBFU+8gnH7PrSYI0t/jMlNg84whF4ACMCMtqxt+xTVNTEwRxlfKf+3YsurgjAdYHxaNYj94bUEZEM1shNAqyLUJXwFo3DryyQUbkaFnzmC8pz806Sn1rwLPiqqUcxjSnFKKZgxAS/HmX041BrPippP7ezANboiY2Q= Administrator
+-----END SSH KEY-----
+    </IMPORT_SSH_KEY>
+    <CERTIFICATE_SIGNING_REQUEST/>
   </RIB_INFO>
+  <SERVER_INFO mode="write"><SERVER_AUTO_PWR VALUE="30"/></SERVER_INFO>
   </LOGIN>
 </RIBCL>
 EOF
@@ -132,7 +147,8 @@ if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
    echo "Skipped!"
 else
    hponcfg -r
-   hponcfg -f $NEW_SNMP_CONFIGURATION
+   hponcfg -f $NEW_SNMP_CONFIGURATION >$NODE_FQDN.log
+   sed '/<CERTIFICATE_SIGNING_REQUEST>/,/<\/CERTIFICATE_SIGNING_REQUEST>/!d;//d' <$NODE_FQDN.log >$NODE_FQDN.csr
    hponcfg -f $NEW_ILO_CONFIGURATION
 fi
 
