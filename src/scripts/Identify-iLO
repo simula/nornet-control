@@ -21,6 +21,8 @@
 
 if [ "$1" != "-no-header" ] ; then
    printf "%-32s %-24s %-20s %s\n" "FQDN" "Host" "Domain" "SerialNo"
+else
+   shift
 fi
 
 (
