@@ -148,7 +148,7 @@ if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
 else
    hponcfg -r
    hponcfg -f $NEW_SNMP_CONFIGURATION >$NODE_FQDN.log
-   sed '/<CERTIFICATE_SIGNING_REQUEST>/,/<\/CERTIFICATE_SIGNING_REQUEST>/!d;//d' <$NODE_FQDN.log >$NODE_FQDN.csr
+   sed '/<CERTIFICATE_SIGNING_REQUEST>/,/<\/CERTIFICATE_SIGNING_REQUEST>/!d;//d' <$NODE_FQDN.log >ilo-$NODE_FQDN.csr
    hponcfg -f $NEW_ILO_CONFIGURATION
 fi
 
