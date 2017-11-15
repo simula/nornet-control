@@ -91,11 +91,13 @@ fi
 
 
 # ====== Obtain old iLO configuration and generate new one ==================
-NEW_SNMP_CONFIGURATION=/root/snmp.xml
+# Documentation: https://support.hpe.com/hpsc/doc/public/display?docId=emr_na-c03351064
+
+NEW_SETTINGS_CONFIGURATION=/root/settings.xml
 OLD_ILO_CONFIGURATION=/root/old-ilo-configuration.xml
 NEW_ILO_CONFIGURATION=/root/new-ilo-configuration.xml
 
-cat >$NEW_SNMP_CONFIGURATION <<EOF
+cat >$NEW_SETTINGS_CONFIGURATION <<EOF
 <RIBCL VERSION="2.0">
   <LOGIN USER_LOGIN="Administrator" PASSWORD="password">
   <RIB_INFO MODE="write">
@@ -106,6 +108,7 @@ cat >$NEW_SNMP_CONFIGURATION <<EOF
     <MOD_GLOBAL_SETTINGS>
      <TELNET_ENABLE VALUE="N"/>
      <ENFORCE_AES VALUE="Y"/>
+     <ENHANCED_CLI_PROMPT_ENABLE VALUE = "Yes"/>
     </MOD_GLOBAL_SETTINGS>
     <LICENSE>
      <ACTIVATE KEY="`cat ~/.ilo-key | tr -d '-'`"/>
@@ -115,7 +118,17 @@ cat >$NEW_SNMP_CONFIGURATION <<EOF
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDODvIna1FXADBFU+8gnH7PrSYI0t/jMlNg84whF4ACMCMtqxt+xTVNTEwRxlfKf+3YsurgjAdYHxaNYj94bUEZEM1shNAqyLUJXwFo3DryyQUbkaFnzmC8pz806Sn1rwLPiqqUcxjSnFKKZgxAS/HmX041BrPippP7ezANboiY2Q= Administrator
 -----END SSH KEY-----
     </IMPORT_SSH_KEY>
-    <CERTIFICATE_SIGNING_REQUEST/>
+    <CSR_CERT_SETTINGS>
+     <CSR_USE_CERT_CUSTOM_SUBJECT VALUE = "No"/>
+     <CSR_USE_CERT_2048PKEY VALUE = "Yes" />
+     <CSR_USE_CERT_FQDN VALUE = "Yes" />
+     <CSR_SUBJECT_COUNTRY VALUE ="NO"/>
+     <CSR_SUBJECT_STATE VALUE ="Akershus"/>
+     <CSR_SUBJECT_LOCATION VALUE ="Fornebu"/>
+     <CSR_SUBJECT_ORG_NAME VALUE ="Simula Research Laboratory"/>
+     <CSR_SUBJECT_ORGUNIT_NAME VALUE ="Centre for Resilient Networks and Applications"/>
+     <CSR_SUBJECT_COMMON_NAME VALUE ="$NODE_FQDN"/>
+   </CSR_CERT_SETTINGS>
   </RIB_INFO>
   <SERVER_INFO mode="write"><SERVER_AUTO_PWR VALUE="30"/></SERVER_INFO>
   </LOGIN>
@@ -147,12 +160,10 @@ if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
    echo "Skipped!"
 else
    hponcfg -r
-   hponcfg -f $NEW_SNMP_CONFIGURATION >$NODE_FQDN.log
-   sed '/<CERTIFICATE_SIGNING_REQUEST>/,/<\/CERTIFICATE_SIGNING_REQUEST>/!d;//d' <$NODE_FQDN.log >ilo-$NODE_FQDN.csr
    hponcfg -f $NEW_ILO_CONFIGURATION
+   hponcfg -f $NEW_SETTINGS_CONFIGURATION
+   hponcfg -b
 fi
-
-rm -f $NEW_SNMP_CONFIGURATION $OLD_ILO_CONFIGURATION $NEW_ILO_CONFIGURATION
 
 
 # ====== Remove HP tools ====================================================
@@ -162,4 +173,6 @@ if [ $REMOVE_TOOLS -eq 1 ] ; then
    apt-get remove -y lib32gcc1 xsltproc
    apt-get autoremove -y
    rm -rf /opt/hp /var/spool/hp-health
+
+   rm -f $NEW_SETTINGS_CONFIGURATION $OLD_ILO_CONFIGURATION $NEW_ILO_CONFIGURATION
 fi
