@@ -169,7 +169,7 @@ fi
 # ====== Remove HP tools ====================================================
 if [ $REMOVE_TOOLS -eq 1 ] ; then
    echo -e "\x1b[34mRemoving hponcfg ...\x1b[0m"
-   dpkg -P cpqacuxe hpacucli hp-health hponcfg hpsmh
+   dpkg -P cpqacuxe hp-health hponcfg hpsmh hpssaducli
    apt-get remove -y lib32gcc1 xsltproc
    apt-get autoremove -y
    rm -rf /opt/hp /var/spool/hp-health
