@@ -36,6 +36,12 @@ export DEB_BUILD_OPTIONS="parallel=${cores}"
 # This will not work (unlimited number of processes for kernel build!):
 # !!! DO NOT USE !!! DEBBUILDOPTS="-j${cores}"
 
+# Support tmpfs build
+# (see http://www.davromaniak.eu/index.php?post/2011/07/12/Pbuilder-and-tmpfs-can-be-friends)
+# Add to /etc/fstab:
+# tmpfs   /var/cache/pbuilder/build   tmpfs   defaults,auto   0	2
+APTCACHEHARDLINK=no
+
 # =================================================================
 
 mkdir -p /var/cache/pbuilder/hook.d
