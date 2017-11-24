@@ -24,7 +24,7 @@ HOME="/home/nornetpp"
 
 SOURCES="$HOME/src"
 REPOSITORIES="$HOME/repos/nornet-applications"
-FEDORAS="rawhide 26 25 24"
+FEDORAS="rawhide 27 26 25 24"
 ARCHS="x86_64 i386"
 
 DISTRIBUTIONS=""

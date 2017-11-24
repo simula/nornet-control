@@ -722,7 +722,7 @@ norNetSetup = [
    'site_enabled'      : True,
    'site_long_name'    : u'Haikou College of Economics',
    'site_short_name'   : 'HKC',
-   'site_url'          : 'http://www.hkc.edu.cn/',
+   'site_url'          : 'http://www.hkc.edu.cn',
    'site_domain'       : 'hkc.nornet',
    'site_city'         : 'Guilinyang',
    'site_province'     : 'Hainan',
