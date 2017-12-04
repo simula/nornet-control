@@ -16,7 +16,7 @@ if [ -s $PACKAGES_TO_DOWNGRADE ] ; then
             grep "${DISTRIB_CODENAME}$" |
             cut -d' ' -f 1-2 |
                sed -e 's/ /=/' |
-                  xargs echo apt-get install
+                  xargs sudo apt-get install
 fi
 
 rm $PACKAGES_TO_DOWNGRADE
