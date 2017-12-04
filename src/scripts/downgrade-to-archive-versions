@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+. /etc/lsb-release
+
+
+PACKAGES_TO_DOWNGRADE=/tmp/packages-to-downgrade.$$
+
+env LANG=C apt-show-versions |
+   fgrep 'newer than version in archive' |
+   cut -d' ' -f 1 >$PACKAGES_TO_DOWNGRADE
+
+if [ -s $PACKAGES_TO_DOWNGRADE ] ; then
+   apt-show-versions -a |
+      fgrep -f $PACKAGES_TO_DOWNGRADE |
+         cut -d' ' -f 1-3 |
+            grep "${DISTRIB_CODENAME}$" |
+            cut -d' ' -f 1-2 |
+               sed -e 's/ /=/' |
+                  xargs echo apt-get install
+fi
+
+rm $PACKAGES_TO_DOWNGRADE
