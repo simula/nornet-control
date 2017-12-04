@@ -37,6 +37,10 @@ while [ "$1" != "" ] ; do
    shift
 done
 
+if [ ! -e ~/.ilo-key ] ; then
+   echo >&2 "ERROR: ~/.ilo-key not found!"
+   exit 1
+fi
 
 # ====== Download and install HP tools ======================================
 if [ $INSTALL_TOOLS -eq 1 ] ; then
@@ -44,10 +48,10 @@ if [ $INSTALL_TOOLS -eq 1 ] ; then
    apt-get install -y libc6-i386 lib32gcc1 xsltproc
    mkdir -p $HOME/hp-tools
    cd $HOME/hp-tools
-   TOOLS="cpqacuxe_9.40.2-2._amd64.deb hpssaducli-2.0-16.0_amd64.deb hp-health_10.0.0.1.3-4._amd64.deb hponcfg_4.4.0.8-2._amd64.deb hpsmh_7.3.2-1.5-2._amd64.deb"
+   TOOLS="cpqacuxe_9.40.2-2._amd64.deb hpssaducli-2.40-13.0_amd64.deb hp-health_10.60-1842.10_amd64.deb hponcfg_4.6.0.5-23._amd64.deb hpsmh_7.6.1-9.1-1._amd64.deb"
    for tool in $TOOLS ; do
       if [ ! -e $tool ] ; then
-         wget "http://downloads.linux.hp.com/SDR/repo/mcp/ubuntu/pool/non-free/$tool"
+         wget "https://downloads.linux.HPE.com/SDR/repo/mcp/ubuntu/pool/non-free/$tool"
       fi
    done
    dpkg -i $TOOLS
@@ -87,11 +91,13 @@ fi
 
 
 # ====== Obtain old iLO configuration and generate new one ==================
-NEW_SNMP_CONFIGURATION=/root/snmp.xml
+# Documentation: https://support.hpe.com/hpsc/doc/public/display?docId=emr_na-c03351064
+
+NEW_SETTINGS_CONFIGURATION=/root/settings.xml
 OLD_ILO_CONFIGURATION=/root/old-ilo-configuration.xml
 NEW_ILO_CONFIGURATION=/root/new-ilo-configuration.xml
-   
-cat >$NEW_SNMP_CONFIGURATION <<EOF
+
+cat >$NEW_SETTINGS_CONFIGURATION <<EOF
 <RIBCL VERSION="2.0">
   <LOGIN USER_LOGIN="Administrator" PASSWORD="password">
   <RIB_INFO MODE="write">
@@ -100,9 +106,31 @@ cat >$NEW_SNMP_CONFIGURATION <<EOF
        <RIB_TRAPS VALUE="Y"/>
     </MOD_SNMP_IM_SETTINGS>
     <MOD_GLOBAL_SETTINGS>
-     <TELNET_ENABLE VALUE="Y"/>
+     <TELNET_ENABLE VALUE="N"/>
+     <ENFORCE_AES VALUE="Y"/>
+     <ENHANCED_CLI_PROMPT_ENABLE VALUE = "Yes"/>
     </MOD_GLOBAL_SETTINGS>
+    <LICENSE>
+     <ACTIVATE KEY="`cat ~/.ilo-key | tr -d '-'`"/>
+    </LICENSE>
+    <IMPORT_SSH_KEY>
+-----BEGIN SSH KEY-----
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDODvIna1FXADBFU+8gnH7PrSYI0t/jMlNg84whF4ACMCMtqxt+xTVNTEwRxlfKf+3YsurgjAdYHxaNYj94bUEZEM1shNAqyLUJXwFo3DryyQUbkaFnzmC8pz806Sn1rwLPiqqUcxjSnFKKZgxAS/HmX041BrPippP7ezANboiY2Q= Administrator
+-----END SSH KEY-----
+    </IMPORT_SSH_KEY>
+    <CSR_CERT_SETTINGS>
+     <CSR_USE_CERT_CUSTOM_SUBJECT VALUE = "No"/>
+     <CSR_USE_CERT_2048PKEY VALUE = "Yes" />
+     <CSR_USE_CERT_FQDN VALUE = "Yes" />
+     <CSR_SUBJECT_COUNTRY VALUE ="NO"/>
+     <CSR_SUBJECT_STATE VALUE ="Akershus"/>
+     <CSR_SUBJECT_LOCATION VALUE ="Fornebu"/>
+     <CSR_SUBJECT_ORG_NAME VALUE ="Simula Research Laboratory"/>
+     <CSR_SUBJECT_ORGUNIT_NAME VALUE ="Centre for Resilient Networks and Applications"/>
+     <CSR_SUBJECT_COMMON_NAME VALUE ="$NODE_FQDN"/>
+   </CSR_CERT_SETTINGS>
   </RIB_INFO>
+  <SERVER_INFO mode="write"><SERVER_AUTO_PWR VALUE="30"/></SERVER_INFO>
   </LOGIN>
 </RIBCL>
 EOF
@@ -119,7 +147,7 @@ sed \
    -e "s/^\(.*<DNS_NAME VALUE = \"\).*\(\"\/>\)$/\1$NODE_HOSTNAME\2/g" \
    -e "s/^\(.*<DOMAIN_NAME VALUE = \"\).*\(\"\/>\)$/\1$NODE_DOMAINNAME\2/g" \
    < $OLD_ILO_CONFIGURATION >$NEW_ILO_CONFIGURATION
-   
+
 
 # ====== Check and apply changes ============================================
 echo -e "\x1b[34mSettings difference to running configuration:\x1b[0m"
@@ -132,18 +160,19 @@ if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
    echo "Skipped!"
 else
    hponcfg -r
-   hponcfg -f $NEW_SNMP_CONFIGURATION
    hponcfg -f $NEW_ILO_CONFIGURATION
+   hponcfg -f $NEW_SETTINGS_CONFIGURATION
+   hponcfg -b
 fi
-
-rm -f $NEW_SNMP_CONFIGURATION $OLD_ILO_CONFIGURATION $NEW_ILO_CONFIGURATION
 
 
 # ====== Remove HP tools ====================================================
 if [ $REMOVE_TOOLS -eq 1 ] ; then
    echo -e "\x1b[34mRemoving hponcfg ...\x1b[0m"
-   dpkg -P cpqacuxe hpacucli hp-health hponcfg hpsmh
+   dpkg -P cpqacuxe hp-health hponcfg hpsmh hpssaducli
    apt-get remove -y lib32gcc1 xsltproc
    apt-get autoremove -y
    rm -rf /opt/hp /var/spool/hp-health
+
+   rm -f $NEW_SETTINGS_CONFIGURATION $OLD_ILO_CONFIGURATION $NEW_ILO_CONFIGURATION
 fi

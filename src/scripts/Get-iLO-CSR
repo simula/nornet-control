@@ -1,0 +1,51 @@
+#!/bin/bash -e
+#
+# iLO Configuration Script
+# Copyright (C) 2015-2018 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+if [ ! -e /usr/sbin/hponcfg ] ; then
+   echo >&2 "ERROR: Cannot find /usr/sbin/hponcfg!"
+   echo "Use $0 -install-tools to install it."
+   exit 1
+fi
+
+
+# ====== Generate network configuration for iLO system ======================
+NODE_FQDN=`hostname --fqdn`
+
+
+# ====== Get CSR ============================================================
+# Documentation: https://support.hpe.com/hpsc/doc/public/display?docId=emr_na-c03351064
+
+CSR_REQUEST=/root/csr-request.xml
+cat >$CSR_REQUEST <<EOF
+<RIBCL VERSION="2.0">
+  <LOGIN USER_LOGIN="Administrator" PASSWORD="password">
+  <RIB_INFO MODE="write">
+    <CERTIFICATE_SIGNING_REQUEST/>
+  </RIB_INFO>
+  </LOGIN>
+</RIBCL>
+EOF
+
+hponcfg -f $CSR_REQUEST >$NODE_FQDN.log
+
+sed '/<CERTIFICATE_SIGNING_REQUEST>/,/<\/CERTIFICATE_SIGNING_REQUEST>/!d;//d' <$NODE_FQDN.log >ilo-$NODE_FQDN.csr
+
+cat ilo-$NODE_FQDN.csr
