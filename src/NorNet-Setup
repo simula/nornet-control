@@ -138,7 +138,7 @@ norNetSetup = [
    'site_latitude'     : 60.789615,
    'site_longitude'    : 10.68166,
    'site_altitude'     : 200,
-   'site_contacts'     : [ u'IT-operations@HiG: helpdesk@hig.no', u'Langseth, Jon: jon.langseth@hig.no', u'Hjelmås, Erik: erikh@hig.no' ],
+   'site_contacts'     : [ u'IT-operations@HiG: helpdesk@hig.no', u'Langseth, Jon: jon.langseth@ntnu.no', u'Hjelmås, Erik: erik.hjelmas@ntnu.no' ],
    'site_pcu'          : [ IPv4Address('128.39.49.165'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
