@@ -1,0 +1,3 @@
+#!/bin/sh
+
+git diff upstream/mptcp_v0.92 ./include/ ./net/ipv4/tcp.c ./net/mptcp/

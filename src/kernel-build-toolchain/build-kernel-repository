@@ -34,7 +34,8 @@ mkdir -p $KERNEL_REPO/conf
 cp distributions $KERNEL_REPO/conf
 
 cd $KERNEL_REPO
-reprepro -C main includedeb xenial $KERNEL_DEBS/*.deb
+reprepro --ignore=undefinedtarget -C main includedeb xenial $KERNEL_DEBS/*.deb
 
 mkdir -p $PUBLISH_REPO/
 rsync -Pav --delete $KERNEL_REPO/ $PUBLISH_REPO/
+

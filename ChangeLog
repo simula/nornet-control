@@ -1,3 +1,3014 @@
+commit a52e6c4cabbb69c110f35f26311f69a855b85a1c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 15 12:05:06 2017 +0100
+
+    Updated scripts.
+
+ src/scripts/Configure-iLO | 27 ++++++++++++++++++-------
+ src/scripts/Get-iLO-CSR   | 51 +++++++++++++++++++++++++++++++++++++++++++++++
+ src/scripts/Set-iLO-CRT   | 49 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 120 insertions(+), 7 deletions(-)
+
+commit d0a46d73af5c0b7c9a7557d27c22865731d70ec9
+Merge: cf9affe 7068dd7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 15 10:35:33 2017 +0100
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit cf9affe363869ab1a8d7b7dccca3057efa104c7c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 15 10:35:25 2017 +0100
+
+    Updated script.
+
+ src/scripts/Configure-iLO | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 7068dd7a938a41877b63fab353e117f3aae6867f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 14 20:56:38 2017 +0100
+
+    Improved script.
+
+ src/scripts/Identify-iLO | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit f34d4456b8ebe9ab133129598b38ea1de29c3862
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 14 20:42:36 2017 +0100
+
+    An update.
+
+ src/scripts/Identify-iLO | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 6054943d44be79e203861f2bd9711e3236af5d1b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 14 20:30:50 2017 +0100
+
+    Fixed package name.
+
+ debian/control | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 24041651844dc336cf766a58acafeee458785ee0
+Merge: c65fad7 2ea65a7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 14 20:19:33 2017 +0100
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit c65fad7bcc591e16ba68f891785f4f53e89ff673
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 14 20:19:27 2017 +0100
+
+    Improved script.
+
+ src/scripts/Configure-iLO | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+commit 2ea65a7de49034a00c4245ca34ca5e6a02a385f3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 14 20:18:04 2017 +0100
+
+    Added xml_grep as dependency.
+
+ debian/control | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit a0392e154c0e9235a75a78db60c408b0e6ac0f38
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 14 20:15:45 2017 +0100
+
+    A fix.
+
+ src/scripts/Identify-iLO | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit f795ff818f87511b387f9d954cfb5370e8298826
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 14 20:02:30 2017 +0100
+
+    An update.
+
+ src/scripts/Identify-iLO | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+commit 464be4993caa66cd5993c1f4341119cc5d2e3176
+Merge: 7523d98 90133d4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 14 19:36:37 2017 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 7523d980ff22afc070855530424368a70f30a4cb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 14 19:34:54 2017 +0100
+
+    Added script.
+
+ src/scripts/Identify-iLO | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+commit 90133d4052ffc46af836787a2dc891a67b76aa4f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 14 13:46:44 2017 +0100
+
+    Updated URL.
+
+ src/scripts/Configure-iLO | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit bb2579f3a4f9892916df4d7b5cf47e64ec1f42bf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 14 13:31:30 2017 +0100
+
+    Updated scripts.
+
+ src/scripts/Configure-iLO | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 3874ac5c36347dbee2ae12e7603aca4616eb7d3c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 30 15:59:13 2017 +0100
+
+    New release.
+
+ debian/changelog             | 2 +-
+ src/Create-New-SSH-Node-Keys | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 06dd63140ea9bb290dc880fdf80023adae6d56b9
+Author: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Mon Oct 30 14:53:48 2017 +0100
+
+    Updated Grub configuration to enable console on ttyS0 for cloud setups.
+
+ src/grub/grub-defaults | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 50b891e398b51ce304ddaae25dec71386a284f60
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 30 12:56:14 2017 +0100
+
+    Minor updates.
+
+ src/Get-Nodes.1       | 2 +-
+ src/Get-Sites.1       | 2 +-
+ src/Get-Slice-Nodes.1 | 2 +-
+ src/Get-Slices        | 2 +-
+ src/Get-Slices.1      | 2 +-
+ src/Get-Users         | 4 ++--
+ src/Get-Users.1       | 2 +-
+ src/Set-OVF-Type      | 4 ++--
+ src/Set-OVF-Type.1    | 2 +-
+ 9 files changed, 11 insertions(+), 11 deletions(-)
+
+commit f288676b209b6a8e6441561b4f0acd1903f4d606
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 30 12:52:59 2017 +0100
+
+    Header updates.
+
+ src/NorNetExperimentToolbox.py | 12 ++++++------
+ src/Test-NTP-Configuration     |  2 +-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+commit 2c4d9b3573a11a9c8c9f269ceb8679f482939dff
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 30 12:51:49 2017 +0100
+
+    Added option to Create-New-SSH-Node-Keys for non-interactively make configuration changes.
+
+ src/Create-New-SSH-Node-Keys   | 25 +++++++++++++++++++------
+ src/Create-New-SSH-Node-Keys.1 | 18 ++++++++++--------
+ 2 files changed, 29 insertions(+), 14 deletions(-)
+
+commit 63947d18ac2bae3e200c4e537b3a3f8d0c69e4dc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 30 11:21:15 2017 +0100
+
+    Added images.
+
+ debian/changelog                       |   4 ++--
+ src/Artwork/Graphics/Flags/Flag-EU.png | Bin 0 -> 654 bytes
+ src/Artwork/Graphics/Flags/Flag-EU.svg |   4 ++++
+ 3 files changed, 6 insertions(+), 2 deletions(-)
+
+commit 619dfcd03ff9a5f7a9671890e8271718f65231ad
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 30 11:00:07 2017 +0100
+
+    Build script update.
+
+ make-ppa | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit c11c5cf54e6d1525f544828789c9b22a9a9e334c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 30 11:00:00 2017 +0100
+
+    Script update.
+
+ UpdateDoc1.sed | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 7032f1eefa4b6a5902e0ad837fb50217fc9750a4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 30 10:59:29 2017 +0100
+
+    Header updates.
+
+ src/Add-SSH-Node-Key                                                | 2 +-
+ src/Auto-Update-BootCD.1                                            | 2 +-
+ src/Auto-Update-Keys.1                                              | 2 +-
+ src/Backup-All-VSystems                                             | 2 +-
+ src/Backup-VSystem                                                  | 2 +-
+ src/CA/Make-NorNet-CA                                               | 2 +-
+ src/CA/NorNet-CA-Level1.config                                      | 2 +-
+ src/CA/NorNet-CA-Level2.config                                      | 2 +-
+ src/CA/NorNet-CA-Simula.config                                      | 2 +-
+ src/CA/NorNet-CA-Test-Alpha.config                                  | 2 +-
+ src/CA/NorNet-CA-Test.config                                        | 2 +-
+ src/CA/NorNet-CA-UDE.config                                         | 2 +-
+ src/CFEngine/build-deb                                              | 2 +-
+ src/CFEngine/clean-deb                                              | 2 +-
+ src/CFEngine/copy-to-cfengine-directory                             | 2 +-
+ src/CFEngine/debian.conf                                            | 2 +-
+ src/CFEngine/filter-empty-entries                                   | 2 +-
+ src/CFEngine/make-deb                                               | 2 +-
+ src/CFEngine/renew-debian-changelog                                 | 2 +-
+ src/Change-VSystem-CDImage.1                                        | 2 +-
+ src/Check-Research-Node                                             | 2 +-
+ src/Check-VSystem                                                   | 2 +-
+ src/Clear-All-SSH-Node-Keys                                         | 2 +-
+ src/Clear-SSH-Node-Key                                              | 2 +-
+ src/Convert-HDD-Images.1                                            | 2 +-
+ src/Find-Nodes-With-Problems                                        | 2 +-
+ src/Get-Control-IPs                                                 | 2 +-
+ src/Get-Nodes                                                       | 2 +-
+ src/Get-Nodes-From-PLC                                              | 2 +-
+ src/Get-NorNet-Configuration                                        | 2 +-
+ src/Get-NorNet-Configuration.1                                      | 2 +-
+ src/Get-Sites                                                       | 2 +-
+ src/Get-Slice-Nodes                                                 | 2 +-
+ src/Interface-Setup.8                                               | 2 +-
+ src/Kontrollsenter/NorNet-Configuration.php                         | 2 +-
+ src/Kontrollsenter/NorNet-Kontrollsenter.html                       | 2 +-
+ src/Kontrollsenter/NorNet-Kontrollsenter.js                         | 2 +-
+ src/Kontrollsenter/NorNet-Map.js                                    | 2 +-
+ src/Kontrollsenter/NorNet-Map.php                                   | 2 +-
+ src/Kontrollsenter/NorNet-Status.php                                | 2 +-
+ src/Kontrollsenter/NorNet-Stylesheet.css                            | 2 +-
+ src/Make-Boot-ISO                                                   | 2 +-
+ src/Make-FileSrv-Configuration                                      | 2 +-
+ src/Make-FileSrv-Configuration.1                                    | 2 +-
+ src/Make-Monitor-Configuration                                      | 2 +-
+ src/Make-Monitor-Configuration.1                                    | 2 +-
+ src/Make-Node-Configuration                                         | 2 +-
+ src/Make-Node-Configuration.1                                       | 2 +-
+ src/Make-Research-VM                                                | 2 +-
+ src/Make-Server-Configuration                                       | 2 +-
+ src/Make-Server-Configuration.1                                     | 2 +-
+ src/Make-Tunnelbox-Configuration                                    | 2 +-
+ src/Make-Tunnelbox-Configuration.1                                  | 2 +-
+ src/Node-Setup                                                      | 2 +-
+ src/Node-Setup.1                                                    | 2 +-
+ src/NorNet-Setup                                                    | 2 +-
+ src/NorNet-TestSetup                                                | 2 +-
+ src/NorNetAPI.py                                                    | 2 +-
+ src/NorNetConfiguration.py                                          | 2 +-
+ src/NorNetNodeSetup.py                                              | 2 +-
+ src/NorNetProviderSetup.py                                          | 2 +-
+ src/NorNetSiteSetup.py                                              | 2 +-
+ src/NorNetTools.py                                                  | 2 +-
+ src/Probe-Endpoint-Setup.1                                          | 2 +-
+ src/Probe-Interface-Setup.1                                         | 2 +-
+ src/Random-Sleep                                                    | 2 +-
+ src/Reset-Networking                                                | 2 +-
+ src/Reset-Networking.1                                              | 2 +-
+ src/Reset-VSystem                                                   | 2 +-
+ src/Server-Setup                                                    | 2 +-
+ src/Server-Setup.1                                                  | 2 +-
+ src/Server-Watchdog.1                                               | 2 +-
+ src/Show-All-Nodes                                                  | 2 +-
+ src/Show-VSystems                                                   | 2 +-
+ src/Slice-Setup                                                     | 2 +-
+ src/Start-VSystem                                                   | 2 +-
+ src/Stop-VSystem                                                    | 2 +-
+ src/SysSetupCommons.py                                              | 2 +-
+ src/System-Info                                                     | 2 +-
+ src/System-Maintenance                                              | 2 +-
+ src/System-Maintenance.1                                            | 2 +-
+ src/Test-NTP-Configuration.1                                        | 2 +-
+ src/Tunnelbox-Setup                                                 | 2 +-
+ src/Tunnelbox-Setup.1                                               | 2 +-
+ src/Update-Node-Distro                                              | 2 +-
+ src/Update-Slice-Expiration                                         | 2 +-
+ src/User-Setup                                                      | 2 +-
+ src/VirtualBox/kbuild/build-deb                                     | 2 +-
+ src/VirtualBox/kbuild/clean-deb                                     | 2 +-
+ src/VirtualBox/kbuild/debian.conf                                   | 2 +-
+ src/VirtualBox/kbuild/filter-empty-entries                          | 2 +-
+ src/VirtualBox/kbuild/make-deb                                      | 2 +-
+ src/VirtualBox/kbuild/renew-debian-changelog                        | 2 +-
+ src/VirtualBox/vbox-4.2dsfg/build-deb                               | 2 +-
+ src/VirtualBox/vbox-4.2dsfg/clean-deb                               | 2 +-
+ src/VirtualBox/vbox-4.2dsfg/debian.conf                             | 2 +-
+ src/VirtualBox/vbox-4.2dsfg/filter-empty-entries                    | 2 +-
+ src/VirtualBox/vbox-4.2dsfg/make-deb                                | 2 +-
+ src/VirtualBox/vbox-4.2dsfg/renew-debian-changelog                  | 2 +-
+ src/VirtualBox/vbox-4.3dfsg/build-deb                               | 2 +-
+ src/VirtualBox/vbox-4.3dfsg/clean-deb                               | 2 +-
+ src/VirtualBox/vbox-4.3dfsg/debian.conf                             | 2 +-
+ src/VirtualBox/vbox-4.3dfsg/filter-empty-entries                    | 2 +-
+ src/VirtualBox/vbox-4.3dfsg/make-deb                                | 2 +-
+ src/VirtualBox/vbox-4.3dfsg/renew-debian-changelog                  | 2 +-
+ src/VirtualBox/vbox-5.0dsfg/build-deb                               | 2 +-
+ src/VirtualBox/vbox-5.0dsfg/clean-deb                               | 2 +-
+ src/VirtualBox/vbox-5.0dsfg/debian.conf                             | 2 +-
+ src/VirtualBox/vbox-5.0dsfg/filter-empty-entries                    | 2 +-
+ src/VirtualBox/vbox-5.0dsfg/make-deb                                | 2 +-
+ src/VirtualBox/vbox-5.0dsfg/renew-debian-changelog                  | 2 +-
+ src/VirtualBox/vbox-5.1dsfg/build-deb                               | 2 +-
+ src/VirtualBox/vbox-5.1dsfg/clean-deb                               | 2 +-
+ src/VirtualBox/vbox-5.1dsfg/debian.conf                             | 2 +-
+ src/VirtualBox/vbox-5.1dsfg/filter-empty-entries                    | 2 +-
+ src/VirtualBox/vbox-5.1dsfg/make-deb                                | 2 +-
+ src/VirtualBox/vbox-5.1dsfg/renew-debian-changelog                  | 2 +-
+ src/WebServer/get-pin256                                            | 2 +-
+ src/WebServer/make-certificate                                      | 2 +-
+ src/WebServer/make-cipher-suites                                    | 2 +-
+ src/check_site                                                      | 2 +-
+ src/check_site.1                                                    | 2 +-
+ src/check_tunnel.1                                                  | 2 +-
+ src/fedora-build-toolchain/build-nornet-applications-repository     | 2 +-
+ src/fedora-build-toolchain/build-nornet-applications-repository-F18 | 2 +-
+ src/fedora-build-toolchain/cfengine/make-rpm                        | 2 +-
+ src/fedora-build-toolchain/install-planetlab-build-dependencies     | 2 +-
+ src/fedora-build-toolchain/libvirt/make-rpm                         | 2 +-
+ src/fedora-build-toolchain/sign-and-publish                         | 2 +-
+ src/fedora-build-toolchain/sign-and-publish-f18                     | 2 +-
+ src/image-resize-with-cropping                                      | 2 +-
+ src/nornetinfogenerator                                             | 2 +-
+ src/nornetinfogenerator.1                                           | 2 +-
+ src/paris-traceroute/build-deb                                      | 2 +-
+ src/paris-traceroute/clean-deb                                      | 2 +-
+ src/paris-traceroute/copy-to-paris-traceroute-directory             | 2 +-
+ src/paris-traceroute/debian.conf                                    | 2 +-
+ src/paris-traceroute/filter-empty-entries                           | 2 +-
+ src/paris-traceroute/make-deb                                       | 2 +-
+ src/paris-traceroute/renew-debian-changelog                         | 2 +-
+ src/prepare-freebsd-vm                                              | 2 +-
+ src/scripts/Configure-iLO                                           | 2 +-
+ src/scripts/init-research-vms                                       | 2 +-
+ src/scripts/nornet-slice-initscript.OBSOLETE                        | 2 +-
+ src/scripts/remove-obsolete-initscript                              | 2 +-
+ src/setup.py                                                        | 2 +-
+ 146 files changed, 146 insertions(+), 146 deletions(-)
+
+commit e2d4df00507eaabaf5514da91279a7782314be7e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 30 10:59:08 2017 +0100
+
+    Updated graphics.
+
+ src/Artwork/Graphics/Flags/CAT-Barcelona.png       |  Bin 0 -> 436 bytes
+ src/Artwork/Graphics/Flags/CAT-Barcelona.svg       |    5 +
+ .../Flags/DE-Baden-W\303\274rttemberg.png"         |  Bin 0 -> 445 bytes
+ .../Flags/DE-Baden-W\303\274rttemberg.svg"         |    5 +
+ src/Artwork/Graphics/Flags/DE-Bayern.png           |  Bin 0 -> 872 bytes
+ src/Artwork/Graphics/Flags/DE-Bayern.svg           |   13 +
+ src/Artwork/Graphics/Flags/DE-Hessen.png           |  Bin 4786 -> 398 bytes
+ src/Artwork/Graphics/Flags/DE-Hessen.svg           |   40 +-
+ src/Artwork/Graphics/Flags/DE-Niedersachsen.png    |  Bin 0 -> 894 bytes
+ src/Artwork/Graphics/Flags/DE-Niedersachsen.svg    |   78 +
+ .../Graphics/Flags/DE-Nordrhein-Westfalen.png      |  Bin 7455 -> 406 bytes
+ .../Graphics/Flags/DE-Nordrhein-Westfalen.svg      |  202 +-
+ src/Artwork/Graphics/Flags/Flag-CAT.png            |  Bin 406 -> 670 bytes
+ src/Artwork/Graphics/Flags/Flag-CAT.svg            |   10 +-
+ src/Artwork/Graphics/Flags/Flag-HU.png             |  Bin 0 -> 406 bytes
+ src/Artwork/Graphics/Flags/Flag-HU.svg             |    5 +
+ src/Artwork/Graphics/Flags/US-Confederate.png      |  Bin 1257 -> 0 bytes
+ src/Artwork/Graphics/Flags/US-Confederate.svg      |   19 -
+ src/Artwork/Graphics/Flags/US-New Jersey.png       |  Bin 0 -> 3395 bytes
+ src/Artwork/Graphics/Flags/US-New Jersey.svg       | 2265 ++++++++++++++++++++
+ 20 files changed, 2397 insertions(+), 245 deletions(-)
+
+commit d3707978c44f57387a4af03e49ea5ceabc6fdd9e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Oct 26 12:09:48 2017 +0200
+
+    Added "bash-completion" as dependency.
+
+ debian/control | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 1523042fce8dbcd12f8868e7a0ba86c1b5064140
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 20 15:01:17 2017 +0200
+
+    Added TCPDump as dependency.
+
+ debian/control | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 2dc0de616bdc9dab54f56ff1c4c4f85235c2e0b3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 20 15:00:26 2017 +0200
+
+    Added dependency.
+
+ debian/changelog | 6 ++++++
+ debian/control   | 1 +
+ 2 files changed, 7 insertions(+)
+
+commit c00d00c3b38078bd6bf021423685ab549d24a065
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 20 11:53:20 2017 +0200
+
+    Some clean-ups.
+
+ debian/changelog                  | 6 ++++++
+ debian/nornet-management.postinst | 2 +-
+ debian/nornet-node.postinst       | 7 +++----
+ 3 files changed, 10 insertions(+), 5 deletions(-)
+
+commit dc4d34ae728a5188332aae0d207ef4dfa07a6815
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 20 11:51:00 2017 +0200
+
+    Failed grub-update is uncritical. It occurs when grub is not yet installed (e.g. MELODIC cloud VM setup with preseeded virt-install).
+
+ debian/nornet-database.postinst    | 2 +-
+ debian/nornet-database.postrm      | 2 +-
+ debian/nornet-development.postinst | 2 +-
+ debian/nornet-development.postrm   | 2 +-
+ debian/nornet-display.postinst     | 2 +-
+ debian/nornet-display.postrm       | 2 +-
+ debian/nornet-filesrv.postinst     | 2 +-
+ debian/nornet-filesrv.postrm       | 2 +-
+ debian/nornet-gatekeeper.postinst  | 2 +-
+ debian/nornet-gatekeeper.postrm    | 2 +-
+ debian/nornet-management.postinst  | 2 +-
+ debian/nornet-management.postrm    | 2 +-
+ debian/nornet-monitor.postinst     | 4 ++--
+ debian/nornet-monitor.postrm       | 2 +-
+ debian/nornet-node.postinst        | 6 +++---
+ debian/nornet-node.postrm          | 2 +-
+ debian/nornet-server.postinst      | 2 +-
+ debian/nornet-server.postrm        | 2 +-
+ debian/nornet-timesrv.postinst     | 2 +-
+ debian/nornet-timesrv.postrm       | 2 +-
+ debian/nornet-tunnelbox.postinst   | 2 +-
+ debian/nornet-tunnelbox.postrm     | 2 +-
+ debian/nornet-websrv.postinst      | 2 +-
+ debian/nornet-websrv.postrm        | 2 +-
+ debian/nornet-wikisrv.postinst     | 2 +-
+ debian/nornet-wikisrv.postrm       | 2 +-
+ 26 files changed, 29 insertions(+), 29 deletions(-)
+
+commit 09cc39a1efce8142360f5959fc1c9a8ae4b4313c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 20 11:49:37 2017 +0200
+
+    Script update.
+
+ src/kernel-build-toolchain/build-kernel-repository | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit ff10a262861607639d5b7456a42471411c656351
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 9 10:17:10 2017 +0200
+
+    Script update.
+
+ src/scripts/slice-setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 46f1abf66c6c0b61d694d8ed0b66a2aa30307c12
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Sep 26 17:33:19 2017 +0200
+
+    Updated HiN configuration.
+
+ src/NorNet-Setup | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 0a8dddc567afd7e2a58123c87fbaa89cb17120a4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 15 14:28:00 2017 +0200
+
+    Improved script.
+
+ src/scripts/net-overview | 44 ++++++++++++++++++++++++--------------------
+ 1 file changed, 24 insertions(+), 20 deletions(-)
+
+commit 6aafd85c1cbf9e9ce2e3ee96b72fb4e251307d05
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 15 14:15:21 2017 +0200
+
+    Added helper script.
+
+ src/scripts/net-overview | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+commit 457158954905eb56fcfcdd999576b9c9cc2f801d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Sep 7 12:50:31 2017 +0200
+
+    Dependency update: added fail2ban in addition to openssh-server.
+
+ debian/changelog | 6 ++++++
+ debian/control   | 6 ++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+commit 123448a36520fe6eff1ac704de88e719f24c2e1a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 30 16:59:00 2017 +0200
+
+    Configuration update.
+
+ src/kernel-build-toolchain/distributions | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+commit 67cddf9a4b1c8c10defcf9d17ce99609526e288f
+Merge: 234fdb2 a9d1c19
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 30 15:23:11 2017 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 234fdb2dc1ef0ecdd23aed7e68d313d535aca72a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 30 15:22:59 2017 +0200
+
+    Added helper script.
+
+ src/kernel-build-toolchain/mptcp-diff | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit a9d1c1938169f29884964f9402fd7ca6304af12e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 29 12:31:38 2017 +0200
+
+    Added helper script.
+
+ src/scripts/check-boot | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+commit 18fd34463564beaa0851dc8dfbe4f98e72986ebb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 25 17:50:46 2017 +0200
+
+    Script updates.
+
+ src/scripts/fix-nodes-simple | 3 +++
+ src/scripts/reboot-nodes     | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+commit a9a3f6ec734248af5f7bfca3ff905c09de5a8919
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 25 15:34:42 2017 +0200
+
+    A fix.
+
+ src/scripts/fix-nodes-simple | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1d71b3084d6b00e9129431e6aa572e4685fbbd7b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 25 14:59:12 2017 +0200
+
+    Updated helper scripts.
+
+ src/scripts/fix-nodes        |  2 +-
+ src/scripts/fix-nodes-simple | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+
+commit 591ab0ae39185f7afe31ba629a54bdd488b16cfd
+Merge: 0d85c2f f974cfc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 25 14:50:33 2017 +0200
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit 0d85c2f9b45eb1283bb2057835458d71a690fa4f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 25 14:48:16 2017 +0200
+
+    Script update.
+
+ src/scripts/fix-nodes | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+commit f974cfc80b83689df81cd5e4ae82dd7558aaa8ff
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 25 14:19:38 2017 +0200
+
+    Version bump.
+
+ debian/changelog | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit f87ee13f1f9e1c7b848fcd1c7a4298ebc5ad1cd3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 25 14:19:30 2017 +0200
+
+    Updated experiment script.
+
+ src/NorNetExperimentToolbox.py | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 3d8501fa09a02e6fffb25bafae5da5d876c01f3a
+Merge: aa8160a b71c492
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 25 11:05:52 2017 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit aa8160a81326690bafc23bfb7c3b54b0dc3c1b61
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 25 11:05:38 2017 +0200
+
+    Updated experiment library.
+
+ src/NorNetExperimentToolbox.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 2ec05a21924a3ed1fe1a813f992d5d4ab0c80b66
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 25 11:05:30 2017 +0200
+
+    Updated helper script.
+
+ src/scripts/run-virt-manager-for-nornet | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+commit b71c4921e708665f4ced2e0e11a3cd1156939747
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 25 10:19:17 2017 +0200
+
+    Script update.
+
+ src/scripts/fix-nodes | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 086d43eb3101a248fcd1167e85508458197d2954
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 24 16:33:08 2017 +0200
+
+    Version bump.
+
+ debian/changelog | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 8d19e08a2ccd4ca0d96e040595a586328ceff10c
+Merge: 8e2763b 9ac168b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 24 15:20:42 2017 +0200
+
+    Merge branch 'tunnelbox-fixes-aug2017'
+
+commit 8e2763be2aced265cf6d1b8af3849fbcb7f8c055
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 24 14:53:55 2017 +0200
+
+    A fix.
+
+ src/Server-Setup | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit a68eaa6426a51ec82c9fd729c2e57cd24d2509fc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 24 14:52:06 2017 +0200
+
+    Some more Fedora improvements.
+
+ src/Server-Setup | 56 +++++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 31 insertions(+), 25 deletions(-)
+
+commit 6e77c2a96a65163da4d46fe913d8f21af11bdaa4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 24 14:46:29 2017 +0200
+
+    Handle bridges under Fedora.
+
+ src/Server-Setup       | 62 ++++++++++++++++++++++++++++++++++++++------------
+ src/SysSetupCommons.py | 18 +++++++++++++++
+ 2 files changed, 65 insertions(+), 15 deletions(-)
+
+commit 9ac168b451723597ddc74ab6e0468b73f72aaade
+Merge: c0fd796 aa915d5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 24 11:47:20 2017 +0200
+
+    Merge branch 'tunnelbox-fixes-aug2017' of github.com:simula/nornet-control into tunnelbox-fixes-aug2017
+
+commit c0fd79632ae766a1cf32a373368b70021f4dda59
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 24 11:47:10 2017 +0200
+
+    Updated helper script.
+
+ debian/changelog      |  6 ++++++
+ src/scripts/Check-DNS | 38 +++++++++++++++++++++++++++++++++-----
+ 2 files changed, 39 insertions(+), 5 deletions(-)
+
+commit aa915d5fffdf4d4a0f73a17c56e4c08df111e315
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 24 11:27:52 2017 +0200
+
+    Also update Fling configuration when service is not (yet) installed.
+
+ debian/nornet-tunnelbox.init | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit 45100f2dfcdb91836657805d1b74ba47ea4e8b52
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 24 11:25:54 2017 +0200
+
+    externalInterfaces has to be a list, since ordering is important.
+
+ src/Make-Tunnelbox-Configuration | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 1b28ed2bb4aab138250f23aa2ccaca131b583b4f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 24 10:58:56 2017 +0200
+
+    Check for DNS configuration changes. Only reload on changes.
+
+ debian/nornet-tunnelbox.init | 36 ++++++++++++++++++++++--------------
+ 1 file changed, 22 insertions(+), 14 deletions(-)
+
+commit 339627ce76dbc281cbf3c2268dfc893bb713ab4a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 24 10:27:25 2017 +0200
+
+    Use preferred address in route configurations.
+
+ src/Tunnelbox-Setup | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+commit ef0d658eb4e16cd521385cec7440dc230e09b934
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 24 09:34:28 2017 +0200
+
+    Configure addresses with "nodad" option, to avoid problems with route configurations.
+
+ src/Probe-Endpoint-Setup | 2 +-
+ src/Tunnelbox-Setup      | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+commit 9e3caa2a0897fdeceba87a0839dfa2308daeb5f7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 23 21:54:14 2017 +0200
+
+    Version bump.
+
+ debian/changelog | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 0f70ecf7d1fe6e22d43e2e5377edce0ae5c9e975
+Merge: 58cca82 0ed5228
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 23 21:47:02 2017 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 58cca82a5c968b8cd01e79060460094184fa1782
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 23 21:46:22 2017 +0200
+
+    Bugfix: configure addresses with "nodad" option, to ensure the following route configuration will be possible.
+
+ src/Interface-Setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 98a5d815a76ac9ab5325f771068b032521031d1d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 23 21:46:05 2017 +0200
+
+    Updated helper script.
+
+ src/kernel-build-toolchain/build-kernel-repository | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 61cbb9f8ca4d941d74e466f76fdaa1213970b8c1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 23 21:45:54 2017 +0200
+
+    Script improvements.
+
+ src/scripts/Check-DNS     |  3 +--
+ src/scripts/update-server | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+), 2 deletions(-)
+
+commit 0ed5228e1509287fbcc5d9df0d313c19b5800fa9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 22 11:12:17 2017 +0200
+
+    Another update.
+
+ src/scripts/fix-nodes | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit e8bba3bec4625c49a681acc66e95b13a60e8b29c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 22 11:09:28 2017 +0200
+
+    Updated script.
+
+ src/scripts/fix-nodes | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit c61b53a8a235144bf2442062e204572aeb3a7b0b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 22 11:00:12 2017 +0200
+
+    Script update.
+
+ src/scripts/fix-nodes | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit e8eae0d7dce1bd0fe411e631c3851c40c7ea8ea6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 21 17:16:59 2017 +0200
+
+    Improved script.
+
+ src/fedora-build-toolchain/sign-and-publish | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit fd00be322149c9ed9a932a2ffd06ff176cc92c0b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 21 17:16:46 2017 +0200
+
+    Improved script.
+
+ src/kernel-build-toolchain/build-kernel-repository | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit c863133b2ef3b268acef3acb9f41c6e383832d89
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 21 16:07:27 2017 +0200
+
+    Added header.
+
+ src/kernel-build-toolchain/build-kernel-repository | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+commit 8b0f918e55a303c3fe6e1d03db584e07982041a6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 21 16:06:31 2017 +0200
+
+    Added helper script.
+
+ debian/control                                     |  2 ++
+ src/kernel-build-toolchain/build-kernel-repository | 15 +++++++++++++++
+ src/kernel-build-toolchain/distributions           |  8 ++++++++
+ 3 files changed, 25 insertions(+)
+
+commit 9028b0176be0e6ce98f0a9739d653d3f1d1a001f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 21 14:43:39 2017 +0200
+
+    New release.
+
+ debian/changelog | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 3f479242df7ee13956a33b1324f38800890570ce
+Merge: 73435d1 8460f4a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 21 13:31:44 2017 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 73435d18088b476b9b723aeab6dc58d0271516c8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 21 13:31:29 2017 +0200
+
+    Add source address to route configuration.
+
+ src/Interface-Setup | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit b21e99d6ac48670db3557641a9cf38ea0c392cfd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 21 13:31:15 2017 +0200
+
+    Add source address to route configuration.
+
+ src/SysSetupCommons.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 8460f4af2987e5ffa7e37d0d6d6ed4ec9c4a8147
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 18 15:15:56 2017 +0200
+
+    Improved script.
+
+ src/scripts/reinstall-nodes | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+commit 7dc68cdbd06c156f4132a143cce74a5e46765c53
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 18 11:45:10 2017 +0200
+
+    Script update.
+
+ src/Vacuum-PLC-DB | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 73ef30b36d917e87947d83a90ca98f41c6975851
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 18 11:13:57 2017 +0200
+
+    An update.
+
+ src/scripts/slice-setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit d94bc0f2aa7f138c925a51634cd70ceec96a89ee
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 17 18:25:02 2017 +0200
+
+    A fix.
+
+ src/NorNet-Setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 20038662cca8db9463d667fbe2f82a44a0ea5aad
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 15 16:45:04 2017 +0200
+
+    Improved helper script.
+
+ src/Test-Setup/make-vms | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+commit ba560249edc1c91c846f675e1c66e20580a1f84a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 15 10:33:01 2017 +0200
+
+    New release.
+
+ debian/changelog | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 7496242eefbcd1e8cfdcdb33c7035a8f1e23317f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 14 10:09:13 2017 +0200
+
+    Added images.
+
+ src/background/Input/BootCD-F24.jpeg | Bin 0 -> 8265122 bytes
+ src/background/Input/BootCD-F25.jpeg | Bin 0 -> 3855756 bytes
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 434f91abd8a173373ffaa4dfc6559a0d862e995d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 10 16:38:54 2017 +0200
+
+    Configuration update.
+
+ src/NorNet-Setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 2557334d8cabaad6a5dc1ced26d9600b041ba626
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 10 11:59:12 2017 +0200
+
+    Dependency update.
+
+ debian/changelog | 6 ++++++
+ debian/control   | 1 +
+ make-ppa         | 2 +-
+ 3 files changed, 8 insertions(+), 1 deletion(-)
+
+commit 638d3267d2d4624c5eb6d797c9b55949e2b37ba5
+Merge: d32dac6 30198c8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 8 16:27:09 2017 +0200
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit d32dac6f98d5873865f3fbf07694c97018fbd821
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 8 16:26:50 2017 +0200
+
+    Added helper scripts.
+
+ src/scripts/run-fix-nodes | 3 +++
+ src/scripts/slice-setup   | 1 +
+ 2 files changed, 4 insertions(+)
+
+commit 30198c8c62ac246ec523f0ae1ec78e130338144c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 8 15:37:37 2017 +0200
+
+    Added helper script.
+
+ src/scripts/update-server | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+commit 9c1c74bc6536b8d7ac76380da8d7d37e11f4068e
+Merge: 494f081 0ab268b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 7 17:52:50 2017 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 494f081ea3af41ac875da66e8d47ffd92f264530
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 7 17:52:26 2017 +0200
+
+    Version bump.
+
+ debian/changelog | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 0ab268b5f9311bd742b51d3879d1fe26803f6c5e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 7 17:38:45 2017 +0200
+
+    Script update.
+
+ src/fedora-build-toolchain/build-nornet-applications-repository | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+commit 33c6c091f855737bc0f92feb9d4a7a308b9524a3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 7 15:54:35 2017 +0200
+
+    Some fixes.
+
+ src/NorNetExperimentToolbox.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 294ab5614966958d376d2ad6d19cf53a8607c9e5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 7 15:47:47 2017 +0200
+
+    Merged changes.
+
+ src/NorNetExperimentToolbox.py | 71 ++++++++++++++++++++++++------------------
+ 1 file changed, 41 insertions(+), 30 deletions(-)
+
+commit e6fb3fc7ce18a9393bbcf4512550a4ed59822d0b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 7 15:07:51 2017 +0200
+
+    Version bump.
+
+ debian/changelog | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 6cf04ba5bb18163690d1cd332b1f695abd47bf45
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 7 15:00:01 2017 +0200
+
+    Added makePseudoNode() function for non-PLC-based node experiments.
+
+ src/NorNetExperimentToolbox.py | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+commit 780c310ee578204c51a83c2d14caa80d2a0378f3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 27 14:33:04 2017 +0200
+
+    Updated crontab.
+
+ src/Mirror/nornet-mirror.crontab | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+commit ef9e8344faddf0d5a7a7611a8349ba30e68b28c1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 12 11:03:03 2017 +0200
+
+    Fling parameter update.
+
+ debian/changelog                 | 6 ++++++
+ src/Make-Tunnelbox-Configuration | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+commit bdb02034d66ec1c95f0b391569a8ebd6f99121e4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 6 18:38:56 2017 +0200
+
+    A fix.
+
+ src/Backup-VSystem | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 012a77a1f65e76bcad5848a661f4a0bbe6b1b2a1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 5 16:39:11 2017 +0200
+
+    Fling configuration update.
+
+ debian/changelog                 | 6 ++++++
+ src/Make-Tunnelbox-Configuration | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+commit e153b84fa3000870559ffd78ae31d195b710eea7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 5 10:30:47 2017 +0200
+
+    A fix.
+
+ src/NorNet-Setup | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 5d1922911f5d141759c65ec225a49bc7a034601b
+Merge: 7e393b0 bd37d3c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 30 12:10:17 2017 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 7e393b0455bfdbab322a30f8afe169b8912df10d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 30 12:09:54 2017 +0200
+
+    Disabled HAW IPv6 access (since it is not working any more).
+
+ src/NorNet-Setup | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit bd37d3c79c416cdc3d07b7e077f2d88c0797b289
+Author: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Tue Jun 20 11:06:53 2017 +0100
+
+    Improved script.
+
+ make-deb | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 4699c43fd87643841c397d9f40aeb08d98ee714c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 1 13:18:56 2017 +0200
+
+    Version bump.
+
+ debian/changelog | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit ceabf7a73faa6ef657349521d128205074891ef2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 1 12:14:44 2017 +0200
+
+    Build script update.
+
+ make-ppa                       | 15 +++++++++++----
+ src/background/make-logo-texts |  2 +-
+ 2 files changed, 12 insertions(+), 5 deletions(-)
+
+commit 2ec95387f0fc4c229df0bf3493fff2d1f0d7c8ce
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue May 30 14:45:28 2017 +0200
+
+    Improved script.
+
+ src/Get-Control-IPs | 59 ++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 47 insertions(+), 12 deletions(-)
+
+commit d1e721624babed31ab934f79d51d9db5551fa343
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 19 10:53:38 2017 +0200
+
+    Script update.
+
+ src/background/images-to-pdf-a4 | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+commit 571868c2b13f23851d4e5703a545531ea81623ce
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 12 15:41:40 2017 +0200
+
+    Improved program.
+
+ src/image-resize-with-cropping | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
+
+commit 28468d0e11f876dca4fbd9702a313585f16d5fd6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 12 15:41:36 2017 +0200
+
+    Added helper script.
+
+ src/background/make-a4 | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit 97ab1976acf9279bb8a64c043e591c0e2bda9026
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 12 15:41:27 2017 +0200
+
+    Improved script.
+
+ src/background/images-to-pdf-a4 | 62 +++++++++++++++++++++++++++++++++++------
+ 1 file changed, 54 insertions(+), 8 deletions(-)
+
+commit 9b5065d87150f47d3d0f5a26c165f9f468ea3cce
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed May 10 14:26:11 2017 +0200
+
+    New release.
+
+ debian/changelog | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 4bb9e1b51d2a39fc02ea7db93560d78bfb6b7601
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed May 10 11:22:53 2017 +0200
+
+    Dependency fixes for Deepin Linux support.
+
+ debian/changelog                  |  6 ++++++
+ debian/control                    | 21 +++++++++++----------
+ debian/nornet-management.postinst |  8 ++++++--
+ debian/nornet-management.prerm    |  4 +++-
+ src/background/make-desktop       |  2 +-
+ 5 files changed, 27 insertions(+), 14 deletions(-)
+
+commit 95d87dea93dbbfd836dd7581710aafc9bbc38d7f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue May 9 14:56:00 2017 +0200
+
+    Added helper script.
+
+ src/background/images-to-pdf-a4 | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+commit 3bf7ac5f729fc62df497fa6410e9e04200b00e1c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 8 14:31:06 2017 +0200
+
+    New release.
+
+ debian/changelog | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit eef8a0b137701f5f2f4b2b43b21c785ca6f0c7ca
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 8 14:04:26 2017 +0200
+
+    Packaging improvements.
+
+ debian/changelog              | 2 +-
+ debian/control                | 1 -
+ debian/nornet-display.install | 5 +++--
+ debian/nornet-display.links   | 3 ---
+ make-dist                     | 6 ++++++
+ src/background/make-overlay   | 2 +-
+ 6 files changed, 11 insertions(+), 8 deletions(-)
+
+commit 3eb10ef8639ed4ee720286f7dbd510602f6dda90
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 8 12:12:32 2017 +0200
+
+    Script improvements.
+
+ debian/nornet-display.links | 2 +-
+ src/background/make-desktop | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 93849b40bdd1e467eec1e4254eeb62001cf581eb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 8 11:40:30 2017 +0200
+
+    Packaging improvements.
+
+ make-dist | 148 ++++++++++++++++++++++++++++----------------------------------
+ 1 file changed, 66 insertions(+), 82 deletions(-)
+
+commit a18899b9a0eeb80ddfde3a7aa7527072e71169da
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 8 11:29:48 2017 +0200
+
+    Added script to handle file conversions.
+
+ make-dist                                         |  1 -
+ src/Artwork/Sites/conversion/convert-to-siteimage |  8 ---
+ src/Artwork/Sites/make-site-images                | 83 +++++++++++++++++++++++
+ 3 files changed, 83 insertions(+), 9 deletions(-)
+
+commit 3e6a2cb29e9533c105b94de34dc1f0ebca0a5ae2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 8 10:42:48 2017 +0200
+
+    Script improvements.
+
+ debian/changelog                      |   4 +--
+ debian/nornet-display.links           |   5 ++--
+ make-dist                             |   1 +
+ src/background/Make-Background        |   4 +--
+ src/background/Make-Logo              |  48 ++++++++++++++++++++++++++++++++--
+ src/background/Make-Mosaic            |   4 +--
+ src/background/Make-Painting          |   4 +--
+ src/background/NorNet-Affiliation.png | Bin 638188 -> 0 bytes
+ src/background/NorNet-Name.png        | Bin 290001 -> 0 bytes
+ src/background/NorNet-Subtitle.png    | Bin 579005 -> 0 bytes
+ src/background/NorNet-Title.png       | Bin 1454811 -> 0 bytes
+ src/background/NorNet-URL.png         | Bin 481762 -> 0 bytes
+ src/background/make-all               |   6 +++++
+ src/background/make-desktop           |  10 +++----
+ src/background/make-logo-texts        |   4 +--
+ src/background/make-overlay           |   2 +-
+ 16 files changed, 72 insertions(+), 20 deletions(-)
+
+commit 70089833de59b256e4cd52615b85913d47125061
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 5 17:03:53 2017 +0200
+
+    Another fix.
+
+ debian/changelog            | 2 +-
+ debian/nornet-display.links | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 11d9bb87056dbfd23ae373dd303887254141166e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 5 16:28:23 2017 +0200
+
+    A fix.
+
+ debian/changelog              | 2 +-
+ debian/nornet-artwork.install | 1 +
+ make-dist                     | 1 +
+ src/background/make-overlay   | 2 +-
+ 4 files changed, 4 insertions(+), 2 deletions(-)
+
+commit 9ec38b622dd6a1948d9d32cbade05086e57d7766
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 5 13:52:27 2017 +0200
+
+    Improved packaging scripts.
+
+ debian/control                |  1 +
+ debian/nornet-desktop.dirs    |  1 +
+ debian/nornet-display.install |  1 -
+ debian/nornet-display.links   |  2 ++
+ make-dist                     | 66 +++++++++++--------------------------------
+ 5 files changed, 20 insertions(+), 51 deletions(-)
+
+commit 394593d86e2c81b29aee335e18cd5dcdcf233e85
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 5 13:19:45 2017 +0200
+
+    Updated background script files.
+
+ src/background/Demo-Fractal.fsf                      |  18 ------------------
+ src/background/Input/Background1.fsf                 |  18 ++++++++++++++++++
+ src/background/Input/Background1.png                 | Bin 0 -> 3841553 bytes
+ src/background/Input/Database1.jpeg                  | Bin 0 -> 2875724 bytes
+ src/background/Input/Development1.jpeg               | Bin 0 -> 3201461 bytes
+ src/background/Input/Display1.jpeg                   | Bin 0 -> 3945268 bytes
+ src/background/Input/FileSrv1.jpeg                   | Bin 0 -> 4748283 bytes
+ src/background/Input/Gatekeeper1.jpeg                | Bin 0 -> 2854893 bytes
+ src/background/Input/Management1.jpeg                | Bin 0 -> 4003876 bytes
+ src/background/Input/Monitor1.jpeg                   | Bin 0 -> 2383051 bytes
+ src/background/Input/Node1.jpeg                      | Bin 0 -> 3094030 bytes
+ src/background/Input/Node2.jpeg                      | Bin 0 -> 7535326 bytes
+ src/background/Input/PLC1.jpeg                       | Bin 0 -> 2144783 bytes
+ src/background/Input/Server1.jpeg                    | Bin 0 -> 3207687 bytes
+ src/background/Input/TimeSrv1.jpeg                   | Bin 0 -> 5694920 bytes
+ src/background/Input/Tunnelbox1.jpeg                 | Bin 0 -> 1311056 bytes
+ src/background/Input/WebSrv1.jpeg                    | Bin 0 -> 8760717 bytes
+ src/background/Input/WikiSrv1.jpeg                   | Bin 0 -> 2762431 bytes
+ src/background/Input/exiftool.argfile                |   3 +++
+ src/background/NorNet-Affiliation.png                | Bin 0 -> 638188 bytes
+ src/background/NorNet-Background1-16x9.png           | Bin 2800338 -> 0 bytes
+ src/background/NorNet-Background1-4x3.png            | Bin 4243046 -> 0 bytes
+ src/background/NorNet-Background1.png                | Bin 8932258 -> 0 bytes
+ src/background/NorNet-Background1.xcf                | Bin 11000770 -> 0 bytes
+ src/background/NorNet-InformationText.png            | Bin 859818 -> 0 bytes
+ src/background/NorNet-InformationText.xcf            | Bin 1559389 -> 0 bytes
+ src/background/NorNet-InformationText1.png           | Bin 644237 -> 0 bytes
+ src/background/NorNet-InformationText1.xcf           | Bin 1465257 -> 0 bytes
+ src/background/NorNet-Name.png                       | Bin 0 -> 290001 bytes
+ src/background/NorNet-Subtitle.png                   | Bin 0 -> 579005 bytes
+ src/background/NorNet-Text-NNTB.xcf                  | Bin 677925 -> 0 bytes
+ src/background/NorNet-Text-NorNet.xcf                | Bin 787715 -> 0 bytes
+ src/background/NorNet-Title.png                      | Bin 0 -> 1454811 bytes
+ src/background/NorNet-URL.png                        | Bin 0 -> 481762 bytes
+ src/background/exiftool.argfile                      |   3 ---
+ src/background/original/Background-Database1.jpeg    | Bin 2875724 -> 0 bytes
+ src/background/original/Background-Development1.jpeg | Bin 3201461 -> 0 bytes
+ src/background/original/Background-Display1.jpeg     | Bin 3945268 -> 0 bytes
+ src/background/original/Background-FileSrv1.jpeg     | Bin 4748283 -> 0 bytes
+ src/background/original/Background-Gatekeeper1.jpeg  | Bin 2854893 -> 0 bytes
+ src/background/original/Background-Management1.jpeg  | Bin 4003876 -> 0 bytes
+ src/background/original/Background-Monitor1.jpeg     | Bin 2383051 -> 0 bytes
+ src/background/original/Background-Node1.jpeg        | Bin 3094030 -> 0 bytes
+ src/background/original/Background-Node2.jpeg        | Bin 7535282 -> 0 bytes
+ src/background/original/Background-PLC1.jpeg         | Bin 2144783 -> 0 bytes
+ src/background/original/Background-Server1.jpeg      | Bin 3207687 -> 0 bytes
+ src/background/original/Background-TimeSrv1.jpeg     | Bin 5694920 -> 0 bytes
+ src/background/original/Background-Tunnelbox1.jpeg   | Bin 1311056 -> 0 bytes
+ src/background/original/Background-WebSrv1.jpeg      | Bin 8760717 -> 0 bytes
+ src/background/original/Background-WikiSrv1.jpeg     | Bin 2762431 -> 0 bytes
+ 50 files changed, 21 insertions(+), 21 deletions(-)
+
+commit 726976c9d8ca501505fb07e3bc78ab20222a59b6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 5 12:38:18 2017 +0200
+
+    Added background scripts.
+
+ src/background/Logo-NorNet.pdf | 2230 ++++++++++++++++++++++++++++++++++++++++
+ src/background/Make-Background |   62 ++
+ src/background/Make-Logo       |   78 ++
+ src/background/Make-Mosaic     |   88 ++
+ src/background/Make-Painting   |   57 +
+ src/background/make-bootsplash |   97 ++
+ src/background/make-desktop    |  217 ++++
+ src/background/make-logo-texts |   50 +
+ src/background/make-overlay    |   71 ++
+ 9 files changed, 2950 insertions(+)
+
+commit 076865464b5b1ca4be50b315f46bbcd3bc408eb2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 5 11:52:38 2017 +0200
+
+    Some packaging updates.
+
+ debian/changelog                       |  4 ++--
+ debian/control                         |  2 ++
+ make-dist                              | 17 +++++++++++------
+ src/WebServer/benlomond.nntb.no.config | 23 +++++++++++++++++++++++
+ 4 files changed, 38 insertions(+), 8 deletions(-)
+
+commit d83f3b44b635aafe0a3d0b4c4b751c3c6f125a36
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 28 16:09:16 2017 +0200
+
+    Another update.
+
+ src/WebServer/000-benlomond.nntb.no.conf | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit b913e14b1ce87f712c9fe47c9d3ed04f95858e85
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 28 16:04:37 2017 +0200
+
+    An update.
+
+ src/WebServer/000-bjoernholt.nntb.no.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 42eed284df72ddc0d61d46790a4c89316e0b70ef
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 28 15:41:23 2017 +0200
+
+    An update.
+
+ src/WebServer/000-www.neat-project.org.conf |  1 +
+ src/WebServer/000-www.nntb.no.conf          |  7 +++----
+ src/WebServer/www.neat-project.org.config   | 23 +++++++++++++++++++++++
+ 3 files changed, 27 insertions(+), 4 deletions(-)
+
+commit 277ceaf6f2050da4fe29b21111767386bda52b9a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 28 15:17:45 2017 +0200
+
+    More updates.
+
+ src/WebServer/000-godbekken.nntb.no.conf | 7 ++++---
+ src/WebServer/000-wiki.nntb.no.conf      | 2 +-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+commit a43d0492b1117dd41d93135f1f695a4337b3c5ed
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 28 14:51:00 2017 +0200
+
+    Another update.
+
+ src/WebServer/wiki.nntb.no.config | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+commit cbcbe24c331b1f1629619d9f550b80cd36237379
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 28 14:35:12 2017 +0200
+
+    Updated configs.
+
+ src/WebServer/000-wiki.nntb.no.conf |  8 +++++---
+ src/WebServer/www.nntb.no.config    | 23 +++++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 3 deletions(-)
+
+commit d71670d4109b10a6ae7a6e0954880dbf919484ac
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 28 14:12:12 2017 +0200
+
+    Updated configurations.
+
+ src/WebServer/000-bjoernholt.nntb.no.conf | 10 ++++++----
+ src/WebServer/make-certificate            | 21 ++++++++++++++-------
+ src/WebServer/nntb.config                 | 19 -------------------
+ src/WebServer/packages.nntb.no.config     | 23 +++++++++++++++++++++++
+ src/WebServer/sign-certificate            | 28 ++++++++++++++++++++++++++++
+ 5 files changed, 71 insertions(+), 30 deletions(-)
+
+commit daab03c90f337ecb5cf987bee992cdfe41957858
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 28 09:09:30 2017 +0200
+
+    Script update.
+
+ debian/changelog | 6 ++++++
+ make-ppa         | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+commit 2bdba5ff5a623d7e5fdb93682dd66bf14d4f6f70
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 21 11:37:09 2017 +0200
+
+    An update
+
+ src/scripts/slice-setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit bfd787f24b08bbc33a6ffb513a19fb7880ac18b2
+Author: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Mon Apr 17 08:51:46 2017 +0200
+
+    New release.
+
+ debian/changelog | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit afa0e2b76a43ffd32135b3a18e1675ec115c1b3a
+Author: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Sun Apr 16 05:42:07 2017 +0200
+
+    Updated Fling settings.
+
+ debian/changelog                 | 6 ++++++
+ src/Make-Tunnelbox-Configuration | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+commit b6f5c6fcc0cafa818c70b1252dc21c834b5615eb
+Merge: d76feb6 2afc4be
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Apr 11 17:55:55 2017 +0200
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit d76feb6d85af395aff57ceced21cd3c6e85d4417
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Apr 11 17:55:39 2017 +0200
+
+    Script update.
+
+ src/fedora-build-toolchain/build-nornet-applications-repository | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 2afc4be94958d7f0f0a4d32c9fdfe922d13f9268
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 10 16:10:38 2017 +0200
+
+    Wrote LSM entry.
+
+ debian/changelog |  6 ++++++
+ nornet.lsm       | 15 +++++++++++++++
+ 2 files changed, 21 insertions(+)
+
+commit 3c336395fcdc1d522984fb23f5920a108f2500ca
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 10 16:01:35 2017 +0200
+
+    Header updates.
+
+ UpdateDoc1.sed                                                      | 4 ++--
+ build-deb                                                           | 2 +-
+ clean-deb                                                           | 2 +-
+ debian/nornet-monitor.init                                          | 2 +-
+ debian/nornet-node.init                                             | 2 +-
+ debian/nornet-server.init                                           | 2 +-
+ debian/nornet-trace-service.init                                    | 2 +-
+ debian/nornet-tunnelbox.init                                        | 2 +-
+ filter-empty-entries                                                | 2 +-
+ make-deb                                                            | 2 +-
+ src/Add-SSH-Node-Key                                                | 2 +-
+ src/Auto-Update-BootCD.1                                            | 2 +-
+ src/Auto-Update-Keys.1                                              | 2 +-
+ src/Backup-All-VSystems                                             | 2 +-
+ src/Backup-VSystem                                                  | 2 +-
+ src/CA/Make-NorNet-CA                                               | 2 +-
+ src/CA/NorNet-CA-Level1.config                                      | 2 +-
+ src/CA/NorNet-CA-Level2.config                                      | 2 +-
+ src/CA/NorNet-CA-Simula.config                                      | 2 +-
+ src/CA/NorNet-CA-Test-Alpha.config                                  | 2 +-
+ src/CA/NorNet-CA-Test.config                                        | 2 +-
+ src/CA/NorNet-CA-UDE.config                                         | 2 +-
+ src/CFEngine/build-deb                                              | 2 +-
+ src/CFEngine/clean-deb                                              | 2 +-
+ src/CFEngine/copy-to-cfengine-directory                             | 2 +-
+ src/CFEngine/debian.conf                                            | 2 +-
+ src/CFEngine/filter-empty-entries                                   | 2 +-
+ src/CFEngine/make-deb                                               | 2 +-
+ src/CFEngine/renew-debian-changelog                                 | 2 +-
+ src/Change-VSystem-CDImage.1                                        | 2 +-
+ src/Check-Research-Node                                             | 2 +-
+ src/Check-VSystem                                                   | 2 +-
+ src/Clear-All-SSH-Node-Keys                                         | 2 +-
+ src/Clear-SSH-Node-Key                                              | 2 +-
+ src/Convert-HDD-Images.1                                            | 2 +-
+ src/Find-Nodes-With-Problems                                        | 2 +-
+ src/Get-Control-IPs                                                 | 2 +-
+ src/Get-Nodes                                                       | 2 +-
+ src/Get-Nodes-From-PLC                                              | 2 +-
+ src/Get-NorNet-Configuration                                        | 2 +-
+ src/Get-NorNet-Configuration.1                                      | 2 +-
+ src/Get-Sites                                                       | 2 +-
+ src/Get-Slice-Nodes                                                 | 2 +-
+ src/Interface-Setup.8                                               | 2 +-
+ src/Kontrollsenter/NorNet-Configuration.php                         | 2 +-
+ src/Kontrollsenter/NorNet-Kontrollsenter.html                       | 2 +-
+ src/Kontrollsenter/NorNet-Kontrollsenter.js                         | 2 +-
+ src/Kontrollsenter/NorNet-Map.js                                    | 2 +-
+ src/Kontrollsenter/NorNet-Map.php                                   | 2 +-
+ src/Kontrollsenter/NorNet-Status.php                                | 2 +-
+ src/Kontrollsenter/NorNet-Stylesheet.css                            | 2 +-
+ src/Make-Boot-ISO                                                   | 2 +-
+ src/Make-FileSrv-Configuration                                      | 2 +-
+ src/Make-FileSrv-Configuration.1                                    | 2 +-
+ src/Make-Monitor-Configuration                                      | 2 +-
+ src/Make-Monitor-Configuration.1                                    | 2 +-
+ src/Make-Node-Configuration                                         | 2 +-
+ src/Make-Node-Configuration.1                                       | 2 +-
+ src/Make-Research-VM                                                | 2 +-
+ src/Make-Server-Configuration                                       | 2 +-
+ src/Make-Server-Configuration.1                                     | 2 +-
+ src/Make-Tunnelbox-Configuration                                    | 2 +-
+ src/Make-Tunnelbox-Configuration.1                                  | 2 +-
+ src/Node-Setup                                                      | 2 +-
+ src/Node-Setup.1                                                    | 2 +-
+ src/NorNet-Setup                                                    | 2 +-
+ src/NorNet-TestSetup                                                | 2 +-
+ src/NorNetAPI.py                                                    | 2 +-
+ src/NorNetConfiguration.py                                          | 2 +-
+ src/NorNetNodeSetup.py                                              | 2 +-
+ src/NorNetProviderSetup.py                                          | 2 +-
+ src/NorNetSiteSetup.py                                              | 2 +-
+ src/NorNetTools.py                                                  | 2 +-
+ src/Probe-Endpoint-Setup.1                                          | 2 +-
+ src/Probe-Interface-Setup.1                                         | 2 +-
+ src/Reset-Networking                                                | 2 +-
+ src/Reset-Networking.1                                              | 2 +-
+ src/Reset-VSystem                                                   | 2 +-
+ src/Server-Setup                                                    | 2 +-
+ src/Server-Setup.1                                                  | 2 +-
+ src/Server-Watchdog.1                                               | 2 +-
+ src/Show-All-Nodes                                                  | 2 +-
+ src/Show-VSystems                                                   | 2 +-
+ src/Slice-Setup                                                     | 2 +-
+ src/Start-VSystem                                                   | 2 +-
+ src/Stop-VSystem                                                    | 2 +-
+ src/SysSetupCommons.py                                              | 2 +-
+ src/System-Info                                                     | 2 +-
+ src/Test-NTP-Configuration.1                                        | 2 +-
+ src/Tunnelbox-Setup                                                 | 2 +-
+ src/Tunnelbox-Setup.1                                               | 2 +-
+ src/Update-Node-Distro                                              | 2 +-
+ src/Update-Slice-Expiration                                         | 2 +-
+ src/User-Setup                                                      | 2 +-
+ src/VirtualBox/kbuild/build-deb                                     | 2 +-
+ src/VirtualBox/kbuild/clean-deb                                     | 2 +-
+ src/VirtualBox/kbuild/debian.conf                                   | 2 +-
+ src/VirtualBox/kbuild/filter-empty-entries                          | 2 +-
+ src/VirtualBox/kbuild/make-deb                                      | 2 +-
+ src/VirtualBox/kbuild/renew-debian-changelog                        | 2 +-
+ src/VirtualBox/vbox-4.2dsfg/build-deb                               | 2 +-
+ src/VirtualBox/vbox-4.2dsfg/clean-deb                               | 2 +-
+ src/VirtualBox/vbox-4.2dsfg/debian.conf                             | 2 +-
+ src/VirtualBox/vbox-4.2dsfg/filter-empty-entries                    | 2 +-
+ src/VirtualBox/vbox-4.2dsfg/make-deb                                | 2 +-
+ src/VirtualBox/vbox-4.2dsfg/renew-debian-changelog                  | 2 +-
+ src/VirtualBox/vbox-4.3dfsg/build-deb                               | 2 +-
+ src/VirtualBox/vbox-4.3dfsg/clean-deb                               | 2 +-
+ src/VirtualBox/vbox-4.3dfsg/debian.conf                             | 2 +-
+ src/VirtualBox/vbox-4.3dfsg/filter-empty-entries                    | 2 +-
+ src/VirtualBox/vbox-4.3dfsg/make-deb                                | 2 +-
+ src/VirtualBox/vbox-4.3dfsg/renew-debian-changelog                  | 2 +-
+ src/VirtualBox/vbox-5.0dsfg/build-deb                               | 2 +-
+ src/VirtualBox/vbox-5.0dsfg/clean-deb                               | 2 +-
+ src/VirtualBox/vbox-5.0dsfg/debian.conf                             | 2 +-
+ src/VirtualBox/vbox-5.0dsfg/filter-empty-entries                    | 2 +-
+ src/VirtualBox/vbox-5.0dsfg/make-deb                                | 2 +-
+ src/VirtualBox/vbox-5.0dsfg/renew-debian-changelog                  | 2 +-
+ src/VirtualBox/vbox-5.1dsfg/build-deb                               | 2 +-
+ src/VirtualBox/vbox-5.1dsfg/clean-deb                               | 2 +-
+ src/VirtualBox/vbox-5.1dsfg/debian.conf                             | 2 +-
+ src/VirtualBox/vbox-5.1dsfg/filter-empty-entries                    | 2 +-
+ src/VirtualBox/vbox-5.1dsfg/make-deb                                | 2 +-
+ src/VirtualBox/vbox-5.1dsfg/renew-debian-changelog                  | 2 +-
+ src/WebServer/get-pin256                                            | 2 +-
+ src/WebServer/make-certificate                                      | 2 +-
+ src/WebServer/make-cipher-suites                                    | 2 +-
+ src/check_site                                                      | 2 +-
+ src/check_site.1                                                    | 2 +-
+ src/check_tunnel.1                                                  | 2 +-
+ src/fedora-build-toolchain/build-nornet-applications-repository     | 2 +-
+ src/fedora-build-toolchain/build-nornet-applications-repository-F18 | 2 +-
+ src/fedora-build-toolchain/cfengine/make-rpm                        | 2 +-
+ src/fedora-build-toolchain/install-planetlab-build-dependencies     | 2 +-
+ src/fedora-build-toolchain/libvirt/make-rpm                         | 2 +-
+ src/fedora-build-toolchain/sign-and-publish                         | 2 +-
+ src/fedora-build-toolchain/sign-and-publish-f18                     | 2 +-
+ src/image-resize-with-cropping                                      | 2 +-
+ src/nornetinfogenerator                                             | 2 +-
+ src/nornetinfogenerator.1                                           | 2 +-
+ src/paris-traceroute/build-deb                                      | 2 +-
+ src/paris-traceroute/clean-deb                                      | 2 +-
+ src/paris-traceroute/copy-to-paris-traceroute-directory             | 2 +-
+ src/paris-traceroute/debian.conf                                    | 2 +-
+ src/paris-traceroute/filter-empty-entries                           | 2 +-
+ src/paris-traceroute/make-deb                                       | 2 +-
+ src/paris-traceroute/renew-debian-changelog                         | 2 +-
+ src/prepare-freebsd-vm                                              | 2 +-
+ src/scripts/Configure-iLO                                           | 2 +-
+ src/scripts/init-research-vms                                       | 2 +-
+ src/scripts/nornet-slice-initscript.OBSOLETE                        | 2 +-
+ src/scripts/remove-obsolete-initscript                              | 2 +-
+ src/setup.py                                                        | 2 +-
+ 153 files changed, 154 insertions(+), 154 deletions(-)
+
+commit 4d030d7b453bf984c3100fff899d7fd9a0b750eb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 10 16:01:16 2017 +0200
+
+    Script update.
+
+ make-ppa | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 6c528632d39b1235818c7055aecff7f2288aeabd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 10 15:56:42 2017 +0200
+
+    System-Maintenance improvements.
+
+ src/System-Maintenance   | 38 +-------------------------------------
+ src/System-Maintenance.1 | 12 +++---------
+ 2 files changed, 4 insertions(+), 46 deletions(-)
+
+commit 0a558c7810683d276c371d14e9779c947a75a082
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 10 15:48:47 2017 +0200
+
+    System-Maintenanc script improvement.
+
+ debian/control           |  2 +-
+ src/System-Maintenance   |  8 +++++---
+ src/System-Maintenance.1 | 11 +++++------
+ 3 files changed, 11 insertions(+), 10 deletions(-)
+
+commit ca8da048c30d8edc358e1f6ed1e831ea6aa2189b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 10 15:22:40 2017 +0200
+
+    Version bump.
+
+ debian/changelog | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 28b663e89a368c42eb03be5615de4842b161ba54
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 10 15:11:04 2017 +0200
+
+    Dependency improvement.
+
+ debian/changelog | 6 ++++++
+ debian/control   | 1 +
+ 2 files changed, 7 insertions(+)
+
+commit 31ec23cc8710558d3e1caa9e5a8458dff7712b43
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 7 17:42:50 2017 +0200
+
+    Version bump.
+
+ debian/changelog                     | 6 ++++++
+ src/Kontrollsenter/ol3-layerswitcher | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+commit ef483b9393d04f9449ba90f9d3c606d3636de9ae
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 7 13:57:20 2017 +0200
+
+    Another fix.
+
+ debian/nornet-tunnelbox.init | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit f2fc55e0586326d528bc8a58f44c14ae13bcba1e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 7 12:54:33 2017 +0200
+
+    A fix.
+
+ src/Kontrollsenter/ol3-layerswitcher | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 7a2af701db06eb7a019978dd345fd1c9b5a26b17
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 7 12:45:22 2017 +0200
+
+    Updated init script to handle Fling Server.
+
+ debian/nornet-tunnelbox.init | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+commit 1f729f97f94b7aa500f700fba3ffadce0648a712
+Merge: 819c58e a7d3b39
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 7 12:14:19 2017 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 819c58e0441415315a334e61d1d9ac18d2b20337
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 7 12:14:05 2017 +0200
+
+    Updated Fling configuration.
+
+ debian/changelog                 |  6 ++++++
+ src/Make-Tunnelbox-Configuration | 17 +++++++++++++++++
+ 2 files changed, 23 insertions(+)
+
+commit a7d3b3921a3556c3ba48e2bcfaab3438f15b74d7
+Merge: ec39334 b00499e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 28 23:04:20 2017 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit ec393345ec75feeb8e6d7b84b19491ea6a88a596
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 28 23:03:04 2017 +0200
+
+    Fixes in the experiment toolbox:
+    - Fixed port number handling.
+    - Set local address to :: for control channel => faster download via default ISP.
+
+ src/NorNetExperimentToolbox.py | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+commit b00499e6f376664fc67d6affe188bb581d01153b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 24 12:49:18 2017 +0100
+
+    Also show VLAN interfaces.
+
+ src/System-Info | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit a21bf240e298c22f002cccd97a7d34e92e5f95b6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 23 13:33:24 2017 +0100
+
+    New release.
+
+ debian/changelog | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit f500232a905edb27edd42ddaf8b81e486ad24ea8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 23 12:56:08 2017 +0100
+
+    Dependency fix.
+
+ debian/control | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 746dac9b7b2a4212714424bcad0ebc88e4f7f940
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 23 12:45:14 2017 +0100
+
+    Fixed caption format.
+
+ debian/nornet-artwork.install | 2 +-
+ make-dist                     | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+commit 50fb6cba7d75b50f59fda488bca0eda20722dd1e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 20 17:03:09 2017 +0100
+
+    Improved image handling.
+
+ debian/changelog                                   |   6 ++
+ debian/nornet-artwork.install                      |   1 +
+ make-dist                                          |  69 +++++++++++++++++----
+ src/Background/Background-Database1.jpeg           | Bin 2875724 -> 0 bytes
+ src/Background/Background-Development1.jpeg        | Bin 3201461 -> 0 bytes
+ src/Background/Background-Display1.jpeg            | Bin 3945268 -> 0 bytes
+ src/Background/Background-FileSrv1.jpeg            | Bin 4748283 -> 0 bytes
+ src/Background/Background-Gatekeeper1.jpeg         | Bin 2854893 -> 0 bytes
+ src/Background/Background-Management1.jpeg         | Bin 4003876 -> 0 bytes
+ src/Background/Background-Monitor1.jpeg            | Bin 2383051 -> 0 bytes
+ src/Background/Background-Node1.jpeg               | Bin 3094030 -> 0 bytes
+ src/Background/Background-Node2.jpeg               | Bin 7535282 -> 0 bytes
+ src/Background/Background-PLC1.jpeg                | Bin 2144783 -> 0 bytes
+ src/Background/Background-Server1.jpeg             | Bin 3207687 -> 0 bytes
+ src/Background/Background-TimeSrv1.jpeg            | Bin 5694920 -> 0 bytes
+ src/Background/Background-Tunnelbox1.jpeg          | Bin 1311056 -> 0 bytes
+ src/Background/Background-WebSrv1.jpeg             | Bin 8760717 -> 0 bytes
+ src/Background/Background-WikiSrv1.jpeg            | Bin 2762431 -> 0 bytes
+ src/Background/Demo-Fractal.fsf                    |  18 ------
+ src/Background/NorNet-Background1-16x9.png         | Bin 2800338 -> 0 bytes
+ src/Background/NorNet-Background1-4x3.png          | Bin 4243046 -> 0 bytes
+ src/Background/NorNet-Background1.png              | Bin 8932258 -> 0 bytes
+ src/Background/NorNet-Background1.xcf              | Bin 11000770 -> 0 bytes
+ src/Background/NorNet-InformationText.png          | Bin 859818 -> 0 bytes
+ src/Background/NorNet-InformationText.xcf          | Bin 1559389 -> 0 bytes
+ src/Background/NorNet-InformationText1.png         | Bin 644237 -> 0 bytes
+ src/Background/NorNet-InformationText1.xcf         | Bin 1465257 -> 0 bytes
+ src/Background/NorNet-Text-NNTB.xcf                | Bin 677925 -> 0 bytes
+ src/Background/NorNet-Text-NorNet.xcf              | Bin 787715 -> 0 bytes
+ src/Background/exiftool.argfile                    |   3 -
+ src/Background/make-it                             |  11 ----
+ src/background/Demo-Fractal.fsf                    |  18 ++++++
+ src/background/NorNet-Background1-16x9.png         | Bin 0 -> 2800338 bytes
+ src/background/NorNet-Background1-4x3.png          | Bin 0 -> 4243046 bytes
+ src/background/NorNet-Background1.png              | Bin 0 -> 8932258 bytes
+ src/background/NorNet-Background1.xcf              | Bin 0 -> 11000770 bytes
+ src/background/NorNet-InformationText.png          | Bin 0 -> 859818 bytes
+ src/background/NorNet-InformationText.xcf          | Bin 0 -> 1559389 bytes
+ src/background/NorNet-InformationText1.png         | Bin 0 -> 644237 bytes
+ src/background/NorNet-InformationText1.xcf         | Bin 0 -> 1465257 bytes
+ src/background/NorNet-Text-NNTB.xcf                | Bin 0 -> 677925 bytes
+ src/background/NorNet-Text-NorNet.xcf              | Bin 0 -> 787715 bytes
+ src/background/exiftool.argfile                    |   3 +
+ src/background/original/Background-Database1.jpeg  | Bin 0 -> 2875724 bytes
+ .../original/Background-Development1.jpeg          | Bin 0 -> 3201461 bytes
+ src/background/original/Background-Display1.jpeg   | Bin 0 -> 3945268 bytes
+ src/background/original/Background-FileSrv1.jpeg   | Bin 0 -> 4748283 bytes
+ .../original/Background-Gatekeeper1.jpeg           | Bin 0 -> 2854893 bytes
+ .../original/Background-Management1.jpeg           | Bin 0 -> 4003876 bytes
+ src/background/original/Background-Monitor1.jpeg   | Bin 0 -> 2383051 bytes
+ src/background/original/Background-Node1.jpeg      | Bin 0 -> 3094030 bytes
+ src/background/original/Background-Node2.jpeg      | Bin 0 -> 7535282 bytes
+ src/background/original/Background-PLC1.jpeg       | Bin 0 -> 2144783 bytes
+ src/background/original/Background-Server1.jpeg    | Bin 0 -> 3207687 bytes
+ src/background/original/Background-TimeSrv1.jpeg   | Bin 0 -> 5694920 bytes
+ src/background/original/Background-Tunnelbox1.jpeg | Bin 0 -> 1311056 bytes
+ src/background/original/Background-WebSrv1.jpeg    | Bin 0 -> 8760717 bytes
+ src/background/original/Background-WikiSrv1.jpeg   | Bin 0 -> 2762431 bytes
+ src/grub/Splash-Database1-1024x768.jpeg            | Bin 435682 -> 0 bytes
+ src/grub/Splash-Development1-1024x768.jpeg         | Bin 366440 -> 0 bytes
+ src/grub/Splash-Display1-1024x768.jpeg             | Bin 485297 -> 0 bytes
+ src/grub/Splash-FileSrv1-1024x768.jpeg             | Bin 574836 -> 0 bytes
+ src/grub/Splash-Gatekeeper1-1024x768.jpeg          | Bin 446317 -> 0 bytes
+ src/grub/Splash-Management1-1024x768.jpeg          | Bin 337880 -> 0 bytes
+ src/grub/Splash-Monitor1-1024x768.jpeg             | Bin 277957 -> 0 bytes
+ src/grub/Splash-Node1-1024x768.jpeg                | Bin 356513 -> 0 bytes
+ src/grub/Splash-PLC1-1024x768.jpeg                 | Bin 259872 -> 0 bytes
+ src/grub/Splash-Server1-1024x768.jpeg              | Bin 388296 -> 0 bytes
+ src/grub/Splash-TimeSrv1-1024x768.jpeg             | Bin 385455 -> 0 bytes
+ src/grub/Splash-Tunnelbox1-1024x768.jpeg           | Bin 142680 -> 0 bytes
+ src/grub/Splash-WebSrv1-1024x768.jpeg              | Bin 562068 -> 0 bytes
+ src/grub/Splash-WikiSrv1-1024x768.jpeg             | Bin 438570 -> 0 bytes
+ 72 files changed, 84 insertions(+), 45 deletions(-)
+
+commit 2a7981cd53219b0905c618d053f3899a44343f9f
+Merge: ae23ccc 30d9731
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 20 16:29:03 2017 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit ae23ccccc2cb0bc25df92b2cbb903541179c3908
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 20 16:28:49 2017 +0100
+
+    Dependency update.
+
+ debian/control | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 30d973189ac2d3fd64fb0a526fe7bfced3eb3f3a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 17 15:57:52 2017 +0100
+
+    Updated script.
+
+ src/scripts/slice-setup | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+commit bce50afa9f8d19a9307f26f402504c4b282b20cb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 15 12:41:42 2017 +0100
+
+    Minor updates.
+
+ debian/nornet-filesrv.init   | 0
+ debian/nornet-monitor.init   | 0
+ debian/nornet-node.init      | 0
+ debian/nornet-tunnelbox.init | 0
+ make-dist                    | 1 +
+ 5 files changed, 1 insertion(+)
+
+commit 68b4385e4330d032b64c2d6823ca740a50390b8c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 14 13:41:45 2017 +0100
+
+    Script update.
+
+ src/scripts/update-tunnelbox | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 0b1abce2b3be9016809ef6bf11853a1ad3cf9d8e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 10 11:02:02 2017 +0100
+
+    Version bump.
+
+ debian/changelog                  | 6 ++++++
+ debian/nornet-management.manpages | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+commit 6f333a3b27083fac767d0f2bfa68d553591fe31c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 9 13:48:02 2017 +0100
+
+    Updated dependencies.
+
+ debian/control | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+commit d7f61ae42250f6e0bcf769d1bf96f61f57d73fe1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 9 11:12:06 2017 +0100
+
+    A small improvement: do not stop when all NTP accesses are firewalled.
+
+ src/System-Maintenance | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit a87c7ee902afbfdc5bcda13ea03a5ed9b584e4e1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 9 11:11:57 2017 +0100
+
+    Updated helper script.
+
+ src/SSH/cbox17 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 4fbc642d46a74d85b8d6a7bdc186b79c86eafb67
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 9 11:11:49 2017 +0100
+
+    Updated helper script.
+
+ src/scripts/update-tunnelbox | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit c15bc2dc3b89f13d9f7249d8d1eebf2366ed73fc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 3 19:52:28 2017 +0100
+
+    Added another example configuration file.
+
+ src/scripts/pxe | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+commit 99505d8844796efd61982641e552d630955ef808
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 3 19:50:41 2017 +0100
+
+    Added example configuration file.
+
+ src/scripts/dhcpd.conf | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+commit 90b664d9a4d06c4394924e98913ef8beb9b8ef35
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 3 16:12:49 2017 +0100
+
+    Configuration update.
+
+ src/NorNet-Setup | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit a147c9e617237a4cdf17cd87d6e2cdc031cc743e
+Merge: 3d98d93 2509057
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 3 12:24:02 2017 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 3d98d93e5e4a0f72c61c9164eabbfa73fc2575b3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 3 12:23:31 2017 +0100
+
+    Dependency update.
+
+ debian/changelog             | 6 ++++++
+ debian/control               | 8 ++++----
+ src/scripts/update-tunnelbox | 1 +
+ 3 files changed, 11 insertions(+), 4 deletions(-)
+
+commit f7093434da7fb7f254a0ee67d3e2caf215646d1f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 3 12:13:09 2017 +0100
+
+    Script update.
+
+ src/scripts/update-tunnelbox | 77 ++++++--------------------------------------
+ 1 file changed, 9 insertions(+), 68 deletions(-)
+
+commit 25090577dbc5eb8a468aa728b8ec97f4ef58ead4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 1 17:46:22 2017 +0100
+
+    Script update.
+
+ src/fedora-build-toolchain/build-nornet-applications-repository | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 8dd4132536acfdc259c496acc4a5cab319d3ce73
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 1 17:16:16 2017 +0100
+
+    Improved ntpdate handling.
+
+ debian/changelog       |  6 ++++++
+ src/System-Maintenance | 11 +++++++++--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
+
+commit dffa49a0d577aaf78c31f5fcd6ca4aa9a6f09749
+Merge: 3fd94a2 f0dc5dc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 1 17:03:07 2017 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 3fd94a26bf812445cf189b1f02e80939257bdbbd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 1 17:02:40 2017 +0100
+
+    A fix.
+
+ src/System-Maintenance | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit f0dc5dcad02b5b72b84a588a06b50e6f33eabcc8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 1 16:35:31 2017 +0100
+
+    Some grub handling fixes.
+
+ src/System-Maintenance | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+commit df9d6d0365688685f79e8efd513060f5486ddc52
+Author: Priv.-Doz. Dr. Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Wed Mar 1 16:08:37 2017 +0100
+
+    Added call to fstrim.
+
+ src/System-Maintenance | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+commit d1d0d893d4bb60d7ae6bd3f7c2eb0062d2ec94d1
+Author: Priv.-Doz. Dr. Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Wed Mar 1 16:04:43 2017 +0100
+
+    Correctly handle HWE kernels.
+
+ src/System-Maintenance | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit b0800a42996192ae6d66a05444c5eafa10584acb
+Author: Priv.-Doz. Dr. Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Wed Mar 1 16:04:31 2017 +0100
+
+    Updated build script.
+
+ make-ppa | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit a9bc8c6dfeafe746d43293f36206e34a3568c793
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 1 10:36:25 2017 +0100
+
+    Version bump.
+
+ debian/changelog | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit c9241e1d15850a5b8c5bd1a1cc79a7402820f1ce
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 1 10:29:05 2017 +0100
+
+    Another fix.
+
+ src/NorNet-Setup | 63 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 62 insertions(+), 1 deletion(-)
+
+commit 885901d5fc44d575b2c4f4ea4cd5043e3fdc7b69
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 1 10:20:25 2017 +0100
+
+    An update.
+
+ src/NorNet-Setup | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 1cf309024b38bd7b2c33c9d6a54188b75c9f39d4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 28 17:31:07 2017 +0100
+
+    Improved handling of interruption.
+
+ src/Random-Sleep | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+commit 38b6bff6d66e751538fce6426400941d29e944f8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 28 17:08:07 2017 +0100
+
+    Configuration update. No IPv6 in Narvik, at the moment.
+
+ src/NorNet-Setup | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit e8a477c3aa0657226eadb3163e7e0d3be61880a7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 28 13:50:44 2017 +0100
+
+    Another update.
+
+ src/NorNet-Setup | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+commit 70a8772cd7a2f5d103e3923c175b1caefd9b601a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 28 13:43:34 2017 +0100
+
+    Fixed parameters.
+
+ src/NorNet-Setup | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+commit 21cb0119578acdf1d2995de6ffa32e8bcf4c1ef7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 28 13:03:46 2017 +0100
+
+    A fix.
+
+ src/NorNet-Setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit a02a9e9fa91609062a38f7ed09364db24b6731f5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 28 12:52:33 2017 +0100
+
+    Added information about connections.
+
+ src/NorNet-Setup | 155 +++++++++++++++++--------------------------------------
+ 1 file changed, 47 insertions(+), 108 deletions(-)
+
+commit 385aefde3abe20f683766cadde315f70ee47ce70
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Feb 27 16:56:22 2017 +0100
+
+    Now ssing dnf instead of yum under Fedora.
+
+ src/System-Maintenance | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 209b67fdf696035457b8bd5f47b7c3af900950c2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Feb 27 13:02:20 2017 +0100
+
+    FreeBSD improvements.
+
+ src/System-Maintenance | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit 0905d4ee977e0579ba39562de5a0d499a2ec1753
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 14 17:29:35 2017 +0100
+
+    Updated script.
+
+ src/Tutorial-Scripts/Tutorial-Experiment-Setup | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
+
+commit da8f1a434971c26629e8c4b52e9eee1a341a3e86
+Merge: 569c30d f4d9d5b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 9 17:10:14 2017 +0100
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit 569c30db0f227dac0e0a19bcbadfb9eafbda471b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 9 17:10:06 2017 +0100
+
+    Configuration update.
+
+ src/scripts/slice-setup | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit f4d9d5bdbbd9e57c507cdfb0fa2933a4a90b5265
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 9 15:19:40 2017 +0100
+
+    Configuration updates.
+
+ .../Graphics/Flags/ES-Castilla-La Mancha.png       | Bin 0 -> 1148 bytes
+ .../Graphics/Flags/ES-Castilla-La Mancha.svg       | 468 +++++++++++++++++++++
+ .../Universidad de Castilla-La Mancha.jpeg         | Bin 0 -> 2498841 bytes
+ .../Sites/Original/University of Sydney.jpeg       | Bin 0 -> 2071440 bytes
+ src/NorNet-Setup                                   |  61 +++
+ 5 files changed, 529 insertions(+)
+
+commit 14f47b4a5b99ca43d8420669f5d9aaf6a781047b
+Merge: 7efdef9 7d3ec79
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 9 14:18:16 2017 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 7d3ec79e93d786ee68bcdc4fc42449927d329c8a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 9 14:15:47 2017 +0100
+
+    Helper script update.
+
+ src/scripts/fix-nodes | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
+
+commit 7efdef92bd5a2388c131b1c58bf4b71ed980d23e
+Merge: e734dd7 dff351c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 8 12:08:37 2017 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit e734dd77584315763d868c8b817ff25e508d6f9d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 8 12:07:56 2017 +0100
+
+    New release.
+
+ debian/changelog | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit dff351ce9ee09a990890f6d0d7159db7fada995c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 8 12:02:20 2017 +0100
+
+    Configuration fix.
+
+ src/NorNet-Setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 2f776497c6fe2364fdab2f5a2b840a332e6b39f5
+Merge: b5ca1a8 6305d3e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 8 11:50:16 2017 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 6305d3eadb0fa0df57e1ae79a1c5a7804f6dec73
+Merge: bb3bd0a d44eb4d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 8 11:49:52 2017 +0100
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit bb3bd0a28f37423a552ca889a663c594837b9541
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 8 11:49:37 2017 +0100
+
+    A fix for Fedora Core.
+
+ src/Check-Nodes | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit b5ca1a8ef9885e27518362a51a97a27a0de86b3f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 8 11:48:58 2017 +0100
+
+    Renamed site.
+
+ .../Original/Laboratoire Informatique Grenoble.jpeg   | Bin 0 -> 2851296 bytes
+ .../Laboratoire d'Informatique de Grenoble.jpeg       | Bin 2851296 -> 0 bytes
+ src/Check-Nodes                                       |   4 ++--
+ 3 files changed, 2 insertions(+), 2 deletions(-)
+
+commit d44eb4dee1a5e40f529a58e9a1db98da19bbed56
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 8 11:14:16 2017 +0100
+
+    Updated helper script.
+
+ src/scripts/reinstall-nodes | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+commit 03de76b91f0a204c511149816889929762240688
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 8 11:14:07 2017 +0100
+
+    Configuration update.
+
+ src/NorNet-Setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 7dd371d2a4898e4c62882b0016629ecfa52cca53
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 2 15:44:13 2017 +0100
+
+    Improved output.
+
+ src/Check-Nodes | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 895c479bf45e36debd4d20f7b1c77263da0dfcd0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 2 10:20:17 2017 +0100
+
+    New release.
+
+ debian/changelog | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 0cd4ecec9b82cb84baa55a562a190ce2d2b85ffb
+Merge: b117271 1efeebf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 2 09:53:34 2017 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit b117271e6adfb71bca0a6d27e84e2ae1b269a853
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 2 09:53:11 2017 +0100
+
+    Added helper scripts.
+
+ src/Check-Nodes             | 13 ++++++++-----
+ src/Update-Node-State       | 36 ++++++++++++++++++++++++++++++++++++
+ src/scripts/reinstall-nodes | 13 +++++++++++++
+ 3 files changed, 57 insertions(+), 5 deletions(-)
+
+commit c1a1c4759f01891892c07552e97cd30037c20cac
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 2 08:47:28 2017 +0100
+
+    A fix.
+
+ src/SSH/tbox17 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1efeebf42ab512317d6738bba3bcda08f9ba0a02
+Merge: f40d435 53c8ad9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 1 17:35:03 2017 +0100
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit f40d4357e580c7dbd516374f43d71176c632f151
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 1 17:34:44 2017 +0100
+
+    Name fix.
+
+ src/NorNet-Setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 53c8ad98ae3456b3ab5d611eeff82e99b6589f19
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 1 17:18:03 2017 +0100
+
+    New release.
+
+ debian/changelog | 6 ++++++
+ src/Check-Nodes  | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+commit 1b9d0ce8470fc1fd5f58b2882fe98d35225bbdc9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 1 16:33:24 2017 +0100
+
+    Updated helper scripts.
+
+ src/SSH/cbox17  | 4 ++--
+ src/SSH/tbext17 | 2 +-
+ src/SSH/tbox17  | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+commit 2f4c331ead5f09d940ee1ee7db50753730f8c9e3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 1 16:33:12 2017 +0100
+
+    Updated helper scripts.
+
+ src/Tutorial-Scripts/Tutorial-Experiment-Setup | 24 +++++++++++++-----------
+ src/Tutorial-Scripts/accounts.conf             | 12 ++++++------
+ 2 files changed, 19 insertions(+), 17 deletions(-)
+
+commit a10a583fc988e6b5a5802ecc0b3212a976846376
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 1 16:32:55 2017 +0100
+
+    Name handling fix.
+
+ src/NorNetTools.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 268d5f1e7f4e2255324486e7e2e4e25cc323444a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 1 16:28:40 2017 +0100
+
+    Configuration update.
+
+ src/NorNet-Setup | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 6685b0ef5ad240b435201dbf6e4b0d8bcc99b8f2
+Merge: 22bef28 9a5cb27
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 1 16:23:23 2017 +0100
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit 22bef289d951f92f31ebdd2f053ad7bfa81ca585
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 1 16:23:08 2017 +0100
+
+    Updated helper scripts.
+
+ src/SSH/cbox17  | 4 ++--
+ src/SSH/cbox18  | 4 ++--
+ src/SSH/cbox19  | 4 ++--
+ src/SSH/cbox20  | 4 ++--
+ src/SSH/cbox21  | 4 ++--
+ src/SSH/cbox22  | 4 ++--
+ src/SSH/cbox23  | 3 +++
+ src/SSH/tbext17 | 4 ++--
+ src/SSH/tbext18 | 4 ++--
+ src/SSH/tbext19 | 4 ++--
+ src/SSH/tbext20 | 4 ++--
+ src/SSH/tbext21 | 4 ++--
+ src/SSH/tbext22 | 4 ++--
+ src/SSH/tbox17  | 4 ++--
+ src/SSH/tbox18  | 4 ++--
+ src/SSH/tbox19  | 4 ++--
+ src/SSH/tbox20  | 4 ++--
+ src/SSH/tbox21  | 4 ++--
+ src/SSH/tbox22  | 4 ++--
+ src/SSH/tbox23  | 3 +++
+ 20 files changed, 42 insertions(+), 36 deletions(-)
+
+commit 9a5cb27bb8640b3a6e3b98663dd4ef3a7aaec9ab
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 1 16:22:32 2017 +0100
+
+    Updated helper script.
+
+ src/scripts/slice-setup | 63 ++++++++++++++++++++++++++-----------------------
+ 1 file changed, 33 insertions(+), 30 deletions(-)
+
+commit f4075bc9edb963cfc35ec06490e06971176da539
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 1 15:23:50 2017 +0100
+
+    Updated script.
+
+ .../build-nornet-applications-repository               | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+commit 772f808baf4e145a7c853210d111175b252c875a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jan 18 13:25:18 2017 +0100
+
+    An update.
+
+ src/scripts/slice-setup | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit c1ebcda5480d20e9e80ab09d6765466aa2762c69
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jan 16 13:32:31 2017 +0100
+
+    Configuration update.
+
+ src/NorNet-Setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 3470e0b614484e31755c2a3f5306cae942efe411
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 21 17:29:37 2016 +0100
+
+    An update.
+
+ src/Kontrollsenter/ol3-layerswitcher | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 69b8b2cb97187893c7697b2424323a8fc04e1a9d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Dec 20 15:03:12 2016 +0100
+
+    Added comment.
+
+ src/NorNet-Setup | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit c9f632c2fa835388c838e14333f852d7b8f410d3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Dec 20 14:39:28 2016 +0100
+
+    Added LIG site configuration.
+
+ src/Kontrollsenter/ol3-layerswitcher | 2 +-
+ src/NorNet-Setup                     | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+commit 235d0c28442d35bae0cbb7a6e691ef48ee14fb3d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Dec 19 14:05:00 2016 +0100
+
+    Fix for problem with Fling service configuration.
+
+ debian/changelog                     | 6 ++++++
+ src/Kontrollsenter/ol3-layerswitcher | 2 +-
+ src/Make-Tunnelbox-Configuration     | 4 ++--
+ 3 files changed, 9 insertions(+), 3 deletions(-)
+
+commit 907cfa2a9608f2d2da8df0314bc0158da56d05d7
+Merge: 34b7a80 44dc23b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 14 11:19:17 2016 +0100
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit 34b7a800375402ecf7e9bb3a787d5d2abcdc34f8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 14 11:19:08 2016 +0100
+
+    An update.
+
+ src/Mirror/nornet-mirror.crontab | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+commit 92b8621b61fdf86f4c2700b3fbb4503fe89569a3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 14 11:15:04 2016 +0100
+
+    An update.
+
+ src/Mirror/nornet-mirror.crontab | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+commit 44dc23bcd14d429897e529d436dd4cd99ed99f30
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 8 12:41:42 2016 +0100
+
+    Improved pbuilderrc.
+
+ src/pbuilder/pbuilderrc | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 3a50ebf2b611626535c9fb0942ddcc36cc98065c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 2 16:38:23 2016 +0100
+
+    Script update.
+
+ src/fedora-build-toolchain/build-nornet-applications-repository | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+commit ec52b548a328a5f867216666f975003f746d4393
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 2 16:27:04 2016 +0100
+
+    Script update.
+
+ src/fedora-build-toolchain/build-nornet-applications-repository | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+commit acf9fc786ad32e4501876a34f6f960e52057ba05
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 2 14:50:46 2016 +0100
+
+    Script update.
+
+ src/fedora-build-toolchain/build-nornet-applications-repository | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 435c71f1aff024e7b1b10327af3f4bd25d752550
+Merge: ca6d1b8 865fceb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 2 12:45:05 2016 +0100
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit ca6d1b8d0ab8c8db9baaa0486781f1cb9721fd23
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 2 12:44:39 2016 +0100
+
+    Now also handling Git tags and branches.
+
+ .../build-nornet-applications-repository               | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+commit 865fcebda37c9d95e523450e1dc2a8fb0fc87e11
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 25 11:51:37 2016 +0100
+
+    New release.
+
+ debian/changelog | 4 ++--
+ debian/control   | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+commit d4e4dbdc1c80aeadcbb94b59f0598bb05d214e42
+Merge: 44df459 2371af0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 25 11:45:37 2016 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 44df459b390053c364e0d31c9d8fdc1079b9486d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 25 11:45:24 2016 +0100
+
+    Configuration update.
+
+ src/NorNet-Setup | 208 +++++++++++++++++++++++++++----------------------------
+ 1 file changed, 104 insertions(+), 104 deletions(-)
+
+commit 2371af0578ed27c91918b0c74bc67fd505b31531
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 25 09:43:38 2016 +0100
+
+    Script updates.
+
+ src/Add-SSH-Node-Key        | 4 +++-
+ src/scripts/prepare-slivers | 1 +
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+commit f64d6ab7530d827130946248fd3d2e18aafa304d
+Merge: b0421c6 636d991
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 24 16:44:47 2016 +0100
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit 636d991c5305a2359d4a6065a280de131e8764cc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 22 14:56:08 2016 +0100
+
+    Script update.
+
+ src/VirtualBox/vbox-5.1dsfg/make-ppa | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 36250b6058fa41840cfc18b14c5a9cd2238ed716
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Nov 21 16:14:51 2016 +0100
+
+    PBuilder configuration update for Ubuntu Zesty.
+
+ debian/changelog                   | 6 ++++++
+ debian/nornet-development.postinst | 3 ++-
+ src/pbuilder/pbuilderrc            | 4 +++-
+ 3 files changed, 11 insertions(+), 2 deletions(-)
+
+commit 65dfbe7cac3828d2edde817b5b7d3ff85c1dfc4b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Nov 21 10:41:54 2016 +0100
+
+    Updated helper scripts.
+
+ src/scripts/make-nodes-list | 3 +++
+ src/scripts/reboot-nodes    | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+commit ca00824934da4e8011798f59c10899105a5358bf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 18 18:29:13 2016 +0100
+
+    Updated list.
+
+ src/Lists/experiments.list | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 574740e454d69ab65199e5c56443463bca52841f
+Merge: 91d89dd db318be
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 17 15:37:12 2016 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 91d89dd1f1124ab42bab9aee25a3b25ffd6571fb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 17 15:36:59 2016 +0100
+
+    Updated build scripts.
+
+ src/VirtualBox/vbox-5.1dsfg/debian/control | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+commit 68d3ed508e55ca160c78da2aa0e49faaf865e487
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 17 15:36:51 2016 +0100
+
+    Updated configurations.
+
+ src/WebServer/000-benlomond.nntb.no.conf  | 6 +++---
+ src/WebServer/000-bjoernholt.nntb.no.conf | 6 +++---
+ src/WebServer/000-www.nntb.no.conf        | 3 ++-
+ 3 files changed, 8 insertions(+), 7 deletions(-)
+
+commit db318be508fdd655da606370666568a7d05a29ae
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 17 14:06:23 2016 +0100
+
+    Script update.
+
+ src/scripts/fix-nodes | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+commit ddabf2a7c00c3ebb9594fe3130aa82ea9b18cb47
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 17 11:14:36 2016 +0100
+
+    Script update.
+
+ src/VirtualBox/kbuild/make-ppa | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit d4fe91a8b7246aad2e516a501f92f841f038ce88
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 17 10:37:45 2016 +0100
+
+    Added helper script.
+
+ update-changelog | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 64fdb82cbe83fd3b5a26dc3db26fc9d00e023a56
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 17 10:27:45 2016 +0100
+
+    Version bump.
+
+ debian/changelog | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 0675c6bcbec5aeb1576db042d7e059e54fad5c59
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 17 10:14:41 2016 +0100
+
+    Added Fling configuration.
+
+ debian/changelog                 |  6 ++++++
+ debian/nornet-tunnelbox.init     | 16 ++++++++++++++++
+ src/Make-Tunnelbox-Configuration | 22 ++++++++++++++++++++++
+ 3 files changed, 44 insertions(+)
+
+commit 0e99673db4541a630e2113187012b41830a443c7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 16 12:09:39 2016 +0100
+
+    Updated helpers scripts.
+
+ src/SSH/cbox01  | 2 +-
+ src/SSH/cbox02  | 2 +-
+ src/SSH/cbox03  | 2 +-
+ src/SSH/cbox04  | 2 +-
+ src/SSH/cbox05  | 2 +-
+ src/SSH/cbox06  | 2 +-
+ src/SSH/cbox07  | 2 +-
+ src/SSH/cbox08  | 2 +-
+ src/SSH/cbox09  | 2 +-
+ src/SSH/cbox10  | 2 +-
+ src/SSH/cbox11  | 2 +-
+ src/SSH/cbox12  | 4 ++--
+ src/SSH/cbox13  | 4 ++--
+ src/SSH/cbox14  | 4 ++--
+ src/SSH/cbox15  | 4 ++--
+ src/SSH/cbox16  | 4 ++--
+ src/SSH/cbox17  | 4 ++--
+ src/SSH/cbox18  | 4 ++--
+ src/SSH/cbox19  | 4 ++--
+ src/SSH/cbox20  | 3 +++
+ src/SSH/cbox21  | 4 ++--
+ src/SSH/cbox22  | 3 +++
+ src/SSH/tbext01 | 3 +++
+ src/SSH/tbext02 | 3 +++
+ src/SSH/tbext03 | 3 +++
+ src/SSH/tbext04 | 3 +++
+ src/SSH/tbext05 | 3 +++
+ src/SSH/tbext06 | 3 +++
+ src/SSH/tbext07 | 3 +++
+ src/SSH/tbext08 | 3 +++
+ src/SSH/tbext09 | 3 +++
+ src/SSH/tbext10 | 3 +++
+ src/SSH/tbext11 | 3 +++
+ src/SSH/tbext12 | 3 +++
+ src/SSH/tbext13 | 3 +++
+ src/SSH/tbext14 | 3 +++
+ src/SSH/tbext15 | 3 +++
+ src/SSH/tbext16 | 3 +++
+ src/SSH/tbext17 | 3 +++
+ src/SSH/tbext18 | 3 +++
+ src/SSH/tbext19 | 3 +++
+ src/SSH/tbext20 | 3 +++
+ src/SSH/tbext21 | 3 +++
+ src/SSH/tbext22 | 3 +++
+ src/SSH/tbox01  | 2 +-
+ src/SSH/tbox02  | 2 +-
+ src/SSH/tbox03  | 2 +-
+ src/SSH/tbox04  | 2 +-
+ src/SSH/tbox05  | 2 +-
+ src/SSH/tbox06  | 2 +-
+ src/SSH/tbox07  | 2 +-
+ src/SSH/tbox08  | 2 +-
+ src/SSH/tbox09  | 2 +-
+ src/SSH/tbox10  | 2 +-
+ src/SSH/tbox11  | 2 +-
+ src/SSH/tbox12  | 2 +-
+ src/SSH/tbox13  | 2 +-
+ src/SSH/tbox14  | 2 +-
+ src/SSH/tbox15  | 2 +-
+ src/SSH/tbox16  | 4 ++--
+ src/SSH/tbox17  | 4 ++--
+ src/SSH/tbox18  | 4 ++--
+ src/SSH/tbox19  | 4 ++--
+ src/SSH/tbox20  | 3 +++
+ src/SSH/tbox21  | 4 ++--
+ src/SSH/tbox22  | 3 +++
+ 66 files changed, 132 insertions(+), 54 deletions(-)
+
+commit 9b1bf45ffed2e8883301605cdef98f687daf59c1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 16 12:08:51 2016 +0100
+
+    Some improvements.
+
+ src/SSH/make-tbox-scripts | 52 ++++++++++++++++++++++++++++-------------------
+ 1 file changed, 31 insertions(+), 21 deletions(-)
+
+commit 45534140da950bada97e96911025d49a99289441
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 16 12:08:40 2016 +0100
+
+    Updated script.
+
+ src/Get-Control-IPs | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+commit bab29ade6695d183606020bff214fe533787345c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 16 11:50:27 2016 +0100
+
+    Added helper script.
+
+ src/Get-Control-IPs | 61 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ src/NorNetAPI.py    |  6 +++---
+ 2 files changed, 64 insertions(+), 3 deletions(-)
+
+commit 91eb38fb1a756287ec8680e55e5bceef8d72ee2f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 16 10:43:23 2016 +0100
+
+    Updated TUDA configuration.
+
+ src/NorNet-Setup | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit b0421c634fa09bad903933a928b0f88a11a3e184
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 11 23:13:32 2016 +0100
+
+    Some updates.
+
+ src/Add-SSH-Node-Key        |  2 +-
+ src/scripts/prepare-slivers | 19 +++++++++++++++++++
+ src/scripts/td-demo-check   |  5 +++--
+ 3 files changed, 23 insertions(+), 3 deletions(-)
+
+commit a35faa7b99ebfa5501fa758189ddf2519431b702
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 10 12:25:53 2016 +0100
+
+    Updated ChangeLog.
+
+ ChangeLog      | 14410 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ debian/control |     4 +-
+ 2 files changed, 14220 insertions(+), 194 deletions(-)
+
 commit d3124db4d8779ce783f1e4d3f6d9ee4f8f2a8a42
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Thu Nov 10 12:15:21 2016 +0100

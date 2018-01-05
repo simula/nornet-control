@@ -1,8 +1,7 @@
 Origin: packages.nntb.no
-Label: APT Repository
+Label: packages.nntb.no
 Codename: xenial
-Architectures: amd64 source
+Architectures: i386 amd64 source
 Components: main
 Description: NorNet Kernel Repository
 SignWith: yes
-Pull: xenial
