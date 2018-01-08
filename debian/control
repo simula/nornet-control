@@ -383,7 +383,8 @@ Depends: fail2ban,
          ${misc:Depends},
          ${shlibs:Depends}
 Suggests: cfengine3
-Recommends: lm-sensors,
+Recommends: intel-microcode,
+            lm-sensors,
             nornet-ca,
             ubuntu-server
 Description: NorNet Server
