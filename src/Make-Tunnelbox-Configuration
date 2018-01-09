@@ -1659,8 +1659,9 @@ def makeHiPerConTracerConfiguration(localSite):
    log('Making HiPerConTracer configuration for ' + localSite['site_long_name'] + ' ...')
    outputFile = codecs.open('hipercontracer-config', 'w', 'utf-8')
 
-   outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -ping -sqlpingtable=Ping -traceroute -sqltraceroutetable=Traceroute -sqltransactionlength=900 -sqldirectory=/var/hipercontracer -quiet -pinginterval=1000 -pingexpiration=5000 -pingttl=64 -tracerouterounds=3 -tracerouteinterval=300000 -tracerouteduration=2000 -tracerouteinitialmaxttl=5 -traceroutefinalmaxttl=35 -tracerouteincrementmaxttl=5"\n')
+   outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -ping -traceroute -resultstransactionlength=900 -resultsdirectory=/var/hipercontracer -quiet -pinginterval=1000 -pingexpiration=5000 -pingttl=64 -tracerouterounds=3 -tracerouteinterval=300000 -tracerouteduration=2000 -tracerouteinitialmaxttl=5 -traceroutefinalmaxttl=35 -tracerouteincrementmaxttl=5"\n')
 
+   outputFile.write('\n# ' + localSite['site_utf8'] + ' (local addresses):\n')
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
 
@@ -1680,7 +1681,7 @@ def makeHiPerConTracerConfiguration(localSite):
       remoteSite         = fullSiteList[remoteSiteIndex]
       remoteProviderList = getNorNetProvidersForSite(remoteSite)
 
-      outputFile.write('# ' + remoteSite['site_utf8'] + '\n')
+      outputFile.write('\n# ' + remoteSite['site_utf8'] + ':\n')
 
       for remoteProviderIndex in remoteProviderList:
          remoteProvider = remoteProviderList[remoteProviderIndex]
