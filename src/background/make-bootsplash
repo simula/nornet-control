@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
 # HU Edge Boot Splash Script
-# Copyright (C) 2017 by Thomas Dreibholz
+# Copyright (C) 2017-2018 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ MAKEFILE="Makefile.bootsplash"
 SPLASH_DIMENSIONS="1024x768"
 VARIANT="plain"
 JPEG_QUALITY=92.5
-INPUTS=`find Output/Desktop-with-Logo/ -maxdepth 1 -name "[A-Z]*-${VARIANT}-${SPLASH_DIMENSIONS}.png" -or -name "[A-Z]*-${VARIANT}-${SPLASH_DIMENSIONS}.jpeg"`
+INPUTS=`find Output/Desktop-with-Logo/${SPLASH_DIMENSIONS}/${VARIANT}/ -maxdepth 1 -name "[A-Z]*.png" -or -name "[A-Z]*.jpeg"`
 
 
 # ====== Handle arguments ===================================================
@@ -67,8 +67,8 @@ splashWidth=`echo "$SPLASH_DIMENSIONS" | sed -e "s/^\([0-9]*\)x\(.*\)$/\1/g"`
 
 # ====== Create bootsplashes ================================================
 for inputFile in $INPUTS ; do
-   name=`basename "$inputFile" | sed -e "s/-${VARIANT}-${SPLASH_DIMENSIONS}\.[a-zA-Z]*$//g"`
-   
+   name=`basename "$inputFile" | sed -e "s/\.[a-zA-Z]*$//g"`
+
    (
       echo -e "Output/Splash/$name-$SPLASH_DIMENSIONS.jpeg:\tOutput/Text/Caption-$SPLASH_DIMENSIONS.png"
       echo -e "\t@echo \"Making Output/Splash/$name-$SPLASH_DIMENSIONS.jpeg ...\""
@@ -83,7 +83,7 @@ for inputFile in $INPUTS ; do
    ) >>$MAKEFILE
 
    allImages="$allImages Output/Splash/$name-$SPLASH_DIMENSIONS.jpeg"
-   
+
 done
 
 (
