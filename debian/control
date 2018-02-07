@@ -397,7 +397,7 @@ Description: NorNet Server
 
 Package: nornet-trace-service
 Architecture: any
-Depends: hipercontracer,
+Depends: hipercontracer (>= 1.2.0~),
          ${misc:Depends},
          ${python3:Depends},
          ${shlibs:Depends}
