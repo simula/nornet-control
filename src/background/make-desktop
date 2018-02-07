@@ -32,6 +32,7 @@ DOMAIN=".simula.nornet"
 DIMENSIONS="2970x2100 1920x1200 1920x1080 1600x1200 1024x768"
 VARIANTS="plain"   # oil mosaic"
 JPEG_QUALITY=92.5
+MAKE_LINKS=1
 
 
 # ====== Initialize Makefile ================================================
@@ -43,10 +44,7 @@ rm -f $MAKEFILE
    echo "MAKE_MOSAIC     := $MAKE_MOSAIC"
    echo "MAKE_CROPPED    := $MAKE_CROPPED"
    echo ""
-   echo -e "all:\tdirectories all-images"
-   echo ""
-   echo "directories:"
-   echo -e "\t@mkdir -p Output/tmp" "Output/Text" "Output/Desktop-with-Logo" "Output/Desktop-without-Logo"
+   echo -e "all:\tall-images"
    echo ""
 ) >$MAKEFILE
 
@@ -60,7 +58,7 @@ for input in $INPUTS ; do
          echo "Output/Text/${hostname}.png:"
          echo -e "\t@echo \"Making label Output/Text/${hostname}.png ...\""
          echo -e "\t@\$(MAKE_LOGO) \"Output/Text/${hostname}.png\" \\"
-         echo -e "\t   \"$hostname\" 256 10 \"Brushed Aluminium\" \"Comic Sans MS\""
+         echo -e "\t   \"$hostname\" 256 10 \"Brushed Aluminium\" \"Comic Sans MS\" >/dev/null"
          echo ""
       ) >>$MAKEFILE
    fi
@@ -80,6 +78,7 @@ for dimensions in $DIMENSIONS ; do
    (
       echo "Output/Text/Overlay-${width}x${height}.png:"
       echo -e "\t@echo \"Making overlay Output/Text/Overlay-${width}x${height}.png ...\""
+      echo -e "\t@mkdir -p Output/Text"
       echo -e "\t@./make-overlay Output/Text/Overlay-${width}x${height}.png ${width} ${height}"
       echo ""
    ) >>$MAKEFILE
@@ -91,20 +90,25 @@ for dimensions in $DIMENSIONS ; do
          else
             outputFormat="jpeg"
          fi
-         output=`echo "$input" | sed -e "s/^Input\///g" -e "s/\.\([pP][nN][gG]\|[jJ][pP][gG]\|jpeg\)$/-${variant}-${width}x${height}.${outputFormat}/g"`
+         output="${width}x${height}/$variant/`echo "$input" | sed -e "s/^Input\///g" -e "s/\.\([pP][nN][gG]\|[jJ][pP][gG]\|jpeg\)$/.${outputFormat}/g"`"
+         outputLink=`echo "$input" | sed -e "s/^Input\///g" -e "s/\.\([pP][nN][gG]\|[jJ][pP][gG]\|jpeg\)$/-${variant}-${width}x${height}.${outputFormat}/g"`
 
          # ====== Make variants =============================================
          # echo "$input -> $output, $variant ..."
          (
-            echo "Output/Desktop-without-Logo/${output}:"
+            echo -e "Output/Desktop-without-Logo/${output}:"
             echo -e "\t@echo \"Making image Output/Desktop-without-Logo/${output} ...\""
+            # Ensure that directories are there:
+            echo -e "\t@mkdir -p Output/Desktop-without-Logo/${width}x${height}/$variant Output/tmp/${width}x${height}/$variant"
+            # Ensure that old hardlink gets removed:
+            echo -e "\t@rm -f Output/Desktop-without-Logo/${outputLink}"
 
             # ------ Oil Painting -------------------------------------------
             if [ "$variant" = "oil" ] ; then
                echo -e "\t@\$(MAKE_PAINTING) \\"
                echo -e "\t   ${input} \\"
                echo -e "\t   Output/tmp/${output}-tmp2.png \\"
-               echo -e "\t   32"
+               echo -e "\t   32 >/dev/null"
                echo -e "\t@\$(MAKE_CROPPED) \\"
                echo -e "\t   Output/tmp/${output}-tmp2.png \\"
                echo -e "\t   Output/tmp/${output}-tmp.png \\"
@@ -115,7 +119,7 @@ for dimensions in $DIMENSIONS ; do
                (
                   echo -e "\t@\$(MAKE_MOSAIC) ${input} \\"
                   echo -e "\t   Output/tmp/${output}-tmp2.png \\"
-                  echo -e "\t   24 4 4 hexagons rough"
+                  echo -e "\t   24 4 4 hexagons rough >/dev/null"
                   echo -e "\t@\$(MAKE_CROPPED) \\"
                   echo -e "\t   Output/tmp/${output}-tmp2.png \\"
                   echo -e "\t   Output/tmp/${output}-tmp.png \\"
@@ -125,7 +129,7 @@ for dimensions in $DIMENSIONS ; do
             # ------ Plain --------------------------------------------------
             elif [ "$variant" = "plain" ] ; then
                if [ "$outputFormat" = "png" ] ; then
-                  echo -e "\t@\$(MAKE_BACKGROUND) ${input} Output/tmp/${output}-tmp2.png"
+                  echo -e "\t@\$(MAKE_BACKGROUND) ${input} Output/tmp/${output}-tmp2.png >/dev/null"
                else
                   echo -e "\t@rm -f Output/tmp/${output}-tmp2.png"
                   echo -e "\t@ln ${input} Output/tmp/${output}-tmp2.png   # No color conversion for pictures!"
@@ -143,23 +147,27 @@ for dimensions in $DIMENSIONS ; do
          ) >>$MAKEFILE
 
 
-         # ------ Resize -------------------------------------------------
+         # ------ Resize ----------------------------------------------------
          (
             echo -e "\t@convert Output/tmp/${output}-tmp.png -resize ${width}x${height} -interlace line Output/Desktop-without-Logo/${output}"
             echo -e "\t@rm -f Output/tmp/${output}-tmp2.png Output/tmp/${output}-tmp.png"
             echo ""
          ) >>$MAKEFILE
 
-         # ------ Combine image with logo layer --------------------------
+         # ------ Combine image with logo layer -----------------------------
          (
             if [[ `basename ${input}` =~ ^[a-z] ]] ; then
                hostname="`basename ${input} | sed -e "s/\.[a-zA-Z]*$//g"`${DOMAIN}"
                # echo "MACHINE: `basename ${input}`  $hostname"
                echo -e "Output/Desktop-with-Logo/${output}:\tOutput/Text/Overlay-${width}x${height}.png Output/Desktop-without-Logo/${output} Output/Text/${hostname}.png"
-            else               
+            else
                echo -e "Output/Desktop-with-Logo/${output}:\tOutput/Text/Overlay-${width}x${height}.png Output/Desktop-without-Logo/${output}"
             fi
             echo -e "\t@echo \"Making image Output/Desktop-with-Logo/${output} ...\""
+            # Ensure that directories are there:
+            echo -e "\t@mkdir -p Output/Desktop-with-Logo/${width}x${height}/$variant Output/tmp/${width}x${height}/$variant"
+            # Ensure that old hardlink gets removed:
+            echo -e "\t@rm -f Output/Desktop-with-Logo/${outputLink}"
          ) >>$MAKEFILE
          if [[ `basename ${input}` =~ ^[a-z] ]] ; then
             # ~~~~~~ With hostname ~~~~~~~~~~~~~~~~~~~~~
@@ -191,16 +199,29 @@ for dimensions in $DIMENSIONS ; do
                echo -e "\t   Output/Desktop-with-Logo/${output}"
             ) >>$MAKEFILE
          fi
-      
-         # ------ Add EXIF information -----------------------------------
+
+         # ------ Add EXIF information --------------------------------------
          (
             echo -e "\t@exiftool -q -overwrite_original -Copyright=\"Copyright `date '+%Y'` by Thomas Dreibholz\" \\"
             echo -e "\t   Output/Desktop-without-Logo/${output} \\"
             echo -e "\t   Output/Desktop-with-Logo/${output}"
             echo ""
          ) >>$MAKEFILE
-         
+
          allImages="$allImages Output/Desktop-with-Logo/${output}"
+
+
+         # ------ Make links ------------------------------------------------
+         if [ $MAKE_LINKS -ne 0 ] ; then
+            for type in Desktop-without-Logo Desktop-with-Logo ; do
+               (
+                  echo -e "Output/$type/${outputLink}:\tOutput/${type}/${output}"
+                  echo -e "\t@if [ ! -e Output/${type}/${outputLink} ] ; then ln Output/${type}/${output} Output/${type}/${outputLink} ; fi"
+                  echo ""
+               ) >>$MAKEFILE
+               allImages="$allImages Output/$type/${outputLink}"
+            done
+         fi
 
       done
    done
