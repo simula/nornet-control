@@ -30,12 +30,15 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 NAME=nornet-trace-service
 DESC="NorNet Trace Service"
-PIDFILE=/var/run/$NAME.pid
-LOGFILE=/var/log/$NAME.log
-DAEMON="/usr/bin/hipercontracer"
-DAEMON_ARGS=""
+HIPERCONTRACER_DAEMON="/usr/bin/hipercontracer"
+HIPERCONTRACER_PINGTRACEROUTE_PIDFILE=/var/run/$NAME.pid
+HIPERCONTRACER_PINGTRACEROUTE_LOGFILE=/var/log/$NAME.log
+HIPERCONTRACER_PINGTRACEROUTE_ARGS=""
+HIPERCONTRACER_CRITSERVICES_PIDFILE=/var/run/$NAME-critservices.pid
+HIPERCONTRACER_CRITSERVICES_LOGFILE=/var/log/$NAME-critservices.log
+HIPERCONTRACER_CRITSERVICES_ARGS=""
 
-test -x $DAEMON || exit 0
+test -x $HIPERCONTRACER_DAEMON || exit 0
 
 
 # Get configuration:
@@ -60,35 +63,45 @@ fi
 set -e
 
 
-echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ###### $0 $@ ######\x1b[0m" >>$LOGFILE
+echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ###### $0 $@ ######\x1b[0m" >>$HIPERCONTRACER_PINGTRACEROUTE_LOGFILE
 
 case "$1" in
   start)
    echo -n "Starting $DESC: "
-   start-stop-daemon --start --background --make-pidfile --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_ARGS >>$LOGFILE 2>&1
+   start-stop-daemon --start --background --make-pidfile --pidfile $HIPERCONTRACER_PINGTRACEROUTE_PIDFILE --exec $HIPERCONTRACER_DAEMON -- $HIPERCONTRACER_PINGTRACEROUTE_ARGS >>$HIPERCONTRACER_PINGTRACEROUTE_LOGFILE 2>&1
+   start-stop-daemon --start --background --make-pidfile --pidfile $HIPERCONTRACER_CRITSERVICES_PIDFILE --exec $HIPERCONTRACER_DAEMON -- $HIPERCONTRACER_CRITSERVICES_ARGS >>$HIPERCONTRACER_CRITSERVICES_LOGFILE 2>&1
    echo "$NAME."
    ;;
   stop)
    echo -n "Stopping $DESC: "
-   start-stop-daemon --stop --pidfile $PIDFILE || true
-   rm -f $PIDFILE
+   start-stop-daemon --stop --pidfile $HIPERCONTRACER_PINGTRACEROUTE_PIDFILE || true
+   rm -f $HIPERCONTRACER_PINGTRACEROUTE_PIDFILE
+   start-stop-daemon --stop --pidfile $HIPERCONTRACER_CRITSERVICES_PIDFILE || true
+   rm -f $HIPERCONTRACER_CRITSERVICES_PIDFILE
    echo "$NAME."
    ;;
   force-reload)
-   start-stop-daemon --stop --test --quiet --pidfile $PIDFILE \
+   start-stop-daemon --stop --test --quiet --pidfile $HIPERCONTRACER_PINGTRACEROUTE_PIDFILE \
+   ; start-stop-daemon --stop --test --quiet --pidfile $HIPERCONTRACER_CRITSERVICES_PIDFILE
    && $0 restart \
    || exit 0
    ;;
   restart)
    echo -n "Restarting $DESC: "
-   start-stop-daemon --stop --quiet --pidfile $PIDFILE || true
-   rm -f $PIDFILE
+   start-stop-daemon --stop --quiet --pidfile $HIPERCONTRACER_PINGTRACEROUTE_PIDFILE || true
+   rm -f $HIPERCONTRACER_PINGTRACEROUTE_PIDFILE
+   start-stop-daemon --stop --quiet --pidfile $HIPERCONTRACER_CRITSERVICES_PIDFILE || true
+   rm -f $HIPERCONTRACER_CRITSERVICES_PIDFILE
    sleep 1
-   start-stop-daemon --start --background --make-pidfile --pidfile $PIDFILE --exec /bin/bash -- -c "exec $DAEMON -- $DAEMON_ARGS >>$LOGFILE 2>&1"
+   start-stop-daemon --start --background --make-pidfile --pidfile $HIPERCONTRACER_PINGTRACEROUTE_PIDFILE --exec /bin/bash -- -c "exec $HIPERCONTRACER_DAEMON -- $HIPERCONTRACER_PINGTRACEROUTE_ARGS >>$HIPERCONTRACER_PINGTRACEROUTE_LOGFILE 2>&1"
+   echo "$NAME."
+   start-stop-daemon --start --background --make-pidfile --pidfile $HIPERCONTRACER_PINGTRACEROUTE_PIDFILE --exec /bin/bash -- -c "exec $HIPERCONTRACER_DAEMON -- $HIPERCONTRACER_PINGTRACEROUTE_ARGS >>$HIPERCONTRACER_PINGTRACEROUTE_LOGFILE 2>&1"
    echo "$NAME."
    ;;
   status)
-   status_of_proc -p $PIDFILE $DAEMON $NAME && exit 0 || exit $?
+   status_of_proc -p $HIPERCONTRACER_PINGTRACEROUTE_PIDFILE $HIPERCONTRACER_DAEMON $NAME \
+   && status_of_proc -p $HIPERCONTRACER_CRITSERVICES_PIDFILE $HIPERCONTRACER_DAEMON $NAME \
+   && exit 0 || exit $?
    ;;
   *)
    N=/etc/init.d/$NAME
