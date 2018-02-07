@@ -1698,13 +1698,21 @@ def makeHiPerConTracerConfiguration(localSite):
    # ====== "Critical Services" destinations ================================
    outputFile.write('\n\n# Critical Services:\n')
    outputFile.write('CRITSERVICES_ARGS=""\n')
-   for criticalService in [ 'www.simula.no' ]:
-      outputFile.write('CRITSERVICES_ARGS="$CRITSERVICES_ARGS ' + criticalService + '"\n')
+   for criticalService in [ '128.39.37.179' ]:
+      outputFile.write('CRITSERVICES_ARGS="$CRITSERVICES_ARGS -destination=' + criticalService + '"\n')
 
    # ====== Daemon parameters ===============================================
    outputFile.write('\n\n# HiPerConTracer Daemons:\n')
-   outputFile.write('HIPERCONTRACER_PINGTRACEROUTE_ARGS="-user=hipercontracer -ping -traceroute -resultstransactionlength=900 -resultsdirectory=/var/hipercontracer -quiet -pinginterval=1000 -pingexpiration=5000 -pingttl=64 -tracerouterounds=3 -tracerouteinterval=300000 -tracerouteduration=2000 -tracerouteinitialmaxttl=5 -traceroutefinalmaxttl=35 -tracerouteincrementmaxttl=5 $SOURCE_ARGS $PINGTRACEROUTE_ARGS"\n')
-   outputFile.write('HIPERCONTRACER_CRITSERVICES_ARGS="-user=hipercontracer -ping -traceroute -resultstransactionlength=900 -resultsdirectory=/var/hipercontracer -quiet -pinginterval=60000 -pingexpiration=5000 -pingttl=64 -tracerouterounds=3 -tracerouteinterval=3600000 -tracerouteduration=2000 -tracerouteinitialmaxttl=5 -traceroutefinalmaxttl=35 -tracerouteincrementmaxttl=5 $SOURCE_ARGS $CRITSERVICES_ARGS"\n')
+   outputFile.write('HIPERCONTRACER_PINGTRACEROUTE_ARGS="-user=hipercontracer -ping -traceroute ' +
+                    '-resultstransactionlength=900 -resultsdirectory=/var/hipercontracer -quiet ' +
+                    '-pinginterval=1000 -pingexpiration=5000 -pingttl=64 ' +
+                    '-tracerouterounds=3 -tracerouteinterval=300000 -tracerouteduration=2000 -tracerouteinitialmaxttl=5 -traceroutefinalmaxttl=35 -tracerouteincrementmaxttl=5 ' +
+                    '$SOURCE_ARGS $PINGTRACEROUTE_ARGS"\n')
+   outputFile.write('HIPERCONTRACER_CRITSERVICES_ARGS="-user=hipercontracer -ping -traceroute ' +
+                    '-resultstransactionlength=900 -resultsdirectory=/var/hipercontracer -quiet ' +
+                    '-pinginterval=60000 -pingexpiration=5000 -pingttl=64 '
+                    '-tracerouterounds=3 -tracerouteinterval=3600000 -tracerouteduration=2000 -tracerouteinitialmaxttl=5 -traceroutefinalmaxttl=35 -tracerouteincrementmaxttl=5' +
+                    '$SOURCE_ARGS $CRITSERVICES_ARGS"\n')
 
    outputFile.close()
 

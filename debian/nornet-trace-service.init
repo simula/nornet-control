@@ -82,7 +82,7 @@ case "$1" in
    ;;
   force-reload)
    start-stop-daemon --stop --test --quiet --pidfile $HIPERCONTRACER_PINGTRACEROUTE_PIDFILE \
-   ; start-stop-daemon --stop --test --quiet --pidfile $HIPERCONTRACER_CRITSERVICES_PIDFILE
+   ; start-stop-daemon --stop --test --quiet --pidfile $HIPERCONTRACER_CRITSERVICES_PIDFILE \
    && $0 restart \
    || exit 0
    ;;
