@@ -1659,22 +1659,23 @@ def makeHiPerConTracerConfiguration(localSite):
    log('Making HiPerConTracer configuration for ' + localSite['site_long_name'] + ' ...')
    outputFile = codecs.open('hipercontracer-config', 'w', 'utf-8')
 
-   outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -ping -traceroute -resultstransactionlength=900 -resultsdirectory=/var/hipercontracer -quiet -pinginterval=1000 -pingexpiration=5000 -pingttl=64 -tracerouterounds=3 -tracerouteinterval=300000 -tracerouteduration=2000 -tracerouteinitialmaxttl=5 -traceroutefinalmaxttl=35 -tracerouteincrementmaxttl=5"\n')
-
+   # ====== Sources =========================================================
    outputFile.write('\n# ' + localSite['site_utf8'] + ' (local addresses):\n')
+   outputFile.write('SOURCE_ARGS=""\n')
    for localProviderIndex in localProviderList:
       localProvider = localProviderList[localProviderIndex]
 
       addressV4 = IPv4Interface(localProvider['provider_tunnelbox_ipv4'])
       addressV6 = IPv6Interface(localProvider['provider_tunnelbox_ipv6'])
 
-      outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -source=' + str(addressV4.ip))
+      outputFile.write('SOURCE_ARGS="$SOURCE_ARGS -source=' + str(addressV4.ip))
       if addressV6 != IPv6Interface('::/0'):
          outputFile.write(' -source=' + str(addressV6.ip))
       outputFile.write('"\n')
    outputFile.write('\n')
 
-
+   # ====== Ping/Traceroute destinations ====================================
+   outputFile.write('PINGTRACEROUTE_ARGS=""\n')
    for remoteSiteIndex in fullSiteList:
       if remoteSiteIndex == localSiteIndex:
          continue
@@ -1689,10 +1690,21 @@ def makeHiPerConTracerConfiguration(localSite):
          addressV4 = IPv4Interface(remoteProvider['provider_tunnelbox_ipv4'])
          addressV6 = IPv6Interface(remoteProvider['provider_tunnelbox_ipv6'])
 
-         outputFile.write('DAEMON_ARGS="$DAEMON_ARGS -destination=' + str(addressV4.ip))
+         outputFile.write('PINGTRACEROUTE_ARGS="$PINGTRACEROUTE_ARGS -destination=' + str(addressV4.ip))
          if addressV6 != IPv6Interface('::/0'):
             outputFile.write(' -destination=' + str(addressV6.ip))
          outputFile.write('"\n')
+
+   # ====== "Critical Services" destinations ================================
+   outputFile.write('\n\n# Critical Services:\n')
+   outputFile.write('CRITSERVICES_ARGS=""\n')
+   for criticalService in [ 'www.simula.no' ]:
+      outputFile.write('CRITSERVICES_ARGS="$CRITSERVICES_ARGS ' + criticalService + '"\n')
+
+   # ====== Daemon parameters ===============================================
+   outputFile.write('\n\n# HiPerConTracer Daemons:\n')
+   outputFile.write('HIPERCONTRACER_PINGTRACEROUTE_ARGS="-user=hipercontracer -ping -traceroute -resultstransactionlength=900 -resultsdirectory=/var/hipercontracer -quiet -pinginterval=1000 -pingexpiration=5000 -pingttl=64 -tracerouterounds=3 -tracerouteinterval=300000 -tracerouteduration=2000 -tracerouteinitialmaxttl=5 -traceroutefinalmaxttl=35 -tracerouteincrementmaxttl=5 $SOURCE_ARGS $PINGTRACEROUTE_ARGS"\n')
+   outputFile.write('HIPERCONTRACER_CRITSERVICES_ARGS="-user=hipercontracer -ping -traceroute -resultstransactionlength=900 -resultsdirectory=/var/hipercontracer -quiet -pinginterval=60000 -pingexpiration=5000 -pingttl=64 -tracerouterounds=3 -tracerouteinterval=3600000 -tracerouteduration=2000 -tracerouteinitialmaxttl=5 -traceroutefinalmaxttl=35 -tracerouteincrementmaxttl=5 $SOURCE_ARGS $CRITSERVICES_ARGS"\n')
 
    outputFile.close()
 
