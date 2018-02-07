@@ -360,7 +360,7 @@ Depends: postgresql,
 Description: NorNet Database
  This package contains the packages to set up a database station for
  experiment results collection. It is in fact just a node with a
- dependency on the Postgres packages.
+ dependency on the PostgreSQL packages.
  .
  See https://www.nntb.no for details on NorNet!
 
@@ -383,7 +383,8 @@ Depends: fail2ban,
          ${misc:Depends},
          ${shlibs:Depends}
 Suggests: cfengine3
-Recommends: intel-microcode,
+Recommends: amd64-microcode,
+            intel-microcode,
             lm-sensors,
             nornet-ca,
             ubuntu-server
