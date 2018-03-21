@@ -8,7 +8,7 @@ Build-Depends: debhelper (>= 9),
                imagemagick,
                libfile-fcntllock-perl,
                python3-all
-Standards-Version: 3.9.7
+Standards-Version: 4.1.1
 X-Python3-Version: >= 3.2
 Vcs-Git: https://github.com/simula/nornet-control.git
 Vcs-Browser: https://github.com/simula/nornet-control/tags
@@ -34,8 +34,8 @@ Depends: apt-file,
          hping3,
          htop,
          idn,
-         ipsec-tools,
          ifupdown2 | ifupdown,
+         ipsec-tools,
          joe,
          kdump-tools,
          libc6-i386 [amd64],
