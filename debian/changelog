@@ -1,3 +1,9 @@
+nornet (1.2.11-1ubuntu1) xenial; urgency=high
+
+  * New release.
+
+ -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Mon, 09 Apr 2018 08:08:08 +0800
+
 nornet (1.2.10-1ubuntu1) xenial; urgency=high
 
   * New release.
