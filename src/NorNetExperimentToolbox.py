@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # NorNet Experiment Toolbox
-# Copyright (C) 2016-2018 by Thomas Dreibholz
+# Copyright (C) 2016 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ def runOverSSH(sshPrivateKey, node, slice, cmdLine, async = False):
       sys.stderr.write('#####################################################\n')
       sys.exit(1)
 
-   sshCall = [ '/usr/bin/ssh' , '-4', '-i', sshPrivateKey, slice['slice_name'] + '@' + node['node_name'] , '-oVerifyHostKeyDNS=no', '-oStrictHostKeyChecking=no', '-oConnectTimeout=30', '-oBatchMode=yes', cmdLine ]
+   sshCall = [ '/usr/bin/ssh' , '-4', '-i', sshPrivateKey, slice['slice_name'] + '@' + node['node_name'] , '-oStrictHostKeyChecking=no', '-oVerifyHostKeyDNS=no', '-oConnectTimeout=30', '-oBatchMode=yes', cmdLine ]
    print('\x1b[34m' + slice['slice_name'] + '@' + node['node_name'] + '> ' + '\x1b[33m' + cmdLine + '\x1b[0m')
    if async == False:
       result = subprocess.call(sshCall, shell=False)
@@ -66,7 +66,7 @@ def runOverSSH(sshPrivateKey, node, slice, cmdLine, async = False):
 
 # ###### Copy directory with RSync from node ################################
 def copyFromNodeOverRSync(sshPrivateKey, node, slice, directory):
-   rsyncCall = [ '/usr/bin/rsync', '-e', 'ssh -oVerifyHostKeyDNS=no -4 -i ' + sshPrivateKey, '-av', '-q', slice['slice_name'] + '@' + node['node_name'] + ':' + directory + '/', directory + '/' ]
+   rsyncCall = [ '/usr/bin/rsync', '-e', 'ssh -4 -i ' + sshPrivateKey, '-av', '-q', slice['slice_name'] + '@' + node['node_name'] + ':' + directory + '/', directory + '/' ]
    print('\x1b[33m' + str(rsyncCall) + '\x1b[0m')
    result = subprocess.call(rsyncCall)
    if result != 0:
@@ -145,10 +145,14 @@ def makePseudoNode(fullSiteList,
 # ###### Start server instances #############################################
 # Different instances (with different ports) for:
 # - ANY address (0.0.0.0/::)
-# - Each provider
+# - Each provider separately (only if fullSiteList is provided, i.e. not None)
 def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, slice, pathMgr):
-   localSite          = getNorNetSiteOfNode(fullSiteList, node)
-   localProviderList  = getNorNetProvidersForSite(localSite)
+   if fullSiteList != None:
+      localSite          = getNorNetSiteOfNode(fullSiteList, node)
+      localProviderList  = getNorNetProvidersForSite(localSite)
+   else:
+      localSite         = None
+      localProviderList = None
 
    cmdLine = 'pkill netperfmeter ; rm -rf ' + measurementName + ' ; mkdir ' + measurementName
 
@@ -177,26 +181,23 @@ def startServer(fullSiteList, portBase, measurementName, sshPrivateKey, node, sl
          '>>' + measurementName + '/NetPerfMeter-' + node['node_name'] + '.log 2>&1 & )'
 
    # ------ Bind to specific address ----------------------------------------
-   for localProviderIndex in localProviderList:
-      localProvider = localProviderList[localProviderIndex]
-      for ipVersion in [ 4, 46, 6 ]:
-         localAddress = makeAddress(localSite, node, localProvider, ipVersion, slice)
-         localPort    = makePort(portBase, localSite, node, localProvider, ipVersion, slice)
+   if localProviderList != None:
+      for localProviderIndex in localProviderList:
+         localProvider = localProviderList[localProviderIndex]
+         for ipVersion in [ 4, 46, 6 ]:
+            localAddress = makeAddress(localSite, node, localProvider, ipVersion, slice)
+            localPort    = makePort(portBase, localSite, node, localProvider, ipVersion, slice)
 
-         if ipVersion != 6:
-            v6Options = ''
-         else:
-            v6Options = '-v6only '
+            if ipVersion != 6:
+               v6Options = ''
+            else:
+               v6Options = '-v6only '
 
-         cmdLine = cmdLine + ' ; \\\n( nohup netperfmeter ' + str(localPort) + ' ' + \
-            '-controllocal=[::] ' + \
-            '-local=[' + str(localAddress) + '] ' + \
-            v6Options + passiveSideOptions + ' '  + \
-            '>>' + measurementName + '/NetPerfMeter-' + node['node_name'] + '.log 2>&1 & )'
-
-   # ------ Wait 10s and display contents of log, to check for problems -----
-   cmdLine = cmdLine + '&& sleep 10 && cat ' + \
-                measurementName + '/NetPerfMeter-' + node['node_name'] + '.log'
+            cmdLine = cmdLine + ' ; \\\n( nohup netperfmeter ' + str(localPort) + ' ' + \
+               '-controllocal=[::] ' + \
+               '-local=[' + str(localAddress) + '] ' + \
+               v6Options + passiveSideOptions + ' '  + \
+               '>>' + measurementName + '/NetPerfMeter-' + node['node_name'] + '.log 2>&1 & )'
 
    result = runOverSSH(sshPrivateKey, node, slice, cmdLine, True)
    return result
@@ -219,16 +220,39 @@ def testCustomNetPerfMeter(sshPrivateKey, nodes, slice):
 
 
 # ###### Install custom NetPerfMeter from Git sources #######################
-def installCustomNetPerfMeter(sshPrivateKey, nodes, slice):
+def installCustomNetPerfMeter(sshPrivateKey, nodes, slice, nodeType = "nornet"):
    processes = []
    for node in nodes:
       sys.stderr.write(node['node_name'] + "-> ")
 
-      cmdLine = """
-sudo dnf install -y cmake gcc-c++ make glib2-devel bzip2-devel lksctp-tools-devel valgrind-devel ; \\
+      # ====== NorNet Fedora Core node ======================================
+      if nodeType == "nornet":
+         cmdLine = """
+sudo dnf install -y cmake gcc-c++ make git glib2-devel bzip2-devel lksctp-tools-devel valgrind-devel ; \\
 sudo dnf upgrade -y --exclude=kernel* ; \\
+git config --global http.proxy proxy.`hostname -d`:3128 ; """
+
+      # ====== Fedora Core machine ==========================================
+      elif nodeType == "fedora":
+         cmdLine = """
+sudo dnf install -y cmake gcc-c++ make git glib2-devel bzip2-devel lksctp-tools-devel valgrind-devel ; \\
+sudo dnf upgrade -y --exclude=kernel* ; """
+
+      # ====== Ubuntu machine ==============================================
+      elif nodeType == "ubuntu":
+         cmdLine = """
+sudo apt-get update ; \\
+sudo apt-get install -y cmake g++ make git libbz2-dev libsctp-dev ; \\
+sudo apt-get dist-upgrade -y ; """
+
+      # ====== Invalid node type ============================================
+      else:
+         error('Invalid node type "' + nodeType + '"')
+
+
+      # ====== Fetch, compile and install NetPerfMeter ======================
+      cmdLine = cmdLine + """
 sudo -u """ + slice['slice_name'] + """ mkdir -p ~/src && cd src/ && \\
-git config --global http.proxy proxy.`hostname -d`:3128 && \\
 if [ -e netperfmeter ] ; then
    cd netperfmeter && git pull
 else
@@ -236,6 +260,7 @@ else
    cd netperfmeter
 fi && \
 ./autogen.sh && sudo make install"""
+
 
       newProcess = runOverSSH(sshPrivateKey, node, slice, cmdLine, True)
       if newProcess != None:
