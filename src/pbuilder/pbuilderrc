@@ -10,9 +10,9 @@ OTHERMIRROR="deb http://ppa.launchpad.net/dreibh/ubuntu $DISTRIBUTION main"
 
 # NOTE: To create the base installation, run:
 #
-# sudo rm -f /etc/apt/pbuilder-trusted.gpg
-# find /etc/apt/trusted.gpg.d/ -name "*.gpg" | xargs --no-run-if-empty -n1 sudo apt-key --keyring /etc/apt/pbuilder-trusted.gpg add
-# sudo pbuilder create --debootstrapopts --variant=buildd --keyring /etc/apt/pbuilder-trusted.gpg
+# sudo rm -f /etc/apt/trusted.gpg
+# find /etc/apt/trusted.gpg.d/ -name "*.gpg" | xargs --no-run-if-empty -n1 sudo apt-key --keyring /etc/apt/trusted.gpg add
+# sudo pbuilder create --debootstrapopts --variant=buildd --keyring /etc/apt/trusted.gpg
 #
 # OR:
 #
