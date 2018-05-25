@@ -173,6 +173,7 @@ Conflicts: miredo,
            nornet-server
 Depends: fail2ban,
          grub2-common | grub,
+         ifupdown,
          nfs-common,
          nornet-api,
          nornet-management,
@@ -198,7 +199,6 @@ Architecture: any
 Depends: arpwatch,
          bind9,
          conntrack,
-         ifupdown,
          iptables-persistent | netfilter-persistent,
          iputils-ping,
          iputils-tracepath,
@@ -372,6 +372,7 @@ Architecture: all
 Conflicts: nornet-node
 Depends: fail2ban,
          grub2-common | grub,
+         ifupdown,
          libvirt-bin,
          nfs-common,
          nornet-api,

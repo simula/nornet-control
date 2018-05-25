@@ -24,7 +24,7 @@ HOME="/home/nornetpp"
 
 SOURCES="$HOME/src"
 REPOSITORIES="$HOME/repos/nornet-applications"
-FEDORAS="27 rawhide 26 25 24"
+FEDORAS="rawhide 28 27 26 25"
 ARCHS="x86_64 i386"
 
 DISTRIBUTIONS=""
@@ -34,7 +34,7 @@ for fedora in $FEDORAS ; do
    done
 done
 
-#PACKAGES="libneat"
+#PACKAGES="hipercontracer"
 PACKAGES="libusrsctp libneat nornet_nn bibtexconv fractgen netperfmeter hipercontracer rsplib subnetcalc tsctp"
 
 

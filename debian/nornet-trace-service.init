@@ -37,6 +37,7 @@ HIPERCONTRACER_PINGTRACEROUTE_ARGS=""
 HIPERCONTRACER_CRITSERVICES_PIDFILE=/var/run/$NAME-critservices.pid
 HIPERCONTRACER_CRITSERVICES_LOGFILE=/var/log/$NAME-critservices.log
 HIPERCONTRACER_CRITSERVICES_ARGS=""
+HIPERCONTRACER_IMPORTER_LOGFILE=/var/log/nornet-trace-import.log
 
 test -x $HIPERCONTRACER_DAEMON || exit 0
 
@@ -71,6 +72,9 @@ case "$1" in
    start-stop-daemon --start --background --make-pidfile --pidfile $HIPERCONTRACER_PINGTRACEROUTE_PIDFILE --exec $HIPERCONTRACER_DAEMON -- $HIPERCONTRACER_PINGTRACEROUTE_ARGS >>$HIPERCONTRACER_PINGTRACEROUTE_LOGFILE 2>&1
    start-stop-daemon --start --background --make-pidfile --pidfile $HIPERCONTRACER_CRITSERVICES_PIDFILE --exec $HIPERCONTRACER_DAEMON -- $HIPERCONTRACER_CRITSERVICES_ARGS >>$HIPERCONTRACER_CRITSERVICES_LOGFILE 2>&1
    echo "$NAME."
+   # Ensure that importer's log file is writable by user "hipercontracer":
+   touch $HIPERCONTRACER_IMPORTER_LOGFILE
+   chown hipercontracer:hipercontracer $HIPERCONTRACER_IMPORTER_LOGFILE
    ;;
   stop)
    echo -n "Stopping $DESC: "
