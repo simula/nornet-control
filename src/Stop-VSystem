@@ -59,7 +59,7 @@ wait_for_shutdown ()
          if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
             vmcontrol "$1" acpipowerbutton
          elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
-            sudo -u $NorNet_LocalNode_NorNetUser virsh shutdown "$1" >/dev/null
+            virsh shutdown "$1" >/dev/null
          fi
       fi
    done || true
@@ -122,13 +122,13 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
    status=`Check-VSystem "$MACHINE_NAME"` && \
    if [ "$status" = "paused" ] ; then
       echo "`env LANG=C date +%FT%H:%M:%S`: Resuming $MACHINE_NAME to perform shutdown ..." && \
-      sudo -u $NorNet_LocalNode_NorNetUser virsh resume "$MACHINE_NAME"
+      virsh resume "$MACHINE_NAME"
       status=`Check-VSystem "$MACHINE_NAME"`
    fi
 
    if [ "$status" = "running" ] ; then
       echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (ACPI power button) ..." && \
-      sudo -u $NorNet_LocalNode_NorNetUser virsh shutdown "$MACHINE_NAME" && \
+      virsh shutdown "$MACHINE_NAME" && \
       wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
       status=`Check-VSystem "$MACHINE_NAME"`
    fi
@@ -136,7 +136,7 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
    if [ "$status" = "running" -o "$status" = "stopping" ] ; then
       echo "`env LANG=C date +%FT%H:%M:%S`: Stopping $MACHINE_NAME (power off) ..."
       if [ "$status" = "running" ] ; then
-         sudo -u $NorNet_LocalNode_NorNetUser virsh destroy "$MACHINE_NAME"
+         virsh destroy "$MACHINE_NAME"
       fi
       wait_for_shutdown "$MACHINE_NAME" "$STOPDELAY"
    fi
