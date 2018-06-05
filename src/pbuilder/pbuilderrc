@@ -16,7 +16,7 @@ OTHERMIRROR="deb http://ppa.launchpad.net/dreibh/ubuntu $DISTRIBUTION main"
 #
 # OR:
 #
-# sudo gpg --no-default-keyring --keyring /etc/apt/trusted.gpg --recv-keys 3B4FE6ACC0B21F32
+# sudo env HOME=/root gpg --no-default-keyring --keyring /etc/apt/trusted.gpg --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
 # sudo pbuilder create --keyring /etc/apt/trusted.gpg --debootstrapopts --keyring=/etc/apt/trusted.gpg
 
 # NOTE: Upon changes, run:

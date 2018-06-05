@@ -59,7 +59,7 @@ if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_Virtualizatio
    status=`echo $s | sed -e "s/VMState=//" -e "s/\"//g"` || true
 
 elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
-    status=`sudo -u $NorNet_LocalNode_NorNetUser env LANG=C HOME=~$NorNet_LocalNode_NorNetUser virsh dominfo "$MACHINE_NAME" | grep "^State:" | sed -e "s/State://" -e "s/^ *//g" -e "s/ *$//g"` || true
+    status=`env LANG=C HOME=~$NorNet_LocalNode_NorNetUser virsh dominfo "$MACHINE_NAME" | grep "^State:" | sed -e "s/State://" -e "s/^ *//g" -e "s/ *$//g" || true`
     if [ "$status" = "shut off" ] ; then
        status="poweroff"
     fi
