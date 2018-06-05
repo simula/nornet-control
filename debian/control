@@ -151,7 +151,8 @@ Depends: autoconf,
          yum-utils,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: python3-wand
+Recommends: python3-wand,
+            ubuntu-dev-tools
 Description: NorNet Development Tools
  This metapackage contains basic software nor NorNet development. The
  software installed provides a common working environment.
