@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: https://www.nntb.no/
 Build-Depends: debhelper (>= 9),
+               dh-python,
                exiftool,
                gimp,
                imagemagick,
