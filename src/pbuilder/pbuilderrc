@@ -1,36 +1,35 @@
-DISTRIBUTION=xenial
+# NorNet Core pbuilderrc File
+# Copyright (C) 2012-2018 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+DISTRIBUTION=cosmic
 COMPONENTS="main universe"
 
 MIRRORSITE=http://no.archive.ubuntu.com/ubuntu/
-OTHERMIRROR="deb http://ppa.launchpad.net/dreibh/ubuntu $DISTRIBUTION main"
-
-# OTHERMIRROR="deb http://no.archive.ubuntu.com/ubuntu/ main restricted universe multiverse"
-# OTHERMIRROR="deb http://ppa.launchpad.net/dreibh/ubuntu $DISTRIBUTION main"
 
 
-# NOTE: To create the base installation, run:
-#
-# sudo rm -f /etc/apt/trusted.gpg
-# find /etc/apt/trusted.gpg.d/ -name "*.gpg" | xargs --no-run-if-empty -n1 sudo apt-key --keyring /etc/apt/trusted.gpg add
-# sudo pbuilder create --debootstrapopts --variant=buildd --keyring /etc/apt/trusted.gpg
-#
-# OR:
-#
-# sudo env HOME=/root gpg --no-default-keyring --keyring /etc/apt/trusted.gpg --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
-# sudo pbuilder create --keyring /etc/apt/trusted.gpg --debootstrapopts --keyring=/etc/apt/trusted.gpg
-
-# NOTE: Upon changes, run:
-# sudo pbuilder update --override-config
-
-
-# Trust
-APTKEYRINGS=( "/etc/apt/trusted.gpg" )
-DEBOOTSTRAP="debootstrap"
-DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/etc/apt/trusted.gpg")
-# NOTE: pbuilder seems to ignore these settings!
-# Then, ALLOWUNTRUSTED=yes "solves" the problem to build VirtualBox (needs kbuild).
-# This is, of course, not a good solution!
-# ALLOWUNTRUSTED=yes
+# To create the environment, including adding a custom PPA:
+# (see also https://larry-price.com/blog/2016/09/27/clean-package-building-with-pbuilder/)
+# sudo pbuilder create --debootstrapopts --variant=buildd
+# sudo pbuilder login --save-after-login <<EOF
+# apt install -y software-properties-common
+# apt-add-repository -sy ppa:dreibh/ppa
+# apt-get update
+# EOF
 
 # Turn OFF ccache! It will not work properly!
 CCACHEDIR=
