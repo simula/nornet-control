@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sudo pbuilder create --debootstrapopts --variant=buildd
+sudo pbuilder login --save-after-login <<EOF
+apt install -y software-properties-common
+apt-add-repository -sy ppa:dreibh/ppa
+apt-get update
+EOF
