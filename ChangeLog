@@ -1,3 +1,597 @@
+commit 8f8e984923309929a155a83bd2c1a7cf1a01df6b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 6 16:00:41 2018 +0200
+
+    Dependency fix.
+
+ debian/changelog | 2 +-
+ debian/control   | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 052e7e96632c91a7cec48a474e8e8838110f614b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 6 12:00:19 2018 +0200
+
+    Script improvement.
+
+ src/pbuilder/initialise-pbuilder | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
+
+commit b130a27afaec9cc706edb653bae035e8495517e3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 6 09:58:59 2018 +0200
+
+    Dependency fix for Ubuntu Cosmic.
+
+ debian/changelog | 6 ++++++
+ debian/control   | 1 +
+ 2 files changed, 7 insertions(+)
+
+commit 8bf9d23de2aaf3e4bac2bc6397835115c847c606
+Merge: 7d82f87 f631c99
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 6 08:39:18 2018 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 7d82f87dfa99b1a82070ea5ca5ef1af1d4e064a4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 6 08:38:23 2018 +0200
+
+    Added helper script.
+
+ src/pbuilder/initialise-pbuilder | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+commit 587e565c981ded8a105cb46be5c1e104df5fc9e3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 6 08:38:18 2018 +0200
+
+    Updated pbuilderrc.
+
+ src/pbuilder/pbuilderrc | 53 ++++++++++++++++++++++++-------------------------
+ 1 file changed, 26 insertions(+), 27 deletions(-)
+
+commit 58b89c4d62ab194129fa5656ba28be85fc9ca25a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jun 5 17:49:07 2018 +0200
+
+    Added dependency.
+
+ debian/control | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit f631c99627d56c4181eba8fd3574b1b4e03980b3
+Merge: 3f38cfe 6847301
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jun 5 16:19:00 2018 +0200
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit 3f38cfe3bd0fa0bfedd7b69bd968a4db2c6332d1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jun 5 16:18:11 2018 +0200
+
+    Updated background configuration.
+
+ src/background/make-desktop | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 6847301655f75bc44bcb2ec82e8b7a17c218577f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jun 5 10:30:56 2018 +0200
+
+    Added dependency.
+
+ debian/control | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit c210ead2cd903f87f2413587deee6ae2825739b3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jun 5 09:40:29 2018 +0200
+
+    New release.
+
+ debian/changelog                     | 4 ++--
+ src/Kontrollsenter/ol3-layerswitcher | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 23b61ecc6e8c478665d86a9993abf77828825504
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jun 4 12:07:29 2018 +0200
+
+    Dependency fix.
+
+ debian/control | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 7b05e08371d467e7f9dca9ba69bfbabc9ea2d764
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jun 4 11:42:31 2018 +0200
+
+    Updated submodule.
+
+ src/Kontrollsenter/ol3-layerswitcher | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit a0b0dec81c6a0efb7c6404d911da19eab40824c5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jun 4 11:41:15 2018 +0200
+
+    Updated for support of Ubuntu Bionic.
+
+ src/Backup-All-VSystem-kvm           |  92 ----------------------
+ src/Backup-VSystem-kvm               | 147 -----------------------------------
+ src/Check-VSystem                    |   2 +-
+ src/Kontrollsenter/ol3-layerswitcher |   2 +-
+ src/Reset-VSystem                    |   2 +-
+ src/Start-VSystem                    |  12 +--
+ src/Stop-VSystem                     |   8 +-
+ 7 files changed, 13 insertions(+), 252 deletions(-)
+
+commit 4463059d542cec2ffc781771cccb69476d0f6926
+Merge: 6411936 cb218d1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jun 4 11:00:30 2018 +0200
+
+    Merge branch 'master' into bionic
+
+commit cb218d11639e1934fc8811b954a70f9132afc187
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 25 11:03:24 2018 +0200
+
+    Updated build scripts.
+
+ build-deb |  6 +++---
+ clean-deb |  9 ++++++---
+ make-deb  | 52 ++++++++++++++++++++++++++--------------------------
+ 3 files changed, 35 insertions(+), 32 deletions(-)
+
+commit 641193649cb2eb2f3e67236df86e1704f15c9a93
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 25 10:37:44 2018 +0200
+
+    A fix.
+
+ debian/control | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 2413443f728d9ac57284855f6ecf9c8dbfe60d5c
+Merge: d61c05d 19b5bd8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 25 10:29:15 2018 +0200
+
+    Merge branch 'master' into bionic
+
+commit 19b5bd80eb0a5f1779f008fbddf08fe641b59bee
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 25 10:07:22 2018 +0200
+
+    Updated configuration file.
+
+ src/WebServer/000-benlomond.nntb.no.conf | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
+
+commit 93c9683e606b7a3dd8d328bbbb4b0ad75bc56ad8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 25 10:07:10 2018 +0200
+
+    Updated build script.
+
+ make-ppa | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 3a23a5f3862b3fe40146cd0721623746934a7683
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 25 10:06:59 2018 +0200
+
+    Updated pbuilderrc.
+
+ src/pbuilder/pbuilderrc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 37844683958fadc1b6e5b3736158fa0b04333148
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu May 10 20:06:28 2018 +0200
+
+    Fix for pbuilderrc.
+
+ src/pbuilder/pbuilderrc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 572543a058c08c3ea6bc8fe981d915f1bc98e7d7
+Merge: 1d18314 320e6cd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 16 17:01:30 2018 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 1d18314efdb8c828e41299c7a52a467683bf85cd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 16 17:01:16 2018 +0200
+
+    Improved measurement helper library.
+
+ debian/control                 |  4 +-
+ src/NorNetExperimentToolbox.py | 85 +++++++++++++++++++++++++++---------------
+ 2 files changed, 57 insertions(+), 32 deletions(-)
+
+commit 320e6cd09726a254c5916ac1f43d43dbc0301200
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 12 11:01:07 2018 +0200
+
+    Script update.
+
+ src/fedora-build-toolchain/build-nornet-applications-repository | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit dfa8fff87169d74977a507cb478e30f7b4e2e692
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 9 13:54:33 2018 +0200
+
+    Version bump.
+
+ debian/changelog | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 396482cc627d52e2da79b607bca93f9788ae4690
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 9 13:53:57 2018 +0200
+
+    Dependency fix.
+
+ debian/control | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 0507cbc11233c7f3d4f4a497043d8dfb792bb422
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 9 12:51:22 2018 +0200
+
+    Bugfix: Ensure that importer's log file is writable by user "hipercontracer".
+
+ debian/nornet-trace-service.init | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit d61c05d5c2943f56ba2932efa321105866b6c204
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 21 15:42:18 2018 +0100
+
+    Updated standards version.
+
+ debian/control | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 1f6b25646332bf6572586f981af1625ff05f86b8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 21 15:29:17 2018 +0100
+
+    Added dependency "ifupdown2 | ifupdow" for handling Ubuntu Bionic installations.
+
+ debian/changelog | 6 ++++++
+ debian/control   | 1 +
+ 2 files changed, 7 insertions(+)
+
+commit 9ea50ec967115d62ef785bafb4cbdb8cbc500128
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 8 18:43:47 2018 +0100
+
+    Dependency update.
+
+ debian/control | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit ee55d4b6b9177dabd7434708981acb61db1f923d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 7 20:27:19 2018 +0100
+
+    Version bump.
+
+ debian/changelog | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit f18713f0a4efa70a78a8f8152c0c303e08ef7378
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 7 20:26:15 2018 +0100
+
+    A fix.
+
+ debian.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 7e326aeb602d993c121984d9c372b415ee465f49
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 7 20:26:03 2018 +0100
+
+    Dependency update.
+
+ debian.conf                          | 2 +-
+ debian/control                       | 2 +-
+ src/Kontrollsenter/ol3-layerswitcher | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 180d92aee59979d7e552810d9d486da614d075ec
+Merge: e2df059 2b88749
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 7 16:29:16 2018 +0100
+
+    Merge remote-tracking branch 'origin/master' into hipercontracer-updates
+
+commit 2b887493d7732e06cf56b4c86a927505eddc1a6e
+Author: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Wed Feb 7 16:24:08 2018 +0100
+
+    Header updates.
+
+ UpdateDoc1.sed                                     | 2 +-
+ UpdateDocFiles                                     | 2 +-
+ build-deb                                          | 2 +-
+ clean-deb                                          | 2 +-
+ debian/nornet-monitor.init                         | 2 +-
+ debian/nornet-node.init                            | 2 +-
+ debian/nornet-server.init                          | 2 +-
+ debian/nornet-trace-service.init                   | 2 +-
+ debian/nornet-tunnelbox.init                       | 2 +-
+ filter-empty-entries                               | 2 +-
+ make-deb                                           | 2 +-
+ src/Artwork/Sites/make-site-images                 | 2 +-
+ src/Update-Node-State                              | 2 +-
+ src/WebServer/sign-certificate                     | 2 +-
+ src/background/Make-Background                     | 2 +-
+ src/background/Make-Logo                           | 2 +-
+ src/background/Make-Mosaic                         | 2 +-
+ src/background/Make-Painting                       | 2 +-
+ src/background/images-to-pdf-a4                    | 2 +-
+ src/background/make-bootsplash                     | 2 +-
+ src/background/make-desktop                        | 2 +-
+ src/background/make-logo-texts                     | 2 +-
+ src/background/make-overlay                        | 2 +-
+ src/kernel-build-toolchain/build-kernel-repository | 2 +-
+ src/scripts/Check-DNS                              | 2 +-
+ 25 files changed, 25 insertions(+), 25 deletions(-)
+
+commit c334aad1e966d889ab5ea4aa95fa378064bd756c
+Merge: 698668c f23a010
+Author: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Wed Feb 7 16:18:28 2018 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 698668c3606292420d33bf57cff3584d6fa507a4
+Author: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Wed Feb 7 16:18:13 2018 +0100
+
+    Updated scripts.
+
+ debian/control                       |  1 +
+ src/Kontrollsenter/ol3-layerswitcher |  2 +-
+ src/background/make-bootsplash       |  8 +++---
+ src/background/make-desktop          | 53 +++++++++++++++++++++++++-----------
+ 4 files changed, 43 insertions(+), 21 deletions(-)
+
+commit e2df059d1dba84772414ed5f404707d649313fda
+Merge: 3cf973f 9c49d62
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 7 15:59:26 2018 +0100
+
+    Merge branch 'hipercontracer-updates' of github.com:simula/nornet-control into hipercontracer-updates
+
+commit 3cf973fc2faa600b03031be61f3bd68501775ce5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 7 15:59:09 2018 +0100
+
+    Run importer as unprivileged user.
+
+ debian/nornet-trace-service.cron.d | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 9c49d624217237e4041373cf2d6f66b4cd41195d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 7 15:31:07 2018 +0100
+
+    Improved HiPerConTracer configuration.
+
+ debian/nornet-trace-service.init |  2 +-
+ src/Make-Tunnelbox-Configuration | 16 ++++++++++++----
+ 2 files changed, 13 insertions(+), 5 deletions(-)
+
+commit a90d329c0aac5bec94c2ceb948410a5bfc1d33a6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 7 15:02:48 2018 +0100
+
+    Updated Make-Tunnelbox-Configuration for new HiPerConTracer service.
+
+ src/Make-Tunnelbox-Configuration | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
+
+commit 5dedf62a912a5ab4c22c293d0931121c46c32504
+Merge: 9a38e0d d7b00be
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 7 15:02:18 2018 +0100
+
+    Merge branch 'hipercontracer-updates' of https://github.com/simula/nornet-control into hipercontracer-updates
+
+commit d7b00bea9dd23e782e1859c1835d0e3f2b6486c4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 7 15:02:03 2018 +0100
+
+    Updated service description.
+
+ debian/nornet-trace-service.init | 41 ++++++++++++++++++++++++++--------------
+ 1 file changed, 27 insertions(+), 14 deletions(-)
+
+commit 9a38e0dc45a9ff274b65d95f8a8a930afb1b6fb1
+Merge: ff77fb6 f23a010
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 7 10:52:14 2018 +0100
+
+    Merge remote-tracking branch 'origin/master' into hipercontracer-updates
+
+commit f23a010e557787b15c1dc17387bacdd92e337fe7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jan 15 09:47:10 2018 +0100
+
+    Updated script.
+
+ src/scripts/fix-nodes | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+commit 84e866d146939a331c11e02b993314ba00acedd4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jan 11 10:18:10 2018 +0100
+
+    Also added amd64-microcode as recommendation to nornet-server package.
+
+ debian/control | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit ff77fb6ef78600c50a67711859c999d48b17acfb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jan 9 16:55:52 2018 +0100
+
+    Updated HiPerConTracer parameters.
+
+ src/Make-Tunnelbox-Configuration | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit b1b6546d29cac66d6bc19f3cce8715a2b5532973
+Merge: e372c14 67bde68
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jan 8 13:02:30 2018 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit e372c14517fb159445f68ecbfde8ebbfbac97996
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jan 8 13:01:11 2018 +0100
+
+    Added intel-microcode as recommendation, to get fixes for Meltdown/Spectre security issues, etc..
+
+ debian/changelog | 6 ++++++
+ debian/control   | 3 ++-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+commit 67bde68b02cc0d3c8093d87a1c97edb1b03a2953
+Merge: 03aca6c aa191ab
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jan 5 16:41:34 2018 +0100
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit 03aca6cf825e1721c50cc88b1612bcf8b930e413
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jan 5 16:40:45 2018 +0100
+
+    An update.
+
+ src/fedora-build-toolchain/build-nornet-applications-repository | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit aa191ab1aa3045895579073c71ea26b60da928c3
+Merge: 4bea223 53eee17
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jan 5 16:10:28 2018 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 4bea2232857f60b2b4b901f184769f8effd21080
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jan 5 16:10:16 2018 +0100
+
+    Updated contacts.
+
+ src/NorNet-Setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 53eee1734ff4c27ba843bc2928a20726968488df
+Author: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Wed Dec 13 18:26:54 2017 +0800
+
+    Updated comment.
+
+ src/pbuilder/pbuilderrc | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 6c4fe9d03ad124d23b3211ab0c96436769e6fd32
+Merge: d79e4df ab442ae
+Author: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Mon Dec 4 11:43:37 2017 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit d79e4df582646dadf80c08054e695bfd84046b77
+Author: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Mon Dec 4 11:43:27 2017 +0100
+
+    An update.
+
+ src/scripts/downgrade-to-archive-versions | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 35f27db5135d9d3e39f64f20544f25a9347d24b3
+Author: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Mon Dec 4 11:42:49 2017 +0100
+
+    Added helper script.
+
+ src/scripts/downgrade-to-archive-versions | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+commit ab442aec19b8de4d56f43c9b3dfa5e0fcc478619
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 24 18:09:45 2017 +0100
+
+    An update.
+
+ src/NorNet-Setup                                                | 2 +-
+ src/fedora-build-toolchain/build-nornet-applications-repository | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 62b99709e2dde879512f71ad70386f66dc35374b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 22 21:10:42 2017 +0100
+
+    Updated pbuilderrc.
+
+ src/pbuilder/pbuilderrc | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 3ab5a517b62806ba34d3116e38c52fb81b6a75b6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 16 13:55:52 2017 +0100
+
+    A fix.
+
+ src/scripts/Configure-iLO | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 41febae299cf4ad2180ef5ca8019b9aa17587735
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 15 18:30:09 2017 +0100
+
+    Added helper script.
+
+ src/scripts/Tunnelbox-iLO-Tunnel | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit 3f12421b8fa2d3ee73bc73a4d713cb24825e3859
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 15 18:26:01 2017 +0100
+
+    Added helper script.
+
+ src/scripts/Set-iLO-MSS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+commit 28561aa11f6d28b871add5861038faeaa350f036
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 15 12:34:28 2017 +0100
+
+    New release.
+
+ ChangeLog        | 3011 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ debian/changelog |    6 +
+ 2 files changed, 3017 insertions(+)
+
 commit a52e6c4cabbb69c110f35f26311f69a855b85a1c
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Nov 15 12:05:06 2017 +0100

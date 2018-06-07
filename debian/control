@@ -10,8 +10,7 @@ Build-Depends: debhelper (>= 9),
                imagemagick,
                libfile-fcntllock-perl,
                python3-all
-Standards-Version: 4.1.1
-X-Python3-Version: >= 3.2
+Standards-Version: 4.1.4
 Vcs-Git: https://github.com/simula/nornet-control.git
 Vcs-Browser: https://github.com/simula/nornet-control/tags
 
