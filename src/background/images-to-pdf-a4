@@ -22,9 +22,29 @@
 MAKE_CROPPED=../image-resize-with-cropping
 
 if [ $# -lt 2 ] ; then
-   echo >&2 "Usage: $0 output_file input_file [input_file [...]]"
+   echo >&2 "Usage: $0 [--format=A4|A3] output_file input_file [input_file [...]]"
    exit 1
 fi
+
+
+# ====== Set format =========================================================
+while [ $# -gt 1 ] ; do
+   if [[ $1 =~ ^-- ]] ; then
+      if [ "$1" == "--format=A3" ] ; then
+         # DIN A3: 420 mm × 297 mm
+         WIDTH=4200
+         HEIGHT=2970
+      elif [ "$1" == "--format=A4" ] ; then
+         # DIN A4: 297 mm × 210 mm
+         WIDTH=2970
+         HEIGHT=2100
+      fi
+      shift
+      continue
+   fi
+   break
+done
+
 
 
 # ====== Convert and crop input files =======================================
@@ -46,10 +66,7 @@ done
 
 
 # ====== Write output file ==================================================
-# DIN A4: 210 mm × 297 mm
-WIDTH=2970
-HEIGHT=2100
-
+echo "Format: ${WIDTH}x${HEIGHT}"
 convert \
  -units PixelsPerCentimeter -density 100x100 -page ${WIDTH}x${HEIGHT} -resize ${WIDTH}x${HEIGHT} \
  -gravity center \
