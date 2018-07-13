@@ -38,6 +38,9 @@ while [ $# -gt 1 ] ; do
          # DIN A4: 297 mm × 210 mm
          WIDTH=2970
          HEIGHT=2100
+      elif [ ! -e "$1" ] ; then
+         echo >&2 "ERROR: $1 does not exist!"
+         exit 1
       fi
       shift
       continue
@@ -70,7 +73,7 @@ echo "Format: ${WIDTH}x${HEIGHT}"
 convert \
  -units PixelsPerCentimeter -density 100x100 -page ${WIDTH}x${HEIGHT} -resize ${WIDTH}x${HEIGHT} \
  -gravity center \
- -compress lossless \
+ -quality 94 \
  $inputPages \
  "$outputFile"
 identify "$outputFile"
