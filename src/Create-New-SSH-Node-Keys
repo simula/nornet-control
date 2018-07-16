@@ -120,10 +120,10 @@ Protocol 2
 
 # Check supported algorithms with "ssh -Q cipher|kex|key|mac"!
 Ciphers                   aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr
-# Note: hmac-ripemd160@openssh.com necessary for old servers!
-MACs                      hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-ripemd160@openssh.com
-# Note: diffie-hellman-group1-sha1 necessary for old servers!
-KexAlgorithms             curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group1-sha1
+# Note: hmac-ripemd160@openssh.com in MACs necessary for old servers!
+MACs                      hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512
+# Note: diffie-hellman-group1-sha1 in KexAlgorithms necessary for old servers!
+KexAlgorithms             curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256
 # To prefer RSA:
 # HostKeyAlgorithms         ssh-rsa-cert-v01@openssh.com,ssh-rsa,ecdsa-sha2-nistp521-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,ssh-ed25519,ssh-ed25519,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp256-cert-v01@openssh.com
 # To prefer ED25519:
