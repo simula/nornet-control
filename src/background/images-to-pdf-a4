@@ -22,9 +22,37 @@
 MAKE_CROPPED=../image-resize-with-cropping
 
 if [ $# -lt 2 ] ; then
-   echo >&2 "Usage: $0 output_file input_file [input_file [...]]"
+   echo >&2 "Usage: $0 [--format=A4|A3] [--mode=PNG|JPEG] output_file input_file [input_file [...]]"
    exit 1
 fi
+
+
+# ====== Set format =========================================================
+MODE=png
+while [ $# -gt 1 ] ; do
+   if [[ $1 =~ ^-- ]] ; then
+      if [ "$1" == "--format=A3" ] ; then
+         # DIN A3: 420 mm × 297 mm
+         WIDTH=4200
+         HEIGHT=2970
+      elif [ "$1" == "--format=A4" ] ; then
+         # DIN A4: 297 mm × 210 mm
+         WIDTH=2970
+         HEIGHT=2100
+      elif [ "$1" == "--mode=PNG" ] ; then
+         MODE=png
+      elif [ "$1" == "--mode=JPEG" ] ; then
+         MODE=jpeg
+      elif [ ! -e "$1" ] ; then
+         echo >&2 "ERROR: $1 does not exist!"
+         exit 1
+      fi
+      shift
+      continue
+   fi
+   break
+done
+
 
 
 # ====== Convert and crop input files =======================================
@@ -36,9 +64,10 @@ page=1
 while [ $# -gt 1 ] ; do
    shift
    inputFile="$1"
-   tempFile="$tempDirectory/${page}.png"
+   tempFile="$tempDirectory/${page}.${MODE}"
 
    ${MAKE_CROPPED} "$inputFile" $tempFile A4
+   # identify "$tempFile"
 
    inputPages="$inputPages $tempFile"
    let page=$page+1
@@ -46,14 +75,11 @@ done
 
 
 # ====== Write output file ==================================================
-# DIN A4: 210 mm × 297 mm
-WIDTH=2970
-HEIGHT=2100
-
+# echo "Format: ${WIDTH}x${HEIGHT}"
 convert \
  -units PixelsPerCentimeter -density 100x100 -page ${WIDTH}x${HEIGHT} -resize ${WIDTH}x${HEIGHT} \
  -gravity center \
- -compress lossless \
+ -quality 94 \
  $inputPages \
  "$outputFile"
 identify "$outputFile"
