@@ -100,13 +100,13 @@ EOF
 
 # ====== Configuration ======================================================
 bridgeInterface=br0
-physicalInterface=eth0
+physicalInterface=dummy0
 
 
 if [ "$1" == "on" ] ; then
    flush
 
-   # ====== Example =========================================================
+   # ====== Get configuration ===============================================
    id=""
    localAddress=""
    remoteAddress=""
