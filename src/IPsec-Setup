@@ -1,0 +1,150 @@
+#!/bin/bash -e
+#
+# IPsec-Setup
+# Copyright (C) 2018 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
+
+# ###### Flush rules ########################################################
+flush ()
+{
+   setkey -c <<EOF
+      flush;
+      spdflush;
+EOF
+}
+
+# ###### Show rules #########################################################
+show ()
+{
+   setkey -c <<EOF
+      dump;
+      spddump;
+EOF
+}
+
+# ###### Configure security associations and policies #######################
+create-sa ()
+{
+   # ====== Get parameters ==================================================
+   local id="$1"
+   local localAddress="$2"
+   local remoteAddress="$3"
+   local crypt_key="$4"
+   local auth_key="$5"
+   # !!! local esp_parameters="-E null -A null"   # !!! Just for testing! !!!
+   local esp_parameters="-E aes-ctr \"${crypt_key}\" -A hmac-sha512 \"${auth_key}\""
+   if [ "$id" == "" ] ; then
+      echo >&2 "ERROR: id not specified!"
+      exit 1
+   fi
+   if [ "$localAddress" == "" ] ; then
+      echo >&2 "ERROR: localAddress not specified!"
+      exit 1
+   fi
+   if [ "$remoteAddress" == "" ] ; then
+      echo >&2 "ERROR: remoteAddress not specified!"
+      exit 1
+   fi
+   if [ "$crypt_key" == "" ] ; then
+      echo >&2 "ERROR: crypt_key not specified!"
+      exit 1
+   fi
+   if [ "$auth_key" == "" ] ; then
+      echo >&2 "ERROR: auth_key not specified!"
+      exit 1
+   fi
+
+   # ====== The outgoing ID on one side is the incoming ID on the other! ====
+   if [[ "${localAddress}" < "${remoteAddress}" ]] ; then
+      local id1=1
+      local id2=2
+      local id3=3
+      local id4=4
+   else
+      local id1=2
+      local id2=1
+      local id3=4
+      local id4=3
+   fi
+
+   # ====== Configure IPsec =================================================
+   if ! /usr/sbin/setkey -c ; then echo >&2 "ERROR: failed to configure IPsec!" && exit 1 ; fi <<EOF
+      add $localAddress $remoteAddress ipcomp 0x${id}${id1} -C deflate;
+      add $remoteAddress $localAddress ipcomp 0x${id}${id2} -C deflate;
+      add $localAddress $remoteAddress esp 0x${id}${id3} ${esp_parameters};
+      add $remoteAddress $localAddress esp 0x${id}${id4} ${esp_parameters};
+      spdadd $localAddress $remoteAddress any -P out ipsec
+         ipcomp/transport//use
+         esp/transport//require;
+      spdadd $remoteAddress $localAddress any -P in ipsec
+         ipcomp/transport//use
+         esp/transport//require;
+EOF
+}
+
+
+# ====== Configuration ======================================================
+bridgeInterface=br0
+physicalInterface=dummy0
+
+
+if [ "$1" == "on" ] ; then
+   flush
+
+   # ====== Get configuration ===============================================
+   id=""
+   localAddress=""
+   remoteAddress=""
+   crypt_key=""
+   auth_key=""
+
+   . /root/nornet-vpn.conf
+
+   # ====== Configure bridge ================================================
+   brctl addbr $bridgeInterface || true
+   brctl addif $bridgeInterface $physicalInterface || true
+   ip link set $bridgeInterface up
+
+   # ====== Configure IPsec =================================================
+   # 36 bytes for encryption key parameter
+   # Encryption: 36 characters (32 + 4 IV)
+   # Auth:       64 characters
+   create-sa ${id} ${localAddress} ${remoteAddress} ${crypt_key} ${auth_key}
+
+   # ====== Configure tunnel ================================================
+   ip link del tunnel${id} 2>/dev/null || true
+   ip link add tunnel${id} type gretap remote ${remoteAddress} local ${localAddress} ttl 255
+   brctl addif $bridgeInterface tunnel${id}
+   # ip addr add 192.168.255.2/24 dev tunnel${id}
+   ip link set tunnel${id} up
+
+   show
+
+elif [ "$1" == "off" ] ; then
+   ip link set $bridgeInterface down || true
+   brctl delbr $bridgeInterface || true
+
+   ip link del tunnel001 || true
+
+   flush
+elif [ "$1" == "show" ] ; then
+   show
+else
+   echo >&2 "Usage: $0 on|off"
+   exit 1
+fi
