@@ -466,7 +466,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 40,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'Universität Kaiserslautern',
    'site_short_name'   : 'TUKL',
    'site_url'          : 'https://www.informatik.uni-kl.de',
@@ -561,7 +561,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 43,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'Universität Darmstadt',
    'site_short_name'   : 'TUDA',
    'site_url'          : 'https://www.deeds.informatik.tu-darmstadt.de',
@@ -719,7 +719,7 @@ norNetSetup = [
 
  # Haikou College of Economics (海口经济学院)
  { 'site_index'        : 89,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'Haikou College of Economics',
    'site_short_name'   : 'HKC',
    'site_url'          : 'http://www.hkc.edu.cn',
