@@ -21,7 +21,7 @@
 
 KERNEL_DEBS=~/src
 KERNEL_REPO=~/tmp/nornet-kernel/ubuntu/
-PUBLISH_REPO=/nfs/adm/packages/nornet-kernel/ubuntu/
+PUBLISH_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ubuntu/
 
 
 # How to add repository:
@@ -36,6 +36,4 @@ cp distributions $KERNEL_REPO/conf
 cd $KERNEL_REPO
 reprepro --ignore=undefinedtarget -C main includedeb xenial $KERNEL_DEBS/*.deb
 
-mkdir -p $PUBLISH_REPO/
-rsync -Pav --delete $KERNEL_REPO/ $PUBLISH_REPO/
-
+rsync -Pav -e "ssh -J dreibh@oesthorn.nntb.no" --delete $KERNEL_REPO/ $PUBLISH_REPO/
