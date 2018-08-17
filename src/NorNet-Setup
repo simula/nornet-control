@@ -46,7 +46,7 @@ norNetSetup = [
    'site_latitude'     : 59.895933,
    'site_longitude'    : 10.627635,
    'site_altitude'     : 15,
-   'site_contacts'     : [ u'Dreibholz, Thomas: dreibh@simula.no', u'Elmokashfi, Ahmed: ahmed@simula.no', u'Werme, Jonas: jonasw@simula.no' ],
+   'site_contacts'     : [ u'Dreibholz, Thomas: dreibh@simula.no', u'Elmokashfi, Ahmed: ahmed@simula.no' ],
    'site_pcu'          : [ IPv4Address('158.39.4.3'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -99,7 +99,7 @@ norNetSetup = [
    'site_latitude'     : 59.944034,
    'site_longitude'    : 10.719013,
    'site_altitude'     : 100,
-   'site_contacts'     : [ u'IT-Ooperations@IFI/UiO: drift@ifi.uio.no', u'Welzl, Michael: michawe@ifi.uio.no', u'Håkedal, Lars: larsha@ifi.uio.no' ],
+   'site_contacts'     : [ u'IT-Ooperations@IFI/UiO: drift@ifi.uio.no', u'Håkedal, Lars: larsha@ifi.uio.no' ],
    'site_pcu'          : [ IPv4Address('129.240.66.75'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
