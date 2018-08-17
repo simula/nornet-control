@@ -430,9 +430,9 @@ norNetSetup = [
 
  { 'site_index'        : 11,
    'site_enabled'      : True,
-   'site_long_name'    : u'Høgskolen i Oslo og Akershus',
-   'site_short_name'   : 'HiOA',
-   'site_url'          : 'http://www.hioa.no',
+   'site_long_name'    : u'Oslo Metropolitan University',
+   'site_short_name'   : 'OsloMet',
+   'site_url'          : 'https://www.oslomet.no',
    'site_domain'       : 'hioa.nornet',
    'site_city'         : 'Oslo',
    'site_province'     : 'Oslo',
