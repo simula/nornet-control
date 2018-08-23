@@ -602,7 +602,7 @@ norNetSetup = [
    'site_latitude'     : 59.404101,
    'site_longitude'    : 13.58189,
    'site_altitude'     : 60,
-   'site_contacts'     : [ u'Alfredsson, Stefan: Stefan.Alfredsson@kau.se', u'Eklund, Johan: Johan.Eklund@kau.se' ],
+   'site_contacts'     : [ u'Vehkajärvi, Tobias: Tobias.Vehkajarvi@kau.se', u'Karlsson, Jonas: jonas.karlsson@kau.se', u'Rajiullah, Mohammad: mohammad.rajiullah@kau.se', u'Alfredsson, Stefan: Stefan.Alfredsson@kau.se' ],
    'site_pcu'          : [ IPv4Address('193.10.227.86'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
