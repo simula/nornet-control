@@ -460,7 +460,7 @@ norNetSetup = [
       [ 103, 4, u'gressholmen', 'holbergsplass.hioa.nornet', 'vnc://holbergsplass.hioa.nornet:5900' ],
       [ 104, 5, u'bleikøya',    'holbergsplass.hioa.nornet', 'vnc://holbergsplass.hioa.nornet:5901' ],
       [ 105, 6, u'langøyene',   'holbergsplass.hioa.nornet', 'vnc://holbergsplass.hioa.nornet:5902' ],
-      [ 106, 7, u'heggholmen',  'pilestredet.hioa.nornet',   'vnc:/pilestredet.hioa.nornet/:5900'   ],
+      [ 106, 7, u'heggholmen',  'pilestredet.hioa.nornet',   'vnc://pilestredet.hioa.nornet/:5900'  ],
       [ 107, 8, u'rambergøya',  'pilestredet.hioa.nornet',   'vnc://pilestredet.hioa.nornet:5901'   ],
       [ 108, 9, u'vippetangen', 'pilestredet.hioa.nornet',   'vnc://pilestredet.hioa.nornet:5902'   ]
    ] },
