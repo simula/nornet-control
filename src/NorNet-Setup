@@ -403,7 +403,7 @@ norNetSetup = [
    'site_latitude'     : 68.436023,
    'site_longitude'    : 17.434984,
    'site_altitude'     : 75,
-   'site_contacts'     : [ u'Pettersen, Ørjan Dypvik: orjan.dypvik.pettersen@hin.no', u'Bråthen, Roger: roger.brathen@hin.no' ],
+   'site_contacts'     : [ u'Pettersen, Ørjan Dypvik: orjan.dypvik.pettersen@uit.no', u'Bråthen, Roger: roger.brathen@uit.no' ],
    'site_pcu'          : [ IPv4Address('158.39.20.207'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
