@@ -449,7 +449,7 @@ norNetSetup = [
    'site_providers' : [
       [ u'Uninett', 'eth1',
            IPv4Interface('128.39.120.60/23'),       IPv4Address('128.39.120.1'),
-           IPv6Interface('2001:700:700:22::60/64'), IPv6Address('2001:700:700:22::'),
+           IPv6Interface('2001:700:700:22::60/64'), IPv6Address('2001:700:700:22::1'),
            1500, 'fibre, research', 1000000, 1000000 ]
    ],
    # Server #251: 128.39.120.63
