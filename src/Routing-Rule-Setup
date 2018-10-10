@@ -1,0 +1,171 @@
+#!/bin/bash -e
+#
+# Routing Rule Setup
+# Copyright (C) 2018 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
+
+
+# ###### Check whether parameter is a valid IPv4 address ####################
+is-ipv4-address ()
+{
+   if [[ "$1" =~ ^([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})$ ]] ; then
+      if [ ${BASH_REMATCH[1]} -le 255 -a ${BASH_REMATCH[2]} -le 255 -a ${BASH_REMATCH[3]} -le 255 -a ${BASH_REMATCH[4]} -le 255 ] ; then
+         return 0
+      fi
+   fi
+   return 1
+}
+
+
+# ###### Check whether parameter is a valid IPv4 network ####################
+is-ipv4-network ()
+{
+   if [[ "$1" =~ ^([0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3})/([0-9]{1,2})$ ]] ; then
+      if [ ${BASH_REMATCH[2]} -le 32 ] ; then
+         if is-ipv4-address "${BASH_REMATCH[1]}" ; then
+            return 0
+         fi
+      fi
+   fi
+   return 1
+}
+
+
+# ###### Check whether parameter is a valid IPv6 address ####################
+is-ipv6-address ()
+{
+   if [[ "$1" =~ ^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\s*$ ]] ; then
+      return 0
+   fi
+   return 1
+}
+
+
+# ###### Check whether parameter is a valid IPv6 network ####################
+is-ipv6-network ()
+{
+   if [[ "$1" =~ ^([0-9a-fA-F:]*)/([0-9]{1,3})$ ]] ; then
+      if [ ${BASH_REMATCH[2]} -le 128 ] ; then
+         if is-ipv6-address "${BASH_REMATCH[1]}" ; then
+            return 0
+         fi
+      fi
+   fi
+   return 1
+}
+
+
+# ###### Check whether parameter is a valid IPv4 or IPv6 address ############
+is-ip-address ()
+{
+   if is-ipv4-address $1 ; then
+      return 0
+   elif is-ipv6-address $1 ; then
+      return 0
+   fi
+   return 1
+}
+
+
+# ###### Check whether parameter is a valid IPv4 or IPv6 network ############
+is-ip-network ()
+{
+   if is-ipv4-network $1 ; then
+      return 0
+   elif is-ipv6-network $1 ; then
+      return 0
+   fi
+   return 1
+}
+
+
+
+# ###### Main program #######################################################
+
+# ====== Handle arguments ===================================================
+if [ $# -lt 4 ] ; then
+   echo >&2 "Usage: $0 add|remove table interface network/prefix ..."
+   exit 1
+fi
+action="$1"
+table="$2"
+interface="$3"
+from="$4"
+if ! is-ip-network "$from" ; then
+   echo >&2 "ERROR: $from is not network/prefix!"
+   exit 1
+fi
+if is-ipv6-network "$from" ; then
+   ipVersionOption="-6"
+else
+   ipVersionOption="-4"
+fi
+
+
+# ====== Add rule ===========================================================
+if [ "$action" == "add" ] ; then
+   # ------ Check arguments -------------------------------------------------
+   if [ $# -lt 6 ] ; then
+      echo >&2 "Usage: $0 add table interface network/prefix destination/prefix gateway"
+      exit 1
+   fi
+   to="$5"
+   if [ "$to" != "default" ] ; then
+      if ! is-ip-network "$to" ; then
+         echo >&2 "ERROR: $to is not \"default\" or network/prefix!"
+         exit 1
+      fi
+   fi
+   gateway="$6"
+   if ! is-ip-address "$gateway" ; then
+      echo >&2 "ERROR: $gateway is not an address!"
+      exit 1
+   fi
+
+   # ------ Configure routing table and routing rule ------------------------
+   echo "Add: $interface: $from -> table $table with $to -> $gateway"
+
+   echo ip $ipVersionOption route add "$from" scope link dev "$interface" table "$table"
+   ip $ipVersionOption route add "$from" scope link dev "$interface" table "$table"
+
+   echo ip $ipVersionOption route add "$to" via "$gateway" dev "$interface" table "$table"
+   ip $ipVersionOption route add "$to" via "$gateway" dev "$interface" table "$table"
+
+   echo ip $ipVersionOption rule add from "$from" table "$table" priority 1000
+   ip $ipVersionOption rule add from "$from" table "$table" priority 1000
+
+
+
+# ====== Remove rule ========================================================
+elif [ "$action" == "remove" ] ; then
+
+   # ------ Remove routing table and routing rule ---------------------------
+   echo "Remove: $interface: $from -> table $table"
+
+   echo ip $ipVersionOption rule del from "$from" table "$table" priority 1000
+   ip $ipVersionOption rule del from "$from" table "$table" priority 1000
+
+   echo ip $ipVersionOption route flush table "$table"
+   ip $ipVersionOption route flush table "$table"
+
+
+# ====== Error ==============================================================
+else
+   echo >&2 "ERROR: Invalid action $1!"
+   exit 1
+fi

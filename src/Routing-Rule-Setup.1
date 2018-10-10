@@ -1,0 +1,62 @@
+.\" Routing Rule Setup
+.\" Copyright (C) 2018 by Thomas Dreibholz
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Contact: dreibh@simula.no
+.\"
+.\" ###### Setup ############################################################
+.Dd September 24, 2018
+.Dt Routing-Rule-Setup 1
+.Os Routing-Rule-Setup
+.\" ###### Name #############################################################
+.Sh NAME
+.Nm Routing-Rule-Setup
+.Nd Routing Rule Setup Script
+.\" ###### Synopsis #########################################################
+.Sh SYNOPSIS
+.Nm Routing-Rule-Setup
+add table interface network/prefix destination/prefix gateway
+.Nm Routing-Rule-Setup
+remove table interface network/prefix
+.\" ###### Description ######################################################
+.Sh DESCRIPTION
+.Nm Routing-Rule-Setup
+sets up or removes a routing rule and corresponding routing table. Particularly, this program can be used for post-up and pre-down rules in /etc/network/interfaces on Debian and Ubuntu systems.
+.Pp
+.\" ###### Arguments ########################################################
+.Sh ARGUMENTS
+The following options are available:
+.Bl -tag -width indent
+.It add|remove
+Add ("add") or removes ("remove") the setup.
+.It table
+Number or name of the routing table to add/remove. Note: names must be configured in /etc/iproute2/rt_tables!
+.It interface
+The network interface.
+.It network/prefix
+Assume network/prefix on the given interface as local scope.
+.It destination/prefix
+Configures a route to destination/prefix, via the given gateway.
+.It gateway
+Configures the gateway for the route.
+.El
+.\" ###### Examples #########################################################
+.Sh EXAMPLES
+.Bl -tag -width indent
+.It Routing-Rule-Setup add 1000 eth1 172.16.254.0/24 172.16.0.0/16 172.16.254.1
+.It Routing-Rule-Setup remove 1000 eth1 172.16.254.0/24
+.It Routing-Rule-Setup add 1000 eth1 3ffe:1:2:3::1/64 3ffe::/16 3ffe:1:2:3::1234
+.It Routing-Rule-Setup remove 1000 eth1 3ffe:1:2:3::1/64
+.El
