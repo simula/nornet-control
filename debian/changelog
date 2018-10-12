@@ -1,3 +1,9 @@
+nornet (1.2.17-1ubuntu1) bionic; urgency=high
+
+  * New release.
+
+ -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Fri, 12 Oct 2018 08:08:08 +0800
+
 nornet (1.2.16-1ubuntu1) bionic; urgency=high
 
   * New release.
