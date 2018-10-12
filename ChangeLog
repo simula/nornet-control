@@ -1,3 +1,23 @@
+commit 4ae9e21043b71e62443c883630d2cd6484f0291d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 12 12:54:57 2018 +0200
+
+    Updated dependencies.
+
+ debian/changelog | 6 ++++++
+ debian/control   | 2 ++
+ 2 files changed, 8 insertions(+)
+
+commit 414a125b918339951e89e5e8af7409fe48091ab5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Oct 10 12:35:02 2018 +0200
+
+    Updated packaging files.
+
+ ChangeLog  | 3690 ++++++++++++++++++++++++++----------------------------------
+ nornet.lsm |    4 +-
+ 2 files changed, 1587 insertions(+), 2107 deletions(-)
+
 commit f9d0af6df0f979543ff8ca64cfce5080061ee72e
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Oct 10 12:34:08 2018 +0200
