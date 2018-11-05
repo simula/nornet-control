@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
-# Oil Painting Script
-# Copyright (C) 2017-2018 by Thomas Dreibholz
+# Old Photo Script
+# Copyright (C) 2018 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,38 +20,49 @@
 
 
 # Example:
-# Make-Painting Image.jpeg Painting.png
+# Make-OldPhoto Image.jpeg OldPhoto.png 20
 
 
 # ====== Handle arguments ===================================================
 if [ $# -lt 2 ] ; then
-   echo >&2 "Usage: $0 input_filename output_filename [masksize]"
+   echo >&2 "Usage: $0 input_filename output_filename [border_size]"
    exit 1
 fi
 INPUTFILENAME="$1"
 OUTPUTFILENAME="$2"
-MASKSIZE=8
+BORDERSIZE=20
 if [ $# -gt 2 ] ; then
-   MASKSIZE="$3"
+   BORDERSIZE="$3"
 fi
 
 
 # ====== Call Gimp ==========================================================
+rm -f "$OUTPUTFILENAME"
 ( cat <<EOF
 (let*
    ((inputFileName    "$INPUTFILENAME")
     (outputFileName   "$OUTPUTFILENAME")
-    (maskSize         $MASKSIZE)
+    (borderSize       $BORDERSIZE)
     (image (car (gimp-file-load RUN-NONINTERACTIVE inputFileName inputFileName)))
     (drawable (car (gimp-image-get-active-layer image)))
    )
    ; ------------------------------------------------------------------------
-   (plug-in-oilify-enhanced RUN-NONINTERACTIVE image drawable
-       1 maskSize drawable maskSize drawable)
+   ; First, make sure that the image is RGB, not indexed color mode!
+   (if (not (= RGB (car (gimp-image-base-type image))))
+             (gimp-image-convert-rgb image))
+
+   (script-fu-old-photo image drawable
+                        TRUE borderSize TRUE FALSE FALSE)
    ; ------------------------------------------------------------------------
-   (file-png-save2 RUN-NONINTERACTIVE image drawable outputFileName outputFileName TRUE 9 TRUE TRUE FALSE TRUE TRUE FALSE TRUE)
+   (file-png-save2 RUN-NONINTERACTIVE image (car (gimp-image-get-active-layer image))
+                   outputFileName outputFileName TRUE 9 TRUE TRUE FALSE TRUE TRUE FALSE TRUE)
 )
 (gimp-quit TRUE)
 EOF
-) | env LANG=C gimp --new-instance --no-interface --no-splash --batch - 2>/dev/null | \
-       ( grep -vE "^ts>|^Copyright|^Welcome|^$" || true )
+) | env LANG=C HOME=/tmp gimp --new-instance --no-interface --no-splash --batch - 2>&1 | \
+       ( grep -vE "^ts>|(#t)|^Copyright|^Welcome|GLib-GObject-WARNING|GEGL-CRITICAL|missing babl fast path|Missing fast-path babl|accelerates GEGL|first occurance of formats|programmatically by bab|GeglBuffers leaked|Failed to parse tag cache|^$" || true )
+
+if [ ! -e "$OUTPUTFILENAME" ] ; then
+   echo >&2 "ERROR: $OUTPUTFILENAME has not been produced. Something went wrong!"
+   exit 1
+fi

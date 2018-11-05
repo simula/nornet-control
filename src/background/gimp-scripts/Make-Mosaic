@@ -1,6 +1,6 @@
 #!/bin/bash -e
 #
-# Oil Painting Script
+# Mosaic Script
 # Copyright (C) 2017-2018 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
@@ -37,13 +37,13 @@ TILESPACING=$5
 TILETYPE="1"
 TILESURFACE=0
 if [ $# -gt 5 ] ; then
-   if [ "$6" = "squares" ] ; then   
+   if [ "$6" = "squares" ] ; then
       TILETYPE=0
-   elif [ "$6" = "hexagons" ] ; then   
+   elif [ "$6" = "hexagons" ] ; then
       TILETYPE=1
-   elif [ "$6" = "octagons" ] ; then   
+   elif [ "$6" = "octagons" ] ; then
       TILETYPE=2
-   elif [ "$6" = "triangles]" ] ; then   
+   elif [ "$6" = "triangles]" ] ; then
       TILETYPE=3
    else
       echo >&2 "Invalid tile type: $6"
@@ -51,9 +51,9 @@ if [ $# -gt 5 ] ; then
    fi
 fi
 if [ $# -gt 6 ] ; then
-   if [ "$7" = "smooth" ] ; then   
+   if [ "$7" = "smooth" ] ; then
       TILESURFACE=0
-   elif [ "$7" = "rough" ] ; then   
+   elif [ "$7" = "rough" ] ; then
       TILESURFACE=1
    else
       echo >&2 "Invalid tile surface: $7"
@@ -62,6 +62,7 @@ if [ $# -gt 6 ] ; then
 fi
 
 # ====== Call Gimp ==========================================================
+rm -f "$OUTPUTFILENAME"
 ( cat <<EOF
 (let*
    ((inputFileName    "$INPUTFILENAME")
@@ -75,6 +76,10 @@ fi
     (drawable (car (gimp-image-get-active-layer image)))
    )
    ; ------------------------------------------------------------------------
+   ; First, make sure that the image is RGB, not indexed color mode!
+   (if (not (= RGB (car (gimp-image-base-type image))))
+             (gimp-image-convert-rgb image))
+
    (plug-in-mosaic RUN-NONINTERACTIVE image drawable
        tileSize tileHeight tileSpacing
        0.65 TRUE 135.0 0.2 TRUE TRUE
@@ -84,5 +89,10 @@ fi
 )
 (gimp-quit TRUE)
 EOF
-) | env LANG=C gimp --new-instance --no-interface --no-splash --batch - 2>/dev/null | \
-       ( grep -vE "^ts>|^Copyright|^Welcome|^$" || true )
+) | env LANG=C HOME=/tmp gimp --new-instance --no-interface --no-splash --batch - 2>&1 | \
+       ( grep -vE "^ts>|(#t)|^Copyright|^Welcome|GLib-GObject-WARNING|GEGL-CRITICAL|missing babl fast path|Missing fast-path babl|accelerates GEGL|first occurance of formats|programmatically by bab|GeglBuffers leaked|Failed to parse tag cache|^$" || true )
+
+if [ ! -e "$OUTPUTFILENAME" ] ; then
+   echo >&2 "ERROR: $OUTPUTFILENAME has not been produced. Something went wrong!"
+   exit 1
+fi

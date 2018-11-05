@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
 # Background Script
-# Copyright (C) 2017-2018 by Thomas Dreibholz
+# Copyright (C) 2017 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ OUTPUTFILENAME="$2"
 
 
 # ====== Call Gimp ==========================================================
+rm -f "$OUTPUTFILENAME"
 ( cat <<EOF
 (let*
    ((inputFileName    "$INPUTFILENAME")
@@ -44,6 +45,10 @@ OUTPUTFILENAME="$2"
     (drawable (car (gimp-image-get-active-layer image)))
    )
    ; ------------------------------------------------------------------------
+   ; First, make sure that the image is RGB, not indexed color mode!
+   (if (not (= RGB (car (gimp-image-base-type image))))
+             (gimp-image-convert-rgb image))
+
    ; Change colours
    (gimp-hue-saturation drawable ALL-HUES 120 0 0)
    ; Bump Map
@@ -58,5 +63,10 @@ OUTPUTFILENAME="$2"
 )
 (gimp-quit TRUE)
 EOF
-) | env LANG=C gimp --new-instance --no-interface --no-splash --batch - 2>/dev/null | \
-       ( grep -vE "^ts>|^Copyright|^Welcome|^$" || true )
+) | env LANG=C HOME=/tmp gimp --new-instance --no-interface --no-splash --batch - 2>&1 | \
+       ( grep -vE "^ts>|(#t)|^Copyright|^Welcome|GLib-GObject-WARNING|GEGL-CRITICAL|missing babl fast path|Missing fast-path babl|accelerates GEGL|first occurance of formats|programmatically by bab|GeglBuffers leaked|Failed to parse tag cache|^$" || true )
+
+if [ ! -e "$OUTPUTFILENAME" ] ; then
+   echo >&2 "ERROR: $OUTPUTFILENAME has not been produced. Something went wrong!"
+   exit 1
+fi
