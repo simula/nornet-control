@@ -5,9 +5,10 @@ Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: https://www.nntb.no/
 Build-Depends: debhelper (>= 9),
                dh-python | debhelper,
+               exiftool,
                exiftool | debhelper,
                gimp,
-               imagemagick,
+               graphicsmagick,
                libfile-fcntllock-perl,
                python3-all
 Standards-Version: 4.1.4
@@ -20,6 +21,7 @@ Depends: apt-file,
          apt-show-versions,
          autofs,
          bash-completion,
+         bc,
          bridge-utils,
          btrfs-tools,
          bwm-ng,
@@ -125,7 +127,7 @@ Depends: autoconf,
          gdb,
          gnupg,
          gnuplot,
-         imagemagick,
+         graphicsmagick,
          kbuild,
          kernel-package,
          kernel-wedge,
@@ -335,7 +337,7 @@ Description: NorNet Web Server
 
 Package: nornet-wikisrv
 Architecture: all
-Depends: imagemagick,
+Depends: graphicsmagick,
          libapache2-mod-php | libapache2-mod-php5,
          nornet-websrv,
          php-mbstring,

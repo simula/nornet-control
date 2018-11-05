@@ -1,7 +1,11 @@
 #!/usr/bin/make -f
 
 %:
-	dh $@ --with python3
+	dh $@ --buildsystem=cmake --parallel --with python3
+
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DFLAT_DIRECTORY_STRUCTURE=1 -DBUILD_BOOTSPLASH=1
 
 override_dh_auto_build:
 	set -ex; for python in $(shell py3versions -r); do \
