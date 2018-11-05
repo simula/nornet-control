@@ -1,5 +1,5 @@
 #############################################################################
-# CONFIGURATION FILES
+# FILES
 #############################################################################
 
 FILE(GLOB Kontrollsenter_files "NorNet-*.css" "NorNet-*.js" "NorNet-*.php" "NorNet-*.html" "Forward-*.html")

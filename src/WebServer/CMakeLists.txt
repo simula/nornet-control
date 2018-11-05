@@ -1,5 +1,5 @@
 #############################################################################
-# CONFIGURATION FILES
+# FILES
 #############################################################################
 
 FILE(GLOB NorNetWebSrv_files "*.config" "*.conf" "favicon.ico" "get-pin256" "make-cipher-suites" "make-certificate" "sign-certificate")
