@@ -17,13 +17,16 @@ INSTALL(FILES Backup-VSystem.1               DESTINATION ${CMAKE_INSTALL_MANDIR}
 INSTALL(FILES Backup-VSystem                 DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES Change-VSystem-CDImage.1       DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 INSTALL(FILES Change-VSystem-CDImage         DESTINATION ${CMAKE_INSTALL_BINDIR})
-INSTALL(FILES check_*                        DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES Check-Nodes.1                  DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 INSTALL(FILES Check-Nodes                    DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES Check-Nodes-Loop.1             DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 INSTALL(FILES Check-Nodes-Loop               DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES Check-Research-Node.1          DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 INSTALL(FILES Check-Research-Node            DESTINATION ${CMAKE_INSTALL_BINDIR})
+INSTALL(FILES check_site.1                   DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+INSTALL(FILES check_site                     DESTINATION ${CMAKE_INSTALL_BINDIR})
+INSTALL(FILES check_tunnel.1                 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+INSTALL(FILES check_tunnel                   DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES Check-VSystem.1                DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 INSTALL(FILES Check-VSystem                  DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES Clear-SSH-Node-Key.1           DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
@@ -46,7 +49,7 @@ INSTALL(FILES Get-Slices.1                   DESTINATION ${CMAKE_INSTALL_MANDIR}
 INSTALL(FILES Get-Slices                     DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES Get-Users.1                    DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 INSTALL(FILES Get-Users                      DESTINATION ${CMAKE_INSTALL_BINDIR})
-INSTALL(FILES Interface-Setup.8              DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+INSTALL(FILES Interface-Setup.8              DESTINATION ${CMAKE_INSTALL_MANDIR}/man8)
 INSTALL(FILES Interface-Setup                DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES Make-FileSrv-Configuration.1   DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 INSTALL(FILES Make-FileSrv-Configuration     DESTINATION ${CMAKE_INSTALL_BINDIR})
@@ -106,8 +109,15 @@ INSTALL(FILES Watchdog                       DESTINATION ${CMAKE_INSTALL_BINDIR}
 
 
 #############################################################################
+# CONFIGURATION FILES
+#############################################################################
+
+INSTALL(FILES nornet-authorized_keys         DESTINATION ${CMAKE_INSTALL_PREFIX}/etc/nornet)
+
+
+#############################################################################
 # SOURCE DIRECTORIES
 #############################################################################
 
-# ADD_SUBDIRECTORY(grub)
-# ADD_SUBDIRECTORY(cloud-init)
+ADD_SUBDIRECTORY(grub)
+ADD_SUBDIRECTORY(vsystems)
