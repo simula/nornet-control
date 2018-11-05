@@ -175,7 +175,9 @@ FILE(MAKE_DIRECTORY ${TDD_OUTPUT_DIRECTORY})
 
 # ###### Create unique target name from file name ###########################
 FUNCTION(makeUniqueTarget target fileName)
+   # STRING(MAKE_C_IDENTIFIER ${fileName} result)
    SET(result ${fileName})
+   STRING(REGEX REPLACE "[/\\ ]" "-"  result ${result})
    STRING(REPLACE "ä" "ae" result ${result})
    STRING(REPLACE "ö" "oe" result ${result})
    STRING(REPLACE "ü" "ue" result ${result})
@@ -193,7 +195,7 @@ FUNCTION(makeUniqueTarget target fileName)
    STRING(REGEX REPLACE "[ÁÀǍÃ]" "A" result ${result})
    STRING(REGEX REPLACE "[éèê]"  "e" result ${result})
    STRING(REGEX REPLACE "[ÉÈÊ]"  "E" result ${result})
-   STRING(REGEX REPLACE "[^a-zA-Z0-9.+-@_]" "_X_" result ${result})
+   STRING(REGEX REPLACE "[^a-zA-Z0-9\\.@_+-]" "_X_" result ${result})
    SET(${target} ${result} PARENT_SCOPE)
 ENDFUNCTION()
 

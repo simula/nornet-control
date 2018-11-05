@@ -61,7 +61,7 @@ inputAspect=`awk "BEGIN { print ${inputWidth}/${inputHeight} }"`
 if [[ "$inputAspect" =~ ^- ]] ; then
    inputAspect=`awk "BEGIN { print 1/${inputAspect} }"`   # Input image is in portrait format => convert aspect
 fi
-# echo "Input: ${inputWidth}*${inputHeight} (${inputAspect})"
+echo "Input: ${inputWidth}*${inputHeight} (${inputAspect})"
 
 
 # ###### Crop image #########################################################
@@ -74,13 +74,13 @@ else
 fi
 cx=`awk "BEGIN { print int(${inputWidth}-${croppedInputWidth})/2+0.5 }"`
 cy=`awk "BEGIN { print int(${inputHeight}-${croppedInputHeight})/2+0.5 }"`
-# echo "Crop: ${croppedInputWidth}*${croppedInputHeight} [cx=${cx} cy=${cy}] (${outputAspect}:1)"
+echo "Crop: ${croppedInputWidth}*${croppedInputHeight} [cx=${cx} cy=${cy}] (${outputAspect}:1)"
 
 
 # ###### Resize image #######################################################
-# if [ "$newWidth" != "" ] ; then
-#    echo "Resize: ${newWidth}*${newHeight} + (${outputAspect}:1)"
-# fi
+if [ "$newWidth" != "" ] ; then
+   echo "Resize: ${newWidth}*${newHeight} + (${outputAspect}:1)"
+fi
 
 
 # ###### Run "convert" ######################################################
@@ -91,6 +91,6 @@ gm convert "$inputFileName" \
    +repage \
    "$outputFileName"
 
-# echo "Done!"
+echo "Done!"
 
-# gm identify "$outputFileName"
+gm identify "$outputFileName"
