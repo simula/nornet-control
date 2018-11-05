@@ -119,5 +119,10 @@ INSTALL(FILES nornet-authorized_keys         DESTINATION ${CMAKE_INSTALL_PREFIX}
 # SOURCE DIRECTORIES
 #############################################################################
 
+ADD_SUBDIRECTORY(cron-apt)
 ADD_SUBDIRECTORY(grub)
 ADD_SUBDIRECTORY(vsystems)
+
+ADD_SUBDIRECTORY(Monitor)
+ADD_SUBDIRECTORY(WebServer)
+ADD_SUBDIRECTORY(XDM)
