@@ -112,7 +112,9 @@ INSTALL(FILES Watchdog                       DESTINATION ${CMAKE_INSTALL_BINDIR}
 # CONFIGURATION FILES
 #############################################################################
 
-INSTALL(FILES nornet-authorized_keys         DESTINATION ${CMAKE_INSTALL_PREFIX}/etc/nornet)
+INSTALL(FILES nornet-authorized_keys  DESTINATION ${CMAKE_INSTALL_PREFIX}/etc/nornet)
+
+INSTALL(FILES watchdog-config.example DESTINATION ${CMAKE_INSTALL_DATADIR}/nornet-server)
 
 
 #############################################################################

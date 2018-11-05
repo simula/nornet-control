@@ -1,12 +1,11 @@
-Kontrollsenter/Clock/*.svg                /var/www/Kontrollsenter/Clock/
-Kontrollsenter/Forward-*.html             /var/www/Kontrollsenter
-Kontrollsenter/NorNet-*                   /var/www/Kontrollsenter
-Kontrollsenter/UnifrakturCook/*           /var/www/Kontrollsenter/UnifrakturCook/
-Kontrollsenter/UnifrakturCook/sources/    /var/www/Kontrollsenter/UnifrakturCook/sources/
-Make-Monitor-Configuration                /usr/bin
-Monitor/nornet-commands.cfg               /etc/nagios3
-Monitor/nornet-services.cfg               /etc/nagios3
-check_site                                /usr/lib/nagios/plugins
-check_tunnel                              /usr/lib/nagios/plugins
-grub/??_nornet_monitor_theme              /etc/grub.d
-grub/Splash-Monitor1-1024x768.jpeg        /boot
+/etc/grub.d/??_nornet_monitor_theme
+/etc/nagios3/Monitor/nornet-commands.cfg
+/etc/nagios3/Monitor/nornet-services.cfg
+/usr/bin/Make-Monitor-Configuration
+/usr/bin/check_site /usr/lib/nagios/plugins
+/usr/bin/check_tunnel /usr/lib/nagios/plugins
+/usr/share/nornet-desktop/Splash/Monitor1-1024x768.jpeg /boot/NorNet
+/var/www/Kontrollsenter/*
+/var/www/Kontrollsenter/Clock/*
+/var/www/Kontrollsenter/UnifrakturCook/*
+/var/www/Kontrollsenter/UnifrakturCook/sources/*

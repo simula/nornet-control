@@ -7,7 +7,7 @@
 echo >&2 "Using NorNet Tunnelbox theme!"
 
 echo "insmod jpeg"   # Load JPEG reader!
-echo "if background_image `make_system_path_relative_to_its_root "/boot/Splash-Tunnelbox1-1024x768.jpeg"`; then"
+echo "if background_image `make_system_path_relative_to_its_root "/boot/NorNet/Tunnelbox1-1024x768.jpeg"`; then"
 echo "   set menu_color_normal=red/black"
 echo "   set menu_color_highlight=blue/red"
 echo "   set color_normal=red/black"
