@@ -3,7 +3,8 @@ Section: net
 Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: https://www.nntb.no/
-Build-Depends: debhelper (>= 9),
+Build-Depends: cmake,
+               debhelper (>= 9),
                dh-python | debhelper,
                exiftool,
                exiftool | debhelper,
