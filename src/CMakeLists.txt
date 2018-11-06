@@ -2,6 +2,23 @@
 # LIBRARIES
 #############################################################################
 
+# Help:
+# https://bloerg.net/2012/11/10/cmake-and-distutils.html
+
+SET(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in")
+SET(SETUP_PY    "${CMAKE_CURRENT_BINARY_DIR}/setup.py")
+# SET(DEPS        "${CMAKE_CURRENT_SOURCE_DIR}/module/__init__.py")
+SET(OUTPUT      "${CMAKE_CURRENT_BINARY_DIR}/build/timestamp")
+
+CONFIGURE_FILE(${SETUP_PY_IN} ${SETUP_PY})
+
+ADD_CUSTOM_COMMAND(OUTPUT ${OUTPUT}
+                   COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} build && touch ${OUTPUT})
+ADD_CUSTOM_TARGET(target ALL DEPENDS ${OUTPUT})
+
+INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install --install-layout=deb --root ${CMAKE_INSTALL_PREFIX})")
+
+
 
 #############################################################################
 # PROGRAMS
@@ -125,7 +142,7 @@ ADD_SUBDIRECTORY(cron-apt)
 ADD_SUBDIRECTORY(grub)
 ADD_SUBDIRECTORY(vsystems)
 
-ADD_SUBDIRECTORY(Artwork)
+# ADD_SUBDIRECTORY(Artwork)
 ADD_SUBDIRECTORY(Kontrollsenter)
 ADD_SUBDIRECTORY(Monitor)
 ADD_SUBDIRECTORY(WebServer)

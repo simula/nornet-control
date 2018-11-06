@@ -1,32 +1,32 @@
 #!/usr/bin/make -f
 
 %:
-	dh $@ --buildsystem=cmake --parallel --with python3
+	dh $@ --buildsystem=cmake --parallel
 
 
 override_dh_auto_configure:
 	dh_auto_configure -- -DFLAT_DIRECTORY_STRUCTURE=1 -DBUILD_BOOTSPLASH=1
 
-override_dh_auto_build:
-	set -ex; for python in $(shell py3versions -r); do \
-		$$python setup.py build ; \
-	done
-
-# Use setup.py to install the API module into the right directory.
-override_dh_auto_install:
-	# NOTE: This is for the package "nornet-api", hence the following --root parameter!
-	set -ex; for python in $(shell py3versions -r); do \
-		$$python setup.py install --install-layout=deb --root $(CURDIR)/debian/nornet-api ; \
-	done
-	# ifupdown scripts:
-	mkdir -p debian/nornet-tunnelbox/etc/network/if-up.d
-	mkdir -p debian/nornet-tunnelbox/etc/network/if-down.d
-	install -m 0755 debian/nornet-tunnelbox.ifupdown debian/nornet-tunnelbox/etc/network/if-up.d/nornet-tunnelbox
-	install -m 0755 debian/nornet-tunnelbox.ifupdown debian/nornet-tunnelbox/etc/network/if-down.d/nornet-tunnelbox
-
-override_dh_auto_clean:
-	dh_clean
-	rm -rf build
+# override_dh_auto_build:
+# 	set -ex; for python in $(shell py3versions -r); do \
+# 		$$python setup.py build ; \
+# 	done
+#
+# # Use setup.py to install the API module into the right directory.
+# override_dh_auto_install:
+# # 	# NOTE: This is for the package "nornet-api", hence the following --root parameter!
+# # 	set -ex; for python in $(shell py3versions -r); do \
+# # 		$$python setup.py install --install-layout=deb --root $(CURDIR)/debian/nornet-api ; \
+# # 	done
+# 	# ifupdown scripts:
+# 	mkdir -p debian/nornet-tunnelbox/etc/network/if-up.d
+# 	mkdir -p debian/nornet-tunnelbox/etc/network/if-down.d
+# 	install -m 0755 debian/nornet-tunnelbox.ifupdown debian/nornet-tunnelbox/etc/network/if-up.d/nornet-tunnelbox
+# 	install -m 0755 debian/nornet-tunnelbox.ifupdown debian/nornet-tunnelbox/etc/network/if-down.d/nornet-tunnelbox
+#
+# override_dh_auto_clean:
+# 	dh_clean
+# 	rm -rf build
 
 # Use upstream ChangeLog for installation
 override_dh_installchangelogs:
