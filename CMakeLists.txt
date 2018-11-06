@@ -102,6 +102,10 @@ ENDIF()
 # REQUIREMENTS
 #############################################################################
 
+SET(Python_ADDITIONAL_VERSIONS 3)
+INCLUDE(FindPythonInterp)
+
+FIND_PACKAGE(PythonInterp 3.4 REQUIRED)
 
 
 #############################################################################
