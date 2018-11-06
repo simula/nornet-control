@@ -41,7 +41,7 @@ SET(Artwork_subdirs
 
 FOREACH(subdir ${Artwork_subdirs})
    FILE(GLOB files "${subdir}/*.png" "${subdir}/*.svg")
-   INSTALL(FILES ${files} DESTINATION  ${CMAKE_INSTALL_PREFIX}/var/www/Artwork/${subdir})
+   INSTALL(FILES ${files} DESTINATION  ${CMAKE_INSTALL_LOCALSTATEDIR}/www/Artwork/${subdir})
 ENDFOREACH()
 
 
@@ -74,11 +74,11 @@ FOREACH(siteImage ${siteImages})
                       COMMAND ${MAKE_CROPPED} ${siteImage} ${smallImage} ${ASPECT_RATIO} ${WIDTH_LARGE}
                       DEPENDS ${siteImage})
    ADD_CUSTOM_TARGET(${generate_smallImage} ALL DEPENDS ${smallImage})
-   INSTALL(FILES ${smallImage} DESTINATION ${CMAKE_INSTALL_PREFIX}/var/www/Artwork/Sites/Small)
+   INSTALL(FILES ${smallImage} DESTINATION ${CMAKE_INSTALL_LOCALSTATEDIR}/www/Artwork/Sites/Small)
 
    ADD_CUSTOM_COMMAND(OUTPUT  ${largeImage}
                       COMMAND ${MAKE_CROPPED} ${siteImage} ${largeImage} ${ASPECT_RATIO} ${WIDTH_LARGE}
                       DEPENDS ${siteImage})
    ADD_CUSTOM_TARGET(${generate_largeImage} ALL DEPENDS ${largeImage})
-   INSTALL(FILES ${largeImage} DESTINATION ${CMAKE_INSTALL_PREFIX}/var/www/Artwork/Sites/Large)
+   INSTALL(FILES ${largeImage} DESTINATION ${CMAKE_INSTALL_LOCALSTATEDIR}/www/Artwork/Sites/Large)
 ENDFOREACH()

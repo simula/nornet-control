@@ -4,4 +4,4 @@
 
 FILE(GLOB NorNetMonitor_files "*.cfg")
 
-INSTALL(FILES ${NorNetMonitor_files} DESTINATION ${CMAKE_INSTALL_DATADIR}/nornet-monitor)
+INSTALL(FILES ${NorNetMonitor_files} DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/nagios3)
