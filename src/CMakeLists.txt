@@ -2,8 +2,13 @@
 # LIBRARIES
 #############################################################################
 
+
+# IF (BUILD_PYTHON_LIBRARY)
 # Help:
 # https://bloerg.net/2012/11/10/cmake-and-distutils.html
+
+# NOTE: setup.py must *not* be packaged, since it is automatically generated!
+# It has to be added to CPACK_SOURCE_IGNORE_FILES (i.e. "setup.py$")!
 
 SET(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in")
 SET(SETUP_PY    "${CMAKE_CURRENT_BINARY_DIR}/setup.py")
@@ -16,7 +21,8 @@ ADD_CUSTOM_COMMAND(OUTPUT ${OUTPUT}
                    COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} build && touch ${OUTPUT})
 ADD_CUSTOM_TARGET(target ALL DEPENDS ${OUTPUT})
 
-INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install --install-layout=deb --root ${CMAKE_INSTALL_PREFIX})")
+INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install --install-layout=deb --prefix=${PYTHON_LIBRARY_PREFIX})")
+# ENDIF()
 
 
 
@@ -173,7 +179,6 @@ INSTALL(FILES Tunnelbox-Setup.1               DESTINATION ${CMAKE_INSTALL_MANDIR
 
 INSTALL(PROGRAMS Watchdog                     DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES Watchdog.1                      DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
-
 
 
 #############################################################################
