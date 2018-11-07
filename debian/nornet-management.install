@@ -1,6 +1,5 @@
 /etc/grub.d/??_nornet_management_theme
 /etc/nornet/nornet-authorized_keys
-/sbin/Interface-Setup
 /usr/bin/Auto-Update-Keys
 /usr/bin/Check-Nodes
 /usr/bin/Check-Nodes-Loop
@@ -23,5 +22,6 @@
 /usr/bin/System-Maintenance
 /usr/bin/Test-NTP-Configuration
 /usr/bin/Watchdog
+/usr/sbin/Interface-Setup /sbin
 /usr/share/nornet-desktop/Splash/Management1-1024x768.jpeg /boot/NorNet
-/usr/share/nornet-desktop/nornet-version /etc/nornet
+/usr/share/nornet-desktop/Splash/nornet-version /etc/nornet

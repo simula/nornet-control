@@ -1,5 +1,4 @@
-/var/www/Artwork/Desktop/*.jpeg
-/var/www/Artwork/Desktop/*.png
+/usr/share/nornet-desktop/Desktop-with-Logo/* /var/www/Artwork/Desktop
 /var/www/Artwork/Graphics/Backgrounds/*.png
 /var/www/Artwork/Graphics/Control/*.png
 /var/www/Artwork/Graphics/Flags/*.png
@@ -7,5 +6,4 @@
 /var/www/Artwork/Graphics/Icons/*.png
 /var/www/Artwork/Graphics/Markers/*.svg
 /var/www/Artwork/Sites/Large/*.jpeg
-/var/www/Artwork/Sites/Original/*.jpeg
 /var/www/Artwork/Sites/Small/*.jpeg

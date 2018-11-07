@@ -1,6 +1,6 @@
 /etc/grub.d/??_nornet_monitor_theme
-/etc/nagios3/Monitor/nornet-commands.cfg
-/etc/nagios3/Monitor/nornet-services.cfg
+/etc/nagios3/nornet-commands.cfg
+/etc/nagios3/nornet-services.cfg
 /usr/bin/Make-Monitor-Configuration
 /usr/bin/check_site /usr/lib/nagios/plugins
 /usr/bin/check_tunnel /usr/lib/nagios/plugins

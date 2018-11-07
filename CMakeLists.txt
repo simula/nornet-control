@@ -116,4 +116,3 @@ FIND_PACKAGE(PythonInterp 3.4.0 REQUIRED)
 #############################################################################
 
 ADD_SUBDIRECTORY(src)
-# ADD_SUBDIRECTORY(background)
