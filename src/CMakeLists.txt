@@ -1,9 +1,7 @@
 #############################################################################
-# LIBRARIES
+# PYTHON LIBRARIES
 #############################################################################
 
-
-# IF (BUILD_PYTHON_LIBRARY)
 # Help:
 # https://bloerg.net/2012/11/10/cmake-and-distutils.html
 
@@ -22,8 +20,6 @@ ADD_CUSTOM_COMMAND(OUTPUT ${OUTPUT}
 ADD_CUSTOM_TARGET(target ALL DEPENDS ${OUTPUT})
 
 INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install --install-layout=deb --prefix=${PYTHON_LIBRARY_PREFIX})")
-# ENDIF()
-
 
 
 #############################################################################
