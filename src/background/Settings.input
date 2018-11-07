@@ -30,7 +30,7 @@ EXECUTE_PROCESS(COMMAND env LC_TIME=en_IE.UTF-8 date "+%Y"
                 OUTPUT_VARIABLE this_year OUTPUT_STRIP_TRAILING_WHITESPACE)
 EXECUTE_PROCESS(COMMAND env LC_TIME=en_IE.UTF-8 date
                 OUTPUT_VARIABLE this_date OUTPUT_STRIP_TRAILING_WHITESPACE)
-EXECUTE_PROCESS(COMMAND head -n1 ${CMAKE_CURRENT_SOURCE_DIR}/../debian/changelog
+EXECUTE_PROCESS(COMMAND head -n1 ${CMAKE_SOURCE_DIR}/debian/changelog
                 COMMAND sed -e "s/[a-zA-Z0-9 \\-]*(//" -e "s/).*//" -e "s/[0-9]*$//" -e "s/ //g" -e "s/^[0-9]*://" -e "s/-[^ ]*$//g"
                 OUTPUT_VARIABLE this_version OUTPUT_STRIP_TRAILING_WHITESPACE)
 
