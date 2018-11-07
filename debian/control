@@ -5,12 +5,10 @@ Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: https://www.nntb.no/
 Build-Depends: cmake,
                debhelper (>= 9),
-               dh-python | debhelper,
-               exiftool,
-               exiftool | debhelper,
                gimp,
                graphicsmagick,
                libfile-fcntllock-perl,
+               libimage-exiftool-perl,
                python3-all
 Standards-Version: 4.1.4
 Vcs-Git: https://github.com/simula/nornet-control.git
@@ -121,7 +119,6 @@ Depends: autoconf,
          debhelper,
          devscripts,
          docker.io,
-         exiftool,
          flex,
          gdb,
          gnupg,
@@ -135,6 +132,7 @@ Depends: autoconf,
          libelf-dev,
          libgdal-dev,
          libglib2.0-dev,
+         libimage-exiftool-perl,
          liblua5.2-dev,
          libnewt-dev,
          libpcap-dev,
@@ -410,7 +408,6 @@ Package: nornet-trace-service
 Architecture: any
 Depends: hipercontracer (>= 1.2.0~),
          ${misc:Depends},
-         ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet Trace Service
  NorNet Trace Service is the traceroute service for the NorNet testbed.

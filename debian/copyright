@@ -4,28 +4,28 @@ Upstream-Contact: Thomas Dreibholz <dreibh@simula.no>
 Source: https://www.nntb.no
 
 Files: *
-Copyright: Copyright 2012-2016 Thomas Dreibholz
+Copyright: Copyright 2012-2018 Thomas Dreibholz
 License: GPL-3
 
-Files: Kontrollsenter/Clock/*
+Files: src/Kontrollsenter/Clock/*
 Copyright: Copyright 2012 Rüdiger Appel
 License: CC-BY
 
-Files: Kontrollsenter/ol3-layerswitcher/*
+Files: src/Kontrollsenter/ol3-layerswitcher/*
 Copyright: Copyright Matt Walker
 License: MIT
 
-Files: Kontrollsenter/UnifrakturCook/*
+Files: src/Kontrollsenter/UnifrakturCook/*
 Copyright:
  Copyright 2009 Peter Wiegel
  Copyright 2010 J. 'Mach' Wust
 License: SIL-OFL
 
-Files: Artwork/Graphics/*/*
+Files: src/Artwork/Graphics/*/*
 Copyright: Copyright Wikimedia Commons
 License: CC-BY-SA
 
-Files: Artwork/Sites/*/*
+Files: src/Artwork/Sites/*/*
 Copyright: See EXIF information!
 License: CC-BY-SA
 
