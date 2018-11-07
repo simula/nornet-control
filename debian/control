@@ -74,7 +74,6 @@ Depends: apt-file,
          xml-twig-tools,
          xmlstarlet,
          ${misc:Depends},
-         ${python3:Depends},
          ${shlibs:Depends}
 Recommends: apport-retrace,
             language-pack-de-base,
@@ -103,7 +102,6 @@ Depends: fvwm,
          xserver-xorg,
          xterm,
          ${misc:Depends},
-         ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet X11 Login
  This metapackage contains basic X11 software for NorNet systems. The
@@ -160,8 +158,7 @@ Depends: autoconf,
          yum-utils,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: python3-wand,
-            ubuntu-dev-tools
+Recommends: ubuntu-dev-tools
 Description: NorNet Development Tools
  This metapackage contains basic software nor NorNet development. The
  software installed provides a common working environment.
@@ -171,7 +168,6 @@ Description: NorNet Development Tools
 Package: nornet-api
 Architecture: any
 Depends: ${misc:Depends},
-         ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet API
  This package contains the NorNet Python API library. It contains functions
