@@ -29,28 +29,27 @@
 # Contact: dreibh@iem.uni-due.de
 
 
-# ###### Initialise #########################################################
+#############################################################################
+# INITIALISE
+#############################################################################
+
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT(undefined NONE)   # to be set in Setting.cmake
 INCLUDE(Settings.input)
 
 
-# ###### Installation Directories ###########################################
+#############################################################################
+# INSTALLATION_DIRECTORIES
+#############################################################################
 
 # See: https://cmake.org/cmake/help/v3.0/module/GNUInstallDirs.html
 INCLUDE(GNUInstallDirs)
 
-# SET(CMAKE_INSTALL_BINDIR        "bin"       CACHE PATH "user executables [PREFIX/bin]")
-# SET(CMAKE_INSTALL_SBINDIR       "sbin"      CACHE PATH "system admin executables [EPREFIX/sbin]")
-# SET(CMAKE_INSTALL_DATADIR       "share"     CACHE PATH "read-only architecture-independent data [PREFIX/share]")
-# SET(CMAKE_INSTALL_SYSCONFDIR    "etc"       CACHE PATH "read-only single-machine data [PREFIX/etc]")
-# SET(CMAKE_INSTALL_LOCALSTATEDIR "var"       CACHE PATH "modifiable single-machine data [PREFIX/var]")
-# SET(CMAKE_INSTALL_LIBDIR        "lib"       CACHE PATH "object code libraries [PREFIX/lib]")
-# SET(CMAKE_INSTALL_INCLUDEDIR    "include"   CACHE PATH "read-only includes [PREFIX/include]")
-# SET(CMAKE_INSTALL_MANDIR        "share/man" CACHE PATH "man documentation [PREFIX/share/man]")
 
+#############################################################################
+# OPTIONS
+#############################################################################
 
-# ###### Options ############################################################
 OPTION(FLAT_DIRECTORY_STRUCTURE "Use flat directory structure" ${TDD_FLAT_DIRECTORY_STRUCTURE})
 
 OPTION(INSTALL_ORIGINALS "Install original images as well" ${TDD_INSTALL_ORIGINALS})
@@ -71,7 +70,10 @@ IF(PRINT_A4 OR PRINT_A3)
 ENDIF()
 
 
-# ###### Requirements #######################################################
+#############################################################################
+# REQUIREMENTS
+#############################################################################
+
 INCLUDE(FindUnixCommands)
 
 # ------ Required prgorams --------------------------------------------------
@@ -148,7 +150,10 @@ IF(NOT BUILD_OVERLAY)
 ENDIF()
 
 
-# ###### Packaging ##########################################################
+#############################################################################
+# REQUIREMENTS
+#############################################################################
+
 IF(TDD_ADD_DIST_TARGET)
    SET(CPACK_SOURCE_GENERATOR "TGZ")
    SET(CPACK_SOURCE_PACKAGE_FILE_NAME
@@ -161,7 +166,9 @@ IF(TDD_ADD_DIST_TARGET)
 ENDIF()
 
 
-# ###### Targets ############################################################
+#############################################################################
+# BUILD TARGETS
+#############################################################################
 
 # NOTE: The following build rules use custom commands. They need additional
 #       targets as well, to correctly run parallel builds! For details, see:
