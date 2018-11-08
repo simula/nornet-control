@@ -28,6 +28,8 @@ HEIGHT="$3"
 DIRECTORY="$4"
 
 GM="/usr/bin/gm"
+SCRIPT=`realpath -s "$0"`
+SCRIPTPATH=`dirname "${SCRIPT}"`
 
 # ------ Proportions --------------------------------------------------------
 titleWidth=0.50      # of Width
@@ -51,7 +53,7 @@ logoWidthValue=`awk "BEGIN { print ${logoWidth}*${titleWidthValue} }"`
 tempDirectory=`mktemp -d`
 
 # ------ NorNet logo on white background, with transparent border -----------
-${GM} convert Logo-NorNet.pdf -trim -resize ${logoWidthValue}x \
+${GM} convert ${SCRIPTPATH}/Logo-NorNet.pdf -trim -resize ${logoWidthValue}x \
    -background blue -bordercolor white -border ${nameBorderValueX}x${nameBorderValueY} \
    ${tempDirectory}/nntb.miff
 ${GM} mogrify -bordercolor none -border 0x${titleBorderValue} ${tempDirectory}/nntb.miff
