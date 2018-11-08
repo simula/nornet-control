@@ -42,7 +42,8 @@ titleWidthValue=`awk "BEGIN { print ${WIDTH}*${titleWidth} }"`
 subtitleWidthValue=`awk "BEGIN { print ${WIDTH}*${subtitleWidth} }"`
 nameHeightValue=`awk "BEGIN { print ${HEIGHT}*${nameHeight} }"`
 titleBorderValue=`awk "BEGIN { print ${nameHeightValue}*${titleBorder} }"`
-nameBorderValue=`awk "BEGIN { print ${nameHeightValue}*${nameBorder} }"`
+nameBorderValueX=`awk "BEGIN { print ${nameHeightValue}*${nameBorder}*${WIDTH}/${HEIGHT} }"`
+nameBorderValueY=`awk "BEGIN { print ${nameHeightValue}*${nameBorder} }"`
 indentValue=`awk "BEGIN { print ${HEIGHT}*${indent} }"`
 logoWidthValue=`awk "BEGIN { print ${logoWidth}*${titleWidthValue} }"`
 
@@ -69,24 +70,26 @@ logoWidthValue=`awk "BEGIN { print ${logoWidth}*${titleWidthValue} }"`
 
 tempDirectory=`mktemp -d`
 
+# ------ NorNet logo on white background, with transparent border -----------
+${GM} convert Logo-NorNet.pdf -trim -resize ${logoWidthValue}x \
+   -background blue -bordercolor white -border ${nameBorderValueX}x${nameBorderValueY} \
+   ${tempDirectory}/nntb.miff
+${GM} mogrify -bordercolor none -border 0x${titleBorderValue} ${tempDirectory}/nntb.miff
+
+
 # ------ Resize input images ------------------------------------------------
-${GM} convert $DIRECTORY/Title.png -trim \
-   -resize ${titleWidthValue}x \
+${GM} convert $DIRECTORY/Title.png -trim -resize ${titleWidthValue}x \
    ${tempDirectory}/title.miff
-${GM} convert $DIRECTORY/Subtitle.png -trim \
-   -resize ${subtitleWidthValue}x \
-   -bordercolor none -border 0x${titleBorderValue} \
+${GM} convert $DIRECTORY/Subtitle.png -trim -resize ${subtitleWidthValue}x \
+   -bordercolor none \
    ${tempDirectory}/subtitle.miff
 
-${GM} convert $DIRECTORY/Name.png -trim \
-   -resize x${nameHeightValue} \
+${GM} convert $DIRECTORY/Name.png -trim -resize x${nameHeightValue} \
    ${tempDirectory}/name.miff
-${GM} convert $DIRECTORY/Affiliation.png -trim \
-   -resize x${nameHeightValue} \
-   -bordercolor none -border 0x${nameBorderValue} \
+${GM} convert $DIRECTORY/Affiliation.png -trim -resize x${nameHeightValue} \
+   -bordercolor none -border 0x${nameBorderValueY} \
    ${tempDirectory}/affiliation.miff
-${GM} convert $DIRECTORY/URL.png -trim \
-   -resize x${nameHeightValue} \
+${GM} convert $DIRECTORY/URL.png -trim -resize x${nameHeightValue} \
    ${tempDirectory}/url.miff
 
 # ------ Center title over subtitle -----------------------------------------
@@ -96,8 +99,15 @@ ${GM} composite -size ${subtitleWidthValue}x${th} \
    -gravity Center ${tempDirectory}/title.miff \
    xc:none ${tempDirectory}/title-c.miff
 
+nh=`gm identify -format "%h" "${tempDirectory}/nntb.miff"`
+# Size is ${subtitleWidthValue}x${th}:
+${GM} composite -size ${subtitleWidthValue}x${nh} \
+   -gravity Center ${tempDirectory}/nntb.miff \
+   xc:none ${tempDirectory}/nntb-c.miff
+
 ${GM} convert -background none -append \
    ${tempDirectory}/title-c.miff \
+   ${tempDirectory}/nntb-c.miff \
    ${tempDirectory}/subtitle.miff \
    ${tempDirectory}/logo.miff
 
