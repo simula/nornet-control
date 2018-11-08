@@ -554,3 +554,12 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
       ENDFOREACH()
    ENDFOREACH()
 ENDFOREACH()
+
+
+#############################################################################
+# SOURCE DIRECTORIES
+#############################################################################
+
+IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/grub)
+   ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/grub)
+ENDIF()
