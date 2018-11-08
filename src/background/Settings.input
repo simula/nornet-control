@@ -35,6 +35,13 @@ EXECUTE_PROCESS(COMMAND head -n1 ${CMAKE_SOURCE_DIR}/debian/changelog
                 OUTPUT_VARIABLE this_version OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 
+# ###### Additional Requirements ############################################
+FIND_PROGRAM(GS gs PATHS /bin /usr/bin /usr/local/bin)
+IF(NOT GS)
+   MESSAGE(FATAL_ERROR "gs (Ubuntu/Debian: ghostscript; Fedora: ghostscript) not found!")
+ENDIF()
+
+
 # ###### Settings ###########################################################
 
 # ------ Layouts ------------------------------------------
