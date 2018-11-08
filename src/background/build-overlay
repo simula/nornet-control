@@ -48,26 +48,6 @@ indentValue=`awk "BEGIN { print ${HEIGHT}*${indent} }"`
 logoWidthValue=`awk "BEGIN { print ${logoWidth}*${titleWidthValue} }"`
 
 
-# prefix="NorNet"
-# convert Logo-NorNet.pdf \
-#    -trim +repage -resize ${logoWidthValue}x \
-#    -bordercolor white -border ${nameBorderValue}x${nameBorderValue} \
-#    -background white -alpha remove \
-#    NorNet-Logo-${WIDTH}x${HEIGHT}.png
-#
-# convert -size ${WIDTH}x${HEIGHT} xc:none \
-#    \( -background none \
-#       \( $prefix-Title.png       -trim +repage -resize ${titleWidthValue}x \) -gravity center -append \
-#       \( NorNet-Logo-${WIDTH}x${HEIGHT}.png -bordercolor none -border 0x${titleBorderValue} \) -gravity center -append \
-#       \( $prefix-Subtitle.png    -trim +repage -resize ${subtitleWidthValue}x \) -gravity south  -append \) -gravity center -composite \
-#    \( -background none \
-#       \( $prefix-Name.png        -trim +repage -resize x${nameHeightValue} \) -gravity center -append \
-#       \( $prefix-Affiliation.png -trim +repage -resize x${nameHeightValue} -bordercolor none -border 0x${nameBorderValue} \) -gravity south  -append \
-#       \( $prefix-URL.png         -trim +repage -resize x${nameHeightValue} \) -gravity south  -append \) \
-#          -gravity southeast -geometry +${indentValue}+${indentValue} -composite \
-# "$OUTPUT"
-
-
 tempDirectory=`mktemp -d`
 
 # ------ NorNet logo on white background, with transparent border -----------
