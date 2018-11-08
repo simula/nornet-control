@@ -22,7 +22,7 @@
 
 
 # Examples:
-# Make-Logo NorNet1.png "NorNet Testbed" 128 5 "Golden" "Eras"
+# Make-Logo NorNet1.png "NorNet Testbed" 128 5 "Golden" "DejaVu Sans"
 # Make-Logo NorNet2.png "NorNet Testbed" 128 5 "Brushed Aluminium" "Comic Sans MS"
 
 
@@ -36,7 +36,7 @@ CONTENT="$2"
 FONTSIZE=$3
 BORDERSIZE=5
 COLORSCHEME="Golden"
-FONTNAME="Eras"
+FONTNAME="DejaVu Sans"
 if [ $# -gt 3 ] ; then
    BORDERSIZE="$4"
 fi
@@ -334,7 +334,7 @@ rm -f "$OUTPUTFILENAME"
 ;    ""
 ;    SF-STRING     _"Text"                     "Galaxy"
 ;    SF-ADJUSTMENT _"Font size (pixels)"       '(100 2 1000 1 10 0 1)
-;    SF-FONT       _"Font"                     "Eras"
+;    SF-FONT       _"Font"                     "DejaVu Sans"
 ;    SF-GRADIENT   _"Blend gradient (text)"    "Shadows 2"
 ;    SF-TOGGLE     _"Text gradient reverse"    FALSE
 ;    SF-GRADIENT   _"Blend gradient (outline)" "Shadows 2"
