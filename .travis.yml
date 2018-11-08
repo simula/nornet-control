@@ -130,7 +130,7 @@ install:
           sudo docker exec -t ubuntu-test bash -c "apt-get dist-upgrade -y"
           sudo docker exec -t ubuntu-test bash -c "apt-get install -y cmake gcc g++ clang make libimage-exiftool-perl gimp graphicsmagick ghostscript gsfonts"
        elif [ "$VARIANT" = "fedora" ] ; then
-          sudo docker exec -t ubuntu-test bash -c "dnf install -y cmake gcc gcc-c++ clang make perl-Image-ExifTool gimp GraphicsMagick ghostscript"
+          sudo docker exec -t ubuntu-test bash -c "dnf install -y cmake gcc gcc-c++ clang make perl-Image-ExifTool gimp GraphicsMagick ghostscript urw-base35-fonts"
        fi
     fi
 
