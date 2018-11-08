@@ -87,10 +87,17 @@ IF(NOT GM)
    MESSAGE(FATAL_ERROR "gm (Ubuntu/Debian: graphicsmagick; Fedora: GraphicsMagick) not found!")
 ENDIF()
 
+# GhostScript is needed by GraphicsMagick to handle PDF files!
+FIND_PROGRAM(GS gs PATHS /bin /usr/bin /usr/local/bin)
+IF(NOT GS)
+   MESSAGE(FATAL_ERROR "gs (Ubuntu/Debian: ghostscript; Fedora: ghostscript) not found!")
+ENDIF()
+
 FIND_PROGRAM(EXIFTOOL exiftool PATHS /bin /usr/bin /usr/local/bin)
 IF(NOT EXIFTOOL)
    MESSAGE(FATAL_ERROR "exiftool (Ubuntu/Debian: libimage-exiftool-perl; Fedora: perl-Image-ExifTool) not found!")
 ENDIF()
+
 
 # ------ Required scripts ---------------------------------------------------
 FIND_PROGRAM(TEST_GIMP ${TDD_TEST_GIMP})
