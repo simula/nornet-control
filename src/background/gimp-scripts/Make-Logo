@@ -22,7 +22,7 @@
 
 
 # Examples:
-# Make-Logo NorNet1.png "NorNet Testbed" 128 5 "Golden" "DejaVu Sans"
+# Make-Logo NorNet1.png "NorNet Testbed" 128 5 "Golden" "Eras"
 # Make-Logo NorNet2.png "NorNet Testbed" 128 5 "Brushed Aluminium" "Comic Sans MS"
 
 
@@ -36,7 +36,7 @@ CONTENT="$2"
 FONTSIZE=$3
 BORDERSIZE=5
 COLORSCHEME="Golden"
-FONTNAME="DejaVu Sans"
+FONTNAME="Eras"
 if [ $# -gt 3 ] ; then
    BORDERSIZE="$4"
 fi
@@ -334,7 +334,7 @@ rm -f "$OUTPUTFILENAME"
 ;    ""
 ;    SF-STRING     _"Text"                     "Galaxy"
 ;    SF-ADJUSTMENT _"Font size (pixels)"       '(100 2 1000 1 10 0 1)
-;    SF-FONT       _"Font"                     "DejaVu Sans"
+;    SF-FONT       _"Font"                     "Eras"
 ;    SF-GRADIENT   _"Blend gradient (text)"    "Shadows 2"
 ;    SF-TOGGLE     _"Text gradient reverse"    FALSE
 ;    SF-GRADIENT   _"Blend gradient (outline)" "Shadows 2"
@@ -385,7 +385,7 @@ rm -f "$OUTPUTFILENAME"
 (gimp-quit TRUE)
 EOF
 ) | env LANG=C HOME=/tmp gimp --new-instance --no-interface --no-splash --batch - 2>&1 | \
-       ( grep -vE "^ts>|(#t)|^Copyright|^Welcome|GLib-GObject-WARNING|GEGL-CRITICAL|missing babl fast path|Missing fast-path babl|accelerates GEGL|first occurance of formats|programmatically by bab|GeglBuffers leaked|Failed to parse tag cache|^$" || true )
+       ( grep -vE "^ts>|(#t)|^Copyright|^Welcome|GLib-GObject-WARNING|GEGL-gegl-operation.c-WARNING|GEGL-CRITICAL|missing babl fast path|Missing fast-path babl|accelerates GEGL|first occurance of formats|programmatically by bab|GeglBuffers leaked|Failed to parse tag cache|^$" || true )
 
 if [ ! -e "$OUTPUTFILENAME" ] ; then
    echo >&2 "ERROR: $OUTPUTFILENAME has not been produced. Something went wrong!"
