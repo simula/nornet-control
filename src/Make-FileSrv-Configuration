@@ -63,9 +63,10 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
    log('Writing global configuration ...')
    outputFile.write('# Global shares\n')
    outputFile.write('/filesrv/pub\t')
-   for version in [ 4, 6 ]:
-      outputFile.write(str(makeNorNetIP(0, 0, 0, version)) + '(' + nfsOptions + ',rw)\t')
-      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(' + nfsOptions + ',rw)\t')
+   outputFile.write(str(makeNorNetIP(0, 0, 0, 4)) + '(' + nfsOptions + ',rw)\t')
+   outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, 4)) + '(' + nfsOptions + ',rw)\t')
+   outputFile.write('[' + str(makeNorNetIP(0, 0, 0, 6)) + '](' + nfsOptions + ',rw)\t')
+   outputFile.write('[' + str(makeNorNetTunnelIP(0, 0, 0, 0, 6)) + '](' + nfsOptions + ',rw)\t')
    outputFile.write('\n')
    outputFile.write('/filesrv/adm\t')
    for i in range(0, len(rwSystemList)):
@@ -120,7 +121,10 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
             for version in [ 4, 6 ]:
                # ====== Add entry for node ==================================
                nodeAddress = makeNorNetIP(providerIndex, siteIndex, nodeIndex, version)
-               outputFile.write(str(nodeAddress.ip) + '(' + nfsOptions + ',rw)\t')
+               if version == 4:
+                  outputFile.write(str(nodeAddress.ip) + '(' + nfsOptions + ',rw)\t')
+               else:
+                  outputFile.write('[' + str(nodeAddress.ip) + '](' + nfsOptions + ',rw)\t')
 
                # ====== Query DNS for the node's name =======================
                if ((version == 4) and
@@ -142,7 +146,10 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
                         for version in [ 4, 6 ]:
                            localInnerAddress =  makeNorNetTunnelIP(siteIndex, providerIndex,
                                                                   remoteSiteIndex, remoteProviderIndex, version)
-                           outputFile.write(str(localInnerAddress.ip) + '(' + nfsOptions + ',rw)\t')
+                           if version == 4:
+                              outputFile.write(str(localInnerAddress.ip) + '(' + nfsOptions + ',rw)\t')
+                           else:
+                              outputFile.write('[' + str(localInnerAddress.ip) + '](' + nfsOptions + ',rw)\t')
 
          outputFile.write('\n')
 
