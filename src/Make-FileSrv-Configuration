@@ -70,9 +70,10 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
    outputFile.write('/filesrv/adm\t')
    for i in range(0, len(rwSystemList)):
       outputFile.write(rwSystemList[i] + '(' + nfsOptions + ',rw)\t')
-   for version in [ 4, 6 ]:
-      outputFile.write(str(makeNorNetIP(0, 0, 0, version)) + '(' + nfsOptions + ',ro)\t')
-      outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '(' + nfsOptions + ',ro)\t')
+   outputFile.write(str(makeNorNetIP(0, 0, 0, 4)) + '(' + nfsOptions + ',ro)\t')
+   outputFile.write(str(makeNorNetTunnelIP(0, 0, 0, 0, 4)) + '(' + nfsOptions + ',ro)\t')
+   outputFile.write('[' + str(makeNorNetIP(0, 0, 0, 6)) + '](' + nfsOptions + ',ro)\t')
+   outputFile.write('[' + str(makeNorNetTunnelIP(0, 0, 0, 0, 6)) + '](' + nfsOptions + ',ro)\t')
    outputFile.write('\n')
    outputFile.write('/filesrv/sys\t')
    for i in range(0, len(rwSystemList)):
