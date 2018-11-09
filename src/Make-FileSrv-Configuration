@@ -114,6 +114,8 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
          except:
             pass
 
+         tunnelIPs = []   # Allow tunnel IPs, but /etc/exports needs unique configuration!
+
          outputFile.write('/filesrv/sys/' + siteDirectory + '/' + nodeDirectory + '\t')
          siteProviderList = getNorNetProvidersForSite(site)
          for providerIndex in siteProviderList:
@@ -146,10 +148,16 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
                         for version in [ 4, 6 ]:
                            localInnerAddress =  makeNorNetTunnelIP(siteIndex, providerIndex,
                                                                   remoteSiteIndex, remoteProviderIndex, version)
-                           if version == 4:
-                              outputFile.write(str(localInnerAddress.ip) + '(' + nfsOptions + ',rw)\t')
+
+                           # The tunnel IPs may be non-unique! Make sure that NFSD gets unique addresses only!
+                           if not str(localInnerAddress.ip) in tunnelIPs:
+                              tunnelIPs.append(str(localInnerAddress.ip))
+                              if version == 4:
+                                 outputFile.write(str(localInnerAddress.ip) + '(' + nfsOptions + ',rw)\t')
+                              else:
+                                 outputFile.write('[' + str(localInnerAddress.ip) + '](' + nfsOptions + ',rw)\t')
                            else:
-                              outputFile.write('[' + str(localInnerAddress.ip) + '](' + nfsOptions + ',rw)\t')
+                              print('Non-unique: ' + str(localInnerAddress.ip))
 
          outputFile.write('\n')
 
