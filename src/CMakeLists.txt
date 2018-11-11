@@ -181,7 +181,7 @@ INSTALL(FILES Watchdog.1                      DESTINATION ${CMAKE_INSTALL_MANDIR
 # CONFIGURATION FILES
 #############################################################################
 
-INSTALL(FILES nornet-authorized_keys  DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/nornet)
+INSTALL(FILES nornet-authorized_keys  DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/nornet)
 
 INSTALL(FILES watchdog-config.example DESTINATION ${CMAKE_INSTALL_DATADIR}/nornet-server)
 
