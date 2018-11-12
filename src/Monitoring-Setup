@@ -63,9 +63,9 @@ done
 if [ "$1" == "add" -o "$1" == "update" ] ; then
    if [ "$1" == "add" ] ; then
       echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
-      sudo curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
+      sudo curl -sL "https://repos.influxdata.com/influxdb.key" | sudo apt-key add -
       echo "deb https://packagecloud.io/grafana/stable/debian/ stretch main" | sudo tee /etc/apt/sources.list.d/grafana.list
-      sudo curl https://packagecloud.io/gpg.key | sudo apt-key add -
+      sudo curl -sL "https://packagecloud.io/gpg.key" | sudo apt-key add -
       sudo apt-get update
       sudo apt-get install -y telegraf influxdb grafana
    fi
