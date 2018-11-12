@@ -30,7 +30,7 @@
 
 
 if [ $# -ne 1 ] ; then
-   echo >&2 "Usage: $0 add|remove"
+   echo >&2 "Usage: $0 add|update|remove"
    exit 1
 fi
 
@@ -60,13 +60,15 @@ done
 
 
 # ====== Add monitoring =====================================================
-if [ "$1" == "add" ] ; then
-   echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
-   sudo curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
-   echo "deb https://packagecloud.io/grafana/stable/debian/ stretch main" | sudo tee /etc/apt/sources.list.d/grafana.list
-   sudo curl https://packagecloud.io/gpg.key | sudo apt-key add -
-#    sudo apt-get update
-#    sudo apt-get install -y telegraf influxdb grafana
+if [ "$1" == "add" -o "$1" == "update" ] ; then
+   if [ "$1" == "add" ] ; then
+      echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+      sudo curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
+      echo "deb https://packagecloud.io/grafana/stable/debian/ stretch main" | sudo tee /etc/apt/sources.list.d/grafana.list
+      sudo curl https://packagecloud.io/gpg.key | sudo apt-key add -
+      sudo apt-get update
+      sudo apt-get install -y telegraf influxdb grafana
+   fi
 
    sudo mkdir -p /etc/telegraf
    ( cat <<EOF
@@ -123,6 +125,17 @@ from_address = nornetpp@sandaker.nntb.no
 from_name = Grafana-Monitoring
 EOF
 ) | sudo tee /etc/grafana/grafana.ini
+
+   sudo systemctl stop telegraf || true
+   sudo systemctl stop influxDB || true
+   sudo systemctl stop grafana-server || true
+
+   sudo systemctl start telegraf
+   sudo systemctl enable telegraf
+   sudo systemctl start influxDB
+   sudo systemctl enable influxDB
+   sudo systemctl start grafana-server
+   sudo systemctl enable grafana-server
 
 
 # ====== Remove monitoring ==================================================
