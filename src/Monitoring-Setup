@@ -142,8 +142,8 @@ EOF
 # ====== Remove monitoring ==================================================
 elif [ "$1" == "remove" ] ; then
    sudo rm -f /etc/apt/sources.list.d/influxdb.list /etc/apt/sources.list.d/grafana.list
-   sudo apt-get autoremove --purge telegraf influxdb grafana || true
-   sudo rm -rf /etc/telegraf /etc/grafana
+   sudo apt-get autoremove -y --purge telegraf influxdb grafana || true
+   sudo rm -rf /etc/telegraf /etc/grafana /var/lib/influxdb
 
 # ====== Error ==============================================================
 else
