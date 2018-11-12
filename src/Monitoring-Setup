@@ -127,23 +127,23 @@ EOF
 ) | sudo tee /etc/grafana/grafana.ini
 
    sudo systemctl stop telegraf || true
-   sudo systemctl stop influxDB || true
+   sudo systemctl stop influxdb || true
    sudo systemctl stop grafana-server || true
 
-   sudo systemctl start telegraf
    sudo systemctl enable telegraf
-   sudo systemctl start influxDB
-   sudo systemctl enable influxDB
-   sudo systemctl start grafana-server
+   sudo systemctl enable influxdb
    sudo systemctl enable grafana-server
+
+   sudo systemctl start telegraf || true
+   sudo systemctl start influxdb || true
+   sudo systemctl start grafana-server || true
 
 
 # ====== Remove monitoring ==================================================
 elif [ "$1" == "remove" ] ; then
    sudo rm -f /etc/apt/sources.list.d/influxdb.list /etc/apt/sources.list.d/grafana.list
    sudo apt-get autoremove --purge telegraf influxdb grafana || true
-   sudo rm -f /etc/telegraf/telegraf.conf /etc/grafana/grafana.ini
-   sudo rmdir /etc/telegraf /etc/grafana
+   sudo rm -rf /etc/telegraf /etc/grafana
 
 # ====== Error ==============================================================
 else
