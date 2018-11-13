@@ -39,9 +39,22 @@ TELEGRAF_INTERFACE_LIST=""
 TELEGRAF_HOSTNAME=`hostname -f`
 TELEGRAF_DNS_LIST=""
 
-source /etc/lsb-release
+
+# ====== Find distribution variant ==========================================
+Variant=""
+if [ -e /etc/network/interfaces ] ; then
+   Variant="Debian"
+elif [ -e /etc/sysconfig/network ] ; then
+   Variant="Fedora"
+elif [ -e /etc/freebsd-update.conf ] ; then
+   Variant="FreeBSD"
+else
+   echo >&2 "ERROR: Unknown/unsupported operating system? Cannot determine how to configure network!"
+   exit 1
+fi
 
 
+# ====== Find interfaces ====================================================
 allInterfaces=`ifconfig | awk '/^([a-zA-Z0-9\-]+):/ { print $1 }'  | sed -e "s/:$//" | sort`
 for interface in $allInterfaces ; do
    if [[ ! "$interface" =~ ^(docker|veth|virbr|teredo) ]] ; then
@@ -62,12 +75,22 @@ done
 # ====== Add monitoring =====================================================
 if [ "$1" == "add" -o "$1" == "update" ] ; then
    if [ "$1" == "add" ] ; then
-      echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
-      sudo curl -sL "https://repos.influxdata.com/influxdb.key" | sudo apt-key add -
-      echo "deb https://packagecloud.io/grafana/stable/debian/ stretch main" | sudo tee /etc/apt/sources.list.d/grafana.list
-      sudo curl -sL "https://packagecloud.io/gpg.key" | sudo apt-key add -
-      sudo apt-get update
-      sudo apt-get install -y telegraf influxdb grafana
+      if [ "$Variant" == "Debian" ] ; then
+         source /etc/lsb-release
+
+         echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+         sudo curl -sL "https://repos.influxdata.com/influxdb.key" | sudo apt-key add -
+         echo "deb https://packagecloud.io/grafana/stable/debian/ stretch main" | sudo tee /etc/apt/sources.list.d/grafana.list
+         sudo curl -sL "https://packagecloud.io/gpg.key" | sudo apt-key add -
+         sudo apt-get update
+         sudo apt-get install -y telegraf influxdb grafana
+      elif [ "$Variant" == "Fedora" ] ; then
+         echo "TBD"
+         exit 1
+      else
+         echo "ERROR: Implement installation for $Variant!"
+         exit 1
+      fi
    fi
 
    sudo mkdir -p /etc/telegraf
@@ -88,7 +111,7 @@ if [ "$1" == "add" -o "$1" == "update" ] ; then
  hostname = "$TELEGRAF_HOSTNAME"
  omit_hostname = false
 [[outputs.influxdb]]
-  urls = ["$TELEGRAF_SERVER_URL"]
+  urls = [ "$TELEGRAF_SERVER_URL" ]
   database = "telegraf"
   retention_policy = ""
   timeout = "5s"
@@ -98,8 +121,8 @@ if [ "$1" == "add" -o "$1" == "update" ] ; then
  collect_cpu_time = false
  report_active = false
  [[inputs.disk]]
-  mount_points = ["/", "/var"]
-  ignore_fs = ["tmpfs", "devtmpfs", "devfs", "overlay", "aufs", "squashfs"]
+  mount_points = [ "/", "/home" ]
+  ignore_fs = [ "tmpfs", "devtmpfs", "devfs", "overlay", "aufs", "squashfs" ]
  [[inputs.mem]]
  [[inputs.swap]]
  [[inputs.system]]
@@ -141,9 +164,17 @@ EOF
 
 # ====== Remove monitoring ==================================================
 elif [ "$1" == "remove" ] ; then
-   sudo rm -f /etc/apt/sources.list.d/influxdb.list /etc/apt/sources.list.d/grafana.list
-   sudo apt-get autoremove -y --purge telegraf influxdb grafana || true
-   sudo rm -rf /etc/telegraf /etc/grafana /var/lib/influxdb
+   if [ "$Variant" == "Debian" ] ; then
+      sudo rm -f /etc/apt/sources.list.d/influxdb.list /etc/apt/sources.list.d/grafana.list
+      sudo apt-get autoremove -y --purge telegraf influxdb grafana || true
+      sudo rm -rf /etc/telegraf /etc/grafana /var/lib/influxdb
+   elif [ "$Variant" == "Fedora" ] ; then
+      echo "TBD"
+      exit 1
+   else
+      echo "ERROR: Implement deinstallation for $Variant!"
+      exit 1
+   fi
 
 # ====== Error ==============================================================
 else
