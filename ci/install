@@ -44,8 +44,8 @@ if [ "$TRAVIS_OS_NAME" == "linux" ] ; then
          fi
          echo "distribution=$distribution"
 
-         if [ "$VARIANT" = u"buntu" ] ; then
-            mirror="http://us.archive.ubuntu.com/ubuntu/"
+         if [ "$VARIANT" = "ubuntu" ] ; then
+            mirror="http://archive.ubuntu.com/ubuntu/"
          else
             mirror="http://deb.debian.org/debian"
          fi
@@ -58,17 +58,43 @@ MIRRORSITE=$mirror
 APTCACHEHARDLINK=no
 EXTRAPACKAGES=eatmydata
 EATMYDATA=yes
+# Multi-core: set concurrency level. The packaging scripts will handle it properly:
+cores=\\\`getconf _NPROCESSORS_ONLN\\\`
+export CONCURRENCY_LEVEL=\\\${cores}
+export DEB_BUILD_OPTIONS="parallel=\\\${cores}"
 EOF
+# =================================================================
+mkdir -p /var/cache/pbuilder/hook.d
+HOOKDIR=\"/var/cache/pbuilder/hook.d\"
+#cat >/var/cache/pbuilder/hook.d/C10shell <<EOF
+##!/bin/sh
+## invoke shell if build fails.
+#apt-get install -y --force-yes vim less bash joe
+#cd /tmp/buildd/*/debian/..
+#/bin/bash < /dev/tty > /dev/tty 2> /dev/tty
+#EOF
+#sudo chmod a+x /var/cache/pbuilder/hook.d/C10shell
+# =================================================================
 "
          sudo docker exec -t ubuntu-test bash -c "cat /etc/pbuilderrc"
          sudo docker exec -t ubuntu-test bash -c "eatmydata pbuilder create --debootstrapopts --variant=buildd"
 
-         # ====== Ubuntu: add ppa:dreibh/ppa ================================
+         # ====== Ubuntu: add ppa:dreibh/ppa and backports ==================
+         # NOTE: backports may be unavailable -> ignore error on apt-get update!
          if [ "$VARIANT" == "ubuntu" ] ; then
-            sudo docker exec -t ubuntu-test bash -c "pbuilder login --save-after-login <<EOF
+            sudo docker exec -t ubuntu-test bash -c "eatmydata pbuilder login --save-after-login <<EOF
 apt install -y software-properties-common
 apt-add-repository -sy ppa:dreibh/ppa
 apt-get update
+apt-add-repository \"deb http://archive.ubuntu.com/ubuntu/ ${distribution}-backports main restricted universe multiverse\"
+apt-get update || true
+EOF
+"
+         elif [ "$VARIANT" == "debian" ] ; then
+            sudo docker exec -t ubuntu-test bash -c "eatmydata pbuilder login --save-after-login <<EOF
+apt install -y software-properties-common
+apt-add-repository \"deb http://deb.debian.org/debian ${distribution}-backports main restricted universe multiverse\"
+apt-get update || true
 EOF
 "
          fi

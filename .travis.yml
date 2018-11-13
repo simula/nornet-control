@@ -13,10 +13,6 @@ matrix:
     - os: linux
       dist: xenial
       group: travis_latest
-      env: DOCKER="ubuntu:cosmic" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
-    - os: linux
-      dist: xenial
-      group: travis_latest
       env: DOCKER="ubuntu:cosmic" VARIANT="ubuntu" TOOL="pbuilder"
 
     # ====== Ubuntu 18.04 (Bionic Beaver) ===================================
@@ -24,10 +20,6 @@ matrix:
       dist: xenial
       group: travis_latest
       env: DOCKER="ubuntu:bionic" VARIANT="ubuntu" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-    - os: linux
-      dist: xenial
-      group: travis_latest
-      env: DOCKER="ubuntu:bionic" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
     - os: linux
       dist: xenial
       group: travis_latest
@@ -41,10 +33,6 @@ matrix:
     - os: linux
       dist: xenial
       group: travis_latest
-      env: DOCKER="ubuntu:xenial" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
-    - os: linux
-      dist: xenial
-      group: travis_latest
       env: DOCKER="ubuntu:xenial" VARIANT="ubuntu" TOOL="pbuilder"
 
     # ====== Ubuntu 14.04 (Trusty Tahr) ====================================
@@ -52,10 +40,6 @@ matrix:
       dist: xenial
       group: travis_latest
       env: DOCKER="ubuntu:trusty" VARIANT="ubuntu" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-    - os: linux
-      dist: xenial
-      group: travis_latest
-      env: DOCKER="ubuntu:trusty" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
     - os: linux
       dist: xenial
       group: travis_latest
@@ -69,10 +53,6 @@ matrix:
       dist: xenial
       group: travis_latest
       env: DOCKER="debian:testing" VARIANT="debian" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-    - os: linux
-      dist: xenial
-      group: travis_latest
-      env: DOCKER="debian:testing" VARIANT="debian" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
     - os: linux
       dist: xenial
       group: travis_latest
@@ -100,10 +80,6 @@ matrix:
     - os: linux
       dist: xenial
       group: travis_latest
-      env: DOCKER="debian:buster" VARIANT="debian" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
-    - os: linux
-      dist: xenial
-      group: travis_latest
       env: DOCKER="debian:buster" VARIANT="debian" TOOL="pbuilder"
 
     # ====== Debian Stretch =================================================
@@ -111,10 +87,6 @@ matrix:
       dist: xenial
       group: travis_latest
       env: DOCKER="debian:stretch" VARIANT="debian" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-    - os: linux
-      dist: xenial
-      group: travis_latest
-      env: DOCKER="debian:stretch" VARIANT="debian" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
     - os: linux
       dist: xenial
       group: travis_latest
@@ -131,10 +103,6 @@ matrix:
     #- os: linux
       #dist: xenial
       #group: travis_latest
-      #env: DOCKER="fedora:30" VARIANT="fedora" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
-    #- os: linux
-      #dist: xenial
-      #group: travis_latest
       #env: DOCKER="fedora:30" VARIANT="fedora" TOOL="mock"
 
     ## ====== Fedora 29 ======================================================
@@ -142,10 +110,6 @@ matrix:
       #dist: xenial
       #group: travis_latest
       #env: DOCKER="fedora:29" VARIANT="fedora" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-    #- os: linux
-      #dist: xenial
-      #group: travis_latest
-      #env: DOCKER="fedora:29" VARIANT="fedora" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
     #- os: linux
       #dist: xenial
       #group: travis_latest
@@ -159,10 +123,6 @@ matrix:
     #- os: linux
       #dist: xenial
       #group: travis_latest
-      #env: DOCKER="fedora:28" VARIANT="fedora" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
-    #- os: linux
-      #dist: xenial
-      #group: travis_latest
       #env: DOCKER="fedora:28" VARIANT="fedora" TOOL="mock"
 
     ## ====== Fedora Rawhide =================================================
@@ -170,10 +130,6 @@ matrix:
       #dist: xenial
       #group: travis_latest
       #env: DOCKER="fedora:rawhide" VARIANT="fedora" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-    #- os: linux
-      #dist: xenial
-      #group: travis_latest
-      #env: DOCKER="fedora:rawhide" VARIANT="fedora" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
     #- os: linux
       #dist: xenial
       #group: travis_latest
