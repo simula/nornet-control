@@ -19,16 +19,7 @@
 # Contact: dreibh@simula.no
 
 
-# # ====== System maintenance =================================================
-# echo -en "\x1b[33mRun system maintenance script? [yes/no]\x1b[0m? "
-# read -er applyChanges
-# if [ "$applyChanges" != "yes" -a "$applyChanges" != "y" ] ; then
-#    echo "Skipped!"
-# else
-#    ${MakeServerConfigurationPath}System-Maintenance
-# fi
-
-
+# ====== Get parameters =====================================================
 if [ $# -ne 1 ] ; then
    echo >&2 "Usage: $0 add|update|remove"
    exit 1
@@ -37,7 +28,7 @@ fi
 TELEGRAF_SERVER_URL="http://128.39.37.166:8086"
 TELEGRAF_INTERFACE_LIST=""
 TELEGRAF_HOSTNAME=`hostname -f`
-TELEGRAF_DNS_LIST=""
+TELEGRAF_DNS_LIST="\"10.1.1.1"\"
 
 
 # ====== Find distribution variant ==========================================
@@ -51,6 +42,23 @@ elif [ -e /etc/freebsd-update.conf ] ; then
 else
    echo >&2 "ERROR: Unknown/unsupported operating system? Cannot determine how to configure network!"
    exit 1
+fi
+
+
+# ====== NorNet system ======================================================
+NORNET_TUNNELBOX=0
+NORNET_CONTROLBOX=0
+if [ -e /etc/nornet/nornetapi-config ] ; then
+   source /etc/nornet/nornetapi-config
+   echo "NorNet: Node=${NorNet_LocalNode_Index}"
+   if [ ${NorNet_LocalNode_Index} == 1 ] ; then
+      NORNET_TUNNELBOX=1
+   fi
+   if [ "${NorNet_LocalNode_ControlBox}" == "yes" ] ; then
+      NORNET_CONTROLBOX=1
+   fi
+   # NORNET_PACKAGES=`env LANG=C apt-show-versions | grep "^nornet" | grep -v "not installed" | sed -e "s/:.*$//g" | sort | xargs`
+   # NORNET_VERSION=`cat /etc/nornet/nornet-version`
 fi
 
 
@@ -107,7 +115,7 @@ if [ "$1" == "add" -o "$1" == "update" ] ; then
  precision = ""
  debug = false
  quiet = false
- logfile = ""
+ logfile = "/var/log/telegraf.log"
  hostname = "$TELEGRAF_HOSTNAME"
  omit_hostname = false
 [[outputs.influxdb]]
@@ -127,7 +135,7 @@ if [ "$1" == "add" -o "$1" == "update" ] ; then
  [[inputs.swap]]
  [[inputs.system]]
  [[inputs.dns_query]]
-  servers = [ "10.1.1.1" ]
+  servers = [ $TELEGRAF_DNS_LIST ]
   port = 53
  [[inputs.net]]
   interfaces = [ $TELEGRAF_INTERFACE_LIST ]
