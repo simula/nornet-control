@@ -3,7 +3,7 @@ Section: net
 Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: https://www.nntb.no/
-Build-Depends: cmake,
+Build-Depends: cmake (>= 3.0) | cmake3,
                debhelper (>= 9),
                fonts-dejavu,
                fonts-noto-cjk,
@@ -120,7 +120,7 @@ Depends: autoconf,
          automake,
          autopoint,
          bison,
-         cmake,
+         cmake (>= 3.0) | cmake3,
          createrepo,
          debhelper,
          devscripts,

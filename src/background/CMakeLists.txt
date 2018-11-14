@@ -33,7 +33,7 @@
 # INITIALISE
 #############################################################################
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(undefined NONE)   # to be set in Setting.cmake
 INCLUDE(Settings.input)
 
