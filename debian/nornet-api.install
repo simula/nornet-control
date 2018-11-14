@@ -15,3 +15,6 @@
 /usr/lib/python3/dist-packages/__pycache__/NorNetSiteSetup*.pyc
 /usr/lib/python3/dist-packages/__pycache__/NorNetTools*.pyc
 /usr/lib/python3/dist-packages/__pycache__/SysSetupCommons*.pyc
+/usr/share/doc/nornet-api/examples/nornetapi-config.full
+/usr/share/doc/nornet-api/examples/nornetapi-config.simple
+/usr/share/doc/nornet-api/examples/nornetapi-constants
