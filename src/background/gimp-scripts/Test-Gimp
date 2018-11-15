@@ -1,6 +1,6 @@
 #!/bin/bash -e
 #
-# Test Gimp
+# Test GIMP
 # Copyright (C) 2018 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,16 @@
 # Contact: dreibh@simula.no
 
 
+# ====== Make sure that GIMP directory exists ===============================
+if [ "${GIMP2_DIRECTORY}" != "" ] ; then
+   echo "Creating GIMP directory ${GIMP2_DIRECTORY}"
+   for subdir in brushes dynamics patterns gradients palettes ; do
+      mkdir -p "${GIMP2_DIRECTORY}/${subdir}"
+   done
+fi
+
+
+# ====== Try to start GIMP ==================================================
 ( cat <<EOF
 (gimp-quit TRUE)
 EOF
