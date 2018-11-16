@@ -288,9 +288,9 @@ Description: NorNet Display
 
 Package: nornet-gatekeeper
 Architecture: all
-Depends: nornet-api,
+Depends: fail2ban,
+         nornet-api,
          nornet-management,
-         fail2ban,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Gatekeeper
