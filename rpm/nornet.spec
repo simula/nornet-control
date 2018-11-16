@@ -277,9 +277,6 @@ See https://www.nntb.no for details on NorNet!
 %files gatekeeper
 /boot/NorNet/Gatekeeper1-1024x768.jpeg
 /etc/grub.d/??_nornet_gatekeeper_theme
-/usr/share/nornet-desktop/Desktop-with-Logo/*
-/usr/share/nornet-desktop/Desktop-without-Logo/*
-/usr/share/nornet-desktop/NorNet-A4.pdf
 
 %post gatekeeper
 cp /usr/share/nornet/grub-defaults /etc/default/grub
@@ -295,11 +292,11 @@ Summary: NorNet WebSrv
 Group: Applications/Internet
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
-Requires: fail2ban
-Requires: httpd
-Requires: oxygen-icon-theme
+Requires: awstats
 Requires: GeoIP-GeoLite-data
 Requires: GeoIP-GeoLite-data-extra
+Requires: httpd
+Requires: oxygen-icon-theme
 
 %description websrv
 This package contains the packages to set up a web server station for the
@@ -310,15 +307,37 @@ See https://www.nntb.no for details on NorNet!
 %files websrv
 /boot/NorNet/WebSrv1-1024x768.jpeg
 /etc/grub.d/??_nornet_websrv_theme
-/usr/share/nornet-desktop/Desktop-with-Logo/*
-/usr/share/nornet-desktop/Desktop-without-Logo/*
-/usr/share/nornet-desktop/NorNet-A4.pdf
 
 %post websrv
 cp /usr/share/nornet/grub-defaults /etc/default/grub
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
 %postun websrv
+rm -f /etc/grub.d/??_nornet_desktop_theme
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+
+%package wikisrv
+Summary: NorNet WikiSrv
+Group: Applications/Internet
+Requires: %{name}-websrv = %{version}-%{release}
+Requires: postfix
+
+%description wikisrv
+This package contains the packages to set up a wiki station for the
+user-contributed documentation. It is in fact just a node with a
+dependency on the MediaWiki packages.
+See https://www.nntb.no for details on NorNet!
+
+%files wikisrv
+/boot/NorNet/WikiSrv1-1024x768.jpeg
+/etc/grub.d/??_nornet_wikisrv_theme
+
+%post wikisrv
+cp /usr/share/nornet/grub-defaults /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+%postun wikisrv
 rm -f /etc/grub.d/??_nornet_desktop_theme
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
@@ -337,9 +356,6 @@ See https://www.nntb.no for details on NorNet!
 %files plc
 /boot/NorNet/PLC1-1024x768.jpeg
 /etc/grub.d/??_nornet_plc_theme
-/usr/share/nornet-desktop/Desktop-with-Logo/*
-/usr/share/nornet-desktop/Desktop-without-Logo/*
-/usr/share/nornet-desktop/NorNet-A4.pdf
 
 %post plc
 cp /usr/share/nornet/grub-defaults /etc/default/grub

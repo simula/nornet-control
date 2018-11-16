@@ -325,8 +325,7 @@ Description: NorNet Web Server
 
 Package: nornet-wikisrv
 Architecture: all
-Depends: graphicsmagick,
-         libapache2-mod-php | libapache2-mod-php5,
+Depends: libapache2-mod-php | libapache2-mod-php5,
          nornet-websrv,
          php-mbstring,
          php-mysql | php5-mysql,
