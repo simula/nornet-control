@@ -51,6 +51,8 @@ make %{?_smp_mflags}
 %install
 make DESTDIR=%{buildroot} install
 # ====== Relocate files =====================================================
+mv %{buildroot}/usr/sbin/Interface-Setup %{buildroot}/sbin
+
 mkdir -p %{buildroot}/boot/NorNet
 mv %{buildroot}/usr/share/nornet-desktop/Splash/*-1024x768.jpeg %{buildroot}/boot/NorNet
 mkdir -p %{buildroot}/etc/nornet
@@ -146,7 +148,7 @@ See https://www.nntb.no for details on NorNet!
 /usr/bin/System-Maintenance
 /usr/bin/Test-NTP-Configuration
 /usr/bin/Watchdog
-/usr/sbin/Interface-Setup /sbin
+/sbin/Interface-Setup
 
 %post management
 cp /usr/share/nornet/grub-defaults /etc/default/grub
@@ -285,6 +287,7 @@ Requires: rsplib-services
 Requires: xorg-x11-xauth
 Recommends: open-vm-tools
 Recommends: virtualbox-guest-additions
+Conflicts: %{name}-server
 
 %description node
 This package contains the scripts to configure a generic node on a NorNet
@@ -528,6 +531,7 @@ Requires: qemu-kvm
 Requires: virt-manager
 Requires: virt-install
 Requires: xorg-x11-xauth
+Conflicts: %{name}-node
 
 %description server
 This package contains the scripts to configure a generic server system
