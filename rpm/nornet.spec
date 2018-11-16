@@ -51,6 +51,11 @@ mv %{buildroot}/usr/share/nornet-desktop/Splash/*-1024x768.jpeg %{buildroot}/boo
 mkdir -p %{buildroot}/etc/nornet
 mv %{buildroot}/usr/share/nornet-desktop/Splash/nornet-version %{buildroot}/etc/nornet
 mkdir -p %{buildroot}/usr/share/nornet/background
+
+ls -l %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/ || true
+ls -l %{buildroot}/usr/share/nornet-desktop/Desktop-without-Logo/Background1-1600x1200-plain.png || true
+ls -l %{buildroot}/usr/share/nornet/background/
+
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-1600x1200-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-4x3.png
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-1920x1200-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-16x10.png
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-3840x2160-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-16x9.png
@@ -112,7 +117,31 @@ See https://www.nntb.no for details on NorNet!
 %files management
 /boot/NorNet/Management1-1024x768.jpeg
 /etc/grub.d/??_nornet_development_theme
+/etc/nornet/nornet-authorized_keys
 /etc/nornet/nornet-version
+/usr/bin/Auto-Update-Keys
+/usr/bin/Check-Nodes
+/usr/bin/Check-Nodes-Loop
+/usr/bin/Clear-SSH-Node-Key
+/usr/bin/Create-New-SSH-Node-Keys
+/usr/bin/Fingerprint-SSH-Node-Keys
+/usr/bin/Get-Nodes
+/usr/bin/Get-NorNet-Configuration
+/usr/bin/Get-Sites
+/usr/bin/Get-Slice-Nodes
+/usr/bin/Get-Slices
+/usr/bin/Get-Users
+/usr/bin/Node-Setup
+/usr/bin/Probe-Endpoint-Setup
+/usr/bin/Random-Sleep
+/usr/bin/Reset-Networking
+/usr/bin/Routing-Rule-Setup
+/usr/bin/System-Backup
+/usr/bin/System-Info
+/usr/bin/System-Maintenance
+/usr/bin/Test-NTP-Configuration
+/usr/bin/Watchdog
+/usr/sbin/Interface-Setup /sbin
 
 %post management
 cp /usr/share/nornet/grub-defaults /etc/default/grub
@@ -181,6 +210,7 @@ See https://www.nntb.no for details on NorNet!
 %files development
 /boot/NorNet/Development1-1024x768.jpeg
 /etc/grub.d/??_nornet_development_theme
+/etc/pbuilderrc
 
 %post development
 cp /usr/share/nornet/grub-defaults /etc/default/grub
@@ -233,6 +263,63 @@ fi
 if [ ! -e /etc/nornet/nornetapi-config ] ; then
    cp /usr/share/doc/nornet-api/examples/nornetapi-config.simple /etc/nornet/nornetapi-config.EXAMPLE
 fi
+
+
+%package node
+Summary: NorNet Node
+Group: Applications/Internet
+Requires: %{name}-management = %{version}-%{release}
+Requires: %{name}-api = %{version}-%{release}
+Requires: fail2ban
+Requires: grub2
+Requires: libvirt-bin
+Requires: nfs-utils
+Requires: ntp
+Requires: openssh-server
+Requires: rsplib-services
+Requires: xorg-x11-xauth
+Recommends: open-vm-tools
+Recommends: virtualbox-guest-additions
+
+%description node
+This package contains the scripts to configure a generic node on a NorNet
+site.
+See https://www.nntb.no for details on NorNet!
+
+%files node
+/boot/NorNet/Node1-1024x768.jpeg
+/etc/grub.d/??_nornet_node_theme
+/usr/bin/Make-Node-Configuration
+/usr/share/nornet/grub-defaults
+
+%post node
+cp /etc/nornet/grub-defaults /etc/default/grub
+cp /usr/share/nornet/grub-defaults /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+%postun node
+rm -f /etc/grub.d/??_nornet_desktop_theme
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+
+%package artwork
+Summary: NorNet Display
+Group: Applications/Internet
+
+%description artwork
+This package contains some images for the monitor server
+on a NorNet central site.
+See https://www.nntb.no for details on NorNet!
+
+%files artwork
+/var/www/Artwork/Graphics/Backgrounds/*.png
+/var/www/Artwork/Graphics/Control/*.png
+/var/www/Artwork/Graphics/Flags/*.png
+/var/www/Artwork/Graphics/Flags/*.svg
+/var/www/Artwork/Graphics/Icons/*.png
+/var/www/Artwork/Graphics/Markers/*.svg
+/var/www/Artwork/Sites/Large/*.jpeg
+/var/www/Artwork/Sites/Small/*.jpeg
 
 
 %package display
@@ -309,6 +396,7 @@ See https://www.nntb.no for details on NorNet!
 %files websrv
 /boot/NorNet/WebSrv1-1024x768.jpeg
 /etc/grub.d/??_nornet_websrv_theme
+/usr/share/nornet-websrv/*
 
 %post websrv
 cp /usr/share/nornet/grub-defaults /etc/default/grub
@@ -436,15 +524,35 @@ Requires: virt-install
 Requires: xorg-x11-xauth
 
 %description server
- This package contains the scripts to configure a generic server system
- to host NorNet virtual machines.
- See https://www.nntb.no for details on NorNet!
+This package contains the scripts to configure a generic server system
+to host NorNet virtual machines.
+See https://www.nntb.no for details on NorNet!
 
 %files server
 /boot/NorNet/Server1-1024x768.jpeg
+/etc/nornet/vsystems/EXAMPLE-99-VirtualServer
 /etc/grub.d/??_nornet_server_theme
+/usr/bin/Auto-Update-BootCD
+/usr/bin/Backup-All-VSystems
+/usr/bin/Backup-VSystem
+/usr/bin/Change-VSystem-CDImage
+/usr/bin/Check-Research-Node
+/usr/bin/Check-VSystem
+/usr/bin/Convert-HDD-Images
+/usr/bin/Make-Server-Configuration
+/usr/bin/Make-VSystem-Template
+/usr/bin/Reset-VSystem
+/usr/bin/Server-Setup
+/usr/bin/Server-Watchdog
+/usr/bin/Set-OVF-Type
+/usr/bin/Show-VSystems
+/usr/bin/Start-VSystem
+/usr/bin/Stop-VSystem
+/usr/share/nornet-server/watchdog-config.example
+/usr/share/nornet/grub-defaults
 
 %post server
+cp /etc/nornet/grub-defaults /etc/default/grub
 cp /usr/share/nornet/grub-defaults /etc/default/grub
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
