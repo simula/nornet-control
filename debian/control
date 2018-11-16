@@ -290,6 +290,7 @@ Package: nornet-gatekeeper
 Architecture: all
 Depends: nornet-api,
          nornet-management,
+         fail2ban,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Gatekeeper

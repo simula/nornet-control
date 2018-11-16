@@ -47,9 +47,9 @@ make %{?_smp_mflags}
 make DESTDIR=%{buildroot} install
 # ====== Relocate files =====================================================
 mkdir -p %{buildroot}/boot/NorNet
-mv %{buildroot}/usr/share/nornet-desktop/splash/*-1024x768.jpeg %{buildroot}/boot/NorNet
+mv %{buildroot}/usr/share/nornet-desktop/Splash/*-1024x768.jpeg %{buildroot}/boot/NorNet
 mkdir -p %{buildroot}/etc/nornet
-mv %{buildroot}/usr/share/nornet-desktop/splash/nornet-version %{buildroot}/etc/nornet
+mv %{buildroot}/usr/share/nornet-desktop/Splash/nornet-version %{buildroot}/etc/nornet
 
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-1600x1200-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-4x3.png
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-1920x1200-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-16x10.png
@@ -257,6 +257,68 @@ cp /usr/share/nornet/grub-defaults /etc/default/grub
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
 %postun display
+rm -f /etc/grub.d/??_nornet_desktop_theme
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+
+%package gatekeeper
+Summary: NorNet Gatekeeper
+Group: Applications/Internet
+Requires: %{name}-management = %{version}-%{release}
+Requires: %{name}-api = %{version}-%{release}
+Requires: fail2ban
+
+%description gatekeeper
+This package contains the packages to set up a gatekeeper station for the
+project presentation. It is in fact just a node with a dependency on the
+additional packages.
+See https://www.nntb.no for details on NorNet!
+
+%files gatekeeper
+/boot/NorNet/Gatekeeper1-1024x768.jpeg
+/etc/grub.d/??_nornet_gatekeeper_theme
+/usr/share/nornet-desktop/Desktop-with-Logo/*
+/usr/share/nornet-desktop/Desktop-without-Logo/*
+/usr/share/nornet-desktop/NorNet-A4.pdf
+
+%post gatekeeper
+cp /usr/share/nornet/grub-defaults /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+%postun gatekeeper
+rm -f /etc/grub.d/??_nornet_desktop_theme
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+
+%package websrv
+Summary: NorNet WebSrv
+Group: Applications/Internet
+Requires: %{name}-management = %{version}-%{release}
+Requires: %{name}-api = %{version}-%{release}
+Requires: fail2ban
+Requires: httpd
+Requires: oxygen-icon-theme
+Requires: GeoIP-GeoLite-data
+Requires: GeoIP-GeoLite-data-extra
+
+%description websrv
+This package contains the packages to set up a web server station for the
+project presentation. It is in fact just a node with a dependency on the
+Apache packages.
+See https://www.nntb.no for details on NorNet!
+
+%files websrv
+/boot/NorNet/WebSrv1-1024x768.jpeg
+/etc/grub.d/??_nornet_websrv_theme
+/usr/share/nornet-desktop/Desktop-with-Logo/*
+/usr/share/nornet-desktop/Desktop-without-Logo/*
+/usr/share/nornet-desktop/NorNet-A4.pdf
+
+%post websrv
+cp /usr/share/nornet/grub-defaults /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+%postun websrv
 rm -f /etc/grub.d/??_nornet_desktop_theme
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
