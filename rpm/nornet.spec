@@ -27,8 +27,13 @@ BuildRequires: texlive-epstopdf-bin
 BuildRequires: urw-base35-fonts
 BuildRoot: %{_tmppath}/%{name}-%{version}-build
 
+
+# This package does not generate debug information (no executables):
+%global debug_package %{nil}
+
 # TEST ONLY:
 %define _unpackaged_files_terminate_build 0
+
 
 %description
 NorNet is a testbed for multi-homed systems. This package
@@ -303,7 +308,7 @@ grub2-mkconfig -o /boot/grub2/grub.cfg
 
 
 %package artwork
-Summary: NorNet Display
+Summary: NorNet Artwork
 Group: Applications/Internet
 
 %description artwork
@@ -327,6 +332,7 @@ Summary: NorNet Display
 Group: Applications/Internet
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Recommends: xorg-x11-drv-vmware
 
 %description display
 This package contains the packages to set up a display station for the
