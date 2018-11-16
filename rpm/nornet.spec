@@ -109,6 +109,7 @@ software installed provides a common working environment.
 See https://www.nntb.no for details on NorNet!
 
 %files management
+/boot/NorNet/Management1-1024x768.jpeg
 /etc/grub.d/??_nornet_development_theme
 /etc/nornet/nornet-version
 
@@ -175,6 +176,7 @@ software installed provides a common working environment.
 See https://www.nntb.no for details on NorNet!
 
 %files development
+/boot/NorNet/Development1-1024x768.jpeg
 /etc/grub.d/??_nornet_development_theme
 
 %post development
@@ -243,6 +245,7 @@ browser and the necessary GUI.
 See https://www.nntb.no for details on NorNet!
 
 %files display
+/boot/NorNet/Display1-1024x768.jpeg
 /etc/grub.d/??_nornet_display_theme
 /usr/share/nornet-desktop/Desktop-with-Logo/*
 /usr/share/nornet-desktop/Desktop-without-Logo/*
