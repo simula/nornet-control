@@ -51,6 +51,9 @@ make %{?_smp_mflags}
 %install
 make DESTDIR=%{buildroot} install
 # ====== Relocate files =====================================================
+mkdir -p %{buildroot}/sbin
+mv %{buildroot}/usr/sbin/Interface-Setup %{buildroot}/sbin
+
 mkdir -p %{buildroot}/boot/NorNet
 mv %{buildroot}/usr/share/nornet-desktop/Splash/*-1024x768.jpeg %{buildroot}/boot/NorNet
 mkdir -p %{buildroot}/etc/nornet
@@ -67,6 +70,7 @@ mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-3840x2160
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-without-Logo/Background1-1600x1200-plain.png   %{buildroot}/usr/share/nornet/background/NorNet-Background1-without-Logo-4x3.png
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-without-Logo/Background1-1920x1200-plain.png   %{buildroot}/usr/share/nornet/background/NorNet-Background1-without-Logo-16x10.png
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-without-Logo/Background1-3840x2160-plain.png   %{buildroot}/usr/share/nornet/background/NorNet-Background1-without-Logo-16x9.png
+
 # ===========================================================================
 
 
@@ -146,7 +150,7 @@ See https://www.nntb.no for details on NorNet!
 /usr/bin/System-Maintenance
 /usr/bin/Test-NTP-Configuration
 /usr/bin/Watchdog
-/usr/sbin/Interface-Setup
+/sbin/Interface-Setup
 
 %post management
 cp /usr/share/nornet/grub-defaults /etc/default/grub
