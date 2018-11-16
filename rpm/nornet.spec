@@ -5,7 +5,7 @@ Summary: NorNet Control
 Group: Applications/Internet
 License: GPLv3
 URL: https://www.nntb.no/
-Source: https://github.com/simula/nornet-control
+Source: https://www.nntb.no/download/%{name}-%{version}.tar.gz
 
 AutoReqProv: on
 BuildRequires: cmake
