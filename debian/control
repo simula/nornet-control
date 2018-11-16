@@ -186,7 +186,6 @@ Depends: fail2ban,
          snmpd,
          ${misc:Depends},
          ${shlibs:Depends}
-Suggests: cfengine3
 Recommends: nornet-ca,
             open-vm-tools,
             virtualbox-guest-utils | virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental
@@ -384,7 +383,6 @@ Depends: fail2ban,
          xauth,
          ${misc:Depends},
          ${shlibs:Depends}
-Suggests: cfengine3
 Recommends: amd64-microcode,
             intel-microcode,
             lm-sensors,
