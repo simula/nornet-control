@@ -50,7 +50,7 @@ mkdir -p %{buildroot}/boot/NorNet
 mv %{buildroot}/usr/share/nornet-desktop/Splash/*-1024x768.jpeg %{buildroot}/boot/NorNet
 mkdir -p %{buildroot}/etc/nornet
 mv %{buildroot}/usr/share/nornet-desktop/Splash/nornet-version %{buildroot}/etc/nornet
-
+mkdir -p %{buildroot}/usr/share/nornet/background
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-1600x1200-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-4x3.png
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-1920x1200-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-16x10.png
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-3840x2160-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-16x9.png
@@ -163,6 +163,8 @@ Requires: pbuilder
 Requires: perl-Image-ExifTool
 Requires: pkg-config
 Requires: python3
+Requires: python3-psycopg2
+Requires: python3-pymongo
 Requires: qt5-qtbase-devel
 Requires: quilt
 Requires: R-base
@@ -342,6 +344,57 @@ rm -f /etc/grub.d/??_nornet_desktop_theme
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
 
+%package timesrv
+Summary: NorNet TimeSrv
+Group: Applications/Internet
+Requires: %{name}-management = %{version}-%{release}
+Requires: %{name}-api = %{version}-%{release}
+Requires: ntp
+
+%description timesrv
+This package contains the packages to set up an NTP server.
+See https://www.nntb.no for details on NorNet!
+
+%files timesrv
+/boot/NorNet/TimeSrv1-1024x768.jpeg
+/etc/grub.d/??_nornet_timesrv_theme
+
+%post timesrv
+cp /usr/share/nornet/grub-defaults /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+%postun timesrv
+rm -f /etc/grub.d/??_nornet_desktop_theme
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+
+%package database
+Summary: NorNet Database
+Group: Applications/Internet
+Requires: %{name}-management = %{version}-%{release}
+Requires: %{name}-api = %{version}-%{release}
+Requires: postgresql-server
+Requires: postgresql-contrib
+
+%description database
+This package contains the packages to set up a database station for
+experiment results collection. It is in fact just a node with a
+dependency on the PostgreSQL packages.
+See https://www.nntb.no for details on NorNet!
+
+%files database
+/boot/NorNet/Database1-1024x768.jpeg
+/etc/grub.d/??_nornet_database_theme
+
+%post database
+cp /usr/share/nornet/grub-defaults /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+%postun database
+rm -f /etc/grub.d/??_nornet_desktop_theme
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+
 %package plc
 Summary: NorNet PLC
 Group: Applications/Internet
@@ -362,6 +415,40 @@ cp /usr/share/nornet/grub-defaults /etc/default/grub
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
 %postun plc
+rm -f /etc/grub.d/??_nornet_desktop_theme
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+
+%package server
+Summary: NorNet Server
+Group: Applications/Internet
+Requires: %{name}-management = %{version}-%{release}
+Requires: %{name}-api = %{version}-%{release}
+Requires: fail2ban
+Requires: grub2
+Requires: libvirt-bin
+Requires: nfs-utils
+Requires: ntp
+Requires: openssh-server
+Requires: qemu-kvm
+Requires: virt-manager
+Requires: virt-install
+Requires: xorg-x11-xauth
+
+%description server
+ This package contains the scripts to configure a generic server system
+ to host NorNet virtual machines.
+ See https://www.nntb.no for details on NorNet!
+
+%files server
+/boot/NorNet/Server1-1024x768.jpeg
+/etc/grub.d/??_nornet_server_theme
+
+%post server
+cp /usr/share/nornet/grub-defaults /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+%postun server
 rm -f /etc/grub.d/??_nornet_desktop_theme
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
