@@ -28,7 +28,7 @@ BuildRequires: urw-base35-fonts
 BuildRoot: %{_tmppath}/%{name}-%{version}-build
 
 # TEST ONLY:
-# %define _unpackaged_files_terminate_build 0
+%define _unpackaged_files_terminate_build 0
 
 %description
 NorNet is a testbed for multi-homed systems. This package
@@ -47,9 +47,10 @@ make %{?_smp_mflags}
 make DESTDIR=%{buildroot} install
 # ====== Relocate files =====================================================
 mkdir -p %{buildroot}/boot/NorNet
-mv %{buildroot}/usr/share/nornet/splash/*-1024x768.jpeg %{buildroot}/boot/NorNet
+mv %{buildroot}/usr/share/nornet-desktop/splash/*-1024x768.jpeg %{buildroot}/boot/NorNet
 mkdir -p %{buildroot}/etc/nornet
-mv %{buildroot}/usr/share/nornet/splash/nornet-version %{buildroot}/etc/nornet
+mv %{buildroot}/usr/share/nornet-desktop/splash/nornet-version %{buildroot}/etc/nornet
+
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-1600x1200-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-4x3.png
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-1920x1200-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-16x10.png
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-3840x2160-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-16x9.png
@@ -256,6 +257,33 @@ cp /usr/share/nornet/grub-defaults /etc/default/grub
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
 %postun display
+rm -f /etc/grub.d/??_nornet_desktop_theme
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+
+%package plc
+Summary: NorNet PLC
+Group: Applications/Internet
+Requires: %{name}-management = %{version}-%{release}
+Requires: %{name}-api = %{version}-%{release}
+Recommends: myplc
+
+%description plc
+This package contains the packages to set up a PLC server.
+See https://www.nntb.no for details on NorNet!
+
+%files plc
+/boot/NorNet/PLC1-1024x768.jpeg
+/etc/grub.d/??_nornet_plc_theme
+/usr/share/nornet-desktop/Desktop-with-Logo/*
+/usr/share/nornet-desktop/Desktop-without-Logo/*
+/usr/share/nornet-desktop/NorNet-A4.pdf
+
+%post plc
+cp /usr/share/nornet/grub-defaults /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+%postun plc
 rm -f /etc/grub.d/??_nornet_desktop_theme
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
