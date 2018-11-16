@@ -51,8 +51,6 @@ make %{?_smp_mflags}
 %install
 make DESTDIR=%{buildroot} install
 # ====== Relocate files =====================================================
-mv %{buildroot}/usr/sbin/Interface-Setup %{buildroot}/sbin
-
 mkdir -p %{buildroot}/boot/NorNet
 mv %{buildroot}/usr/share/nornet-desktop/Splash/*-1024x768.jpeg %{buildroot}/boot/NorNet
 mkdir -p %{buildroot}/etc/nornet
@@ -148,7 +146,7 @@ See https://www.nntb.no for details on NorNet!
 /usr/bin/System-Maintenance
 /usr/bin/Test-NTP-Configuration
 /usr/bin/Watchdog
-/sbin/Interface-Setup
+/usr/sbin/Interface-Setup
 
 %post management
 cp /usr/share/nornet/grub-defaults /etc/default/grub
