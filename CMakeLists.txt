@@ -97,7 +97,7 @@ ENDIF()
 # REQUIREMENTS
 #############################################################################
 
-OPTION(PYTHON_LIBRARY_PREFIX "NorNet Python library prefix" "${CMAKE_INSTALL_PREFIX}")
+SET(PYTHON_LIBRARY_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE FILEPATH "NorNet Python library prefix")
 
 SET(Python_ADDITIONAL_VERSIONS 3)
 INCLUDE(FindPythonInterp)
