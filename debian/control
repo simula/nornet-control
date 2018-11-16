@@ -138,7 +138,6 @@ Depends: autoconf,
          libpcap-dev,
          librsplib-dev,
          libsctp-dev,
-         sysvbanner,
          libssl-dev,
          libtool,
          mock,
@@ -152,6 +151,7 @@ Depends: autoconf,
          r-cran-ggplot2,
          r-cran-hmisc,
          rpm,
+         sysvbanner,
          valgrind
 Recommends: ubuntu-dev-tools
 Description: NorNet Development Tools
