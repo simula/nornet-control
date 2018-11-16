@@ -4,7 +4,7 @@ Version:        1.2.17
 Entered-date:   2018-10-12
 Description:    NorNet is a testbed for multi-homed systems. This package
                 contains the management software for the testbed's
-                infrastructure.
+                infrastructure management software.
 Keywords:       NorNet, Multi-Homing, Testbed, Routing, Management
 Author:         dreibh@simula.no (Thomas Dreibholz)
 Maintained-by:  dreibh@simula.no (Thomas Dreibholz)

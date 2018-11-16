@@ -17,7 +17,7 @@ Build-Depends: cmake (>= 3.0) | cmake3,
                python3-all
 Standards-Version: 4.2.1
 Vcs-Git: https://github.com/simula/nornet-control.git
-Vcs-Browser: https://github.com/simula/nornet-control/tags
+Vcs-Browser: https://github.com/simula/nornet-control
 
 Package: nornet-management
 Architecture: any
