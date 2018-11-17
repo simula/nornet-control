@@ -49,7 +49,7 @@ indentValue=`awk "BEGIN { print ${HEIGHT}*${indent} }"`
 logoWidthValue=`awk "BEGIN { print ${logoWidth}*${titleWidthValue} }"`
 
 
-tempDirectory=`mktemp -d`
+tempDirectory=`mktemp -d nornet-overlay-${WIDTH}x${HEIGHT}.XXXXXXXXXXXXXXXX`
 
 # ------ NorNet logo on white background, with transparent border -----------
 ${GM} convert ${SCRIPTPATH}/Logo-NorNet.pdf -trim -resize ${logoWidthValue}x \
