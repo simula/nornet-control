@@ -37,7 +37,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
       buildFor="fedora-$release-x86_64"
       echo "release=$release."
       echo "buildFor=$buildFor."
-      sudo docker exec -t ubuntu-test bash -c "./make-rpm $buildFor"
+      sudo docker exec -t ubuntu-test bash -c "env LANG=C.UTF-8 ./make-rpm $buildFor"
 
    else
       echo >&2 "ERROR: Invalid setting of TOOL=$TOOL"
