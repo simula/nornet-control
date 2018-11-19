@@ -19,7 +19,7 @@ ADD_CUSTOM_COMMAND(OUTPUT ${OUTPUT}
                    COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} build && touch ${OUTPUT})
 ADD_CUSTOM_TARGET(target ALL DEPENDS ${OUTPUT})
 
-INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install --prefix=${PYTHON_LIBRARY_PREFIX})")
+INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install ${PYTHON_SETUP_OPTS} --prefix=${PYTHON_LIBRARY_PREFIX})")
 
 
 #############################################################################
