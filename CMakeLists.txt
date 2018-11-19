@@ -17,7 +17,7 @@
 # Contact: dreibh@simula.no
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
-PROJECT(nornet NONE)
+PROJECT(nornet LANGUAGES C)
 
 SET(BUILD_MAJOR "1")
 SET(BUILD_MINOR "3")
@@ -97,7 +97,7 @@ ENDIF()
 # REQUIREMENTS
 #############################################################################
 
-OPTION(PYTHON_LIBRARY_PREFIX "NorNet Python library prefix" "${CMAKE_INSTALL_PREFIX}")
+SET(PYTHON_LIBRARY_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE FILEPATH "NorNet Python library prefix")
 
 SET(Python_ADDITIONAL_VERSIONS 3)
 INCLUDE(FindPythonInterp)

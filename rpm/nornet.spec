@@ -45,7 +45,7 @@ See https://www.nntb.no for details on NorNet!
 %setup -q
 
 %build
-%cmake -DCMAKE_INSTALL_PREFIX=/usr -DFLAT_DIRECTORY_STRUCTURE=1 -DBUILD_BOOTSPLASH=1 .
+%cmake -DCMAKE_INSTALL_PREFIX=/usr -DPYTHON_LIBRARY_PREFIX=%{buildroot}/usr -DFLAT_DIRECTORY_STRUCTURE=1 -DBUILD_BOOTSPLASH=1 .
 make %{?_smp_mflags}
 
 %install
@@ -54,15 +54,14 @@ make DESTDIR=%{buildroot} install
 mkdir -p %{buildroot}/sbin
 mv %{buildroot}/usr/sbin/Interface-Setup %{buildroot}/sbin
 
+mkdir -p %{buildroot}/var
+mv %{buildroot}/usr/var/www %{buildroot}/var
+
 mkdir -p %{buildroot}/boot/NorNet
 mv %{buildroot}/usr/share/nornet-desktop/Splash/*-1024x768.jpeg %{buildroot}/boot/NorNet
 mkdir -p %{buildroot}/etc/nornet
 mv %{buildroot}/usr/share/nornet-desktop/Splash/nornet-version %{buildroot}/etc/nornet
 mkdir -p %{buildroot}/usr/share/nornet/background
-
-ls -l %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/ || true
-ls -l %{buildroot}/usr/share/nornet-desktop/Desktop-without-Logo/Background1-1600x1200-plain.png || true
-ls -l %{buildroot}/usr/share/nornet/background/
 
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-1600x1200-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-4x3.png
 mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-1920x1200-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-16x10.png
@@ -241,23 +240,23 @@ to communicate with the central server (MyPLC), based on XMLRPC.
 See https://www.nntb.no for details on NorNet!
 
 %files api
-/usr/lib/python3/dist-packages/NorNet*.egg-info
-/usr/lib/python3/dist-packages/NorNetAPI.py
-/usr/lib/python3/dist-packages/NorNetConfiguration.py
-/usr/lib/python3/dist-packages/NorNetExperimentToolbox.py
-/usr/lib/python3/dist-packages/NorNetNodeSetup.py
-/usr/lib/python3/dist-packages/NorNetProviderSetup.py
-/usr/lib/python3/dist-packages/NorNetSiteSetup.py
-/usr/lib/python3/dist-packages/NorNetTools.py
-/usr/lib/python3/dist-packages/SysSetupCommons.py
-/usr/lib/python3/dist-packages/__pycache__/NorNetAPI*.pyc
-/usr/lib/python3/dist-packages/__pycache__/NorNetConfiguration*.pyc
-/usr/lib/python3/dist-packages/__pycache__/NorNetExperimentToolbox*.pyc
-/usr/lib/python3/dist-packages/__pycache__/NorNetNodeSetup*.pyc
-/usr/lib/python3/dist-packages/__pycache__/NorNetProviderSetup*.pyc
-/usr/lib/python3/dist-packages/__pycache__/NorNetSiteSetup*.pyc
-/usr/lib/python3/dist-packages/__pycache__/NorNetTools*.pyc
-/usr/lib/python3/dist-packages/__pycache__/SysSetupCommons*.pyc
+/usr/lib/python*/*-packages/NorNet*.egg-info
+/usr/lib/python*/*-packages/NorNetAPI.py
+/usr/lib/python*/*-packages/NorNetConfiguration.py
+/usr/lib/python*/*-packages/NorNetExperimentToolbox.py
+/usr/lib/python*/*-packages/NorNetNodeSetup.py
+/usr/lib/python*/*-packages/NorNetProviderSetup.py
+/usr/lib/python*/*-packages/NorNetSiteSetup.py
+/usr/lib/python*/*-packages/NorNetTools.py
+/usr/lib/python*/*-packages/SysSetupCommons.py
+/usr/lib/python*/*-packages/__pycache__/NorNetAPI*.pyc
+/usr/lib/python*/*-packages/__pycache__/NorNetConfiguration*.pyc
+/usr/lib/python*/*-packages/__pycache__/NorNetExperimentToolbox*.pyc
+/usr/lib/python*/*-packages/__pycache__/NorNetNodeSetup*.pyc
+/usr/lib/python*/*-packages/__pycache__/NorNetProviderSetup*.pyc
+/usr/lib/python*/*-packages/__pycache__/NorNetSiteSetup*.pyc
+/usr/lib/python*/*-packages/__pycache__/NorNetTools*.pyc
+/usr/lib/python*/*-packages/__pycache__/SysSetupCommons*.pyc
 /usr/share/doc/nornet-api/examples/nornetapi-config.full
 /usr/share/doc/nornet-api/examples/nornetapi-config.simple
 /usr/share/doc/nornet-api/examples/nornetapi-constants
