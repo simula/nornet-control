@@ -5,8 +5,10 @@
 
 
 override_dh_auto_configure:
-	# Build without Python library. Need to set path for packaging here:
-	dh_auto_configure -- -DPYTHON_LIBRARY_PREFIX="$(CURDIR)/debian/tmp/usr"
+	# Build without Python library:
+        # * Need to set path for packaging here.
+        # * Need to tell setup.py to use Debian layout.
+	dh_auto_configure -- -DPYTHON_LIBRARY_PREFIX="$(CURDIR)/debian/tmp/usr" -DPYTHON_SETUP_OPTS="--install-layout=deb"
 
 # Use setup.py to install the API module into the right directory.
 override_dh_auto_install:
