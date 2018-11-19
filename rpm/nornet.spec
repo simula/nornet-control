@@ -572,5 +572,5 @@ grub2-mkconfig -o /boot/grub2/grub.cfg
 
 
 %changelog
-* Fri Nov 16 2018 Thomas Dreibholz <dreibh@iem.uni-due.de> - 0.0.0
+* Fri Nov 16 2018-2019 Thomas Dreibholz <dreibh@iem.uni-due.de> - 0.0.0
 - Created RPM package.
