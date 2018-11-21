@@ -1,0 +1,127 @@
+#!/bin/bash -e
+#
+# MELODIC Logo Script
+# Copyright (C) 2017-2019 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY# without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@iem.uni-due.de
+
+if [ $# -lt 4 ] ; then
+   echo >&2 "Usage: $0 output_file width height input_directory"
+   exit 1
+fi
+OUTPUT="$1"
+WIDTH="$2"
+HEIGHT="$3"
+DIRECTORY="$4"
+
+GM="/usr/bin/gm"
+SCRIPTPATH=`dirname "$0"`   # NOTE: Current directory may be a build directory!
+
+# ------ Proportions --------------------------------------------------------
+titleWidth=0.50      # of Width
+subtitleWidth=0.65   # of Width
+nameHeight=0.035     # of Height
+titleBorder=0.60     # of Name Height
+nameBorder=0.35      # of Name Height
+indent=0.055         # of Height
+logoWidth=0.475      # of Title Width
+
+titleWidthValue=`awk "BEGIN { print ${WIDTH}*${titleWidth} }"`
+subtitleWidthValue=`awk "BEGIN { print ${WIDTH}*${subtitleWidth} }"`
+nameHeightValue=`awk "BEGIN { print ${HEIGHT}*${nameHeight} }"`
+titleBorderValue=`awk "BEGIN { print ${nameHeightValue}*${titleBorder} }"`
+nameBorderValueX=`awk "BEGIN { print ${nameHeightValue}*${nameBorder}*${WIDTH}/${HEIGHT} }"`
+nameBorderValueY=`awk "BEGIN { print ${nameHeightValue}*${nameBorder} }"`
+indentValue=`awk "BEGIN { print ${HEIGHT}*${indent} }"`
+logoWidthValue=`awk "BEGIN { print ${logoWidth}*${titleWidthValue} }"`
+
+
+tempDirectory=`mktemp -d nornet-overlay-${WIDTH}x${HEIGHT}.XXXXXXXXXXXXXXXX`
+
+# ------ NorNet logo on white background, with transparent border -----------
+${GM} convert ${SCRIPTPATH}/Logo-NorNet.pdf -trim -resize ${logoWidthValue}x \
+   -background blue -bordercolor white -border ${nameBorderValueX}x${nameBorderValueY} \
+   ${tempDirectory}/nntb.miff
+${GM} mogrify -bordercolor none -border 0x${titleBorderValue} ${tempDirectory}/nntb.miff
+
+
+# ------ Resize input images ------------------------------------------------
+${GM} convert $DIRECTORY/Title.png -trim -resize ${titleWidthValue}x \
+   ${tempDirectory}/title.miff
+${GM} convert $DIRECTORY/Subtitle.png -trim -resize ${subtitleWidthValue}x \
+   -bordercolor none \
+   ${tempDirectory}/subtitle.miff
+
+${GM} convert $DIRECTORY/Name.png -trim -resize x${nameHeightValue} \
+   ${tempDirectory}/name.miff
+${GM} convert $DIRECTORY/Affiliation.png -trim -resize x${nameHeightValue} \
+   -bordercolor none -border 0x${nameBorderValueY} \
+   ${tempDirectory}/affiliation.miff
+${GM} convert $DIRECTORY/URL.png -trim -resize x${nameHeightValue} \
+   ${tempDirectory}/url.miff
+
+# ------ Center title over subtitle -----------------------------------------
+th=`gm identify -format "%h" "${tempDirectory}/title.miff"`
+# Size is ${subtitleWidthValue}x${th}:
+${GM} composite -size ${subtitleWidthValue}x${th} \
+   -gravity Center ${tempDirectory}/title.miff \
+   xc:none ${tempDirectory}/title-c.miff
+
+nh=`gm identify -format "%h" "${tempDirectory}/nntb.miff"`
+# Size is ${subtitleWidthValue}x${th}:
+${GM} composite -size ${subtitleWidthValue}x${nh} \
+   -gravity Center ${tempDirectory}/nntb.miff \
+   xc:none ${tempDirectory}/nntb-c.miff
+
+${GM} convert -background none -append \
+   ${tempDirectory}/title-c.miff \
+   ${tempDirectory}/nntb-c.miff \
+   ${tempDirectory}/subtitle.miff \
+   ${tempDirectory}/logo.miff
+
+
+# ------ Center contact labels ----------------------------------------------
+nw=`gm identify -format "%w" "${tempDirectory}/name.miff"`
+nh=`gm identify -format "%h" "${tempDirectory}/name.miff"`
+
+aw=`gm identify -format "%w" "${tempDirectory}/affiliation.miff"`
+ah=`gm identify -format "%h" "${tempDirectory}/affiliation.miff"`
+
+uw=`gm identify -format "%w" "${tempDirectory}/url.miff"`
+uh=`gm identify -format "%h" "${tempDirectory}/url.miff"`
+
+cw=`echo "$nw $aw $uw" | xargs -n1 echo | sort -n -r | head -n1`
+${GM} composite -size ${cw}x${nh} -gravity Center ${tempDirectory}/name.miff xc:none ${tempDirectory}/name-c.miff
+${GM} composite -size ${cw}x${ah} -gravity Center ${tempDirectory}/affiliation.miff xc:none ${tempDirectory}/affiliation-c.miff
+${GM} composite -size ${cw}x${uh} -gravity Center ${tempDirectory}/url.miff xc:none ${tempDirectory}/url-c.miff
+
+${GM} convert -gravity Center -background none -append \
+   ${tempDirectory}/name-c.miff ${tempDirectory}/affiliation-c.miff ${tempDirectory}/url-c.miff \
+   ${tempDirectory}/contact.miff
+
+
+# ------ Combine everything -------------------------------------------------
+${GM} composite -size ${WIDTH}x${HEIGHT} \
+   -gravity Center ${tempDirectory}/logo.miff \
+   xc:none ${tempDirectory}/layer-contact.miff
+${GM} composite -size ${WIDTH}x${HEIGHT} \
+   -gravity SouthEast -geometry +${indentValue}+${indentValue} ${tempDirectory}/contact.miff \
+   xc:none ${tempDirectory}/layer-logo.miff
+
+
+${GM} composite ${tempDirectory}/layer-contact.miff ${tempDirectory}/layer-logo.miff "$OUTPUT"
+
+rm -rf ${tempDirectory}

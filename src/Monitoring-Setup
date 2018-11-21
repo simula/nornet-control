@@ -1,0 +1,173 @@
+#!/bin/bash -e
+#
+# Monitoring Setup
+# Copyright (C) 2018-2019 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+# ====== Get parameters =====================================================
+if [ $# -ne 1 ] ; then
+   echo >&2 "Usage: $0 add|update|remove"
+   exit 1
+fi
+
+TELEGRAF_SERVER_URL="http://128.39.37.166:8086"
+TELEGRAF_INTERFACE_LIST=""
+TELEGRAF_HOSTNAME=`hostname -f`
+TELEGRAF_DNS_LIST="\"10.1.1.1"\"
+
+
+# ====== Find distribution variant ==========================================
+Variant=""
+if [ -e /etc/network/interfaces ] ; then
+   Variant="Debian"
+elif [ -e /etc/sysconfig/network ] ; then
+   Variant="Fedora"
+elif [ -e /etc/freebsd-update.conf ] ; then
+   Variant="FreeBSD"
+else
+   echo >&2 "ERROR: Unknown/unsupported operating system? Cannot determine how to configure network!"
+   exit 1
+fi
+
+
+# ====== NorNet system ======================================================
+NORNET_TUNNELBOX=0
+NORNET_CONTROLBOX=0
+if [ -e /etc/nornet/nornetapi-config ] ; then
+   source /etc/nornet/nornetapi-config
+   echo "NorNet: Node=${NorNet_LocalNode_Index}"
+   if [ ${NorNet_LocalNode_Index} == 1 ] ; then
+      NORNET_TUNNELBOX=1
+   fi
+   if [ "${NorNet_LocalNode_ControlBox}" == "yes" ] ; then
+      NORNET_CONTROLBOX=1
+   fi
+   # NORNET_PACKAGES=`env LANG=C apt-show-versions | grep "^nornet" | grep -v "not installed" | sed -e "s/:.*$//g" | sort | xargs`
+   # NORNET_VERSION=`cat /etc/nornet/nornet-version`
+fi
+
+
+# ====== Find interfaces ====================================================
+allInterfaces=`ifconfig | awk '/^([a-zA-Z0-9\-]+):/ { print $1 }'  | sed -e "s/:$//" | sort`
+for interface in $allInterfaces ; do
+   if [[ ! "$interface" =~ ^(docker|veth|virbr|teredo) ]] ; then
+      ifconfigResult="`ifconfig $interface`"
+      # ====== Only show non-loopback interfaces ============================
+      if [ "`echo "$ifconfigResult" | head -n1 | grep "^.*<.*LOOPBACK.*>"`" == "" ] ; then
+         if [ "$TELEGRAF_INTERFACE_LIST" == "" ] ; then
+            TELEGRAF_INTERFACE_LIST="\"$interface\""
+         else
+            TELEGRAF_INTERFACE_LIST="$TELEGRAF_INTERFACE_LIST, \"$interface\""
+         fi
+      fi
+   fi
+done
+
+
+
+# ====== Add monitoring =====================================================
+if [ "$1" == "add" -o "$1" == "update" ] ; then
+   if [ "$1" == "add" ] ; then
+      if [ "$Variant" == "Debian" ] ; then
+         source /etc/lsb-release
+
+         echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+         sudo curl -sL "https://repos.influxdata.com/influxdb.key" | sudo apt-key add -
+         sudo apt-get update
+         sudo apt-get install -y telegraf influxdb
+      elif [ "$Variant" == "Fedora" ] ; then
+         echo "TBD"
+         exit 1
+      else
+         echo "ERROR: Implement installation for $Variant!"
+         exit 1
+      fi
+   fi
+
+   sudo mkdir -p /etc/telegraf
+   ( cat <<EOF
+[global_tags]
+[agent]
+ interval = "300s"
+ round_interval = true
+ metric_batch_size = 1000
+ metric_buffer_limit = 10000
+ collection_jitter = "0s"
+ flush_interval = "10s"
+ flush_jitter = "0s"
+ precision = ""
+ debug = false
+ quiet = false
+ logfile = "/var/log/telegraf.log"
+ hostname = "$TELEGRAF_HOSTNAME"
+ omit_hostname = false
+[[outputs.influxdb]]
+  urls = [ "$TELEGRAF_SERVER_URL" ]
+  database = "telegraf"
+  retention_policy = ""
+  timeout = "5s"
+ [[inputs.cpu]]
+ percpu = true
+ totalcpu = true
+ collect_cpu_time = false
+ report_active = false
+ [[inputs.disk]]
+  mount_points = [ "/", "/home" ]
+  ignore_fs = [ "tmpfs", "devtmpfs", "devfs", "overlay", "aufs", "squashfs" ]
+ [[inputs.mem]]
+ [[inputs.swap]]
+ [[inputs.system]]
+ [[inputs.dns_query]]
+  servers = [ $TELEGRAF_DNS_LIST ]
+  port = 53
+ [[inputs.net]]
+  interfaces = [ $TELEGRAF_INTERFACE_LIST ]
+EOF
+) | sudo tee /etc/telegraf/telegraf.conf
+
+   sudo systemctl stop telegraf || true
+   sudo systemctl stop influxdb || true
+
+   sudo systemctl enable telegraf
+   sudo systemctl enable influxdb
+
+   sudo systemctl start telegraf || true
+   sudo systemctl start influxdb || true
+
+
+# ====== Remove monitoring ==================================================
+elif [ "$1" == "remove" ] ; then
+   if [ "$Variant" == "Debian" ] ; then
+      sudo rm -f /etc/apt/sources.list.d/influxdb.list
+      sudo apt-get autoremove -y --purge telegraf influxdb || true
+      sudo rm -rf /etc/telegraf /var/lib/influxdb
+   elif [ "$Variant" == "Fedora" ] ; then
+      echo "TBD"
+      exit 1
+   else
+      echo "ERROR: Implement deinstallation for $Variant!"
+      exit 1
+   fi
+
+# ====== Error ==============================================================
+else
+   echo >&2 "ERROR: Invalid action $1!"
+   exit 1
+fi
+
+echo "Done."

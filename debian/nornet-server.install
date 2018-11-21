@@ -1,21 +1,21 @@
-Auto-Update-BootCD                /usr/bin
-Backup-All-VSystems               /usr/bin
-Backup-VSystem                    /usr/bin
-Change-VSystem-CDImage            /usr/bin
-Check-Research-Node               /usr/bin
-Check-VSystem                     /usr/bin
-Convert-HDD-Images                /usr/bin
-Make-Server-Configuration         /usr/bin
-Make-VSystem-Template             /usr/bin
-Reset-VSystem                     /usr/bin
-Server-Setup                      /usr/bin
-Server-Watchdog                   /usr/bin
-Set-OVF-Type                      /usr/bin
-Show-VSystems                     /usr/bin
-Start-VSystem                     /usr/bin
-Stop-VSystem                      /usr/bin
-grub/??_nornet_server_theme       /etc/grub.d
-grub/Splash-Server1-1024x768.jpeg /boot
-grub/grub-defaults                /etc/nornet
-vsystems/EXAMPLE-99-VirtualServer /etc/nornet/vsystems
-watchdog-config.example           /usr/share/nornet-server
+/etc/grub.d/??_nornet_server_theme
+/etc/nornet/vsystems/EXAMPLE-99-VirtualServer
+/usr/bin/Auto-Update-BootCD
+/usr/bin/Backup-All-VSystems
+/usr/bin/Backup-VSystem
+/usr/bin/Change-VSystem-CDImage
+/usr/bin/Check-Research-Node
+/usr/bin/Check-VSystem
+/usr/bin/Convert-HDD-Images
+/usr/bin/Make-Server-Configuration
+/usr/bin/Make-VSystem-Template
+/usr/bin/Reset-VSystem
+/usr/bin/Server-Setup
+/usr/bin/Server-Watchdog
+/usr/bin/Set-OVF-Type
+/usr/bin/Show-VSystems
+/usr/bin/Start-VSystem
+/usr/bin/Stop-VSystem
+/usr/share/nornet-desktop/Splash/Server1-1024x768.jpeg /boot/NorNet
+/usr/share/nornet-server/watchdog-config.example
+/usr/share/nornet/grub-defaults

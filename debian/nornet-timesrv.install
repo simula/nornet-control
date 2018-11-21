@@ -1,2 +1,2 @@
-grub/??_nornet_timesrv_theme         /etc/grub.d
-grub/Splash-TimeSrv1-1024x768.jpeg   /boot
+/etc/grub.d/??_nornet_timesrv_theme
+/usr/share/nornet-desktop/Splash/TimeSrv1-1024x768.jpeg /boot/NorNet

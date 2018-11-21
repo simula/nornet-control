@@ -1,27 +1,27 @@
-Auto-Update-Keys                        /usr/bin
-Check-Nodes                             /usr/bin
-Check-Nodes-Loop                        /usr/bin
-Clear-SSH-Node-Key                      /usr/bin
-Create-New-SSH-Node-Keys                /usr/bin
-Fingerprint-SSH-Node-Keys               /usr/bin
-Get-Nodes                               /usr/bin
-Get-NorNet-Configuration                /usr/bin
-Get-Sites                               /usr/bin
-Get-Slice-Nodes                         /usr/bin
-Get-Slices                              /usr/bin
-Get-Users                               /usr/bin
-Interface-Setup                         /sbin
-Node-Setup                              /usr/bin
-Probe-Endpoint-Setup                    /usr/bin
-Random-Sleep                            /usr/bin
-Reset-Networking                        /usr/bin
-Routing-Rule-Setup                      /usr/bin
-System-Backup                           /usr/bin
-System-Info                             /usr/bin
-System-Maintenance                      /usr/bin
-Test-NTP-Configuration                  /usr/bin
-Watchdog                                /usr/bin
-grub/??_nornet_management_theme         /etc/grub.d
-grub/Splash-Management1-1024x768.jpeg   /boot
-nornet-authorized_keys                  /etc/nornet
-nornet-version                          /etc/nornet
+/etc/grub.d/??_nornet_management_theme
+/etc/nornet/nornet-authorized_keys
+/usr/bin/Auto-Update-Keys
+/usr/bin/Check-Nodes
+/usr/bin/Check-Nodes-Loop
+/usr/bin/Clear-SSH-Node-Key
+/usr/bin/Create-New-SSH-Node-Keys
+/usr/bin/Fingerprint-SSH-Node-Keys
+/usr/bin/Get-Nodes
+/usr/bin/Get-NorNet-Configuration
+/usr/bin/Get-Sites
+/usr/bin/Get-Slice-Nodes
+/usr/bin/Get-Slices
+/usr/bin/Get-Users
+/usr/bin/Node-Setup
+/usr/bin/Probe-Endpoint-Setup
+/usr/bin/Random-Sleep
+/usr/bin/Reset-Networking
+/usr/bin/Routing-Rule-Setup
+/usr/bin/System-Backup
+/usr/bin/System-Info
+/usr/bin/System-Maintenance
+/usr/bin/Test-NTP-Configuration
+/usr/bin/Watchdog
+/usr/sbin/Interface-Setup /sbin
+/usr/share/nornet-desktop/Splash/Management1-1024x768.jpeg /boot/NorNet
+/usr/share/nornet-desktop/Splash/nornet-version /etc/nornet

@@ -1,2 +1,2 @@
-XDM/Xresources   /etc/nornet
-XDM/Xsetup       /etc/nornet
+/usr/share/nornet-x11/Xresources
+/usr/share/nornet-x11/Xsetup

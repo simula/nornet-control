@@ -3,16 +3,21 @@ Section: net
 Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: https://www.nntb.no/
-Build-Depends: debhelper (>= 9),
-               dh-python | debhelper,
-               exiftool | debhelper,
+Build-Depends: cmake (>= 3.0.2) | cmake3,
+               debhelper (>= 9),
+               fonts-dejavu,
+               fonts-noto-cjk,
+               fonts-noto-hinted,
+               ghostscript,
                gimp,
-               imagemagick,
+               graphicsmagick,
+               gsfonts,
                libfile-fcntllock-perl,
+               libimage-exiftool-perl,
                python3-all
-Standards-Version: 4.1.4
+Standards-Version: 4.2.1
 Vcs-Git: https://github.com/simula/nornet-control.git
-Vcs-Browser: https://github.com/simula/nornet-control/tags
+Vcs-Browser: https://github.com/simula/nornet-control
 
 Package: nornet-management
 Architecture: any
@@ -20,20 +25,17 @@ Depends: apt-file,
          apt-show-versions,
          autofs,
          bash-completion,
+         bc,
          bridge-utils,
          btrfs-tools,
          bwm-ng,
          colordiff,
          cron,
          cron-apt,
-         debconf-utils,
-         dpkg-sig,
          eatmydata,
          ethtool,
-         gddrescue,
          git,
          gpm,
-         hping3,
          htop,
          idn,
          ifupdown,
@@ -50,17 +52,17 @@ Depends: apt-file,
          netperfmeter,
          nmap,
          ntpdate,
-         nttcp,
          pxz,
+         python3,
          reiserfsprogs,
          reprepro,
          rsplib-tools,
-         secure-delete,
          smartmontools,
          snmp,
          software-properties-common,
          sslscan,
          subnetcalc,
+         sysvbanner,
          tcpdump,
          tftp,
          traceroute,
@@ -68,10 +70,7 @@ Depends: apt-file,
          virt-what,
          vlan,
          whois,
-         xml-twig-tools,
-         xmlstarlet,
          ${misc:Depends},
-         ${python3:Depends},
          ${shlibs:Depends}
 Recommends: apport-retrace,
             language-pack-de-base,
@@ -100,7 +99,6 @@ Depends: fvwm,
          xserver-xorg,
          xterm,
          ${misc:Depends},
-         ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet X11 Login
  This metapackage contains basic X11 software for NorNet systems. The
@@ -113,37 +111,39 @@ Package: nornet-development
 Architecture: any
 Depends: autoconf,
          automake,
-         autopoint,
+         bc,
          bison,
-         cmake,
+         clang,
+         cmake (>= 3.0.2) | cmake3,
          createrepo,
          debhelper,
          devscripts,
          docker.io,
-         exiftool,
          flex,
+         fonts-dejavu,
+         fonts-noto-cjk,
+         fonts-noto-hinted,
          gdb,
+         ghostscript,
          gnupg,
          gnuplot,
-         imagemagick,
-         kbuild,
+         graphicsmagick,
+         gsfonts,
          kernel-package,
-         kernel-wedge,
          libbz2-dev,
-         libdw-dev,
-         libelf-dev,
-         libgdal-dev,
+         libcpprspserver-dev,
+         libcurl4-openssl-dev,
          libglib2.0-dev,
-         liblua5.2-dev,
-         libnewt-dev,
+         libimage-exiftool-perl,
          libpcap-dev,
-         libsasl2-dev,
+         librsplib-dev,
          libsctp-dev,
          libssl-dev,
          libtool,
-         lua5.2,
+         mock,
          pbuilder,
          pkg-config,
+         python3-all,
          python3-psycopg2,
          python3-pymongo,
          quilt,
@@ -151,14 +151,11 @@ Depends: autoconf,
          r-cran-ggplot2,
          r-cran-hmisc,
          rpm,
-         subversion,
          sysvbanner,
          valgrind,
-         yum-utils,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: python3-wand,
-            ubuntu-dev-tools
+Recommends: ubuntu-dev-tools
 Description: NorNet Development Tools
  This metapackage contains basic software nor NorNet development. The
  software installed provides a common working environment.
@@ -168,7 +165,6 @@ Description: NorNet Development Tools
 Package: nornet-api
 Architecture: any
 Depends: ${misc:Depends},
-         ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet API
  This package contains the NorNet Python API library. It contains functions
@@ -188,12 +184,10 @@ Depends: fail2ban,
          nornet-management,
          ntp,
          openssh-server,
-         python (>= 2.7),
          rsplib-services,
          snmpd,
          ${misc:Depends},
          ${shlibs:Depends}
-Suggests: cfengine3
 Recommends: nornet-ca,
             open-vm-tools,
             virtualbox-guest-utils | virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental
@@ -217,7 +211,6 @@ Depends: arpwatch,
          nornet-management,
          nornet-node | nornet-server,
          ntp,
-         python (>= 2.7),
          radvd,
          snmpd,
          squid3,
@@ -240,7 +233,6 @@ Architecture: all
 Depends: nfs-kernel-server,
          nornet-api,
          nornet-management,
-         python3,
          python3-adns,
          tftpd-hpa,
          ${misc:Depends},
@@ -271,7 +263,6 @@ Depends: apache2,
          nornet-artwork,
          nornet-management,
          postfix,
-         python (>= 2.7),
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Monitor
@@ -299,7 +290,8 @@ Description: NorNet Display
 
 Package: nornet-gatekeeper
 Architecture: all
-Depends: nornet-api,
+Depends: fail2ban,
+         nornet-api,
          nornet-management,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -335,8 +327,7 @@ Description: NorNet Web Server
 
 Package: nornet-wikisrv
 Architecture: all
-Depends: imagemagick,
-         libapache2-mod-php | libapache2-mod-php5,
+Depends: libapache2-mod-php | libapache2-mod-php5,
          nornet-websrv,
          php-mbstring,
          php-mysql | php5-mysql,
@@ -388,14 +379,12 @@ Depends: fail2ban,
          nornet-management,
          ntp,
          openssh-server,
-         python (>= 2.7),
          qemu-kvm,
          virt-manager,
          virtinst,
          xauth,
          ${misc:Depends},
          ${shlibs:Depends}
-Suggests: cfengine3
 Recommends: amd64-microcode,
             intel-microcode,
             lm-sensors,
@@ -411,7 +400,6 @@ Package: nornet-trace-service
 Architecture: any
 Depends: hipercontracer (>= 1.2.0~),
          ${misc:Depends},
-         ${python3:Depends},
          ${shlibs:Depends}
 Description: NorNet Trace Service
  NorNet Trace Service is the traceroute service for the NorNet testbed.
