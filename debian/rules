@@ -14,7 +14,10 @@ override_dh_auto_configure:
 override_dh_auto_install:
 	dh_auto_install --
 	# Fix for Ubuntu Trusty CMake installation: move /usr/var/www to /var/www
-	if [ -e debian/usr/var/www ] ; then rm -rf debian/var/www && mv debian/usr/var/www debian/var/www ; fi
+	mkdir -p $(CURDIR)/debian/tmp/var
+	ls -l $(CURDIR)/debian/tmp/usr
+	ls -l $(CURDIR)/debian/tmp/var
+	if [ -e $(CURDIR)/debian/tmp/usr/var/www ] ; then rm -rf $(CURDIR)/debian/tmp/var/www && mv $(CURDIR)/debian/tmp/usr/var/www $(CURDIR)/debian/tmp/var/www ; fi
 	# ifupdown scripts:
 	mkdir -p debian/nornet-tunnelbox/etc/network/if-up.d
 	mkdir -p debian/nornet-tunnelbox/etc/network/if-down.d
