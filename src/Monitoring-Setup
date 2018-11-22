@@ -119,7 +119,7 @@ if [ "$1" == "add" -o "$1" == "update" ] ; then
  precision = ""
  debug = false
  quiet = false
- logfile = "/var/log/telegraf.log"
+ logfile = ""
  hostname = "$TELEGRAF_HOSTNAME"
  omit_hostname = false
 [[outputs.influxdb]]
