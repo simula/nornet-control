@@ -20,15 +20,16 @@
 
 
 # ====== Get parameters =====================================================
-if [ $# -ne 1 ] ; then
-   echo >&2 "Usage: $0 add|update|remove"
+if [ $# -lt 1 ] ; then
+   echo >&2 "Usage: $0 add|update|remove [Telegraf password]"
    exit 1
 fi
 
-TELEGRAF_SERVER_URL="http://128.39.37.166:8086"
+TELEGRAF_SERVER_URL="https://sandaker.nntb.no:8086"
 TELEGRAF_INTERFACE_LIST=""
 TELEGRAF_HOSTNAME=`hostname -f`
 TELEGRAF_DNS_LIST="\"10.1.1.1"\"
+TELEGRAF_SERVER_PWD="$2"
 
 
 # ====== Find distribution variant ==========================================
@@ -99,6 +100,11 @@ if [ "$1" == "add" -o "$1" == "update" ] ; then
       fi
    fi
 
+   if [ "$TELEGRAF_SERVER_PWD" == "" ] ; then
+      echo >&2 "ERROR: No Telegraf password given!"
+      exit 1
+   fi
+
    sudo mkdir -p /etc/telegraf
    ( cat <<EOF
 [global_tags]
@@ -118,25 +124,28 @@ if [ "$1" == "add" -o "$1" == "update" ] ; then
  omit_hostname = false
 [[outputs.influxdb]]
   urls = [ "$TELEGRAF_SERVER_URL" ]
-  database = "telegraf"
+ database = "telegraf"
   retention_policy = ""
   timeout = "5s"
- [[inputs.cpu]]
+  username = "telegraf"
+  password = "$TELEGRAF_SERVER_PWD"
+  insecure_skip_verify = true
+[[inputs.cpu]]
  percpu = true
  totalcpu = true
  collect_cpu_time = false
  report_active = false
- [[inputs.disk]]
+[[inputs.disk]]
   mount_points = [ "/", "/home" ]
   ignore_fs = [ "tmpfs", "devtmpfs", "devfs", "overlay", "aufs", "squashfs" ]
- [[inputs.mem]]
- [[inputs.swap]]
- [[inputs.system]]
- [[inputs.dns_query]]
-  servers = [ $TELEGRAF_DNS_LIST ]
-  port = 53
- [[inputs.net]]
-  interfaces = [ $TELEGRAF_INTERFACE_LIST ]
+[[inputs.mem]]
+[[inputs.swap]]
+[[inputs.system]]
+[[inputs.dns_query]]
+ servers = [ $TELEGRAF_DNS_LIST ]
+ port = 53
+[[inputs.net]]
+ interfaces = [ $TELEGRAF_INTERFACE_LIST ]
 EOF
 ) | sudo tee /etc/telegraf/telegraf.conf
 
