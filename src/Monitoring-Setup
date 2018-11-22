@@ -90,7 +90,7 @@ if [ "$1" == "add" -o "$1" == "update" ] ; then
          echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
          sudo curl -sL "https://repos.influxdata.com/influxdb.key" | sudo apt-key add -
          sudo apt-get update
-         sudo apt-get install -y telegraf influxdb
+         sudo apt-get install -y telegraf
       elif [ "$Variant" == "Fedora" ] ; then
          echo "TBD"
          exit 1
@@ -150,21 +150,16 @@ EOF
 ) | sudo tee /etc/telegraf/telegraf.conf
 
    sudo systemctl stop telegraf || true
-   sudo systemctl stop influxdb || true
-
    sudo systemctl enable telegraf
-   sudo systemctl enable influxdb
-
    sudo systemctl start telegraf || true
-   sudo systemctl start influxdb || true
 
 
 # ====== Remove monitoring ==================================================
 elif [ "$1" == "remove" ] ; then
    if [ "$Variant" == "Debian" ] ; then
       sudo rm -f /etc/apt/sources.list.d/influxdb.list
-      sudo apt-get autoremove -y --purge telegraf influxdb || true
-      sudo rm -rf /etc/telegraf /var/lib/influxdb
+      sudo apt-get autoremove -y --purge telegraf || true
+      sudo rm -rf /etc/telegraf
    elif [ "$Variant" == "Fedora" ] ; then
       echo "TBD"
       exit 1
