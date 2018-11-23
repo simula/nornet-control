@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+vncport1=5900   # Node
+vncport2=5920   # Server
+vncport3=5950   # Tunnelbox
+Show-VSystems | sort | (
+   while read name ; do
+      echo "N=$name"
+      
+      virsh dumpxml $name >$name.xml
+      if [[ "$name" =~ ^NorNet-Tunnelbox ]] ; then
+         sed -e "s/type='vnc' port='[0-9]*'/type='vnc' port='$vncport3'/g" <$name.xml >$name.xml.new
+         let vncport3=$vncport3+1
+      elif [[ "$name" =~ ^[A-Z] ]] ; then
+         sed -e "s/type='vnc' port='[0-9]*'/type='vnc' port='$vncport2'/g" <$name.xml >$name.xml.new
+         let vncport2=$vncport2+1
+      else
+         sed -e "s/type='vnc' port='[0-9]*'/type='vnc' port='$vncport1'/g" <$name.xml >$name.xml.new
+         let vncport1=$vncport1+1
+      fi
+
+      grep vnc $name.xml.new
+      virsh define $name.xml.new && mv $name.xml.new $name.xml
+   done
+)
