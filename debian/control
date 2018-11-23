@@ -70,6 +70,7 @@ Depends: apt-file,
          virt-what,
          vlan,
          whois,
+         xmlstarlet,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: apport-retrace,
@@ -153,6 +154,7 @@ Depends: autoconf,
          rpm,
          sysvbanner,
          valgrind,
+         xmlstarlet,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: ubuntu-dev-tools
