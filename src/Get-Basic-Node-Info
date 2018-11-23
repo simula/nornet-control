@@ -74,13 +74,16 @@ sys.stdout.write('Addresses: ')
 for providerIndex in providerList:
    provider = providerList[providerIndex]
    for version in [ 4, 6 ]:
-      address = makeNorNetIP(providerIndex, localSite['site_id'], localNode['node_index'], version)
+      address = makeNorNetIP(providerIndex,
+                             localSite['site_id'],
+                             localNode['node_index'], version).ip
       sys.stdout.write(str(address) + ' ')
 sys.stdout.write('\n')
 
 sys.stdout.write('DNS: ')
 for version in [ 4, 6 ]:
    dnsServer = makeNorNetIP(localSite['site_default_provider_index'],
-                            localSite['site_index'], NorNet_NodeIndex_Tunnelbox, version)
+                            localSite['site_index'],
+                            NorNet_NodeIndex_Tunnelbox, version).ip
    sys.stdout.write(str(dnsServer) + ' ')
 sys.stdout.write('\n')
