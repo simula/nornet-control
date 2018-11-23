@@ -150,7 +150,7 @@ EOF
   timeout = "5s"
   username = "telegraf"
   password = "$TELEGRAF_SERVER_PWD"
-  insecure_skip_verify = true
+  insecure_skip_verify = false
 [[inputs.cpu]]
  percpu = true
  totalcpu = true
