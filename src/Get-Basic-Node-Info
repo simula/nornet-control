@@ -31,11 +31,9 @@ from SysSetupCommons     import *
 
 # ###### Main program #######################################################
 # ====== Handle arguments ===================================================
-if len(sys.argv) < 4:
-   error('Usage: ' + sys.argv[0] + ' FQDN Interface Debian|Fedora|FreeBSD')
+if len(sys.argv) < 2:
+   error('Usage: ' + sys.argv[0] + ' FQDN')
 fqdn          = sys.argv[1]
-interfaceName = sys.argv[2]
-distribution  = sys.argv[3]
 
 
 # ====== Get configuration ==================================================
@@ -72,7 +70,7 @@ providerList = getNorNetProvidersForSite(localSite)
 # ====== Print information ==================================================
 sys.stdout.write('Node: ' + fqdn + '\n')
 
-sys.stdout.write('Addresses: '
+sys.stdout.write('Addresses: ')
 for providerIndex in providerList:
    provider = providerList[providerIndex]
    for version in [ 4, 6 ]:
@@ -80,7 +78,7 @@ for providerIndex in providerList:
       sys.stdout.write(str(address) + ' ')
 sys.stdout.write('\n')
 
-sys.stdout.write('DNS: '
+sys.stdout.write('DNS: ')
 for version in [ 4, 6 ]:
    dnsServer = makeNorNetIP(localSite['site_default_provider_index'],
                             localSite['site_index'], NorNet_NodeIndex_Tunnelbox, version)
