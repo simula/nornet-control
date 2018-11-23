@@ -62,6 +62,17 @@ if [ -e /etc/nornet/nornetapi-config ] ; then
    # NORNET_VERSION=`cat /etc/nornet/nornet-version`
 fi
 
+fqdn=`hostname -f`
+dnsList=`./Get-Basic-Node-Info ${fqdn} | grep ^DNS: | sed -e "s/^DNS: //g"`
+TELEGRAF_DNS_LIST=""
+for dns in ${dnsList} ; do
+   if [ "${TELEGRAF_DNS_LIST}" == "" ] ; then
+      TELEGRAF_DNS_LIST="\"${dns}\""
+   else
+      TELEGRAF_DNS_LIST="${TELEGRAF_DNS_LIST}, \"${dns}\""
+   fi
+done
+
 
 # ====== Find interfaces ====================================================
 allInterfaces=`ifconfig | awk '/^([a-zA-Z0-9\-]+):/ { print $1 }'  | sed -e "s/:$//" | sort`
