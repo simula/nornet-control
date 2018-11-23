@@ -97,7 +97,7 @@ if [ "$1" == "add" -o "$1" == "update" ] ; then
 cat <<EOF | sudo tee /etc/yum.repos.d/influxdb.repo
 [influxdb]
 name = InfluxDB Repository - RHEL \$releasever
-baseurl = https://repos.influxdata.com/rhel/\$releasever/\$basearch/stable
+baseurl = https://repos.influxdata.com/rhel/7/\$basearch/stable/
 enabled = 1
 gpgcheck = 1
 gpgkey = https://repos.influxdata.com/influxdb.key
@@ -172,7 +172,7 @@ elif [ "$1" == "remove" ] ; then
       sudo rm -rf /etc/telegraf
    elif [ "$Variant" == "Fedora" ] ; then
       sudo rm -f /etc/yum.repos.d/influxdb.repo
-      sudo dnf remove -y telegraf
+      sudo dnf remove -y telegraf || true
    else
       echo "ERROR: Implement deinstallation for $Variant!"
       exit 1
