@@ -96,7 +96,7 @@ if [ "$1" == "add" -o "$1" == "update" ] ; then
       elif [ "$Variant" == "Fedora" ] ; then
 cat <<EOF | sudo tee /etc/yum.repos.d/influxdb.repo
 [influxdb]
-name = InfluxDB Repository - RHEL \$releasever
+name = InfluxDB Repository - RHEL 7
 baseurl = https://repos.influxdata.com/rhel/7/\$basearch/stable/
 enabled = 1
 gpgcheck = 1

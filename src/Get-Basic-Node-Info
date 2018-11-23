@@ -1,0 +1,88 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
+# Get Basic Node Information
+# Copyright (C) 2018-2019 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+import sys
+
+# NorNet
+from NorNetConfiguration import *
+from NorNetAPI           import *
+from NorNetNodeSetup     import *
+from SysSetupCommons     import *
+
+
+
+# ###### Main program #######################################################
+# ====== Handle arguments ===================================================
+if len(sys.argv) < 4:
+   error('Usage: ' + sys.argv[0] + ' FQDN Interface Debian|Fedora|FreeBSD')
+fqdn          = sys.argv[1]
+interfaceName = sys.argv[2]
+distribution  = sys.argv[3]
+
+
+# ====== Get configuration ==================================================
+loginToPLC()
+fullSiteList = fetchNorNetSiteList(False)
+
+localNode = fetchNorNetNode(fqdn)
+if localNode == None:
+   print(('Node ' + fqdn + ' is not in the database => just using INDEX ' + \
+         str(getLocalNodeIndex()) + ' from configuration file.'))
+   if getLocalNodeIndex() == None:
+      error('NorNet_LocalNode_Index has not been set in configuration file!')
+   if getLocalNodeNorNetInterface() == None:
+      error('NorNet_LocalNode_NorNetInterface has not been set in configuration file!')
+   domain = getDomainFromFQDN(fqdn)
+   localSite = getNorNetSiteOfDomain(fullSiteList, domain)
+   if localSite == None:
+      error('Unable to find site for domain ' + domain + ' in database!')
+   localNode = {
+      'node_id'               : -1,
+      'node_site_id'          : localSite['site_id'],
+      'node_index'            : getLocalNodeIndex(),
+      'node_name'             : getHostnameFromFQDN(fqdn),
+      'node_model'            : 'Amiga 6000',
+      'node_nornet_interface' : getLocalNodeNorNetInterface()
+  }
+
+localSite = getNorNetSiteOfNode(fullSiteList, localNode)
+if localSite == None:
+   error('Unable to find site of node ' + localNode['node_name'] + ' in database!')
+providerList = getNorNetProvidersForSite(localSite)
+
+
+# ====== Print information ==================================================
+sys.stdout.write('Node: ' + fqdn + '\n')
+
+sys.stdout.write('Addresses: '
+for providerIndex in providerList:
+   provider = providerList[providerIndex]
+   for version in [ 4, 6 ]:
+      address = makeNorNetIP(providerIndex, localSite['site_id'], localNode['node_index'], version)
+      sys.stdout.write(str(address) + ' ')
+sys.stdout.write('\n')
+
+sys.stdout.write('DNS: '
+for version in [ 4, 6 ]:
+   dnsServer = makeNorNetIP(localSite['site_default_provider_index'],
+                            localSite['site_index'], NorNet_NodeIndex_Tunnelbox, version)
+   sys.stdout.write(str(dnsServer) + ' ')
+sys.stdout.write('\n')
