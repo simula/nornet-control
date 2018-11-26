@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # NorNet Experiment Toolbox
-# Copyright (C) 2016 by Thomas Dreibholz
+# Copyright (C) 2016-2019 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,9 +32,9 @@ def setGlobalVariable(variable, value):
 
 
 # ###### Invoke command #####################################################
-def runLocal(cmdLine, async = False):
+def runLocal(cmdLine, asynchronously = False):
    print('\x1b[33m' + cmdLine + '\x1b[0m')
-   if async == False:
+   if asynchronously == False:
       result = subprocess.call(cmdLine, shell=True)
       if result != 0:
          print('\x1b[31;1m========== WARNING: result=' + str(result) + ' ==========\x1b[0m')
@@ -45,7 +45,7 @@ def runLocal(cmdLine, async = False):
 
 
 # ###### Invoke command on node via SSH #####################################
-def runOverSSH(sshPrivateKey, node, slice, cmdLine, async = False):
+def runOverSSH(sshPrivateKey, node, slice, cmdLine, asynchronously = False):
    if not os.access(sshPrivateKey, os.R_OK):
       sys.stderr.write('\n#####################################################\n')
       sys.stderr.write('Private key not found: ' + sshPrivateKey + '\n')
@@ -55,7 +55,7 @@ def runOverSSH(sshPrivateKey, node, slice, cmdLine, async = False):
 
    sshCall = [ '/usr/bin/ssh' , '-4', '-i', sshPrivateKey, slice['slice_name'] + '@' + node['node_name'] , '-oStrictHostKeyChecking=no', '-oVerifyHostKeyDNS=no', '-oConnectTimeout=30', '-oBatchMode=yes', cmdLine ]
    print('\x1b[34m' + slice['slice_name'] + '@' + node['node_name'] + '> ' + '\x1b[33m' + cmdLine + '\x1b[0m')
-   if async == False:
+   if asynchronously == False:
       result = subprocess.call(sshCall, shell=False)
       if result != 0:
          print('\x1b[31;1m========== WARNING: result=' + str(result) + ' ==========\x1b[0m')

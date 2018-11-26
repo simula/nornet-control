@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
 # System Maintenance
-# Copyright (C) 2013-2018 by Thomas Dreibholz
+# Copyright (C) 2013-2019 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -78,7 +78,8 @@ fi
 # ====== apt-get package fixes ==============================================
 if [ "$Variant" = "Debian" ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing missing dependencies, if necessary ...\x1b[0m"
-   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -f -y -q  >/tmp/install.log 2>&1 &
+   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install -f -y -q \
+      -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" >/tmp/install.log 2>&1 &
    wait
    cat /tmp/install.log
 fi
@@ -87,7 +88,8 @@ fi
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Installing updates ...\x1b[0m"
 if [ "$Variant" = "Debian" ] ; then
    # ------ Download --------------------------------------
-   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get dist-upgrade -yd -q >/tmp/install.log 2>&1 &
+   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get dist-upgrade -yd -q \
+      -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" >/tmp/install.log 2>&1 &
    wait
 
    # ------ Update special packages -----------------------
@@ -102,7 +104,9 @@ if [ "$Variant" = "Debian" ] ; then
                echo "exit 101"
             ) | sudo tee /usr/sbin/policy-rc.d >/dev/null
             sudo chmod +x /usr/sbin/policy-rc.d
-            sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install --only-upgrade $package -y -q >>/tmp/install.log 2>&1 &
+            sudo DEBIAN_FRONTEND=noninteractive nohup apt-get install --only-upgrade \
+               -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" \
+              $package -y -q >>/tmp/install.log 2>&1 &
             wait
             echo "Updated $package package."
          fi
@@ -113,7 +117,8 @@ if [ "$Variant" = "Debian" ] ; then
    sudo rm -f /usr/sbin/policy-rc.d
 
    # ------ Update the rest -------------------------------
-   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get dist-upgrade -y -q >>/tmp/install.log 2>&1 &
+   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get dist-upgrade -y -q \
+      -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" >>/tmp/install.log 2>&1 &
    wait
    cat /tmp/install.log
 elif [ "$Variant" = "Fedora" ] ; then
@@ -130,12 +135,14 @@ fi
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Cleaning up ...\x1b[0m"
 if [ "$Variant" = "Debian" ] ; then
    # ------ Remove unnecessary dependencies ---------------
-   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get autoremove -y -q >/tmp/install.log 2>&1 &
+   sudo DEBIAN_FRONTEND=noninteractive nohup apt-get autoremove -y -q \
+      -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" >/tmp/install.log 2>&1 &
    wait
    cat /tmp/install.log
 
    # ------ Purge all previously-removed packages ---------
-   dpkg --get-selections | awk '$2=="deinstall" { print $1 }' | xargs --no-run-if-empty sudo DEBIAN_FRONTEND=noninteractive apt-get purge -y >/tmp/install.log 2>&1 &
+   dpkg --get-selections | awk '$2=="deinstall" { print $1 }' | xargs --no-run-if-empty sudo DEBIAN_FRONTEND=noninteractive apt-get purge -y \
+      -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" >/tmp/install.log 2>&1 &
    wait
    cat /tmp/install.log
 
@@ -210,11 +217,15 @@ if [ "$Variant" = "Debian" ] ; then
    echo -en "\x1b[0m"
 
    if [ $INTERACTIVE_KERNEL_REMOVAL -eq 0 ] ; then
-      sudo DEBIAN_FRONTEND=noninteractive nohup apt-get remove -y -qq --purge $toBeRemoved >/tmp/install.log 2>&1 &
+      sudo DEBIAN_FRONTEND=noninteractive nohup apt-get remove -y -qq --purge \
+         -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" \
+         $toBeRemoved >/tmp/install.log 2>&1 &
       wait
       cat /tmp/install.log
    else
-      sudo apt-get remove --purge $toBeRemoved
+      sudo apt-get remove --purge \
+         -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" \
+         $toBeRemoved
    fi
 fi
 
