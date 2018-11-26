@@ -1,3 +1,151 @@
+commit d109a1a885dca13696a2b22b6bd7784b81cbfd88
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Nov 26 16:40:25 2018 +0100
+
+    Merged scripts from updated version.
+
+ debian/changelog                      |  6 +++++
+ debian/control                        | 45 ++++++++++++++---------------------
+ src/Add-SSH-Node-Key                  |  2 +-
+ src/Auto-Update-BootCD                |  2 +-
+ src/Auto-Update-BootCD.1              |  2 +-
+ src/Auto-Update-Keys                  |  2 +-
+ src/Auto-Update-Keys.1                |  2 +-
+ src/Backup-All-VSystems               |  2 +-
+ src/Backup-All-VSystems.1             |  2 +-
+ src/Backup-VSystem                    |  2 +-
+ src/Backup-VSystem.1                  |  2 +-
+ src/Change-VSystem-CDImage            |  2 +-
+ src/Change-VSystem-CDImage.1          |  2 +-
+ src/Check-Nodes                       |  2 +-
+ src/Check-Nodes-Loop                  |  2 +-
+ src/Check-Nodes-Loop.1                |  2 +-
+ src/Check-Nodes.1                     |  2 +-
+ src/Check-Research-Node               |  2 +-
+ src/Check-Research-Node.1             |  2 +-
+ src/Check-VSystem                     |  2 +-
+ src/Check-VSystem.1                   |  2 +-
+ src/Clear-All-SSH-Node-Keys           |  2 +-
+ src/Clear-SSH-Node-Key                |  2 +-
+ src/Clear-SSH-Node-Key.1              |  2 +-
+ src/Convert-HDD-Images                |  2 +-
+ src/Convert-HDD-Images.1              |  2 +-
+ src/Create-New-SSH-Node-Keys          |  2 +-
+ src/Create-New-SSH-Node-Keys.1        |  2 +-
+ src/Create-Research-VM-Configurations |  2 +-
+ src/Find-Nodes-With-Problems          |  2 +-
+ src/Fingerprint-SSH-Node-Keys         |  2 +-
+ src/Fingerprint-SSH-Node-Keys.1       |  2 +-
+ src/Get-Control-IPs                   |  2 +-
+ src/Get-Nodes                         |  2 +-
+ src/Get-Nodes-From-PLC                |  2 +-
+ src/Get-Nodes.1                       |  2 +-
+ src/Get-NorNet-Configuration          |  2 +-
+ src/Get-NorNet-Configuration.1        |  2 +-
+ src/Get-Sites                         |  2 +-
+ src/Get-Sites.1                       |  2 +-
+ src/Get-Slice-Nodes                   |  2 +-
+ src/Get-Slice-Nodes.1                 |  2 +-
+ src/Get-Slices                        |  2 +-
+ src/Get-Slices.1                      |  2 +-
+ src/Get-Users                         |  2 +-
+ src/Get-Users.1                       |  2 +-
+ src/IPsec-Setup                       |  2 +-
+ src/Interface-Setup                   |  2 +-
+ src/Interface-Setup.8                 |  2 +-
+ src/Kontrollsenter/ol3-layerswitcher  |  2 +-
+ src/Make-Boot-ISO                     |  2 +-
+ src/Make-FileSrv-Configuration        | 36 ++++++++++++++++++++--------
+ src/Make-FileSrv-Configuration.1      |  2 +-
+ src/Make-Monitor-Configuration        |  2 +-
+ src/Make-Monitor-Configuration.1      |  2 +-
+ src/Make-Node-Configuration           |  2 +-
+ src/Make-Node-Configuration.1         |  2 +-
+ src/Make-Research-VM                  |  2 +-
+ src/Make-Server-Configuration         |  2 +-
+ src/Make-Server-Configuration.1       |  2 +-
+ src/Make-Tunnelbox-Configuration      |  2 +-
+ src/Make-Tunnelbox-Configuration.1    |  2 +-
+ src/Make-VSystem-Template             |  2 +-
+ src/Make-VSystem-Template.1           |  2 +-
+ src/Node-Setup                        |  2 +-
+ src/Node-Setup.1                      |  2 +-
+ src/NorNet-Setup                      |  2 +-
+ src/NorNet-TestSetup                  |  2 +-
+ src/NorNetAPI.py                      |  2 +-
+ src/NorNetConfiguration.py            |  2 +-
+ src/NorNetExperimentToolbox.py        | 10 ++++----
+ src/NorNetNodeSetup.py                |  2 +-
+ src/NorNetProviderSetup.py            |  2 +-
+ src/NorNetSiteSetup.py                |  2 +-
+ src/NorNetTools.py                    |  2 +-
+ src/Probe-Endpoint-Setup              |  2 +-
+ src/Probe-Endpoint-Setup.1            |  2 +-
+ src/Probe-Interface-Setup             |  2 +-
+ src/Probe-Interface-Setup.1           |  2 +-
+ src/Random-Sleep                      |  2 +-
+ src/Random-Sleep.1                    |  2 +-
+ src/Reset-Networking                  |  2 +-
+ src/Reset-Networking.1                |  2 +-
+ src/Reset-VSystem                     |  2 +-
+ src/Reset-VSystem.1                   |  2 +-
+ src/Routing-Rule-Setup                |  2 +-
+ src/Routing-Rule-Setup.1              |  2 +-
+ src/Server-Setup                      |  2 +-
+ src/Server-Setup.1                    |  2 +-
+ src/Server-Watchdog                   |  2 +-
+ src/Server-Watchdog.1                 |  2 +-
+ src/Set-OVF-Type                      |  2 +-
+ src/Set-OVF-Type.1                    |  2 +-
+ src/Show-All-Nodes                    |  2 +-
+ src/Show-VSystems                     |  2 +-
+ src/Show-VSystems.1                   |  2 +-
+ src/Slice-Setup                       |  2 +-
+ src/Start-VSystem                     |  2 +-
+ src/Start-VSystem.1                   |  2 +-
+ src/Stop-VSystem                      |  2 +-
+ src/Stop-VSystem.1                    |  2 +-
+ src/SysSetupCommons.py                |  2 +-
+ src/System-Backup                     |  2 +-
+ src/System-Backup.1                   |  2 +-
+ src/System-Info                       |  2 +-
+ src/System-Info.1                     |  2 +-
+ src/System-Maintenance                | 29 +++++++++++++++-------
+ src/System-Maintenance.1              |  2 +-
+ src/Test-NTP-Configuration            |  2 +-
+ src/Test-NTP-Configuration.1          |  2 +-
+ src/Tunnelbox-Bootstrap-Helper        |  2 +-
+ src/Tunnelbox-Bootstrap-Helper.1      |  2 +-
+ src/Tunnelbox-NAT-Helper              |  2 +-
+ src/Tunnelbox-NAT-Helper.1            |  2 +-
+ src/Tunnelbox-Setup                   |  2 +-
+ src/Tunnelbox-Setup.1                 |  2 +-
+ src/Update-Node-Distro                |  2 +-
+ src/Update-Node-State                 |  2 +-
+ src/Update-Slice-Expiration           |  2 +-
+ src/User-Setup                        |  2 +-
+ src/Watchdog                          |  2 +-
+ src/Watchdog.1                        |  2 +-
+ src/check_site                        |  2 +-
+ src/check_site.1                      |  2 +-
+ src/check_tunnel                      |  2 +-
+ src/check_tunnel.1                    |  2 +-
+ src/image-resize-with-cropping        |  2 +-
+ src/nornetinfogenerator               |  2 +-
+ src/nornetinfogenerator.1             |  2 +-
+ src/prepare-freebsd-vm                |  2 +-
+ 130 files changed, 200 insertions(+), 176 deletions(-)
+
+commit 07e7d293f900cec028adf1dc8d1e06b187a597d0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 12 12:56:26 2018 +0200
+
+    Updated packaging files.
+
+ ChangeLog  | 20 ++++++++++++++++++++
+ nornet.lsm |  4 ++--
+ 2 files changed, 22 insertions(+), 2 deletions(-)
+
 commit 4ae9e21043b71e62443c883630d2cd6484f0291d
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Fri Oct 12 12:54:57 2018 +0200
