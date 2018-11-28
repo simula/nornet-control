@@ -167,6 +167,7 @@ EOF
  port = 53
 [[inputs.net]]
  interfaces = [ $TELEGRAF_INTERFACE_LIST ]
+[[inputs.ntpq]]
 EOF
 ) | sudo tee /etc/telegraf/telegraf.conf
 
