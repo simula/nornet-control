@@ -73,7 +73,7 @@ Depends: apt-file,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: apport-retrace,
-         grub2-common,
+            grub2-common,
             language-pack-de-base,
             language-pack-en-base,
             language-pack-nb-base,
