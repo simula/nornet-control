@@ -93,7 +93,6 @@ Requires: jq
 Requires: libidn
 Requires: lksctp-tools
 Requires: mlocate
-Requires: netperfmeter
 Requires: net-snmp-utils
 Requires: net-tools
 Requires: nmap
@@ -112,6 +111,10 @@ Requires: vconfig
 Requires: virt-what
 Requires: whois
 Recommends: grub2-tools
+<<<<<<< HEAD
+=======
+Recommends: netperfmeter
+>>>>>>> master
 Recommends: rsplib-docs
 Recommends: rsplib-services
 Recommends: rsplib-tools
