@@ -153,10 +153,13 @@ See https://www.nntb.no for details on NorNet!
 /sbin/Interface-Setup
 
 %post management
+echo "Updating /etc/default/grub with NorNet settings:"
+echo "-----"
 cat /usr/share/nornet/grub-defaults | \
-   ( if grep "biosdevname=0" /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"biosdevname=0 /g" ; fi ) | \
-   ( if grep "net.ifnames=0" /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"net.ifnames=0 /g" ; fi ) \
->/etc/default/grub-defaults.new && mv /etc/default/grub-defaults.new /etc/default/grub-defaults
+   ( if grep "biosdevname=0" >/dev/null 2>&1 /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"biosdevname=0 /g" ; else cat ; fi ) | \
+   ( if grep "net.ifnames=0" >/dev/null 2>&1 /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"net.ifnames=0 /g" ; else cat ; fi ) | tee /etc/default/grub.new && \
+mv /etc/default/grub.new /etc/default/grub
+echo "-----"
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
 
 
