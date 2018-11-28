@@ -110,11 +110,9 @@ Requires: tree
 Requires: vconfig
 Requires: virt-what
 Requires: whois
+Requires: xmlstarlet
 Recommends: grub2-tools
-<<<<<<< HEAD
-=======
 Recommends: netperfmeter
->>>>>>> master
 Recommends: rsplib-docs
 Recommends: rsplib-services
 Recommends: rsplib-tools
@@ -175,6 +173,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package development
 Summary: NorNet Development
 Group: Applications/Internet
+Requires: %{name}-management = %{version}-%{release}
 Requires: autoconf
 Requires: automake
 Requires: banner
