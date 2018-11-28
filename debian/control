@@ -371,7 +371,7 @@ Package: nornet-server
 Architecture: all
 Depends: fail2ban,
          ifupdown,
-         libvirt-bin,
+         libvirt-clients | libvirt-bin,
          nfs-common,
          nornet-api,
          nornet-management,
