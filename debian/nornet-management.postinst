@@ -5,17 +5,22 @@ set -e
 case "$1" in
    configure)
       Auto-Update-Keys
+
       if [ -e /etc/update-motd.d ] ; then
          ln -sf /usr/bin/System-Info /etc/update-motd.d/55-nornet-management
       fi
       if [ -e /usr/sbin/update-motd ] ; then
          /usr/sbin/update-motd 2>/dev/null || true
       fi
+
       cat /usr/share/nornet/grub-defaults | \
          ( if grep "biosdevname=0" /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"biosdevname=0 /g" ; fi ) | \
          ( if grep "net.ifnames=0" /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"net.ifnames=0 /g" ; fi ) \
       >/etc/default/grub-defaults.new && mv /etc/default/grub-defaults.new /etc/default/grub-defaults
-      update-grub || true
+
+      if [ -x /usr/sbin/update-grub ] ; then
+         /usr/sbin/update-grub || true
+      fi
       ;;
 esac
 
