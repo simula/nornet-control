@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.3.1
+Version: 1.3.2~rc1.0
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -111,6 +111,7 @@ Requires: tree
 Requires: vconfig
 Requires: virt-what
 Requires: whois
+Recommends: grub2-tools
 Recommends: rsplib-docs
 Recommends: rsplib-services
 Recommends: rsplib-tools
@@ -148,15 +149,21 @@ See https://www.nntb.no for details on NorNet!
 /usr/bin/System-Maintenance
 /usr/bin/Test-NTP-Configuration
 /usr/bin/Watchdog
+/usr/share/nornet/grub-defaults
 /sbin/Interface-Setup
 
 %post management
-cp /usr/share/nornet/grub-defaults /etc/default/grub
-grub2-mkconfig -o /boot/grub2/grub.cfg
+cat /usr/share/nornet/grub-defaults | \
+   ( if grep "biosdevname=0" /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"biosdevname=0 /g" ; fi ) | \
+   ( if grep "net.ifnames=0" /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"net.ifnames=0 /g" ; fi ) \
+>/etc/default/grub-defaults.new && mv /etc/default/grub-defaults.new /etc/default/grub-defaults
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 %postun management
-rm -f /etc/grub.d/??_nornet_desktop_theme
-grub2-mkconfig -o /boot/grub2/grub.cfg
+rm -f /etc/grub.d/??_nornet_management_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 
 %package development
@@ -220,12 +227,13 @@ See https://www.nntb.no for details on NorNet!
 /etc/pbuilderrc
 
 %post development
-cp /usr/share/nornet/grub-defaults /etc/default/grub
-grub2-mkconfig -o /boot/grub2/grub.cfg
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 %postun development
-rm -f /etc/grub.d/??_nornet_desktop_theme
-grub2-mkconfig -o /boot/grub2/grub.cfg
+rm -f /etc/grub.d/??_nornet_development_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 
 %package api
@@ -287,7 +295,6 @@ Requires: rsplib-services
 Requires: xorg-x11-xauth
 Recommends: open-vm-tools
 Recommends: virtualbox-guest-additions
-Conflicts: %{name}-server
 
 %description node
 This package contains the scripts to configure a generic node on a NorNet
@@ -298,16 +305,15 @@ See https://www.nntb.no for details on NorNet!
 /boot/NorNet/Node1-1024x768.jpeg
 /etc/grub.d/??_nornet_node_theme
 /usr/bin/Make-Node-Configuration
-/usr/share/nornet/grub-defaults
 
 %post node
-cp /etc/nornet/grub-defaults /etc/default/grub
-cp /usr/share/nornet/grub-defaults /etc/default/grub
-grub2-mkconfig -o /boot/grub2/grub.cfg
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 %postun node
-rm -f /etc/grub.d/??_nornet_desktop_theme
-grub2-mkconfig -o /boot/grub2/grub.cfg
+rm -f /etc/grub.d/??_nornet_node_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 
 %package artwork
@@ -351,12 +357,13 @@ See https://www.nntb.no for details on NorNet!
 /usr/share/nornet-desktop/NorNet-A4.pdf
 
 %post display
-cp /usr/share/nornet/grub-defaults /etc/default/grub
-grub2-mkconfig -o /boot/grub2/grub.cfg
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 %postun display
-rm -f /etc/grub.d/??_nornet_desktop_theme
-grub2-mkconfig -o /boot/grub2/grub.cfg
+rm -f /etc/grub.d/??_nornet_display_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 
 %package gatekeeper
@@ -377,12 +384,13 @@ See https://www.nntb.no for details on NorNet!
 /etc/grub.d/??_nornet_gatekeeper_theme
 
 %post gatekeeper
-cp /usr/share/nornet/grub-defaults /etc/default/grub
-grub2-mkconfig -o /boot/grub2/grub.cfg
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 %postun gatekeeper
-rm -f /etc/grub.d/??_nornet_desktop_theme
-grub2-mkconfig -o /boot/grub2/grub.cfg
+rm -f /etc/grub.d/??_nornet_gatekeeper_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 
 %package websrv
@@ -408,12 +416,13 @@ See https://www.nntb.no for details on NorNet!
 /usr/share/nornet-websrv/*
 
 %post websrv
-cp /usr/share/nornet/grub-defaults /etc/default/grub
-grub2-mkconfig -o /boot/grub2/grub.cfg
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 %postun websrv
-rm -f /etc/grub.d/??_nornet_desktop_theme
-grub2-mkconfig -o /boot/grub2/grub.cfg
+rm -f /etc/grub.d/??_nornet_websrv_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 
 %package wikisrv
@@ -433,12 +442,13 @@ See https://www.nntb.no for details on NorNet!
 /etc/grub.d/??_nornet_wikisrv_theme
 
 %post wikisrv
-cp /usr/share/nornet/grub-defaults /etc/default/grub
-grub2-mkconfig -o /boot/grub2/grub.cfg
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 %postun wikisrv
-rm -f /etc/grub.d/??_nornet_desktop_theme
-grub2-mkconfig -o /boot/grub2/grub.cfg
+rm -f /etc/grub.d/??_nornet_wikisrv_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 
 %package timesrv
@@ -457,12 +467,13 @@ See https://www.nntb.no for details on NorNet!
 /etc/grub.d/??_nornet_timesrv_theme
 
 %post timesrv
-cp /usr/share/nornet/grub-defaults /etc/default/grub
-grub2-mkconfig -o /boot/grub2/grub.cfg
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 %postun timesrv
-rm -f /etc/grub.d/??_nornet_desktop_theme
-grub2-mkconfig -o /boot/grub2/grub.cfg
+rm -f /etc/grub.d/??_nornet_timesrv_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 
 %package database
@@ -484,12 +495,13 @@ See https://www.nntb.no for details on NorNet!
 /etc/grub.d/??_nornet_database_theme
 
 %post database
-cp /usr/share/nornet/grub-defaults /etc/default/grub
-grub2-mkconfig -o /boot/grub2/grub.cfg
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 %postun database
-rm -f /etc/grub.d/??_nornet_desktop_theme
-grub2-mkconfig -o /boot/grub2/grub.cfg
+rm -f /etc/grub.d/??_nornet_database_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 
 %package plc
@@ -508,12 +520,13 @@ See https://www.nntb.no for details on NorNet!
 /etc/grub.d/??_nornet_plc_theme
 
 %post plc
-cp /usr/share/nornet/grub-defaults /etc/default/grub
-grub2-mkconfig -o /boot/grub2/grub.cfg
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 %postun plc
-rm -f /etc/grub.d/??_nornet_desktop_theme
-grub2-mkconfig -o /boot/grub2/grub.cfg
+rm -f /etc/grub.d/??_nornet_plc_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 
 %package server
@@ -531,7 +544,6 @@ Requires: qemu-kvm
 Requires: virt-manager
 Requires: virt-install
 Requires: xorg-x11-xauth
-Conflicts: %{name}-node
 
 %description server
 This package contains the scripts to configure a generic server system
@@ -559,16 +571,15 @@ See https://www.nntb.no for details on NorNet!
 /usr/bin/Start-VSystem
 /usr/bin/Stop-VSystem
 /usr/share/nornet-server/watchdog-config.example
-/usr/share/nornet/grub-defaults
 
 %post server
-cp /etc/nornet/grub-defaults /etc/default/grub
-cp /usr/share/nornet/grub-defaults /etc/default/grub
-grub2-mkconfig -o /boot/grub2/grub.cfg
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 %postun server
-rm -f /etc/grub.d/??_nornet_desktop_theme
-grub2-mkconfig -o /boot/grub2/grub.cfg
+rm -f /etc/grub.d/??_nornet_server_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 
 %changelog

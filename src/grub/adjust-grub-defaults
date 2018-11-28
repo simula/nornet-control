@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cat grub-defaults | \
+   ( if grep "biosdevname=0" /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"biosdevname=0 /g" ; fi ) | \
+   ( if grep "net.ifnames=0" /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"net.ifnames=0 /g" ; fi ) \
+>grub-defaults.new

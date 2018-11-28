@@ -73,6 +73,7 @@ Depends: apt-file,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: apport-retrace,
+         grub2-common,
             language-pack-de-base,
             language-pack-en-base,
             language-pack-nb-base,
@@ -175,10 +176,8 @@ Description: NorNet API
 
 Package: nornet-node
 Architecture: any
-Conflicts: miredo,
-           nornet-server
+Conflicts: miredo
 Depends: fail2ban,
-         grub2-common | grub,
          ifupdown,
          nfs-common,
          nornet-api,
@@ -370,9 +369,7 @@ Description: NorNet Database
 
 Package: nornet-server
 Architecture: all
-Conflicts: nornet-node
 Depends: fail2ban,
-         grub2-common | grub,
          ifupdown,
          libvirt-bin,
          nfs-common,
