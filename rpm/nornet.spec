@@ -268,18 +268,18 @@ See https://www.nntb.no for details on NorNet!
 /usr/lib/python*/*-packages/__pycache__/NorNetSiteSetup*.pyc
 /usr/lib/python*/*-packages/__pycache__/NorNetTools*.pyc
 /usr/lib/python*/*-packages/__pycache__/SysSetupCommons*.pyc
-/usr/share/doc/nornet-api/examples/nornetapi-config.full
-/usr/share/doc/nornet-api/examples/nornetapi-config.simple
-/usr/share/doc/nornet-api/examples/nornetapi-constants
+/usr/share/nornet-api/nornetapi-config.full
+/usr/share/nornet-api/nornetapi-config.simple
+/usr/share/nornet-api/nornetapi-constants
 
 %post api
 mkdir -p /etc/nornet
 if [ ! -e /etc/nornet/nornetapi-constants ] ; then
-   cp /usr/share/doc/nornet-api/examples/nornetapi-constants /etc/nornet/nornetapi-constants
+   cp /usr/share/nornet-api/nornetapi-constants /etc/nornet/nornetapi-constants
 fi
 
 if [ ! -e /etc/nornet/nornetapi-config ] ; then
-   cp /usr/share/doc/nornet-api/examples/nornetapi-config.simple /etc/nornet/nornetapi-config.EXAMPLE
+   cp /usr/share/nornet-api/nornetapi-config.simple /etc/nornet/nornetapi-config.EXAMPLE
 fi
 
 
