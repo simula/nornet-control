@@ -159,7 +159,7 @@ script:
   - |
     travis_wait 60 ci/build
     if [ "${VARIANT}" != "debian" ] ; then
-       travis_wait 60 ci/test
+       travis_wait 60 ci/test \
           nornet-api \
           nornet-artwork \
           nornet-database \
