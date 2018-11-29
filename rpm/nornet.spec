@@ -93,7 +93,6 @@ Requires: jq
 Requires: libidn
 Requires: lksctp-tools
 Requires: mlocate
-Requires: netperfmeter
 Requires: net-snmp-utils
 Requires: net-tools
 Requires: nmap
@@ -102,7 +101,6 @@ Requires: pxz
 Requires: reiserfs-utils
 Requires: reprepro
 Requires: smartmontools
-Requires: sslscan
 Requires: subnetcalc
 Requires: tcpdump
 Requires: tftp
@@ -111,7 +109,9 @@ Requires: tree
 Requires: vconfig
 Requires: virt-what
 Requires: whois
+Requires: xmlstarlet
 Recommends: grub2-tools
+Recommends: netperfmeter
 Recommends: rsplib-docs
 Recommends: rsplib-services
 Recommends: rsplib-tools
@@ -172,6 +172,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package development
 Summary: NorNet Development
 Group: Applications/Internet
+Requires: %{name}-management = %{version}-%{release}
 Requires: autoconf
 Requires: automake
 Requires: banner
