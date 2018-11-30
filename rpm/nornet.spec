@@ -93,7 +93,6 @@ Requires: jq
 Requires: libidn
 Requires: lksctp-tools
 Requires: mlocate
-Requires: netperfmeter
 Requires: net-snmp-utils
 Requires: net-tools
 Requires: nmap
@@ -102,7 +101,6 @@ Requires: pxz
 Requires: reiserfs-utils
 Requires: reprepro
 Requires: smartmontools
-Requires: sslscan
 Requires: subnetcalc
 Requires: tcpdump
 Requires: tftp
@@ -111,7 +109,9 @@ Requires: tree
 Requires: vconfig
 Requires: virt-what
 Requires: whois
+Requires: xmlstarlet
 Recommends: grub2-tools
+Recommends: netperfmeter
 Recommends: rsplib-docs
 Recommends: rsplib-services
 Recommends: rsplib-tools
@@ -172,6 +172,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package development
 Summary: NorNet Development
 Group: Applications/Internet
+Requires: %{name}-management = %{version}-%{release}
 Requires: autoconf
 Requires: automake
 Requires: banner
@@ -227,7 +228,7 @@ See https://www.nntb.no for details on NorNet!
 %files development
 /boot/NorNet/Development1-1024x768.jpeg
 /etc/grub.d/??_nornet_development_theme
-/etc/pbuilderrc
+/usr/share/nornet/pbuilderrc
 
 %post development
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -290,12 +291,12 @@ Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Requires: fail2ban
 Requires: grub2
-Requires: libvirt-bin
+Requires: libvirt-client
 Requires: nfs-utils
 Requires: ntp
 Requires: openssh-server
-Requires: rsplib-services
 Requires: xorg-x11-xauth
+Recommends: rsplib-services
 Recommends: open-vm-tools
 Recommends: virtualbox-guest-additions
 
@@ -337,6 +338,44 @@ See https://www.nntb.no for details on NorNet!
 /var/www/Artwork/Graphics/Markers/*.svg
 /var/www/Artwork/Sites/Large/*.jpeg
 /var/www/Artwork/Sites/Small/*.jpeg
+
+
+%package monitor
+Summary: NorNet Monitor
+Group: Applications/Internet
+Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-artwork = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
+Requires: httpd
+Requires: mod_php
+Requires: nagios
+Requires: postfix
+
+%description monitor
+This package contains the scripts to configure a generic monitoring station
+on a NorNet central site.
+See https://www.nntb.no for details on NorNet!
+
+%files monitor
+/boot/NorNet/Monitor1-1024x768.jpeg
+/etc/grub.d/??_nornet_monitor_theme
+/etc/nornet/nornet-commands.cfg
+/etc/nornet/nornet-services.cfg
+/usr/bin/Make-Monitor-Configuration
+/usr/bin/check_site
+/usr/bin/check_tunnel
+/var/www/Kontrollsenter/*
+/var/www/Kontrollsenter/Clock/*
+/var/www/Kontrollsenter/UnifrakturCook/*
+/var/www/Kontrollsenter/UnifrakturCook/sources/*
+
+%post monitor
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
+
+%postun monitor
+rm -f /etc/grub.d/??_nornet_monitor_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
 
 
 %package display
@@ -402,9 +441,12 @@ Group: Applications/Internet
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Requires: awstats
+Requires: geoipupdate-cron
+Requires: geoipupdate-cron6
 Requires: GeoIP-GeoLite-data
 Requires: GeoIP-GeoLite-data-extra
 Requires: httpd
+Requires: mod_php
 Requires: oxygen-icon-theme
 
 %description websrv
@@ -433,6 +475,7 @@ Summary: NorNet WikiSrv
 Group: Applications/Internet
 Requires: %{name}-websrv = %{version}-%{release}
 Requires: postfix
+Requires: php-mysqlnd
 
 %description wikisrv
 This package contains the packages to set up a wiki station for the
@@ -539,7 +582,7 @@ Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Requires: fail2ban
 Requires: grub2
-Requires: libvirt-bin
+Requires: libvirt-client
 Requires: nfs-utils
 Requires: ntp
 Requires: openssh-server
