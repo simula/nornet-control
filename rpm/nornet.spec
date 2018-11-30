@@ -228,7 +228,7 @@ See https://www.nntb.no for details on NorNet!
 %files development
 /boot/NorNet/Development1-1024x768.jpeg
 /etc/grub.d/??_nornet_development_theme
-/etc/pbuilderrc
+/usr/share/nornet/pbuilderrc
 
 %post development
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
