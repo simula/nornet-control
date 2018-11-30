@@ -317,7 +317,7 @@ Depends: apache2,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: geoip-database-extra,
-         geoipupdate,
+            geoipupdate,
             php-mysql | php5-mysql,
             php-ssh2 | libssh2-php
 Description: NorNet Web Server
