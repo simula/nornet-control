@@ -159,19 +159,5 @@ script:
   - |
     travis_wait 60 ci/build
     if [ "${VARIANT}" != "debian" ] ; then
-       travis_wait 60 ci/test \
-          nornet-api \
-          nornet-artwork \
-          nornet-database \
-          nornet-development \
-          nornet-display \
-          nornet-filesrv \
-          nornet-gatekeeper \
-          nornet-management \
-          nornet-node \
-          nornet-server \
-          nornet-timesrv \
-          nornet-tunnelbox \
-          nornet-trace-service \
-          nornet-x11
+       travis_wait 60 ci/test
     fi
