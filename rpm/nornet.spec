@@ -475,9 +475,7 @@ Summary: NorNet WikiSrv
 Group: Applications/Internet
 Requires: %{name}-websrv = %{version}-%{release}
 Requires: postfix
-Requires: php-mbstring
 Requires: php-mysqlnd
-Requires: php-xml
 
 %description wikisrv
 This package contains the packages to set up a wiki station for the
