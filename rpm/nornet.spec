@@ -291,12 +291,12 @@ Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Requires: fail2ban
 Requires: grub2
-Requires: libvirt-bin
+Requires: libvirt-client
 Requires: nfs-utils
 Requires: ntp
 Requires: openssh-server
-Requires: rsplib-services
 Requires: xorg-x11-xauth
+Recommends: rsplib-services
 Recommends: open-vm-tools
 Recommends: virtualbox-guest-additions
 
@@ -540,7 +540,7 @@ Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Requires: fail2ban
 Requires: grub2
-Requires: libvirt-bin
+Requires: libvirt-client
 Requires: nfs-utils
 Requires: ntp
 Requires: openssh-server
