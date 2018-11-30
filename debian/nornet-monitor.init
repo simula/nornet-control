@@ -117,10 +117,12 @@ get_new_monitor_configuration ()
 check_and_configure ()
 {
    get_new_monitor_configuration
-   if needs_update nagios-config /etc/nagios3/nornet-testbed.cfg $1 ; then
+   if needs_update nagios-config /etc/nornet/nornet-testbed.cfg $1 ; then
       echo -e "\x1b[32m`env LANG=C date +%FT%H:%M:%S`: Nagios configuration has been updated => restarting Nagios service ...\x1b[0m"
-      cp nagios-config /etc/nagios3/nornet-testbed.cfg
+      cp nagios-config /etc/nornet/nornet-testbed.cfg
+      service nagios  reload >/dev/null || true   # "reload" is sufficient here => faster!
       service nagios3 reload >/dev/null || true   # "reload" is sufficient here => faster!
+      service nagios4 reload >/dev/null || true   # "reload" is sufficient here => faster!
    fi
 }
 

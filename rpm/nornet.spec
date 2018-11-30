@@ -359,8 +359,8 @@ See https://www.nntb.no for details on NorNet!
 %files monitor
 /boot/NorNet/Monitor1-1024x768.jpeg
 /etc/grub.d/??_nornet_monitor_theme
-/etc/nagios3/nornet-commands.cfg
-/etc/nagios3/nornet-services.cfg
+/etc/nornet/nornet-commands.cfg
+/etc/nornet/nornet-services.cfg
 /usr/bin/Make-Monitor-Configuration
 /usr/bin/check_site
 /usr/bin/check_tunnel

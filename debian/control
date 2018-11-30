@@ -318,7 +318,7 @@ Depends: apache2,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: geoip-database-extra,
-           php-mysql | php5-mysql,
+            php-mysql | php5-mysql,
             php-ssh2 | libssh2-php
 Description: NorNet Web Server
  This package contains the packages to set up a web server station for the
