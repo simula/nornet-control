@@ -5,18 +5,20 @@ set -e
 case "$1" in
    configure)
       for nagios in ${nagios} nagios4 ; do
-         (
-            cat /etc/${nagios}/nagios.cfg | \
-               grep -v "^cfg_file=.*/nornet[a-zA-Z0-9+-]*.cfg$" |
-               grep -v "^# [-]* NorNet [-]"
+         if [ -d /etc/${nagios} ] ; then
+            (
+               cat /etc/${nagios}/nagios.cfg | \
+                  grep -v "^cfg_file=.*/nornet[a-zA-Z0-9+-]*.cfg$" |
+                  grep -v "^# [-]* NorNet [-]"
 
-            echo "# ------ NorNet -------------------------------------------------------------"
-            echo "cfg_file=/etc/nornet/nornet-commands.cfg"
-            echo "cfg_file=/etc/nornet/nornet-services.cfg"
-            echo "cfg_file=/etc/nornet/nornet-testbed.cfg"
-            echo "# ------ NorNet -------------------------------------------------------------"
-         ) >/etc/${nagios}/nagios.cfg.new
-         mv /etc/${nagios}/nagios.cfg.new /etc/${nagios}/nagios.cfg
+               echo "# ------ NorNet -------------------------------------------------------------"
+               echo "cfg_file=/etc/nornet/nornet-commands.cfg"
+               echo "cfg_file=/etc/nornet/nornet-services.cfg"
+               echo "cfg_file=/etc/nornet/nornet-testbed.cfg"
+               echo "# ------ NorNet -------------------------------------------------------------"
+            ) >/etc/${nagios}/nagios.cfg.new
+            mv /etc/${nagios}/nagios.cfg.new /etc/${nagios}/nagios.cfg
+         fi
       done
 
       if [ -x /usr/sbin/update-grub ] ; then
