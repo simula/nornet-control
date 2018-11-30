@@ -340,6 +340,44 @@ See https://www.nntb.no for details on NorNet!
 /var/www/Artwork/Sites/Small/*.jpeg
 
 
+%package monitor
+Summary: NorNet Monitor
+Group: Applications/Internet
+Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-artwork = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
+Requires: httpd
+Requires: mod_php
+Requires: nagios
+Requires: postfix
+
+%description monitor
+This package contains the scripts to configure a generic monitoring station
+on a NorNet central site.
+See https://www.nntb.no for details on NorNet!
+
+%files monitor
+/boot/NorNet/Monitor1-1024x768.jpeg
+/etc/grub.d/??_nornet_monitor_theme
+/etc/nagios3/nornet-commands.cfg
+/etc/nagios3/nornet-services.cfg
+/usr/bin/Make-Monitor-Configuration
+/usr/bin/check_site
+/usr/bin/check_tunnel
+/var/www/Kontrollsenter/*
+/var/www/Kontrollsenter/Clock/*
+/var/www/Kontrollsenter/UnifrakturCook/*
+/var/www/Kontrollsenter/UnifrakturCook/sources/*
+
+%post monitor
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
+
+%postun monitor
+rm -f /etc/grub.d/??_nornet_monitor_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
+
 %package display
 Summary: NorNet Display
 Group: Applications/Internet

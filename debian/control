@@ -258,8 +258,7 @@ Package: nornet-monitor
 Architecture: all
 Depends: apache2,
          libapache2-mod-php | libapache2-mod-php5,
-         nagios3,
-         nagios3-doc,
+         nagios4 | nagios3,
          nornet-api,
          nornet-artwork,
          nornet-management,
@@ -307,7 +306,7 @@ Package: nornet-websrv
 Architecture: all
 Depends: apache2,
          awstats,
-         geoip-database-contrib,
+         geoip-database | geoip-database-contrib,
          geoipupdate,
          libapache2-mod-php | libapache2-mod-php5,
          libgeo-ip-perl,
@@ -318,7 +317,8 @@ Depends: apache2,
          oxygen-icon-theme,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: php-mysql | php5-mysql,
+Recommends: geoip-database-extra,
+           php-mysql | php5-mysql,
             php-ssh2 | libssh2-php
 Description: NorNet Web Server
  This package contains the packages to set up a web server station for the
