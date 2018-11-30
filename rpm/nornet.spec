@@ -403,9 +403,12 @@ Group: Applications/Internet
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Requires: awstats
+Requires: geoipupdate-cron
+Requires: geoipupdate-cron6
 Requires: GeoIP-GeoLite-data
 Requires: GeoIP-GeoLite-data-extra
 Requires: httpd
+Requires: mod_php
 Requires: oxygen-icon-theme
 
 %description websrv
@@ -434,6 +437,9 @@ Summary: NorNet WikiSrv
 Group: Applications/Internet
 Requires: %{name}-websrv = %{version}-%{release}
 Requires: postfix
+Requires: php-mbstring
+Requires: php-mysqlnd
+Requires: php-xml
 
 %description wikisrv
 This package contains the packages to set up a wiki station for the

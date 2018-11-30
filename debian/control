@@ -308,6 +308,7 @@ Architecture: all
 Depends: apache2,
          awstats,
          geoip-database-contrib,
+         geoipupdate,
          libapache2-mod-php | libapache2-mod-php5,
          libgeo-ip-perl,
          libnet-dns-perl,
@@ -328,8 +329,7 @@ Description: NorNet Web Server
 
 Package: nornet-wikisrv
 Architecture: all
-Depends: libapache2-mod-php | libapache2-mod-php5,
-         nornet-websrv,
+Depends: nornet-websrv,
          php-mbstring,
          php-mysql | php5-mysql,
          php-xml,
