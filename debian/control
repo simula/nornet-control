@@ -220,9 +220,7 @@ Depends: arpwatch,
          ${shlibs:Depends}
 Recommends: nornet-trace-service,
             nslint
-Suggests: collectd,
-          stab,
-          tracebox
+Suggests: tracebox
 Description: NorNet Tunnelbox Control
  This package contains the scripts to configure the tunnelboxes of NorNet
  sites.
