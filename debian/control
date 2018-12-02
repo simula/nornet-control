@@ -396,9 +396,10 @@ Description: NorNet Server
 Package: nornet-trace-service
 Architecture: any
 Depends: hipercontracer (>= 1.2.0~),
+         nornet-tunnelbox,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Trace Service
  NorNet Trace Service is the traceroute service for the NorNet testbed.
  It performs regular traceroute/traceroute6 runs among all sites and
- imports the results into an SQL database.
+ imports the results into a database.
