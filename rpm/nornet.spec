@@ -319,6 +319,47 @@ rm -f /etc/grub.d/??_nornet_node_theme
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
 
 
+%package tunnelbox
+Summary: NorNet Tunnelbox
+Group: Applications/Internet
+Requires: (%{name}-node = %{version}-%{release} or %{name}-server = %{version}-%{release})
+Requires: %{name}-management = %{version}-%{release}
+Requires: %{name}-api = %{version}-%{release}
+Requires: arpwatch
+Requires: bind
+Requires: conntrack-tools
+Requires: dhcp-server
+Requires: iptables
+Requires: iputils
+Requires: net-snmp
+Requires: netstat-nat
+Requires: ntp
+Requires: radvd
+Requires: squid
+Requires: traceroute
+
+%description tunnelbox
+This package contains the scripts to configure the tunnelboxes of NorNet
+sites.
+See https://www.nntb.no for details on NorNet!
+
+%files tunnelbox
+/boot/NorNet/Tunnelbox1-1024x768.jpeg
+/etc/grub.d/??_nornet_tunnelbox_theme
+/usr/bin/Make-Tunnelbox-Configuration
+/usr/bin/Probe-Interface-Setup
+/usr/bin/Tunnelbox-Bootstrap-Helper
+/usr/bin/Tunnelbox-NAT-Helper
+/usr/bin/Tunnelbox-Setup
+
+%post tunnelbox
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
+
+%postun tunnelbox
+rm -f /etc/grub.d/??_nornet_tunnelbox_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 %package artwork
 Summary: NorNet Artwork
