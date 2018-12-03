@@ -181,8 +181,8 @@ Conflicts: miredo
 Depends: fail2ban,
          ifupdown,
          nfs-common,
-         nornet-api,
-         nornet-management,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          ntp,
          openssh-server,
          rsplib-services,
@@ -208,9 +208,9 @@ Depends: arpwatch,
          iputils-tracepath,
          isc-dhcp-server,
          netstat-nat,
-         nornet-api,
-         nornet-management,
-         nornet-node | nornet-server,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
+         nornet-node (= ${binary:Version}) | nornet-server (= ${binary:Version}),
          ntp,
          radvd,
          snmpd,
@@ -218,7 +218,7 @@ Depends: arpwatch,
          traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: nornet-trace-service,
+Recommends: nornet-trace-service (= ${binary:Version}),
             nslint
 Suggests: tracebox
 Description: NorNet Tunnelbox Control
@@ -230,8 +230,8 @@ Description: NorNet Tunnelbox Control
 Package: nornet-filesrv
 Architecture: all
 Depends: nfs-kernel-server,
-         nornet-api,
-         nornet-management,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          python3-adns,
          tftpd-hpa,
          ${misc:Depends},
@@ -257,9 +257,9 @@ Architecture: all
 Depends: apache2,
          libapache2-mod-php | libapache2-mod-php5,
          nagios4 | nagios3,
-         nornet-api,
-         nornet-artwork,
-         nornet-management,
+         nornet-api (= ${binary:Version}),
+         nornet-artwork (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          postfix,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -273,8 +273,8 @@ Package: nornet-display
 Architecture: all
 Depends: firefox,
          kubuntu-desktop | neon-desktop | deepin-desktop-environment | lubuntu-desktop | ubuntu-desktop,
-         nornet-api,
-         nornet-management,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          sddm | kdm | lightdm | gdm3,
          xserver-xorg-video-vmware,
          ${misc:Depends},
@@ -289,8 +289,8 @@ Description: NorNet Display
 Package: nornet-gatekeeper
 Architecture: all
 Depends: fail2ban,
-         nornet-api,
-         nornet-management,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Gatekeeper
@@ -309,8 +309,8 @@ Depends: apache2,
          libgeo-ip-perl,
          libnet-dns-perl,
          libnet-ip-perl,
-         nornet-api,
-         nornet-management,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          oxygen-icon-theme,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -327,7 +327,7 @@ Description: NorNet Web Server
 
 Package: nornet-wikisrv
 Architecture: all
-Depends: nornet-websrv,
+Depends: nornet-websrv (= ${binary:Version}),
          php-mysql | php5-mysql,
          postfix,
          ${misc:Depends},
@@ -341,8 +341,8 @@ Description: NorNet Wiki Server
 
 Package: nornet-timesrv
 Architecture: all
-Depends: nornet-api,
-         nornet-management,
+Depends: nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          ntp,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -353,7 +353,9 @@ Description: NorNet Time Server
 
 Package: nornet-database
 Architecture: all
-Depends: postgresql,
+Depends: nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
+         postgresql,
          postgresql-contrib,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -370,8 +372,8 @@ Depends: fail2ban,
          ifupdown,
          libvirt-clients | libvirt-bin,
          nfs-common,
-         nornet-api,
-         nornet-management,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          ntp,
          openssh-server,
          qemu-kvm,
@@ -394,7 +396,7 @@ Description: NorNet Server
 Package: nornet-trace-service
 Architecture: any
 Depends: hipercontracer (>= 1.2.0~),
-         nornet-tunnelbox,
+         nornet-tunnelbox (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Trace Service
