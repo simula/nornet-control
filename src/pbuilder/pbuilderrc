@@ -31,8 +31,9 @@ MIRRORSITE=http://no.archive.ubuntu.com/ubuntu/
 # apt-get update
 # EOF
 
-# Turn OFF ccache! It will not work properly!
-CCACHEDIR=
+# Use "eatmydata" to speed up disk I/O.
+EXTRAPACKAGES=eatmydata
+EATMYDATA=yes
 
 # Multi-core: set concurrency level. The packaging scripts will handle it properly:
 cores=`getconf _NPROCESSORS_ONLN`
@@ -45,6 +46,7 @@ export DEB_BUILD_OPTIONS="parallel=${cores}"
 # (see http://www.davromaniak.eu/index.php?post/2011/07/12/Pbuilder-and-tmpfs-can-be-friends)
 # Add to /etc/fstab:
 # tmpfs   /var/cache/pbuilder/build   tmpfs   defaults,auto   0	2
+
 APTCACHEHARDLINK=no
 
 # =================================================================
