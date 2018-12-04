@@ -272,7 +272,7 @@ Description: NorNet Monitor
 Package: nornet-display
 Architecture: all
 Depends: firefox,
-         kubuntu-desktop | neon-desktop | deepin-desktop-environment | lubuntu-desktop | ubuntu-desktop,
+         kubuntu-desktop | neon-desktop | kde-standard | deepin-desktop-environment | lubuntu-desktop | ubuntu-desktop,
          nornet-api,
          nornet-management,
          sddm | kdm | lightdm | gdm3,
