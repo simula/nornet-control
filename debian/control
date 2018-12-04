@@ -271,7 +271,7 @@ Description: NorNet Monitor
 
 Package: nornet-display
 Architecture: all
-Depends: firefox,
+Depends: firefox | firefox-esr,
          kubuntu-desktop | neon-desktop | kde-standard | deepin-desktop-environment | lubuntu-desktop | ubuntu-desktop,
          nornet-api (>= ${source:Version}),
          nornet-management (>= ${source:Version}),
