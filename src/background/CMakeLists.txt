@@ -378,7 +378,7 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
                                   COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED}    ${image} ${imageTemp2} ${aspectRatio} ${width}
                                   COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_BACKGROUND} ${imageTemp2} ${imageTemp1}
                                   COMMAND ${GM} convert ${imageTemp1} -interlace line ${imageWithoutLogo}
-                                  COMMAND ${EXIFTOOL} -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
+                                  COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
                                   COMMAND ${RM} -f ${imageTemp1} ${imageTemp2}
                                   DEPENDS ${image}
                                           generate_gimpDirStamp
@@ -387,7 +387,7 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
                ADD_CUSTOM_COMMAND(OUTPUT  ${imageWithoutLogo}
                                   COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED} ${image} ${imageTemp1} ${aspectRatio} ${width}
                                   COMMAND ${GM} convert ${imageTemp1} -interlace line ${imageWithoutLogo}
-                                  COMMAND ${EXIFTOOL} -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
+                                  COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
                                   COMMAND ${RM} -f ${imageTemp1} ${imageTemp2}
                                   DEPENDS ${image}
                                           generate_gimpDirStamp
@@ -402,7 +402,7 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
                                COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED}  ${image} ${imageTemp2} ${aspectRatio} ${width}
                                COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_PAINTING} ${imageTemp2} ${imageTemp1} ${makeSize}
                                COMMAND ${GM} convert ${imageTemp1} -interlace line ${imageWithoutLogo}
-                               COMMAND ${EXIFTOOL} -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
+                               COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
                                COMMAND ${RM} -f ${imageTemp1} ${imageTemp2}
                                DEPENDS ${image}
                                        generate_gimpDirStamp
@@ -423,7 +423,7 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
                                COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED} ${image} ${imageTemp2} ${aspectRatio} ${width}
                                COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_MOSAIC}  ${imageTemp2} ${imageTemp1} ${tileSize} ${tileHeight} ${tileHeight} hexagons rough
                                COMMAND ${GM} convert ${imageTemp1} -interlace line ${imageWithoutLogo}
-                               COMMAND ${EXIFTOOL} -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
+                               COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
                                COMMAND ${RM} -f ${imageTemp1} ${imageTemp2}
                                DEPENDS ${image}
                                        generate_gimpDirStamp
@@ -435,7 +435,7 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
                                COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED} ${image} ${imageTemp2} ${aspectRatio} ${width}
                                COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CLOTH}   ${imageTemp2} ${imageTemp1} 5
                                COMMAND ${GM} convert ${imageTemp1} -interlace line ${imageWithoutLogo}
-                               COMMAND ${EXIFTOOL} -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
+                               COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
                                COMMAND ${RM} -f ${imageTemp1} ${imageTemp2}
                                DEPENDS ${image}
                                        generate_gimpDirStamp
@@ -447,7 +447,7 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
                                COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED}  ${image} ${imageTemp2} ${aspectRatio} ${width}
                                COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_OLDPHOTO} ${imageTemp2} ${imageTemp1} 20
                                COMMAND ${GM} convert ${imageTemp1} -interlace line ${imageWithoutLogo}
-                               COMMAND ${EXIFTOOL} -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
+                               COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
                                COMMAND ${RM} -f ${imageTemp1} ${imageTemp2}
                                DEPENDS ${image}
                                        generate_gimpDirStamp
@@ -479,7 +479,7 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
          IF((INSERT_HOSTNAME) AND (imageName MATCHES ^[a-z]))
             ADD_CUSTOM_COMMAND(OUTPUT ${imageWithLogo}
                                COMMAND ${GM} composite ${overlayImageWithHostname} ${imageWithoutLogo} -interlace line -quality ${TDD_JPEG_QUALITY} ${imageWithLogo}
-                               COMMAND ${EXIFTOOL} -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithLogo} || true
+                               COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithLogo} || true
                                DEPENDS ${generate_overlayImageWithHostname}
                                        ${overlayImageWithHostname}
                                        ${generate_imageWithoutLogo}
@@ -489,7 +489,7 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
          ELSE()
             ADD_CUSTOM_COMMAND(OUTPUT ${imageWithLogo}
                                COMMAND ${GM} composite ${overlayImage} ${imageWithoutLogo} -interlace line -quality ${TDD_JPEG_QUALITY} ${imageWithLogo}
-                               COMMAND ${EXIFTOOL} -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithLogo} || true
+                               COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithLogo} || true
                                DEPENDS ${generate_overlayImage}
                                        ${overlayImage}
                                        ${generate_imageWithoutLogo}
@@ -507,7 +507,7 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
 
             ADD_CUSTOM_COMMAND(OUTPUT  ${imageBootsplash}
                                COMMAND ${GM} composite  -gravity South ${bootsplash_overlayImage} ${imageWithLogo} -quality ${TDD_JPEG_QUALITY} ${imageBootsplash}
-                               COMMAND ${EXIFTOOL} -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageBootsplash} || true
+                               COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageBootsplash} || true
                                DEPENDS ${generate_bootsplash_overlayImage}
                                        ${bootsplash_overlayImage}
                                        ${generate_imageWithLogo}

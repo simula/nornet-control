@@ -4,23 +4,26 @@ set -e
 
 case "$1" in
    configure)
-      (
-         cat /etc/nagios3/nagios.cfg | \
-            grep -v "^cfg_file=.*/nornet[a-zA-Z0-9+-]*.cfg$" |
-            grep -v "^# [-]* NorNet [-]"
+      for nagios in ${nagios} nagios4 ; do
+         if [ -d /etc/${nagios} ] ; then
+            (
+               cat /etc/${nagios}/nagios.cfg | \
+                  grep -v "^cfg_file=.*/nornet[a-zA-Z0-9+-]*.cfg$" |
+                  grep -v "^# [-]* NorNet [-]"
 
-         echo "# ------ NorNet -------------------------------------------------------------"
-         echo "cfg_file=/etc/nagios3/nornet-commands.cfg"
-         echo "cfg_file=/etc/nagios3/nornet-services.cfg"
-         echo "cfg_file=/etc/nagios3/nornet-testbed.cfg"
-         echo "# ------ NorNet -------------------------------------------------------------"
-      ) >/etc/nagios3/nagios.cfg.new
-      mv /etc/nagios3/nagios.cfg.new /etc/nagios3/nagios.cfg
+               echo "# ------ NorNet -------------------------------------------------------------"
+               echo "cfg_file=/etc/nornet/nornet-commands.cfg"
+               echo "cfg_file=/etc/nornet/nornet-services.cfg"
+               echo "cfg_file=/etc/nornet/nornet-testbed.cfg"
+               echo "# ------ NorNet -------------------------------------------------------------"
+            ) >/etc/${nagios}/nagios.cfg.new
+            mv /etc/${nagios}/nagios.cfg.new /etc/${nagios}/nagios.cfg
+         fi
+      done
 
-      # The NorNet Management cron job has been moved to Server/Node!
-      rm -f /etc/cron.d/nornet-management
-
-      update-grub || true
+      if [ -x /usr/sbin/update-grub ] ; then
+         /usr/sbin/update-grub || true
+      fi
       ;;
 esac
 

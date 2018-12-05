@@ -3,11 +3,11 @@
 set -e
 
 if [ ! -e /etc/nornet/nornetapi-constants ] ; then
-   cp /usr/share/doc/nornet-api/examples/nornetapi-constants /etc/nornet/nornetapi-constants
+   cp /usr/share/nornet-api/nornetapi-constants /etc/nornet/nornetapi-constants
 fi
 
 if [ ! -e /etc/nornet/nornetapi-config ] ; then
-   cp /usr/share/doc/nornet-api/examples/nornetapi-config.simple /etc/nornet/nornetapi-config.EXAMPLE
+   cp /usr/share/nornet-api/nornetapi-config.simple /etc/nornet/nornetapi-config.EXAMPLE
 fi
 
 #DEBHELPER#

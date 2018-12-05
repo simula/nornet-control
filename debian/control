@@ -27,7 +27,7 @@ Depends: apt-file,
          bash-completion,
          bc,
          bridge-utils,
-         btrfs-tools,
+         btrfs-progs | btrfs-tools,
          bwm-ng,
          colordiff,
          cron,
@@ -73,6 +73,7 @@ Depends: apt-file,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: apport-retrace,
+            grub2-common,
             language-pack-de-base,
             language-pack-en-base,
             language-pack-nb-base,
@@ -141,6 +142,7 @@ Depends: autoconf,
          libssl-dev,
          libtool,
          mock,
+         nornet-management,
          pbuilder,
          pkg-config,
          python3-all,
@@ -175,14 +177,12 @@ Description: NorNet API
 
 Package: nornet-node
 Architecture: any
-Conflicts: miredo,
-           nornet-server
+Conflicts: miredo
 Depends: fail2ban,
-         grub2-common | grub,
          ifupdown,
          nfs-common,
-         nornet-api,
-         nornet-management,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          ntp,
          openssh-server,
          rsplib-services,
@@ -208,9 +208,9 @@ Depends: arpwatch,
          iputils-tracepath,
          isc-dhcp-server,
          netstat-nat,
-         nornet-api,
-         nornet-management,
-         nornet-node | nornet-server,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
+         nornet-node (= ${binary:Version}) | nornet-server (= ${binary:Version}),
          ntp,
          radvd,
          snmpd,
@@ -218,11 +218,9 @@ Depends: arpwatch,
          traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: nornet-trace-service,
+Recommends: nornet-trace-service (= ${binary:Version}),
             nslint
-Suggests: collectd,
-          stab,
-          tracebox
+Suggests: tracebox
 Description: NorNet Tunnelbox Control
  This package contains the scripts to configure the tunnelboxes of NorNet
  sites.
@@ -230,10 +228,10 @@ Description: NorNet Tunnelbox Control
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-filesrv
-Architecture: all
+Architecture: any
 Depends: nfs-kernel-server,
-         nornet-api,
-         nornet-management,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          python3-adns,
          tftpd-hpa,
          ${misc:Depends},
@@ -255,14 +253,13 @@ Description: NorNet Artwork
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-monitor
-Architecture: all
+Architecture: any
 Depends: apache2,
          libapache2-mod-php | libapache2-mod-php5,
-         nagios3,
-         nagios3-doc,
-         nornet-api,
-         nornet-artwork,
-         nornet-management,
+         nagios4 | nagios3,
+         nornet-api (= ${binary:Version}),
+         nornet-artwork (>= ${source:Version}),
+         nornet-management (= ${binary:Version}),
          postfix,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -273,11 +270,11 @@ Description: NorNet Monitor
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-display
-Architecture: all
+Architecture: any
 Depends: firefox,
          kubuntu-desktop | neon-desktop | deepin-desktop-environment | lubuntu-desktop | ubuntu-desktop,
-         nornet-api,
-         nornet-management,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          sddm | kdm | lightdm | gdm3,
          xserver-xorg-video-vmware,
          ${misc:Depends},
@@ -290,10 +287,10 @@ Description: NorNet Display
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-gatekeeper
-Architecture: all
+Architecture: any
 Depends: fail2ban,
-         nornet-api,
-         nornet-management,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Gatekeeper
@@ -304,20 +301,22 @@ Description: NorNet Gatekeeper
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-websrv
-Architecture: all
+Architecture: any
 Depends: apache2,
          awstats,
-         geoip-database-contrib,
+         geoip-database | geoip-database-contrib,
          libapache2-mod-php | libapache2-mod-php5,
          libgeo-ip-perl,
          libnet-dns-perl,
          libnet-ip-perl,
-         nornet-api,
-         nornet-management,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          oxygen-icon-theme,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: php-mysql | php5-mysql,
+Recommends: geoip-database-extra,
+            geoipupdate,
+            php-mysql | php5-mysql,
             php-ssh2 | libssh2-php
 Description: NorNet Web Server
  This package contains the packages to set up a web server station for the
@@ -327,12 +326,9 @@ Description: NorNet Web Server
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-wikisrv
-Architecture: all
-Depends: libapache2-mod-php | libapache2-mod-php5,
-         nornet-websrv,
-         php-mbstring,
+Architecture: any
+Depends: nornet-websrv (= ${binary:Version}),
          php-mysql | php5-mysql,
-         php-xml,
          postfix,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -344,9 +340,9 @@ Description: NorNet Wiki Server
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-timesrv
-Architecture: all
-Depends: nornet-api,
-         nornet-management,
+Architecture: any
+Depends: nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          ntp,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -356,8 +352,10 @@ Description: NorNet Time Server
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-database
-Architecture: all
-Depends: postgresql,
+Architecture: any
+Depends: nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
+         postgresql,
          postgresql-contrib,
          ${misc:Depends},
          ${shlibs:Depends}
@@ -369,15 +367,13 @@ Description: NorNet Database
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-server
-Architecture: all
-Conflicts: nornet-node
+Architecture: any
 Depends: fail2ban,
-         grub2-common | grub,
          ifupdown,
-         libvirt-bin,
+         libvirt-clients | libvirt-bin,
          nfs-common,
-         nornet-api,
-         nornet-management,
+         nornet-api (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          ntp,
          openssh-server,
          qemu-kvm,
@@ -400,9 +396,10 @@ Description: NorNet Server
 Package: nornet-trace-service
 Architecture: any
 Depends: hipercontracer (>= 1.2.0~),
+         nornet-tunnelbox (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Trace Service
  NorNet Trace Service is the traceroute service for the NorNet testbed.
  It performs regular traceroute/traceroute6 runs among all sites and
- imports the results into an SQL database.
+ imports the results into a database.

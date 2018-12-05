@@ -190,13 +190,13 @@ INSTALL(FILES watchdog-config.example DESTINATION ${CMAKE_INSTALL_DATADIR}/norne
 # EXAMPLES
 #############################################################################
 
-SET(nornet_api_examples
+SET(nornet_api_configuration
    nornetapi-config.full
    nornetapi-config.simple
    nornetapi-constants
 )
 
-INSTALL(FILES ${nornet_api_examples} DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/nornet-api/examples)
+INSTALL(FILES ${nornet_api_configuration} DESTINATION ${CMAKE_INSTALL_DATADIR}/nornet-api)
 
 
 #############################################################################

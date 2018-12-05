@@ -4,8 +4,8 @@ set -e
 
 case "$1" in
    configure)
-      cp /etc/nornet/Xresources /etc/X11/xdm/
-      cp /etc/nornet/Xsetup /etc/X11/xdm/
+      cp /usr/share/nornet-x11/Xresources /etc/X11/xdm/
+      cp /usr/share/nornet-x11/Xsetup /etc/X11/xdm/
       ;;
 esac
 
