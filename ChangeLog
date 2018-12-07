@@ -1,3 +1,40 @@
+commit e106df937558795b35830f5971252152bcecfc8f
+Merge: ace62775 04f7e58f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 5 23:42:49 2018 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit ace627753a40cba27b7f8d64e880269098af893b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 5 23:42:10 2018 +0100
+
+    Build script updates.
+
+commit 04f7e58f0775a654b1e23d86642ab80ef0641d50
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 5 16:26:35 2018 +0100
+
+    Renamed site.
+
+commit 2ddbd4b0eccf2cec26644445d721e4c8507f81e7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 5 13:56:19 2018 +0100
+
+    Dependency improvements.
+
+commit 1114bacd8f749cb9de937c057bc987cd646cfed9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 5 10:31:21 2018 +0100
+
+    Dependency fix: btrfs-tools -> btrfs-progs.
+
+commit 5746dc213016a5d81d0f56fc095bcb3b78e670b3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Dec 3 13:16:37 2018 +0100
+
+    Version bump.
+
 commit d7514f07f23d7e8bafab75c55f28d98775a6e60e
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Mon Dec 3 10:59:15 2018 +0100
