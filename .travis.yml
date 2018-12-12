@@ -231,14 +231,14 @@ matrix:
      env: DOCKER="fedora:rawhide" VARIANT="fedora" TOOL="mock"
 
 
-    # ###### Other ##########################################################
+   # ###### Other ###########################################################
 
-    # ====== MacOS X ========================================================
-    # - name: "MacOS X"
-    #   os: osx
-    #   osx_image: xcode9.4
-    #   compiler: clang
-    #   group: travis_latest
+   # ====== MacOS X ========================================================
+   # - name: "MacOS X"
+   #   os: osx
+   #   osx_image: xcode9.4
+   #   compiler: clang
+   #   group: travis_latest
 
 
 before_install:
