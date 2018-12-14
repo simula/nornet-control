@@ -19,8 +19,8 @@
 # Contact: dreibh@simula.no
 #
 
-KERNEL_DEBS=~/src
-KERNEL_REPO=~/tmp/nornet-kernel/ubuntu/
+KERNEL_DEBS=/storage/mptcp-kernels/deb
+KERNEL_REPO=/storage/mptcp-kernels/ubuntu
 PUBLISH_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ubuntu/
 
 
@@ -29,11 +29,16 @@ PUBLISH_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ubuntu/
 # sudo apt-add-repository -s https://packages.nntb.no/nornet-kernel/ubuntu/
 
 
-mkdir -p $KERNEL_REPO
-mkdir -p $KERNEL_REPO/conf
-cp distributions $KERNEL_REPO/conf
+mkdir -p ${KERNEL_DEBS}/
+rsync -e "ssh -p 50691" -Pv thomasd@dnat.simula.no:'src/*.deb' ${KERNEL_DEBS}/
 
-cd $KERNEL_REPO
+
+mkdir -p ${KERNEL_REPO}
+mkdir -p ${KERNEL_REPO}/conf
+cp distributions ${KERNEL_REPO}/conf
+
+cd ${KERNEL_REPO}
 reprepro --ignore=undefinedtarget -C main includedeb xenial $KERNEL_DEBS/*.deb
 
-rsync -Pav -e "ssh -J dreibh@oesthorn.nntb.no" --delete $KERNEL_REPO/ $PUBLISH_REPO/
+
+rsync -Pav -e "ssh -J dreibh@oesthorn.nntb.no" --delete ${KERNEL_REPO}/ $PUBLISH_REPO/

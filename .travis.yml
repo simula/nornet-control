@@ -253,7 +253,8 @@ install:
 
 script:
   - |
-    travis_wait 60 ci/build
-    if [ "${VARIANT}" != "debian" ] ; then
-       travis_wait 60 ci/test
+    if [ "${VARIANT}" != "debian" ] ; then   # There is no Debian PPA for the required rsplib-* packages!
+       travis_wait 60 ci/build && travis_wait 60 ci/test
+    else
+       travis_wait 60 ci/build
     fi
