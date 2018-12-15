@@ -11,11 +11,11 @@ matrix:
      dist: xenial
      group: travis_latest
      env: DOCKER="ubuntu:disco" VARIANT="ubuntu" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Ubuntu 19.04 (Disco Dingo) with Clang"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="ubuntu:disco" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
+   #- name: "Ubuntu 19.04 (Disco Dingo) with Clang"
+     #os: linux
+     #dist: xenial
+     #group: travis_latest
+     #env: DOCKER="ubuntu:disco" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
    - name: "Ubuntu 19.04 (Disco Dingo) packaging with pbuilder"
      dist: xenial
      group: travis_latest
@@ -27,11 +27,11 @@ matrix:
      dist: xenial
      group: travis_latest
      env: DOCKER="ubuntu:cosmic" VARIANT="ubuntu" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Ubuntu 18.10 (Cosmic Cuttlefish) with Clang"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="ubuntu:cosmic" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
+   #- name: "Ubuntu 18.10 (Cosmic Cuttlefish) with Clang"
+     #os: linux
+     #dist: xenial
+     #group: travis_latest
+     #env: DOCKER="ubuntu:cosmic" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
    - name: "Ubuntu 18.10 (Cosmic Cuttlefish) packaging with pbuilder"
      dist: xenial
      group: travis_latest
@@ -43,11 +43,11 @@ matrix:
      dist: xenial
      group: travis_latest
      env: DOCKER="ubuntu:bionic" VARIANT="ubuntu" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Ubuntu 18.04 (Bionic Beaver) with Clang"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="ubuntu:bionic" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
+   #- name: "Ubuntu 18.04 (Bionic Beaver) with Clang"
+     #os: linux
+     #dist: xenial
+     #group: travis_latest
+     #env: DOCKER="ubuntu:bionic" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
    - name: "Ubuntu 18.04 (Bionic Beaver) packaging with pbuilder"
      os: linux
      dist: xenial
@@ -60,33 +60,16 @@ matrix:
      dist: xenial
      group: travis_latest
      env: DOCKER="ubuntu:xenial" VARIANT="ubuntu" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Ubuntu 16.04 (Xenial Xerus) with Clang"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="ubuntu:xenial" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
+   #- name: "Ubuntu 16.04 (Xenial Xerus) with Clang"
+     #os: linux
+     #dist: xenial
+     #group: travis_latest
+     #env: DOCKER="ubuntu:xenial" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
    - name: "Ubuntu 16.04 (Xenial Xerus) packaging with pbuilder"
      os: linux
      dist: xenial
      group: travis_latest
      env: DOCKER="ubuntu:xenial" VARIANT="ubuntu" TOOL="pbuilder"
-
-   # ====== Ubuntu 14.04 (Trusty Tahr) ======================================
-   - name: "Ubuntu 14.04 (Trusty Tahr) with GCC"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="ubuntu:trusty" VARIANT="ubuntu" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Ubuntu 14.04 (Trusty Tahr) with Clang"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="ubuntu:trusty" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
-   - name: "Ubuntu 14.04 (Trusty Tahr) packaging with pbuilder"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="ubuntu:trusty" VARIANT="ubuntu" TOOL="pbuilder"
 
 
     # ###### Debian Linux ###################################################
@@ -97,11 +80,11 @@ matrix:
      dist: xenial
      group: travis_latest
      env: DOCKER="debian:testing" VARIANT="debian" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Debian Testing with Clang"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="debian:testing" VARIANT="debian" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
+   #- name: "Debian Testing with Clang"
+     #os: linux
+     #dist: xenial
+     #group: travis_latest
+     #env: DOCKER="debian:testing" VARIANT="debian" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
    - name: "Debian Testing packaging with pbuilder"
      os: linux
      dist: xenial
@@ -114,11 +97,11 @@ matrix:
      dist: xenial
      group: travis_latest
      env: DOCKER="debian:sid" VARIANT="debian" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Debian Sid with Clang"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="debian:sid" VARIANT="debian" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
+   #- name: "Debian Sid with Clang"
+     #os: linux
+     #dist: xenial
+     #group: travis_latest
+     #env: DOCKER="debian:sid" VARIANT="debian" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
    - name: "Debian Sid packaging with pbuilder"
      os: linux
      dist: xenial
@@ -131,11 +114,11 @@ matrix:
      dist: xenial
      group: travis_latest
      env: DOCKER="debian:buster" VARIANT="debian" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Debian Buster with Clang"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="debian:buster" VARIANT="debian" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
+   #- name: "Debian Buster with Clang"
+     #os: linux
+     #dist: xenial
+     #group: travis_latest
+     #env: DOCKER="debian:buster" VARIANT="debian" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
    - name: "Debian Buster packaging with pbuilder"
      os: linux
      dist: xenial
@@ -148,11 +131,11 @@ matrix:
      dist: xenial
      group: travis_latest
      env: DOCKER="debian:stretch" VARIANT="debian" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Debian Stretch with Clang"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="debian:stretch" VARIANT="debian" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
+   #- name: "Debian Stretch with Clang"
+     #os: linux
+     #dist: xenial
+     #group: travis_latest
+     #env: DOCKER="debian:stretch" VARIANT="debian" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
    - name: "Debian Stretch packaging with pbuilder"
      os: linux
      dist: xenial
@@ -168,11 +151,11 @@ matrix:
      dist: xenial
      group: travis_latest
      env: DOCKER="fedora:30" VARIANT="fedora" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Fedora 30 with Clang"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="fedora:30" VARIANT="fedora" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
+   #- name: "Fedora 30 with Clang"
+     #os: linux
+     #dist: xenial
+     #group: travis_latest
+     #env: DOCKER="fedora:30" VARIANT="fedora" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
    - name: "Fedora 30 packaging with mock"
      os: linux
      dist: xenial
@@ -185,11 +168,11 @@ matrix:
      dist: xenial
      group: travis_latest
      env: DOCKER="fedora:29" VARIANT="fedora" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Fedora 29 with Clang"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="fedora:29" VARIANT="fedora" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
+   #- name: "Fedora 29 with Clang"
+     #os: linux
+     #dist: xenial
+     #group: travis_latest
+     #env: DOCKER="fedora:29" VARIANT="fedora" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
    - name: "Fedora 29 packaging with mock"
      os: linux
      dist: xenial
@@ -202,11 +185,11 @@ matrix:
      dist: xenial
      group: travis_latest
      env: DOCKER="fedora:28" VARIANT="fedora" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Fedora 28 with Clang"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="fedora:28" VARIANT="fedora" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
+   #- name: "Fedora 28 with Clang"
+     #os: linux
+     #dist: xenial
+     #group: travis_latest
+     #env: DOCKER="fedora:28" VARIANT="fedora" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
    - name: "Fedora 28 packaging with mock"
      os: linux
      dist: xenial
@@ -219,11 +202,11 @@ matrix:
      dist: xenial
      group: travis_latest
      env: DOCKER="fedora:rawhide" VARIANT="fedora" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Fedora Rawhide with Clang"
-     os: linux
-     dist: xenial
-     group: travis_latest
-     env: DOCKER="fedora:rawhide" VARIANT="fedora" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
+   #- name: "Fedora Rawhide with Clang"
+     #os: linux
+     #dist: xenial
+     #group: travis_latest
+     #env: DOCKER="fedora:rawhide" VARIANT="fedora" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
    - name: "Fedora Rawhide packaging with mock"
      os: linux
      dist: xenial
