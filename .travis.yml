@@ -225,18 +225,14 @@ matrix:
 
 
 before_install:
-  - |
-    travis_wait 60 ci/before-install
-
+  - travis_wait 60 ci/before-install
 
 install:
-  - |
-    travis_wait 60 ci/install
-
+  - travis_wait 60 ci/install
 
 script:
+  - travis_wait 60 ci/build
   - |
-    travis_wait 60 ci/build
     if [ "${VARIANT}" != "debian" ] ; then   # There is no Debian PPA for the required rsplib-* packages!
        travis_wait 60 ci/test
     fi
