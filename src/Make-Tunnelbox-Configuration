@@ -362,7 +362,7 @@ def makeNodeForDNS(nodeName, site, nodeIndex, model, type, options):
          v6Only = 1
       elif option == 'def-v6only':
          v6Only = 2
-      elif option == 'default-v6only':
+      elif option == 'def-only':
          v4Only = 2
          v6Only = 2
       elif option == 'slice':
