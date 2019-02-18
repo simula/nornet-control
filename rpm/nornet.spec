@@ -124,7 +124,7 @@ See https://www.nntb.no for details on NorNet!
 
 %files management
 /boot/NorNet/Management1-1024x768.jpeg
-/etc/grub.d/??_nornet_development_theme
+/etc/grub.d/??_nornet_management_theme
 /etc/nornet/nornet-authorized_keys
 /etc/nornet/nornet-version
 /usr/bin/Auto-Update-Keys
