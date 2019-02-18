@@ -1807,10 +1807,13 @@ for i in range(NorNet_MinNodeIndex, NorNet_MaxNodeIndex + 1):
    # ====== Handle nodes ====================================================
    nodeConfiguration = getLocalNodeConfigurationString(i)
    if nodeConfiguration != '':
-      # print i,nodeConfiguration
-      parameters = shlex.split(nodeConfiguration)
+      # print(i, nodeConfiguration)
+      try:
+         parameters = shlex.split(nodeConfiguration)
+      except:
+         parameters = []
       if len(parameters) < 3:
-         error('Bad configuration "' + nodeConfiguration + '" for NorNet_LocalSite_Node' + str(i))
+         error('Bad configuration <' + nodeConfiguration + '> for NorNet_LocalSite_Node' + str(i))
 
       nodeName     = unquote(parameters[0])
       hardwareInfo = unquote(parameters[1])
