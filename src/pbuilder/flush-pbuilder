@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+for directory in /var/cache/pbuilder/aptcache /var/cache/pbuilder/result ; do
+   if [ -e ${directory} ] ; then
+      echo "Cleaning up ${directory} ..."
+      find ${directory} -type f | xargs -r rm -f
+   fi
+done
+
+fstrim -v /var/cache/pbuilder
+du -sch /var/cache/pbuilder
