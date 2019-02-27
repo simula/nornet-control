@@ -1,8 +1,8 @@
 /etc/grub.d/??_nornet_tunnelbox_theme
+/usr/bin/Flush-Squid-Cache
 /usr/bin/Make-Tunnelbox-Configuration
 /usr/bin/Probe-Interface-Setup
 /usr/bin/Tunnelbox-Bootstrap-Helper
 /usr/bin/Tunnelbox-NAT-Helper
 /usr/bin/Tunnelbox-Setup
-/usr/bin/Flush-Squid-Cache
 /usr/share/nornet-desktop/Splash/Tunnelbox1-1024x768.jpeg /boot/NorNet
