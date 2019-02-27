@@ -167,6 +167,7 @@ See https://www.nntb.no for details on NorNet!
 /usr/share/man/man1/Watchdog.1.gz
 /usr/share/man/man8/Interface-Setup.8.gz
 /sbin/Interface-Setup
+%ghost /etc/cron-apt/action.d/5-install
 
 %post management
 echo "Updating /etc/default/grub with NorNet settings:"
@@ -409,6 +410,9 @@ See https://www.nntb.no for details on NorNet!
 /var/www/Artwork/Graphics/Markers/*.svg
 /var/www/Artwork/Sites/Large/*.jpeg
 /var/www/Artwork/Sites/Small/*.jpeg
+%ghost /boot/NorNet/Background1-1024x768.jpeg
+%ghost /boot/NorNet/BootCD-F24-1024x768.jpeg
+%ghost /boot/NorNet/BootCD-F25-1024x768.jpeg
 
 
 %package monitor
