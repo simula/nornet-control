@@ -1,4 +1,4 @@
-.\" Random Sleep
+.\" Flush-Squid-Cache
 .\" Copyright (C) 2019 by Thomas Dreibholz
 .\"
 .\" This program is free software: you can redistribute it and/or modify
@@ -17,39 +17,29 @@
 .\" Contact: dreibh@simula.no
 .\"
 .\" ###### Setup ############################################################
-.Dd May 29, 2013
-.Dt Random-Sleep 1
-.Os Random-Sleep
+.Dd February 27, 2019
+.Dt Flush-Squid-Cache 1
+.Os Flush-Squid-Cache
 .\" ###### Name #############################################################
 .Sh NAME
-.Nm Random-Sleep
-.Nd Random Sleep
+.Nm Flush-Squid-Cache
+.Nd Flush Squid Cache
 .\" ###### Synopsis #########################################################
 .Sh SYNOPSIS
-.Nm Random-Sleep
-min_sleep_time
-max_sleep_time
-.Op quiet
+.Nm Flush-Squid-Cache
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
-.Nm Random-Sleep
-waits a randomly chosen time from min_sleep_time to max_sleep_time. 
-It can be used to decouple time-scheduled operations on systems.
+.Nm Flush-Squid-Cache
+flushes the cache of a Squid proxy.
 .Pp
 .\" ###### Arguments ########################################################
-.Sh ARGUMENTS
-.Bl -tag -width indent
-.It min_sleep_time
-The minimum sleep time in seconds (floating point number).
-.It max_sleep_time
-The maximum sleep time in seconds (floating point number).
-.It Op quiet
-If specified, no output is generated. Otherwise, the program prints the
-selected waiting time.
-.El
+.\" .Sh ARGUMENTS
+.\" .Bl -tag -width indent
+.\" .It ...
+.\" ...
+.\" .El
 .\" ###### Examples #########################################################
 .Sh EXAMPLES
 .Bl -tag -width indent
-.It Random-Sleep 0 3600
-.It Random-Sleep 3.25 7.75 -quiet
+.It sudo Flush-Squid-Cache
 .El
