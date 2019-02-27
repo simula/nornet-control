@@ -186,6 +186,28 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 
+%package x11
+Summary: NorNet X11 Login
+Group: Applications/Internet
+BuildArch: noarch
+Requires: fvwm
+Requires: xloadimage
+Requires: xorg-x11-apps
+Requires: xorg-x11-server
+Requires: xterm
+
+%description x11
+This metapackage contains basic X11 software for NorNet systems. The
+software provides a very lightweight graphical login (fvwm) with a shell
+(xterm).
+See https://www.nntb.no for details on NorNet!
+
+%files x11
+/usr/share/nornet-x11/Xresources
+/usr/share/nornet-x11/Xsetup
+
+
+
 %package development
 Summary: NorNet Development
 Group: Applications/Internet
@@ -303,6 +325,7 @@ if [ ! -e /etc/nornet/nornetapi-config ] ; then
 fi
 
 
+
 %package node
 Summary: NorNet Node
 Group: Applications/Internet
@@ -338,6 +361,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %postun node
 rm -f /etc/grub.d/??_nornet_node_theme
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 
 %package tunnelbox
@@ -391,6 +415,38 @@ rm -f /etc/grub.d/??_nornet_tunnelbox_theme
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
 
 
+
+%package filesrv
+Summary: NorNet FileSrv
+Group: Applications/Internet
+BuildArch: noarch
+Requires: %{name}-management = %{version}-%{release}
+Requires: %{name}-api = %{version}-%{release}
+Requires: libnfs-utils
+Requires: tftp-server
+
+%description filesrv
+This package contains the scripts to configure a file server
+on a NorNet central site.
+See https://www.nntb.no for details on NorNet!
+
+%files filesrv
+/boot/NorNet/FileSrv1-1024x768.jpeg
+/etc/grub.d/??_nornet_filesrv_theme
+/usr/bin/Make-FileSrv-Configuration
+/usr/share/man/man1/Make-FileSrv-Configuration.1.gz
+
+
+%post filesrv
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
+
+%postun filesrv
+rm -f /etc/grub.d/??_nornet_filesrv_theme
+if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
+
+
 %package artwork
 Summary: NorNet Artwork
 Group: Applications/Internet
@@ -413,6 +469,7 @@ See https://www.nntb.no for details on NorNet!
 %ghost /boot/NorNet/Background1-1024x768.jpeg
 %ghost /boot/NorNet/BootCD-F24-1024x768.jpeg
 %ghost /boot/NorNet/BootCD-F25-1024x768.jpeg
+
 
 
 %package monitor
@@ -455,6 +512,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %postun monitor
 rm -f /etc/grub.d/??_nornet_monitor_theme
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
 
 
 %package display
@@ -734,6 +792,25 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %postun server
 rm -f /etc/grub.d/??_nornet_server_theme
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
+
+
+
+%package trace-service
+Summary: NorNet Trace Service
+Group: Applications/Internet
+BuildArch: noarch
+Requires: %{name}-tunnelbox = %{version}-%{release}
+Recommends: hipercontracer
+
+%description trace-service
+This package contains the packages to set up a trace-service station for
+experiment results collection. It is in fact just a node with a
+dependency on the PostgreSQL packages.
+See https://www.nntb.no for details on NorNet!
+
+%files trace-service
+/usr/bin/nornetinfogenerator
+/usr/share/man/man1/nornetinfogenerator.1.gz
 
 
 
