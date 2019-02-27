@@ -61,14 +61,6 @@ mkdir -p %{buildroot}/boot/NorNet
 mv %{buildroot}/usr/share/nornet-desktop/Splash/*-1024x768.jpeg %{buildroot}/boot/NorNet
 mkdir -p %{buildroot}/etc/nornet
 mv %{buildroot}/usr/share/nornet-desktop/Splash/nornet-version %{buildroot}/etc/nornet
-mkdir -p %{buildroot}/usr/share/nornet/background
-
-mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-1600x1200-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-4x3.png
-mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-1920x1200-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-16x10.png
-mv %{buildroot}/usr/share/nornet-desktop/Desktop-with-Logo/Background1-3840x2160-plain.png      %{buildroot}/usr/share/nornet/background/NorNet-Background1-16x9.png
-mv %{buildroot}/usr/share/nornet-desktop/Desktop-without-Logo/Background1-1600x1200-plain.png   %{buildroot}/usr/share/nornet/background/NorNet-Background1-without-Logo-4x3.png
-mv %{buildroot}/usr/share/nornet-desktop/Desktop-without-Logo/Background1-1920x1200-plain.png   %{buildroot}/usr/share/nornet/background/NorNet-Background1-without-Logo-16x10.png
-mv %{buildroot}/usr/share/nornet-desktop/Desktop-without-Logo/Background1-3840x2160-plain.png   %{buildroot}/usr/share/nornet/background/NorNet-Background1-without-Logo-16x9.png
 # ===========================================================================
 
 
@@ -446,6 +438,7 @@ See https://www.nntb.no for details on NorNet!
 /usr/bin/check_tunnel
 /usr/share/man/man1/Make-Monitor-Configuration.1.gz
 /usr/share/man/man1/check_site.1.gz
+/usr/share/man/man1/check_tunnel.1.gz
 /var/www/Kontrollsenter/*
 /var/www/Kontrollsenter/Clock/*
 /var/www/Kontrollsenter/UnifrakturCook/*
@@ -482,6 +475,12 @@ See https://www.nntb.no for details on NorNet!
 /usr/share/nornet-desktop/NorNet-A4.pdf
 
 %post display
+ln -s /usr/share/nornet-desktop/Desktop-with-Logo/Background1-1600x1200-plain.png      /usr/share/nornet/background/NorNet-Background1-4x3.png
+ln -s /usr/share/nornet-desktop/Desktop-with-Logo/Background1-1920x1200-plain.png      /usr/share/nornet/background/NorNet-Background1-16x10.png
+ln -s /usr/share/nornet-desktop/Desktop-with-Logo/Background1-3840x2160-plain.png      /usr/share/nornet/background/NorNet-Background1-16x9.png
+ln -s /usr/share/nornet-desktop/Desktop-without-Logo/Background1-1600x1200-plain.png   /usr/share/nornet/background/NorNet-Background1-without-Logo-4x3.png
+ln -s /usr/share/nornet-desktop/Desktop-without-Logo/Background1-1920x1200-plain.png   /usr/share/nornet/background/NorNet-Background1-without-Logo-16x10.png
+ln -s /usr/share/nornet-desktop/Desktop-without-Logo/Background1-3840x2160-plain.png   /usr/share/nornet/background/NorNet-Background1-without-Logo-16x9.png
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
 
 
