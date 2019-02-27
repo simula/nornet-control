@@ -20,7 +20,7 @@ Vcs-Git: https://github.com/simula/nornet-control.git
 Vcs-Browser: https://github.com/simula/nornet-control
 
 Package: nornet-management
-Architecture: any
+Architecture: all
 Depends: apt-file,
          apt-show-versions,
          autofs,
@@ -43,7 +43,6 @@ Depends: apt-file,
          joe,
          jq,
          kdump-tools,
-         libc6-i386 [amd64],
          libfile-fcntllock-perl,
          lksctp-tools,
          lsb-base (>= 3.2-14),
@@ -92,7 +91,7 @@ Description: NorNet Management Tools
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-x11
-Architecture: any
+Architecture: all
 Depends: fvwm,
          x11-apps,
          xdm,
@@ -109,7 +108,7 @@ Description: NorNet X11 Login
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-development
-Architecture: any
+Architecture: all
 Depends: autoconf,
          automake,
          bc,
@@ -167,7 +166,7 @@ Description: NorNet Development Tools
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-api
-Architecture: any
+Architecture: all
 Depends: ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet API
@@ -177,7 +176,7 @@ Description: NorNet API
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-node
-Architecture: any
+Architecture: all
 Conflicts: miredo
 Depends: fail2ban,
          ifupdown,
@@ -200,7 +199,7 @@ Description: NorNet Node Control
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-tunnelbox
-Architecture: any
+Architecture: all
 Depends: arpwatch,
          bind9,
          conntrack,
@@ -229,7 +228,7 @@ Description: NorNet Tunnelbox Control
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-filesrv
-Architecture: any
+Architecture: all
 Depends: nfs-kernel-server,
          nornet-api (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
@@ -254,7 +253,7 @@ Description: NorNet Artwork
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-monitor
-Architecture: any
+Architecture: all
 Depends: apache2,
          libapache2-mod-php | libapache2-mod-php5,
          nagios4 | nagios3,
@@ -271,7 +270,7 @@ Description: NorNet Monitor
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-display
-Architecture: any
+Architecture: all
 Depends: firefox,
          kubuntu-desktop | neon-desktop | deepin-desktop-environment | lubuntu-desktop | ubuntu-desktop,
          nornet-api (= ${binary:Version}),
@@ -288,7 +287,7 @@ Description: NorNet Display
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-gatekeeper
-Architecture: any
+Architecture: all
 Depends: fail2ban,
          nornet-api (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
@@ -302,7 +301,7 @@ Description: NorNet Gatekeeper
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-websrv
-Architecture: any
+Architecture: all
 Depends: apache2,
          awstats,
          geoip-database | geoip-database-contrib,
@@ -327,7 +326,7 @@ Description: NorNet Web Server
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-wikisrv
-Architecture: any
+Architecture: all
 Depends: nornet-websrv (= ${binary:Version}),
          php-mysql | php5-mysql,
          postfix,
@@ -341,7 +340,7 @@ Description: NorNet Wiki Server
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-timesrv
-Architecture: any
+Architecture: all
 Depends: nornet-api (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          ntp,
@@ -353,7 +352,7 @@ Description: NorNet Time Server
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-database
-Architecture: any
+Architecture: all
 Depends: nornet-api (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          postgresql,
@@ -368,7 +367,7 @@ Description: NorNet Database
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-server
-Architecture: any
+Architecture: all
 Depends: fail2ban,
          ifupdown,
          libvirt-clients | libvirt-bin,
@@ -395,7 +394,7 @@ Description: NorNet Server
  See https://www.nntb.no for details on NorNet!
 
 Package: nornet-trace-service
-Architecture: any
+Architecture: all
 Depends: hipercontracer (>= 1.2.0~),
          nornet-tunnelbox (= ${binary:Version}),
          ${misc:Depends},
