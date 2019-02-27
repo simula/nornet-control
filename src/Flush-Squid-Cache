@@ -25,7 +25,7 @@ service squid stop
 for directory in /var/spool/squid /var/spool/squid3 ; do
    if [ -e ${directory} ] ; then
       echo "Cleaning up ${directory} ..."
-      find ${directory} -type f | xargs -i rm -f
+      find ${directory} -type f | xargs -r rm -f
       fstrim -v ${directory}
       du -sch ${directory}
    fi
