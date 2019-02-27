@@ -3,3 +3,4 @@ src/Probe-Interface-Setup.1
 src/Tunnelbox-Bootstrap-Helper.1
 src/Tunnelbox-NAT-Helper.1
 src/Tunnelbox-Setup.1
+src/Flush-Squid-Cache.1

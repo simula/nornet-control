@@ -150,6 +150,29 @@ See https://www.nntb.no for details on NorNet!
 /usr/bin/Test-NTP-Configuration
 /usr/bin/Watchdog
 /usr/share/nornet/grub-defaults
+/usr/share/man/man1/Auto-Update-Keys.1.gz
+/usr/share/man/man1/Check-Nodes-Loop.1.gz
+/usr/share/man/man1/Check-Nodes.1.gz
+/usr/share/man/man1/Clear-SSH-Node-Key.1.gz
+/usr/share/man/man1/Create-New-SSH-Node-Keys.1.gz
+/usr/share/man/man1/Fingerprint-SSH-Node-Keys.1.gz
+/usr/share/man/man1/Get-Nodes.1.gz
+/usr/share/man/man1/Get-NorNet-Configuration.1.gz
+/usr/share/man/man1/Get-Sites.1.gz
+/usr/share/man/man1/Get-Slice-Nodes.1.gz
+/usr/share/man/man1/Get-Slices.1.gz
+/usr/share/man/man1/Get-Users.1.gz
+/usr/share/man/man1/Node-Setup.1.gz
+/usr/share/man/man1/Probe-Endpoint-Setup.1.gz
+/usr/share/man/man1/Random-Sleep.1.gz
+/usr/share/man/man1/Reset-Networking.1.gz
+/usr/share/man/man1/Routing-Rule-Setup.1.gz
+/usr/share/man/man1/System-Backup.1.gz
+/usr/share/man/man1/System-Info.1.gz
+/usr/share/man/man1/System-Maintenance.1.gz
+/usr/share/man/man1/Test-NTP-Configuration.1.gz
+/usr/share/man/man1/Watchdog.1.gz
+/usr/share/man/man8/Interface-Setup.8.gz
 /sbin/Interface-Setup
 
 %post management
@@ -309,6 +332,7 @@ See https://www.nntb.no for details on NorNet!
 /boot/NorNet/Node1-1024x768.jpeg
 /etc/grub.d/??_nornet_node_theme
 /usr/bin/Make-Node-Configuration
+/usr/share/man/man1/Make-Node-Configuration.1.gz
 
 %post node
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -346,11 +370,19 @@ See https://www.nntb.no for details on NorNet!
 %files tunnelbox
 /boot/NorNet/Tunnelbox1-1024x768.jpeg
 /etc/grub.d/??_nornet_tunnelbox_theme
+/usr/bin/Flush-Squid-Cache
 /usr/bin/Make-Tunnelbox-Configuration
 /usr/bin/Probe-Interface-Setup
 /usr/bin/Tunnelbox-Bootstrap-Helper
 /usr/bin/Tunnelbox-NAT-Helper
 /usr/bin/Tunnelbox-Setup
+/usr/share/man/man1/Make-Tunnelbox-Configuration.1.gz
+/usr/share/man/man1/Probe-Interface-Setup.1.gz
+/usr/share/man/man1/Tunnelbox-Bootstrap-Helper.1.gz
+/usr/share/man/man1/Tunnelbox-NAT-Helper.1.gz
+/usr/share/man/man1/Tunnelbox-Setup.1.gz
+/usr/share/man/man1/Flush-Squid-Cache.1.gz
+
 
 %post tunnelbox
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -405,6 +437,8 @@ See https://www.nntb.no for details on NorNet!
 /usr/bin/Make-Monitor-Configuration
 /usr/bin/check_site
 /usr/bin/check_tunnel
+/usr/share/man/man1/Make-Monitor-Configuration.1.gz
+/usr/share/man/man1/check_site.1.gz
 /var/www/Kontrollsenter/*
 /var/www/Kontrollsenter/Clock/*
 /var/www/Kontrollsenter/UnifrakturCook/*
@@ -657,6 +691,22 @@ See https://www.nntb.no for details on NorNet!
 /usr/bin/Show-VSystems
 /usr/bin/Start-VSystem
 /usr/bin/Stop-VSystem
+/usr/share/man/man1/Auto-Update-BootCD.1.gz
+/usr/share/man/man1/Backup-All-VSystems.1.gz
+/usr/share/man/man1/Backup-VSystem.1.gz
+/usr/share/man/man1/Change-VSystem-CDImage.1.gz
+/usr/share/man/man1/Check-Research-Node.1.gz
+/usr/share/man/man1/Check-VSystem.1.gz
+/usr/share/man/man1/Convert-HDD-Images.1.gz
+/usr/share/man/man1/Make-Server-Configuration.1.gz
+/usr/share/man/man1/Make-VSystem-Template.1.gz
+/usr/share/man/man1/Reset-VSystem.1.gz
+/usr/share/man/man1/Server-Setup.1.gz
+/usr/share/man/man1/Server-Watchdog.1.gz
+/usr/share/man/man1/Set-OVF-Type.1.gz
+/usr/share/man/man1/Show-VSystems.1.gz
+/usr/share/man/man1/Start-VSystem.1.gz
+/usr/share/man/man1/Stop-VSystem.1.gz
 /usr/share/nornet-server/watchdog-config.example
 
 %post server
