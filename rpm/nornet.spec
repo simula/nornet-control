@@ -75,6 +75,7 @@ mv %{buildroot}/usr/share/nornet-desktop/Desktop-without-Logo/Background1-3840x2
 %package management
 Summary: NorNet Management
 Group: Applications/Internet
+BuildArch: noarch
 Requires: bash-completion
 Requires: bridge-utils
 Requires: btrfs-progs
@@ -195,6 +196,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package development
 Summary: NorNet Development
 Group: Applications/Internet
+BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
 Requires: autoconf
 Requires: automake
@@ -266,6 +268,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package api
 Summary: NorNet API
 Group: Applications/Internet
+BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 
@@ -310,6 +313,7 @@ fi
 %package node
 Summary: NorNet Node
 Group: Applications/Internet
+BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Requires: fail2ban
@@ -346,6 +350,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package tunnelbox
 Summary: NorNet Tunnelbox
 Group: Applications/Internet
+BuildArch: noarch
 Requires: (%{name}-node = %{version}-%{release} or %{name}-server = %{version}-%{release})
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
@@ -396,6 +401,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package artwork
 Summary: NorNet Artwork
 Group: Applications/Internet
+BuildArch: noarch
 
 %description artwork
 This package contains some images for the monitor server
@@ -416,6 +422,7 @@ See https://www.nntb.no for details on NorNet!
 %package monitor
 Summary: NorNet Monitor
 Group: Applications/Internet
+BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
 Requires: %{name}-artwork = %{version}-%{release}
 Requires: %{name}-management = %{version}-%{release}
@@ -456,6 +463,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package display
 Summary: NorNet Display
 Group: Applications/Internet
+BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Recommends: xorg-x11-drv-vmware
@@ -486,6 +494,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package gatekeeper
 Summary: NorNet Gatekeeper
 Group: Applications/Internet
+BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Requires: fail2ban
@@ -513,6 +522,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package websrv
 Summary: NorNet WebSrv
 Group: Applications/Internet
+BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Requires: awstats
@@ -548,6 +558,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package wikisrv
 Summary: NorNet WikiSrv
 Group: Applications/Internet
+BuildArch: noarch
 Requires: %{name}-websrv = %{version}-%{release}
 Requires: postfix
 Requires: php-mysqlnd
@@ -575,6 +586,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package timesrv
 Summary: NorNet TimeSrv
 Group: Applications/Internet
+BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Requires: ntp
@@ -600,6 +612,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package database
 Summary: NorNet Database
 Group: Applications/Internet
+BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Requires: postgresql-server
@@ -628,6 +641,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package plc
 Summary: NorNet PLC
 Group: Applications/Internet
+BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Recommends: myplc
@@ -653,6 +667,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %package server
 Summary: NorNet Server
 Group: Applications/Internet
+BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Requires: fail2ban
