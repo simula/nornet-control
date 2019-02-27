@@ -23,10 +23,12 @@ echo -e "\x1b[34m`date +%FT%H:%M:%S`: Stopping Squid service ...\x1b[0m"
 service squid stop
 
 for directory in /var/spool/squid /var/spool/squid3 ; do
-   echo "Cleaning up ${directory} ..."
-   find ${directory} -type f | xargs -i rm -f
-   fstrim -v ${directory}
-   du -sch ${directory}
+   if [ -e ${directory} ] ; then
+      echo "Cleaning up ${directory} ..."
+      find ${directory} -type f | xargs -i rm -f
+      fstrim -v ${directory}
+      du -sch ${directory}
+   fi
 done
 
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Starting Squid service ...\x1b[0m"
