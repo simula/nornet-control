@@ -795,18 +795,31 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 
+%package trace-importer
+Summary: NorNet Trace Importer
+Group: Applications/Internet
+BuildArch: noarch
+Recommends: hipercontracer
+
+%description trace-service
+ NorNet Trace Importer is the importer cron job to import results from the
+ NorNet Trace Service into a database.
+ See https://www.nntb.no for details on NorNet!
+
+
+
 %package trace-service
 Summary: NorNet Trace Service
 Group: Applications/Internet
 BuildArch: noarch
+Requires: %{name}-trace-importer = %{version}-%{release}
 Requires: %{name}-tunnelbox = %{version}-%{release}
 Recommends: hipercontracer
 
 %description trace-service
-This package contains the packages to set up a trace-service station for
-experiment results collection. It is in fact just a node with a
-dependency on the PostgreSQL packages.
-See https://www.nntb.no for details on NorNet!
+ NorNet Trace Service is the traceroute service for the NorNet testbed.
+ It performs regular traceroute/traceroute6 runs among all sites.
+ See https://www.nntb.no for details on NorNet!
 
 %files trace-service
 /usr/bin/nornetinfogenerator
