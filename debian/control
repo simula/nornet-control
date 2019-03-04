@@ -407,8 +407,8 @@ Description: NorNet Trace Importer
 Package: nornet-trace-service
 Architecture: all
 Depends: hipercontracer (>= 1.2.0~),
-         nornet-tunnelbox (= ${binary:Version}),
          nornet-trace-importer (= ${binary:Version}),
+         nornet-tunnelbox (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Trace Service
