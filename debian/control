@@ -393,13 +393,22 @@ Description: NorNet Server
  .
  See https://www.nntb.no for details on NorNet!
 
+Package: nornet-trace-importer
+Architecture: all
+Depends: hipercontracer (>= 1.2.0~),
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Trace Importer
+ NorNet Trace Importer is the importer cron job to import results from the
+ NorNet Trace Service into a database.
+
 Package: nornet-trace-service
 Architecture: all
 Depends: hipercontracer (>= 1.2.0~),
          nornet-tunnelbox (= ${binary:Version}),
+         nornet-trace-importer (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Description: NorNet Trace Service
  NorNet Trace Service is the traceroute service for the NorNet testbed.
- It performs regular traceroute/traceroute6 runs among all sites and
- imports the results into a database.
+ It performs regular traceroute/traceroute6 runs among all sites.
