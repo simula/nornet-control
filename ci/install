@@ -164,14 +164,14 @@ EOF\""
          # ====== Fedora: set up compiler ===================================
          if [ "${TOOL}" == "compile" ] ; then
             ci/retry -t ${RETRY_MAXTRIALS} -p ${RETRY_PAUSE} -- sudo docker exec ${CONTAINER} env LANG=C.UTF-8 \
-               dnf install -y --allowerasing make clang yum-plugin-copr ${FEDORA_DEPS}
+               dnf install -y --allowerasing make clang dnf-plugins-core ${FEDORA_DEPS}
             ci/retry -t ${RETRY_MAXTRIALS} -p ${RETRY_PAUSE} -- sudo docker exec ${CONTAINER} env LANG=C.UTF-8 \
                dnf copr enable -y dreibh/ppa
 
          # ====== Fedora: set up mock =======================================
          elif [ "${TOOL}" == "mock" ] ; then
             ci/retry -t ${RETRY_MAXTRIALS} -p ${RETRY_PAUSE} -- sudo docker exec ${CONTAINER} env LANG=C.UTF-8 \
-               dnf install -y --allowerasing make findutils fedora-release mock rpmdevtools yum-plugin-copr ${FEDORA_DEPS}
+               dnf install -y --allowerasing make findutils fedora-release mock rpmdevtools dnf-plugins-core ${FEDORA_DEPS}
             ci/retry -t ${RETRY_MAXTRIALS} -p ${RETRY_PAUSE} -- sudo docker exec ${CONTAINER} env LANG=C.UTF-8 \
                dnf copr enable -y dreibh/ppa
 

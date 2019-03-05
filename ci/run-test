@@ -13,7 +13,7 @@ export COMPILER_CXX="clang++"
 # export VARIANT="ubuntu"
 # export TOOL="pbuilder"
 
-export DOCKER="fedora:30"
+export DOCKER="fedora:29"
 export VARIANT="fedora"
 export TOOL="mock"
 

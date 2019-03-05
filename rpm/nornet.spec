@@ -69,9 +69,9 @@ Summary: NorNet Management
 Group: Applications/Internet
 BuildArch: noarch
 Requires: bash-completion
+Requires: bc
 Requires: bridge-utils
 Requires: btrfs-progs
-Requires: bc
 Requires: bwm-ng
 Requires: colordiff
 Requires: cronie
@@ -86,6 +86,7 @@ Requires: jq
 Requires: libidn
 Requires: lksctp-tools
 Requires: mlocate
+Requires: netperfmeter
 Requires: net-snmp-utils
 Requires: net-tools
 Requires: nmap
@@ -93,6 +94,9 @@ Requires: ntpdate
 Requires: pxz
 Requires: reiserfs-utils
 Requires: reprepro
+Requires: rsplib-docs
+Requires: rsplib-services
+Requires: rsplib-tools
 Requires: smartmontools
 Requires: subnetcalc
 Requires: tcpdump
@@ -102,13 +106,9 @@ Requires: tree
 Requires: vconfig
 Requires: virt-what
 Requires: whois
+Requires: wireshark-cli
 Requires: xmlstarlet
 Recommends: grub2-tools
-Recommends: netperfmeter
-Recommends: rsplib-docs
-Recommends: rsplib-services
-Recommends: rsplib-tools
-Recommends: wireshark-cli
 
 %description management
 This metapackage contains basic software nor NorNet node management. The
@@ -166,7 +166,7 @@ See https://www.nntb.no for details on NorNet!
 %{_mandir}/man1/Test-NTP-Configuration.1.gz
 %{_mandir}/man1/Watchdog.1.gz
 %{_mandir}/man8/Interface-Setup.8.gz
-%{_sbindir}/Interface-Setup
+/sbin/Interface-Setup
 %ghost %{_sysconfdir}/cron-apt/action.d/5-install
 
 %post management
@@ -193,7 +193,7 @@ BuildArch: noarch
 Requires: fvwm
 Requires: xloadimage
 Requires: xorg-x11-apps
-Requires: xorg-x11-server
+Requires: xorg-x11-server-Xorg
 Requires: xterm
 
 %description x11
@@ -338,8 +338,8 @@ Requires: libvirt-client
 Requires: nfs-utils
 Requires: ntp
 Requires: openssh-server
+Requires: rsplib-services
 Requires: xorg-x11-xauth
-Recommends: rsplib-services
 Recommends: open-vm-tools
 Recommends: virtualbox-guest-additions
 
@@ -588,7 +588,7 @@ Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
 Requires: awstats
 Requires: geoipupdate-cron
-Requires: geoipupdate-cron6
+Recommends: geoipupdate-cron6
 Requires: GeoIP-GeoLite-data
 Requires: GeoIP-GeoLite-data-extra
 Requires: httpd
