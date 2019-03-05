@@ -1,5 +1,0 @@
-# not a spelling error, the correct phrase is "offering these package-promise
-# suggestions to ..."
-cfengine3: spelling-error-in-binary usr/sbin/cf-agent these package this package
-# Tracked in https://dev.cfengine.com/issues/6127.
-cfengine3: binary-without-manpage usr/sbin/cf-upgrade
