@@ -117,57 +117,57 @@ See https://www.nntb.no for details on NorNet!
 
 %files management
 /boot/NorNet/Management1-1024x768.jpeg
-/etc/grub.d/??_nornet_management_theme
-/etc/nornet/nornet-authorized_keys
-/etc/nornet/nornet-version
-/usr/bin/Auto-Update-Keys
-/usr/bin/Check-Nodes
-/usr/bin/Check-Nodes-Loop
-/usr/bin/Clear-SSH-Node-Key
-/usr/bin/Create-New-SSH-Node-Keys
-/usr/bin/Fingerprint-SSH-Node-Keys
-/usr/bin/Get-Nodes
-/usr/bin/Get-NorNet-Configuration
-/usr/bin/Get-Sites
-/usr/bin/Get-Slice-Nodes
-/usr/bin/Get-Slices
-/usr/bin/Get-Users
-/usr/bin/Node-Setup
-/usr/bin/Probe-Endpoint-Setup
-/usr/bin/Random-Sleep
-/usr/bin/Reset-Networking
-/usr/bin/Routing-Rule-Setup
-/usr/bin/System-Backup
-/usr/bin/System-Info
-/usr/bin/System-Maintenance
-/usr/bin/Test-NTP-Configuration
-/usr/bin/Watchdog
-/usr/share/nornet/grub-defaults
-/usr/share/man/man1/Auto-Update-Keys.1.gz
-/usr/share/man/man1/Check-Nodes-Loop.1.gz
-/usr/share/man/man1/Check-Nodes.1.gz
-/usr/share/man/man1/Clear-SSH-Node-Key.1.gz
-/usr/share/man/man1/Create-New-SSH-Node-Keys.1.gz
-/usr/share/man/man1/Fingerprint-SSH-Node-Keys.1.gz
-/usr/share/man/man1/Get-Nodes.1.gz
-/usr/share/man/man1/Get-NorNet-Configuration.1.gz
-/usr/share/man/man1/Get-Sites.1.gz
-/usr/share/man/man1/Get-Slice-Nodes.1.gz
-/usr/share/man/man1/Get-Slices.1.gz
-/usr/share/man/man1/Get-Users.1.gz
-/usr/share/man/man1/Node-Setup.1.gz
-/usr/share/man/man1/Probe-Endpoint-Setup.1.gz
-/usr/share/man/man1/Random-Sleep.1.gz
-/usr/share/man/man1/Reset-Networking.1.gz
-/usr/share/man/man1/Routing-Rule-Setup.1.gz
-/usr/share/man/man1/System-Backup.1.gz
-/usr/share/man/man1/System-Info.1.gz
-/usr/share/man/man1/System-Maintenance.1.gz
-/usr/share/man/man1/Test-NTP-Configuration.1.gz
-/usr/share/man/man1/Watchdog.1.gz
-/usr/share/man/man8/Interface-Setup.8.gz
-/sbin/Interface-Setup
-%ghost /etc/cron-apt/action.d/5-install
+%{_sysconfdir}/grub.d/??_nornet_management_theme
+%{_sysconfdir}/nornet/nornet-authorized_keys
+%{_sysconfdir}/nornet/nornet-version
+%{_bindir}/Auto-Update-Keys
+%{_bindir}/Check-Nodes
+%{_bindir}/Check-Nodes-Loop
+%{_bindir}/Clear-SSH-Node-Key
+%{_bindir}/Create-New-SSH-Node-Keys
+%{_bindir}/Fingerprint-SSH-Node-Keys
+%{_bindir}/Get-Nodes
+%{_bindir}/Get-NorNet-Configuration
+%{_bindir}/Get-Sites
+%{_bindir}/Get-Slice-Nodes
+%{_bindir}/Get-Slices
+%{_bindir}/Get-Users
+%{_bindir}/Node-Setup
+%{_bindir}/Probe-Endpoint-Setup
+%{_bindir}/Random-Sleep
+%{_bindir}/Reset-Networking
+%{_bindir}/Routing-Rule-Setup
+%{_bindir}/System-Backup
+%{_bindir}/System-Info
+%{_bindir}/System-Maintenance
+%{_bindir}/Test-NTP-Configuration
+%{_bindir}/Watchdog
+%{_datadir}/nornet/grub-defaults
+%{_mandir}/man1/Auto-Update-Keys.1.gz
+%{_mandir}/man1/Check-Nodes-Loop.1.gz
+%{_mandir}/man1/Check-Nodes.1.gz
+%{_mandir}/man1/Clear-SSH-Node-Key.1.gz
+%{_mandir}/man1/Create-New-SSH-Node-Keys.1.gz
+%{_mandir}/man1/Fingerprint-SSH-Node-Keys.1.gz
+%{_mandir}/man1/Get-Nodes.1.gz
+%{_mandir}/man1/Get-NorNet-Configuration.1.gz
+%{_mandir}/man1/Get-Sites.1.gz
+%{_mandir}/man1/Get-Slice-Nodes.1.gz
+%{_mandir}/man1/Get-Slices.1.gz
+%{_mandir}/man1/Get-Users.1.gz
+%{_mandir}/man1/Node-Setup.1.gz
+%{_mandir}/man1/Probe-Endpoint-Setup.1.gz
+%{_mandir}/man1/Random-Sleep.1.gz
+%{_mandir}/man1/Reset-Networking.1.gz
+%{_mandir}/man1/Routing-Rule-Setup.1.gz
+%{_mandir}/man1/System-Backup.1.gz
+%{_mandir}/man1/System-Info.1.gz
+%{_mandir}/man1/System-Maintenance.1.gz
+%{_mandir}/man1/Test-NTP-Configuration.1.gz
+%{_mandir}/man1/Watchdog.1.gz
+%{_mandir}/man8/Interface-Setup.8.gz
+%{_sbindir}/Interface-Setup
+%ghost %{_sysconfdir}/cron-apt/action.d/5-install
 
 %post management
 echo "Updating /etc/default/grub with NorNet settings:"
@@ -203,8 +203,8 @@ software provides a very lightweight graphical login (fvwm) with a shell
 See https://www.nntb.no for details on NorNet!
 
 %files x11
-/usr/share/nornet-x11/Xresources
-/usr/share/nornet-x11/Xsetup
+%{_datadir}/nornet-x11/Xresources
+%{_datadir}/nornet-x11/Xsetup
 
 
 
@@ -267,8 +267,8 @@ See https://www.nntb.no for details on NorNet!
 
 %files development
 /boot/NorNet/Development1-1024x768.jpeg
-/etc/grub.d/??_nornet_development_theme
-/usr/share/nornet/pbuilderrc
+%{_sysconfdir}/grub.d/??_nornet_development_theme
+%{_datadir}/nornet/pbuilderrc
 
 %post development
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -310,9 +310,9 @@ See https://www.nntb.no for details on NorNet!
 /usr/lib/python*/*-packages/__pycache__/NorNetSiteSetup*.pyc
 /usr/lib/python*/*-packages/__pycache__/NorNetTools*.pyc
 /usr/lib/python*/*-packages/__pycache__/SysSetupCommons*.pyc
-/usr/share/nornet-api/nornetapi-config.full
-/usr/share/nornet-api/nornetapi-config.simple
-/usr/share/nornet-api/nornetapi-constants
+%{_datadir}/nornet-api/nornetapi-config.full
+%{_datadir}/nornet-api/nornetapi-config.simple
+%{_datadir}/nornet-api/nornetapi-constants
 
 %post api
 mkdir -p /etc/nornet
@@ -350,9 +350,9 @@ See https://www.nntb.no for details on NorNet!
 
 %files node
 /boot/NorNet/Node1-1024x768.jpeg
-/etc/grub.d/??_nornet_node_theme
-/usr/bin/Make-Node-Configuration
-/usr/share/man/man1/Make-Node-Configuration.1.gz
+%{_sysconfdir}/grub.d/??_nornet_node_theme
+%{_bindir}/Make-Node-Configuration
+%{_mandir}/man1/Make-Node-Configuration.1.gz
 
 %post node
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -391,19 +391,19 @@ See https://www.nntb.no for details on NorNet!
 
 %files tunnelbox
 /boot/NorNet/Tunnelbox1-1024x768.jpeg
-/etc/grub.d/??_nornet_tunnelbox_theme
-/usr/bin/Flush-Squid-Cache
-/usr/bin/Make-Tunnelbox-Configuration
-/usr/bin/Probe-Interface-Setup
-/usr/bin/Tunnelbox-Bootstrap-Helper
-/usr/bin/Tunnelbox-NAT-Helper
-/usr/bin/Tunnelbox-Setup
-/usr/share/man/man1/Make-Tunnelbox-Configuration.1.gz
-/usr/share/man/man1/Probe-Interface-Setup.1.gz
-/usr/share/man/man1/Tunnelbox-Bootstrap-Helper.1.gz
-/usr/share/man/man1/Tunnelbox-NAT-Helper.1.gz
-/usr/share/man/man1/Tunnelbox-Setup.1.gz
-/usr/share/man/man1/Flush-Squid-Cache.1.gz
+%{_sysconfdir}/grub.d/??_nornet_tunnelbox_theme
+%{_bindir}/Flush-Squid-Cache
+%{_bindir}/Make-Tunnelbox-Configuration
+%{_bindir}/Probe-Interface-Setup
+%{_bindir}/Tunnelbox-Bootstrap-Helper
+%{_bindir}/Tunnelbox-NAT-Helper
+%{_bindir}/Tunnelbox-Setup
+%{_mandir}/man1/Make-Tunnelbox-Configuration.1.gz
+%{_mandir}/man1/Probe-Interface-Setup.1.gz
+%{_mandir}/man1/Tunnelbox-Bootstrap-Helper.1.gz
+%{_mandir}/man1/Tunnelbox-NAT-Helper.1.gz
+%{_mandir}/man1/Tunnelbox-Setup.1.gz
+%{_mandir}/man1/Flush-Squid-Cache.1.gz
 
 
 %post tunnelbox
@@ -432,9 +432,9 @@ See https://www.nntb.no for details on NorNet!
 
 %files filesrv
 /boot/NorNet/FileSrv1-1024x768.jpeg
-/etc/grub.d/??_nornet_filesrv_theme
-/usr/bin/Make-FileSrv-Configuration
-/usr/share/man/man1/Make-FileSrv-Configuration.1.gz
+%{_sysconfdir}/grub.d/??_nornet_filesrv_theme
+%{_bindir}/Make-FileSrv-Configuration
+%{_mandir}/man1/Make-FileSrv-Configuration.1.gz
 
 
 %post filesrv
@@ -458,14 +458,14 @@ on a NorNet central site.
 See https://www.nntb.no for details on NorNet!
 
 %files artwork
-/var/www/Artwork/Graphics/Backgrounds/*.png
-/var/www/Artwork/Graphics/Control/*.png
-/var/www/Artwork/Graphics/Flags/*.png
-/var/www/Artwork/Graphics/Flags/*.svg
-/var/www/Artwork/Graphics/Icons/*.png
-/var/www/Artwork/Graphics/Markers/*.svg
-/var/www/Artwork/Sites/Large/*.jpeg
-/var/www/Artwork/Sites/Small/*.jpeg
+%{_localstatedir}/www/Artwork/Graphics/Backgrounds/*.png
+%{_localstatedir}/www/Artwork/Graphics/Control/*.png
+%{_localstatedir}/www/Artwork/Graphics/Flags/*.png
+%{_localstatedir}/www/Artwork/Graphics/Flags/*.svg
+%{_localstatedir}/www/Artwork/Graphics/Icons/*.png
+%{_localstatedir}/www/Artwork/Graphics/Markers/*.svg
+%{_localstatedir}/www/Artwork/Sites/Large/*.jpeg
+%{_localstatedir}/www/Artwork/Sites/Small/*.jpeg
 %ghost /boot/NorNet/Background1-1024x768.jpeg
 %ghost /boot/NorNet/BootCD-F24-1024x768.jpeg
 %ghost /boot/NorNet/BootCD-F25-1024x768.jpeg
@@ -491,19 +491,19 @@ See https://www.nntb.no for details on NorNet!
 
 %files monitor
 /boot/NorNet/Monitor1-1024x768.jpeg
-/etc/grub.d/??_nornet_monitor_theme
-/etc/nornet/nornet-commands.cfg
-/etc/nornet/nornet-services.cfg
-/usr/bin/Make-Monitor-Configuration
-/usr/bin/check_site
-/usr/bin/check_tunnel
-/usr/share/man/man1/Make-Monitor-Configuration.1.gz
-/usr/share/man/man1/check_site.1.gz
-/usr/share/man/man1/check_tunnel.1.gz
-/var/www/Kontrollsenter/*
-/var/www/Kontrollsenter/Clock/*
-/var/www/Kontrollsenter/UnifrakturCook/*
-/var/www/Kontrollsenter/UnifrakturCook/sources/*
+%{_sysconfdir}/grub.d/??_nornet_monitor_theme
+%{_sysconfdir}/nornet/nornet-commands.cfg
+%{_sysconfdir}/nornet/nornet-services.cfg
+%{_bindir}/Make-Monitor-Configuration
+%{_bindir}/check_site
+%{_bindir}/check_tunnel
+%{_mandir}/man1/Make-Monitor-Configuration.1.gz
+%{_mandir}/man1/check_site.1.gz
+%{_mandir}/man1/check_tunnel.1.gz
+%{_localstatedir}/www/Kontrollsenter/*
+%{_localstatedir}/www/Kontrollsenter/Clock/*
+%{_localstatedir}/www/Kontrollsenter/UnifrakturCook/*
+%{_localstatedir}/www/Kontrollsenter/UnifrakturCook/sources/*
 
 %post monitor
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -531,10 +531,10 @@ See https://www.nntb.no for details on NorNet!
 
 %files display
 /boot/NorNet/Display1-1024x768.jpeg
-/etc/grub.d/??_nornet_display_theme
-/usr/share/nornet-desktop/Desktop-with-Logo/*
-/usr/share/nornet-desktop/Desktop-without-Logo/*
-/usr/share/nornet-desktop/NorNet-A4.pdf
+%{_sysconfdir}/grub.d/??_nornet_display_theme
+%{_datadir}/nornet-desktop/Desktop-with-Logo/*
+%{_datadir}/nornet-desktop/Desktop-without-Logo/*
+%{_datadir}/nornet-desktop/NorNet-A4.pdf
 
 %post display
 ln -s /usr/share/nornet-desktop/Desktop-with-Logo/Background1-1600x1200-plain.png      /usr/share/nornet/background/NorNet-Background1-4x3.png
@@ -568,7 +568,7 @@ See https://www.nntb.no for details on NorNet!
 
 %files gatekeeper
 /boot/NorNet/Gatekeeper1-1024x768.jpeg
-/etc/grub.d/??_nornet_gatekeeper_theme
+%{_sysconfdir}/grub.d/??_nornet_gatekeeper_theme
 
 %post gatekeeper
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -603,8 +603,8 @@ See https://www.nntb.no for details on NorNet!
 
 %files websrv
 /boot/NorNet/WebSrv1-1024x768.jpeg
-/etc/grub.d/??_nornet_websrv_theme
-/usr/share/nornet-websrv/*
+%{_sysconfdir}/grub.d/??_nornet_websrv_theme
+%{_datadir}/nornet-websrv/*
 
 %post websrv
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -632,7 +632,7 @@ See https://www.nntb.no for details on NorNet!
 
 %files wikisrv
 /boot/NorNet/WikiSrv1-1024x768.jpeg
-/etc/grub.d/??_nornet_wikisrv_theme
+%{_sysconfdir}/grub.d/??_nornet_wikisrv_theme
 
 %post wikisrv
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -658,7 +658,7 @@ See https://www.nntb.no for details on NorNet!
 
 %files timesrv
 /boot/NorNet/TimeSrv1-1024x768.jpeg
-/etc/grub.d/??_nornet_timesrv_theme
+%{_sysconfdir}/grub.d/??_nornet_timesrv_theme
 
 %post timesrv
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -687,7 +687,7 @@ See https://www.nntb.no for details on NorNet!
 
 %files database
 /boot/NorNet/Database1-1024x768.jpeg
-/etc/grub.d/??_nornet_database_theme
+%{_sysconfdir}/grub.d/??_nornet_database_theme
 
 %post database
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -713,7 +713,7 @@ See https://www.nntb.no for details on NorNet!
 
 %files plc
 /boot/NorNet/PLC1-1024x768.jpeg
-/etc/grub.d/??_nornet_plc_theme
+%{_sysconfdir}/grub.d/??_nornet_plc_theme
 
 %post plc
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -749,41 +749,41 @@ See https://www.nntb.no for details on NorNet!
 
 %files server
 /boot/NorNet/Server1-1024x768.jpeg
-/etc/nornet/vsystems/EXAMPLE-99-VirtualServer
-/etc/grub.d/??_nornet_server_theme
-/usr/bin/Auto-Update-BootCD
-/usr/bin/Backup-All-VSystems
-/usr/bin/Backup-VSystem
-/usr/bin/Change-VSystem-CDImage
-/usr/bin/Check-Research-Node
-/usr/bin/Check-VSystem
-/usr/bin/Convert-HDD-Images
-/usr/bin/Make-Server-Configuration
-/usr/bin/Make-VSystem-Template
-/usr/bin/Reset-VSystem
-/usr/bin/Server-Setup
-/usr/bin/Server-Watchdog
-/usr/bin/Set-OVF-Type
-/usr/bin/Show-VSystems
-/usr/bin/Start-VSystem
-/usr/bin/Stop-VSystem
-/usr/share/man/man1/Auto-Update-BootCD.1.gz
-/usr/share/man/man1/Backup-All-VSystems.1.gz
-/usr/share/man/man1/Backup-VSystem.1.gz
-/usr/share/man/man1/Change-VSystem-CDImage.1.gz
-/usr/share/man/man1/Check-Research-Node.1.gz
-/usr/share/man/man1/Check-VSystem.1.gz
-/usr/share/man/man1/Convert-HDD-Images.1.gz
-/usr/share/man/man1/Make-Server-Configuration.1.gz
-/usr/share/man/man1/Make-VSystem-Template.1.gz
-/usr/share/man/man1/Reset-VSystem.1.gz
-/usr/share/man/man1/Server-Setup.1.gz
-/usr/share/man/man1/Server-Watchdog.1.gz
-/usr/share/man/man1/Set-OVF-Type.1.gz
-/usr/share/man/man1/Show-VSystems.1.gz
-/usr/share/man/man1/Start-VSystem.1.gz
-/usr/share/man/man1/Stop-VSystem.1.gz
-/usr/share/nornet-server/watchdog-config.example
+%{_sysconfdir}/nornet/vsystems/EXAMPLE-99-VirtualServer
+%{_sysconfdir}/grub.d/??_nornet_server_theme
+%{_bindir}/Auto-Update-BootCD
+%{_bindir}/Backup-All-VSystems
+%{_bindir}/Backup-VSystem
+%{_bindir}/Change-VSystem-CDImage
+%{_bindir}/Check-Research-Node
+%{_bindir}/Check-VSystem
+%{_bindir}/Convert-HDD-Images
+%{_bindir}/Make-Server-Configuration
+%{_bindir}/Make-VSystem-Template
+%{_bindir}/Reset-VSystem
+%{_bindir}/Server-Setup
+%{_bindir}/Server-Watchdog
+%{_bindir}/Set-OVF-Type
+%{_bindir}/Show-VSystems
+%{_bindir}/Start-VSystem
+%{_bindir}/Stop-VSystem
+%{_mandir}/man1/Auto-Update-BootCD.1.gz
+%{_mandir}/man1/Backup-All-VSystems.1.gz
+%{_mandir}/man1/Backup-VSystem.1.gz
+%{_mandir}/man1/Change-VSystem-CDImage.1.gz
+%{_mandir}/man1/Check-Research-Node.1.gz
+%{_mandir}/man1/Check-VSystem.1.gz
+%{_mandir}/man1/Convert-HDD-Images.1.gz
+%{_mandir}/man1/Make-Server-Configuration.1.gz
+%{_mandir}/man1/Make-VSystem-Template.1.gz
+%{_mandir}/man1/Reset-VSystem.1.gz
+%{_mandir}/man1/Server-Setup.1.gz
+%{_mandir}/man1/Server-Watchdog.1.gz
+%{_mandir}/man1/Set-OVF-Type.1.gz
+%{_mandir}/man1/Show-VSystems.1.gz
+%{_mandir}/man1/Start-VSystem.1.gz
+%{_mandir}/man1/Stop-VSystem.1.gz
+%{_datadir}/nornet-server/watchdog-config.example
 
 %post server
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -792,38 +792,6 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 %postun server
 rm -f /etc/grub.d/??_nornet_server_theme
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
-
-
-
-%package trace-importer
-Summary: NorNet Trace Importer
-Group: Applications/Internet
-BuildArch: noarch
-Recommends: hipercontracer
-
-%description trace-service
- NorNet Trace Importer is the importer cron job to import results from the
- NorNet Trace Service into a database.
- See https://www.nntb.no for details on NorNet!
-
-
-
-%package trace-service
-Summary: NorNet Trace Service
-Group: Applications/Internet
-BuildArch: noarch
-Requires: %{name}-trace-importer = %{version}-%{release}
-Requires: %{name}-tunnelbox = %{version}-%{release}
-Recommends: hipercontracer
-
-%description trace-service
- NorNet Trace Service is the traceroute service for the NorNet testbed.
- It performs regular traceroute/traceroute6 runs among all sites.
- See https://www.nntb.no for details on NorNet!
-
-%files trace-service
-/usr/bin/nornetinfogenerator
-/usr/share/man/man1/nornetinfogenerator.1.gz
 
 
 
