@@ -218,7 +218,7 @@ Depends: arpwatch,
          traceroute,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: nornet-trace-service (= ${binary:Version}),
+Recommends: nornet-trace-service (>= 2.0.0~),
             nslint
 Suggests: tracebox
 Description: NorNet Tunnelbox Control
@@ -390,29 +390,5 @@ Recommends: amd64-microcode,
 Description: NorNet Server
  This package contains the scripts to configure a generic server system
  to host NorNet virtual machines.
- .
- See https://www.nntb.no for details on NorNet!
-
-Package: nornet-trace-importer
-Architecture: all
-Depends: hipercontracer (>= 1.2.0~),
-         ${misc:Depends},
-         ${shlibs:Depends}
-Description: NorNet Trace Importer
- NorNet Trace Importer is the importer cron job to import results from the
- NorNet Trace Service into a database.
- .
- See https://www.nntb.no for details on NorNet!
-
-Package: nornet-trace-service
-Architecture: all
-Depends: hipercontracer (>= 1.2.0~),
-         nornet-trace-importer (= ${binary:Version}),
-         nornet-tunnelbox (= ${binary:Version}),
-         ${misc:Depends},
-         ${shlibs:Depends}
-Description: NorNet Trace Service
- NorNet Trace Service is the traceroute service for the NorNet testbed.
- It performs regular traceroute/traceroute6 runs among all sites.
  .
  See https://www.nntb.no for details on NorNet!
