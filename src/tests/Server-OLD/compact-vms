@@ -1,3 +1,0 @@
-#!/bin/sh
-
-VBoxManage list hdds|grep "^UUID:"|sed -e "s/UUID:[ ]*//g" | xargs -n1 -i§ vboxmanage modifyhd "§" --compact
