@@ -48,4 +48,4 @@ reprepro --ignore=undefinedtarget -C xenial-kernel includedeb xenial ${XENIAL_KE
 reprepro --ignore=undefinedtarget -C bionic-kernel includedeb bionic ${BIONIC_KERNEL_DEBS}/*.deb
 
 
-# rsync -Pav -e "ssh -J dreibh@oesthorn.nntb.no" --delete ${LOCAL_KERNEL_REPO}/ $PUBLIC_KERNEL_REPO/
+rsync -Pav -e "ssh -J dreibh@oesthorn.nntb.no" --delete ${LOCAL_KERNEL_REPO}/ $PUBLIC_KERNEL_REPO/
