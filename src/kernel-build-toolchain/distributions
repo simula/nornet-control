@@ -1,7 +1,13 @@
 Origin: packages.nntb.no
 Label: packages.nntb.no
 Codename: xenial
-Architectures: i386 amd64 source
-Components: main
-Description: NorNet Kernel Repository
+Architectures: amd64 source
+Components: xenial-kernel
+Description: NorNet Kernel Repository for Xenial Xerus
+SignWith: yes
+
+Codename: bionic
+Architectures: amd64 source
+Components: bionic-kernel
+Description: NorNet Kernel Repository for Bionic Beaver
 SignWith: yes
