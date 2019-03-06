@@ -1,3 +1,0 @@
-#!/bin/sh
-echo "Connecting to Tunnelbox of Korea University (203.230.60.125) ..."
-ssh -C nornetpp@203.230.60.125

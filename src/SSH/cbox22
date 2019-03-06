@@ -1,3 +1,0 @@
-#!/bin/sh
-echo "Connecting to Control Box of Korea University (203.230.60.126) ..."
-ssh -C nornetpp@203.230.60.126

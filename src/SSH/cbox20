@@ -1,3 +1,0 @@
-#!/bin/sh
-echo "Connecting to Control Box of The University of Kansas (164.113.202.19) ..."
-ssh -C nornetpp@164.113.202.19
