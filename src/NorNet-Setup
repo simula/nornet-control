@@ -140,7 +140,7 @@ norNetSetup = [
    'site_longitude'    : 10.68166,
    'site_altitude'     : 200,
    # Phone: +47-95-10-24-10
-   'site_contacts'     : [ u'IT-operations@HiG: helpdesk@hig.no', u'Langseth, Jon: jon.langseth@ntnu.no', u'Hjelmås, Erik: erik.hjelmas@ntnu.no' ],
+   'site_contacts'     : [ u'IT-operations@HiG: helpdesk@hig.no', u'Langseth, Jon: jon.langseth@ntnu.no' ],
    'site_pcu'          : [ IPv4Address('128.39.49.165'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -175,7 +175,7 @@ norNetSetup = [
    'site_latitude'     : 69.681897,
    'site_longitude'    : 18.980541,
    'site_altitude'     : 50,
-   'site_contacts'     : [ u'Wulff Hauglann, Maria: maria.wulff.hauglann@uit.no', u'Brunes, Børge: borge.brunes@uit.no', u'Anshus, Otto: otto.anshus@uit.no' ],
+   'site_contacts'     : [ u'Nilssen, Kai-Even: kai-even.nilssen@uit.no', u'Brunes, Børge: borge.brunes@uit.no' ],
    'site_pcu'          : [ IPv4Address('129.242.157.229'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -771,7 +771,7 @@ norNetSetup = [
    'site_latitude'     : 38.952,
    'site_longitude'    : -95.264,
    'site_altitude'     : 300,
-   'site_contacts'     : [ u'Gangadhar, Siddharth: siddharth@ittc.ku.edu', u'Fleming, Brad: bdfleming@kanren.net', u'Sterbenz, James P.G.: jpgs@ittc.ku.edu' ],
+   'site_contacts'     : [ u'Fleming, Brad: bdfleming@kanren.net', u'Gangadhar, Siddharth: siddharth@ittc.ku.edu', u'Sterbenz, James P.G.: jpgs@ittc.ku.edu' ],
    'site_pcu'          : [ IPv4Address('164.113.202.19'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
