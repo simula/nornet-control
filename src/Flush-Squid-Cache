@@ -26,7 +26,7 @@ for directory in /var/spool/squid /var/spool/squid3 ; do
    if [ -e ${directory} ] ; then
       echo "Cleaning up ${directory} ..."
       find ${directory} -type f | xargs -r rm -f
-      fstrim -v ${directory}
+      fstrim -v ${directory} || true
       du -sch ${directory}
    fi
 done
