@@ -683,6 +683,35 @@ norNetSetup = [
       [ 103, 4, u'crolles'     ]
    ] },
 
+ # Northeastern University (东北大学)
+ { 'site_index'        : 87,
+   'site_enabled'      : True,
+   'site_long_name'    : u'Northeastern University',
+   'site_short_name'   : 'NEU',
+   'site_url'          : 'http://www.neu.edu.cn',
+   'site_domain'       : 'neu.nornet',
+   'site_city'         : 'Shenyang',
+   'site_province'     : 'Liaoning',
+   'site_country'      : 'China',
+   'site_country_code' : 'CN',
+   'site_latitude'     : 123.38,
+   'site_longitude'    : 41.8,
+   'site_altitude'     : 55,
+   'site_contacts'     : [ u'Zhang, Songyang: sonyang.chang@foxmail.com',
+                           u'Zhang, Wei: zhangwei1@mail.neu.edu.cn,
+                           u'Lei, Weimin: leiwiemin@ise.neu.edu.cn ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'China Education and Research Network', 'eth1',
+           IPv4Interface('202.199.6.244/24'), IPv4Address('202.199.6.254'),
+           IPv6Interface('2001:da8:9000:a806:d6be:d9ff:febb:9f63/64'), IPv6Address('2001:da8:9000:a806::1'),
+           1500, 'fibre, research', 10000, 10000 ]
+   ],
+   'site_nodes' : [
+      # Naming scheme: places in Liaoning
+      [ 100, 1, u'mozimountain', 'mozimountain.neu.nornet', 'vnc://mozimountain.neu.nornet:5900' ]
+   ] },
+
  # Hainan University (海南大学)
  { 'site_index'        : 88,
    'site_enabled'      : True,
