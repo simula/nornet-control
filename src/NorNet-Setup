@@ -699,7 +699,7 @@ norNetSetup = [
    'site_altitude'     : 55,
    'site_contacts'     : [ u'Zhang, Songyang: sonyang.chang@foxmail.com',
                            u'Zhang, Wei: zhangwei1@mail.neu.edu.cn',
-                           u'Lei, Weimin: leiwiemin@ise.neu.edu.cn' ],
+                           u'Lei, Weimin: leiweimin@ise.neu.edu.cn' ],
    'site_pcu'          : [ IPv4Address('219.216.65.5'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
