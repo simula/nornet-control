@@ -217,10 +217,14 @@ if [ "$Variant" = "Debian" ] ; then
    echo -en "\x1b[0m"
 
    if [ $INTERACTIVE_KERNEL_REMOVAL -eq 0 ] ; then
-      sudo DEBIAN_FRONTEND=noninteractive nohup apt-get remove -y -qq --purge \
-         -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" \
-         $toBeRemoved >/tmp/install.log 2>&1 &
-      wait
+      # Needs to run twice, to ensure that the kernel directory is removed after all
+      # modules packages have been removed.
+      for stage in 1 2 ; do
+         sudo DEBIAN_FRONTEND=noninteractive nohup apt-get remove -y -qq --purge \
+            -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" \
+            $toBeRemoved >/tmp/install.log 2>&1 &
+         wait
+      done
       cat /tmp/install.log
    else
       sudo apt-get remove --purge \
