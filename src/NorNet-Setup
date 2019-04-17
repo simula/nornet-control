@@ -730,6 +730,7 @@ norNetSetup = [
    'site_contacts'     : [ u'Fa, Fu: fufa@hainu.edu.cn', u'Zhou, Xing: xingzhou50@126.com' ],
    'site_pcu'          : [ IPv4Address('210.37.45.148'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
+   # DNS: 210.37.40.4 210.37.41.2
    'site_providers' : [
       [ u'China Education and Research Network', 'eth1',
            IPv4Interface('210.37.45.149/26'),           IPv4Address('210.37.45.190'),
