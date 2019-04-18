@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 #
 # Build NorNet Kernel Repository
 # Copyright (C) 2017-2019 by Thomas Dreibholz
@@ -36,12 +36,11 @@ PUBLIC_KERNEL_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ub
 # deb-src https://packages.nntb.no/nornet-kernel/ubuntu/ xenial xenial-kernel
 
 
-# mkdir -p ${XENIAL_KERNEL_DEBS}/
-# rsync -Pc -e "ssh -p 50691" -Pv thomasd@dnat.simula.no:'src/*.deb' ${XENIAL_KERNEL_DEBS}/
-#
-#
-# mkdir -p ${BIONIC_KERNEL_DEBS}/
-# rsync -Pc ~/src/linux*.deb ${BIONIC_KERNEL_DEBS}/
+mkdir -p ${XENIAL_KERNEL_DEBS}/
+rsync -Pc -e "ssh -p 50691" -Pv thomasd@dnat.simula.no:'src/*.deb' ${XENIAL_KERNEL_DEBS}/
+
+mkdir -p ${BIONIC_KERNEL_DEBS}/
+rsync -Pc ~/src/linux*.deb ${BIONIC_KERNEL_DEBS}/
 
 
 rm -rf ${LOCAL_KERNEL_REPO}
