@@ -730,7 +730,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
                      for incomingProviderIndex in incomingProviderList:
                         incomingProvider = incomingProviderList[incomingProviderIndex]
 
-                        outgoingTunnelIP  = makeNorNetTunnelIP(outgoingSiteIndex, outgoingProviderIndex,
+                        outgoingTunnelIP = makeNorNetTunnelIP(outgoingSiteIndex, outgoingProviderIndex,
                                                               incomingSiteIndex, incomingProviderIndex,
                                                               version)
                         incomingTunnelIP = makeNorNetTunnelIP(incomingSiteIndex, incomingProviderIndex,
