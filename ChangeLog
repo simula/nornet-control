@@ -1,3 +1,197 @@
+commit 95b94b6bb554e9fb1e1f0ab10e5524d90b96d578
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 12:34:54 2019 +0800
+
+    Minor update.
+
+commit 9ed1b6111d25db1a52f033b7237440f5f572b6de
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 12:31:41 2019 +0800
+
+    Added comment.
+
+commit d7cf27f36f993583141a049fc3ec1926e943c0d8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 12:28:09 2019 +0800
+
+    A fix.
+
+commit c1d16df4bb38e7e21616551086067a8215931b26
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 12:26:00 2019 +0800
+
+    Fixed indentation.
+
+commit 59cf63f574ef0ccb3abfeed01bf158da75726335
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 12:25:34 2019 +0800
+
+    Further improvements.
+
+commit 419beb952f6d3c709e7e5b281b7200131e362a48
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 12:05:06 2019 +0800
+
+    Improved configuration of DNS.
+
+commit a95dfed25cc8cb9ff390549988c37f8d6aa8be51
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 11:29:33 2019 +0800
+
+    Added option.
+
+commit 6af817d470faed0998a876df126baa954a4126a5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 05:20:04 2019 +0200
+
+    Improved configuration.
+
+commit 1773403f034408f5f6c8398c327d29ab5b0b2678
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Apr 17 08:48:59 2019 +0800
+
+    Added comment.
+
+commit d732da8eff7be9e1be071381785323887ee8c39b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Apr 9 21:24:48 2019 +0200
+
+    Dependency fix.
+
+commit 1eb3ca591db3c80b43dbcd20d0bd5dda817dc75d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Apr 9 13:59:07 2019 +0200
+
+    A fix.
+
+commit 7a6064283f46d04094daf758c34a1efd3cfb7bfb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Apr 9 12:53:35 2019 +0200
+
+    Improved CI scripts.
+
+commit 8fbd228f0489b969e80ba40343c94002d4f7fd94
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 8 17:24:49 2019 +0200
+
+    Improved script.
+
+commit 5adc0433ff3e8b8f70d25e2d9776d0a672227f66
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 8 16:31:13 2019 +0200
+
+    Dependency update.
+
+commit dd9c1bb112291bd0e54876c191b13cfe0579140d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 8 14:23:18 2019 +0200
+
+    Improved script.
+
+commit a58a1a5d97ce3d26aee55f49a71710c05d3dc463
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 8 14:06:45 2019 +0200
+
+    An update.
+
+commit 4857d8e0550864cfb0b68f135320687ee3336c57
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 8 14:06:24 2019 +0200
+
+    Configuration update.
+
+commit a5d47fbd141cc5737b1da994d51f54d87eb2545d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 5 13:10:33 2019 +0200
+
+    Added image.
+
+commit e88b2e3632011e77fc43527e82561a6e1bfab778
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 5 13:05:36 2019 +0200
+
+    Another update.
+
+commit 9bd063588e7492c0276393bed567d06712968b7f
+Merge: 7aea1bcc 1b7fc2a9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 5 13:03:40 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 7aea1bcc7a67641688eb5dbe7c055bbb70c63814
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 5 13:03:31 2019 +0200
+
+    An update.
+
+commit 1b7fc2a99533c2cddeec3e4c6019a2ce414c5c27
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 5 12:20:07 2019 +0200
+
+    An update.
+
+commit 34477d22cd9beba969b60e0f05076b71bef8bcf3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 4 12:21:13 2019 +0200
+
+    Some fixes.
+
+commit 2f566186e70fa8402ccb2eb5583e7d66a2690114
+Merge: ab1d77d7 7b8e1c78
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 4 12:17:49 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit ab1d77d757d5ca27b1309b3995248c392d1a4cd5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 4 12:16:55 2019 +0200
+
+    Added site.
+
+commit 7b8e1c78d8257c243c20aff3d5b39d5d377d7eac
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Mar 16 11:10:00 2019 +0100
+
+    A fix.
+
+commit 77cbd7e427cc79559fd76b929a51be08cb569921
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 8 16:10:33 2019 +0100
+
+    Configuration file update.
+
+commit 4db229f67a3f444557fd5e7662b19446e9aeb566
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 6 17:32:36 2019 +0100
+
+    Updated configuration file.
+
+commit e839acb4fd66dbd3ccac13f54b6445ee56533aa7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 6 17:25:12 2019 +0100
+
+    Updated configuration file.
+
+commit efdc1f0d563c37e50445838736bb62fc384a48d8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 6 16:35:36 2019 +0100
+
+    Updated LSM entry.
+
+commit a1afcdd21a8f800c3845be915349028ccd956b6c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 6 16:10:27 2019 +0100
+
+    A fix.
+
+commit f7cceb68ded0421818f3634177883aae586a6c4d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 6 16:02:49 2019 +0100
+
+    Updated ChangeLog.
+
 commit d6301fabce54c8a566765c6ce08e1129da06484c
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Mar 6 15:46:36 2019 +0100

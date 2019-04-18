@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.3.6
+Version: 1.3.7
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -796,6 +796,8 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %changelog
+* Thu Apr 18 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.7
+- New upstream release.
 * Wed Mar 06 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.6
 - New upstream release.
 * Fri Nov 16 2018 Thomas Dreibholz <dreibh@iem.uni-due.de> - 0.0.0
