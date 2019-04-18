@@ -397,7 +397,7 @@ def getSlavesForSite(fullSiteList, localSite):
    for remoteSiteIndex in fullSiteList:
       remoteSite = fullSiteList[remoteSiteIndex]
       if ( ((localSite['site_index'] == NorNet_SiteIndex_Central) and
-            (remoteSite['site_index'] != localSite['site_index']) and) or
+            (remoteSite['site_index'] != localSite['site_index'])) or
            ((localSite['site_index'] != NorNet_SiteIndex_Central) and
             (remoteSite['site_index'] == NorNet_SiteIndex_Central)) ):
          # The remote site should be enabled as well!
