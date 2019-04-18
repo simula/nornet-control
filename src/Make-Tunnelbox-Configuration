@@ -397,10 +397,12 @@ def getSlavesForSite(fullSiteList, localSite):
    for remoteSiteIndex in fullSiteList:
       remoteSite = fullSiteList[remoteSiteIndex]
       if ( ((localSite['site_index'] == NorNet_SiteIndex_Central) and
-            (remoteSite['site_index'] != localSite['site_index'])) or
+            (remoteSite['site_index'] != localSite['site_index']) and) or
            ((localSite['site_index'] != NorNet_SiteIndex_Central) and
             (remoteSite['site_index'] == NorNet_SiteIndex_Central)) ):
-         slaves.append('ns.' + remoteSite['site_domain'] + '.')
+         # The remote site should be enabled as well!
+         if remoteSite['site_enabled'] == True:
+           slaves.append('ns.' + remoteSite['site_domain'] + '.')
 
    return slaves
 
@@ -753,18 +755,19 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
          masterSite = None
 
       zoneConfFile.write('// ====== ' + site['site_long_name'] + ' ======\n')
-      writeZone(zoneConfFile, site['site_domain'], site['site_domain'] + '.db', masterSite)
+      if (masterSite == None) or (masterSite['site_enabled'] == True):
+         writeZone(zoneConfFile, site['site_domain'], site['site_domain'] + '.db', masterSite)
 
-      siteProviderList = getNorNetProvidersForSite(site)
-      for siteProviderIndex in siteProviderList:
-         siteProvider = siteProviderList[siteProviderIndex]
-         for version in [ 4, 6 ]:
-            providerNetwork = makeNorNetIP(siteProviderIndex, siteIndex, 0, version)
-            providerZone = getZoneForAddress(providerNetwork, providerNetwork.network.prefixlen)
-            writeZone(zoneConfFile,
-                      providerZone,
-                      str.lower(siteProvider['provider_short_name']) + '.' + site['site_domain'] + '.ipv' + str(version) + '.db',
-                      masterSite)
+         siteProviderList = getNorNetProvidersForSite(site)
+         for siteProviderIndex in siteProviderList:
+            siteProvider = siteProviderList[siteProviderIndex]
+            for version in [ 4, 6 ]:
+               providerNetwork = makeNorNetIP(siteProviderIndex, siteIndex, 0, version)
+               providerZone = getZoneForAddress(providerNetwork, providerNetwork.network.prefixlen)
+               writeZone(zoneConfFile,
+                        providerZone,
+                        str.lower(siteProvider['provider_short_name']) + '.' + site['site_domain'] + '.ipv' + str(version) + '.db',
+                        masterSite)
 
    zoneConfFile.write('\n// ====== Tunnel IP Reverse Lookup ======\n')
    # The Central Site tunnelbox is master for the reverse lookup of the tunnel IPs.
@@ -773,8 +776,8 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
    else:
       masterSite = fullSiteList[NorNet_SiteIndex_Central]
    for version in [ 4, 6 ]:
-      tunnelNetwork  = makeNorNetTunnelIP(0, 0, 0, 0, version)
-      tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.network.prefixlen)
+      tunnelNetwork = makeNorNetTunnelIP(0, 0, 0, 0, version)
+      tunnelZone    = getZoneForAddress(tunnelNetwork, tunnelNetwork.network.prefixlen)
       writeZone(zoneConfFile, tunnelZone, 'tunnels.ipv' + str(version) + '.db',
                 masterSite)
 
