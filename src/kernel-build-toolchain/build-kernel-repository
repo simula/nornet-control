@@ -28,7 +28,12 @@ PUBLIC_KERNEL_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ub
 
 # How to add repository:
 # sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys DF605BB0760F2D65
-# sudo apt-add-repository -s https://packages.nntb.no/nornet-kernel/ubuntu/
+# Add to sources.list (for Ubuntu 18.04):
+# deb https://packages.nntb.no/nornet-kernel/ubuntu/ bionic bionic-kernel
+# deb-src https://packages.nntb.no/nornet-kernel/ubuntu/ bionic bionic-kernel
+# Add to sources.list (for Ubuntu 16.04):
+# deb https://packages.nntb.no/nornet-kernel/ubuntu/ xenial xenial-kernel
+# deb-src https://packages.nntb.no/nornet-kernel/ubuntu/ xenial xenial-kernel
 
 
 # mkdir -p ${XENIAL_KERNEL_DEBS}/
@@ -39,6 +44,7 @@ PUBLIC_KERNEL_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ub
 # rsync -Pc ~/src/linux*.deb ${BIONIC_KERNEL_DEBS}/
 
 
+rm -rf ${LOCAL_KERNEL_REPO}
 mkdir -p ${LOCAL_KERNEL_REPO}
 mkdir -p ${LOCAL_KERNEL_REPO}/conf
 cp distributions ${LOCAL_KERNEL_REPO}/conf
