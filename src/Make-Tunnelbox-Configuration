@@ -111,12 +111,17 @@ def getLocalSiteDNATOptionsString():
       return ''
 
 
-# ###### Get Squid memory cache #############################################
+# ###### Get DNS forwarders #################################################
 def getLocalSiteDNSForwardersString():
    try:
       return str(NorNet_Configuration['NorNet_LocalSite_DNS_Forwarders'])
    except:
       return ''
+
+
+# ###### Get DNS DNSSEC validation ##########################################
+def getLocalSiteDNSValidateDNSSEC():
+   return checkParameter('NorNet_LocalSite_DNS_ValidateDNSSEC', [ 'on', 'off'])
 
 
 # ###### Get blacklist ######################################################
