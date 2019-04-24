@@ -75,6 +75,7 @@ Requires: btrfs-progs
 Requires: bwm-ng
 Requires: colordiff
 Requires: cronie
+Requires: curl
 Requires: ethtool
 Requires: git
 Requires: gpm
@@ -250,6 +251,7 @@ Requires: pbuilder
 Requires: perl-Image-ExifTool
 Requires: pkg-config
 Requires: python3
+Requires: python3-pip
 Requires: python3-psycopg2
 Requires: python3-pymongo
 Requires: qt5-qtbase-devel
