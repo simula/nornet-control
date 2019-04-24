@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 #
 # Build NorNet Kernel Repository
 # Copyright (C) 2017-2019 by Thomas Dreibholz
@@ -36,21 +36,29 @@ PUBLIC_KERNEL_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ub
 # deb-src https://packages.nntb.no/nornet-kernel/ubuntu/ xenial xenial-kernel
 
 
+echo "Synchronising packages for Xenial ..."
 mkdir -p ${XENIAL_KERNEL_DEBS}/
 rsync -Pc -e "ssh -p 50691" -Pv thomasd@dnat.simula.no:'src/*.deb' ${XENIAL_KERNEL_DEBS}/
 
+echo "Synchronising packages for Bionic ..."
 mkdir -p ${BIONIC_KERNEL_DEBS}/
 rsync -Pc ~/src/linux*.deb ${BIONIC_KERNEL_DEBS}/
 
 
+echo "Creating repository ..."
 rm -rf ${LOCAL_KERNEL_REPO}
 mkdir -p ${LOCAL_KERNEL_REPO}
 mkdir -p ${LOCAL_KERNEL_REPO}/conf
 cp distributions ${LOCAL_KERNEL_REPO}/conf
+ 
 
 cd ${LOCAL_KERNEL_REPO}
+# reprepro --ignore=undefinedtarget -C xenial-kernel includedeb xenial -C bionic-kernel includedeb bionic ${BIONIC_KERNEL_DEBS}/*.deb ${XENIAL_KERNEL_DEBS}/*.deb
 reprepro --ignore=undefinedtarget -C xenial-kernel includedeb xenial ${XENIAL_KERNEL_DEBS}/*.deb
 reprepro --ignore=undefinedtarget -C bionic-kernel includedeb bionic ${BIONIC_KERNEL_DEBS}/*.deb
 
 
+echo "Copying to server ..."
 rsync -Pav -e "ssh -J dreibh@oesthorn.nntb.no" --delete ${LOCAL_KERNEL_REPO}/ $PUBLIC_KERNEL_REPO/
+
+echo "Done!"
