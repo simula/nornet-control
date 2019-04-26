@@ -819,7 +819,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 101,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'New York University',
    'site_short_name'   : 'NYU',
    'site_url'          : 'http://engineering.nyu.edu',
@@ -848,7 +848,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 160,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'Korea University',   # 고려대학교
    'site_short_name'   : 'KRU',
    'site_url'          : 'https://www.korea.ac.kr',
