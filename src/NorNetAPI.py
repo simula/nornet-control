@@ -171,7 +171,6 @@ def fetchNorNetSite(siteNameToFind, justEnabledSites = True):
 
 # ###### Fetch list of NorNet sites #########################################
 def fetchNorNetSiteList(justEnabledSites = True):
-   log('Fetching NorNet site list ...')
    return fetchNorNetSite(None, justEnabledSites)
 
 
@@ -349,13 +348,11 @@ def fetchNorNetNode(nodeNameToFind = None, site = None):
 
 # ###### Fetch list of NorNet nodes #########################################
 def fetchNorNetNodeList():
-   log('Fetching NorNet node list ...')
    return fetchNorNetNode(None, None)
 
 
 # ###### Fetch list of NorNet nodes for given site ##########################
 def fetchNorNetNodeListForSite(site):
-   log('Fetching NorNet node list ...')
    return fetchNorNetNode(None, site)
 
 
@@ -418,7 +415,6 @@ def fetchNorNetUser(userNameToFind):
 
 # ###### Fetch list of NorNet users #########################################
 def fetchNorNetUserList():
-   log('Fetching NorNet user list ...')
    return fetchNorNetUser(None)
 
 
@@ -511,7 +507,6 @@ def fetchNorNetSlice(sliceNameToFind):
 
 # ###### Fetch list of NorNet slices ########################################
 def fetchNorNetSliceList():
-   log('Fetching NorNet slice list ...')
    return fetchNorNetSlice(None)
 
 
