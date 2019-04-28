@@ -1,0 +1,55 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
+# Get all nodes
+# Copyright (C) 2012-2019 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+# NorNet
+from NorNetSiteSetup import *
+from NorNetTools     import *
+from NorNetAPI       import *
+
+
+
+# ###### Main program #######################################################
+if len(sys.argv) < 2:
+   sys.stderr.write('Usage: ' + sys.argv[0] + ' slice\n')
+   sys.exit(1)
+
+loginToPLC(quietMode = True)
+
+slice = fetchNorNetSlice(sys.argv[1])
+if slice == None:
+   error('Slice ' + sys.argv[1] + ' not found!')
+
+# print(slice)
+
+
+siteList = fetchNorNetSiteList(False)
+nodeList = fetchNorNetNode(None)
+for node in nodeList:
+   if node['node_id'] in slice['slice_node_ids']:
+      # print(node)
+      nodeName  = node['node_name']
+      nodeState = node['node_state']
+      if nodeState == 'boot':
+         for site in siteList:
+            if siteList[site]['site_id'] == node['node_site_id']:
+               if siteList[site]['site_enabled'] == True:
+   
+                  print(fill(nodeName,32) + ' ' + fill(nodeState,10))
