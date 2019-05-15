@@ -1,3 +1,101 @@
+commit 125ef4ac69aa9c85f6d029ff331e16eb7df114f1
+Merge: bc32d60f 14b9daa2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 10 15:55:56 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit bc32d60fa4ceea9b3c89994a3d015aa2343eb962
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 10 15:55:50 2019 +0200
+
+    Added script.
+
+commit 14b9daa20c8dbc5182640ec4537061ec48259784
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 10 09:10:29 2019 +0200
+
+    Dependency fix.
+
+commit 939017fdd038f03cee78ddfdf4ca07683ae95bed
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 6 13:31:53 2019 +0200
+
+    Updated script.
+
+commit 9bc4dadc1162e848782a1986466894a59c006598
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 6 13:28:01 2019 +0200
+
+    An update.
+
+commit aacf617ed62f0e86304db94bee6862c76ae1a3e9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Apr 28 16:41:37 2019 +0800
+
+    Build script update.
+
+commit 86e8451976ca891b6585146cfaaf04f65d680406
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Apr 28 16:36:22 2019 +0800
+
+    Improved output.
+
+commit 4779f0482857cb02702b5175bdd480f0573f5bcd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Apr 28 14:45:57 2019 +0800
+
+    Added script.
+
+commit 744dcdd30ff93e6d231a64bd2aa72a278d726bc7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Apr 28 14:39:56 2019 +0800
+
+    Added script.
+
+commit 9a975eb6146e3690e1fd6010b82b8d2a3badadde
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 26 09:09:29 2019 +0800
+
+    Updated configuration.
+
+commit 2d5657744d29691a9ddf84bf3767b03e5b54d331
+Merge: 0c52cc13 d0d8ac93
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Apr 24 07:23:10 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 0c52cc135b823eb86e628ade07a367dcbda563e7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Apr 24 07:22:56 2019 +0200
+
+    Updated scripts.
+
+commit d0d8ac93c2ed3f9cef389cdb77a07d6fda7af582
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Apr 24 13:21:34 2019 +0800
+
+    Updated dependencies.
+
+commit d3925ff93f9db9d5f6f4e37fc77b680ab49b6e05
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 12:17:45 2019 +0200
+
+    A fix.
+
+commit 2eb02f86a25c353941ad6024ed23d17c96f9b8df
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 17:49:07 2019 +0800
+
+    Updated script.
+
+commit 9ac55547cae5fae4e9a9bc3eaaae7e4a6291b536
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 12:56:12 2019 +0800
+
+    Version bump.
+
 commit 95b94b6bb554e9fb1e1f0ab10e5524d90b96d578
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Thu Apr 18 12:34:54 2019 +0800
