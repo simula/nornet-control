@@ -1,3 +1,27 @@
+commit 807624cbfab15315c4f361a950339ad37587c9c8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 7 11:31:22 2019 +0200
+
+    Made cron-apt configuration working again.
+
+commit 13086d3c9b76df62c288f2617dd9f83e33945c1f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue May 21 18:41:07 2019 +0200
+
+    Submodule update.
+
+commit 606fe7da4bf8b963f88f9e62924b7c93dbb609c3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed May 15 16:24:18 2019 +0200
+
+    Updated Travis CI configuration.
+
+commit 1d337124f37e0de4652546645c92aa0dda721d28
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed May 15 15:52:06 2019 +0200
+
+    Version bump.
+
 commit 125ef4ac69aa9c85f6d029ff331e16eb7df114f1
 Merge: bc32d60f 14b9daa2
 Author: Thomas Dreibholz <dreibh@simula.no>
