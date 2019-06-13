@@ -177,6 +177,17 @@ Description: NorNet API
  .
  See https://www.nntb.no for details on NorNet!
 
+Package: nornet-autoupdate
+Architecture: all
+Depends: cron-apt,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: NorNet Auto Update
+ This package ensures that the NorNet system is automatically updated
+ (installation of updates via cron-apt).
+ .
+ See https://www.nntb.no for details on NorNet!
+
 Package: nornet-node
 Architecture: all
 Conflicts: miredo
@@ -184,6 +195,7 @@ Depends: fail2ban,
          ifupdown,
          nfs-common,
          nornet-api (= ${binary:Version}),
+         nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          ntp,
          openssh-server,
@@ -211,6 +223,7 @@ Depends: arpwatch,
          isc-dhcp-server,
          netstat-nat,
          nornet-api (= ${binary:Version}),
+         nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          nornet-node (= ${binary:Version}) | nornet-server (= ${binary:Version}),
          ntp,
@@ -233,6 +246,7 @@ Package: nornet-filesrv
 Architecture: all
 Depends: nfs-kernel-server,
          nornet-api (= ${binary:Version}),
+         nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          python3-adns,
          tftpd-hpa,
@@ -261,6 +275,7 @@ Depends: apache2,
          nagios4 | nagios3,
          nornet-api (= ${binary:Version}),
          nornet-artwork (>= ${source:Version}),
+         nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          postfix,
          ${misc:Depends},
@@ -276,6 +291,7 @@ Architecture: all
 Depends: firefox,
          kubuntu-desktop | neon-desktop | deepin-desktop-environment | lubuntu-desktop | ubuntu-desktop,
          nornet-api (= ${binary:Version}),
+         nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          sddm | kdm | lightdm | gdm3,
          xserver-xorg-video-vmware,
@@ -292,6 +308,7 @@ Package: nornet-gatekeeper
 Architecture: all
 Depends: fail2ban,
          nornet-api (= ${binary:Version}),
+         nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
@@ -312,6 +329,7 @@ Depends: apache2,
          libnet-dns-perl,
          libnet-ip-perl,
          nornet-api (= ${binary:Version}),
+         nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          oxygen-icon-theme,
          ${misc:Depends},
@@ -344,6 +362,7 @@ Description: NorNet Wiki Server
 Package: nornet-timesrv
 Architecture: all
 Depends: nornet-api (= ${binary:Version}),
+         nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          ntp,
          ${misc:Depends},
@@ -356,6 +375,7 @@ Description: NorNet Time Server
 Package: nornet-database
 Architecture: all
 Depends: nornet-api (= ${binary:Version}),
+         nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          postgresql,
          postgresql-contrib,

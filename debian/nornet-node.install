@@ -1,4 +1,3 @@
-/etc/cron-apt/action.d/5-install
 /etc/grub.d/??_nornet_node_theme
 /usr/bin/Make-Node-Configuration
 /usr/share/nornet-desktop/Splash/Node1-1024x768.jpeg /boot/NorNet

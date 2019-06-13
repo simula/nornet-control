@@ -328,12 +328,24 @@ fi
 
 
 
+%package autoupdate
+Summary: NorNet Auto Update
+Group: Applications/Internet
+BuildArch: noarch
+
+%description autoupdate
+This package ensures that the NorNet system is automatically updated
+See https://www.nntb.no for details on NorNet!
+
+
+
 %package node
 Summary: NorNet Node
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Requires: fail2ban
 Requires: grub2
 Requires: libvirt-client
@@ -370,9 +382,10 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 Summary: NorNet Tunnelbox
 Group: Applications/Internet
 BuildArch: noarch
-Requires: (%{name}-node = %{version}-%{release} or %{name}-server = %{version}-%{release})
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
+Requires: (%{name}-node = %{version}-%{release} or %{name}-server = %{version}-%{release})
 Requires: arpwatch
 Requires: bind
 Requires: conntrack-tools
@@ -422,8 +435,9 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 Summary: NorNet FileSrv
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Requires: libnfs-utils
 Requires: tftp-server
 
@@ -480,6 +494,7 @@ Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
 Requires: %{name}-artwork = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
 Requires: %{name}-management = %{version}-%{release}
 Requires: httpd
 Requires: mod_php
@@ -521,8 +536,9 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 Summary: NorNet Display
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Recommends: xorg-x11-drv-vmware
 
 %description display
@@ -558,8 +574,9 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 Summary: NorNet Gatekeeper
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Requires: fail2ban
 
 %description gatekeeper
@@ -586,8 +603,9 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 Summary: NorNet WebSrv
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Requires: awstats
 Requires: geoipupdate-cron
 Recommends: geoipupdate-cron6
@@ -650,8 +668,9 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 Summary: NorNet TimeSrv
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Requires: ntp
 
 %description timesrv
@@ -676,8 +695,9 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 Summary: NorNet Database
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Requires: postgresql-server
 Requires: postgresql-contrib
 
@@ -705,8 +725,9 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 Summary: NorNet PLC
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Recommends: myplc
 
 %description plc
@@ -731,8 +752,8 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 Summary: NorNet Server
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Requires: fail2ban
 Requires: grub2
 Requires: libvirt-client
