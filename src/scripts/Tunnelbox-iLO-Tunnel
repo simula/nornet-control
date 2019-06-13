@@ -2,4 +2,4 @@
 
 let p=2000+$1
 firefox https://localhost:$p &
-ssh nornetpp@10.1.$1.251 -L $p:10.1.$1.244:443
+ssh -J oesthorn.nntb.no nornetpp@10.1.$1.251 -L $p:10.1.$1.244:443
