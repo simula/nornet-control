@@ -1,7 +1,7 @@
 Begin4
 Title:          nornet
-Version:        1.3.6
-Entered-date:   2019-03-06
+Version:        1.3.10
+Entered-date:   2019-06-14
 Description:    NorNet is a testbed for multi-homed systems. This package
                 contains the management software for the testbed's
                 infrastructure management software.
