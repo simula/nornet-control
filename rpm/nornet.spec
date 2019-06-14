@@ -340,6 +340,8 @@ This package ensures that the NorNet system is automatically updated
 (installation of updates via dnf-automatic).
 See https://www.nntb.no for details on NorNet!
 
+%files autoupdate
+
 %post autoupdate
 sed -e "s/^apply_updates[ \t]*=[ \t]*no.*$/apply_updates = yes/g" -i /etc/dnf/automatic.conf
 systemctl enable --now dnf-automatic.timer
