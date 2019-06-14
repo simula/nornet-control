@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.3.9
+Version: 1.3.10~rc2
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -332,10 +332,16 @@ fi
 Summary: NorNet Auto Update
 Group: Applications/Internet
 BuildArch: noarch
+Requires: dnf-automatic
 
 %description autoupdate
 This package ensures that the NorNet system is automatically updated
+(installation of updates via dnf-automatic).
 See https://www.nntb.no for details on NorNet!
+
+%post autoupdate
+sed -e "s/^apply_updates[ \t]*=[ \t]*no.*$/apply_updates = yes/g" -i /etc/dnf/automatic.conf
+systemctl enable --now dnf-automatic.timer
 
 
 
