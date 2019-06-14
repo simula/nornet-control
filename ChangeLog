@@ -1,3 +1,108 @@
+commit 51ecff2b81acf6dd1631982a35640288bb336572
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 15:00:53 2019 +0200
+
+    Some clean-ups.
+
+commit 88da976570726a27c140e6512ec79393c8a4222d
+Merge: a48424b2 c8d2530f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 14:51:19 2019 +0200
+
+    Merge branch 'dreibh/noarch'
+
+commit a48424b23132f1e3429256289a9c008ae8bdbc0c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 14:50:13 2019 +0200
+
+    A fix.
+
+commit b0d3d9c25635680118da9aca696860e3ccbfd6bf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 13:52:00 2019 +0200
+
+    RPM dependency fix.
+
+commit c8d2530f2e3316c2b13eae8c9d62521f461205c2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 13:42:56 2019 +0200
+
+    System-Maintenance: also list installed NorNet packages for Fedora.
+
+commit 4e390be25c8b667ce03e299a9903913f2e96b1e8
+Merge: 94a2a15d 760fa94f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 12:13:54 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 760fa94f662e4f42b863b369f3e77e538478fc34
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 12:12:55 2019 +0200
+
+    nornet-autoupdate RPM package needs file section (empty), in order to build this package.
+
+commit 94a2a15da6311c7926bf609cb1b524a160131934
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 12:12:13 2019 +0200
+
+    Renamed file to avoid upgrade problems.
+
+commit 91ee4aea6e0c1bc975021f25eebb70919d25a1a0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 11:23:24 2019 +0200
+
+    Reduced build log verbosity for RPM build.
+
+commit 08c1239fe0e3a3dd789f80e2473537fb4f59e86b
+Merge: 482f2eeb 8b7f6e51
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 10:57:30 2019 +0200
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit 8b7f6e5187b879d4ba73dc67637017bf4908a2b4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 10:56:54 2019 +0200
+
+    Fedora: also handle automatic updates via additional package nornet-autoupdate.
+
+commit 482f2eeb14e3ee2ed7083cefa6542c0e67d56509
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 10:55:44 2019 +0200
+
+    Updated script.
+
+commit b47d7d513010209d522bed6c48844c7baf792ddb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 13 18:01:05 2019 +0200
+
+    Added "nornet-autoupdate" package, to simplify update management.
+
+commit cc8b22625c459dcc99cfe0e791a3f891f50ca144
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 13 12:56:13 2019 +0200
+
+    Improved build script.
+
+commit de232da7e1e0a05b7f0d914191a369b7912ebbc7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 13 12:25:01 2019 +0200
+
+    Reduced log output during PPA build.
+
+commit 522e98822153c958eb50e63e386e81ce2401bb95
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 13 12:24:10 2019 +0200
+
+    Added/updated helper scripts.
+
+commit ff5bc4c059cd09e448de3f362bf6f70b7e1485a8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 7 11:45:14 2019 +0200
+
+    New release 1.3.9.
+
 commit 807624cbfab15315c4f361a950339ad37587c9c8
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Fri Jun 7 11:31:22 2019 +0200
