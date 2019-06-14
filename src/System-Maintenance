@@ -344,4 +344,8 @@ if [ "$Variant" = "Debian" ] ; then
       /usr/bin/apt-show-versions | grep "^nornet-" | grep -v "not installed$"
       echo "=============================================================================="
    fi
+elif [ "$Variant" == "Fedora" ] ; then
+   echo "====== Installed NorNet Software ============================================="
+   rpm -qa | grep "^nornet-"
+   echo "=============================================================================="
 fi
