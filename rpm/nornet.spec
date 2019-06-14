@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.3.10~rc2
+Version: 1.3.10~rc4
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -222,7 +222,7 @@ Requires: bison
 Requires: bzip2-devel
 Requires: clang
 Requires: cmake
-Requires: createrepo
+Requires: createrepo_c or createrepo
 Requires: debhelper
 Requires: dejavu-sans-fonts
 Requires: dejavu-sans-mono-fonts
