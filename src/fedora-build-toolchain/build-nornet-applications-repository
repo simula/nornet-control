@@ -24,8 +24,8 @@ HOME="/home/nornetpp"
 
 SOURCES="$HOME/src"
 REPOSITORIES="$HOME/repos/nornet-applications"
-FEDORAS="rawhide 28 27 26 25"
-ARCHS="x86_64 i386"
+FEDORAS="29 25"   # rawhide
+ARCHS="x86_64"  # i386"
 
 DISTRIBUTIONS=""
 for fedora in $FEDORAS ; do
@@ -34,8 +34,8 @@ for fedora in $FEDORAS ; do
    done
 done
 
-#PACKAGES="hipercontracer"
-PACKAGES="libusrsctp libneat nornet_nn bibtexconv fractgen netperfmeter hipercontracer rsplib subnetcalc tsctp"
+#PACKAGES="libusrsctp libneat"
+PACKAGES="nornet_nn bibtexconv fractgen netperfmeter hipercontracer rsplib subnetcalc tsctp"
 
 
 # ====== NorNet-NN ========================================
@@ -144,7 +144,9 @@ for package in $PACKAGES ; do
    # ====== Build ===========================================================
    (
       cd "$package_dir"
+      git checkout packaging.conf || true
       git checkout $package_repo_tag
+      sed -e 's/SKIP_PACKAGE_SIGNING=0/SKIP_PACKAGE_SIGNING=1/g' -i packaging.conf || true
 
       # ====== Build SRPM ===================================================
       eval "package_dir=\$${package}_DIR"
@@ -153,7 +155,7 @@ for package in $PACKAGES ; do
       if [ -e ./clean-deb ] ; then
          ./clean-deb
       fi
-      ./make-rpm $DISTRIBUTIONS
+      ./build-rpm $DISTRIBUTIONS
 
       # ====== Build RPMs ===================================================
       for distribution in $DISTRIBUTIONS ; do
