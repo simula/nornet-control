@@ -169,7 +169,7 @@ See https://www.nntb.no for details on NorNet!
 %{_mandir}/man1/Watchdog.1.gz
 %{_mandir}/man8/Interface-Setup.8.gz
 /sbin/Interface-Setup
-%ghost %{_sysconfdir}/cron-apt/action.d/5-install
+%ghost %{_sysconfdir}/cron-apt/action.d/9-install
 
 %post management
 echo "Updating /etc/default/grub with NorNet settings:"
