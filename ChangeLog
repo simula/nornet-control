@@ -1,3 +1,33 @@
+commit 5dee78a35019995c1bbac1b3eb67c46cdb292074
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 20 11:03:31 2019 +0200
+
+    FreeBSD improvements.
+
+commit 61853b0dec5168d6b963b5890e58f937214e6f80
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 19 15:22:48 2019 +0200
+
+    Updated build scripts.
+
+commit 4a37ede7b37dccb5aff253fe64873e495bbad0a5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 19 12:20:32 2019 +0200
+
+    Renamed files to avoid conflict with configuration order.
+
+commit abae9f3b0f23c891943a353ad178c68d56ec02ed
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 15:26:30 2019 +0200
+
+    Updated LSM entry.
+
+commit 1decf0b88ed2c7fb035c439dcaa5eb2869725747
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 15:22:10 2019 +0200
+
+    New release 1.3.10.
+
 commit 51ecff2b81acf6dd1631982a35640288bb336572
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Fri Jun 14 15:00:53 2019 +0200
