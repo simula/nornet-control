@@ -34,7 +34,7 @@ def extractDependencies(line, variant):
    dependencies = []
 
    # Remove "build-depends:", etc.:
-   m = re.match(r'^(.*:)(.*$)', line)
+   m = re.match(r'^(.*:[ \t]*)([a-zA-Z0-9-+]*)(.*)$', line)
    if m != None:
       line = m.group(2)
    line = line.strip()
