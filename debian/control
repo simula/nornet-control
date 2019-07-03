@@ -77,7 +77,6 @@ Recommends: apport-retrace,
             language-pack-de-base,
             language-pack-en-base,
             language-pack-nb-base,
-            linux-crashdump,
             tshark,
             update-motd
 Conflicts: landscape-common,
