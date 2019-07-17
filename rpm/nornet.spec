@@ -763,6 +763,7 @@ Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
 Requires: %{name}-management = %{version}-%{release}
+Requires: edk2-ovmf
 Requires: fail2ban
 Requires: grub2
 Requires: libvirt-client
