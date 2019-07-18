@@ -21,8 +21,10 @@
 RESOLUTION="1024x768"
 
 make generate_overlayImage-${RESOLUTION}.png
-if [ -e Output/Overlay/Overlay-${RESOLUTION}.png ] ; then
-   echo "==> Output/Overlay/Overlay-${RESOLUTION}.png"
+
+result=`find . -name "Overlay-${RESOLUTION}.png"`
+if [ -e "${result}" ] ; then
+   echo "==> ${result}"
 else
    echo "Something went wrong!"
    exit 1
