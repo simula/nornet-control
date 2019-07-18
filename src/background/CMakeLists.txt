@@ -34,7 +34,7 @@
 #############################################################################
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
-PROJECT(undefined LANGUAGES C)   # to be set in Settings.input
+PROJECT(undefined NONE)   # to be set in Settings.input
 INCLUDE(Settings.input)
 
 
