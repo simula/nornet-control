@@ -290,7 +290,8 @@ ADD_CUSTOM_COMMAND(OUTPUT  ${bootsplash_overlayImage}
                    DEPENDS ${generate_captionFile}
                            ${captionFile}
                            generate_gimpDirStamp
-                           ${gimpDirStamp})
+                           ${gimpDirStamp}
+                           ${BUILD_CAPTION})
 ADD_CUSTOM_TARGET(${generate_bootsplash_overlayImage} DEPENDS ${bootsplash_overlayImage})
 
 
@@ -316,7 +317,8 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
    ADD_CUSTOM_COMMAND(OUTPUT ${overlayImage}
                       COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${BUILD_OVERLAY} ${overlayImage} ${width} ${height} ${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text
                       DEPENDS generate_all_texts
-                              ${all_texts})
+                              ${all_texts}
+                              ${BUILD_OVERLAY})
    ADD_CUSTOM_TARGET(${generate_overlayImage} DEPENDS ${overlayImage})
 
 
