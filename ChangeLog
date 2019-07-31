@@ -1,3 +1,27 @@
+commit b9b69cefb192e278e9af945b228493ed3cf99e4b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 31 14:54:33 2019 +0200
+
+    Improved helper script.
+
+commit 96761ea77258b2cc7eff8f7606dcc5813ea48bbd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 31 08:38:15 2019 +0200
+
+    Updated script.
+
+commit 69bc6dc3e2cb5c328a0c35fdc60dca174953b0a8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 26 11:01:53 2019 +0200
+
+    Updated LSM entry.
+
+commit 66a80dc3d8ca4b5e0a8d96faa6330acf2004f582
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 26 10:51:11 2019 +0200
+
+    New release nornet-1.3.15.
+
 commit 9fe2a1eebbdf20fff4943d20da89fab640f1daa4
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Tue Jul 23 15:24:06 2019 +0200
