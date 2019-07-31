@@ -1,2 +1,3 @@
 #!/bin/sh
 do-release-upgrade -f DistUpgradeViewNonInteractive
+apt-add-repository -sy ppa:dreibh/ppa
