@@ -21,6 +21,7 @@
 
 XENIAL_KERNEL_DEBS=/storage/mptcp-kernels/xenial-deb
 BIONIC_KERNEL_DEBS=/storage/mptcp-kernels/bionic-deb
+DISCO_KERNEL_DEBS=/storage/mptcp-kernels/disco-deb
 
 LOCAL_KERNEL_REPO=/storage/mptcp-kernels/ubuntu
 PUBLIC_KERNEL_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ubuntu/
@@ -38,11 +39,15 @@ PUBLIC_KERNEL_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ub
 
 echo "Synchronising packages for Xenial ..."
 mkdir -p ${XENIAL_KERNEL_DEBS}/
-rsync -Pc -e "ssh -p 50691" -Pv thomasd@dnat.simula.no:'src/*.deb' ${XENIAL_KERNEL_DEBS}/
+rsync -P -e "ssh -p 50691" thomasd@dnat.simula.no:'src/linux*.deb' ${XENIAL_KERNEL_DEBS}/
 
 echo "Synchronising packages for Bionic ..."
 mkdir -p ${BIONIC_KERNEL_DEBS}/
-rsync -Pc ~/src/linux*.deb ${BIONIC_KERNEL_DEBS}/
+rsync -P ~/src/linux*.deb ${BIONIC_KERNEL_DEBS}/
+
+echo "Synchronising packages for Disco ..."
+mkdir -p ${DISCO_KERNEL_DEBS}/
+rsync -P 158.36.78.120:'src/multipath/linux*.deb' ${DISCO_KERNEL_DEBS}/
 
 
 echo "Creating repository ..."
@@ -50,12 +55,13 @@ rm -rf ${LOCAL_KERNEL_REPO}
 mkdir -p ${LOCAL_KERNEL_REPO}
 mkdir -p ${LOCAL_KERNEL_REPO}/conf
 cp distributions ${LOCAL_KERNEL_REPO}/conf
- 
+
 
 cd ${LOCAL_KERNEL_REPO}
 # reprepro --ignore=undefinedtarget -C xenial-kernel includedeb xenial -C bionic-kernel includedeb bionic ${BIONIC_KERNEL_DEBS}/*.deb ${XENIAL_KERNEL_DEBS}/*.deb
 reprepro --ignore=undefinedtarget -C xenial-kernel includedeb xenial ${XENIAL_KERNEL_DEBS}/*.deb
 reprepro --ignore=undefinedtarget -C bionic-kernel includedeb bionic ${BIONIC_KERNEL_DEBS}/*.deb
+reprepro --ignore=undefinedtarget -C disco-kernel  includedeb disco ${DISCO_KERNEL_DEBS}/*.deb
 
 
 echo "Copying to server ..."

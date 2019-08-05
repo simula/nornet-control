@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ISO_DIRECTORY="$HOME/Downloads"
+ISO_DIRECTORY="$HOME/ISOs"
 ISOs=`find $ISO_DIRECTORY -name *test.iso`
 
 if [ "$ISOs" != "" ] ; then

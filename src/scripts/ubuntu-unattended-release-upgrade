@@ -1,2 +1,5 @@
 #!/bin/sh
+
 do-release-upgrade -f DistUpgradeViewNonInteractive
+apt-add-repository -sy ppa:dreibh/ppa
+apt install -y linux-generic-hwe-18.04
