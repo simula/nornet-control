@@ -29,6 +29,8 @@ fi
 inputFileName="$1"
 outputFileName="$2"
 
+inputImageSize=`gm identify -format "%wx%h" "$inputFileName"`
+
 aspectArg="$3"
 outputAspect=1
 if [[ "$aspectArg" =~ ^([0-9]+\.{0,1}[0-9]*)([:x])([0-9]+\.{0,1}[0-9]*)$ ]] ; then
@@ -46,7 +48,7 @@ else
    fi
 fi
 
-newWidth=
+newWidth=`echo "$inputImageSize" | sed -e "s/x[0-9]*$//"`
 if [ $# -ge 4 ] ; then
    newWidth="$4"
    newHeight=`awk "BEGIN { print (${newWidth}/${outputAspect})+0.5 }"`
@@ -54,7 +56,6 @@ fi
 
 
 # ###### Load image #########################################################
-inputImageSize=`gm identify -format "%wx%h" "$inputFileName"`
 inputWidth=`echo "$inputImageSize" | sed -e "s/x[0-9]*$//"`
 inputHeight=`echo "$inputImageSize" | sed -e "s/^[0-9]*x//"`
 inputAspect=`awk "BEGIN { print ${inputWidth}/${inputHeight} }"`
@@ -78,10 +79,9 @@ cy=`awk "BEGIN { print int(${inputHeight}-${croppedInputHeight})/2+0.5 }"`
 
 
 # ###### Resize image #######################################################
-# if [ "$newWidth" != "" ] ; then
+# if [ "${newWidth}" != "" ] ; then
 #    echo "Resize: ${newWidth}*${newHeight} + (${outputAspect}:1)"
 # fi
-
 
 # ###### Run "convert" ######################################################
 rm -f "$outputFileName"
