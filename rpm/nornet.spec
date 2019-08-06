@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.3.14
+Version: 1.3.16
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -763,6 +763,7 @@ Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
 Requires: %{name}-management = %{version}-%{release}
+Requires: edk2-ovmf
 Requires: fail2ban
 Requires: grub2
 Requires: libvirt-client
@@ -828,6 +829,10 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %changelog
+* Wed Jul 31 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.16
+- New upstream release.
+* Fri Jul 26 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.15
+- New upstream release.
 * Fri Jul 05 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.14
 - New upstream release.
 * Wed Jul 03 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.13

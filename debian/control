@@ -15,7 +15,7 @@ Build-Depends: cmake (>= 3.0.2) | cmake3,
                libfile-fcntllock-perl,
                libimage-exiftool-perl,
                python3-all
-Standards-Version: 4.3.0
+Standards-Version: 4.4.0.1
 Vcs-Git: https://github.com/simula/nornet-control.git
 Vcs-Browser: https://github.com/simula/nornet-control
 
@@ -76,6 +76,7 @@ Recommends: apport-retrace,
             language-pack-de-base,
             language-pack-en-base,
             language-pack-nb-base,
+            resolvconf,
             tshark,
             update-motd
 Conflicts: landscape-common,
@@ -395,6 +396,7 @@ Depends: fail2ban,
          nornet-management (= ${binary:Version}),
          ntp,
          openssh-server,
+         ovmf,
          qemu-kvm,
          virt-manager,
          virtinst,

@@ -34,7 +34,7 @@
 #############################################################################
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
-PROJECT(undefined LANGUAGES C)   # to be set in Setting.cmake
+PROJECT(undefined NONE)   # to be set in Settings.input
 INCLUDE(Settings.input)
 
 
@@ -290,7 +290,8 @@ ADD_CUSTOM_COMMAND(OUTPUT  ${bootsplash_overlayImage}
                    DEPENDS ${generate_captionFile}
                            ${captionFile}
                            generate_gimpDirStamp
-                           ${gimpDirStamp})
+                           ${gimpDirStamp}
+                           ${BUILD_CAPTION})
 ADD_CUSTOM_TARGET(${generate_bootsplash_overlayImage} DEPENDS ${bootsplash_overlayImage})
 
 
@@ -316,7 +317,8 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
    ADD_CUSTOM_COMMAND(OUTPUT ${overlayImage}
                       COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${BUILD_OVERLAY} ${overlayImage} ${width} ${height} ${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text
                       DEPENDS generate_all_texts
-                              ${all_texts})
+                              ${all_texts}
+                              ${BUILD_OVERLAY})
    ADD_CUSTOM_TARGET(${generate_overlayImage} DEPENDS ${overlayImage})
 
 

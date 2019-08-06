@@ -1,3 +1,105 @@
+commit 4a9ab6ad0eb9cfbb2752f2ad0b761f56f5cdf3ce
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 31 16:35:11 2019 +0200
+
+    New release nornet-1.3.16.
+
+commit b9b69cefb192e278e9af945b228493ed3cf99e4b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 31 14:54:33 2019 +0200
+
+    Improved helper script.
+
+commit 96761ea77258b2cc7eff8f7606dcc5813ea48bbd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 31 08:38:15 2019 +0200
+
+    Updated script.
+
+commit 69bc6dc3e2cb5c328a0c35fdc60dca174953b0a8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 26 11:01:53 2019 +0200
+
+    Updated LSM entry.
+
+commit 66a80dc3d8ca4b5e0a8d96faa6330acf2004f582
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 26 10:51:11 2019 +0200
+
+    New release nornet-1.3.15.
+
+commit 9fe2a1eebbdf20fff4943d20da89fab640f1daa4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 23 15:24:06 2019 +0200
+
+    Dependency update.
+
+commit a1358a4de9e9d1efc138f1ef849e6174d73e204d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 18 12:32:08 2019 +0200
+
+    Updated build scripts.
+
+commit 8b811143f3eb203d8fb824a76a3468d24b741151
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 18 12:23:38 2019 +0200
+
+    A fix.
+
+commit 1761285cfe7258fdd9d51d551bd255c5cc2d2a0d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 18 12:16:45 2019 +0200
+
+    A fix.
+
+commit 92106bc835f58bc540c249157d2e89ba71db7bc6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 18 12:09:08 2019 +0200
+
+    Minor update.
+
+commit 37ece9be58dc5fb2adc8ee74b1637dbc1d56d621
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 18 12:08:54 2019 +0200
+
+    Fixed dependency handling.
+
+commit 5af75fc796f1d5cc3d187c7d9be4d1e775e813eb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 18 12:08:27 2019 +0200
+
+    Added test script.
+
+commit 1109add3c54d01cabfba5c2e3bd5cca088fb6d96
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 17 12:38:20 2019 +0200
+
+    Added ovmf package as requirement of NorNet-Server, in order to allow booting VMs with UEFI.
+
+commit 506265f0951dd7e8e346b2d3b3e71bf02818be43
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 11 15:31:16 2019 +0200
+
+    Updated another script.
+
+commit f092d9517ed25c49b17a2d8d09ff9d57a5eecb3a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 11 15:30:40 2019 +0200
+
+    Updated script.
+
+commit 510a9a594e1e26cf67fa4c874bc592018ac2da87
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 5 22:05:03 2019 +0200
+
+    Updated LSM entry.
+
+commit 3c0a9d50335985c0f3c29875bb22cad1909a6be0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 5 21:20:49 2019 +0200
+
+    New release nornet-1.3.14.
+
 commit 7dfecdd5244166d1f66987011cf9acead1b24cfa
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Fri Jul 5 21:18:20 2019 +0200
