@@ -66,7 +66,7 @@ mv %{buildroot}/usr/share/nornet-desktop/Splash/nornet-version %{buildroot}/etc/
 
 
 %package management
-Summary: NorNet Management
+Summary: Management tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: bash-completion
@@ -189,7 +189,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package x11
-Summary: NorNet X11 Login
+Summary: X11 Login tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: fvwm
@@ -211,7 +211,7 @@ See https://www.nntb.no for details on NorNet!
 
 
 %package development
-Summary: NorNet Development
+Summary: Development tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
@@ -284,7 +284,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package api
-Summary: NorNet API
+Summary: API tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
@@ -330,7 +330,7 @@ fi
 
 
 %package autoupdate
-Summary: NorNet Auto Update
+Summary: Auto Update tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: dnf-automatic
@@ -349,7 +349,7 @@ systemctl enable --now dnf-automatic.timer
 
 
 %package node
-Summary: NorNet Node
+Summary: Node tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
@@ -388,7 +388,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package tunnelbox
-Summary: NorNet Tunnelbox
+Summary: Tunnelbox tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
@@ -441,7 +441,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package filesrv
-Summary: NorNet FileSrv
+Summary: FileSrv tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
@@ -473,7 +473,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package artwork
-Summary: NorNet Artwork
+Summary: Artwork tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 
@@ -498,7 +498,7 @@ See https://www.nntb.no for details on NorNet!
 
 
 %package monitor
-Summary: NorNet Monitor
+Summary: Monitor tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
@@ -542,7 +542,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package display
-Summary: NorNet Display
+Summary: Display tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
@@ -580,7 +580,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package gatekeeper
-Summary: NorNet Gatekeeper
+Summary: Gatekeeper tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
@@ -609,7 +609,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package websrv
-Summary: NorNet WebSrv
+Summary: WebSrv tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
@@ -646,7 +646,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package wikisrv
-Summary: NorNet WikiSrv
+Summary: WikiSrv tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-websrv = %{version}-%{release}
@@ -674,7 +674,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package timesrv
-Summary: NorNet TimeSrv
+Summary: TimeSrv tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
@@ -701,7 +701,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package database
-Summary: NorNet Database
+Summary: Database tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
@@ -731,7 +731,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package plc
-Summary: NorNet PLC
+Summary: PLC tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
@@ -758,7 +758,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package server
-Summary: NorNet Server
+Summary: Server tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}

@@ -84,7 +84,7 @@ Conflicts: landscape-common,
            tntnet,
            webfs
 Replaces: landscape-common
-Description: NorNet Management Tools
+Description: Management Tools tools for the NorNet system environment
  This metapackage contains basic software nor NorNet node management. The
  software installed provides a common working environment.
  .
@@ -100,7 +100,7 @@ Depends: fvwm,
          xterm,
          ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet X11 Login
+Description: X11 Login tools for the NorNet system environment
  This metapackage contains basic X11 software for NorNet systems. The
  software provides a very lightweight graphical login (fvwm) with a shell
  (xterm).
@@ -159,7 +159,7 @@ Depends: autoconf,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: ubuntu-dev-tools
-Description: NorNet Development Tools
+Description: Development Tools tools for the NorNet system environment
  This metapackage contains basic software nor NorNet development. The
  software installed provides a common working environment.
  .
@@ -169,7 +169,7 @@ Package: nornet-api
 Architecture: all
 Depends: ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet API
+Description: API tools for the NorNet system environment
  This package contains the NorNet Python API library. It contains functions
  to communicate with the central server (MyPLC), based on XMLRPC.
  .
@@ -180,7 +180,7 @@ Architecture: all
 Depends: cron-apt,
          ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet Auto Update
+Description: Auto Update tools for the NorNet system environment
  This package ensures that the NorNet system is automatically updated
  (installation of updates via cron-apt).
  .
@@ -204,7 +204,7 @@ Depends: fail2ban,
 Recommends: nornet-ca,
             open-vm-tools,
             virtualbox-guest-utils | virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental
-Description: NorNet Node Control
+Description: Node Control tools for the NorNet system environment
  This package contains the scripts to configure a generic node on a NorNet
  site.
  .
@@ -234,7 +234,7 @@ Depends: arpwatch,
 Recommends: nornet-trace-service (>= 2.0.0~),
             nslint
 Suggests: tracebox
-Description: NorNet Tunnelbox Control
+Description: Tunnelbox Control tools for the NorNet system environment
  This package contains the scripts to configure the tunnelboxes of NorNet
  sites.
  .
@@ -250,7 +250,7 @@ Depends: nfs-kernel-server,
          tftpd-hpa,
          ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet File Server
+Description: File Server tools for the NorNet system environment
  This package contains the scripts to configure a file server
  on a NorNet central site.
  .
@@ -260,7 +260,7 @@ Package: nornet-artwork
 Architecture: all
 Depends: ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet Artwork
+Description: Artwork tools for the NorNet system environment
  This package contains some images for the monitor server
  on a NorNet central site.
  .
@@ -278,7 +278,7 @@ Depends: apache2,
          postfix,
          ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet Monitor
+Description: Monitor tools for the NorNet system environment
  This package contains the scripts to configure a generic monitoring station
  on a NorNet central site.
  .
@@ -295,7 +295,7 @@ Depends: firefox,
          xserver-xorg-video-vmware,
          ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet Display
+Description: Display tools for the NorNet system environment
  This package contains the packages to set up a display station for the
  results of the monitoring station. It is in fact just a node with a web
  browser and the necessary GUI.
@@ -310,7 +310,7 @@ Depends: fail2ban,
          nornet-management (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet Gatekeeper
+Description: Gatekeeper tools for the NorNet system environment
  This package contains the packages to set up a gatekeeper station for the
  project presentation. It is in fact just a node with a dependency on the
  additional packages.
@@ -336,7 +336,7 @@ Recommends: geoip-database-extra,
             geoipupdate,
             php-mysql | php5-mysql,
             php-ssh2 | libssh2-php
-Description: NorNet Web Server
+Description: Web Server tools for the NorNet system environment
  This package contains the packages to set up a web server station for the
  project presentation. It is in fact just a node with a dependency on the
  Apache packages.
@@ -350,7 +350,7 @@ Depends: nornet-websrv (= ${binary:Version}),
          postfix,
          ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet Wiki Server
+Description: Wiki Server tools for the NorNet system environment
  This package contains the packages to set up a wiki station for the
  user-contributed documentation. It is in fact just a node with a
  dependency on the MediaWiki packages.
@@ -365,7 +365,7 @@ Depends: nornet-api (= ${binary:Version}),
          ntp,
          ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet Time Server
+Description: Time Server tools for the NorNet system environment
  This package contains the packages to set up an NTP server.
  .
  See https://www.nntb.no for details on NorNet!
@@ -379,7 +379,7 @@ Depends: nornet-api (= ${binary:Version}),
          postgresql-contrib,
          ${misc:Depends},
          ${shlibs:Depends}
-Description: NorNet Database
+Description: Database tools for the NorNet system environment
  This package contains the packages to set up a database station for
  experiment results collection. It is in fact just a node with a
  dependency on the PostgreSQL packages.
@@ -408,7 +408,7 @@ Recommends: amd64-microcode,
             lm-sensors,
             nornet-ca,
             ubuntu-server
-Description: NorNet Server
+Description: Server tools for the NorNet system environment
  This package contains the scripts to configure a generic server system
  to host NorNet virtual machines.
  .
