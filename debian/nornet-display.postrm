@@ -5,7 +5,7 @@ set -e
 case "$1" in
    remove|purge|abort-install)
       rm -f /etc/grub.d/??_nornet_display_theme
-      if [ -x update-grub ] ; then
+      if [ -x "$(command -v update-grub)" ] ; then
          update-grub || true
       fi
       ;;
