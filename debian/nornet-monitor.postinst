@@ -21,8 +21,8 @@ case "$1" in
          fi
       done
 
-      if [ -x /usr/sbin/update-grub ] ; then
-         /usr/sbin/update-grub || true
+      if [ -x update-grub ] ; then
+         update-grub || true
       fi
       ;;
 esac
