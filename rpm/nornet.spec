@@ -3,7 +3,7 @@ Version: 1.3.16
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
-License: GPLv3
+License: GPL-3+
 URL: https://www.nntb.no/
 Source: https://packages.nntb.no/software/nornet/%{name}-%{version}.tar.xz
 
