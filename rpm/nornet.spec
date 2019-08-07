@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.3.16
+Version: 1.3.17~rc0
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -683,7 +683,9 @@ Requires: %{name}-management = %{version}-%{release}
 Requires: ntp
 
 %description timesrv
-This package contains the packages to set up an NTP server.
+This package contains the packages to set up an NTP server for the
+time synchronisation. It is in fact just a node with a dependency on
+the NTP server packages.
 See https://www.nntb.no for details on NorNet!
 
 %files timesrv

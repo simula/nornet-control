@@ -21,7 +21,8 @@ Vcs-Browser: https://github.com/simula/nornet-control
 
 Package: nornet-management
 Architecture: all
-Depends: apt-file,
+Depends: anacron,
+         apt-file,
          apt-show-versions,
          autofs,
          bash-completion,
@@ -167,7 +168,8 @@ Description: Development Tools tools for the NorNet system environment
 
 Package: nornet-api
 Architecture: all
-Depends: ${misc:Depends},
+Depends: python3,
+         ${misc:Depends},
          ${shlibs:Depends}
 Description: API tools for the NorNet system environment
  This package contains the NorNet Python API library. It contains functions
@@ -189,14 +191,17 @@ Description: Auto Update tools for the NorNet system environment
 Package: nornet-node
 Architecture: all
 Conflicts: miredo
+Pre-Depends: ${misc:Pre-Depends}
 Depends: fail2ban,
          ifupdown,
+         lsb-base,
          nfs-common,
          nornet-api (= ${binary:Version}),
          nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          ntp,
          openssh-server,
+         python3,
          rsplib-services,
          snmpd,
          ${misc:Depends},
@@ -212,6 +217,7 @@ Description: Node Control tools for the NorNet system environment
 
 Package: nornet-tunnelbox
 Architecture: all
+Pre-Depends: ${misc:Pre-Depends}
 Depends: arpwatch,
          bind9,
          conntrack,
@@ -219,12 +225,14 @@ Depends: arpwatch,
          iputils-ping,
          iputils-tracepath,
          isc-dhcp-server,
+         lsb-base,
          netstat-nat,
          nornet-api (= ${binary:Version}),
          nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          nornet-node (= ${binary:Version}) | nornet-server (= ${binary:Version}),
          ntp,
+         python3,
          radvd,
          snmpd,
          squid3,
@@ -242,10 +250,13 @@ Description: Tunnelbox Control tools for the NorNet system environment
 
 Package: nornet-filesrv
 Architecture: all
-Depends: nfs-kernel-server,
+Pre-Depends: ${misc:Pre-Depends}
+Depends: lsb-base,
+         nfs-kernel-server,
          nornet-api (= ${binary:Version}),
          nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
+         python3,
          python3-adns,
          tftpd-hpa,
          ${misc:Depends},
@@ -268,14 +279,17 @@ Description: Artwork tools for the NorNet system environment
 
 Package: nornet-monitor
 Architecture: all
+Pre-Depends: ${misc:Pre-Depends}
 Depends: apache2,
          libapache2-mod-php | libapache2-mod-php5,
+         lsb-base,
          nagios4 | nagios3,
          nornet-api (= ${binary:Version}),
          nornet-artwork (>= ${source:Version}),
          nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          postfix,
+         python3,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: Monitor tools for the NorNet system environment
@@ -366,7 +380,9 @@ Depends: nornet-api (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Description: Time Server tools for the NorNet system environment
- This package contains the packages to set up an NTP server.
+ This package contains the packages to set up an NTP server for the
+ time synchronisation. It is in fact just a node with a dependency on
+ the NTP server packages.
  .
  See https://www.nntb.no for details on NorNet!
 
@@ -388,15 +404,18 @@ Description: Database tools for the NorNet system environment
 
 Package: nornet-server
 Architecture: all
+Pre-Depends: ${misc:Pre-Depends}
 Depends: fail2ban,
          ifupdown,
          libvirt-clients | libvirt-bin,
+         lsb-base,
          nfs-common,
          nornet-api (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          ntp,
          openssh-server,
          ovmf,
+         python3,
          qemu-kvm,
          virt-manager,
          virtinst,
