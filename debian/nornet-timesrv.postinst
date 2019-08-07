@@ -4,7 +4,7 @@ set -e
 
 case "$1" in
    configure)
-      if [ -x update-grub ] ; then
+      if [ -x "$(command -v update-grub)" ] ; then
          update-grub || true
       fi
       ;;

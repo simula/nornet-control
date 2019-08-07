@@ -11,7 +11,7 @@ case "$1" in
          pbuilder create --debootstrapopts --variant=buildd --keyring /etc/apt/pbuilder-trusted.gpg || true
       fi
 
-      if [ -x update-grub ] ; then
+      if [ -x "$(command -v update-grub)" ] ; then
          update-grub || true
       fi
       ;;

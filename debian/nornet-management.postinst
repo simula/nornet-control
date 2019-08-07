@@ -21,7 +21,7 @@ case "$1" in
       mv /etc/default/grub.new /etc/default/grub
       echo "-----"
 
-      if [ -x update-grub ] ; then
+      if [ -x "$(command -v update-grub)" ] ; then
          update-grub || true
       fi
       ;;

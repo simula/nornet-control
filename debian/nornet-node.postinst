@@ -8,7 +8,7 @@ case "$1" in
       sed </etc/default/snmpd -e "s/SNMPDOPTS='-Lsd /SNMPDOPTS='-LS6d /g" -e "s/TRAPDOPTS='-Lsd /TRAPDOPTS='-LS6d /g" >/etc/default/snmpd.new && \
       mv /etc/default/snmpd.new /etc/default/snmpd
 
-      if [ -x update-grub ] ; then
+      if [ -x "$(command -v update-grub)" ] ; then
          update-grub || true
       fi
       ;;
