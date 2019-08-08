@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.3.17~rc0
+Version: 1.3.17~rc1
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
