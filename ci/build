@@ -63,7 +63,8 @@ if [ "${TRAVIS_OS_NAME}" == "linux" ] ; then
          arch=`sudo docker exec -t ${CONTAINER} env LANG=C.UTF-8 uname -m | sed -e "s/[^0-9a-zA-Z_+-]//g"`
          sudo docker exec ${CONTAINER} env LANG=C.UTF-8 sed -e 's/SKIP_PACKAGE_SIGNING=0/SKIP_PACKAGE_SIGNING=1/g' -i packaging.conf
          sudo docker exec ${CONTAINER} env LANG=C.UTF-8  ./build-rpm fedora-${release}-${arch}
-
+echo "DOCKER BUILD-RPM DONE!"
+date
       else
          echo >&2 "ERROR: Invalid setting of TOOL=${TOOL}"
          exit 1
