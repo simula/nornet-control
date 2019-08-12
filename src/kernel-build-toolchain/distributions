@@ -6,8 +6,18 @@ Components: xenial-kernel
 Description: NorNet Kernel Repository for Xenial Xerus
 SignWith: yes
 
+Origin: packages.nntb.no
+Label: packages.nntb.no
 Codename: bionic
 Architectures: amd64 source
 Components: bionic-kernel
 Description: NorNet Kernel Repository for Bionic Beaver
+SignWith: yes
+
+Origin: packages.nntb.no
+Label: packages.nntb.no
+Codename: disco
+Architectures: amd64 source
+Components: disco-kernel
+Description: NorNet Kernel Repository for Disco Dingo
 SignWith: yes

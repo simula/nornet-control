@@ -39,15 +39,17 @@ PUBLIC_KERNEL_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ub
 
 echo "Synchronising packages for Xenial ..."
 mkdir -p ${XENIAL_KERNEL_DEBS}/
-rsync -P -e "ssh -p 50691" thomasd@dnat.simula.no:'src/linux*.deb' ${XENIAL_KERNEL_DEBS}/
+rsync --partial -ac -e "ssh -p 50691" thomasd@dnat.simula.no:'src/linux*.deb' ${XENIAL_KERNEL_DEBS}/ &
 
 echo "Synchronising packages for Bionic ..."
 mkdir -p ${BIONIC_KERNEL_DEBS}/
-rsync -P ~/src/linux*.deb ${BIONIC_KERNEL_DEBS}/
+rsync --partial -ac ~/src/linux*.deb ${BIONIC_KERNEL_DEBS}/ &
 
 echo "Synchronising packages for Disco ..."
 mkdir -p ${DISCO_KERNEL_DEBS}/
-rsync -P 158.36.78.120:'src/multipath/linux*.deb' ${DISCO_KERNEL_DEBS}/
+rsync --partial -ac 158.36.78.120:'src/multipath/linux*.deb' ${DISCO_KERNEL_DEBS}/ &
+
+wait
 
 
 echo "Creating repository ..."
@@ -58,10 +60,12 @@ cp distributions ${LOCAL_KERNEL_REPO}/conf
 
 
 cd ${LOCAL_KERNEL_REPO}
-# reprepro --ignore=undefinedtarget -C xenial-kernel includedeb xenial -C bionic-kernel includedeb bionic ${BIONIC_KERNEL_DEBS}/*.deb ${XENIAL_KERNEL_DEBS}/*.deb
+echo "Xenial"
 reprepro --ignore=undefinedtarget -C xenial-kernel includedeb xenial ${XENIAL_KERNEL_DEBS}/*.deb
+echo "Bionic"
 reprepro --ignore=undefinedtarget -C bionic-kernel includedeb bionic ${BIONIC_KERNEL_DEBS}/*.deb
-reprepro --ignore=undefinedtarget -C disco-kernel  includedeb disco ${DISCO_KERNEL_DEBS}/*.deb
+echo "Disco"
+reprepro --ignore=undefinedtarget -C disco-kernel  includedeb disco  ${DISCO_KERNEL_DEBS}/*.deb
 
 
 echo "Copying to server ..."
