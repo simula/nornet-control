@@ -21,7 +21,7 @@ BuildRequires: google-noto-sans-fonts
 BuildRequires: google-noto-serif-fonts
 BuildRequires: GraphicsMagick
 BuildRequires: perl-Image-ExifTool
-BuildRequires: python3
+BuildRequires: python3-devel
 BuildRequires: qt5-qtbase-devel
 BuildRequires: texlive-epstopdf-bin
 BuildRequires: urw-base35-fonts
@@ -48,6 +48,7 @@ See https://www.nntb.no for details on NorNet!
 # NOTE: CMAKE_VERBOSE_MAKEFILE=OFF for reduced log output!
 %cmake -DCMAKE_INSTALL_PREFIX=/usr -DPYTHON_LIBRARY_PREFIX=%{buildroot}/usr -DFLAT_DIRECTORY_STRUCTURE=1 -DBUILD_BOOTSPLASH=1 -DCMAKE_VERBOSE_MAKEFILE=OFF .
 make %{?_smp_mflags}
+%py3_build
 
 %install
 make DESTDIR=%{buildroot} install
@@ -63,6 +64,7 @@ mv %{buildroot}/usr/share/nornet-desktop/Splash/*-1024x768.jpeg %{buildroot}/boo
 mkdir -p %{buildroot}/etc/nornet
 mv %{buildroot}/usr/share/nornet-desktop/Splash/nornet-version %{buildroot}/etc/nornet
 # ===========================================================================
+%py3_install
 
 
 %package management
@@ -296,23 +298,23 @@ to communicate with the central server (MyPLC), based on XMLRPC.
 See https://www.nntb.no for details on NorNet!
 
 %files api
-/usr/lib/python*/*-packages/NorNet*.egg-info
-/usr/lib/python*/*-packages/NorNetAPI.py
-/usr/lib/python*/*-packages/NorNetConfiguration.py
-/usr/lib/python*/*-packages/NorNetExperimentToolbox.py
-/usr/lib/python*/*-packages/NorNetNodeSetup.py
-/usr/lib/python*/*-packages/NorNetProviderSetup.py
-/usr/lib/python*/*-packages/NorNetSiteSetup.py
-/usr/lib/python*/*-packages/NorNetTools.py
-/usr/lib/python*/*-packages/SysSetupCommons.py
-/usr/lib/python*/*-packages/__pycache__/NorNetAPI*.pyc
-/usr/lib/python*/*-packages/__pycache__/NorNetConfiguration*.pyc
-/usr/lib/python*/*-packages/__pycache__/NorNetExperimentToolbox*.pyc
-/usr/lib/python*/*-packages/__pycache__/NorNetNodeSetup*.pyc
-/usr/lib/python*/*-packages/__pycache__/NorNetProviderSetup*.pyc
-/usr/lib/python*/*-packages/__pycache__/NorNetSiteSetup*.pyc
-/usr/lib/python*/*-packages/__pycache__/NorNetTools*.pyc
-/usr/lib/python*/*-packages/__pycache__/SysSetupCommons*.pyc
+%{python3_sitelib}/NorNet*.egg-info
+%{python3_sitelib}/NorNetAPI.py
+%{python3_sitelib}/NorNetConfiguration.py
+%{python3_sitelib}/NorNetExperimentToolbox.py
+%{python3_sitelib}/NorNetNodeSetup.py
+%{python3_sitelib}/NorNetProviderSetup.py
+%{python3_sitelib}/NorNetSiteSetup.py
+%{python3_sitelib}/NorNetTools.py
+%{python3_sitelib}/SysSetupCommons.py
+%{python3_sitelib}/__pycache__/NorNetAPI*.pyc
+%{python3_sitelib}/__pycache__/NorNetConfiguration*.pyc
+%{python3_sitelib}/__pycache__/NorNetExperimentToolbox*.pyc
+%{python3_sitelib}/__pycache__/NorNetNodeSetup*.pyc
+%{python3_sitelib}/__pycache__/NorNetProviderSetup*.pyc
+%{python3_sitelib}/__pycache__/NorNetSiteSetup*.pyc
+%{python3_sitelib}/__pycache__/NorNetTools*.pyc
+%{python3_sitelib}/__pycache__/SysSetupCommons*.pyc
 %{_datadir}/nornet-api/nornetapi-config.full
 %{_datadir}/nornet-api/nornetapi-config.simple
 %{_datadir}/nornet-api/nornetapi-constants

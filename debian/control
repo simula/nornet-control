@@ -5,6 +5,7 @@ Maintainer: Thomas Dreibholz <dreibh@iem.uni-due.de>
 Homepage: https://www.nntb.no/
 Build-Depends: cmake (>= 3.0.2) | cmake3,
                debhelper (>= 9),
+               dh-python,
                fonts-dejavu,
                fonts-noto-cjk,
                fonts-noto-hinted,
@@ -168,8 +169,8 @@ Description: Development Tools tools for the NorNet system environment
 
 Package: nornet-api
 Architecture: all
-Depends: python3,
-         ${misc:Depends},
+Depends: ${misc:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Description: API tools for the NorNet system environment
  This package contains the NorNet Python API library. It contains functions
@@ -201,10 +202,10 @@ Depends: fail2ban,
          nornet-management (= ${binary:Version}),
          ntp,
          openssh-server,
-         python3,
          rsplib-services,
          snmpd,
          ${misc:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Recommends: nornet-ca,
             open-vm-tools,
@@ -232,12 +233,12 @@ Depends: arpwatch,
          nornet-management (= ${binary:Version}),
          nornet-node (= ${binary:Version}) | nornet-server (= ${binary:Version}),
          ntp,
-         python3,
          radvd,
          snmpd,
          squid3,
          traceroute,
          ${misc:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Recommends: nornet-trace-service (>= 2.0.0~),
             nslint
@@ -256,10 +257,10 @@ Depends: lsb-base,
          nornet-api (= ${binary:Version}),
          nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
-         python3,
          python3-adns,
          tftpd-hpa,
          ${misc:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Description: File Server tools for the NorNet system environment
  This package contains the scripts to configure a file server
@@ -289,8 +290,8 @@ Depends: apache2,
          nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          postfix,
-         python3,
          ${misc:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Description: Monitor tools for the NorNet system environment
  This package contains the scripts to configure a generic monitoring station
@@ -415,12 +416,12 @@ Depends: fail2ban,
          ntp,
          openssh-server,
          ovmf,
-         python3,
          qemu-kvm,
          virt-manager,
          virtinst,
          xauth,
          ${misc:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Recommends: amd64-microcode,
             intel-microcode,
