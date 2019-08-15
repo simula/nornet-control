@@ -1,3 +1,264 @@
+commit aced81191a4f44a297a993b1292dc8c80fc24f3f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 13 10:36:32 2019 +0200
+
+    Minor update.
+
+commit e73ff720ab24a000ca282b951f4d30c43f30fb8a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 13 10:36:26 2019 +0200
+
+    Improved CI scripts.
+
+commit fb60ebc6959891a20408256db629d2c7045d9b24
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 16:49:37 2019 +0200
+
+    Debian Python packaging improvements.
+
+commit 55f24a3108bcc32af9af19c8e7d371bff134d1f3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 15:30:32 2019 +0200
+
+    Updated build script.
+
+commit f745a25a18a9212747df276b016c6beddbed5df9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 15:29:48 2019 +0200
+
+    Removed Ubuntu Cosmic from Travis CI builds, since it is deprecated.
+
+commit cdf70cd313e4e184bb0f5c84ef17f9db9d17af9b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 09:49:21 2019 +0200
+
+    Updated script.
+
+commit 906e709037908d7493541d97031ff69f47965fd7
+Merge: 65aa929d 98111f3c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 09:01:37 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 98111f3c8d4f1bb02c58a6cdad770a941f2958d8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Aug 10 18:49:40 2019 +0200
+
+    A test.
+
+commit 65aa929dea5e8d9570f398d559d9f0594e36e815
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 8 16:00:56 2019 +0200
+
+    Updated Travis CI configuration.
+
+commit d28f8f29e3cd871bd0d2b383d13270c427a48cdf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 8 15:08:50 2019 +0200
+
+    Updated build script.
+
+commit 5fbe54952633bd3c29ea5d3b5b1c8ded42515ef7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 8 15:08:34 2019 +0200
+
+    A fix.
+
+commit 42bbc939e72068cf049f38aadcb4200f3c35977e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 8 14:23:29 2019 +0200
+
+    Minor update.
+
+commit b3e7ea250dc1b015fecc101ce1fe238e89225540
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 18:31:09 2019 +0200
+
+    Some Lintian warning fixes.
+
+commit 221408805ceec5922276d81ec61b12f71a936a56
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 16:07:20 2019 +0200
+
+    Another manpage fix.
+
+commit d1b49cd676e1c87d6bade7eec7c78aeda235c8d4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 15:30:44 2019 +0200
+
+    Need to check for update-grub before calling it. It may not exist in e.g. Docker environments.
+
+commit 93f063b1e985f60d78addc12c53de8e0d784b334
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 15:29:47 2019 +0200
+
+    Need to check for update-grub before calling it. It may not exist in e.g. Docker environments.
+
+commit 26c1224a7f1852409f142960b2af7986248fe6b1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 15:07:42 2019 +0200
+
+    Updated example configuration script.
+
+commit cfdd536e029b77ebb98a5a1bfd7ed5586b39bbb1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 15:06:25 2019 +0200
+
+    Fixed another spelling error.
+
+commit 272123effd33824bc170fa53d2bcdade05ee1641
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:48:53 2019 +0200
+
+    Small improvements of the configuration examples.
+
+commit 89608e4773760ce768847f1517a1c09fa71a6eb5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:48:41 2019 +0200
+
+    Updated WebServer/CMakeLists.txt.
+
+commit 570e95e4a5aa4ff2869890ed59d80ac87947e2c8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:48:34 2019 +0200
+
+    Manpage fix.
+
+commit a7ea4ad61a85106dcdad3f95711277d786c5c93d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:20:33 2019 +0200
+
+    A fix.
+
+commit a389b76633b2566fa2b41d13f3de247117cf333e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:17:41 2019 +0200
+
+    Fixed spelling error.
+
+commit 3a144aaeb68a1e28e0a0c0c491a0b7b40c838410
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:09:49 2019 +0200
+
+    Fixed changelog entry.
+
+commit 3fbb3a74f32f1078280c6fceb1e10571d6a6a7bf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:09:38 2019 +0200
+
+    Added Lintian override.
+
+commit 8e3091ee6e79aa6b361822fdb3eb87db04fa451d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 13:58:48 2019 +0200
+
+    Packaging improvements.
+
+commit a1d8440a893cb35cb33062086858fb6b3de255b1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 12:34:35 2019 +0200
+
+    Use "update-motd" instead of "/usr/sbin/update-motd" in postinst/postrm scripts.
+
+commit 39f31c7cb0a8cb67b0923f6a35e0f1d40e0e0653
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 12:22:58 2019 +0200
+
+    Use "update-motd" instead of "/usr/sbin/update-motd" in postinst/postrm scripts.
+
+commit 6dcfb609b35c8e5adef00abeebb844a923ef44c8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 11:33:45 2019 +0200
+
+    Use "update-grub" instead of "/usr/sbin/update-grub" in postinst/postrm scripts.
+
+commit 5f595fed2bbdfa6d204d3bcba265604c035c3941
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 10:33:04 2019 +0200
+
+    Fixed some inconsistencies in different packaging files.
+
+commit 3e97c68e77b855af50c6136196fbdda8e29dc794
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 10:04:34 2019 +0200
+
+    Updated build scripts.
+
+commit c5bd9e391c48d7c735d12ce326d39226dfa9ea66
+Merge: 0ceeee17 b334f7f6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 00:03:37 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 0ceeee17f3ab07a2948ec11ba31b9500870fc3b3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 00:03:26 2019 +0200
+
+    Manpage fix.
+
+commit b334f7f6757bdaa47499f4f54ce38dff4b70ad67
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 6 16:50:36 2019 +0200
+
+    Removed leading / from Ubuntu/Debian install files.
+
+commit 779676310540c5d7738335ca6d8ef158321c6c49
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 22:59:24 2019 +0200
+
+    Script update.
+
+commit d4a15ffa02c9cd77d865359c9364e6bad27c3888
+Merge: 6a570888 65c91eaa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 22:21:18 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 6a57088817c5e540f190917d8a0f9dc0e332f2c7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 22:21:00 2019 +0200
+
+    Minor update.
+
+commit 8fe168db8e99f7a06fd40c05eb4414c399366999
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 22:06:50 2019 +0200
+
+    Updated CI scripts.
+
+commit 65c91eaaced5391b2e47bf78827694ee220e2889
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 15:13:15 2019 +0200
+
+    Removed obsolete file.
+
+commit 697e2d99569a4f2566cc1267676519d563215279
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 15:11:17 2019 +0200
+
+    Updated Travis CI configuration.
+
+commit f12c53bc42ad0469f6ca1fc3450a6d82cfce109d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 15:05:27 2019 +0200
+
+    Build script updates.
+
+commit 7e863cff07d19b0992e46d028985bbc96815b76f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 15:04:02 2019 +0200
+
+    Updated contacts.
+
+commit 145f33cab28b3bed2d5654a693f19be25abf3d3b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 31 16:42:16 2019 +0200
+
+    Updated LSM entry.
+
 commit 4a9ab6ad0eb9cfbb2752f2ad0b761f56f5cdf3ce
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Jul 31 16:35:11 2019 +0200
