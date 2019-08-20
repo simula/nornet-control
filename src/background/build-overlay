@@ -27,7 +27,7 @@ WIDTH="$2"
 HEIGHT="$3"
 DIRECTORY="$4"
 
-GM="/usr/bin/gm"
+GM="gm"
 SCRIPTPATH=`dirname "$0"`   # NOTE: Current directory may be a build directory!
 
 # ------ Proportions --------------------------------------------------------
