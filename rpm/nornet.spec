@@ -82,7 +82,6 @@ Requires: git
 Requires: gpm
 Requires: hping3
 Requires: htop
-Requires: ipsec-tools
 Requires: joe
 Requires: jq
 Requires: libidn
@@ -111,6 +110,7 @@ Requires: whois
 Requires: wireshark-cli
 Requires: xmlstarlet
 Recommends: grub2-tools
+Recommends: ipsec-tools
 
 %description management
 This metapackage contains basic software nor NorNet node management. The
