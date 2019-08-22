@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [ $# -ne 3 ] ; then
    echo >&2 "Usage: $0 ISO_directory from_machine_number to_machine_number"

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Server Setup
 # Copyright (C) 2013-2019 by Thomas Dreibholz

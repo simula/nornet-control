@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Remove SSH keys of a nodes
 # Copyright (C) 2014-2019 by Thomas Dreibholz

@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 #
 # Flush Squid Cache
 # Copyright (C) 2012-2019 by Thomas Dreibholz
@@ -18,6 +18,9 @@
 #
 # Contact: dreibh@simula.no
 #
+
+# Bash options:
+set -e
 
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Stopping Squid service ...\x1b[0m"
 service squid stop

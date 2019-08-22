@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Add SSH keys of nodes
 # Copyright (C) 2014-2019 by Thomas Dreibholz

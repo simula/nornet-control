@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 OLD="4.4.84-888.fc25"
 NEW="4.9.76-888.fc25"

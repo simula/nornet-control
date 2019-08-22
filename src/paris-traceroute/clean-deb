@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # $Id: clean-deb 1505 2012-08-25 21:52:30Z dreibh $
 #
 # Debian Packaging Scripts
