@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 #
 # Image Best-Fit (resize with cropping, keeping aspect ratio)
 # Copyright (C) 2012-2019 by Thomas Dreibholz
@@ -18,6 +18,9 @@
 #
 # Contact: dreibh@simula.no
 #
+
+# Bash options:
+set -e
 
 
 # ###### Handle arguments ###################################################
