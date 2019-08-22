@@ -1,3 +1,123 @@
+commit ebf212f5fbf8a0b65fd7891e32cc70301af5cf1d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 12:29:18 2019 +0200
+
+    A small fix.
+
+commit 65f65098e406955bed6fc1ca26599dd59c848cf7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 11:51:53 2019 +0200
+
+    Debian/Ubuntu init scripts have to use /bin/bash shebang.
+
+commit 14451a6875c4bbdd12ed2718f7272d317fe4c57d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 10:58:26 2019 +0200
+
+    Updated Python and Bash shebangs for improved platform-independence.
+
+commit dd4ff5f34a22764c97219af4df002af32f74f798
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 10:44:50 2019 +0200
+
+    Minor updates.
+
+commit a111670cb5ddc1efd02028a5ad88304a9e365396
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 10:44:11 2019 +0200
+
+    Updated scripts.
+
+commit 17c6eeed1abf8e1ab13f64df3bd68fbbf29c9a83
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 10:06:55 2019 +0200
+
+    Updated build helper script.
+
+commit 192b23b77d99eb24a2e4fbee15fc6546afea2acc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 10:05:35 2019 +0200
+
+    Updated Travis CI configuration
+
+commit c616b9b9c3ad9d9a6f331f9259ad03afe08f9c6e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 09:52:21 2019 +0200
+
+    Updated Travis CI configuration
+
+commit 10c48718cf1d41aa53d724fd2a6b9e8382674ea3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 09:52:21 2019 +0200
+
+    Updated build scripts
+
+commit 31c37d76d3da775f87ea090fc0043f88e4ffdd03
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 09:52:21 2019 +0200
+
+    Updated build scripts
+
+commit 8758c25f0a39272b36cf56504c96aafb832577b7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 20 13:19:28 2019 +0200
+
+    Dependency update.
+
+commit 977ae19bfa1fc81bb1a3b01f6adc9ef96a5de99a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 20 08:34:02 2019 +0200
+
+    Using LC_NUMERIC=C for awk to ensure expected format of floats regardless of locale settings.
+
+commit 98bbd011e1c32aa89cc3d8c338bde4fe5fc519f5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 19 11:34:01 2019 +0200
+
+    Updated Travis CI configuration.
+
+commit aaf9916e571e809a740430ede0912d923f21a1f5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 19 11:27:05 2019 +0200
+
+    Updated build helper script.
+
+commit 26dbeebb75bba1b6987193a25073010c4eb79bf7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 19 11:01:12 2019 +0200
+
+    Updated build scripts.
+
+commit 56a6e50f4c409be8dc763371ccbceb58e24ea700
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 19 11:01:04 2019 +0200
+
+    Updated build helper script.
+
+commit b39da67bbd805585b7402d4db86e8b4d3d372078
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Aug 17 22:55:11 2019 +0200
+
+    Updated build scripts.
+
+commit c791abb69f48b2c42cea9c22e4599f2b63307d52
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Aug 17 22:54:54 2019 +0200
+
+    Updated CI scripts.
+
+commit d22746a88975f5d29435f4b107e0a8b7559545b6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 15 11:39:28 2019 +0200
+
+    Updated LSM entry.
+
+commit f16984e8f2f377bba0b9b7d77203ccdd88ffd7e3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 15 11:29:40 2019 +0200
+
+    New release nornet-1.3.17.
+
 commit aced81191a4f44a297a993b1292dc8c80fc24f3f
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Tue Aug 13 10:36:32 2019 +0200
