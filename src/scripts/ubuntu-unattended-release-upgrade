@@ -3,3 +3,4 @@
 do-release-upgrade -f DistUpgradeViewNonInteractive
 apt-add-repository -sy ppa:dreibh/ppa
 apt install -y linux-generic-hwe-18.04
+apt-show-versions | grep "No avail" | IFS=":" awk '{ print $1 }'|xargs sudo apt remove -y
