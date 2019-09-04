@@ -1,3 +1,33 @@
+commit 5fab5c181244571b49371f8857a7b71b34413991
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 4 16:35:15 2019 +0200
+
+    Kernel version handling fix.
+
+commit ce452647909e9cb1ce46f3a4a357366a72b08cf6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 27 10:12:35 2019 +0200
+
+    Updated script.
+
+commit 71a3ea6596ec00516d4256778ba16445ad96c737
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 26 13:05:45 2019 +0200
+
+    Updated build scripts
+
+commit 60f92c1c4e12e4933e895f7e0d8c6c4d7c76d325
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 23 09:26:47 2019 +0200
+
+    Updated LSM entry.
+
+commit 4f391b1b53b9698b00837ed5cf033b4019939fdc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 17:54:31 2019 +0200
+
+    New release nornet-1.4.0.
+
 commit ebf212f5fbf8a0b65fd7891e32cc70301af5cf1d
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Thu Aug 22 12:29:18 2019 +0200
