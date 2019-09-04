@@ -1,4 +1,7 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+
+# Bash options:
+set -e
 cd ..
 ./User-Setup add --user=dreibh@simula.no --password=xs2nntbTEST "--title=Priv.-Doz. Dr." --firstname=Thomas --lastname=Dreibholz --url=https://www.nntb.no --pi --tech --user
 ./NorNet-TestSetup add ALL --user=dreibh@simula.no

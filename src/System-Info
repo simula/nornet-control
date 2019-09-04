@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Print system information
 # Copyright (C) 2013-2019 by Thomas Dreibholz

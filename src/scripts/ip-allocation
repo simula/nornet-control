@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 isp=1
 site=1

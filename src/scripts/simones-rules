@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 SLICE=srl-mptcp
 NODES="altenessen.dfn.ude.nornet wanqun.cernet.hu.nornet nordlys.uninett.unis.nornet julenisse.uninett.uia.nornet reinsvoll.uninett.hig.nornet amundsen.uninett.uit.nornet mariebergsskogen.sunet.kau.nornet"

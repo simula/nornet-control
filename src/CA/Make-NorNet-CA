@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 #
 # NorNet CA Setup
 # Copyright (C) 2015-2019 by Thomas Dreibholz
@@ -17,6 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: dreibh@simula.no
+
+# Bash options:
+set -e
 
 
 SERVER_DIRECTORY=NorNet-Servers   # <-- where to place server certificates

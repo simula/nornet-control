@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 let p=2000+$1
 firefox https://localhost:$p &

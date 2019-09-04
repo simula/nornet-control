@@ -1,1 +1,1 @@
-${MAKE_LOGO} ${OUTPUT}   "https://www.nntb.no"   256 20 "Golden"   "DejaVu Sans"
+${MAKE_TEXT} ${OUTPUT}   "https://www.nntb.no"   256 20 "Golden"   "DejaVu Sans"

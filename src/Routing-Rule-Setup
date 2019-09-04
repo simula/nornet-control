@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 #
 # Routing Rule Setup
 # Copyright (C) 2018-2019 by Thomas Dreibholz
@@ -18,6 +18,9 @@
 #
 # Contact: dreibh@simula.no
 #
+
+# Bash options:
+set -e
 
 
 # ###### Check whether parameter is a valid IPv4 address ####################

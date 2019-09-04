@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 cd ..
 ./Check-Nodes-Loop 60 as_test ~/.ssh/id_rsa

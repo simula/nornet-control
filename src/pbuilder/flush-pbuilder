@@ -1,4 +1,7 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+
+# Bash options:
+set -e
 
 for directory in /var/cache/pbuilder/aptcache /var/cache/pbuilder/result ; do
    if [ -e ${directory} ] ; then

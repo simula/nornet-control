@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 #
 # Logo Script
 # Copyright (C) 2017-2019 by Thomas Dreibholz
@@ -20,15 +20,18 @@
 #
 # Contact: dreibh@simula.no
 
+# Bash options:
+set -e
+
 
 # Examples:
-# Make-Logo NorNet1.png "NorNet Testbed" 128 5 "Golden" "Eras"
-# Make-Logo NorNet2.png "NorNet Testbed" 128 5 "Brushed Aluminium" "Comic Sans MS"
+# Make-Text NorNet1.png "NorNet Testbed" 128 5 "Golden" "Eras"
+# Make-Text NorNet2.png "NorNet Testbed" 128 5 "Brushed Aluminium" "Comic Sans MS"
 
 
 # ====== Handle arguments ===================================================
 if [ $# -lt 3 ] ; then
-   echo >&2 "Usage: $0 filename logo_text logo_size [border_size [colorscheme [fontname]]]"
+   echo >&2 "Usage: $0 filename content font_size [border_size [colorscheme [fontname]]]"
    exit 1
 fi
 OUTPUTFILENAME="$1"

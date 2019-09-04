@@ -1,4 +1,7 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+
+# Bash options:
+set -e
 
 vncport1=5900   # Node
 vncport2=5920   # Server

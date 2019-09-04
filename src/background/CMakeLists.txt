@@ -111,9 +111,9 @@ IF(NOT MAKE_CAPTION)
    MESSAGE(FATAL_ERROR "Make-Caption (${TDD_MAKE_CAPTION}) not found!")
 ENDIF()
 
-FIND_PROGRAM(MAKE_LOGO ${TDD_MAKE_LOGO})
-IF(NOT MAKE_LOGO)
-   MESSAGE(FATAL_ERROR "Make-Logo (${TDD_MAKE_LOGO}) not found!")
+FIND_PROGRAM(MAKE_TEXT ${TDD_MAKE_TEXT})
+IF(NOT MAKE_TEXT)
+   MESSAGE(FATAL_ERROR "Make-Text (${TDD_MAKE_TEXT}) not found!")
 ENDIF()
 
 FIND_PROGRAM(MAKE_BACKGROUND ${TDD_MAKE_BACKGROUND})
@@ -235,7 +235,7 @@ FOREACH(textFile IN LISTS TDD_TEXT_FILES)
    GET_FILENAME_COMPONENT(textImage ${textImage} NAME)
 
    ADD_CUSTOM_COMMAND(OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text/${textImage}
-                      COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} MAKE_LOGO="${MAKE_LOGO}" OUTPUT="${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text/${textImage}" ${BASH} ${textFile}
+                      COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} MAKE_TEXT="${MAKE_TEXT}" OUTPUT="${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text/${textImage}" ${BASH} ${textFile}
                       DEPENDS ${textFile}
                               generate_gimpDirStamp
                               ${gimpDirStamp})
@@ -262,7 +262,7 @@ FOREACH(image IN LISTS TDD_IMAGE_FILES)
       makeUniqueTarget(generate_hostnameImage "generate_${hostname}.png")
 
       ADD_CUSTOM_COMMAND(OUTPUT  ${hostnameImage}
-                         COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_LOGO} ${hostnameImage} "${hostname}" 256 10 "Brushed Aluminium" "Comic Sans MS"
+                         COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_TEXT} ${hostnameImage} "${hostname}" 256 10 "Brushed Aluminium" "Comic Sans MS"
                          DEPENDS generate_gimpDirStamp
                                  ${gimpDirStamp})
       ADD_CUSTOM_TARGET(${generate_hostnameImage} DEPENDS ${hostnameImage})

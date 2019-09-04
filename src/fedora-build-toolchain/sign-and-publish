@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 #
 # Install PlanetLab build dependencies
 # Copyright (C) 2015-2019 by Thomas Dreibholz
@@ -18,6 +18,9 @@
 #
 # Contact: dreibh@simula.no
 #
+
+# Bash options:
+set -e
 
 # ---------------------------------------------------------
 KEY_ID="dreibh@simula.no"

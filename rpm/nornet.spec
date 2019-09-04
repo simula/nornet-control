@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.3.17
+Version: 1.4.1
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -82,7 +82,6 @@ Requires: git
 Requires: gpm
 Requires: hping3
 Requires: htop
-Requires: ipsec-tools
 Requires: joe
 Requires: jq
 Requires: libidn
@@ -111,6 +110,7 @@ Requires: whois
 Requires: wireshark-cli
 Requires: xmlstarlet
 Recommends: grub2-tools
+Recommends: ipsec-tools
 
 %description management
 This metapackage contains basic software nor NorNet node management. The
@@ -831,6 +831,10 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %changelog
+* Wed Sep 04 2019 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.4.1
+- New upstream release.
+* Thu Aug 22 2019 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.4.0
+- New upstream release.
 * Thu Aug 15 2019 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.3.17
 - New upstream release.
 * Wed Jul 31 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.16

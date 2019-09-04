@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # DNS Check Script
 # Copyright (C) 2017-2019 by Thomas Dreibholz

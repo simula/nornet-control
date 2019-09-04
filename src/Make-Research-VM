@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 #
 # Make Research VM
 # Copyright (C) 2012-2019 by Thomas Dreibholz <dreibh@simula.no>
@@ -18,6 +18,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: dreibh@simula.no
+
+# Bash options:
+set -e
 
 
 if [ $# -lt 4 ] ; then
