@@ -31,9 +31,9 @@ set -e
 
    local count=0
    while [[ "${count}" -lt "${timeout}" ]]; do
-      echo "Waiting for ${pid}: ${count}/${timeout} ..."
-      sleep 60
       let count=${count}+1
+      echo "Waiting for ${pid}: ${count}/${timeout} ..."
+      sleep 1
 
       # local i=0
       # while [ ${i} -lt 60 ] ; do
@@ -45,7 +45,7 @@ set -e
       #    fi
       # done
    done
-   echo "Timeout (${timeout} min) for ${pid} reached -> sending SIGKILL ..."
+   echo "Timeout (${timeout} min) reached -> sending SIGKILL ..."
    kill -9 ${pid}
 }
 
