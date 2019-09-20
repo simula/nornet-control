@@ -168,7 +168,7 @@ fi
 if [ "${Variant}" = "Debian" ] ; then
    echo -e "\x1b[34m`date +%FT%H:%M:%S`: Removing obsolete kernels ...\x1b[0m"
 
-   kernelType=$(uname -r | sed 's/\([0-9]*.[0-9]*.[0-9]*\)-\([a-zA-Z0-9\.+]\)/\2/')
+   kernelType=$(uname -r | sed 's/\([0-9]*.[0-9]*.[0-9]*\|[0-9]*.[0-9]*.[0-9]*.-[0-9]*\)-\([a-zA-Z0-9\.+]\)/\2/')
    kernelBootVersion=$(uname -r | sed s/-${kernelType}//)
    kernelDiskVersion=$(ls -t /boot/vmlinuz-*-${kernelType} | sort -rV | head -n1 | sed -e "s/\/boot\/vmlinuz-//" -e "s/-${kernelType}//")
 
