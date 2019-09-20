@@ -1,3 +1,69 @@
+commit 45bf4aadc7adae15bbd783b259cd824d3fefa934
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 20 16:40:08 2019 +0200
+
+    Improved script.
+
+commit 9c1eddc9a6f237e1e4a29083c1850833feaaa440
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 20 16:33:45 2019 +0200
+
+    Minor fix.
+
+commit 651f2a7683c0b7edb653ecb9b652785c74ae34a5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 20 14:54:52 2019 +0200
+
+    Further improvement.
+
+commit 431de44b3733c576cb5c0fb659fb964c36746cba
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 20 14:49:04 2019 +0200
+
+    A fix.
+
+commit 5641ad974c45792a98868287ab94bb7eb9264f42
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 20 10:46:47 2019 +0200
+
+    Updated script.
+
+commit 5de015b8efaff84dd5b2fd57c3e83b50936cce3b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 18 08:57:59 2019 +0200
+
+    Updated build scripts
+
+commit 309d21f370588a4578a449699351cdb14db5b3fa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Sep 10 15:46:06 2019 +0300
+
+    Updated build scripts
+
+commit 23e1e23468ae175f5b173b9d65aa41ca0ba9d3b0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Sep 10 15:45:56 2019 +0300
+
+    Updated Travis CI configuration.
+
+commit 5b5d3fb0eaa365681e101cd570a5f9d906d425ec
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 4 22:51:56 2019 +0200
+
+    Submodule update.
+
+commit 0ada373ec4822ee99189a4536b3b51e943b631cc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 4 22:50:41 2019 +0200
+
+    Updated build scripts
+
+commit 510d5eeefa8ca2aab5d33bb5d1c1a5503c1d0831
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 4 16:46:47 2019 +0200
+
+    New release nornet-1.4.1.
+
 commit 5fab5c181244571b49371f8857a7b71b34413991
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Sep 4 16:35:15 2019 +0200
