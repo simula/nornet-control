@@ -347,11 +347,11 @@ echo -e "\x1b[34m`date +%FT%H:%M:%S`: Done!\x1b[0m"
 if [ "${Variant}" == "Debian" ] ; then
    if [ -e /usr/bin/apt-show-versions ] ; then
       echo "====== Installed NorNet Software ============================================="
-      /usr/bin/apt-show-versions | grep "^nornet-" | grep -v "not installed$"
+      /usr/bin/apt-show-versions | grep "^nornet-" | grep -v "not installed$" || true
       echo "=============================================================================="
    fi
 elif [ "${Variant}" == "Fedora" ] ; then
    echo "====== Installed NorNet Software ============================================="
-   rpm -qa | grep "^nornet-"
+   rpm -qa | grep "^nornet-" || true
    echo "=============================================================================="
 fi
