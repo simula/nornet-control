@@ -46,7 +46,7 @@ rsync --partial -ac -e "ssh -p 50691" thomasd@dnat.simula.no:'src/linux*.deb' ${
 
 echo "Synchronising packages for Bionic ..."
 mkdir -p ${BIONIC_KERNEL_DEBS}/
-rsync --partial -ac ~/src/linux*.deb ${BIONIC_KERNEL_DEBS}/ &
+rsync --partial -ac ~/src/multipath/linux*.deb ${BIONIC_KERNEL_DEBS}/ &
 
 echo "Synchronising packages for Disco ..."
 mkdir -p ${DISCO_KERNEL_DEBS}/
