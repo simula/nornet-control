@@ -1,0 +1,8 @@
+#!/bin/bash
+
+for pip in pip3 pip ; do
+   if [ -x /usr/bin/${pip} ] ; then
+      /usr/bin/${pip} list --outdated --format=legacy | awk '/Current:/ {print $1}' | xargs -rp -- /usr/bin/${pip} install -U
+      sudo -H /usr/bin/${pip} list --outdated --format=legacy | awk '/Current:/ {print $1}' | xargs -rp -- sudo -H /usr/bin/${pip} install -U
+   fi
+done
