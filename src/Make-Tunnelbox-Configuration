@@ -168,6 +168,14 @@ def getSquidParentCache():
 
 
 # ###### Get Squid parent cache #############################################
+def getSquidAdditionalNetworks():
+   try:
+      return NorNet_Configuration['NorNet_Squid_AdditionalNetworks']
+   except:
+      return ''
+
+
+# ###### Get Squid parent cache #############################################
 def getSquidTransparentProxy():
    return checkParameter('NorNet_Squid_TransparentProxy', [ 'on', 'off'])
 
@@ -964,6 +972,17 @@ def makeSquidConfiguration(nodeName, localSite):
       outputFile.write('\n# Remote tunnelboxes:\n')
       for version in [ 4, 6 ]:
          outputFile.write('acl localnet src ' + str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '\n')
+
+   additionalNetworks = shlex.split(getSquidAdditionalNetworks())
+   for i in range(0, len(additionalNetworks)):
+      try:
+         network = ip_network(additionalNetworks[i])
+         if i == 0:
+            outputFile.write('\n# Additional networks:\n')
+         outputFile.write('acl localnet src ' + str(network) + '\n')
+
+      except Exception as e:
+         error('Bad configuration "' + dnsForwarders[i] + '" for NorNet_Squid_AdditionalNetworks: ' + str(e))
 
    outputFile.write('\n# Ports:\n')
    outputFile.write('acl SSL_ports port 443\n')
