@@ -113,6 +113,8 @@ NorNet_Squid_DiskCache=1024
 NorNet_Squid_MaxObjectSize=16
 #NorNet_Squid_ParentCache="proxy.simula.nornet"
 NorNet_Squid_TransparentProxy="on"
+# Additional allowed networks:
+# NorNet_Squid_AdditionalNetworks='"10.255.1.0/24" "10.254.1.0/24" "2001:700:4100:ff01::/64" "2001:700:4100:fe01::/64"'
 
 
 # ====== Central Site only! ===============================
