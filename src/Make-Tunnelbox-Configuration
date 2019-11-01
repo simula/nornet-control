@@ -1012,8 +1012,11 @@ def makeSquidConfiguration(nodeName, localSite):
    # outputFile.write('extension_methods REPORT MERGE MKACTIVITY CHECKOUT PROPFIND\n\n')
 
    outputFile.write('# Improve privacy:\n')
-   outputFile.write('request_header_access User-Agent deny all\n')
-   outputFile.write('request_header_replace User-Agent Mozilla/5.0 (compatible)\n')
+   # NOTE: Commented out!
+   # - request_header_access causes problems with CDNs, resulting in HTTP 403.
+   # - request_header_replace user agent change even makes user agents more unique.
+   # outputFile.write('request_header_access User-Agent deny all\n')
+   # outputFile.write('request_header_replace User-Agent Mozilla/5.0 (compatible)\n')
    outputFile.write('forwarded_for off\n\n')
 
    outputFile.write('# ================== Caching ===========================\n')
