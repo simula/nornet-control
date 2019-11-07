@@ -1,3 +1,71 @@
+commit d765920a37bf7a8e40329d7e51fb4a47022edf7d
+Merge: dc339a3b 7186bc17
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 1 13:02:25 2019 +0100
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit dc339a3b55121f363e594264b14086dbad99ee4b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 1 13:01:56 2019 +0100
+
+    Squid configuration fix for problems with downloads from CDNs.
+
+commit 7186bc1757495b55424d3696f30358c59fc420db
+Merge: ca149e4c 6a483cc8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 28 14:09:05 2019 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit ca149e4cbada811c5ee36462d6d0eac9bd58deb3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 28 14:08:59 2019 +0100
+
+    Updated example.
+
+commit 6a483cc8d0b8451dbfabba99a92d431c128a6a70
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 28 14:07:49 2019 +0100
+
+    Some improvements.
+
+commit 5042c1c6bbd6637e0102f4f2d923495ada6adbd5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 28 14:02:49 2019 +0100
+
+    Updated configuration.
+
+commit 524d6a96f30640fb43bd9583574d5d626a753aef
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 28 14:01:53 2019 +0100
+
+    Improved Tunnelbox Squid configuration.
+
+commit 5dd683eb5ff044084bfe60d6b67d7184413fda1d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Oct 24 09:57:44 2019 +0200
+
+    Added script.
+
+commit e2e0e2056a896bf64260e7a5444a5947808b7eb7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 18 12:26:40 2019 +0200
+
+    Updated build scripts
+
+commit ef224e3ed71afddb03c7762930963ac0042d0132
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Oct 16 13:52:29 2019 +0200
+
+    Updated build scripts
+
+commit 329ed4256b98879a9d0dcd1ea00a9c773d5bc0c4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 20 22:24:46 2019 +0200
+
+    New release nornet-1.4.3.
+
 commit 252df07611eaec6531f2ceaa906f45dc1607def2
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Fri Sep 20 22:24:36 2019 +0200
