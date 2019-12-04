@@ -20,6 +20,6 @@
 # Contact: dreibh@iem.uni-due.de
 
 while [ "$1" != "" ] ; do
-   sed -f UpdateDoc1.sed $1 >/tmp/sedtemp && cp /tmp/sedtemp $1 && rm -f /tmp/sedtemp
+   sed -f UpdateDoc1.sed "$1" >/tmp/sedtemp && cp /tmp/sedtemp "$1" && rm -f /tmp/sedtemp
    shift
 done
