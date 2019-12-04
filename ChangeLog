@@ -1,3 +1,51 @@
+commit df67846a0ca66f1111f83bc5fceadcdf2a7a3c90
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 14:39:35 2019 +0100
+
+    Header updates.
+
+commit 2b567c949bd09845fd9ab706635c2a7eb0f145fe
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 14:27:36 2019 +0100
+
+    Improved script.
+
+commit 4075a578128448fe08ecb867cb12108c022078a7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 14:15:04 2019 +0100
+
+    Improved script.
+
+commit cb5994c5cfc8feaf5953253c49dc421ce7f6d757
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 13:51:55 2019 +0100
+
+    A fix.
+
+commit e757cadcfffe54d2ee55589a0a0ebf086718fbb4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 13:03:19 2019 +0100
+
+    Updated submodule.
+
+commit 59a0c171b74d7a6049947d0234389c26b22dd652
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 13:03:13 2019 +0100
+
+    Sort package list.
+
+commit 3283f33da6ca12010fb153e307d95839676a8d00
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 13:02:53 2019 +0100
+
+    Minor improvements.
+
+commit a447f9194ec095955a33fff80c7f94a2afb99a89
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 7 15:19:53 2019 +0100
+
+    New release nornet-1.4.4.
+
 commit d765920a37bf7a8e40329d7e51fb4a47022edf7d
 Merge: dc339a3b 7186bc17
 Author: Thomas Dreibholz <dreibh@simula.no>
