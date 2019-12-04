@@ -352,6 +352,6 @@ if [ "${Variant}" == "Debian" ] ; then
    fi
 elif [ "${Variant}" == "Fedora" ] ; then
    echo "====== Installed NorNet Software ============================================="
-   rpm -qa | grep "^nornet-" || true
+   rpm -qa | grep "^nornet-" | sort || true
    echo "=============================================================================="
 fi
