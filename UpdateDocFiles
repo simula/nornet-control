@@ -31,8 +31,11 @@ while [ $# -gt 0 ] ; do
       echo "Skipping $1 (is input SED file)"
    elif [[ "$BASENAME" =~ \.(jpeg|jpg|JPG|png|PNG|svg|SVG)$ ]] ; then
       echo "Skipping $1 (is binary file)"
+   elif [[ "$1" =~ ^.*/\.git/.*$ ]] ; then
+      echo "Skipping $1 (is Git file)"
    else
-      sed -f ${SED_FILE} "$1" >/tmp/sedtemp && cp /tmp/sedtemp "$1" && rm -f /tmp/sedtemp
+      echo "Updating $1 ..."
+      sed -f ${SED_FILE} -i "$1"
    fi
 
    shift

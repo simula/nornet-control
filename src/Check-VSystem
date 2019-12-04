@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Check status of virtual system
-# Copyright (C) 2013-2019 by Thomas Dreibholz
+# Copyright (C) 2013-2020 by Thomas Dreibholz
 # Copyright (C) 2014 by Forough Golkar <forough.golkar87@gmail.com>
 # Copyright (C) 2013 by Nima Fallah Darya <nima.darya@gmail.com>
 #
