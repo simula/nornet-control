@@ -16,7 +16,7 @@ Build-Depends: cmake (>= 3.0.2) | cmake3,
                libfile-fcntllock-perl,
                libimage-exiftool-perl,
                python3-all
-Standards-Version: 4.4.1.1
+Standards-Version: 4.4.1.2
 Vcs-Git: https://github.com/simula/nornet-control.git
 Vcs-Browser: https://github.com/simula/nornet-control
 
@@ -86,7 +86,7 @@ Conflicts: landscape-common,
            tntnet,
            webfs
 Replaces: landscape-common
-Description: Management Tools tools for the NorNet system environment
+Description: Management tools for the NorNet system environment
  This metapackage contains basic software nor NorNet node management. The
  software installed provides a common working environment.
  .
@@ -161,7 +161,7 @@ Depends: autoconf,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: ubuntu-dev-tools
-Description: Development Tools tools for the NorNet system environment
+Description: Development tools for the NorNet system environment
  This metapackage contains basic software nor NorNet development. The
  software installed provides a common working environment.
  .

@@ -1,3 +1,9 @@
+nornet (1.4.5~rc1-1ubuntu1) bionic; urgency=medium
+
+  * New upstream release.
+
+ -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Wed, 04 Dec 2019 13:33:30 +0100
+
 nornet (1.4.4-1ubuntu1) bionic; urgency=medium
 
   * New upstream release.
