@@ -186,7 +186,7 @@ cd "$WORKDIR"
 
 
 # ====== Make groups ========================================================
-./make-nornet-groups
+# ./make-nornet-groups
 
 
 # ====== Update repository management files =================================
