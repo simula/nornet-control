@@ -1,8 +1,45 @@
 #!/bin/bash
 
-for pip in pip3 pip ; do
-   if [ -x /usr/bin/${pip} ] ; then
-      /usr/bin/${pip} list --outdated --format=legacy | awk '/Current:/ {print $1}' | xargs -rp -- /usr/bin/${pip} install -U
-      sudo -H /usr/bin/${pip} list --outdated --format=legacy | awk '/Current:/ {print $1}' | xargs -rp -- sudo -H /usr/bin/${pip} install -U
+# ###### Perform Python package upgrades with PIP ###########################
+run-upgrade ()
+{
+   local sudo=""
+   if [ "$1" != "" ] ; then
+      sudo="$1 "
    fi
-done
+   local options=" $2"
+
+   local pip
+   for pip in pip pip3 ; do
+      # ====== Check for PIP ================================================
+      if [ -x /usr/local/bin/${pip} ] ; then
+         # Prefer to use PIP-installed version of PIP
+         pipCommand=/usr/local/bin/${pip}
+      elif [ -x /usr/bin/${pip} ] ; then
+         # Otherwise, try OS-installed version of PIP
+         pipCommand=/usr/bin/${pip}
+      else
+         # Not found -> nothing to do!
+         continue
+      fi
+
+
+      # ====== Perform upgrades =============================================
+      echo "Running PIP by using \"${sudo}${pipCommand} ...\""
+      ${sudo} ${pipCommand} list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1 | xargs -r -- ${sudo} ${pipCommand} install --quiet --upgrade ${options} &
+   done
+}
+
+
+
+# ###### Main program #######################################################
+
+# ====== Run as superuser ===================================================
+run-upgrade "sudo -H"
+
+# ====== Run as user, if script is run as user ==============================
+if [ "${SUDO_USER}" != "" -a "${SUDO_GID}" != "" ] ; then
+   run-upgrade "sudo -u ${SUDO_USER} -g#${SUDO_GID}" --user
+fi
+
+wait
