@@ -117,7 +117,6 @@ Depends: autoconf,
          bison,
          clang,
          cmake (>= 3.0.2) | cmake3,
-         createrepo,
          debhelper,
          devscripts,
          docker.io,
@@ -142,7 +141,6 @@ Depends: autoconf,
          librsplib-dev,
          libsctp-dev,
          libtool,
-         mock,
          nornet-management,
          pbuilder,
          pkg-config,
@@ -160,7 +158,9 @@ Depends: autoconf,
          xmlstarlet,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: ubuntu-dev-tools
+Recommends: createrepo,
+            mock,
+            ubuntu-dev-tools
 Description: Development tools for the NorNet system environment
  This metapackage contains basic software nor NorNet development. The
  software installed provides a common working environment.
