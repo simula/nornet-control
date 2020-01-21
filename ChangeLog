@@ -1,3 +1,51 @@
+commit f04ccab0eaccc2baf9a8c2394487f63ca97b1b2a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jan 21 16:28:43 2020 +0100
+
+    Dependency fix.
+
+commit 7a4501493d4db41d6357e339e96e6a5a705dea5b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 12 11:11:01 2019 +0100
+
+    Another update.
+
+commit 1ca966373655b2a639c75ca70d24d4ed58e4acb1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 12 11:10:28 2019 +0100
+
+    Improved script.
+
+commit fcfbb43aa605daf684c62675d926dd370164c70b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 13:19:18 2019 +0100
+
+    Updated Travis CI configuration: added Ubuntu 20.04.
+
+commit 46fa05adb26563264451d01b4910be730b82733f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:32:12 2019 +0100
+
+    Updated Travis CI configuration: removed Fedora 29, added Fedora 31.
+
+commit 33e565335fe79e02396940f9b8889058a5457cad
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:14:41 2019 +0100
+
+    Updated LSM entry.
+
+commit afd8e6ededd64deff3d1f1cf89e92cc945de7331
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:14:11 2019 +0100
+
+    Removed obsolete files.
+
+commit dc35c8d30f1d6663529a9399debb0b20d75aabae
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 16:29:09 2019 +0100
+
+    New release nornet-1.4.5.
+
 commit df67846a0ca66f1111f83bc5fceadcdf2a7a3c90
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Dec 4 14:39:35 2019 +0100
