@@ -1,0 +1,8 @@
+#!/bin/bash
+
+FROM=img
+TO=vdi
+for i in 0 1 2 3 ; do
+   echo "Converting DH$i from $FROM to $TO ..."
+   qemu-img convert -p DH$i.$FROM -O $TO DH$i.$TO
+done
