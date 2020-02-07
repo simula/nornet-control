@@ -33,7 +33,7 @@ fi
 
 # ###### Main program #######################################################
 if [ "$NorNet_Server_VirtualizationSystem" = "" -o "$NorNet_Server_VirtualizationSystem" = "VirtualBox" ] ; then
-   VBoxManage list vms 2>&1 | grep "^\"" | sed -e "s/ {.*}$//g" -e "s/^\"//g" -e "s/\"$//g"
+   VBoxManage list vms 2>&1 | grep "^\"" | sed -e "s/ {.*}$//g" -e "s/^\"//g" -e "s/\"$//g" | sort
 
 elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
     virsh list --all | sed -e '1,/^-*/d' | sed '/^$/d' | awk '{print $2}'
