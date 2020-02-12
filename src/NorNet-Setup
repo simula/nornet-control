@@ -789,8 +789,46 @@ norNetSetup = [
       [ 105, 6, u'hongshulin',   'hongshulin.hkc.nornet',   'vnc://baoting.hkc.nornet:5901'   ]
    ] },
 
+ ## BITS Pilani (NAME IN LOCAL LANGUAGE, like 海口经济学院)
+ #{ 'site_index'        : 90,
+   #'site_enabled'      : True,
+   #'site_long_name'    : u'Birla Institute of Technology and Science',
+   #'site_short_name'   : 'BITS',
+   #'site_url'          : 'https://www.bits-pilani.ac.in',
+   #'site_domain'       : 'bits.nornet',
+   #'site_city'         : 'Hyderabad',
+   #'site_province'     : 'Telangana',
+   #'site_country'      : 'India',
+   #'site_country_code' : 'IN',
+   #'site_latitude'     : 17.37,
+   #'site_longitude'    : 78.48,
+   #'site_altitude'     : 550,
+   #'site_contacts'     : [ u'Paxena, Paresh: psaxena@hyderabad.bits-pilani.ac.in',
+                           #u'Malhan, Bharat: f20160050@hyderabad.bits-pilani.ac.in' ],
+   #'site_pcu'          : [ IPv4Address('255.255.255.255'), 'pcu-root', 'a-secret-password' ],   # IP OF CONTROL BOX PC
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'China Telecom', 'eth1',
+           #IPv4Interface('202.100.206.163/28'), IPv4Address('202.100.206.161'),
+           #IPv6Interface('::/0'),               IPv6Address('::'),
+           #1500, 'fibre, business', 10000, 10000 ],
+      #[ u'China Education and Research Network', 'eth2',
+           #IPv4Interface('210.37.80.162/25'), IPv4Address('210.37.80.254'),
+           #IPv6Interface('::/0'),             IPv6Address('::'),
+           #1500, 'fibre, research', 10000, 10000 ]
+   #],
+   #'site_nodes' : [
+      ## Naming scheme: places in Hainan
+      #[ 100, 1, u'huoshankou',   'huoshankou.hkc.nornet',   'vnc://wuzhishan.hkc.nornet:5900' ],
+      #[ 101, 2, u'dongzhaigang', 'dongzhaigang.hkc.nornet', 'vnc://wuzhishan.hkc.nornet:5901' ],
+      #[ 102, 3, u'wanlvyuan',    'wanlvyuan.hkc.nornet',    'vnc://lingshui.hkc.nornet:5900'  ],
+      #[ 103, 4, u'baishamen',    'baishamen.hkc.nornet',    'vnc://lingshui.hkc.nornet:5901'  ],
+      #[ 104, 5, u'guanlanhu',    'guanlanhu.hkc.nornet',    'vnc://baoting.hkc.nornet:5900'   ],
+      #[ 105, 6, u'hongshulin',   'hongshulin.hkc.nornet',   'vnc://baoting.hkc.nornet:5901'   ]
+   #] },
+
  { 'site_index'        : 100,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'The University of Kansas',
    'site_short_name'   : 'KU',
    'site_url'          : 'https://www.ittc.ku.edu',
