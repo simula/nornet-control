@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Upgrade to Ubuntu 20.04 Development
+
+do-release-upgrade -d -f DistUpgradeViewNonInteractive
+apt-add-repository -sy ppa:dreibh/ppa
+
+sudo rm -rf /var/lib/geoip-database-contrib
+sudo rm /var/lib/dpkg/info/geoip-database-contrib.postrm
+sudo dpkg --force-all -r geoip-database-extra
+sudo apt install -fy
+
+# MySQL:
+
+# Do *not* delete DB files!
+sudo apt purge mysql-server-5.7
+
+sudo mkdir -p /var/run/mysqld
+sudo chown mysql:mysql /var/run/mysqld
+sudo mkdir -p /var/log/mysql
+sudo chown mysql:mysql /var/log/mysql
+sudo systemctl enable mysql
+
+# apt-show-versions | grep "No avail" | IFS=":" awk '{ print $1 }'|xargs sudo apt remove -y
