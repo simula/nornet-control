@@ -22,3 +22,5 @@ sudo chown mysql:mysql /var/log/mysql
 sudo systemctl enable mysql
 
 # apt-show-versions | grep "No avail" | IFS=":" awk '{ print $1 }'|xargs sudo apt remove -y
+
+# find /etc -name "*-dist" -or -name "*old" -or -name "*~" -or -name "*.distUpgrade" -or -name "*.save" | xargs -r rm 

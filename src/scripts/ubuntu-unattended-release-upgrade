@@ -4,3 +4,6 @@ do-release-upgrade -f DistUpgradeViewNonInteractive
 apt-add-repository -sy ppa:dreibh/ppa
 apt install -y linux-generic-hwe-18.04
 apt-show-versions | grep "No avail" | IFS=":" awk '{ print $1 }'|xargs sudo apt remove -y
+
+# Clean-up:
+# find /etc -name "*-dist" -or -name "*old" -or -name "*~" -or -name "*.distUpgrade" -or -name "*.save" | xargs -r rm 
