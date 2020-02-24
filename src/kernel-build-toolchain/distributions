@@ -16,8 +16,8 @@ SignWith: yes
 
 Origin: packages.nntb.no
 Label: packages.nntb.no
-Codename: disco
+Codename: focal
 Architectures: amd64 source
-Components: disco-kernel
-Description: NorNet Kernel Repository for Disco Dingo
+Components: focal-kernel
+Description: NorNet Kernel Repository for Disco Focal
 SignWith: yes
