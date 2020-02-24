@@ -1,12 +1,16 @@
 #!/bin/bash
 
-FROM=img
-TO=vdi
-for i in 0 1 2 3 ; do
-   echo "Converting DH$i from $FROM to $TO ..."
-   if [ ! -e DH$i.$TO ] ; then
-      qemu-img convert -p DH$i.$FROM -O $TO DH$i.$TO
+FROM=vmdk
+TO=qcow2
+
+inputImages=`find . -name "*.${FROM}" | sort`
+
+for inputImage in ${inputImages} ; do
+   outputImage=`echo "${inputImage}" | sed -e "s/${FROM}$/${TO}/g"`
+   echo "Converting ${inputImage} from $FROM to $TO ..."
+   if [ ! -e "${outputImage}" ] ; then
+      qemu-img convert -p "${inputImage}" -O $TO "${outputImage}"
    else
-      echo >&2 "ERROR: DH$i.$TO already exists!"
+      echo >&2 "ERROR: ${outputImage} already exists!"
    fi
 done
