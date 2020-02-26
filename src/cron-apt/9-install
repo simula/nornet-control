@@ -1,0 +1,4 @@
+-f install
+-y upgrade
+-y dist-upgrade
+-y autoremove

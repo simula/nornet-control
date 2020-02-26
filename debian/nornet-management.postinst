@@ -9,8 +9,8 @@ case "$1" in
       if [ -e /etc/update-motd.d ] ; then
          ln -sf /usr/bin/System-Info /etc/update-motd.d/55-nornet-management
       fi
-      if [ -e /usr/sbin/update-motd ] ; then
-         /usr/sbin/update-motd 2>/dev/null || true
+      if [ -e update-motd ] ; then
+         update-motd 2>/dev/null || true
       fi
 
       echo "Updating /etc/default/grub with NorNet settings:"
@@ -21,8 +21,9 @@ case "$1" in
       mv /etc/default/grub.new /etc/default/grub
       echo "-----"
 
-      if [ -x /usr/sbin/update-grub ] ; then
-         /usr/sbin/update-grub || true
+      if [ -x "$(command -v update-grub)" ] ; then
+         rm -f /etc/grub.d/01_nornet_management_theme   # Remove obsolete file!
+         update-grub || true
       fi
       ;;
 esac

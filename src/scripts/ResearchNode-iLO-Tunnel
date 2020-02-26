@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Usage: $0 site_index node_number
+
+let p=2000+100*$1+$2
+firefox https://localhost:$p &
+ssh -J oesthorn.nntb.no nornetpp@10.1.$1.254 -L $p:10.1.$1.24$2:443

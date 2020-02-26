@@ -1,3 +1,1184 @@
+commit 729133bb0498e1ff3c91db21107376d16360cc5b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 26 11:07:10 2020 +0100
+
+    Minor update.
+
+commit ae5a5415547b09700788fbb612a014172abc5b60
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 26 11:06:54 2020 +0100
+
+    Remove obsolete grub files.
+
+commit e7ef1225237313552b590cc2c7f3395882e823e4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Feb 24 11:45:49 2020 +0100
+
+    Updated scripts.
+
+commit b22df62f72ad76a9ad14681434162b956a4f816b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Feb 24 11:45:38 2020 +0100
+
+    Improved script.
+
+commit ca1160523fd9ac1ebf83a4b37c4eaa77df61ba3a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 19 14:56:00 2020 +0100
+
+    Updated scripts.
+
+commit cb9c829240eff40396c649cff01c718efc72bd4e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Feb 17 18:49:10 2020 +0100
+
+    Added helper script.
+
+commit 98fd13260bff389e33852aa4ce86f1fcc3b07eb3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 12 15:48:01 2020 +0100
+
+    Added image.
+
+commit 4ea3bf53970519faddfc156c6e354b8f84f50301
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 12 15:44:06 2020 +0100
+
+    Updated configuration.
+
+commit 5388f569acf70471c06987ed473c99b7360659f3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 7 14:21:34 2020 +0100
+
+    Show-VSystems: sort list of VMs for VirtualBox.
+
+commit f647c5f6fade94c158eaafbf546393aadac4d901
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 7 13:38:27 2020 +0100
+
+    Updated build scripts
+
+commit ede83da090879abe54471ccd6bdeea8e7f063bbf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jan 29 16:24:06 2020 +0100
+
+    Added another helper script.
+
+commit 38f2ad12ac50e74ae22966ce26baacd25f0f6c99
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jan 29 15:27:24 2020 +0100
+
+    Added comment.
+
+commit 2c4a74122505994eddb608225f0802e9dab7c754
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jan 29 14:42:21 2020 +0100
+
+    Added script.
+
+commit ec39148a5a6c64d604a46aa7293b48cf11f26459
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jan 21 16:28:51 2020 +0100
+
+    New release nornet-1.4.6.
+
+commit f04ccab0eaccc2baf9a8c2394487f63ca97b1b2a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jan 21 16:28:43 2020 +0100
+
+    Dependency fix.
+
+commit 7a4501493d4db41d6357e339e96e6a5a705dea5b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 12 11:11:01 2019 +0100
+
+    Another update.
+
+commit 1ca966373655b2a639c75ca70d24d4ed58e4acb1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 12 11:10:28 2019 +0100
+
+    Improved script.
+
+commit fcfbb43aa605daf684c62675d926dd370164c70b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 13:19:18 2019 +0100
+
+    Updated Travis CI configuration: added Ubuntu 20.04.
+
+commit 46fa05adb26563264451d01b4910be730b82733f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:32:12 2019 +0100
+
+    Updated Travis CI configuration: removed Fedora 29, added Fedora 31.
+
+commit 33e565335fe79e02396940f9b8889058a5457cad
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:14:41 2019 +0100
+
+    Updated LSM entry.
+
+commit afd8e6ededd64deff3d1f1cf89e92cc945de7331
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:14:11 2019 +0100
+
+    Removed obsolete files.
+
+commit dc35c8d30f1d6663529a9399debb0b20d75aabae
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 16:29:09 2019 +0100
+
+    New release nornet-1.4.5.
+
+commit df67846a0ca66f1111f83bc5fceadcdf2a7a3c90
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 14:39:35 2019 +0100
+
+    Header updates.
+
+commit 2b567c949bd09845fd9ab706635c2a7eb0f145fe
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 14:27:36 2019 +0100
+
+    Improved script.
+
+commit 4075a578128448fe08ecb867cb12108c022078a7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 14:15:04 2019 +0100
+
+    Improved script.
+
+commit cb5994c5cfc8feaf5953253c49dc421ce7f6d757
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 13:51:55 2019 +0100
+
+    A fix.
+
+commit e757cadcfffe54d2ee55589a0a0ebf086718fbb4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 13:03:19 2019 +0100
+
+    Updated submodule.
+
+commit 59a0c171b74d7a6049947d0234389c26b22dd652
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 13:03:13 2019 +0100
+
+    Sort package list.
+
+commit 3283f33da6ca12010fb153e307d95839676a8d00
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 13:02:53 2019 +0100
+
+    Minor improvements.
+
+commit a447f9194ec095955a33fff80c7f94a2afb99a89
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 7 15:19:53 2019 +0100
+
+    New release nornet-1.4.4.
+
+commit d765920a37bf7a8e40329d7e51fb4a47022edf7d
+Merge: dc339a3b 7186bc17
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 1 13:02:25 2019 +0100
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit dc339a3b55121f363e594264b14086dbad99ee4b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 1 13:01:56 2019 +0100
+
+    Squid configuration fix for problems with downloads from CDNs.
+
+commit 7186bc1757495b55424d3696f30358c59fc420db
+Merge: ca149e4c 6a483cc8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 28 14:09:05 2019 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit ca149e4cbada811c5ee36462d6d0eac9bd58deb3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 28 14:08:59 2019 +0100
+
+    Updated example.
+
+commit 6a483cc8d0b8451dbfabba99a92d431c128a6a70
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 28 14:07:49 2019 +0100
+
+    Some improvements.
+
+commit 5042c1c6bbd6637e0102f4f2d923495ada6adbd5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 28 14:02:49 2019 +0100
+
+    Updated configuration.
+
+commit 524d6a96f30640fb43bd9583574d5d626a753aef
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 28 14:01:53 2019 +0100
+
+    Improved Tunnelbox Squid configuration.
+
+commit 5dd683eb5ff044084bfe60d6b67d7184413fda1d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Oct 24 09:57:44 2019 +0200
+
+    Added script.
+
+commit e2e0e2056a896bf64260e7a5444a5947808b7eb7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 18 12:26:40 2019 +0200
+
+    Updated build scripts
+
+commit ef224e3ed71afddb03c7762930963ac0042d0132
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Oct 16 13:52:29 2019 +0200
+
+    Updated build scripts
+
+commit 329ed4256b98879a9d0dcd1ea00a9c773d5bc0c4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 20 22:24:46 2019 +0200
+
+    New release nornet-1.4.3.
+
+commit 252df07611eaec6531f2ceaa906f45dc1607def2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 20 22:24:36 2019 +0200
+
+    New release nornet-1.4.2.
+
+commit 45bf4aadc7adae15bbd783b259cd824d3fefa934
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 20 16:40:08 2019 +0200
+
+    Improved script.
+
+commit 9c1eddc9a6f237e1e4a29083c1850833feaaa440
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 20 16:33:45 2019 +0200
+
+    Minor fix.
+
+commit 651f2a7683c0b7edb653ecb9b652785c74ae34a5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 20 14:54:52 2019 +0200
+
+    Further improvement.
+
+commit 431de44b3733c576cb5c0fb659fb964c36746cba
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 20 14:49:04 2019 +0200
+
+    A fix.
+
+commit 5641ad974c45792a98868287ab94bb7eb9264f42
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 20 10:46:47 2019 +0200
+
+    Updated script.
+
+commit 5de015b8efaff84dd5b2fd57c3e83b50936cce3b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 18 08:57:59 2019 +0200
+
+    Updated build scripts
+
+commit 309d21f370588a4578a449699351cdb14db5b3fa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Sep 10 15:46:06 2019 +0300
+
+    Updated build scripts
+
+commit 23e1e23468ae175f5b173b9d65aa41ca0ba9d3b0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Sep 10 15:45:56 2019 +0300
+
+    Updated Travis CI configuration.
+
+commit 5b5d3fb0eaa365681e101cd570a5f9d906d425ec
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 4 22:51:56 2019 +0200
+
+    Submodule update.
+
+commit 0ada373ec4822ee99189a4536b3b51e943b631cc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 4 22:50:41 2019 +0200
+
+    Updated build scripts
+
+commit 510d5eeefa8ca2aab5d33bb5d1c1a5503c1d0831
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 4 16:46:47 2019 +0200
+
+    New release nornet-1.4.1.
+
+commit 5fab5c181244571b49371f8857a7b71b34413991
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 4 16:35:15 2019 +0200
+
+    Kernel version handling fix.
+
+commit ce452647909e9cb1ce46f3a4a357366a72b08cf6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 27 10:12:35 2019 +0200
+
+    Updated script.
+
+commit 71a3ea6596ec00516d4256778ba16445ad96c737
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 26 13:05:45 2019 +0200
+
+    Updated build scripts
+
+commit 60f92c1c4e12e4933e895f7e0d8c6c4d7c76d325
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 23 09:26:47 2019 +0200
+
+    Updated LSM entry.
+
+commit 4f391b1b53b9698b00837ed5cf033b4019939fdc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 17:54:31 2019 +0200
+
+    New release nornet-1.4.0.
+
+commit ebf212f5fbf8a0b65fd7891e32cc70301af5cf1d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 12:29:18 2019 +0200
+
+    A small fix.
+
+commit 65f65098e406955bed6fc1ca26599dd59c848cf7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 11:51:53 2019 +0200
+
+    Debian/Ubuntu init scripts have to use /bin/bash shebang.
+
+commit 14451a6875c4bbdd12ed2718f7272d317fe4c57d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 10:58:26 2019 +0200
+
+    Updated Python and Bash shebangs for improved platform-independence.
+
+commit dd4ff5f34a22764c97219af4df002af32f74f798
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 10:44:50 2019 +0200
+
+    Minor updates.
+
+commit a111670cb5ddc1efd02028a5ad88304a9e365396
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 10:44:11 2019 +0200
+
+    Updated scripts.
+
+commit 17c6eeed1abf8e1ab13f64df3bd68fbbf29c9a83
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 10:06:55 2019 +0200
+
+    Updated build helper script.
+
+commit 192b23b77d99eb24a2e4fbee15fc6546afea2acc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 10:05:35 2019 +0200
+
+    Updated Travis CI configuration
+
+commit c616b9b9c3ad9d9a6f331f9259ad03afe08f9c6e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 09:52:21 2019 +0200
+
+    Updated Travis CI configuration
+
+commit 10c48718cf1d41aa53d724fd2a6b9e8382674ea3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 09:52:21 2019 +0200
+
+    Updated build scripts
+
+commit 31c37d76d3da775f87ea090fc0043f88e4ffdd03
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 22 09:52:21 2019 +0200
+
+    Updated build scripts
+
+commit 8758c25f0a39272b36cf56504c96aafb832577b7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 20 13:19:28 2019 +0200
+
+    Dependency update.
+
+commit 977ae19bfa1fc81bb1a3b01f6adc9ef96a5de99a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 20 08:34:02 2019 +0200
+
+    Using LC_NUMERIC=C for awk to ensure expected format of floats regardless of locale settings.
+
+commit 98bbd011e1c32aa89cc3d8c338bde4fe5fc519f5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 19 11:34:01 2019 +0200
+
+    Updated Travis CI configuration.
+
+commit aaf9916e571e809a740430ede0912d923f21a1f5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 19 11:27:05 2019 +0200
+
+    Updated build helper script.
+
+commit 26dbeebb75bba1b6987193a25073010c4eb79bf7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 19 11:01:12 2019 +0200
+
+    Updated build scripts.
+
+commit 56a6e50f4c409be8dc763371ccbceb58e24ea700
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 19 11:01:04 2019 +0200
+
+    Updated build helper script.
+
+commit b39da67bbd805585b7402d4db86e8b4d3d372078
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Aug 17 22:55:11 2019 +0200
+
+    Updated build scripts.
+
+commit c791abb69f48b2c42cea9c22e4599f2b63307d52
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Aug 17 22:54:54 2019 +0200
+
+    Updated CI scripts.
+
+commit d22746a88975f5d29435f4b107e0a8b7559545b6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 15 11:39:28 2019 +0200
+
+    Updated LSM entry.
+
+commit f16984e8f2f377bba0b9b7d77203ccdd88ffd7e3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 15 11:29:40 2019 +0200
+
+    New release nornet-1.3.17.
+
+commit aced81191a4f44a297a993b1292dc8c80fc24f3f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 13 10:36:32 2019 +0200
+
+    Minor update.
+
+commit e73ff720ab24a000ca282b951f4d30c43f30fb8a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 13 10:36:26 2019 +0200
+
+    Improved CI scripts.
+
+commit fb60ebc6959891a20408256db629d2c7045d9b24
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 16:49:37 2019 +0200
+
+    Debian Python packaging improvements.
+
+commit 55f24a3108bcc32af9af19c8e7d371bff134d1f3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 15:30:32 2019 +0200
+
+    Updated build script.
+
+commit f745a25a18a9212747df276b016c6beddbed5df9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 15:29:48 2019 +0200
+
+    Removed Ubuntu Cosmic from Travis CI builds, since it is deprecated.
+
+commit cdf70cd313e4e184bb0f5c84ef17f9db9d17af9b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 09:49:21 2019 +0200
+
+    Updated script.
+
+commit 906e709037908d7493541d97031ff69f47965fd7
+Merge: 65aa929d 98111f3c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 09:01:37 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 98111f3c8d4f1bb02c58a6cdad770a941f2958d8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Aug 10 18:49:40 2019 +0200
+
+    A test.
+
+commit 65aa929dea5e8d9570f398d559d9f0594e36e815
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 8 16:00:56 2019 +0200
+
+    Updated Travis CI configuration.
+
+commit d28f8f29e3cd871bd0d2b383d13270c427a48cdf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 8 15:08:50 2019 +0200
+
+    Updated build script.
+
+commit 5fbe54952633bd3c29ea5d3b5b1c8ded42515ef7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 8 15:08:34 2019 +0200
+
+    A fix.
+
+commit 42bbc939e72068cf049f38aadcb4200f3c35977e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 8 14:23:29 2019 +0200
+
+    Minor update.
+
+commit b3e7ea250dc1b015fecc101ce1fe238e89225540
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 18:31:09 2019 +0200
+
+    Some Lintian warning fixes.
+
+commit 221408805ceec5922276d81ec61b12f71a936a56
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 16:07:20 2019 +0200
+
+    Another manpage fix.
+
+commit d1b49cd676e1c87d6bade7eec7c78aeda235c8d4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 15:30:44 2019 +0200
+
+    Need to check for update-grub before calling it. It may not exist in e.g. Docker environments.
+
+commit 93f063b1e985f60d78addc12c53de8e0d784b334
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 15:29:47 2019 +0200
+
+    Need to check for update-grub before calling it. It may not exist in e.g. Docker environments.
+
+commit 26c1224a7f1852409f142960b2af7986248fe6b1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 15:07:42 2019 +0200
+
+    Updated example configuration script.
+
+commit cfdd536e029b77ebb98a5a1bfd7ed5586b39bbb1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 15:06:25 2019 +0200
+
+    Fixed another spelling error.
+
+commit 272123effd33824bc170fa53d2bcdade05ee1641
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:48:53 2019 +0200
+
+    Small improvements of the configuration examples.
+
+commit 89608e4773760ce768847f1517a1c09fa71a6eb5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:48:41 2019 +0200
+
+    Updated WebServer/CMakeLists.txt.
+
+commit 570e95e4a5aa4ff2869890ed59d80ac87947e2c8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:48:34 2019 +0200
+
+    Manpage fix.
+
+commit a7ea4ad61a85106dcdad3f95711277d786c5c93d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:20:33 2019 +0200
+
+    A fix.
+
+commit a389b76633b2566fa2b41d13f3de247117cf333e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:17:41 2019 +0200
+
+    Fixed spelling error.
+
+commit 3a144aaeb68a1e28e0a0c0c491a0b7b40c838410
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:09:49 2019 +0200
+
+    Fixed changelog entry.
+
+commit 3fbb3a74f32f1078280c6fceb1e10571d6a6a7bf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 14:09:38 2019 +0200
+
+    Added Lintian override.
+
+commit 8e3091ee6e79aa6b361822fdb3eb87db04fa451d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 13:58:48 2019 +0200
+
+    Packaging improvements.
+
+commit a1d8440a893cb35cb33062086858fb6b3de255b1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 12:34:35 2019 +0200
+
+    Use "update-motd" instead of "/usr/sbin/update-motd" in postinst/postrm scripts.
+
+commit 39f31c7cb0a8cb67b0923f6a35e0f1d40e0e0653
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 12:22:58 2019 +0200
+
+    Use "update-motd" instead of "/usr/sbin/update-motd" in postinst/postrm scripts.
+
+commit 6dcfb609b35c8e5adef00abeebb844a923ef44c8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 11:33:45 2019 +0200
+
+    Use "update-grub" instead of "/usr/sbin/update-grub" in postinst/postrm scripts.
+
+commit 5f595fed2bbdfa6d204d3bcba265604c035c3941
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 10:33:04 2019 +0200
+
+    Fixed some inconsistencies in different packaging files.
+
+commit 3e97c68e77b855af50c6136196fbdda8e29dc794
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 10:04:34 2019 +0200
+
+    Updated build scripts.
+
+commit c5bd9e391c48d7c735d12ce326d39226dfa9ea66
+Merge: 0ceeee17 b334f7f6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 00:03:37 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 0ceeee17f3ab07a2948ec11ba31b9500870fc3b3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 00:03:26 2019 +0200
+
+    Manpage fix.
+
+commit b334f7f6757bdaa47499f4f54ce38dff4b70ad67
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 6 16:50:36 2019 +0200
+
+    Removed leading / from Ubuntu/Debian install files.
+
+commit 779676310540c5d7738335ca6d8ef158321c6c49
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 22:59:24 2019 +0200
+
+    Script update.
+
+commit d4a15ffa02c9cd77d865359c9364e6bad27c3888
+Merge: 6a570888 65c91eaa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 22:21:18 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 6a57088817c5e540f190917d8a0f9dc0e332f2c7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 22:21:00 2019 +0200
+
+    Minor update.
+
+commit 8fe168db8e99f7a06fd40c05eb4414c399366999
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 22:06:50 2019 +0200
+
+    Updated CI scripts.
+
+commit 65c91eaaced5391b2e47bf78827694ee220e2889
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 15:13:15 2019 +0200
+
+    Removed obsolete file.
+
+commit 697e2d99569a4f2566cc1267676519d563215279
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 15:11:17 2019 +0200
+
+    Updated Travis CI configuration.
+
+commit f12c53bc42ad0469f6ca1fc3450a6d82cfce109d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 15:05:27 2019 +0200
+
+    Build script updates.
+
+commit 7e863cff07d19b0992e46d028985bbc96815b76f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 5 15:04:02 2019 +0200
+
+    Updated contacts.
+
+commit 145f33cab28b3bed2d5654a693f19be25abf3d3b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 31 16:42:16 2019 +0200
+
+    Updated LSM entry.
+
+commit 4a9ab6ad0eb9cfbb2752f2ad0b761f56f5cdf3ce
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 31 16:35:11 2019 +0200
+
+    New release nornet-1.3.16.
+
+commit b9b69cefb192e278e9af945b228493ed3cf99e4b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 31 14:54:33 2019 +0200
+
+    Improved helper script.
+
+commit 96761ea77258b2cc7eff8f7606dcc5813ea48bbd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 31 08:38:15 2019 +0200
+
+    Updated script.
+
+commit 69bc6dc3e2cb5c328a0c35fdc60dca174953b0a8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 26 11:01:53 2019 +0200
+
+    Updated LSM entry.
+
+commit 66a80dc3d8ca4b5e0a8d96faa6330acf2004f582
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 26 10:51:11 2019 +0200
+
+    New release nornet-1.3.15.
+
+commit 9fe2a1eebbdf20fff4943d20da89fab640f1daa4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jul 23 15:24:06 2019 +0200
+
+    Dependency update.
+
+commit a1358a4de9e9d1efc138f1ef849e6174d73e204d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 18 12:32:08 2019 +0200
+
+    Updated build scripts.
+
+commit 8b811143f3eb203d8fb824a76a3468d24b741151
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 18 12:23:38 2019 +0200
+
+    A fix.
+
+commit 1761285cfe7258fdd9d51d551bd255c5cc2d2a0d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 18 12:16:45 2019 +0200
+
+    A fix.
+
+commit 92106bc835f58bc540c249157d2e89ba71db7bc6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 18 12:09:08 2019 +0200
+
+    Minor update.
+
+commit 37ece9be58dc5fb2adc8ee74b1637dbc1d56d621
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 18 12:08:54 2019 +0200
+
+    Fixed dependency handling.
+
+commit 5af75fc796f1d5cc3d187c7d9be4d1e775e813eb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 18 12:08:27 2019 +0200
+
+    Added test script.
+
+commit 1109add3c54d01cabfba5c2e3bd5cca088fb6d96
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 17 12:38:20 2019 +0200
+
+    Added ovmf package as requirement of NorNet-Server, in order to allow booting VMs with UEFI.
+
+commit 506265f0951dd7e8e346b2d3b3e71bf02818be43
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 11 15:31:16 2019 +0200
+
+    Updated another script.
+
+commit f092d9517ed25c49b17a2d8d09ff9d57a5eecb3a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 11 15:30:40 2019 +0200
+
+    Updated script.
+
+commit 510a9a594e1e26cf67fa4c874bc592018ac2da87
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 5 22:05:03 2019 +0200
+
+    Updated LSM entry.
+
+commit 3c0a9d50335985c0f3c29875bb22cad1909a6be0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 5 21:20:49 2019 +0200
+
+    New release nornet-1.3.14.
+
+commit 7dfecdd5244166d1f66987011cf9acead1b24cfa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 5 21:18:20 2019 +0200
+
+    Dependency fix.
+
+commit a037678f109fd3d4720506b295f00a377884ee1b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 5 16:44:14 2019 +0200
+
+    Improved script.
+
+commit 261996fd0d3f32397a70e1110b64d354658f1996
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 3 09:49:17 2019 +0200
+
+    Updated LSM entry.
+
+commit d61071059bb6f3a7a640d641d05ee037980f74ad
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 3 09:29:25 2019 +0200
+
+    New release nornet-1.3.13.
+
+commit 95b2ed87a7db4a079c3cdd5f9df2adf198233bf4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 3 09:22:32 2019 +0200
+
+    Another dependency update.
+
+commit 0c102fd07c5a2e07ad41384c3d2ddc7c1b851a40
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 3 09:07:41 2019 +0200
+
+    Dependency update.
+
+commit 795202eff6da31b96b8a586d53cc09dab9a97826
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 28 13:09:17 2019 +0200
+
+    Updated LSM entry.
+
+commit dd4facb7b64ec88b15bc439c08e609888fe7fe91
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 28 12:51:25 2019 +0200
+
+    Script updates.
+
+commit ac0722a14e0f6583918a65cf73cce11923cb167a
+Merge: afd9cc5a 4a408feb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 28 12:50:53 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit afd9cc5a4d5611d8b5705d401843774a51c7f574
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 28 12:50:26 2019 +0200
+
+    New release nornet-1.3.12.
+
+commit 4a408feb66d280994c414ae84ae1ac81458fde98
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 27 21:37:15 2019 +0200
+
+    Build script update.
+
+commit 4d59ce03ac01dba0e868e777a1e1088885e112b6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 26 13:25:31 2019 +0200
+
+    Updated CI script.
+
+commit b9ff53a1f0cc23c72227421e584a43872f121642
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 26 13:25:19 2019 +0200
+
+    Dependency update.
+
+commit 915ef696f074bf77befb568796f27d28f741e89d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jun 24 17:24:16 2019 +0200
+
+    Updated build scripts.
+
+commit 760a594aaf98e5e2ad43c36045a3f968e23caae4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 20 11:14:19 2019 +0200
+
+    New release 1.3.11.
+
+commit 5dee78a35019995c1bbac1b3eb67c46cdb292074
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 20 11:03:31 2019 +0200
+
+    FreeBSD improvements.
+
+commit 61853b0dec5168d6b963b5890e58f937214e6f80
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 19 15:22:48 2019 +0200
+
+    Updated build scripts.
+
+commit 4a37ede7b37dccb5aff253fe64873e495bbad0a5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 19 12:20:32 2019 +0200
+
+    Renamed files to avoid conflict with configuration order.
+
+commit abae9f3b0f23c891943a353ad178c68d56ec02ed
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 15:26:30 2019 +0200
+
+    Updated LSM entry.
+
+commit 1decf0b88ed2c7fb035c439dcaa5eb2869725747
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 15:22:10 2019 +0200
+
+    New release 1.3.10.
+
+commit 51ecff2b81acf6dd1631982a35640288bb336572
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 15:00:53 2019 +0200
+
+    Some clean-ups.
+
+commit 88da976570726a27c140e6512ec79393c8a4222d
+Merge: a48424b2 c8d2530f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 14:51:19 2019 +0200
+
+    Merge branch 'dreibh/noarch'
+
+commit a48424b23132f1e3429256289a9c008ae8bdbc0c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 14:50:13 2019 +0200
+
+    A fix.
+
+commit b0d3d9c25635680118da9aca696860e3ccbfd6bf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 13:52:00 2019 +0200
+
+    RPM dependency fix.
+
+commit c8d2530f2e3316c2b13eae8c9d62521f461205c2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 13:42:56 2019 +0200
+
+    System-Maintenance: also list installed NorNet packages for Fedora.
+
+commit 4e390be25c8b667ce03e299a9903913f2e96b1e8
+Merge: 94a2a15d 760fa94f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 12:13:54 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 760fa94f662e4f42b863b369f3e77e538478fc34
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 12:12:55 2019 +0200
+
+    nornet-autoupdate RPM package needs file section (empty), in order to build this package.
+
+commit 94a2a15da6311c7926bf609cb1b524a160131934
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 12:12:13 2019 +0200
+
+    Renamed file to avoid upgrade problems.
+
+commit 91ee4aea6e0c1bc975021f25eebb70919d25a1a0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 11:23:24 2019 +0200
+
+    Reduced build log verbosity for RPM build.
+
+commit 08c1239fe0e3a3dd789f80e2473537fb4f59e86b
+Merge: 482f2eeb 8b7f6e51
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 10:57:30 2019 +0200
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit 8b7f6e5187b879d4ba73dc67637017bf4908a2b4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 10:56:54 2019 +0200
+
+    Fedora: also handle automatic updates via additional package nornet-autoupdate.
+
+commit 482f2eeb14e3ee2ed7083cefa6542c0e67d56509
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 14 10:55:44 2019 +0200
+
+    Updated script.
+
+commit b47d7d513010209d522bed6c48844c7baf792ddb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 13 18:01:05 2019 +0200
+
+    Added "nornet-autoupdate" package, to simplify update management.
+
+commit cc8b22625c459dcc99cfe0e791a3f891f50ca144
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 13 12:56:13 2019 +0200
+
+    Improved build script.
+
+commit de232da7e1e0a05b7f0d914191a369b7912ebbc7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 13 12:25:01 2019 +0200
+
+    Reduced log output during PPA build.
+
+commit 522e98822153c958eb50e63e386e81ce2401bb95
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 13 12:24:10 2019 +0200
+
+    Added/updated helper scripts.
+
+commit ff5bc4c059cd09e448de3f362bf6f70b7e1485a8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 7 11:45:14 2019 +0200
+
+    New release 1.3.9.
+
+commit 807624cbfab15315c4f361a950339ad37587c9c8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 7 11:31:22 2019 +0200
+
+    Made cron-apt configuration working again.
+
+commit 13086d3c9b76df62c288f2617dd9f83e33945c1f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue May 21 18:41:07 2019 +0200
+
+    Submodule update.
+
+commit 606fe7da4bf8b963f88f9e62924b7c93dbb609c3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed May 15 16:24:18 2019 +0200
+
+    Updated Travis CI configuration.
+
+commit 1d337124f37e0de4652546645c92aa0dda721d28
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed May 15 15:52:06 2019 +0200
+
+    Version bump.
+
+commit 125ef4ac69aa9c85f6d029ff331e16eb7df114f1
+Merge: bc32d60f 14b9daa2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 10 15:55:56 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit bc32d60fa4ceea9b3c89994a3d015aa2343eb962
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 10 15:55:50 2019 +0200
+
+    Added script.
+
+commit 14b9daa20c8dbc5182640ec4537061ec48259784
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 10 09:10:29 2019 +0200
+
+    Dependency fix.
+
+commit 939017fdd038f03cee78ddfdf4ca07683ae95bed
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 6 13:31:53 2019 +0200
+
+    Updated script.
+
+commit 9bc4dadc1162e848782a1986466894a59c006598
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 6 13:28:01 2019 +0200
+
+    An update.
+
+commit aacf617ed62f0e86304db94bee6862c76ae1a3e9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Apr 28 16:41:37 2019 +0800
+
+    Build script update.
+
+commit 86e8451976ca891b6585146cfaaf04f65d680406
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Apr 28 16:36:22 2019 +0800
+
+    Improved output.
+
+commit 4779f0482857cb02702b5175bdd480f0573f5bcd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Apr 28 14:45:57 2019 +0800
+
+    Added script.
+
+commit 744dcdd30ff93e6d231a64bd2aa72a278d726bc7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Apr 28 14:39:56 2019 +0800
+
+    Added script.
+
+commit 9a975eb6146e3690e1fd6010b82b8d2a3badadde
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 26 09:09:29 2019 +0800
+
+    Updated configuration.
+
+commit 2d5657744d29691a9ddf84bf3767b03e5b54d331
+Merge: 0c52cc13 d0d8ac93
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Apr 24 07:23:10 2019 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 0c52cc135b823eb86e628ade07a367dcbda563e7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Apr 24 07:22:56 2019 +0200
+
+    Updated scripts.
+
+commit d0d8ac93c2ed3f9cef389cdb77a07d6fda7af582
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Apr 24 13:21:34 2019 +0800
+
+    Updated dependencies.
+
+commit d3925ff93f9db9d5f6f4e37fc77b680ab49b6e05
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 12:17:45 2019 +0200
+
+    A fix.
+
+commit 2eb02f86a25c353941ad6024ed23d17c96f9b8df
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 17:49:07 2019 +0800
+
+    Updated script.
+
+commit 9ac55547cae5fae4e9a9bc3eaaae7e4a6291b536
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 18 12:56:12 2019 +0800
+
+    Version bump.
+
 commit 95b94b6bb554e9fb1e1f0ab10e5524d90b96d578
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Thu Apr 18 12:34:54 2019 +0800

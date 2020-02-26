@@ -1,9 +1,9 @@
 Name: nornet
-Version: 1.3.7
+Version: 1.4.7
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
-License: GPLv3
+License: GPL-3+
 URL: https://www.nntb.no/
 Source: https://packages.nntb.no/software/nornet/%{name}-%{version}.tar.xz
 
@@ -21,7 +21,7 @@ BuildRequires: google-noto-sans-fonts
 BuildRequires: google-noto-serif-fonts
 BuildRequires: GraphicsMagick
 BuildRequires: perl-Image-ExifTool
-BuildRequires: python3
+BuildRequires: python3-devel
 BuildRequires: qt5-qtbase-devel
 BuildRequires: texlive-epstopdf-bin
 BuildRequires: urw-base35-fonts
@@ -45,7 +45,8 @@ See https://www.nntb.no for details on NorNet!
 %setup -q
 
 %build
-%cmake -DCMAKE_INSTALL_PREFIX=/usr -DPYTHON_LIBRARY_PREFIX=%{buildroot}/usr -DFLAT_DIRECTORY_STRUCTURE=1 -DBUILD_BOOTSPLASH=1 .
+# NOTE: CMAKE_VERBOSE_MAKEFILE=OFF for reduced log output!
+%cmake -DCMAKE_INSTALL_PREFIX=/usr -DPYTHON_LIBRARY_PREFIX=%{buildroot}/usr -DFLAT_DIRECTORY_STRUCTURE=1 -DBUILD_BOOTSPLASH=1 -DCMAKE_VERBOSE_MAKEFILE=OFF .
 make %{?_smp_mflags}
 
 %install
@@ -65,7 +66,7 @@ mv %{buildroot}/usr/share/nornet-desktop/Splash/nornet-version %{buildroot}/etc/
 
 
 %package management
-Summary: NorNet Management
+Summary: Management tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: bash-completion
@@ -81,7 +82,6 @@ Requires: git
 Requires: gpm
 Requires: hping3
 Requires: htop
-Requires: ipsec-tools
 Requires: joe
 Requires: jq
 Requires: libidn
@@ -110,6 +110,7 @@ Requires: whois
 Requires: wireshark-cli
 Requires: xmlstarlet
 Recommends: grub2-tools
+Recommends: ipsec-tools
 
 %description management
 This metapackage contains basic software nor NorNet node management. The
@@ -168,7 +169,7 @@ See https://www.nntb.no for details on NorNet!
 %{_mandir}/man1/Watchdog.1.gz
 %{_mandir}/man8/Interface-Setup.8.gz
 /sbin/Interface-Setup
-%ghost %{_sysconfdir}/cron-apt/action.d/5-install
+%ghost %{_sysconfdir}/cron-apt/action.d/9-install
 
 %post management
 echo "Updating /etc/default/grub with NorNet settings:"
@@ -188,7 +189,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package x11
-Summary: NorNet X11 Login
+Summary: X11 Login tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: fvwm
@@ -210,7 +211,7 @@ See https://www.nntb.no for details on NorNet!
 
 
 %package development
-Summary: NorNet Development
+Summary: Development tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
@@ -221,7 +222,7 @@ Requires: bison
 Requires: bzip2-devel
 Requires: clang
 Requires: cmake
-Requires: createrepo
+Requires: (createrepo_c or createrepo)
 Requires: debhelper
 Requires: dejavu-sans-fonts
 Requires: dejavu-sans-mono-fonts
@@ -283,7 +284,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package api
-Summary: NorNet API
+Summary: API tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
@@ -295,23 +296,23 @@ to communicate with the central server (MyPLC), based on XMLRPC.
 See https://www.nntb.no for details on NorNet!
 
 %files api
-/usr/lib/python*/*-packages/NorNet*.egg-info
-/usr/lib/python*/*-packages/NorNetAPI.py
-/usr/lib/python*/*-packages/NorNetConfiguration.py
-/usr/lib/python*/*-packages/NorNetExperimentToolbox.py
-/usr/lib/python*/*-packages/NorNetNodeSetup.py
-/usr/lib/python*/*-packages/NorNetProviderSetup.py
-/usr/lib/python*/*-packages/NorNetSiteSetup.py
-/usr/lib/python*/*-packages/NorNetTools.py
-/usr/lib/python*/*-packages/SysSetupCommons.py
-/usr/lib/python*/*-packages/__pycache__/NorNetAPI*.pyc
-/usr/lib/python*/*-packages/__pycache__/NorNetConfiguration*.pyc
-/usr/lib/python*/*-packages/__pycache__/NorNetExperimentToolbox*.pyc
-/usr/lib/python*/*-packages/__pycache__/NorNetNodeSetup*.pyc
-/usr/lib/python*/*-packages/__pycache__/NorNetProviderSetup*.pyc
-/usr/lib/python*/*-packages/__pycache__/NorNetSiteSetup*.pyc
-/usr/lib/python*/*-packages/__pycache__/NorNetTools*.pyc
-/usr/lib/python*/*-packages/__pycache__/SysSetupCommons*.pyc
+%{python3_sitelib}/NorNet*.egg-info
+%{python3_sitelib}/NorNetAPI.py
+%{python3_sitelib}/NorNetConfiguration.py
+%{python3_sitelib}/NorNetExperimentToolbox.py
+%{python3_sitelib}/NorNetNodeSetup.py
+%{python3_sitelib}/NorNetProviderSetup.py
+%{python3_sitelib}/NorNetSiteSetup.py
+%{python3_sitelib}/NorNetTools.py
+%{python3_sitelib}/SysSetupCommons.py
+%{python3_sitelib}/__pycache__/NorNetAPI*.pyc
+%{python3_sitelib}/__pycache__/NorNetConfiguration*.pyc
+%{python3_sitelib}/__pycache__/NorNetExperimentToolbox*.pyc
+%{python3_sitelib}/__pycache__/NorNetNodeSetup*.pyc
+%{python3_sitelib}/__pycache__/NorNetProviderSetup*.pyc
+%{python3_sitelib}/__pycache__/NorNetSiteSetup*.pyc
+%{python3_sitelib}/__pycache__/NorNetTools*.pyc
+%{python3_sitelib}/__pycache__/SysSetupCommons*.pyc
 %{_datadir}/nornet-api/nornetapi-config.full
 %{_datadir}/nornet-api/nornetapi-config.simple
 %{_datadir}/nornet-api/nornetapi-constants
@@ -328,12 +329,32 @@ fi
 
 
 
-%package node
-Summary: NorNet Node
+%package autoupdate
+Summary: Auto Update tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
+Requires: dnf-automatic
+
+%description autoupdate
+This package ensures that the NorNet system is automatically updated
+(installation of updates via dnf-automatic).
+See https://www.nntb.no for details on NorNet!
+
+%files autoupdate
+
+%post autoupdate
+sed -e "s/^apply_updates[ \t]*=[ \t]*no.*$/apply_updates = yes/g" -i /etc/dnf/automatic.conf
+systemctl enable --now dnf-automatic.timer
+
+
+
+%package node
+Summary: Node tools for the NorNet system environment
+Group: Applications/Internet
+BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Requires: fail2ban
 Requires: grub2
 Requires: libvirt-client
@@ -367,12 +388,13 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package tunnelbox
-Summary: NorNet Tunnelbox
+Summary: Tunnelbox tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
-Requires: (%{name}-node = %{version}-%{release} or %{name}-server = %{version}-%{release})
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
+Requires: (%{name}-node = %{version}-%{release} or %{name}-server = %{version}-%{release})
 Requires: arpwatch
 Requires: bind
 Requires: conntrack-tools
@@ -419,11 +441,12 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package filesrv
-Summary: NorNet FileSrv
+Summary: FileSrv tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Requires: libnfs-utils
 Requires: tftp-server
 
@@ -450,7 +473,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package artwork
-Summary: NorNet Artwork
+Summary: Artwork tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 
@@ -475,11 +498,12 @@ See https://www.nntb.no for details on NorNet!
 
 
 %package monitor
-Summary: NorNet Monitor
+Summary: Monitor tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
 Requires: %{name}-artwork = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
 Requires: %{name}-management = %{version}-%{release}
 Requires: httpd
 Requires: mod_php
@@ -518,11 +542,12 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package display
-Summary: NorNet Display
+Summary: Display tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Recommends: xorg-x11-drv-vmware
 
 %description display
@@ -555,11 +580,12 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package gatekeeper
-Summary: NorNet Gatekeeper
+Summary: Gatekeeper tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Requires: fail2ban
 
 %description gatekeeper
@@ -583,11 +609,12 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package websrv
-Summary: NorNet WebSrv
+Summary: WebSrv tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Requires: awstats
 Requires: geoipupdate-cron
 Recommends: geoipupdate-cron6
@@ -619,7 +646,7 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package wikisrv
-Summary: NorNet WikiSrv
+Summary: WikiSrv tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-websrv = %{version}-%{release}
@@ -647,15 +674,18 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package timesrv
-Summary: NorNet TimeSrv
+Summary: TimeSrv tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Requires: ntp
 
 %description timesrv
-This package contains the packages to set up an NTP server.
+This package contains the packages to set up an NTP server for the
+time synchronisation. It is in fact just a node with a dependency on
+the NTP server packages.
 See https://www.nntb.no for details on NorNet!
 
 %files timesrv
@@ -673,11 +703,12 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package database
-Summary: NorNet Database
+Summary: Database tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Requires: postgresql-server
 Requires: postgresql-contrib
 
@@ -702,11 +733,12 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package plc
-Summary: NorNet PLC
+Summary: PLC tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
 Recommends: myplc
 
 %description plc
@@ -728,11 +760,12 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %package server
-Summary: NorNet Server
+Summary: Server tools for the NorNet system environment
 Group: Applications/Internet
 BuildArch: noarch
-Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
+Requires: edk2-ovmf
 Requires: fail2ban
 Requires: grub2
 Requires: libvirt-client
@@ -798,6 +831,42 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %changelog
+* Wed Feb 26 2020 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.4.7
+- New upstream release.
+* Tue Jan 21 2020 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.4.6
+- New upstream release.
+* Wed Dec 04 2019 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.4.5
+- New upstream release.
+* Thu Nov 07 2019 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.4.4
+- New upstream release.
+* Fri Sep 20 2019 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.4.3
+- New upstream release.
+* Fri Sep 20 2019 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.4.2
+- New upstream release.
+* Wed Sep 04 2019 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.4.1
+- New upstream release.
+* Thu Aug 22 2019 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.4.0
+- New upstream release.
+* Thu Aug 15 2019 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.3.17
+- New upstream release.
+* Wed Jul 31 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.16
+- New upstream release.
+* Fri Jul 26 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.15
+- New upstream release.
+* Fri Jul 05 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.14
+- New upstream release.
+* Wed Jul 03 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.13
+- New upstream release.
+* Fri Jun 28 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.12
+- New upstream release.
+* Thu Jun 20 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.11
+- New upstream release.
+* Fri Jun 14 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.10
+- New upstream release.
+* Fri Jun 07 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.9
+- New upstream release.
+* Wed May 15 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.8
+- New upstream release.
 * Thu Apr 18 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.7
 - New upstream release.
 * Wed Mar 06 2019 Thomas Dreibholz <dreibh@simula.no> - 1.3.6

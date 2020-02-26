@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# VBoxManage storageattach HAW-NorNet-Tunnelbox-hamburg.haw.nornet --storagectl "SATA" --port 0 --device 0 --nonrotational on --discard on
 
 while [ $# -gt 0 ] ; do
    echo "===== $1 ... ====="

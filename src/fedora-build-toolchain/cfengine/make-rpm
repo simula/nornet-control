@@ -1,8 +1,8 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 # $Id: make-rpm 1744 2013-11-11 08:56:43Z dreibh $
 #
 # Packaging Scripts
-# Copyright (C) 2015-2019 by Thomas Dreibholz
+# Copyright (C) 2015-2020 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,6 +18,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: dreibh@iem.uni-due.de
+
+# Bash options:
+set -e
 
 
 # ---------------------------------------------------------------------------

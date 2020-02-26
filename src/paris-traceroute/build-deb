@@ -1,8 +1,8 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 # $Id: build-deb 1648 2013-05-29 16:01:03Z dreibh $
 #
 # Debian Packaging Scripts
-# Copyright (C) 2002-2019 by Thomas Dreibholz
+# Copyright (C) 2002-2020 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,6 +18,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: dreibh@iem.uni-due.de
+
+# Bash options:
+set -e
 
 if [ ! -e ./debian.conf ] ; then
    echo >&2 "ERROR: debian.conf does not exist -> no configuration for the new package!"

@@ -1,7 +1,7 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 #
 # Flush Squid Cache
-# Copyright (C) 2012-2019 by Thomas Dreibholz
+# Copyright (C) 2012-2020 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,6 +18,9 @@
 #
 # Contact: dreibh@simula.no
 #
+
+# Bash options:
+set -e
 
 echo -e "\x1b[34m`date +%FT%H:%M:%S`: Stopping Squid service ...\x1b[0m"
 service squid stop

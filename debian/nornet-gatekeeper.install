@@ -1,2 +1,2 @@
-/etc/grub.d/??_nornet_gatekeeper_theme
-/usr/share/nornet-desktop/Splash/Gatekeeper1-1024x768.jpeg /boot/NorNet
+etc/grub.d/??_nornet_gatekeeper_theme
+usr/share/nornet-desktop/Splash/Gatekeeper1-1024x768.jpeg /boot/NorNet

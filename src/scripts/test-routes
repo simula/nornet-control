@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 LOCAL_P1=11.255.1.50
 LOCAL_P2=11.254.1.50

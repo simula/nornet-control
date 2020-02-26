@@ -1,8 +1,8 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Make Tunnelbox Configuration
-# Copyright (C) 2012-2019 by Thomas Dreibholz
+# Copyright (C) 2012-2020 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -163,6 +163,14 @@ def getSquidDiskCacheSize():
 def getSquidParentCache():
    try:
       return NorNet_Configuration['NorNet_Squid_ParentCache']
+   except:
+      return ''
+
+
+# ###### Get Squid parent cache #############################################
+def getSquidAdditionalNetworks():
+   try:
+      return NorNet_Configuration['NorNet_Squid_AdditionalNetworks']
    except:
       return ''
 
@@ -965,6 +973,17 @@ def makeSquidConfiguration(nodeName, localSite):
       for version in [ 4, 6 ]:
          outputFile.write('acl localnet src ' + str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '\n')
 
+   additionalNetworks = shlex.split(getSquidAdditionalNetworks())
+   for i in range(0, len(additionalNetworks)):
+      try:
+         network = ip_interface(additionalNetworks[i])
+         if i == 0:
+            outputFile.write('\n# Additional networks:\n')
+         outputFile.write('acl localnet src ' + str(network) + '\n')
+
+      except Exception as e:
+         error('Bad configuration "' + additionalNetworks[i] + '" for NorNet_Squid_AdditionalNetworks: ' + str(e))
+
    outputFile.write('\n# Ports:\n')
    outputFile.write('acl SSL_ports port 443\n')
    outputFile.write('acl Safe_ports port 80          # http\n')
@@ -993,8 +1012,11 @@ def makeSquidConfiguration(nodeName, localSite):
    # outputFile.write('extension_methods REPORT MERGE MKACTIVITY CHECKOUT PROPFIND\n\n')
 
    outputFile.write('# Improve privacy:\n')
-   outputFile.write('request_header_access User-Agent deny all\n')
-   outputFile.write('request_header_replace User-Agent Mozilla/5.0 (compatible)\n')
+   # NOTE: Commented out!
+   # - request_header_access causes problems with CDNs, resulting in HTTP 403.
+   # - request_header_replace user agent change even makes user agents more unique.
+   # outputFile.write('request_header_access User-Agent deny all\n')
+   # outputFile.write('request_header_replace User-Agent Mozilla/5.0 (compatible)\n')
    outputFile.write('forwarded_for off\n\n')
 
    outputFile.write('# ================== Caching ===========================\n')

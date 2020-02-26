@@ -1,8 +1,8 @@
-/var/www/Artwork/Graphics/Backgrounds/*.png
-/var/www/Artwork/Graphics/Control/*.png
-/var/www/Artwork/Graphics/Flags/*.png
-/var/www/Artwork/Graphics/Flags/*.svg
-/var/www/Artwork/Graphics/Icons/*.png
-/var/www/Artwork/Graphics/Markers/*.svg
-/var/www/Artwork/Sites/Large/*.jpeg
-/var/www/Artwork/Sites/Small/*.jpeg
+var/www/Artwork/Graphics/Backgrounds/*.png
+var/www/Artwork/Graphics/Control/*.png
+var/www/Artwork/Graphics/Flags/*.png
+var/www/Artwork/Graphics/Flags/*.svg
+var/www/Artwork/Graphics/Icons/*.png
+var/www/Artwork/Graphics/Markers/*.svg
+var/www/Artwork/Sites/Large/*.jpeg
+var/www/Artwork/Sites/Small/*.jpeg
