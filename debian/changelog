@@ -1,3 +1,10 @@
+nornet (1.4.7-1ubuntu1) bionic; urgency=medium
+
+  * New upstream release.
+  * debian/control: Updated standards version to 4.5.0.0.
+
+ -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Wed, 26 Feb 2020 13:55:04 +0100
+
 nornet (1.4.6-1ubuntu1) bionic; urgency=medium
 
   * New upstream release.

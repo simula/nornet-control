@@ -1,3 +1,87 @@
+commit 729133bb0498e1ff3c91db21107376d16360cc5b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 26 11:07:10 2020 +0100
+
+    Minor update.
+
+commit ae5a5415547b09700788fbb612a014172abc5b60
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 26 11:06:54 2020 +0100
+
+    Remove obsolete grub files.
+
+commit e7ef1225237313552b590cc2c7f3395882e823e4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Feb 24 11:45:49 2020 +0100
+
+    Updated scripts.
+
+commit b22df62f72ad76a9ad14681434162b956a4f816b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Feb 24 11:45:38 2020 +0100
+
+    Improved script.
+
+commit ca1160523fd9ac1ebf83a4b37c4eaa77df61ba3a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 19 14:56:00 2020 +0100
+
+    Updated scripts.
+
+commit cb9c829240eff40396c649cff01c718efc72bd4e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Feb 17 18:49:10 2020 +0100
+
+    Added helper script.
+
+commit 98fd13260bff389e33852aa4ce86f1fcc3b07eb3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 12 15:48:01 2020 +0100
+
+    Added image.
+
+commit 4ea3bf53970519faddfc156c6e354b8f84f50301
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 12 15:44:06 2020 +0100
+
+    Updated configuration.
+
+commit 5388f569acf70471c06987ed473c99b7360659f3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 7 14:21:34 2020 +0100
+
+    Show-VSystems: sort list of VMs for VirtualBox.
+
+commit f647c5f6fade94c158eaafbf546393aadac4d901
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 7 13:38:27 2020 +0100
+
+    Updated build scripts
+
+commit ede83da090879abe54471ccd6bdeea8e7f063bbf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jan 29 16:24:06 2020 +0100
+
+    Added another helper script.
+
+commit 38f2ad12ac50e74ae22966ce26baacd25f0f6c99
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jan 29 15:27:24 2020 +0100
+
+    Added comment.
+
+commit 2c4a74122505994eddb608225f0802e9dab7c754
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jan 29 14:42:21 2020 +0100
+
+    Added script.
+
+commit ec39148a5a6c64d604a46aa7293b48cf11f26459
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jan 21 16:28:51 2020 +0100
+
+    New release nornet-1.4.6.
+
 commit f04ccab0eaccc2baf9a8c2394487f63ca97b1b2a
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Tue Jan 21 16:28:43 2020 +0100
