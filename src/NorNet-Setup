@@ -805,15 +805,15 @@ norNetSetup = [
    #'site_altitude'     : 550,
    #'site_contacts'     : [ u'Paxena, Paresh: psaxena@hyderabad.bits-pilani.ac.in',
                            #u'Malhan, Bharat: f20160050@hyderabad.bits-pilani.ac.in' ],
-   #'site_pcu'          : [ IPv4Address('255.255.255.255'), 'pcu-root', 'a-secret-password' ],   # IP OF CONTROL BOX PC
+   #'site_pcu'          : [ IPv4Address('136.233.62.69'), 'pcu-root', 'a-secret-password' ],
    #'site_nornet_if'    : 'eth0',
    #'site_providers' : [
       #[ u'China Telecom', 'eth1',
-           #IPv4Interface('202.100.206.163/28'), IPv4Address('202.100.206.161'),
+           #IPv4Interface('136.233.62.70/24'), IPv4Address('????'),
            #IPv6Interface('::/0'),               IPv6Address('::'),
            #1500, 'fibre, business', 10000, 10000 ],
       #[ u'China Education and Research Network', 'eth2',
-           #IPv4Interface('210.37.80.162/25'), IPv4Address('210.37.80.254'),
+           #IPv4Interface('14.98.244.197/24'), IPv4Address('????'),
            #IPv6Interface('::/0'),             IPv6Address('::'),
            #1500, 'fibre, research', 10000, 10000 ]
    #],
