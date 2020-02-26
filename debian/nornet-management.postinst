@@ -22,6 +22,7 @@ case "$1" in
       echo "-----"
 
       if [ -x "$(command -v update-grub)" ] ; then
+         rm -f /etc/grub.d/01_nornet_management_theme   # Remove obsolete file!
          update-grub || true
       fi
       ;;

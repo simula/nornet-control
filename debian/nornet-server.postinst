@@ -5,6 +5,7 @@ set -e
 case "$1" in
    configure)
       if [ -x "$(command -v update-grub)" ] ; then
+         rm -f /etc/grub.d/05_nornet_server_theme   # Remove obsolete file!
          update-grub || true
       fi
       ;;
