@@ -31,7 +31,7 @@ TYPE="$2"
 
 KEYLEN=4096
 EKEYLEN=4096
-CURVE="secp384r1"   # "c2tnb431r1"
+CURVE="secp384r1"
 DAYS=1830
 HASH_PARAM="-sha512"
 
@@ -52,7 +52,7 @@ elif [ "$TYPE" = "ec" ] ; then
 elif [ "$TYPE" = "keyexchange" ] ; then
    # Key exchange parameters
    openssl ecparam -name $CURVE -out $PREFIX.ecparam
-   openssl dhparam -2 $EKEYLEN -out $PREFIX.dhparam
+   openssl dhparam -out $PREFIX.dhparam $EKEYLEN
    exit 0
 else
    echo >&2 "ERROR: Bad type $TYPE!"
