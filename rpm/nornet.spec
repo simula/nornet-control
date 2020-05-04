@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.4.7
+Version: 1.4.8~alpha1.0
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -174,7 +174,7 @@ See https://www.nntb.no for details on NorNet!
 %post management
 echo "Updating /etc/default/grub with NorNet settings:"
 echo "-----"
-cat grub-defaults | \
+cat /usr/share/nornet/grub-defaults | \
    ( if grep "biosdevname=0" >/dev/null 2>&1 /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"biosdevname=0 /g" ; else cat ; fi ) | \
    ( if grep "net.ifnames=0" >/dev/null 2>&1 /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"net.ifnames=0 /g" ; else cat ; fi ) | \
    tee /etc/default/grub.new && \
