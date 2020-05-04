@@ -36,6 +36,11 @@ siteIndexList = []
 for siteIndex in siteList:
    siteIndexList.append(siteIndex)
 
+if len(sys.argv) > 1:
+   print('{0:3s} {1:1s} {2:8s} {3:36s} {4:4s} {5:25s} {6:25s} {7:9s} {8:10s} {9:12s} {10:42s} {11:20s} {12:20s}'.format(
+      'ID', 'A', 'SSN', 'SiteLongName', 'CC', 'Province', 'City', 'Lat', 'Lon', 'PSN', 'PLongName', 'IPv4', 'IPv6'
+   ))
+
 for siteIndex in sorted(siteIndexList):
    site         = siteList[siteIndex]
    siteName     = site['site_utf8']
@@ -53,7 +58,7 @@ for siteIndex in sorted(siteIndexList):
             externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
             externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
 
-            print('{0:3d} {1:1d} {2:8s} {3:36s} {4:2s} {5:25s} {6:25s} {7:s} {8:s} {9:42s} {10:12s} {11:20s} {12:20s}'.format(
+            print('{0:3d} {1:1d} {2:8s} {3:36s} {4:2s} {5:25s} {6:25s} {7:s} {8:s} {9:12s} {10:42s} {11:20s} {12:20s}'.format(
                      int(site['site_index']),
                      int(siteEnabled),
                      '"' + str(site['site_short_name']) + '"',
@@ -63,8 +68,8 @@ for siteIndex in sorted(siteIndexList):
                      '"' + getTagValue(siteTagsList, 'nornet_site_city', '?')           + '"',
                      fill(str(site['site_latitude']), 9),
                      fill(str(site['site_longitude']), 10),
-                     '"' + provider['provider_long_name']  + '"',
                      '"' + provider['provider_short_name'] + '"',
+                     '"' + provider['provider_long_name']  + '"',
                      '"' + str(externalNetworkIPv4) + '"',
                      '"' + str(externalNetworkIPv6) + '"'
                   ))
