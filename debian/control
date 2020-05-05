@@ -37,6 +37,7 @@ Depends: anacron,
          curl,
          eatmydata,
          ethtool,
+         fail2ban,
          git,
          gpm,
          htop,
@@ -193,8 +194,7 @@ Package: nornet-node
 Architecture: all
 Conflicts: miredo
 Pre-Depends: ${misc:Pre-Depends}
-Depends: fail2ban,
-         ifupdown,
+Depends: ifupdown,
          lsb-base,
          nfs-common,
          nornet-api (= ${binary:Version}),
@@ -319,8 +319,7 @@ Description: Display tools for the NorNet system environment
 
 Package: nornet-gatekeeper
 Architecture: all
-Depends: fail2ban,
-         nornet-api (= ${binary:Version}),
+Depends: nornet-api (= ${binary:Version}),
          nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          ${misc:Depends},
@@ -406,8 +405,7 @@ Description: Database tools for the NorNet system environment
 Package: nornet-server
 Architecture: all
 Pre-Depends: ${misc:Pre-Depends}
-Depends: fail2ban,
-         ifupdown,
+Depends: ifupdown,
          libvirt-clients | libvirt-bin,
          lsb-base,
          nfs-common,

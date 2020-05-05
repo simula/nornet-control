@@ -78,6 +78,7 @@ Requires: colordiff
 Requires: cronie
 Requires: curl
 Requires: ethtool
+Requires: fail2ban
 Requires: git
 Requires: gpm
 Requires: hping3
@@ -357,7 +358,6 @@ BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
 Requires: %{name}-autoupdate = %{version}-%{release}
 Requires: %{name}-management = %{version}-%{release}
-Requires: fail2ban
 Requires: grub2
 Requires: libvirt-client
 Requires: nfs-utils
@@ -588,7 +588,6 @@ BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
 Requires: %{name}-autoupdate = %{version}-%{release}
 Requires: %{name}-management = %{version}-%{release}
-Requires: fail2ban
 
 %description gatekeeper
 This package contains the packages to set up a gatekeeper station for the
@@ -768,7 +767,6 @@ BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
 Requires: %{name}-management = %{version}-%{release}
 Requires: edk2-ovmf
-Requires: fail2ban
 Requires: grub2
 Requires: libvirt-client
 Requires: nfs-utils
