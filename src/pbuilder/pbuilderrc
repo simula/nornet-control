@@ -16,7 +16,7 @@
 #
 # Contact: dreibh@simula.no
 
-DISTRIBUTION=cosmic
+DISTRIBUTION=focal
 COMPONENTS="main universe"
 
 MIRRORSITE=http://no.archive.ubuntu.com/ubuntu/

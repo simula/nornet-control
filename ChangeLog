@@ -1,3 +1,169 @@
+commit c015ce9d93fd0f649ab75de97ef0baadc6911b92
+Merge: bf3496fd 56a3bdf0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue May 5 13:15:46 2020 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit bf3496fd41b7ac5b712d0349cf3efcedc248d5fa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue May 5 13:15:39 2020 +0200
+
+    Version bump.
+
+commit 56a3bdf096415a2316ee21587df061b7c1cd298c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue May 5 13:14:44 2020 +0200
+
+    Dependency fix.
+
+commit caecb1b1c1a61dce302e102d81b39f77ace32a52
+Merge: 436eafd6 8d728053
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue May 5 08:44:09 2020 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 436eafd6cf533f5b692c7610bd1e29fb2950d5df
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue May 5 08:43:30 2020 +0200
+
+    Updated build scripts
+
+commit f35c597677ce8c55ff622fdcdfa03444d6991ebf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue May 5 08:43:30 2020 +0200
+
+    Updated build scripts
+
+commit 2b81c5a4172a75a1e170e5f1446a6559d56a69bb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue May 5 08:43:09 2020 +0200
+
+    Updated Ubuntu/Debian packaging files.
+
+commit 8d728053b9a119a852a1ef103173839c32214717
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 4 13:27:03 2020 +0200
+
+    Minor update.
+
+commit 1db4e2c1b1d345c18fa64d4a464b2e0e19ee345b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 4 13:02:51 2020 +0200
+
+    An update.
+
+commit d7ad3deda9d51ac1378cf4e003d76e60e8cb65bf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 4 12:48:21 2020 +0200
+
+    Improved script.
+
+commit 724e44ea9195bd12a66a2e0ff018dca01f2cb6aa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 4 09:33:24 2020 +0200
+
+    Also fixed the RPM spec.
+
+commit 71f9a99a844e130e28a2f96bac3a98eb3f80ca85
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun May 3 14:17:06 2020 +0200
+
+    A fix.
+
+commit 1a1a2cc6036031e7476d4c9e01d180b4c8ea3167
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun May 3 09:52:24 2020 +0200
+
+    Updated distribution in pbuilderrc.
+
+commit 829f6b0b2d6c4bfe2a00c2b606d7a278a1b69061
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat May 2 11:51:49 2020 +0200
+
+    Updated packaging files.
+
+commit 5dcbbd72cb611f8bebd3d209e676b7bbe31ccb24
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat May 2 11:49:51 2020 +0200
+
+    Updated script to handle GRUB_ENABLE_CRYPTODISK option if necessary.
+
+commit 019d60b86818e9414d964af46d00208e85415ae6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat May 2 11:49:24 2020 +0200
+
+    Setting GRUB_RECORDFAIL_TIMEOUT to GRUB_TIMEOUT is necessary to show the boot menu when booting with EFI.
+
+commit 9cf252ec2d8e33c3630e84411cfb636a776f492c
+Merge: 96930d3f 27223840
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 30 18:39:37 2020 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 96930d3fd23b651b80b8c9e8db8159c4dd722dda
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 30 18:39:22 2020 +0200
+
+    Improved script.
+
+commit 272238408e1dcffdb73fb5a2d7b2457bfa357e1a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 17 11:31:00 2020 +0200
+
+    Updated Travis CI configuration for Ubuntu builds.
+
+commit cde7771e9ea5ab14bc3fca1349e5dd570dae35b0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 16 11:42:56 2020 +0200
+
+    Updated Travis CI configuration: Ubuntu 19.04 (Disco Dingo) is now obsolete.
+
+commit 65659d43991fcc83e9a617637703c76265fcf695
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Apr 14 19:05:34 2020 +0200
+
+    Updated submodule.
+
+commit 616a896d7e818309dfff7419593796ca37278ac5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Apr 14 19:05:19 2020 +0200
+
+    Updated build scripts
+
+commit 8c403027d4267a0083ddbfbe7d0c73531fa50c28
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 26 09:56:53 2020 +0100
+
+    Updated build scripts
+
+commit 7fae28d02f51b7d19d0d6d08e0e7f95bf37df355
+Merge: a3bbedc7 10e2c7c6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 26 15:56:05 2020 +0100
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit a3bbedc7d228671783c0de627c70a7f1b7c22ed4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 26 15:56:01 2020 +0100
+
+    An update.
+
+commit 10e2c7c6fc04f8f2bccf2ec877765c2ff9affdb7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 26 14:02:12 2020 +0100
+
+    Updated LSM entry.
+
+commit 83d366f54211bdf0bd842d86b67b1ed2a6d3f900
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 26 13:55:12 2020 +0100
+
+    New release nornet-1.4.7.
+
 commit 729133bb0498e1ff3c91db21107376d16360cc5b
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Feb 26 11:07:10 2020 +0100

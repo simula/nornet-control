@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.4.7
+Version: 1.4.8
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -78,6 +78,7 @@ Requires: colordiff
 Requires: cronie
 Requires: curl
 Requires: ethtool
+Requires: fail2ban
 Requires: git
 Requires: gpm
 Requires: hping3
@@ -176,7 +177,9 @@ echo "Updating /etc/default/grub with NorNet settings:"
 echo "-----"
 cat /usr/share/nornet/grub-defaults | \
    ( if grep "biosdevname=0" >/dev/null 2>&1 /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"biosdevname=0 /g" ; else cat ; fi ) | \
-   ( if grep "net.ifnames=0" >/dev/null 2>&1 /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"net.ifnames=0 /g" ; else cat ; fi ) | tee /etc/default/grub.new && \
+   ( if grep "net.ifnames=0" >/dev/null 2>&1 /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"net.ifnames=0 /g" ; else cat ; fi ) | \
+   tee /etc/default/grub.new && \
+grep "^GRUB_ENABLE_CRYPTODISK=" /etc/default/grub | tee --append /etc/default/grub.new && \
 mv /etc/default/grub.new /etc/default/grub
 echo "-----"
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
@@ -355,7 +358,6 @@ BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
 Requires: %{name}-autoupdate = %{version}-%{release}
 Requires: %{name}-management = %{version}-%{release}
-Requires: fail2ban
 Requires: grub2
 Requires: libvirt-client
 Requires: nfs-utils
@@ -586,7 +588,6 @@ BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
 Requires: %{name}-autoupdate = %{version}-%{release}
 Requires: %{name}-management = %{version}-%{release}
-Requires: fail2ban
 
 %description gatekeeper
 This package contains the packages to set up a gatekeeper station for the
@@ -766,7 +767,6 @@ BuildArch: noarch
 Requires: %{name}-api = %{version}-%{release}
 Requires: %{name}-management = %{version}-%{release}
 Requires: edk2-ovmf
-Requires: fail2ban
 Requires: grub2
 Requires: libvirt-client
 Requires: nfs-utils
@@ -831,6 +831,8 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %changelog
+* Tue May 05 2020 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.4.8
+- New upstream release.
 * Wed Feb 26 2020 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.4.7
 - New upstream release.
 * Tue Jan 21 2020 Thomas Dreibholz <dreibh@iem.uni-due.de> - 1.4.6
