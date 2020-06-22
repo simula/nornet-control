@@ -1,7 +1,7 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 #
 # Build NorNet Kernel Repository
-# Copyright (C) 2017-2019 by Thomas Dreibholz
+# Copyright (C) 2017-2020 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,9 +19,12 @@
 # Contact: dreibh@simula.no
 #
 
+# Bash options:
+set -e
+
 XENIAL_KERNEL_DEBS=/storage/mptcp-kernels/xenial-deb
 BIONIC_KERNEL_DEBS=/storage/mptcp-kernels/bionic-deb
-DISCO_KERNEL_DEBS=/storage/mptcp-kernels/disco-deb
+DISCO_KERNEL_DEBS=/storage/mptcp-kernels/focal-deb
 
 LOCAL_KERNEL_REPO=/storage/mptcp-kernels/ubuntu
 PUBLIC_KERNEL_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ubuntu/
@@ -39,15 +42,17 @@ PUBLIC_KERNEL_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ub
 
 echo "Synchronising packages for Xenial ..."
 mkdir -p ${XENIAL_KERNEL_DEBS}/
-rsync -P -e "ssh -p 50691" thomasd@dnat.simula.no:'src/linux*.deb' ${XENIAL_KERNEL_DEBS}/
+rsync --partial -a -e "ssh -p 50691" thomasd@dnat.simula.no:'~/src/multipath/linux*.deb' ${XENIAL_KERNEL_DEBS}/ &
 
 echo "Synchronising packages for Bionic ..."
 mkdir -p ${BIONIC_KERNEL_DEBS}/
-rsync -P ~/src/linux*.deb ${BIONIC_KERNEL_DEBS}/
+rsync --partial -a ~/src/multipath/linux*.deb ${BIONIC_KERNEL_DEBS}/ &
 
-echo "Synchronising packages for Disco ..."
+echo "Synchronising packages for Focal ..."
 mkdir -p ${DISCO_KERNEL_DEBS}/
-rsync -P 158.36.78.120:'src/multipath/linux*.deb' ${DISCO_KERNEL_DEBS}/
+rsync --partial -a -e "ssh -J oesthorn.nntb.no" nornetpp@besserud.simula.nornet:'~/src/multipath/linux*.deb' ${DISCO_KERNEL_DEBS}/ &
+
+wait
 
 
 echo "Creating repository ..."
@@ -58,10 +63,12 @@ cp distributions ${LOCAL_KERNEL_REPO}/conf
 
 
 cd ${LOCAL_KERNEL_REPO}
-# reprepro --ignore=undefinedtarget -C xenial-kernel includedeb xenial -C bionic-kernel includedeb bionic ${BIONIC_KERNEL_DEBS}/*.deb ${XENIAL_KERNEL_DEBS}/*.deb
+echo "Xenial"
 reprepro --ignore=undefinedtarget -C xenial-kernel includedeb xenial ${XENIAL_KERNEL_DEBS}/*.deb
+echo "Bionic"
 reprepro --ignore=undefinedtarget -C bionic-kernel includedeb bionic ${BIONIC_KERNEL_DEBS}/*.deb
-reprepro --ignore=undefinedtarget -C disco-kernel  includedeb disco ${DISCO_KERNEL_DEBS}/*.deb
+echo "Focal"
+reprepro --ignore=undefinedtarget -C focal-kernel  includedeb focal  ${DISCO_KERNEL_DEBS}/*.deb
 
 
 echo "Copying to server ..."

@@ -1,3 +1,3 @@
-/etc/grub.d/??_nornet_development_theme
-/usr/share/nornet-desktop/Splash/Development1-1024x768.jpeg /boot/NorNet
-/usr/share/nornet/pbuilderrc
+etc/grub.d/??_nornet_development_theme
+usr/share/nornet-desktop/Splash/Development1-1024x768.jpeg /boot/NorNet
+usr/share/nornet/pbuilderrc

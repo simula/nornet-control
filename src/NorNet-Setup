@@ -1,8 +1,8 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # NorNet Setup
-# Copyright (C) 2012-2019 by Thomas Dreibholz
+# Copyright (C) 2012-2020 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -140,7 +140,7 @@ norNetSetup = [
    'site_longitude'    : 10.68166,
    'site_altitude'     : 200,
    # Phone: +47-95-10-24-10
-   'site_contacts'     : [ u'IT-operations@HiG: helpdesk@hig.no', u'Langseth, Jon: jon.langseth@ntnu.no' ],
+   'site_contacts'     : [ u'IT-operations@HiG: orakel@ntnu.no', u'Langseth, Jon: jon.langseth@ntnu.no', u'Gran, Ernst Gunnar: ernst.g.gran@ntnu.no' ],
    'site_pcu'          : [ IPv4Address('128.39.49.165'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -789,8 +789,46 @@ norNetSetup = [
       [ 105, 6, u'hongshulin',   'hongshulin.hkc.nornet',   'vnc://baoting.hkc.nornet:5901'   ]
    ] },
 
+ ## BITS Pilani (NAME IN LOCAL LANGUAGE, like 海口经济学院)
+ #{ 'site_index'        : 90,
+   #'site_enabled'      : True,
+   #'site_long_name'    : u'Birla Institute of Technology and Science',
+   #'site_short_name'   : 'BITS',
+   #'site_url'          : 'https://www.bits-pilani.ac.in',
+   #'site_domain'       : 'bits.nornet',
+   #'site_city'         : 'Hyderabad',
+   #'site_province'     : 'Telangana',
+   #'site_country'      : 'India',
+   #'site_country_code' : 'IN',
+   #'site_latitude'     : 17.37,
+   #'site_longitude'    : 78.48,
+   #'site_altitude'     : 550,
+   #'site_contacts'     : [ u'Paxena, Paresh: psaxena@hyderabad.bits-pilani.ac.in',
+                           #u'Malhan, Bharat: f20160050@hyderabad.bits-pilani.ac.in' ],
+   #'site_pcu'          : [ IPv4Address('136.233.62.69'), 'pcu-root', 'a-secret-password' ],
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'China Telecom', 'eth1',
+           #IPv4Interface('136.233.62.70/24'), IPv4Address('????'),
+           #IPv6Interface('::/0'),               IPv6Address('::'),
+           #1500, 'fibre, business', 10000, 10000 ],
+      #[ u'China Education and Research Network', 'eth2',
+           #IPv4Interface('14.98.244.197/24'), IPv4Address('????'),
+           #IPv6Interface('::/0'),             IPv6Address('::'),
+           #1500, 'fibre, research', 10000, 10000 ]
+   #],
+   #'site_nodes' : [
+      ## Naming scheme: places in Hainan
+      #[ 100, 1, u'huoshankou',   'huoshankou.hkc.nornet',   'vnc://wuzhishan.hkc.nornet:5900' ],
+      #[ 101, 2, u'dongzhaigang', 'dongzhaigang.hkc.nornet', 'vnc://wuzhishan.hkc.nornet:5901' ],
+      #[ 102, 3, u'wanlvyuan',    'wanlvyuan.hkc.nornet',    'vnc://lingshui.hkc.nornet:5900'  ],
+      #[ 103, 4, u'baishamen',    'baishamen.hkc.nornet',    'vnc://lingshui.hkc.nornet:5901'  ],
+      #[ 104, 5, u'guanlanhu',    'guanlanhu.hkc.nornet',    'vnc://baoting.hkc.nornet:5900'   ],
+      #[ 105, 6, u'hongshulin',   'hongshulin.hkc.nornet',   'vnc://baoting.hkc.nornet:5901'   ]
+   #] },
+
  { 'site_index'        : 100,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'The University of Kansas',
    'site_short_name'   : 'KU',
    'site_url'          : 'https://www.ittc.ku.edu',

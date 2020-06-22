@@ -1,5 +1,5 @@
 # MELODIC/NorNet Build Scripts
-# Copyright (C) 2017-2019 by Thomas Dreibholz
+# Copyright (C) 2017-2020 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
 PROJECT(nornet LANGUAGES C)
 
 SET(BUILD_MAJOR "1")
-SET(BUILD_MINOR "3")
-SET(BUILD_PATCH "14")
+SET(BUILD_MINOR "4")
+SET(BUILD_PATCH "8")
 SET(BUILD_VERSION ${BUILD_MAJOR}.${BUILD_MINOR}.${BUILD_PATCH})
 
 

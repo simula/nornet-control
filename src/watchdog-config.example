@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # ------ Set fallback IP settings here! -------
 CENTRAL_SITE_TB="10.1.1.1"
 FALLBACK_INTERFACE="eth2"

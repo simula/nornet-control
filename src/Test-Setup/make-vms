@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-ISO_DIRECTORY="$HOME/Downloads"
+ISO_DIRECTORY="$HOME/ISOs"
 ISOs=`find $ISO_DIRECTORY -name *test*.iso`
 
 VM_DISK=200

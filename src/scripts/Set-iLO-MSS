@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # HP's crapware handles PMTU discovery by aborting the TCP connection
 # => Allow connection to HP's iLO crapware by setting the MSS to 576.
