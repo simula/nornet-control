@@ -183,14 +183,14 @@ norNetSetup = [
            IPv4Interface('129.242.157.228/28'),    IPv4Address('129.242.157.225'),
            IPv6Interface('::/0'),                  IPv6Address('::'),
            1500, 'fibre, research', 100000, 100000 ],
-      [ u'PowerTech', 'eth2',
-           IPv4Interface('195.159.158.162/30'),    IPv4Address('195.159.158.161'),
-           IPv6Interface('2001:840:490c::162/64'), IPv6Address('2001:840:490c::1'),
-           1492, 'ADSL, consumer', 2000, 128 ],
-      [ u'Telenor', 'eth3',
+      [ u'Telenor', 'eth2',
            IPv4Interface('62.92.89.210/30'),       IPv4Address('62.92.89.209'),
            IPv6Interface('::/0'),                  IPv6Address('::'),
-           1492, 'ADSL, consumer', 2000, 256 ]
+           1492, 'ADSL, consumer', 2000, 256 ],
+      [ u'PowerTech', 'eth3',
+           IPv4Interface('195.159.158.162/30'),    IPv4Address('195.159.158.161'),
+           IPv6Interface('2001:840:490c::162/64'), IPv6Address('2001:840:490c::1'),
+           1492, 'ADSL, consumer', 2000, 128 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'amundsen',    'ishav.uit.nornet',       'vnc://ishav.uit.nornet:5900'       ],
