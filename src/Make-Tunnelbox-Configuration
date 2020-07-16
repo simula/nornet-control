@@ -1,8 +1,8 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Make Tunnelbox Configuration
-# Copyright (C) 2012-2019 by Thomas Dreibholz
+# Copyright (C) 2012-2020 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -111,12 +111,20 @@ def getLocalSiteDNATOptionsString():
       return ''
 
 
-# ###### Get Squid memory cache #############################################
+# ###### Get DNS forwarders #################################################
 def getLocalSiteDNSForwardersString():
    try:
       return str(NorNet_Configuration['NorNet_LocalSite_DNS_Forwarders'])
    except:
       return ''
+
+
+# ###### Get DNS DNSSEC validation ##########################################
+def getLocalSiteDNSValidateDNSSEC():
+   try:
+      return checkParameter('NorNet_LocalSite_DNS_ValidateDNSSEC', [ 'on', 'off'])
+   except:
+      return 'on'
 
 
 # ###### Get blacklist ######################################################
@@ -155,6 +163,14 @@ def getSquidDiskCacheSize():
 def getSquidParentCache():
    try:
       return NorNet_Configuration['NorNet_Squid_ParentCache']
+   except:
+      return ''
+
+
+# ###### Get Squid parent cache #############################################
+def getSquidAdditionalNetworks():
+   try:
+      return NorNet_Configuration['NorNet_Squid_AdditionalNetworks']
    except:
       return ''
 
@@ -392,7 +408,9 @@ def getSlavesForSite(fullSiteList, localSite):
             (remoteSite['site_index'] != localSite['site_index'])) or
            ((localSite['site_index'] != NorNet_SiteIndex_Central) and
             (remoteSite['site_index'] == NorNet_SiteIndex_Central)) ):
-         slaves.append('ns.' + remoteSite['site_domain'] + '.')
+         # The remote site should be enabled as well!
+         if remoteSite['site_enabled'] == True:
+           slaves.append('ns.' + remoteSite['site_domain'] + '.')
 
    return slaves
 
@@ -720,7 +738,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
                      for incomingProviderIndex in incomingProviderList:
                         incomingProvider = incomingProviderList[incomingProviderIndex]
 
-                        outgoingTunnelIP  = makeNorNetTunnelIP(outgoingSiteIndex, outgoingProviderIndex,
+                        outgoingTunnelIP = makeNorNetTunnelIP(outgoingSiteIndex, outgoingProviderIndex,
                                                               incomingSiteIndex, incomingProviderIndex,
                                                               version)
                         incomingTunnelIP = makeNorNetTunnelIP(incomingSiteIndex, incomingProviderIndex,
@@ -745,18 +763,21 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
          masterSite = None
 
       zoneConfFile.write('// ====== ' + site['site_long_name'] + ' ======\n')
-      writeZone(zoneConfFile, site['site_domain'], site['site_domain'] + '.db', masterSite)
+      if (masterSite == None) or (masterSite['site_enabled'] == True):
+         writeZone(zoneConfFile, site['site_domain'], site['site_domain'] + '.db', masterSite)
 
-      siteProviderList = getNorNetProvidersForSite(site)
-      for siteProviderIndex in siteProviderList:
-         siteProvider = siteProviderList[siteProviderIndex]
-         for version in [ 4, 6 ]:
-            providerNetwork = makeNorNetIP(siteProviderIndex, siteIndex, 0, version)
-            providerZone = getZoneForAddress(providerNetwork, providerNetwork.network.prefixlen)
-            writeZone(zoneConfFile,
-                      providerZone,
-                      str.lower(siteProvider['provider_short_name']) + '.' + site['site_domain'] + '.ipv' + str(version) + '.db',
-                      masterSite)
+         siteProviderList = getNorNetProvidersForSite(site)
+         for siteProviderIndex in siteProviderList:
+            siteProvider = siteProviderList[siteProviderIndex]
+            for version in [ 4, 6 ]:
+               providerNetwork = makeNorNetIP(siteProviderIndex, siteIndex, 0, version)
+               providerZone = getZoneForAddress(providerNetwork, providerNetwork.network.prefixlen)
+               writeZone(zoneConfFile,
+                        providerZone,
+                        str.lower(siteProvider['provider_short_name']) + '.' + site['site_domain'] + '.ipv' + str(version) + '.db',
+                        masterSite)
+      else:
+         zoneConfFile.write('// Site is disabled!\n\n')
 
    zoneConfFile.write('\n// ====== Tunnel IP Reverse Lookup ======\n')
    # The Central Site tunnelbox is master for the reverse lookup of the tunnel IPs.
@@ -765,8 +786,8 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
    else:
       masterSite = fullSiteList[NorNet_SiteIndex_Central]
    for version in [ 4, 6 ]:
-      tunnelNetwork  = makeNorNetTunnelIP(0, 0, 0, 0, version)
-      tunnelZone     = getZoneForAddress(tunnelNetwork, tunnelNetwork.network.prefixlen)
+      tunnelNetwork = makeNorNetTunnelIP(0, 0, 0, 0, version)
+      tunnelZone    = getZoneForAddress(tunnelNetwork, tunnelNetwork.network.prefixlen)
       writeZone(zoneConfFile, tunnelZone, 'tunnels.ipv' + str(version) + '.db',
                 masterSite)
 
@@ -788,10 +809,12 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
    optionsConfFile.write("options {\n")
    optionsConfFile.write("\tdirectory          \"/var/cache/bind\";\n")
    optionsConfFile.write("\tdnssec-enable      yes;\n")
-   optionsConfFile.write("\tdnssec-validation  no;\n")
+   if getLocalSiteDNSValidateDNSSEC() == 'on':
+      optionsConfFile.write("\tdnssec-validation  yes;\n")
+   else:
+      optionsConfFile.write("\tdnssec-validation  no;   // Setting for China!\n")
    optionsConfFile.write("\tdnssec-lookaside   auto;\n")
-   optionsConfFile.write("\tauth-nxdomain      no;   # conform to RFC1035\n")
-   optionsConfFile.write("\tempty-zones-enable yes;\n")
+   optionsConfFile.write("\tlisten-on          { any; };\n")
    optionsConfFile.write("\tlisten-on-v6       { any; };\n")
    optionsConfFile.write('\tallow-recursion    { nornet; };\n')
    optionsConfFile.write('\tallow-query        { nornet; };\n')
@@ -950,6 +973,17 @@ def makeSquidConfiguration(nodeName, localSite):
       for version in [ 4, 6 ]:
          outputFile.write('acl localnet src ' + str(makeNorNetTunnelIP(0, 0, 0, 0, version)) + '\n')
 
+   additionalNetworks = shlex.split(getSquidAdditionalNetworks())
+   for i in range(0, len(additionalNetworks)):
+      try:
+         network = ip_interface(additionalNetworks[i])
+         if i == 0:
+            outputFile.write('\n# Additional networks:\n')
+         outputFile.write('acl localnet src ' + str(network) + '\n')
+
+      except Exception as e:
+         error('Bad configuration "' + additionalNetworks[i] + '" for NorNet_Squid_AdditionalNetworks: ' + str(e))
+
    outputFile.write('\n# Ports:\n')
    outputFile.write('acl SSL_ports port 443\n')
    outputFile.write('acl Safe_ports port 80          # http\n')
@@ -978,8 +1012,11 @@ def makeSquidConfiguration(nodeName, localSite):
    # outputFile.write('extension_methods REPORT MERGE MKACTIVITY CHECKOUT PROPFIND\n\n')
 
    outputFile.write('# Improve privacy:\n')
-   outputFile.write('request_header_access User-Agent deny all\n')
-   outputFile.write('request_header_replace User-Agent Mozilla/5.0 (compatible)\n')
+   # NOTE: Commented out!
+   # - request_header_access causes problems with CDNs, resulting in HTTP 403.
+   # - request_header_replace user agent change even makes user agents more unique.
+   # outputFile.write('request_header_access User-Agent deny all\n')
+   # outputFile.write('request_header_replace User-Agent Mozilla/5.0 (compatible)\n')
    outputFile.write('forwarded_for off\n\n')
 
    outputFile.write('# ================== Caching ===========================\n')

@@ -11,7 +11,7 @@
 # --------------------------------------------------------------------------
 #
 # SuNILab Desktop Background Script
-# Copyright (C) 2017-2019 by Thomas Dreibholz
+# Copyright (C) 2017-2020 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@
 #############################################################################
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
-PROJECT(undefined LANGUAGES C)   # to be set in Setting.cmake
+PROJECT(undefined NONE)   # to be set in Settings.input
 INCLUDE(Settings.input)
 
 
@@ -111,9 +111,9 @@ IF(NOT MAKE_CAPTION)
    MESSAGE(FATAL_ERROR "Make-Caption (${TDD_MAKE_CAPTION}) not found!")
 ENDIF()
 
-FIND_PROGRAM(MAKE_LOGO ${TDD_MAKE_LOGO})
-IF(NOT MAKE_LOGO)
-   MESSAGE(FATAL_ERROR "Make-Logo (${TDD_MAKE_LOGO}) not found!")
+FIND_PROGRAM(MAKE_TEXT ${TDD_MAKE_TEXT})
+IF(NOT MAKE_TEXT)
+   MESSAGE(FATAL_ERROR "Make-Text (${TDD_MAKE_TEXT}) not found!")
 ENDIF()
 
 FIND_PROGRAM(MAKE_BACKGROUND ${TDD_MAKE_BACKGROUND})
@@ -235,7 +235,7 @@ FOREACH(textFile IN LISTS TDD_TEXT_FILES)
    GET_FILENAME_COMPONENT(textImage ${textImage} NAME)
 
    ADD_CUSTOM_COMMAND(OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text/${textImage}
-                      COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} MAKE_LOGO="${MAKE_LOGO}" OUTPUT="${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text/${textImage}" ${BASH} ${textFile}
+                      COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} MAKE_TEXT="${MAKE_TEXT}" OUTPUT="${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text/${textImage}" ${BASH} ${textFile}
                       DEPENDS ${textFile}
                               generate_gimpDirStamp
                               ${gimpDirStamp})
@@ -262,7 +262,7 @@ FOREACH(image IN LISTS TDD_IMAGE_FILES)
       makeUniqueTarget(generate_hostnameImage "generate_${hostname}.png")
 
       ADD_CUSTOM_COMMAND(OUTPUT  ${hostnameImage}
-                         COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_LOGO} ${hostnameImage} "${hostname}" 256 10 "Brushed Aluminium" "Comic Sans MS"
+                         COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_TEXT} ${hostnameImage} "${hostname}" 256 10 "Brushed Aluminium" "Comic Sans MS"
                          DEPENDS generate_gimpDirStamp
                                  ${gimpDirStamp})
       ADD_CUSTOM_TARGET(${generate_hostnameImage} DEPENDS ${hostnameImage})
@@ -290,7 +290,8 @@ ADD_CUSTOM_COMMAND(OUTPUT  ${bootsplash_overlayImage}
                    DEPENDS ${generate_captionFile}
                            ${captionFile}
                            generate_gimpDirStamp
-                           ${gimpDirStamp})
+                           ${gimpDirStamp}
+                           ${BUILD_CAPTION})
 ADD_CUSTOM_TARGET(${generate_bootsplash_overlayImage} DEPENDS ${bootsplash_overlayImage})
 
 
@@ -316,7 +317,8 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
    ADD_CUSTOM_COMMAND(OUTPUT ${overlayImage}
                       COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${BUILD_OVERLAY} ${overlayImage} ${width} ${height} ${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text
                       DEPENDS generate_all_texts
-                              ${all_texts})
+                              ${all_texts}
+                              ${BUILD_OVERLAY})
    ADD_CUSTOM_TARGET(${generate_overlayImage} DEPENDS ${overlayImage})
 
 

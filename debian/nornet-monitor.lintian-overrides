@@ -1,1 +1,4 @@
+nornet-monitor: extra-license-file
+nornet-monitor: font-in-non-font-package
+nornet-monitor: font-outside-font-dir
 nornet-monitor: dir-or-file-in-var-www

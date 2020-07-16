@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 OLD="4.4.84-888.fc25"
-NEW="4.9.76-888.fc25"
+NEW="4.9.87-888.fc25"
 
 new=`echo "$NEW" | sed -e "s/-/./g"`
 old=`echo "$OLD" | sed -e "s/-/./g"`
@@ -29,8 +29,8 @@ while [ $# -gt 0 ] ; do
       NodeUpdate.py
       
       # Update slivers
-      cd /vservers
-      find -maxdepth 1 -name "[a-z0-9]*" -type d -printf "%f\n" | xargs -n1 -i§ virsh -c lxc:/// lxc-enter-namespace --noseclabel § /bin/bash -c "sudo dnf upgrade -y"
+#      cd /vservers
+#      find -maxdepth 1 -name "[a-z0-9]*" -type d -printf "%f\n" | xargs -n1 -i§ virsh -c lxc:/// lxc-enter-namespace --noseclabel § /bin/bash -c "sudo dnf upgrade -y"
       
       # Ensure kernel is up to date
       dnf install -y kernel-core-$NEW.x86_64 kernel-$NEW.x86_64 kernel-modules-$NEW.x86_64 kernel-modules-extra-$NEW.x86_64 transforward
@@ -42,7 +42,7 @@ while [ $# -gt 0 ] ; do
          if [ "\$kernel" = "$OLD.x86_64" ] ; then
             echo "OLD KERNEL -> Reboot!"
             rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64   # transforward-\*-$old.\*.nornet
-            # reboot
+            reboot
          else
             echo "Different kernel!"
             rpm -ehv kernel-core-$OLD.x86_64 kernel-$OLD.x86_64 kernel-modules-$OLD.x86_64 kernel-modules-extra-$OLD.x86_64   # transforward-\*-$old.\*.nornet

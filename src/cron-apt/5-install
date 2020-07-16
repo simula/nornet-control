@@ -1,3 +1,0 @@
--f install
-dist-upgrade -y -o APT::Get::Show-Upgraded=true -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef"
-autoremove -y

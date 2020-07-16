@@ -5,8 +5,8 @@ set -e
 case "$1" in
    remove|purge|abort-install)
       rm -f /etc/grub.d/??_nornet_node_theme
-      if [ -x /usr/sbin/update-grub ] ; then
-         /usr/sbin/update-grub || true
+      if [ -x "$(command -v update-grub)" ] ; then
+         update-grub || true
       fi
       ;;
 esac

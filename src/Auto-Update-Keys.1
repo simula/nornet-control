@@ -1,5 +1,5 @@
 .\" Auto-Update-Keys
-.\" Copyright (C) 2012-2019 by Thomas Dreibholz
+.\" Copyright (C) 2012-2020 by Thomas Dreibholz
 .\"
 .\" This program is free software: you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -30,10 +30,10 @@
 .\" ###### Description ######################################################
 .Sh DESCRIPTION
 .Nm Auto-Update-Keys
-copies all SSH keys in /etc/nornet-authorized-keys to the NorNet User's
-.ssh/authorized_keys file. The keys stored there will be tagged by the
-comment lines "BEGIN-OF-NORNET-KEYS" and "END-OF-NORNET-KEYS". All previously
-stored keys in this section (if existing) will be removed.
+copies all SSH keys in /etc/nornet-authorized-keys to the
+NorNet User's .ssh/authorized_keys file. The keys stored there will be tagged
+by the comment lines "BEGIN-OF-NORNET-KEYS" and "END-OF-NORNET-KEYS". All
+previously stored keys in this section (if existing) will be removed.
 .br
 For security reasons, Auto-Update-Keys only works if
 NorNet_LocalNode_SSHAuthorizedKeysUpdate is set to 1 in /etc/nornetapi-config!

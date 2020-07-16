@@ -1,8 +1,8 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # NorNet Setup
-# Copyright (C) 2012-2019 by Thomas Dreibholz
+# Copyright (C) 2012-2020 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -140,7 +140,7 @@ norNetSetup = [
    'site_longitude'    : 10.68166,
    'site_altitude'     : 200,
    # Phone: +47-95-10-24-10
-   'site_contacts'     : [ u'IT-operations@HiG: helpdesk@hig.no', u'Langseth, Jon: jon.langseth@ntnu.no', u'Hjelmås, Erik: erik.hjelmas@ntnu.no' ],
+   'site_contacts'     : [ u'IT-operations@HiG: orakel@ntnu.no', u'Langseth, Jon: jon.langseth@ntnu.no', u'Gran, Ernst Gunnar: ernst.g.gran@ntnu.no' ],
    'site_pcu'          : [ IPv4Address('128.39.49.165'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -175,7 +175,7 @@ norNetSetup = [
    'site_latitude'     : 69.681897,
    'site_longitude'    : 18.980541,
    'site_altitude'     : 50,
-   'site_contacts'     : [ u'Wulff Hauglann, Maria: maria.wulff.hauglann@uit.no', u'Brunes, Børge: borge.brunes@uit.no', u'Anshus, Otto: otto.anshus@uit.no' ],
+   'site_contacts'     : [ u'Nilssen, Kai-Even: kai-even.nilssen@uit.no', u'Brunes, Børge: borge.brunes@uit.no' ],
    'site_pcu'          : [ IPv4Address('129.242.157.229'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -183,14 +183,14 @@ norNetSetup = [
            IPv4Interface('129.242.157.228/28'),    IPv4Address('129.242.157.225'),
            IPv6Interface('::/0'),                  IPv6Address('::'),
            1500, 'fibre, research', 100000, 100000 ],
-      [ u'PowerTech', 'eth2',
-           IPv4Interface('195.159.158.162/30'),    IPv4Address('195.159.158.161'),
-           IPv6Interface('2001:840:490c::162/64'), IPv6Address('2001:840:490c::1'),
-           1492, 'ADSL, consumer', 2000, 128 ],
-      [ u'Telenor', 'eth3',
+      [ u'Telenor', 'eth2',
            IPv4Interface('62.92.89.210/30'),       IPv4Address('62.92.89.209'),
            IPv6Interface('::/0'),                  IPv6Address('::'),
-           1492, 'ADSL, consumer', 2000, 256 ]
+           1492, 'ADSL, consumer', 2000, 256 ],
+      [ u'PowerTech', 'eth3',
+           IPv4Interface('195.159.158.162/30'),    IPv4Address('195.159.158.161'),
+           IPv6Interface('2001:840:490c::162/64'), IPv6Address('2001:840:490c::1'),
+           1492, 'ADSL, consumer', 2000, 128 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'amundsen',    'ishav.uit.nornet',       'vnc://ishav.uit.nornet:5900'       ],
@@ -562,34 +562,34 @@ norNetSetup = [
       #[ 107, 8, u'zollverein'  ]
    ] },
 
- { 'site_index'        : 43,
-   'site_enabled'      : False,
-   'site_long_name'    : u'Universität Darmstadt',
-   'site_short_name'   : 'TUDA',
-   'site_url'          : 'https://www.deeds.informatik.tu-darmstadt.de',
-   'site_domain'       : 'tuda.nornet',
-   'site_city'         : 'Darmstadt',
-   'site_province'     : 'Hessen',
-   'site_country'      : 'Deutschland',
-   'site_country_code' : 'DE',
-   'site_latitude'     : 49.877621,
-   'site_longitude'    : 8.654673,
-   'site_altitude'     : 50,
-   'site_contacts'     : [ u'Demir, Kubilay: kubidem@deeds.informatik.tu-darmstadt.de' ],
-   'site_pcu'          : [ IPv4Address('130.83.162.211'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ u'Deutsches Forschungsnetz', 'eth1',
-           IPv4Interface('130.83.162.212/25'), IPv4Address('130.83.162.254'),
-           IPv6Interface('::/0'),              IPv6Address('::'),
-           1500, 'fibre, research', 1000000, 1000000 ],
-   ],
-   'site_nodes' : [
-      [ 100, 1, u'woogsviertel'     ],
-      [ 101, 2, u'edelsteinviertel' ],
-      [ 102, 3, u'verlegerviertel'  ],
-      [ 103, 4, u'bessungen'        ]
-   ] },
+ #{ 'site_index'        : 43,
+   #'site_enabled'      : False,
+   #'site_long_name'    : u'Universität Darmstadt',
+   #'site_short_name'   : 'TUDA',
+   #'site_url'          : 'https://www.deeds.informatik.tu-darmstadt.de',
+   #'site_domain'       : 'tuda.nornet',
+   #'site_city'         : 'Darmstadt',
+   #'site_province'     : 'Hessen',
+   #'site_country'      : 'Deutschland',
+   #'site_country_code' : 'DE',
+   #'site_latitude'     : 49.877621,
+   #'site_longitude'    : 8.654673,
+   #'site_altitude'     : 50,
+   #'site_contacts'     : [ u'Demir, Kubilay: kubidem@deeds.informatik.tu-darmstadt.de' ],
+   #'site_pcu'          : [ IPv4Address('130.83.162.211'), 'pcu-root', 'a-secret-password' ],
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'Deutsches Forschungsnetz', 'eth1',
+           #IPv4Interface('130.83.162.212/25'), IPv4Address('130.83.162.254'),
+           #IPv6Interface('::/0'),              IPv6Address('::'),
+           #1500, 'fibre, research', 1000000, 1000000 ],
+   #],
+   #'site_nodes' : [
+      #[ 100, 1, u'woogsviertel'     ],
+      #[ 101, 2, u'edelsteinviertel' ],
+      #[ 102, 3, u'verlegerviertel'  ],
+      #[ 103, 4, u'bessungen'        ]
+   #] },
 
  { 'site_index'        : 30,
    'site_enabled'      : True,
@@ -653,7 +653,7 @@ norNetSetup = [
 
  # Laboratoire d'Informatique de Grenoble (LIG)
  { 'site_index'        : 64,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u"Laboratoire Informatique Grenoble",
    'site_short_name'   : 'LIG',
    'site_url'          : 'https://www.liglab.fr',
@@ -683,6 +683,36 @@ norNetSetup = [
       [ 103, 4, u'crolles'     ]
    ] },
 
+ # Northeastern University (东北大学)
+ { 'site_index'        : 87,
+   'site_enabled'      : True,
+   'site_long_name'    : u'Northeastern University',
+   'site_short_name'   : 'NEU',
+   'site_url'          : 'http://www.neu.edu.cn',
+   'site_domain'       : 'neu.nornet',
+   'site_city'         : 'Shenyang',
+   'site_province'     : 'Liaoning',
+   'site_country'      : 'China',
+   'site_country_code' : 'CN',
+   'site_latitude'     : 41.8,
+   'site_longitude'    : 123.38,
+   'site_altitude'     : 55,
+   'site_contacts'     : [ u'Zhang, Songyang: sonyang.chang@foxmail.com',
+                           u'Zhang, Wei: zhangwei1@mail.neu.edu.cn',
+                           u'Lei, Weimin: leiweimin@ise.neu.edu.cn' ],
+   'site_pcu'          : [ IPv4Address('219.216.65.5'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'China Education and Research Network', 'eth1',
+           IPv4Interface('202.199.6.244/24'), IPv4Address('202.199.6.254'),
+           IPv6Interface('2001:da8:9000:a806::6:244/64'), IPv6Address('2001:da8:9000:a806::1'),
+           1500, 'fibre, research', 10000, 10000 ]
+   ],
+   'site_nodes' : [
+      # Naming scheme: places in Liaoning
+      [ 100, 1, u'mozimountain', 'mozimountain.neu.nornet', 'vnc://mozimountain.neu.nornet:5900' ]
+   ] },
+
  # Hainan University (海南大学)
  { 'site_index'        : 88,
    'site_enabled'      : True,
@@ -700,6 +730,7 @@ norNetSetup = [
    'site_contacts'     : [ u'Fa, Fu: fufa@hainu.edu.cn', u'Zhou, Xing: xingzhou50@126.com' ],
    'site_pcu'          : [ IPv4Address('210.37.45.148'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
+   # DNS: 210.37.40.4 210.37.41.2
    'site_providers' : [
       [ u'China Education and Research Network', 'eth1',
            IPv4Interface('210.37.45.149/26'),           IPv4Address('210.37.45.190'),
@@ -758,8 +789,46 @@ norNetSetup = [
       [ 105, 6, u'hongshulin',   'hongshulin.hkc.nornet',   'vnc://baoting.hkc.nornet:5901'   ]
    ] },
 
+ ## BITS Pilani (NAME IN LOCAL LANGUAGE, like 海口经济学院)
+ #{ 'site_index'        : 90,
+   #'site_enabled'      : True,
+   #'site_long_name'    : u'Birla Institute of Technology and Science',
+   #'site_short_name'   : 'BITS',
+   #'site_url'          : 'https://www.bits-pilani.ac.in',
+   #'site_domain'       : 'bits.nornet',
+   #'site_city'         : 'Hyderabad',
+   #'site_province'     : 'Telangana',
+   #'site_country'      : 'India',
+   #'site_country_code' : 'IN',
+   #'site_latitude'     : 17.37,
+   #'site_longitude'    : 78.48,
+   #'site_altitude'     : 550,
+   #'site_contacts'     : [ u'Paxena, Paresh: psaxena@hyderabad.bits-pilani.ac.in',
+                           #u'Malhan, Bharat: f20160050@hyderabad.bits-pilani.ac.in' ],
+   #'site_pcu'          : [ IPv4Address('136.233.62.69'), 'pcu-root', 'a-secret-password' ],
+   #'site_nornet_if'    : 'eth0',
+   #'site_providers' : [
+      #[ u'China Telecom', 'eth1',
+           #IPv4Interface('136.233.62.70/24'), IPv4Address('????'),
+           #IPv6Interface('::/0'),               IPv6Address('::'),
+           #1500, 'fibre, business', 10000, 10000 ],
+      #[ u'China Education and Research Network', 'eth2',
+           #IPv4Interface('14.98.244.197/24'), IPv4Address('????'),
+           #IPv6Interface('::/0'),             IPv6Address('::'),
+           #1500, 'fibre, research', 10000, 10000 ]
+   #],
+   #'site_nodes' : [
+      ## Naming scheme: places in Hainan
+      #[ 100, 1, u'huoshankou',   'huoshankou.hkc.nornet',   'vnc://wuzhishan.hkc.nornet:5900' ],
+      #[ 101, 2, u'dongzhaigang', 'dongzhaigang.hkc.nornet', 'vnc://wuzhishan.hkc.nornet:5901' ],
+      #[ 102, 3, u'wanlvyuan',    'wanlvyuan.hkc.nornet',    'vnc://lingshui.hkc.nornet:5900'  ],
+      #[ 103, 4, u'baishamen',    'baishamen.hkc.nornet',    'vnc://lingshui.hkc.nornet:5901'  ],
+      #[ 104, 5, u'guanlanhu',    'guanlanhu.hkc.nornet',    'vnc://baoting.hkc.nornet:5900'   ],
+      #[ 105, 6, u'hongshulin',   'hongshulin.hkc.nornet',   'vnc://baoting.hkc.nornet:5901'   ]
+   #] },
+
  { 'site_index'        : 100,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'The University of Kansas',
    'site_short_name'   : 'KU',
    'site_url'          : 'https://www.ittc.ku.edu',
@@ -771,7 +840,7 @@ norNetSetup = [
    'site_latitude'     : 38.952,
    'site_longitude'    : -95.264,
    'site_altitude'     : 300,
-   'site_contacts'     : [ u'Gangadhar, Siddharth: siddharth@ittc.ku.edu', u'Fleming, Brad: bdfleming@kanren.net', u'Sterbenz, James P.G.: jpgs@ittc.ku.edu' ],
+   'site_contacts'     : [ u'Fleming, Brad: bdfleming@kanren.net', u'Gangadhar, Siddharth: siddharth@ittc.ku.edu', u'Sterbenz, James P.G.: jpgs@ittc.ku.edu' ],
    'site_pcu'          : [ IPv4Address('164.113.202.19'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
@@ -788,7 +857,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 101,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'New York University',
    'site_short_name'   : 'NYU',
    'site_url'          : 'http://engineering.nyu.edu',
@@ -817,7 +886,7 @@ norNetSetup = [
    ] },
 
  { 'site_index'        : 160,
-   'site_enabled'      : True,
+   'site_enabled'      : False,
    'site_long_name'    : u'Korea University',   # 고려대학교
    'site_short_name'   : 'KRU',
    'site_url'          : 'https://www.korea.ac.kr',

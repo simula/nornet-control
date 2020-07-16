@@ -1,9 +1,54 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+# Set options "nonrotational" and "discard" in VirtualBox machines for all disks
+# Copyright (C) 2020 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
 
+# Bash options:
+set -e
+
+
+controllerNames=""
 while [ $# -gt 0 ] ; do
    echo "===== $1 ... ====="
-   sed -e 's/nonrotational="true" type="HardDisk"/nonrotational="true" discard="true" type="HardDisk"/g' -i $1
-   grep 'discard="true"' $1
+   vboxmanage showvminfo $1 --machinereadable | (
+      while read line ; do
+         if [[ "${line}" =~ ^storagecontrollername([0-9]*)=\"(.*)\"$ ]] ; then
+            id=${BASH_REMATCH[1]}
+            controllerName="${BASH_REMATCH[2]}"
+            controllerNames="${controllerNames} ${controllerName}"
+         else
+            for controllerName in ${controllerNames} ; do
+               if [[ "${line}" =~ ^\"${controllerName}-([0-9]*)-([0-9]*)\"=\"(.*\.vdi)\"$ ]] ; then
+                  port=${BASH_REMATCH[1]}
+                  device=${BASH_REMATCH[2]}
+                  image="${BASH_REMATCH[3]}"
+
+                  echo "$1: ${controllerName}, device ${device}, port ${port} -> ${image}"
+
+                  VBoxManage storageattach $1 --storagectl "${controllerName}" --port ${port} --device ${device} --nonrotational on --discard on
+                  VBoxManage storagectl $1 --name "${controllerName}" --hostiocache on
+
+                  break
+               fi
+            done
+         fi
+      done
+   )
    shift
 done
 

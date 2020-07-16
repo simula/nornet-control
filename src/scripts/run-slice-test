@@ -1,4 +1,7 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+
+# Bash options:
+set -e
 
 SLICE="$1"
 if [ "$SLICE" = "" ] ; then 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 REPOFILES="fedora.repo fedora-updates.repo fedora-updates-testing.repo nornet.repo"
 SLIVERS=`find /vservers -maxdepth 1 -type d -name "[a-zA-Z]*"`

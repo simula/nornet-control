@@ -1,7 +1,7 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 #
 # TLS configuration helper script
-# Copyright (C) 2012-2019 by Thomas Dreibholz
+# Copyright (C) 2012-2020 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,6 +19,9 @@
 # Contact: dreibh@simula.no
 #
 
+# Bash options:
+set -e
+
 if [ $# -lt 2 ] ; then
    echo >&2 "Usage: $0 file_name_prefix rsa|ec|keyexchange"
    exit 1
@@ -28,7 +31,7 @@ TYPE="$2"
 
 KEYLEN=4096
 EKEYLEN=4096
-CURVE="secp384r1"   # "c2tnb431r1"
+CURVE="secp384r1"
 DAYS=1830
 HASH_PARAM="-sha512"
 
@@ -49,7 +52,7 @@ elif [ "$TYPE" = "ec" ] ; then
 elif [ "$TYPE" = "keyexchange" ] ; then
    # Key exchange parameters
    openssl ecparam -name $CURVE -out $PREFIX.ecparam
-   openssl dhparam -2 $EKEYLEN -out $PREFIX.dhparam
+   openssl dhparam -out $PREFIX.dhparam $EKEYLEN
    exit 0
 else
    echo >&2 "ERROR: Bad type $TYPE!"

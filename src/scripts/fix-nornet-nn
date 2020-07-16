@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 slice="srl_test"
 # node="bymarka.ntnu.nornet"

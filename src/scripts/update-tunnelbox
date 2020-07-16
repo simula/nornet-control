@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 find /etc/apt/ -name "*.save" -or -name "*.distUpgrade" -or -name "*~" | xargs --no-run-if-empty sudo rm -f && \
 find /etc/apt/sources.list.d -name "dreibh-ppa-*"  | xargs --no-run-if-empty sudo rm -f && \

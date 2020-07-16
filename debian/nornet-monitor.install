@@ -1,11 +1,11 @@
-/etc/grub.d/??_nornet_monitor_theme
-/etc/nornet/nornet-commands.cfg
-/etc/nornet/nornet-services.cfg
-/usr/bin/Make-Monitor-Configuration
-/usr/bin/check_site /usr/lib/nagios/plugins
-/usr/bin/check_tunnel /usr/lib/nagios/plugins
-/usr/share/nornet-desktop/Splash/Monitor1-1024x768.jpeg /boot/NorNet
-/var/www/Kontrollsenter/*
-/var/www/Kontrollsenter/Clock/*
-/var/www/Kontrollsenter/UnifrakturCook/*
-/var/www/Kontrollsenter/UnifrakturCook/sources/*
+etc/grub.d/??_nornet_monitor_theme
+etc/nornet/nornet-commands.cfg
+etc/nornet/nornet-services.cfg
+usr/bin/Make-Monitor-Configuration
+usr/bin/check_site /usr/lib/nagios/plugins
+usr/bin/check_tunnel /usr/lib/nagios/plugins
+usr/share/nornet-desktop/Splash/Monitor1-1024x768.jpeg /boot/NorNet
+var/www/Kontrollsenter/*
+var/www/Kontrollsenter/Clock/*
+var/www/Kontrollsenter/UnifrakturCook/*
+var/www/Kontrollsenter/UnifrakturCook/sources/*
