@@ -79,6 +79,7 @@ Requires: cronie
 Requires: curl
 Requires: ethtool
 Requires: fail2ban
+Requires: gawk
 Requires: git
 Requires: gpm
 Requires: hping3
@@ -93,6 +94,7 @@ Requires: net-snmp-utils
 Requires: net-tools
 Requires: nmap
 Requires: ntpdate
+Requires: pwgen
 Requires: pxz
 Requires: reiserfs-utils
 Requires: reprepro
