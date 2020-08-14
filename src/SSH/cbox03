@@ -1,3 +1,3 @@
 #!/bin/sh
 echo "Connecting to Control Box of Høgskolen i Gjøvik (128.39.49.165) ..."
-ssh -C nornetpp@128.39.49.165
+ssh -CX nornetpp@128.39.49.165
