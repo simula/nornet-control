@@ -22,6 +22,7 @@ usr/bin/System-Info
 usr/bin/System-Maintenance
 usr/bin/Test-NTP-Configuration
 usr/bin/Watchdog
+usr/bin/cls
 usr/sbin/Interface-Setup /sbin
 usr/share/nornet-desktop/Splash/Management1-1024x768.jpeg /boot/NorNet
 usr/share/nornet-desktop/Splash/nornet-version /etc/nornet

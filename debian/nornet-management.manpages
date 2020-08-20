@@ -21,3 +21,4 @@ src/System-Info.1
 src/System-Maintenance.1
 src/Test-NTP-Configuration.1
 src/Watchdog.1
+src/cls.1

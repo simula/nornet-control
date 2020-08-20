@@ -125,6 +125,7 @@ See https://www.nntb.no for details on NorNet!
 %{_sysconfdir}/grub.d/??_nornet_management_theme
 %{_sysconfdir}/nornet/nornet-authorized_keys
 %{_sysconfdir}/nornet/nornet-version
+%{_bindir}/cls
 %{_bindir}/Auto-Update-Keys
 %{_bindir}/Check-Nodes
 %{_bindir}/Check-Nodes-Loop
@@ -148,6 +149,7 @@ See https://www.nntb.no for details on NorNet!
 %{_bindir}/Test-NTP-Configuration
 %{_bindir}/Watchdog
 %{_datadir}/nornet/grub-defaults
+%{_mandir}/man1/cls.1.gz
 %{_mandir}/man1/Auto-Update-Keys.1.gz
 %{_mandir}/man1/Check-Nodes-Loop.1.gz
 %{_mandir}/man1/Check-Nodes.1.gz

@@ -26,6 +26,9 @@ INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install $
 # PROGRAMS
 #############################################################################
 
+INSTALL(PROGRAMS cls                          DESTINATION ${CMAKE_INSTALL_BINDIR})
+INSTALL(FILES cls.1                           DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+
 INSTALL(PROGRAMS Auto-Update-BootCD           DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES Auto-Update-BootCD.1            DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
