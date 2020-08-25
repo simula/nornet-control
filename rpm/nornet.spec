@@ -178,6 +178,12 @@ See https://www.nntb.no for details on NorNet!
 %ghost %{_sysconfdir}/cron-apt/action.d/9-install
 
 %post management
+if [ ! -e /etc/profile.d/systeminfo.csh ] ; then
+   ln -s /usr/bin/System-Info /etc/profile.d/systeminfo.csh
+fi
+if [ ! -e /etc/profile.d/systeminfo.sh ] ; then
+   ln -s /usr/bin/System-Info /etc/profile.d/systeminfo.sh
+fi
 echo "Updating /etc/default/grub with NorNet settings:"
 echo "-----"
 cat /usr/share/nornet/grub-defaults | \
