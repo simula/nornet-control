@@ -15,7 +15,6 @@ case "$1" in
 
       # Remove deprecated behaviour:
       rm -f /etc/update-motd.d/55-nornet-management
-      update-motd 2>/dev/null || true
 
       echo "Updating /etc/default/grub with NorNet settings:"
       echo "-----"

@@ -4,10 +4,8 @@ set -e
 
 case "$1" in
    remove|upgrade|deconfigure)
-      rm -f /etc/update-motd.d/55-nornet-management || true
-      if [ -e update-motd ] ; then
-         update-motd 2>/dev/null || true
-      fi
+      rm -f /etc/profile.d/systeminfo.sh
+      rm -f /etc/profile.d/systeminfo.csh
       ;;
 esac
 

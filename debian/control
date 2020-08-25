@@ -83,8 +83,7 @@ Recommends: apport-retrace,
             language-pack-en-base,
             language-pack-nb-base,
             resolvconf,
-            tshark,
-            update-motd
+            tshark
 Conflicts: landscape-common,
            minidlna,
            tntnet,
