@@ -112,6 +112,7 @@ Requires: virt-what
 Requires: whois
 Requires: wireshark-cli
 Requires: xmlstarlet
+Requires: yamllint
 Recommends: grub2-tools
 Recommends: ipsec-tools
 

@@ -73,6 +73,7 @@ Depends: anacron,
          whois,
          xmlstarlet,
          xz-utils (>= 5.2.0) | pxz,
+         yamllint,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: apport-retrace,
