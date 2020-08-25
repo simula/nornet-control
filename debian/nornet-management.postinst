@@ -6,12 +6,16 @@ case "$1" in
    configure)
       Auto-Update-Keys
 
-      if [ -e /etc/update-motd.d ] ; then
-         ln -sf /usr/bin/System-Info /etc/update-motd.d/55-nornet-management
+      if [ ! -e /etc/profile.d/systeminfo.csh ] ; then
+         ln -s /usr/bin/System-Info /etc/profile.d/systeminfo.csh
       fi
-      if [ -e update-motd ] ; then
-         update-motd 2>/dev/null || true
+      if [ ! -e /etc/profile.d/systeminfo.sh ] ; then
+         ln -s /usr/bin/System-Info /etc/profile.d/systeminfo.sh
       fi
+
+      # Remove deprecated behaviour:
+      rm -f /etc/update-motd.d/55-nornet-management
+      update-motd 2>/dev/null || true
 
       echo "Updating /etc/default/grub with NorNet settings:"
       echo "-----"
