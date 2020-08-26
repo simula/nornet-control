@@ -1,3 +1,127 @@
+commit f48dc69d501576240a427779b573bbee6f2f3a10
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 25 16:42:24 2020 +0200
+
+    Improved packaging.
+
+commit ceea7c8559de3c589149fb87d0e826d573da53d3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 25 15:06:54 2020 +0200
+
+    Updated System-Info installation rules for Ubuntu and Fedora.
+
+commit 9f1a4539388a9db1fe460957174717b9137a3afa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 25 14:51:38 2020 +0200
+
+    Added missing handling of profile.d/systeminfo.* for Fedora.
+
+commit 4265faed2e909588169f7440f2d9eabc989c9620
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 25 10:54:03 2020 +0200
+
+    Dependency update.
+
+commit e40021ac2062c73b51a12cb6d51396e3552a3f80
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 20 10:02:49 2020 +0200
+
+    Updated packaging files.
+
+commit 9b75fb43ca493a7c64b5db95512c02c37c5002e6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 20 09:53:31 2020 +0200
+
+    Added script and manpage.
+
+commit 7d4f793adcb535dce622985fc5868003e53e3eed
+Merge: 567f1d89 fc189af9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 14 15:47:29 2020 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 567f1d899a8e2d4d05cb5a680931bcedb796ddc5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 14 15:47:18 2020 +0200
+
+    Updated scripts.
+
+commit fc189af944198ef5b011cc07dcacbca380ce1d82
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Jul 25 14:17:16 2020 +0200
+
+    Updated dependencies.
+
+commit 7c312aa3c366f2ce00e2a6355dfcb251b924bec6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 16 11:58:02 2020 +0200
+
+    Updated build scripts
+
+commit 29c327c5d608c72490e44e446f1734ddf23e5e23
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 16 11:57:26 2020 +0200
+
+    A fix.
+
+commit 5f31483e3736ce26ea89064226a6f7f5e761a82f
+Merge: 87d9e527 fca4ef27
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 16 11:54:39 2020 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 87d9e5275f34a612ba5148b1279bb41f95d245b9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 16 11:53:37 2020 +0200
+
+    Fixed packaging configuration.
+
+commit fca4ef274f1745957102210d4813def03d85c0ea
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jun 29 13:06:47 2020 +0200
+
+    Configuration fix.
+
+commit ef6baffba84a8f6b25d7ae0de5dd129ef7d77248
+Merge: b2512c9b 25f45753
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jun 22 18:13:10 2020 +0200
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit b2512c9beb64344b010653c1217494e469e0de73
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jun 22 18:12:59 2020 +0200
+
+    Added helper script.
+
+commit 25f457532d8df90b7c6a37862ea3ef74143e06c3
+Merge: a7b23021 f1fa97e0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat May 23 22:19:14 2020 +0200
+
+    Merge branch 'master' of https://github.com/simula/nornet-control
+
+commit a7b230217f48b82dc16816aa66d0f6d31534815b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat May 23 22:18:57 2020 +0200
+
+    A fix.
+
+commit f1fa97e02c1566eac526d6fe1feca5f1dc1e8aad
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed May 6 14:21:17 2020 +0200
+
+    Improved script.
+
+commit 55c0837b09f4b7ed39d19c9bb42d456294cae416
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue May 5 13:17:05 2020 +0200
+
+    New release nornet-1.4.8.
+
 commit c015ce9d93fd0f649ab75de97ef0baadc6911b92
 Merge: bf3496fd 56a3bdf0
 Author: Thomas Dreibholz <dreibh@simula.no>
