@@ -1,5 +1,6 @@
 etc/grub.d/??_nornet_management_theme
 etc/nornet/nornet-authorized_keys
+etc/system-info.d/10-nornet
 usr/bin/Auto-Update-Keys
 usr/bin/Check-Nodes
 usr/bin/Check-Nodes-Loop

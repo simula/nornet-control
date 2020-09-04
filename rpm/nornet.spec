@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.5.1~alpha1.0
+Version: 1.5.1~alpha1.1
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -175,6 +175,7 @@ See https://www.nntb.no for details on NorNet!
 %{_mandir}/man8/Interface-Setup.8.gz
 /sbin/Interface-Setup
 %ghost %{_sysconfdir}/cron-apt/action.d/9-install
+%{_sysconfdir}/system-info.d/10-nornet
 
 %post management
 echo "Updating /etc/default/grub with NorNet settings:"
