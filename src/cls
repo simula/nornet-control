@@ -18,5 +18,6 @@
 #
 # Contact: dreibh@simula.no
 
+reset -I
 echo -en "\x1b[H\x1b[2J"
 reset -I
