@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.5.0
+Version: 1.5.1~alpha1.0
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
