@@ -158,9 +158,6 @@ INSTALL(FILES Stop-VSystem.1                  DESTINATION ${CMAKE_INSTALL_MANDIR
 INSTALL(PROGRAMS System-Backup                DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES System-Backup.1                 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
-INSTALL(PROGRAMS System-Info                  DESTINATION ${CMAKE_INSTALL_BINDIR})
-INSTALL(FILES System-Info.1                   DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
-
 INSTALL(PROGRAMS System-Maintenance           DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES System-Maintenance.1            DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
@@ -183,6 +180,8 @@ INSTALL(FILES Watchdog.1                      DESTINATION ${CMAKE_INSTALL_MANDIR
 #############################################################################
 # CONFIGURATION FILES
 #############################################################################
+
+INSTALL(PROGRAMS system-info.d/10-nornet DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/system-info.d)
 
 INSTALL(FILES nornet-authorized_keys  DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/nornet)
 

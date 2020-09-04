@@ -103,6 +103,7 @@ Requires: rsplib-services
 Requires: rsplib-tools
 Requires: smartmontools
 Requires: subnetcalc
+Requires: system-info
 Requires: tcpdump
 Requires: tftp
 Requires: traceroute
@@ -145,7 +146,6 @@ See https://www.nntb.no for details on NorNet!
 %{_bindir}/Reset-Networking
 %{_bindir}/Routing-Rule-Setup
 %{_bindir}/System-Backup
-%{_bindir}/System-Info
 %{_bindir}/System-Maintenance
 %{_bindir}/Test-NTP-Configuration
 %{_bindir}/Watchdog
@@ -169,7 +169,6 @@ See https://www.nntb.no for details on NorNet!
 %{_mandir}/man1/Reset-Networking.1.gz
 %{_mandir}/man1/Routing-Rule-Setup.1.gz
 %{_mandir}/man1/System-Backup.1.gz
-%{_mandir}/man1/System-Info.1.gz
 %{_mandir}/man1/System-Maintenance.1.gz
 %{_mandir}/man1/Test-NTP-Configuration.1.gz
 %{_mandir}/man1/Watchdog.1.gz
@@ -178,12 +177,6 @@ See https://www.nntb.no for details on NorNet!
 %ghost %{_sysconfdir}/cron-apt/action.d/9-install
 
 %post management
-if [ ! -e /etc/profile.d/systeminfo.csh ] ; then
-   ln -s /usr/bin/System-Info /etc/profile.d/systeminfo.csh
-fi
-if [ ! -e /etc/profile.d/systeminfo.sh ] ; then
-   ln -s /usr/bin/System-Info /etc/profile.d/systeminfo.sh
-fi
 echo "Updating /etc/default/grub with NorNet settings:"
 echo "-----"
 cat /usr/share/nornet/grub-defaults | \

@@ -6,13 +6,6 @@ case "$1" in
    configure)
       Auto-Update-Keys
 
-      if [ ! -e /etc/profile.d/systeminfo.csh ] ; then
-         ln -s /usr/bin/System-Info /etc/profile.d/systeminfo.csh
-      fi
-      if [ ! -e /etc/profile.d/systeminfo.sh ] ; then
-         ln -s /usr/bin/System-Info /etc/profile.d/systeminfo.sh
-      fi
-
       # Remove deprecated behaviour:
       rm -f /etc/update-motd.d/55-nornet-management
 

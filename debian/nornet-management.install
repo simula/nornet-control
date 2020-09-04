@@ -18,7 +18,6 @@ usr/bin/Random-Sleep
 usr/bin/Reset-Networking
 usr/bin/Routing-Rule-Setup
 usr/bin/System-Backup
-usr/bin/System-Info
 usr/bin/System-Maintenance
 usr/bin/Test-NTP-Configuration
 usr/bin/Watchdog
