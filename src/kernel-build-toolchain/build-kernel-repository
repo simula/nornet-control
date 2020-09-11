@@ -31,7 +31,7 @@ PUBLIC_KERNEL_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ub
 
 
 # How to add repository:
-# sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys DF605BB0760F2D65
+# sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 21412672518D8B2D1862EFEF5CD5D12AA0877B49
 # Add to sources.list (for Ubuntu 18.04):
 # deb https://packages.nntb.no/nornet-kernel/ubuntu/ bionic bionic-kernel
 # deb-src https://packages.nntb.no/nornet-kernel/ubuntu/ bionic bionic-kernel
