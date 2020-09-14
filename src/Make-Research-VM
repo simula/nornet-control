@@ -39,7 +39,7 @@ fi
 if [ "$NorNet_LocalNode_NorNetUser" = "" ] ; then
    NorNet_LocalNode_NorNetUser="nornetpp"
 fi
-   
+
 # ====== Get command-line parameters ========================================
 VM_NAME="$1"
 ISO_NAME="$2"
@@ -102,14 +102,13 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
 
    virsh destroy "$VM_NAME"  >/dev/null 2>&1 || true
    virsh undefine "$VM_NAME" >/dev/null 2>&1 || true
-   rm -f "$HOME/KVM/$VM_NAME/DH0.img"
-   if [ "$sparseMode" == "true" ] ; then
-      echo "Creating sparse file $HOME/KVM/$VM_NAME/DH0.img ..."
-      truncate --size=${DISK_SIZE}GB "$HOME/KVM/$VM_NAME/DH0.img"
-   else
-      echo "Creating non-sparse file $HOME/KVM/$VM_NAME/DH0.img ..."
-      fallocate -l ${DISK_SIZE}GB "$HOME/KVM/$VM_NAME/DH0.img" || dd if=/dev/zero of="$HOME/KVM/$VM_NAME/DH0.img" bs=1G count=$DISK_SIZE
+   rm -f "$HOME/KVM/$VM_NAME/DH0.*"
+
+   options="nocow"
+   if [ "$sparseMode" == "false" ] ; then
+      options="$options,preallocation=full"
    fi
+   qemu-img create -f qcow2 "$HOME/KVM/$VM_NAME/DH0.qcow2" -o options ${DISK_SIZE}G
    virt-install --connect qemu:///system --virt-type kvm \
                 --name "$VM_NAME" \
                 --arch x86_64 --os-type="linux" --os-variant="fedora16" \
@@ -121,7 +120,7 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
                 --noautoconsole \
                 --network bridge=br0,model=virtio \
                 --disk path="$ISO_NAME",format=iso,device=cdrom,bus=ide \
-                --disk path="$HOME/KVM/$VM_NAME/DH0.img,format=raw,size="$DISK_SIZE",device=disk,bus=virtio",sparse=$sparseMode \
+                --disk path="$HOME/KVM/$VM_NAME/DH0.qcow2,format=qcow2,size="$DISK_SIZE",device=disk,bus=virtio",sparse=$sparseMode \
                 --watchdog default,action=reset \
                 --import --noreboot   # No installation procedure, no start of the domain
 
