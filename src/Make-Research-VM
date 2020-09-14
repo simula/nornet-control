@@ -104,11 +104,13 @@ elif [ "$NorNet_Server_VirtualizationSystem" = "KVM" ] ; then
    virsh undefine "$VM_NAME" >/dev/null 2>&1 || true
    rm -f "$HOME/KVM/$VM_NAME/DH0.*"
 
-   options="nocow"
-   if [ "$sparseMode" == "false" ] ; then
-      options="$options,preallocation=full"
+   options=""
+   if [ "$sparseMode" == "true" ] ; then
+      options="preallocation=off"
+   else
+      options="preallocation=full"
    fi
-   qemu-img create -f qcow2 "$HOME/KVM/$VM_NAME/DH0.qcow2" -o options ${DISK_SIZE}G
+   qemu-img create -f qcow2 -o $options "$HOME/KVM/$VM_NAME/DH0.qcow2" ${DISK_SIZE}G
    virt-install --connect qemu:///system --virt-type kvm \
                 --name "$VM_NAME" \
                 --arch x86_64 --os-type="linux" --os-variant="fedora16" \
