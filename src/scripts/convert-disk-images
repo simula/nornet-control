@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FROM=vmdk
+FROM=vdi
 TO=qcow2
 
 inputImages=`find . -name "*.${FROM}" | sort`
