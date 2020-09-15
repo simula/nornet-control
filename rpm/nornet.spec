@@ -244,7 +244,6 @@ Requires: ghostscript
 Requires: gimp
 Requires: glib2-devel
 Requires: gnupg
-Requires: gnuplot
 Requires: google-noto-cjk-fonts
 Requires: google-noto-sans-fonts
 Requires: google-noto-serif-fonts
