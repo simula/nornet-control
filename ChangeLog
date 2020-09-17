@@ -1,8 +1,132 @@
+commit 7cb05cec311932fb80c362d808146969e7aab5f4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Sep 15 17:23:25 2020 +0200
+
+    Removed GNU Plot from development dependencies, since it depends on gdm3 -> triggers installation of ~400 X11 packages.
+
+commit e4bd43e84b4ac882355660a6f037bfe339dd04e1
+Merge: 2e377448 a745112c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Sep 14 20:16:55 2020 +0200
+
+    Merge remote-tracking branch 'origin/master' into dreibh/systeminfo
+
+commit a745112c975c8cfa8d02acd6a7fb7a4b58399d9e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Sep 14 20:12:08 2020 +0200
+
+    Minor update.
+
+commit 0568e1d2d29ff84b2b5935298dc4d42c30dba5a9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Sep 14 19:53:29 2020 +0200
+
+    A fix.
+
+commit 47dfc15fcded16c0ee7f6e98a62b10cad689d1e2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Sep 14 19:45:07 2020 +0200
+
+    Some improvements.
+
+commit 88ea1a4c6a4c3e58e11824a17f81da1d5c917884
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Sep 14 09:58:28 2020 +0200
+
+    Added helper script.
+
+commit 060070dc30d18b128687b8fd0a22fda191952818
+Merge: 55c10bec c0bb8956
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 11 11:01:26 2020 +0200
+
+    Merge branch 'master' into dreibh/systeminfo
+
+commit c0bb895697c75227ab44f2cc1e3f0374a35aae9f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Sep 10 12:44:28 2020 +0200
+
+    Updated build scripts
+
+commit 9cd37e900a609a838f70fdeed92886aa544ef532
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Sep 10 12:44:25 2020 +0200
+
+    Updated packaging configuration.
+
+commit 7c9f9ca98a69f9a4617a3c932f6c3df55374ae98
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Sep 10 12:44:09 2020 +0200
+
+    Updated signing key.
+
+commit 70cb15fc27fb81e8d90b3a7082968ab2a5660c6e
+Merge: e4a6347d 760bded0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Sep 10 12:43:54 2020 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 760bded0988d4e7a9f1d2a331baff0d41600e81a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Sep 10 11:24:56 2020 +0200
+
+    Minor update.
+
+commit 55c10becf6d660eb7f3e5e13633b66b91c624711
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 4 15:55:18 2020 +0200
+
+    Dependency fix.
+
+commit 5c5773afbce3bedbfdb0f32bbab7a1ba5631c21b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 4 14:15:28 2020 +0200
+
+    Updated build scripts
+
+commit 547ffd404c39fb495ab1a83c85bbdcc574c5383d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 4 14:11:58 2020 +0200
+
+    Updated Travis CI configuration.
+
+commit d00becd74eee92837a3787dae32f8fc752d42cb8
+Merge: e116b03a b6b76957
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 4 14:04:22 2020 +0200
+
+    Merge remote-tracking branch 'origin/master' into dreibh/systeminfo
+
+commit e116b03a0eac1ba6578f68261a69681a912d3ff5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 4 14:03:09 2020 +0200
+
+    Use system-info package.
+
+commit b6b76957d5acf3c161059683287c201ef1e2f826
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 4 13:55:57 2020 +0200
+
+    New release nornet-1.5.1.
+
 commit 6298796fa445fcf95d93675bbcd9344db1a8cd68
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Fri Sep 4 13:55:40 2020 +0200
 
     Updated build scripts
+
+commit dda108a6fa10e051a0e4f86c7f46a19e9fa4cec2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 4 12:38:42 2020 +0200
+
+    Moved System-Info into separate package.
+
+commit e4a6347ddbfb22aef27cc6c63dd5215ffda51da4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 4 12:27:47 2020 +0200
+
+    Version bump.
 
 commit cc192797c62ac46f6f700de1cfef5e508d3b674f
 Author: Thomas Dreibholz <dreibh@simula.no>
