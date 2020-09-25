@@ -1,3 +1,27 @@
+commit c8a42b887a2ba101dcbc504de0fd1506902801e3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 25 19:32:10 2020 +0200
+
+    Added file.
+
+commit 0960769d1e82d6063c3c2a49bea7b7026e3178c7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 25 19:29:53 2020 +0200
+
+    Updated build scripts
+
+commit 419d38163a908ae8e5ad95877e8623e52384474f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 25 14:27:01 2020 +0200
+
+    Dependency fix.
+
+commit 64eb890452b9f54046d85e0d32a96264dc139a41
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Sep 17 13:23:56 2020 +0200
+
+    New release nornet-1.5.2.
+
 commit 7cb05cec311932fb80c362d808146969e7aab5f4
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Tue Sep 15 17:23:25 2020 +0200

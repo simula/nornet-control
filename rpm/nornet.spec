@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.5.2
+Version: 1.5.3~alpha1.0
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -103,7 +103,7 @@ Requires: rsplib-services
 Requires: rsplib-tools
 Requires: smartmontools
 Requires: subnetcalc
-Requires: system-info
+Requires: td-system-tools-all
 Requires: tcpdump
 Requires: tftp
 Requires: traceroute
@@ -146,7 +146,6 @@ See https://www.nntb.no for details on NorNet!
 %{_bindir}/Reset-Networking
 %{_bindir}/Routing-Rule-Setup
 %{_bindir}/System-Backup
-%{_bindir}/System-Maintenance
 %{_bindir}/Test-NTP-Configuration
 %{_bindir}/Watchdog
 %{_datadir}/nornet/grub-defaults
@@ -169,7 +168,6 @@ See https://www.nntb.no for details on NorNet!
 %{_mandir}/man1/Reset-Networking.1.gz
 %{_mandir}/man1/Routing-Rule-Setup.1.gz
 %{_mandir}/man1/System-Backup.1.gz
-%{_mandir}/man1/System-Maintenance.1.gz
 %{_mandir}/man1/Test-NTP-Configuration.1.gz
 %{_mandir}/man1/Watchdog.1.gz
 %{_mandir}/man8/Interface-Setup.8.gz
