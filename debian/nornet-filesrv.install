@@ -1,3 +1,4 @@
 etc/grub.d/??_nornet_filesrv_theme
 usr/bin/Make-FileSrv-Configuration
 usr/share/nornet-desktop/Splash/FileSrv1-1024x768.jpeg /boot/NorNet
+usr/share/nornet-desktop/Splash/FileSrv1-1920x1080.jpeg /boot/NorNet
