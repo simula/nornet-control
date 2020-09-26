@@ -174,6 +174,7 @@ See https://www.nntb.no for details on NorNet!
 /sbin/Interface-Setup
 %ghost %{_sysconfdir}/cron-apt/action.d/9-install
 %{_sysconfdir}/system-info.d/10-nornet
+%{_sysconfdir}/system-maintenance.d/10-nornet
 
 %post management
 echo "Updating /etc/default/grub with NorNet settings:"
@@ -531,9 +532,6 @@ See https://www.nntb.no for details on NorNet!
 %{_mandir}/man1/check_site.1.gz
 %{_mandir}/man1/check_tunnel.1.gz
 %{_localstatedir}/www/Kontrollsenter/*
-%{_localstatedir}/www/Kontrollsenter/Clock/*
-%{_localstatedir}/www/Kontrollsenter/UnifrakturCook/*
-%{_localstatedir}/www/Kontrollsenter/UnifrakturCook/sources/*
 
 %post monitor
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
