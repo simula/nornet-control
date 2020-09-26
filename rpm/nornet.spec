@@ -423,8 +423,8 @@ sites.
 See https://www.nntb.no for details on NorNet!
 
 %files tunnelbox
-/boot/NorNet/Development1-1024x768.jpeg
-/boot/NorNet/Development1-1920x1080.jpeg
+/boot/NorNet/Tunnelbox1-1024x768.jpeg
+/boot/NorNet/Tunnelbox1-1920x1080.jpeg
 %{_sysconfdir}/grub.d/??_nornet_tunnelbox_theme
 %{_bindir}/Flush-Squid-Cache
 %{_bindir}/Make-Tunnelbox-Configuration
