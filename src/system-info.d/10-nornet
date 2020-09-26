@@ -42,7 +42,7 @@ separator ()
    local width=`tput cols`   # Console width
    local separatorWidth
 
-   let separatorWidth=${width}-12
+   let separatorWidth=${width}-4
    local i=0
    while [ $i -lt ${separatorWidth} ] ; do
       separator="${separator}${separatorCharacter}"
