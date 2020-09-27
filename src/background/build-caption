@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# NorNet Logo Script
+# SuNILab Desktop Background Script
 # Copyright (C) 2017-2020 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@ if [ $# -lt 3 ] ; then
    echo >&2 "Usage: $0 output_file caption width"
    exit 1
 fi
+
 OUTPUT="$1"
 if [ ! -e "$2" ] ; then
    echo >&2 "ERROR: Caption file $2 does not exist!"
@@ -32,12 +33,14 @@ if [ ! -e "$2" ] ; then
 fi
 CAPTION="`cat "$2"`"
 WIDTH="$3"
+HEIGHT="$4"
 
 if [ "${MAKE_CAPTION}" = "" ] ; then
    MAKE_CAPTION=gimp-scripts/Make-Caption
 fi
 
+let height=42*${HEIGHT}/768   # Height "42" is designed for 1024x768
 ${MAKE_CAPTION} \
-   "${OUTPUT}" "${CAPTION}" 1024 42 \
-   "Noto Sans Bold" 60 \
+   "${OUTPUT}" "${CAPTION}" ${WIDTH} ${height} \
+   "Noto Sans Bold" 55 \
    "#02266b" "#ffd700" 26
