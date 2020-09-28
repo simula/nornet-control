@@ -1,3 +1,81 @@
+commit 201bb3b74c388efd78def0775bb54e2054dd03af
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Sep 27 13:31:36 2020 +0200
+
+    Improved scripts.
+
+commit 33f9d4bc393bf1869b20e0dd148d525dc04984a6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Sep 27 13:25:34 2020 +0200
+
+    Improved script.
+
+commit 905c6aac80fea65d1b108e80d1eb8678509f038c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Sep 27 12:29:24 2020 +0200
+
+    Updated caption script.
+
+commit fa16c0cfbe8790de761c0ca2287db261ba969f77
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Sep 26 20:57:27 2020 +0200
+
+    Packaging fix.
+
+commit f46c7ae25c086225310393253eda871cc6d9bb0e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Sep 26 20:57:23 2020 +0200
+
+    Minor update.
+
+commit 8b473a0c501df05c943a235e8dad930595cbead9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Sep 26 20:47:36 2020 +0200
+
+    Updated build scripts
+
+commit 01ce3f51b23f3c273134dd1f1c7954fec1599111
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Sep 26 20:42:48 2020 +0200
+
+    Updated background image script.
+
+commit 6b44b5eee252ca6d6c8b2b46911832802accb80c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Sep 26 19:24:25 2020 +0200
+
+    Packaging update for Fedora 33.
+
+commit 4b5297336fbb67d2720f98125f05164fbf501c5f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Sep 26 17:13:52 2020 +0200
+
+    Minor update.
+
+commit ae315dfb73fab238c4db5dbf6d3754a7f2389991
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Sep 26 15:50:43 2020 +0200
+
+    RPM spec fix.
+
+commit fcb16d63e19e690205f3ed0dbc3cba76a5819583
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Sep 26 15:03:46 2020 +0200
+
+    Improved script.
+
+commit cf6aadebe95cf8262ebe81ec91e116689b258266
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Sep 26 12:10:33 2020 +0200
+
+    Update for new version of System-Maintenance.
+
+commit 670d5e122e2d6872bc121640551fb1a280ceab88
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 25 19:43:02 2020 +0200
+
+    Update to System Tools.
+
 commit c8a42b887a2ba101dcbc504de0fd1506902801e3
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Fri Sep 25 19:32:10 2020 +0200
