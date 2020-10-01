@@ -59,8 +59,7 @@ mkdir -p %{buildroot}/var
 mv %{buildroot}/usr/var/www %{buildroot}/var
 
 mkdir -p %{buildroot}/boot/NorNet
-mv %{buildroot}/usr/share/nornet-desktop/Splash/*-1024x768.jpeg  %{buildroot}/boot/NorNet
-mv %{buildroot}/usr/share/nornet-desktop/Splash/*-1920x1080.jpeg %{buildroot}/boot/NorNet
+mv %{buildroot}/usr/share/nornet-desktop/Splash/*-*.jpeg  %{buildroot}/boot/NorNet
 mkdir -p %{buildroot}/etc/nornet
 mv %{buildroot}/usr/share/nornet-desktop/Splash/nornet-version %{buildroot}/etc/nornet
 # ===========================================================================
@@ -124,8 +123,7 @@ software installed provides a common working environment.
 See https://www.nntb.no for details on NorNet!
 
 %files management
-/boot/NorNet/Management1-1024x768.jpeg
-/boot/NorNet/Management1-1920x1080.jpeg
+/boot/NorNet/Management1-*.jpeg
 %{_sysconfdir}/grub.d/??_nornet_management_theme
 %{_sysconfdir}/nornet/nornet-authorized_keys
 %{_sysconfdir}/nornet/nornet-version
@@ -277,8 +275,7 @@ software installed provides a common working environment.
 See https://www.nntb.no for details on NorNet!
 
 %files development
-/boot/NorNet/Development1-1024x768.jpeg
-/boot/NorNet/Development1-1920x1080.jpeg
+/boot/NorNet/Development1-*.jpeg
 %{_sysconfdir}/grub.d/??_nornet_development_theme
 %{_datadir}/nornet/pbuilderrc
 
@@ -380,8 +377,7 @@ site.
 See https://www.nntb.no for details on NorNet!
 
 %files node
-/boot/NorNet/Node1-1024x768.jpeg
-/boot/NorNet/Node1-1920x1080.jpeg
+/boot/NorNet/Node1-*.jpeg
 %{_sysconfdir}/grub.d/??_nornet_node_theme
 %{_bindir}/Make-Node-Configuration
 %{_mandir}/man1/Make-Node-Configuration.1.gz
@@ -423,8 +419,7 @@ sites.
 See https://www.nntb.no for details on NorNet!
 
 %files tunnelbox
-/boot/NorNet/Tunnelbox1-1024x768.jpeg
-/boot/NorNet/Tunnelbox1-1920x1080.jpeg
+/boot/NorNet/Tunnelbox1-*.jpeg
 %{_sysconfdir}/grub.d/??_nornet_tunnelbox_theme
 %{_bindir}/Flush-Squid-Cache
 %{_bindir}/Make-Tunnelbox-Configuration
@@ -466,8 +461,7 @@ on a NorNet central site.
 See https://www.nntb.no for details on NorNet!
 
 %files filesrv
-/boot/NorNet/FileSrv1-1024x768.jpeg
-/boot/NorNet/FileSrv1-1920x1080.jpeg
+/boot/NorNet/FileSrv1-*.jpeg
 %{_sysconfdir}/grub.d/??_nornet_filesrv_theme
 %{_bindir}/Make-FileSrv-Configuration
 %{_mandir}/man1/Make-FileSrv-Configuration.1.gz
@@ -502,12 +496,9 @@ See https://www.nntb.no for details on NorNet!
 %{_localstatedir}/www/Artwork/Graphics/Markers/*.svg
 %{_localstatedir}/www/Artwork/Sites/Large/*.jpeg
 %{_localstatedir}/www/Artwork/Sites/Small/*.jpeg
-%ghost /boot/NorNet/Background1-1024x768.jpeg
-%ghost /boot/NorNet/Background1-1920x1080.jpeg
-%ghost /boot/NorNet/BootCD-F24-1024x768.jpeg
-%ghost /boot/NorNet/BootCD-F24-1920x1080.jpeg
-%ghost /boot/NorNet/BootCD-F25-1024x768.jpeg
-%ghost /boot/NorNet/BootCD-F25-1920x1080.jpeg
+%ghost /boot/NorNet/Background1-*.jpeg
+%ghost /boot/NorNet/BootCD-F24-*.jpeg
+%ghost /boot/NorNet/BootCD-F25-*.jpeg
 
 
 
@@ -530,8 +521,7 @@ on a NorNet central site.
 See https://www.nntb.no for details on NorNet!
 
 %files monitor
-/boot/NorNet/Monitor1-1024x768.jpeg
-/boot/NorNet/Monitor1-1920x1080.jpeg
+/boot/NorNet/Monitor1-*.jpeg
 %{_sysconfdir}/grub.d/??_nornet_monitor_theme
 %{_sysconfdir}/nornet/nornet-commands.cfg
 %{_sysconfdir}/nornet/nornet-services.cfg
@@ -569,8 +559,7 @@ browser and the necessary GUI.
 See https://www.nntb.no for details on NorNet!
 
 %files display
-/boot/NorNet/Display1-1024x768.jpeg
-/boot/NorNet/Display1-1920x1080.jpeg
+/boot/NorNet/Display1-*.jpeg
 %{_sysconfdir}/grub.d/??_nornet_display_theme
 %{_datadir}/nornet-desktop/Desktop-with-Logo/*
 %{_datadir}/nornet-desktop/Desktop-without-Logo/*
@@ -607,8 +596,7 @@ additional packages.
 See https://www.nntb.no for details on NorNet!
 
 %files gatekeeper
-/boot/NorNet/Gatekeeper1-1024x768.jpeg
-/boot/NorNet/Gatekeeper1-1920x1080.jpeg
+/boot/NorNet/Gatekeeper1-*.jpeg
 %{_sysconfdir}/grub.d/??_nornet_gatekeeper_theme
 
 %post gatekeeper
@@ -644,8 +632,7 @@ Apache packages.
 See https://www.nntb.no for details on NorNet!
 
 %files websrv
-/boot/NorNet/WebSrv1-1024x768.jpeg
-/boot/NorNet/WebSrv1-1920x1080.jpeg
+/boot/NorNet/WebSrv1-*.jpeg
 %{_sysconfdir}/grub.d/??_nornet_websrv_theme
 %{_datadir}/nornet-websrv/*
 
@@ -674,8 +661,7 @@ dependency on the MediaWiki packages.
 See https://www.nntb.no for details on NorNet!
 
 %files wikisrv
-/boot/NorNet/WikiSrv1-1024x768.jpeg
-/boot/NorNet/WikiSrv1-1920x1080.jpeg
+/boot/NorNet/WikiSrv1-*.jpeg
 %{_sysconfdir}/grub.d/??_nornet_wikisrv_theme
 
 %post wikisrv
@@ -704,8 +690,7 @@ the NTP server packages.
 See https://www.nntb.no for details on NorNet!
 
 %files timesrv
-/boot/NorNet/TimeSrv1-1024x768.jpeg
-/boot/NorNet/TimeSrv1-1920x1080.jpeg
+/boot/NorNet/TimeSrv1-*.jpeg
 %{_sysconfdir}/grub.d/??_nornet_timesrv_theme
 
 %post timesrv
@@ -735,8 +720,7 @@ dependency on the PostgreSQL packages.
 See https://www.nntb.no for details on NorNet!
 
 %files database
-/boot/NorNet/Database1-1024x768.jpeg
-/boot/NorNet/Database1-1920x1080.jpeg
+/boot/NorNet/Database1-*.jpeg
 %{_sysconfdir}/grub.d/??_nornet_database_theme
 
 %post database
@@ -763,8 +747,7 @@ This package contains the packages to set up a PLC server.
 See https://www.nntb.no for details on NorNet!
 
 %files plc
-/boot/NorNet/PLC1-1024x768.jpeg
-/boot/NorNet/PLC1-1920x1080.jpeg
+/boot/NorNet/PLC1-*.jpeg
 %{_sysconfdir}/grub.d/??_nornet_plc_theme
 
 %post plc
@@ -800,8 +783,7 @@ to host NorNet virtual machines.
 See https://www.nntb.no for details on NorNet!
 
 %files server
-/boot/NorNet/Server1-1024x768.jpeg
-/boot/NorNet/Server1-1920x1080.jpeg
+/boot/NorNet/Server1-*.jpeg
 %{_sysconfdir}/nornet/vsystems/EXAMPLE-99-VirtualServer
 %{_sysconfdir}/grub.d/??_nornet_server_theme
 %{_bindir}/Auto-Update-BootCD

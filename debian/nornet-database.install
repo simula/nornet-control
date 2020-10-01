@@ -1,3 +1,2 @@
 etc/grub.d/??_nornet_database_theme
-usr/share/nornet-desktop/Splash/Database1-1024x768.jpeg /boot/NorNet
-usr/share/nornet-desktop/Splash/Database1-1920x1080.jpeg /boot/NorNet
+usr/share/nornet-desktop/Splash/Database1-*.jpeg /boot/NorNet

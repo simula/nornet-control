@@ -120,7 +120,7 @@ Depends: autoconf,
          bc,
          bison,
          clang,
-         cmake (>= 3.0.2) | cmake3,
+         cmake (>= 3.3) | cmake3,
          debhelper,
          devscripts,
          docker.io,
@@ -312,6 +312,7 @@ Depends: firefox,
          xserver-xorg-video-vmware,
          ${misc:Depends},
          ${shlibs:Depends}
+Recommends: wireshark
 Description: Display tools for the NorNet system environment
  This package contains the packages to set up a display station for the
  results of the monitoring station. It is in fact just a node with a web

@@ -4,8 +4,7 @@ etc/nornet/nornet-services.cfg
 usr/bin/Make-Monitor-Configuration
 usr/bin/check_site /usr/lib/nagios/plugins
 usr/bin/check_tunnel /usr/lib/nagios/plugins
-usr/share/nornet-desktop/Splash/Monitor1-1024x768.jpeg /boot/NorNet
-usr/share/nornet-desktop/Splash/Monitor1-1920x1080.jpeg /boot/NorNet
+usr/share/nornet-desktop/Splash/Monitor1-*.jpeg /boot/NorNet
 var/www/Kontrollsenter/*
 var/www/Kontrollsenter/Clock/*
 var/www/Kontrollsenter/UnifrakturCook/*

@@ -16,6 +16,5 @@ usr/bin/Set-OVF-Type
 usr/bin/Show-VSystems
 usr/bin/Start-VSystem
 usr/bin/Stop-VSystem
-usr/share/nornet-desktop/Splash/Server1-1024x768.jpeg /boot/NorNet
-usr/share/nornet-desktop/Splash/Server1-1920x1080.jpeg /boot/NorNet
+usr/share/nornet-desktop/Splash/Server1-*.jpeg /boot/NorNet
 usr/share/nornet-server/watchdog-config.example
