@@ -27,9 +27,7 @@ BuildRequires: texlive-epstopdf-bin
 BuildRequires: urw-base35-fonts
 BuildRoot: %{_tmppath}/%{name}-%{version}-build
 
-
-# This package does not generate debug information (no executables):
-%global debug_package %{nil}
+BuildArch: noarch
 
 # TEST ONLY:
 # define _unpackaged_files_terminate_build 0
