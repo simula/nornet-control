@@ -1,3 +1,40 @@
+commit 9ac004a38ca5b90e1ae5fc2df52078ecc3e40527
+Merge: 55de0007 cba4a691
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Oct 1 11:55:21 2020 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 55de0007b63fe9112a6b559e1acfbc7219da8117
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Oct 1 11:54:36 2020 +0200
+
+    Packaging file updates.
+
+commit cba4a691693449b2c05ef36b05169010442a35a5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Oct 1 11:50:38 2020 +0200
+
+    RPM spec fix: need to set BuildArch.
+
+commit ffa71f4d47527191f1a1581e6cd2ece2de056e56
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Oct 1 11:18:50 2020 +0200
+
+    Updated packaging files.
+
+commit 9b6e2a55955d46b4a6d48276c546608f50b7bf1a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Oct 1 10:38:00 2020 +0200
+
+    Improved CMakeLists.txt.
+
+commit 6fdc905e2c0d6b4d9efa9259449f836bad96abd0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Sep 28 10:43:52 2020 +0200
+
+    New release nornet-1.5.3.
+
 commit 201bb3b74c388efd78def0775bb54e2054dd03af
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Sun Sep 27 13:31:36 2020 +0200
