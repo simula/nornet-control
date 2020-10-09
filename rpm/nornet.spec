@@ -101,7 +101,9 @@ Requires: rsplib-services
 Requires: rsplib-tools
 Requires: smartmontools
 Requires: subnetcalc
-Requires: td-system-tools-all
+Requires: td-system-tools-system-info >= 1.1.1
+Requires: td-system-tools-system-maintenance >= 1.1.1
+Requires: td-system-tools-configure-grub >= 1.1.1
 Requires: tcpdump
 Requires: tftp
 Requires: traceroute
@@ -177,12 +179,7 @@ See https://www.nntb.no for details on NorNet!
 %post management
 echo "Updating /etc/default/grub with NorNet settings:"
 echo "-----"
-cat /usr/share/nornet/grub-defaults | \
-   ( if grep "biosdevname=0" >/dev/null 2>&1 /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"biosdevname=0 /g" ; else cat ; fi ) | \
-   ( if grep "net.ifnames=0" >/dev/null 2>&1 /proc/cmdline ; then sed "s/^GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"net.ifnames=0 /g" ; else cat ; fi ) | \
-   tee /etc/default/grub.new && \
-grep "^GRUB_ENABLE_CRYPTODISK=" /etc/default/grub | tee --append /etc/default/grub.new && \
-mv /etc/default/grub.new /etc/default/grub
+configure-grub /usr/share/hencsat/grub-defaults -o /etc/default/grub
 echo "-----"
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
 
