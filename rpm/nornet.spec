@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.5.4
+Version: 1.5.5
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -179,7 +179,7 @@ See https://www.nntb.no for details on NorNet!
 %post management
 echo "Updating /etc/default/grub with NorNet settings:"
 echo "-----"
-configure-grub /usr/share/hencsat/grub-defaults -o /etc/default/grub
+configure-grub /usr/share/nornet/grub-defaults -o /etc/default/grub
 echo "-----"
 if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg || true ; fi
 
@@ -826,6 +826,8 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %changelog
+* Sat Oct 10 2020 Thomas Dreibholz <dreibh@simula.no> - 1.5.5
+- New upstream release.
 * Mon Oct 05 2020 Thomas Dreibholz <dreibh@simula.no> - 1.5.4
 - New upstream release.
 * Mon Sep 28 2020 Thomas Dreibholz <dreibh@simula.no> - 1.5.3

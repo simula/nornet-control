@@ -11,7 +11,7 @@ case "$1" in
 
       echo "Updating /etc/default/grub with NorNet settings:"
       echo "-----"
-      configure-grub /usr/share/hencsat/grub-defaults -o /etc/default/grub
+      configure-grub /usr/share/nornet/grub-defaults -o /etc/default/grub
       echo "-----"
 
       if [ -x "$(command -v update-grub)" ] ; then

@@ -1,3 +1,27 @@
+commit ac7d12b6c6a7e65a796e779641ad03971b3699fc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 9 16:44:30 2020 +0200
+
+    Minor clean-up.
+
+commit 38fc276de77285355b999e3a9c46cc91ec2522d1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 9 16:32:45 2020 +0200
+
+    Using configure-grub instead of custom code. Added dependency for configure-grub >= 1.1.1.
+
+commit 866a9bf6a63d9e397dd2c1462a97f7d723675f3b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 5 22:01:46 2020 +0200
+
+    Improved packaging configuration.
+
+commit 98445d719abbb55446284254b6160f8b53b280f5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 5 10:07:25 2020 +0200
+
+    New release nornet-1.5.4.
+
 commit 9ac004a38ca5b90e1ae5fc2df52078ecc3e40527
 Merge: 55de0007 cba4a691
 Author: Thomas Dreibholz <dreibh@simula.no>
