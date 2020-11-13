@@ -1,0 +1,3 @@
+etc/grub.d/20_nornet_plc_theme
+usr/lib/python3/dist-packages/__pycache__/*
+usr/share/nornet-desktop/Splash/*

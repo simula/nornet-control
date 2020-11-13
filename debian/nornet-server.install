@@ -16,5 +16,21 @@ usr/bin/Set-OVF-Type
 usr/bin/Show-VSystems
 usr/bin/Start-VSystem
 usr/bin/Stop-VSystem
+usr/share/man/man1/Auto-Update-BootCD.1
+usr/share/man/man1/Backup-All-VSystems.1
+usr/share/man/man1/Backup-VSystem.1
+usr/share/man/man1/Change-VSystem-CDImage.1
+usr/share/man/man1/Check-Research-Node.1
+usr/share/man/man1/Check-VSystem.1
+usr/share/man/man1/Convert-HDD-Images.1
+usr/share/man/man1/Make-Server-Configuration.1
+usr/share/man/man1/Make-VSystem-Template.1
+usr/share/man/man1/Reset-VSystem.1
+usr/share/man/man1/Server-Setup.1
+usr/share/man/man1/Server-Watchdog.1
+usr/share/man/man1/Set-OVF-Type.1
+usr/share/man/man1/Show-VSystems.1
+usr/share/man/man1/Start-VSystem.1
+usr/share/man/man1/Stop-VSystem.1
 usr/share/nornet-desktop/Splash/Server1-*.jpeg /boot/NorNet
 usr/share/nornet-server/watchdog-config.example

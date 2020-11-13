@@ -4,6 +4,9 @@ etc/nornet/nornet-services.cfg
 usr/bin/Make-Monitor-Configuration
 usr/bin/check_site /usr/lib/nagios/plugins
 usr/bin/check_tunnel /usr/lib/nagios/plugins
+usr/share/man/man1/Make-Monitor-Configuration.1
+usr/share/man/man1/check_site.1
+usr/share/man/man1/check_tunnel.1
 usr/share/nornet-desktop/Splash/Monitor1-*.jpeg /boot/NorNet
 var/www/Kontrollsenter/*
 var/www/Kontrollsenter/Clock/*

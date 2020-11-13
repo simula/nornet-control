@@ -24,6 +24,28 @@ usr/bin/Test-NTP-Configuration
 usr/bin/Watchdog
 usr/bin/cls
 usr/sbin/Interface-Setup /sbin
+usr/share/man/man1/Auto-Update-Keys.1
+usr/share/man/man1/Check-Nodes-Loop.1
+usr/share/man/man1/Check-Nodes.1
+usr/share/man/man1/Clear-SSH-Node-Key.1
+usr/share/man/man1/Create-New-SSH-Node-Keys.1
+usr/share/man/man1/Fingerprint-SSH-Node-Keys.1
+usr/share/man/man1/Get-Nodes.1
+usr/share/man/man1/Get-NorNet-Configuration.1
+usr/share/man/man1/Get-Sites.1
+usr/share/man/man1/Get-Slice-Nodes.1
+usr/share/man/man1/Get-Slices.1
+usr/share/man/man1/Get-Users.1
+usr/share/man/man1/Node-Setup.1
+usr/share/man/man1/Probe-Endpoint-Setup.1
+usr/share/man/man1/Random-Sleep.1
+usr/share/man/man1/Reset-Networking.1
+usr/share/man/man1/Routing-Rule-Setup.1
+usr/share/man/man1/System-Backup.1
+usr/share/man/man1/Test-NTP-Configuration.1
+usr/share/man/man1/Watchdog.1
+usr/share/man/man1/cls.1
+usr/share/man/man8/Interface-Setup.8
 usr/share/nornet-desktop/Splash/Management1-*.jpeg /boot/NorNet
 usr/share/nornet-desktop/Splash/nornet-version /etc/nornet
 usr/share/nornet/grub-defaults

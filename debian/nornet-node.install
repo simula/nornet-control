@@ -1,3 +1,4 @@
 etc/grub.d/??_nornet_node_theme
 usr/bin/Make-Node-Configuration
+usr/share/man/man1/Make-Node-Configuration.1
 usr/share/nornet-desktop/Splash/Node1-*.jpeg /boot/NorNet

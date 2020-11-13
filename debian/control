@@ -1,7 +1,7 @@
 Source: nornet
 Section: net
 Priority: optional
-Maintainer: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: https://www.nntb.no/
 Build-Depends: cmake (>= 3.3) | cmake3,
                debhelper (>= 9),
