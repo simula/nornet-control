@@ -1,3 +1,39 @@
+commit 434a6d048470076450368b691399c1aa9547490c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 13 12:25:35 2020 +0100
+
+    Packaging clean-ups.
+
+commit b37f55db36e9168d17b1630bbfe35153a53af86a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 13 11:06:29 2020 +0100
+
+    Updated build scripts
+
+commit d224ebb661ad49b0af6f6bc440b89648b2fb12b4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 13 10:31:33 2020 +0100
+
+    Configuration improvement.
+
+commit 0d2373c64b49b06a8e512dad558154e26bb24b7d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 13 10:28:40 2020 +0100
+
+    Updated Travis CI configuration.
+
+commit 04b022ae45f47d3c07a61135ce8f82775c4ce114
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 5 17:09:54 2020 +0100
+
+    Updated build scripts
+
+commit 8c650b7e721c2351046b30be3af2596473d785a9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Oct 10 16:37:06 2020 +0200
+
+    New release nornet-1.5.5.
+
 commit ac7d12b6c6a7e65a796e779641ad03971b3699fc
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Fri Oct 9 16:44:30 2020 +0200
