@@ -136,7 +136,6 @@ Depends: autoconf,
          gnupg,
          graphicsmagick,
          gsfonts,
-         kernel-package,
          libboost-all-dev,
          libbz2-dev,
          libcpprspserver-dev,
@@ -164,9 +163,7 @@ Depends: autoconf,
          xmlstarlet,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: createrepo,
-            mock,
-            ubuntu-dev-tools
+Recommends: ubuntu-dev-tools
 Description: Development tools for the NorNet system environment
  This metapackage contains basic software nor NorNet development. The
  software installed provides a common working environment.
