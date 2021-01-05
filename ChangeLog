@@ -1,3 +1,15 @@
+commit 9fd2d842e88b533eddc61015f53342884791240c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jan 5 18:18:40 2021 +0100
+
+    Added option to specify a deny list for the DHCP server.
+
+commit 6f5ecd8c780123531bbb1ea8573c643764f74060
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 16 10:26:05 2020 +0100
+
+    New release nornet-1.5.7.
+
 commit 8b57a8714e13bb47d1e75e1ec41cec31c9f9be1b
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Dec 16 10:25:20 2020 +0100
