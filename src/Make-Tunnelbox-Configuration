@@ -83,6 +83,14 @@ def getLocalSiteDHCPServerStaticConfigurationString(nodeIndex):
 
 
 # ###### Get DHCPD node configuration string ################################
+def getLocalSiteDHCPServerDenyString():
+   try:
+      return str(NorNet_Configuration['NorNet_LocalSite_DHCPServer_Deny'])
+   except:
+      return ''
+
+
+# ###### Get DHCPD node configuration string ################################
 def getLocalSiteRADVDConfigurationString():
    return checkParameter('NorNet_LocalSite_RADVDServer', [ 'on', 'off'])
 
@@ -848,7 +856,7 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
 
 
 # ###### Generate DHCP daemon configuration #################################
-def makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList):
+def makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList, denyList):
    domain        = localSite['site_domain']
    providerIndex = localSite['site_default_provider_index']
    siteIndex     = localSite['site_index']
@@ -888,6 +896,13 @@ def makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList):
          else:
             # outputFile.write('\tserver-name       "tftp.' + getCentralSiteDomainName() + '";\n')
             outputFile.write('\tnext-server       tftp.' + getCentralSiteDomainName() + ';\n')
+      outputFile.write('}\n')
+
+   for denyEntry in denyList:
+      label = 'deny-' + denyEntry.replace(':', '').upper()
+      outputFile.write('\nhost ' + label + ' {\n')
+      outputFile.write('\thardware ethernet ' + denyEntry + ';\n')
+      outputFile.write('\tdeny booting;\n')
       outputFile.write('}\n')
 
    outputFile.close()
@@ -1971,6 +1986,11 @@ for i in range(NorNet_MinNodeIndex + 1, NorNet_MaxNodeIndex + 1):
       }
       staticList.append(staticEntry)
 
+denyList = []
+denyConfiguration = getLocalSiteDHCPServerDenyString()
+for denyEntry in shlex.split(denyConfiguration):
+   print(denyEntry)
+   denyList.append(unquote(denyEntry))
 
 # ====== Create Bind configuration ==========================================
 makeBindConfiguration(fullSiteList, siteNodeList, fullSliceList, localSite,
@@ -1980,7 +2000,7 @@ makeBindConfiguration(fullSiteList, siteNodeList, fullSliceList, localSite,
 makeHiPerConTracerConfiguration(localSite)
 makeFlingConfiguration(localSite)
 #makeIPSECConfiguration(localSite)
-makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList)
+makeDHCPDConfiguration(localSite, dynamicStart, dynamicEnd, staticList, denyList)
 makeRADVDConfiguration(localSite)
 makeSquidConfiguration(getLocalNodeHostname(), localSite)
 makeRegistrarConfiguration(localSite)

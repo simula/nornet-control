@@ -101,6 +101,8 @@ NorNet_LocalSite_DHCPServer_Static200='"f0:de:f1:11:22:33"'
 NorNet_LocalSite_DHCPServer_Static201='"f0:de:f1:aa:bb:cc" "pxe-boot.img"'
 NorNet_LocalSite_DHCPServer_Static202='"f0:de:f1:aa:bb:ee" "pxe-boot.img" "pxe-server.simula.nornet"'
 
+# NorNet_LocalSite_DHCPServer_Deny='"f0:de:f1:01:ff:ff" "f0:de:f1:02:ff:ff"'
+
 # RADVD Configuration:
 NorNet_LocalSite_RADVDServer="on"
 
