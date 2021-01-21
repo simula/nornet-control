@@ -1,0 +1,10 @@
+title: sognsvann;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.1.253
+title: langevann;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.2.253
+title: fjellhallen;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.3.253
+title: ishav;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.4.253
+title: petroleum;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.5.253
+title: floeyfjellet;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.6.253
+title: wergeland;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.7.253
+title: fjellrev;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.8.253
+title: munkholmen;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.9.253
+title: herjangsfjorden;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.10.253
