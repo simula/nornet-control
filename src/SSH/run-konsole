@@ -22,8 +22,27 @@
 # Turn OFF setting General -> Remember window size
 # Otherwise, Konsole is going to ignore the size settings here!
 
-konsole \
-   --separate --fallback-profile \
-   -p ShowTerminalSizeHint=true -p TerminalColumns=256 -p TerminalRows=50 \
-   -p ColorScheme=WhiteOnBlack \
-   --tabs-from-file tabs1 -e date
+if [ $# -lt 1 ] ; then
+   echo >&2 "Usage: $0 tab_file [...]"
+   exit 1
+fi
+
+while [ $# -gt 0 ] ; do
+   inputFile="$1"
+   shift
+
+   if [ ! -e "${inputFile}" ] ; then
+      echo >&2 "ERROR: ${inputFile} not found!"
+      exit 1
+   fi
+   konsole \
+      --separate --fallback-profile \
+      -p ShowTerminalSizeHint=true -p TerminalColumns=256 -p TerminalRows=8 \
+      -p ColorScheme=WhiteOnBlack \
+      --tabs-from-file "${inputFile}" \
+      -e date &
+
+   if [ $# -gt 0 ] ; then
+      sleep 5
+   fi
+done
