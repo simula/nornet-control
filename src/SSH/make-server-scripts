@@ -22,7 +22,7 @@ for level in 251 252 253 254 1 ; do
    (
       for site in 1 2 3 4 5 6 7 8 9 10 ; do
          address="10.1.$site.$level"
-         name=`dig -x 10.1.1.254 +short`
+         name=`dig -x ${address} +short | sed -e "s/\..*$//g"`
          if [ "${name}" == "" ] ; then
             name="${address}"
          fi
