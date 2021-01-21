@@ -18,15 +18,12 @@
 #
 # Contact: dreibh@simula.no
 
-for level in 251 252 253 254 1 ; do
-   (
-      for site in 1 2 3 4 5 6 7 8 9 10 ; do
-         address="10.1.$site.$level"
-         name=`dig -x 10.1.1.254 +short`
-         if [ "${name}" == "" ] ; then
-            name="${address}"
-         fi
-         echo "title: ${name};; command: `realpath access` ${address}"
-      done
-   ) >tabs${level}
-done
+# NOTE:
+# Turn OFF setting General -> Remember window size
+# Otherwise, Konsole is going to ignore the size settings here!
+
+konsole \
+   --separate --fallback-profile \
+   -p ShowTerminalSizeHint=true -p TerminalColumns=256 -p TerminalRows=50 \
+   -p ColorScheme=WhiteOnBlack \
+   --tabs-from-file tabs1 -e date
