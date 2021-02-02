@@ -20,7 +20,11 @@
 
 
 # Get the width of the terminal. Assume 80, if unknown.
-TERMINAL_WIDTH=`tput cols 2>/dev/null || echo "80"`
+if [ "${TERM}" != "dumb" ] ; then
+   TERMINAL_WIDTH=`tput cols`
+else
+   TERMINAL_WIDTH=80
+fi
 
 
 # ###### Center text in console #############################################
