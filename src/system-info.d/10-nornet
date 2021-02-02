@@ -19,12 +19,16 @@
 # Contact: dreibh@simula.no
 
 
+# Get the width of the terminal. Assume 80, if unknown.
+TERMINAL_WIDTH=`tput cols 2>/dev/null || echo "80"`
+
+
 # ###### Center text in console #############################################
 center ()
 {
    local text="$1"
    local length=${#text}
-   local width=`tput cols`   # Console width
+   local width=${TERMINAL_WIDTH}
 
    let indent=(${width} - ${length})/2
    if [ ${indent} -lt 0 ] ; then
@@ -39,7 +43,7 @@ separator ()
 {
    local separatorCharacter="="
    local separator=""
-   local width=`tput cols`   # Console width
+   local width=${TERMINAL_WIDTH}
    local separatorWidth
 
    let separatorWidth=${width}-4
