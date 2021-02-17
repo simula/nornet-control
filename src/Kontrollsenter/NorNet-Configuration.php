@@ -1,7 +1,7 @@
 <?php
 //
 // NorNet Configuration
-// Copyright (C) 2015-2020 by Thomas Dreibholz
+// Copyright (C) 2015-2021 by Thomas Dreibholz
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
