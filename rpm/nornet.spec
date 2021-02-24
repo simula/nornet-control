@@ -82,6 +82,7 @@ Requires: git
 Requires: gpm
 Requires: hping3
 Requires: htop
+Requires: inotify-tools
 Requires: joe
 Requires: jq
 Requires: libidn
