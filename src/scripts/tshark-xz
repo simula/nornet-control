@@ -18,7 +18,8 @@
 #
 # Contact: dreibh@simula.no
 
-# Initial idea based on: https://stackoverflow.com/questions/50489159/write-tcpdump-output-to-compressed-gziped-file
+# Initial idea based on:
+# https://stackoverflow.com/questions/50489159/write-tcpdump-output-to-compressed-gziped-file
 
 
 set -e
