@@ -1,3 +1,129 @@
+commit b047a9c71045bed6c8839136a9514a65b17f88b6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 24 20:00:52 2021 +0100
+
+    Added inotify-tools to NorNet Management package.
+
+commit 20828b4ab27463e35d03fa4c02b527895f5d2c50
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 24 11:33:44 2021 +0100
+
+    Minor update.
+
+commit cfc3866b560cdfdedd6d109105413b442cf2c447
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 24 11:29:27 2021 +0100
+
+    Added script.
+
+commit 64e0adc9f9f2a3d3c5bcb9bc585fb200ce61bd96
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 17 17:57:12 2021 +0100
+
+    Cleaned up CMakeLists.txt.
+
+commit 46bf5cecda5998433a6930b007d736ab65db169f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 17 15:19:07 2021 +0100
+
+    Updated build scripts
+
+commit 80fed6c3beaed9865281d503312cc286ce3a556d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 17 15:19:06 2021 +0100
+
+    Updated build scripts
+
+commit a183033e95cd70ed907cb168c0c612e7b6c2ee71
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 17 15:17:37 2021 +0100
+
+    Updated build scripts
+
+commit 1960440ebbb03c2909680348459c5f77b6cb89c2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 17 15:17:37 2021 +0100
+
+    Updated build scripts
+
+commit 6f8363b9c1d055b033350ac4f25bb8182d6b5871
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 17 15:16:37 2021 +0100
+
+    Header updates.
+
+commit 1024b216b827b7cccef86dade0ab765daeea10fc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 2 10:14:33 2021 +0100
+
+    Fix for Fedora.
+
+commit 4cc07039b5efa970140ce3aa649f7d8bf2a218a4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 2 09:59:39 2021 +0100
+
+    Updated submodule.
+
+commit a20064e6406eaef9a3954bb7b1bfa5b7eb73dcda
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 2 09:59:21 2021 +0100
+
+    Improved script.
+
+commit 896c71e6b804c9a1ca273eb7eee5ae88efb98a69
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Jan 30 07:41:00 2021 +0100
+
+    Updated Travis CI configuration
+
+commit e44537cbd7768c21d1d948801d6261d604696d10
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jan 29 23:21:37 2021 +0100
+
+    A fix.
+
+commit d3e51fa6ce3e171258656cbcd075d3dc6f1164f7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jan 25 20:00:51 2021 +0100
+
+    Minor update.
+
+commit 7c574021e6a1394279014f8a1bdc3dd9a29cfade
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jan 21 16:20:09 2021 +0100
+
+    Updated script.
+
+commit 2bb0fe84d241e7e4735a5ea0e00be7ec5ff99b6c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jan 21 15:55:44 2021 +0100
+
+    Added files.
+
+commit 7961b230293d62ab309275511635da875e0974f5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jan 21 15:51:38 2021 +0100
+
+    Updated script.
+
+commit 9cde2b212f15993811cd4d27adf83db716577d70
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jan 21 15:35:34 2021 +0100
+
+    An update.
+
+commit e08ad4b21748f9e9c6fc58db1be98fc4490fe435
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jan 21 14:17:30 2021 +0100
+
+    Added script.
+
+commit c2fa37f25724fd7435a1eb62ca7829938c4e039f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Jan 5 21:28:24 2021 +0100
+
+    New release nornet-1.5.8.
+
 commit 9fd2d842e88b533eddc61015f53342884791240c
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Tue Jan 5 18:18:40 2021 +0100
