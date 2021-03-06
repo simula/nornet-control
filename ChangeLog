@@ -1,3 +1,75 @@
+commit d63c5b0dbc10399a7a15713d91493e0d2b864bb7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Mar 6 22:33:06 2021 +0100
+
+    Another dependency fix.
+
+commit c7fd294bbbfc47a7a6dd686b10a83bfd040b8f37
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Mar 6 21:12:26 2021 +0100
+
+    Updated submodule.
+
+commit cbbb047cc59bafedc6079056915e28759da1dda9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Mar 6 21:11:28 2021 +0100
+
+    Dependency fix.
+
+commit 5de365b2d59b1ac67e1ccd09b96f3d5edd3cf06d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Mar 6 20:01:43 2021 +0100
+
+    Improved post-install for container installation.
+
+commit 531390390605770f87bfe91082f088e441c3ee4b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 5 18:52:37 2021 +0100
+
+    Updated Travis CI configuration
+
+commit d82fb557f5b134a0c13bb06d9a743887745c6025
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 5 16:01:45 2021 +0100
+
+    Updated build scripts
+
+commit 19d8bc2dff525a9e819c96a5229aeda4a76ac53f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 3 21:08:18 2021 +0100
+
+    Dependency update.
+
+commit f1dc7fb4598f24912d190f729c63e884bd0bbd10
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 3 19:41:47 2021 +0100
+
+    Updated script.
+
+commit a9cfa8edf9f0bc0c974bb540555f3fade4c13059
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 1 21:20:30 2021 +0100
+
+    Updated build scripts
+
+commit 6c9c8853c300a36e32e9bbd1ff9b71bd4f8ee850
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 1 16:30:36 2021 +0100
+
+    Updated build scripts
+
+commit 7c8f177b7f94bc9add1f3c541a0a175c2970c169
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 1 16:13:22 2021 +0100
+
+    Improved autogen.sh with options for static analysis.
+
+commit 36f1fafcee34555ae5db73d53503737982493e11
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 24 20:01:23 2021 +0100
+
+    New release nornet-1.5.9.
+
 commit b047a9c71045bed6c8839136a9514a65b17f88b6
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Feb 24 20:00:52 2021 +0100
