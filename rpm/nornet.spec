@@ -507,7 +507,7 @@ Requires: %{name}-artwork = %{version}-%{release}
 Requires: %{name}-autoupdate = %{version}-%{release}
 Requires: %{name}-management = %{version}-%{release}
 Requires: httpd
-Requires: mod_php
+Requires: php-fpm
 Requires: nagios
 Requires: postfix
 
