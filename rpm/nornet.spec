@@ -618,7 +618,7 @@ Recommends: geoipupdate-cron6
 Requires: GeoIP-GeoLite-data
 Requires: GeoIP-GeoLite-data-extra
 Requires: httpd
-Requires: mod_php
+Requires: php-fpm
 Requires: oxygen-icon-theme
 
 %description websrv
