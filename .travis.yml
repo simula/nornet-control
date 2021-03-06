@@ -16,11 +16,11 @@ matrix:
      dist: focal
      group: travis_latest
      env: DOCKER="ubuntu:focal" VARIANT="ubuntu" TOOL="compile" COMPILER_C="gcc" COMPILER_CXX="g++"
-   - name: "Ubuntu 20.04 (Focal Fossa) with Clang"
-     os: linux
-     dist: focal
-     group: travis_latest
-     env: DOCKER="ubuntu:focal" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
+   #- name: "Ubuntu 20.04 (Focal Fossa) with Clang"
+     #os: linux
+     #dist: focal
+     #group: travis_latest
+     #env: DOCKER="ubuntu:focal" VARIANT="ubuntu" TOOL="compile" COMPILER_C="clang" COMPILER_CXX="clang++"
    - name: "Ubuntu 20.04 (Focal Fossa) packaging with pbuilder"
      dist: focal
      group: travis_latest

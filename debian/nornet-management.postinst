@@ -11,7 +11,9 @@ case "$1" in
 
       echo "Updating /etc/default/grub with NorNet settings:"
       echo "-----"
-      configure-grub /usr/share/nornet/grub-defaults -o /etc/default/grub -T "20000 584 144 736 48 1048 288 984 96 784 63 0 1 656 64 880 63 0 1 1176 192"
+      if [ -e /etc/default/grub ] ; then
+         configure-grub /usr/share/nornet/grub-defaults -o /etc/default/grub -T "20000 584 144 736 48 1048 288 984 96 784 63 0 1 656 64 880 63 0 1 1176 192"
+      fi
       echo "-----"
 
       if [ -x "$(command -v update-grub)" ] ; then
