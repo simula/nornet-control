@@ -148,7 +148,7 @@ matrix:
      env: DOCKER="debian:stretch" VARIANT="debian" TOOL="pbuilder"
 
 
-   # ###### Fedora Linux ###################################################
+   # ###### Fedora Linux ####################################################
 
    # ====== Fedora 33 =======================================================
    - name: "Fedora 33 with GCC"
