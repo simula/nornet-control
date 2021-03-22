@@ -61,11 +61,11 @@ norNetSetup = [
       [ u'Telenor', 'eth3',
            IPv4Interface('62.92.88.42/30'),                    IPv4Address('62.92.88.41'),
            IPv6Interface('::/0'),                              IPv6Address('::'),
-           1492, 'ADSL, consumer', 768, 3000 ],
+           1492, 'ADSL, consumer', 768, 16000 ],
       [ u'PowerTech', 'eth4',
            IPv4Interface('80.241.88.26/29'),                   IPv4Address('80.241.88.25'),
            IPv6Interface('2001:840:4ad5::34/64'),              IPv6Address('2001:840:4ad5::1'),
-           1492, 'ADSL, consumer', 256, 6000 ]
+           1492, 'ADSL, consumer', 512, 6000 ],
    ],
    'site_nodes' : [
       [ 100,  1, u'akerbrygge',  'sognsvann.simula.nornet',      'vnc://sognsvann.simula.nornet:5900'      ],
@@ -111,11 +111,11 @@ norNetSetup = [
       [ u'PowerTech', 'eth2',
            IPv4Interface('195.159.158.198/30'),     IPv4Address('195.159.158.197'),
            IPv6Interface('2001:840:4abd::4/64'),    IPv6Address('2001:840:4abd::1'),
-           1492, 'ADSL, consumer', 128, 2000 ],
+           1492, 'ADSL, consumer', 512, 6000 ],
       [ u'Broadnet', 'eth3',
            IPv4Interface('85.252.121.218/30'),      IPv4Address('85.252.121.217'),
            IPv6Interface('::/0'),                   IPv6Address('::'),
-           1492, 'ADSL, consumer', 512, 2000 ]
+           1492, 'ADSL, consumer', 768, 16000 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'bjørvika', 'langevann.uio.nornet', 'vnc://langevann.uio.nornet:5900' ],
@@ -151,7 +151,7 @@ norNetSetup = [
       [ u'PowerTech', 'eth2',
            IPv4Interface('195.159.158.254/30'),       IPv4Address('195.159.158.253'),
            IPv6Interface('2001:840:490b::254/64'),    IPv6Address('2001:840:490b::1'),
-           1492, 'ADSL, consumer', 128, 2000 ]
+           1492, 'ADSL, consumer', 512, 6000 ],
    ],
    'site_nodes' : [
       [ 100, 1, u'kapp',      'fjellhallen.hig.nornet', 'vnc://fjellhallen.hig.nornet:5900' ],
@@ -225,7 +225,7 @@ norNetSetup = [
       [ u'PowerTech', 'eth2',
            IPv4Interface('195.159.158.210/30'),    IPv4Address('195.159.158.209'),
            IPv6Interface('2001:840:4908::210/64'), IPv6Address('2001:840:4908::1'),
-           1492, 'ADSL, consumer', 128, 2000 ],
+           1492, 'ADSL, consumer', 512, 6000 ],
       [ u'Altibox', 'eth3',
            IPv4Interface('79.161.4.42/30'),        IPv4Address('79.161.4.41'),
            IPv6Interface('2a01:798:1:9::1/127'),   IPv6Address('2a01:798:1:9::'),
@@ -304,7 +304,7 @@ norNetSetup = [
       [ u'PowerTech', 'eth2',
            IPv4Interface('195.159.203.50/30'),        IPv4Address('195.159.203.49'),
            IPv6Interface('2001:840:490a::50/64'),     IPv6Address('2001:840:490a::1'),
-           1492, 'ADSL, consumer', 128, 2000 ],
+           1492, 'ADSL, consumer', 512, 6000 ],
       #[ u'Broadnet', 'eth3',
            #IPv4Interface('193.69.209.10'),            IPv4Address('193.69.209.9'),
            #IPv6Interface('::/0'),                     IPv6Address('::'),
@@ -379,7 +379,7 @@ norNetSetup = [
       [ u'PowerTech', 'eth2',
            IPv4Interface('195.159.158.134/30'),        IPv4Address('195.159.158.133'),
            IPv6Interface('2001:840:490e::134/64'),     IPv6Address('2001:840:490e::1'),
-           1492, 'ADSL, consumer', 128, 2000 ]
+           1492, 'ADSL, consumer', 512, 6000 ],
    ],
    'site_nodes' : [
       [ 100, 1, u'bybro',      'munkholmen.ntnu.nornet',   'vnc://munkholmen.ntnu.nornet:5900'   ],
@@ -735,11 +735,11 @@ norNetSetup = [
       [ u'China Education and Research Network', 'eth1',
            IPv4Interface('210.37.45.149/26'),           IPv4Address('210.37.45.190'),
            IPv6Interface('2001:250:3801:71::149/64'),   IPv6Address('2001:250:3801:71::1'),
-           1500, 'fibre, research', 10000, 10000 ],
+           1500, 'fibre, research', 100000, 100000 ],
       [ u'China Unicom', 'eth2',
            IPv4Interface('113.59.104.58/29'), IPv4Address('113.59.104.62'),
            IPv6Interface('::/0'),             IPv6Address('::'),
-           1500, 'fibre, consumer', 10000, 10000 ]
+           1500, 'fibre, consumer', 20000, 20000 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'longlou',   'wenchang.hu.nornet', 'vnc://wenchang.hu.nornet:5900' ],   # Wenchang Satellite Launch Center/WSLC
