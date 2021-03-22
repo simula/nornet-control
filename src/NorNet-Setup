@@ -186,11 +186,11 @@ norNetSetup = [
       [ u'Telenor', 'eth2',
            IPv4Interface('62.92.89.210/30'),       IPv4Address('62.92.89.209'),
            IPv6Interface('::/0'),                  IPv6Address('::'),
-           1492, 'ADSL, consumer', 2000, 256 ],
+           1492, 'ADSL, consumer', 2000, 384 ],
       [ u'PowerTech', 'eth3',
            IPv4Interface('195.159.158.162/30'),    IPv4Address('195.159.158.161'),
            IPv6Interface('2001:840:490c::162/64'), IPv6Address('2001:840:490c::1'),
-           1492, 'ADSL, consumer', 2000, 128 ]
+           1492, 'ADSL, consumer', 6000, 512 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'amundsen',    'ishav.uit.nornet',       'vnc://ishav.uit.nornet:5900'       ],
@@ -415,11 +415,11 @@ norNetSetup = [
       [ u'PowerTech', 'eth2',
            IPv4Interface('195.159.158.174/30'),       IPv4Address('195.159.158.173'),
            IPv6Interface('2001:840:490d::174/64'),    IPv6Address('2001:840:490d::1'),
-           1492, 'ADSL, consumer', 128, 2000 ],
+           1492, 'ADSL, consumer', 512, 6000 ],
       [ u'Broadnet', 'eth3',
            IPv4Interface('85.252.123.242/30'),        IPv4Address('85.252.123.241'),
            IPv6Interface('::/0'),                     IPv6Address('::'),
-           1492, 'ADSL, consumer', 768, 4000 ]
+           1492, 'ADSL, consumer', 768, 16000 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'storsteinsfjellet', 'herjangsfjorden.hin.nornet', 'vnc://herjangsfjorden.hin.nornet:5900' ],
