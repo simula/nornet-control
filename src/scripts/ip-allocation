@@ -7,8 +7,9 @@ i=1
 while [ $i -lt 255 ] ; do
 
    name=`dig -x 10.$isp.$site.$i ptr +short`
+   status=`ping -c1 10.$isp.$site.$i >/dev/null && echo "OK" || echo "BAD"`
 
-   echo -e "$i\t$name"
+   echo -e "$i\t$name:\t$status"
 
    let i=$i+1
 done
