@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+#
+# NorNet Helper Scripts
+# Copyright (C) 2012-2021 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+VMs="
+nordishavet.unis.nornet
+nordlandet.hin.nornet
+vestlandet.uib.nornet
+oestlandet.uio.nornet
+soerlandet.uia.nornet
+
+yaounde.simula.nornet
+douala.hig.nornet
+garoua.uit.nornet
+bafoussam.uib.nornet
+kousseri.unis.nornet
+
+meilan.hu.nornet
+dingo.simula.nornet
+wombat.uia.nornet
+koala.ntnu.nornet
+wallaby.uib.nornet
+redback.hin.nornet
+"
+(
+   for name in `echo "$VMs" | sort -u` ; do
+      echo "title: ${name};; command: `realpath access` ${name}"
+   done
+) >tabsHaikou
+
+VMs="
+beastie.simula.nornet
+snoemann.unis.nornet
+lutefisk.uit.nornet
+"
+(
+   for name in `echo "$VMs" | sort -u` ; do
+      echo "title: ${name};; command: `realpath access` ${name}"
+   done
+) >tabsBSD
