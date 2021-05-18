@@ -738,8 +738,8 @@ norNetSetup = [
            1500, 'fibre, research', 100000, 100000 ],
       [ u'China Unicom', 'eth2',
            IPv4Interface('113.59.104.58/29'), IPv4Address('113.59.104.62'),
-           IPv6Interface('::/0'),             IPv6Address('::'),
-           1500, 'fibre, consumer', 20000, 20000 ]
+           IPv6Interface('2408:8660:be27:1::2/64'),     IPv6Address('2408:8660:be27:1::1'),
+           1500, 'fibre, consumer', 50000, 50000 ]
    ],
    'site_nodes' : [
       [ 100, 1, u'longlou',   'wenchang.hu.nornet', 'vnc://wenchang.hu.nornet:5900' ],   # Wenchang Satellite Launch Center/WSLC
