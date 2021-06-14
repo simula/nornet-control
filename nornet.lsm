@@ -1,7 +1,7 @@
 Begin4
 Title:          nornet
-Version:        1.5.10
-Entered-date:   2021-03-07
+Version:        1.5.11
+Entered-date:   2021-06-14
 Description:    NorNet is a testbed for multi-homed systems. This package
                 contains the management software for the testbed's
                 infrastructure management software.
@@ -9,7 +9,7 @@ Keywords:       NorNet, Multi-Homing, Testbed, Routing, Management
 Author:         dreibh@simula.no (Thomas Dreibholz)
 Maintained-by:  dreibh@simula.no (Thomas Dreibholz)
 Primary-site:   https://www.nntb.no
-                196891 kB software/nornet/nornet-1.5.10.tar.xz
+                196893 kB software/nornet/nornet-1.5.11.tar.xz
 Original-site:  https://www.nntb.no
 Platforms:      Linux
 Copying-policy: GPL-3+
