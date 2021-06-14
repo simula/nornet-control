@@ -92,7 +92,7 @@ Requires: netperfmeter
 Requires: net-snmp-utils
 Requires: net-tools
 Requires: nmap
-Requires: ntpdate
+Requires: (ntpsec or ntpdate)
 Requires: pwgen
 Requires: pxz
 Requires: reiserfs-utils
