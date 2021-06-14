@@ -1,3 +1,76 @@
+commit efe38ecd6eafe0e37619b7c83bcd527ef66d832f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jun 14 11:43:39 2021 +0200
+
+    RPM fix for Fedora 34.
+
+commit 160f01f79c42f10d7c13c6a9ffd7568d240c7c7c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue May 18 17:18:47 2021 +0200
+
+    Upgrade of China Unicom connection at HU.
+
+commit ecd292f1ab66ae7f03da84d661ce6d7e65113e4e
+Merge: 18532575 e12cc96d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 10 15:35:53 2021 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 18532575f27c0ba1f06ed6cc5e05027c45b54092
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 10 15:35:32 2021 +0200
+
+    Added helper script.
+
+commit e12cc96d0eb2ceb4fafe5916880e0bdaf46ae4a3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed May 5 09:27:23 2021 +0200
+
+    Another update.
+
+commit 09975b758f01e1bb568ed4689f7cea341b9b61c3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed May 5 09:23:55 2021 +0200
+
+    Improved script.
+
+commit 0062b0bbd6dfa81c8e727b103b0ceec271bd3202
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 3 21:22:02 2021 +0200
+
+    Updated build scripts
+
+commit dd7fd856ccd7093e76b11c72ff6111d886aca842
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 22 21:34:55 2021 +0100
+
+    Some more updates.
+
+commit 6190af4e375b564fb2a14c1722c4132f4220eb32
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 22 21:19:08 2021 +0100
+
+    Configuration updates.
+
+commit a29241b40d552b337a0116a9227cafc99d25e643
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 10 11:35:06 2021 +0100
+
+    Updated Travis CI configuration.
+
+commit 7f63097385a7446092c27bcbcb15b03f4fc8bbd8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Mar 7 00:07:28 2021 +0100
+
+    Updated LSM entry.
+
+commit addad3d50f80103b78ae9b21b6e040705f4a5416
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Mar 6 23:41:30 2021 +0100
+
+    New release nornet-1.5.10.
+
 commit d63c5b0dbc10399a7a15713d91493e0d2b864bb7
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Sat Mar 6 22:33:06 2021 +0100
