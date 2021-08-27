@@ -34,6 +34,14 @@ from SysSetupCommons     import *
 # ###########################################################################
 
 
+# ###### Get option for enabling a basic firewall ###########################
+def getLocalNodeBasicFirewalling():
+   try:
+      return checkParameter('NorNet_LocalNode_BasicFirewalling', [ 'yes', 'no'])
+   except:
+      return 'yes'
+
+
 # ###### Get DNAT string ####################################################
 def getLocalSiteDNATOptionsString():
    try:
@@ -80,12 +88,15 @@ def _writeFWConfig(v4File, v6File, line):
 # ###### Write firewall rules ###############################################
 def makeFirewallConfiguration(fullSiteList, localSite, localNode):
 
+   log('Making firewall configuration for ' + localSite['site_long_name'] + ' ...')
+   if getLocalNodeBasicFirewalling() == 'no':
+      # Nothing to be done!
+      return
+
    localSiteIndex    = localSite['site_index']
    localProviderList = getNorNetProvidersForSite(localSite)
 
-   log('Making firewall configuration for ' + localSite['site_long_name'] + ' ...')
-
-   # ====== Generate tunnelbox configuration file ===========================
+   # ====== Generate configuration files ====================================
    v4File = codecs.open('firewall4-config', 'w', 'utf-8')
    v6File = codecs.open('firewall6-config', 'w', 'utf-8')
 

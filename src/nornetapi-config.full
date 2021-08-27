@@ -32,6 +32,13 @@ NorNet_LocalNode_NorNetInterface='eth0'
 # no  -> set the default route via tunnelbox
 NorNet_LocalNode_ControlBox='no'
 
+# Defines whether the node should install a basic firewall with
+# iptables-persistent. It should be on by default. In case of
+# customisation e.g. by ufw, it should be turned off.
+# yes -> create basic firewall rules
+# no  -> do not create basic firewall rules
+NorNet_LocalNode_BasicFirewalling='yes'
+
 # Set custom NTP servers (seperated by space).
 # Default:
 # For tunnelbox: use use the configuration from the PLC
