@@ -16,7 +16,7 @@ Build-Depends: cmake (>= 3.3) | cmake3,
                libfile-fcntllock-perl,
                libimage-exiftool-perl,
                python3-all
-Standards-Version: 4.5.1.0
+Standards-Version: 4.6.0.1
 Rules-Requires-Root: no
 Vcs-Git: https://github.com/simula/nornet-control.git
 Vcs-Browser: https://github.com/simula/nornet-control
@@ -197,7 +197,7 @@ Architecture: all
 Conflicts: miredo
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ifupdown,
-         iptables-persistent | netfilter-persistent,
+         netfilter-persistent | iptables-persistent,
          lsb-base,
          nfs-common,
          nornet-api (= ${binary:Version}),
@@ -409,6 +409,7 @@ Package: nornet-server
 Architecture: all
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ifupdown,
+         netfilter-persistent | iptables-persistent,
          libvirt-clients | libvirt-bin,
          lsb-base,
          nfs-common,
