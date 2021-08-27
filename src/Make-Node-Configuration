@@ -54,6 +54,22 @@ def makeFirewallConfiguration(fullSiteList, localSite, localNode):
 
    _writeFWConfig(v4File, v6File, "*filter\n")
    _writeFWConfig(v4File, v6File, ":INPUT ACCEPT [0:0]\n")
+
+   # ------ Reject external RPC portmapper access ---------
+   v4File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv4Prefix']) + " -p udp -m udp --dport 111 -j ACCEPT\n")
+   v4File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv4Prefix']) + " -p tcp -m tcp --dport 111 -j ACCEPT\n")
+   v4File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + " -p udp -m udp --dport 111 -j ACCEPT\n")
+   v4File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + " -p tcp -m tcp --dport 111 -j ACCEPT\n")
+   v4File.write("-A INPUT -p udp -m udp --dport 111 -j REJECT\n")
+   v4File.write("-A INPUT -p tcp -m tcp --dport 111 -j REJECT\n")
+   v6File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv6Prefix']) + " -p udp -m udp --dport 111 -j ACCEPT\n")
+   v6File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv6Prefix']) + " -p tcp -m tcp --dport 111 -j ACCEPT\n")
+   v6File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv6TunnelPrefix']) + " -p udp -m udp --dport 111 -j ACCEPT\n")
+   v6File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv6TunnelPrefix']) + " -p tcp -m tcp --dport 111 -j ACCEPT\n")
+   v6File.write("-A INPUT -p udp -m udp --dport 111 -j REJECT\n")
+   v6File.write("-A INPUT -p tcp -m tcp --dport 111 -j REJECT\n")
+   # ------------------------------------------------------
+
    _writeFWConfig(v4File, v6File, ":FORWARD ACCEPT [0:0]\n")
    _writeFWConfig(v4File, v6File, ":OUTPUT ACCEPT [0:0]\n")
    _writeFWConfig(v4File, v6File, ":logreject - [0:0]\n")
@@ -123,8 +139,6 @@ def makeFirewallConfiguration(fullSiteList, localSite, localNode):
                else:
                   v6File.write('-A FORWARD -s ' + str(blacklistNetwork) + ' -o ' + interfaceName + ' -j logreject\n')
 
-      _writeFWConfig(v4File, v6File, "COMMIT\n")
-
 
       if localSiteIndex == NorNet_SiteIndex_Central:
          # ====== Get NAT range =============================================
@@ -177,7 +191,8 @@ def makeFirewallConfiguration(fullSiteList, localSite, localNode):
                         ' --dport "' + dnatOption[2] + '"' + \
                         ' -j DNAT --to ' + str(dnatOption[3]) + "\n")
 
-      v4File.write("COMMIT\n")
+
+   _writeFWConfig(v4File, v6File, "COMMIT\n")
 
    v6File.close()
    v4File.close()
