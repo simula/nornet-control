@@ -1,3 +1,111 @@
+commit 396f39f999d0b6c033cae84984018ed928d5d69d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 15:54:41 2021 +0200
+
+    Updated dependencies.
+
+commit 4aaa903191a45f38c35a539c8ea91db056a60d06
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 15:53:29 2021 +0200
+
+    Improved script.
+
+commit f70959d1f8384e8e1e46cfe9b2ee1ecb877e5c43
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 15:50:42 2021 +0200
+
+    Added helper script.
+
+commit b96acabd004ec2fe60b520dd6b82544e7c4c1368
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 15:36:01 2021 +0200
+
+    Bugfix: Fix for determining operating system.
+
+commit 5567c5939be0196bef07c734d09fc8a0d907ec36
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 14:58:30 2021 +0200
+
+    Improved init script.
+
+commit 96fdd4e84a5d107a23bc1533f554bd0d01613dc7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 14:58:24 2021 +0200
+
+    Updated comment.
+
+commit c4e26487bf966464ea90251e22dc03164eab8496
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 14:54:50 2021 +0200
+
+    Further improvements.
+
+commit 9e19368c9ed21a404de936355e990593d45c5522
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 13:30:44 2021 +0200
+
+    Fixed syntax issue.
+
+commit ef7f8bc2793cd47bcc878d8fb91c60051193dfa3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 13:27:37 2021 +0200
+
+    Path fix for updated script.
+
+commit 4a7a8b3377c219966e2485d2437ddf0dc6b37260
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 12:28:34 2021 +0200
+
+    A fix.
+
+commit a3b55823d2f668ec99d4c76a75313887ae91cd47
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 12:22:23 2021 +0200
+
+    Added function.
+
+commit 72585ef21b3f2b0f09f96d05e7702b238410843a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 12:21:17 2021 +0200
+
+    Further clean-ups.
+
+commit 0decc31d60d009dbe468864a785d54e2789d353d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 12:19:48 2021 +0200
+
+    Moved another function.
+
+commit 0088950939a60312aed68641c2bc1433f273a03d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 12:18:29 2021 +0200
+
+    Moved function.
+
+commit b115879b57e3d4404526be1d71db598f02a7c62d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 12:15:38 2021 +0200
+
+    Updated configuration.
+
+commit 44aebdc6322a4e0ce38e5d01aefd520ca441bd86
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 11:39:45 2021 +0200
+
+    Updated scripts to handle firewall rules also for Node, not only for Tunnelbox.
+
+commit 4d8b1af751f86fa0276927756d1cd24ffc5fc7e2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 11:29:56 2021 +0200
+
+    Updated script.
+
+commit d84196a1e0d7f094393c2be71963bee1d7369f59
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 1 11:16:50 2021 +0200
+
+    New release nornet-1.5.12.
+
 commit 0220e9f1d9fc7309ceef2bfc33008c8c9f6b33da
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Thu Jul 1 11:15:20 2021 +0200
