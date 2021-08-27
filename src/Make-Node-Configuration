@@ -66,6 +66,11 @@ def getCentralSiteBlacklistString():
       return ''
 
 
+# ###### Get Squid parent cache #############################################
+def getSquidTransparentProxy():
+   return checkParameter('NorNet_Squid_TransparentProxy', [ 'on', 'off'])
+
+
 # ###### Write firewall configuration line to IPv4 and IPv6 files ###########
 def _writeFWConfig(v4File, v6File, line):
    v4File.write(line)
