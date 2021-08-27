@@ -111,14 +111,6 @@ def getCentralSiteAdditionalExtInterface():
       return ''
 
 
-# ###### Get DNAT string ####################################################
-def getLocalSiteDNATOptionsString():
-   try:
-      return str(NorNet_Configuration['NorNet_LocalSite_DNAT_Options'])
-   except:
-      return ''
-
-
 # ###### Get DNS forwarders #################################################
 def getLocalSiteDNSForwardersString():
    try:

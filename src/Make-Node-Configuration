@@ -34,6 +34,14 @@ from SysSetupCommons     import *
 # ###########################################################################
 
 
+# ###### Get DNAT string ####################################################
+def getLocalSiteDNATOptionsString():
+   try:
+      return str(NorNet_Configuration['NorNet_LocalSite_DNAT_Options'])
+   except:
+      return ''
+
+
 # ###### Write firewall configuration line to IPv4 and IPv6 files ###########
 def _writeFWConfig(v4File, v6File, line):
    v4File.write(line)
