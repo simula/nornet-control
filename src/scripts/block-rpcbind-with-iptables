@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if [ ! -d /etc/iptables ] ; then
+   echo >&2 "ERROR: netfilter-persistent is not installed!"
+   exit 1
+fi
+
+sudo tee /etc/iptables/rules.v4 <<EOF
+*filter
+:INPUT ACCEPT [0:0]
+-A INPUT -s 2001:700:4100::/48 -p udp -m udp --dport 111 -j ACCEPT
+-A INPUT -s 2001:700:4100::/48 -p tcp -m tcp --dport 111 -j ACCEPT
+-A INPUT -s 2001:700:4100:ff:ffff::/80 -p udp -m udp --dport 111 -j ACCEPT
+-A INPUT -s 2001:700:4100:ff:ffff::/80 -p tcp -m tcp --dport 111 -j ACCEPT
+-A INPUT -p udp -m udp --dport 111 -j REJECT
+-A INPUT -p tcp -m tcp --dport 111 -j REJECT
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+COMMIT
+EOF
+
+sudo tee /etc/iptables/rules.v6 <<EOF
+*filter
+:INPUT ACCEPT [0:0]
+-A INPUT -s 2001:700:4100::/48 -p udp -m udp --dport 111 -j ACCEPT
+-A INPUT -s 2001:700:4100::/48 -p tcp -m tcp --dport 111 -j ACCEPT
+-A INPUT -s 2001:700:4100:ff:ffff::/80 -p udp -m udp --dport 111 -j ACCEPT
+-A INPUT -s 2001:700:4100:ff:ffff::/80 -p tcp -m tcp --dport 111 -j ACCEPT
+-A INPUT -p udp -m udp --dport 111 -j REJECT
+-A INPUT -p tcp -m tcp --dport 111 -j REJECT
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+COMMIT
+EOF
