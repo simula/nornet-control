@@ -5,7 +5,7 @@ if [ ! -d /etc/iptables ] ; then
    exit 1
 fi
 
-sudo service iptables-persistent stop
+sudo service netfilter-persistent stop
 
 sudo tee /etc/iptables/rules.v4 <<EOF
 *filter
@@ -35,6 +35,6 @@ sudo tee /etc/iptables/rules.v6 <<EOF
 COMMIT
 EOF
 
-sudo service iptables-persistent start
+sudo service netfilter-persistent stop
 
 sudo ls -l /etc/iptables
