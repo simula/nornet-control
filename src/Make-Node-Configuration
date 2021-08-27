@@ -205,9 +205,8 @@ def makeFirewallConfiguration(fullSiteList, localSite, localNode):
       else:
          natTraget = None
 
-      _writeFWConfig(v4File, v6File, "COMMIT\n")
-
       # ====== Write IPv4 NAT configuration =================================
+      v4File.write("COMMIT\n")
       v4File.write("*nat\n")
       v4File.write(":PREROUTING ACCEPT [0:0]\n")
       v4File.write(":INPUT ACCEPT [0:0]\n")
@@ -229,7 +228,7 @@ def makeFirewallConfiguration(fullSiteList, localSite, localNode):
                         ' --dport "' + dnatOption[2] + '"' + \
                         ' -j DNAT --to ' + str(dnatOption[3]) + "\n")
 
-      v4File.write("COMMIT\n")
+   _writeFWConfig(v4File, v6File, "COMMIT\n")
 
    v6File.close()
    v4File.close()
