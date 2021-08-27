@@ -18,8 +18,10 @@
 #
 # Contact: dreibh@simula.no
 
+PROXY="128.39.37.188"   # oesthorn.nntb.no
+
 Random-Sleep 0 5
 while [ true ] ; do
    echo "Connecting to $1 ..."
-   ssh -t -J oesthorn.nntb.no nornetpp@$1 || Random-Sleep 0 300
+   ssh -t -J $PROXY nornetpp@$1 || Random-Sleep 0 300
 done
