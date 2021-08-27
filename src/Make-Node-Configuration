@@ -42,6 +42,14 @@ def getLocalSiteDNATOptionsString():
       return ''
 
 
+# ###### Get name of additional external interface ##########################
+def getCentralSiteAdditionalExtInterface():
+   try:
+      return NorNet_Configuration['NorNet_CentralSite_AdditionalExtInterface']
+   except:
+      return ''
+
+
 # ###### Write firewall configuration line to IPv4 and IPv6 files ###########
 def _writeFWConfig(v4File, v6File, line):
    v4File.write(line)

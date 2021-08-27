@@ -103,14 +103,6 @@ def getCentralSiteNATRangeString():
       return ''
 
 
-# ###### Get name of additional external interface ##########################
-def getCentralSiteAdditionalExtInterface():
-   try:
-      return NorNet_Configuration['NorNet_CentralSite_AdditionalExtInterface']
-   except:
-      return ''
-
-
 # ###### Get DNS forwarders #################################################
 def getLocalSiteDNSForwardersString():
    try:
