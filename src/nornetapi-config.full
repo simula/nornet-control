@@ -35,8 +35,9 @@ NorNet_LocalNode_ControlBox='no'
 # Defines whether the node should install a basic firewall with
 # iptables-persistent. It should be on by default. In case of
 # customisation e.g. by ufw, it should be turned off.
-# yes -> create basic firewall rules
+# yes -> create basic firewall rules (default)
 # no  -> do not create basic firewall rules
+#        (A custom firefall should e.g. be configured by using ufw!)
 NorNet_LocalNode_BasicFirewalling='yes'
 
 # Set custom NTP servers (seperated by space).
