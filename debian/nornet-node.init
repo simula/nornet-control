@@ -225,7 +225,7 @@ check_and_configure ()
    fi
    if needs_update auto.nfs /etc/auto.nfs $1 ; then
       echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: AutoFS configuration has been updated => restarting AutoFS service ...\x1b[0m"
-      rm -f /etc/auto.*
+      find /etc -maxdepth 1 -name "auto.*" -type f | xargs rm -r -f
       cp auto.* /etc
       service autofs restart >/dev/null || true
    fi
