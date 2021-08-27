@@ -1,11 +1,11 @@
 #!/bin/bash
 
 if [ ! -d /etc/iptables ] ; then
-   echo >&2 "ERROR: netfilter-persistent is not installed!"
+   echo >&2 "ERROR: iptables-persistent is not installed!"
    exit 1
 fi
 
-sudo service netfilter-persistent stop
+sudo service iptables-persistent stop
 
 sudo tee /etc/iptables/rules.v4 <<EOF
 *filter
@@ -35,6 +35,6 @@ sudo tee /etc/iptables/rules.v6 <<EOF
 COMMIT
 EOF
 
-sudo service netfilter-persistent start
+sudo service iptables-persistent start
 
 sudo ls -l /etc/iptables

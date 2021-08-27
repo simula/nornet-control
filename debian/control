@@ -197,7 +197,7 @@ Architecture: all
 Conflicts: miredo
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ifupdown,
-         netfilter-persistent | iptables-persistent,
+         iptables-persistent | netfilter-persistent,
          lsb-base,
          nfs-common,
          nornet-api (= ${binary:Version}),
@@ -409,7 +409,7 @@ Package: nornet-server
 Architecture: all
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ifupdown,
-         netfilter-persistent | iptables-persistent,
+         iptables-persistent | netfilter-persistent,
          libvirt-clients | libvirt-bin,
          lsb-base,
          nfs-common,
