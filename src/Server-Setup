@@ -94,9 +94,9 @@ fi
 
 # ====== Find distribution variant ==========================================
 Variant=""
-if [ -e /etc/network/interfaces ] ; then
+if [ -e /usr/bin/apt-get ] ; then
    Variant="Debian"
-elif [ -e /etc/sysconfig/network ] ; then
+elif [ -e /usr/bin/dnf ] ; then
    Variant="Fedora"
 elif [ -e /etc/freebsd-update.conf ] ; then
    Variant="FreeBSD"
