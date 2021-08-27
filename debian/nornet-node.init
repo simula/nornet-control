@@ -153,8 +153,8 @@ get_new_node_configuration ()
 
    # ====== Apply firewall update ===========================================
    rm -f firewall4-config firewall6-config
-   mv updated-tunnelbox-config/firewall4-config .
-   mv updated-tunnelbox-config/firewall6-config .
+   mv updated-node-config/firewall4-config .
+   mv updated-node-config/firewall6-config .
    needsFirewallUpdate=0
    if needs_update firewall4-config /etc/iptables/rules.v4 $1 ; then
       cp firewall4-config /etc/iptables/rules.v4
