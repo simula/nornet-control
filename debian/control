@@ -197,6 +197,7 @@ Architecture: all
 Conflicts: miredo
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ifupdown,
+         iptables-persistent | netfilter-persistent,
          lsb-base,
          nfs-common,
          nornet-api (= ${binary:Version}),
@@ -224,7 +225,6 @@ Pre-Depends: ${misc:Pre-Depends}
 Depends: arpwatch,
          bind9,
          conntrack,
-         iptables-persistent | netfilter-persistent,
          iputils-ping,
          iputils-tracepath,
          isc-dhcp-server,
