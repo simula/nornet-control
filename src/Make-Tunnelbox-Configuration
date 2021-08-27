@@ -95,14 +95,6 @@ def getLocalSiteRADVDConfigurationString():
    return checkParameter('NorNet_LocalSite_RADVDServer', [ 'on', 'off'])
 
 
-# ###### Get NAT range ######################################################
-def getCentralSiteNATRangeString():
-   try:
-      return str(NorNet_Configuration['NorNet_CentralSite_NAT_Range'])
-   except:
-      return ''
-
-
 # ###### Get DNS forwarders #################################################
 def getLocalSiteDNSForwardersString():
    try:
@@ -117,14 +109,6 @@ def getLocalSiteDNSValidateDNSSEC():
       return checkParameter('NorNet_LocalSite_DNS_ValidateDNSSEC', [ 'on', 'off'])
    except:
       return 'on'
-
-
-# ###### Get blacklist ######################################################
-def getCentralSiteBlacklistString():
-   try:
-      return str(NorNet_Configuration['NorNet_CentralSite_Blacklist'])
-   except:
-      return ''
 
 
 # ###### Get Squid memory cache #############################################

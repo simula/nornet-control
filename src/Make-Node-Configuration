@@ -50,6 +50,22 @@ def getCentralSiteAdditionalExtInterface():
       return ''
 
 
+# ###### Get NAT range ######################################################
+def getCentralSiteNATRangeString():
+   try:
+      return str(NorNet_Configuration['NorNet_CentralSite_NAT_Range'])
+   except:
+      return ''
+
+
+# ###### Get blacklist ######################################################
+def getCentralSiteBlacklistString():
+   try:
+      return str(NorNet_Configuration['NorNet_CentralSite_Blacklist'])
+   except:
+      return ''
+
+
 # ###### Write firewall configuration line to IPv4 and IPv6 files ###########
 def _writeFWConfig(v4File, v6File, line):
    v4File.write(line)
