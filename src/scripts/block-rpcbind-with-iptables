@@ -5,13 +5,15 @@ if [ ! -d /etc/iptables ] ; then
    exit 1
 fi
 
+sudo service netfilter-persistent stop
+
 sudo tee /etc/iptables/rules.v4 <<EOF
 *filter
 :INPUT ACCEPT [0:0]
--A INPUT -s 2001:700:4100::/48 -p udp -m udp --dport 111 -j ACCEPT
--A INPUT -s 2001:700:4100::/48 -p tcp -m tcp --dport 111 -j ACCEPT
--A INPUT -s 2001:700:4100:ff:ffff::/80 -p udp -m udp --dport 111 -j ACCEPT
--A INPUT -s 2001:700:4100:ff:ffff::/80 -p tcp -m tcp --dport 111 -j ACCEPT
+-A INPUT -s 10.0.0.0/8 -p udp -m udp --dport 111 -j ACCEPT
+-A INPUT -s 10.0.0.0/8 -p tcp -m tcp --dport 111 -j ACCEPT
+-A INPUT -s 192.168.0.0/16 -p udp -m udp --dport 111 -j ACCEPT
+-A INPUT -s 192.168.0.0/16 -p tcp -m tcp --dport 111 -j ACCEPT
 -A INPUT -p udp -m udp --dport 111 -j REJECT
 -A INPUT -p tcp -m tcp --dport 111 -j REJECT
 :FORWARD ACCEPT [0:0]
@@ -32,3 +34,7 @@ sudo tee /etc/iptables/rules.v6 <<EOF
 :OUTPUT ACCEPT [0:0]
 COMMIT
 EOF
+
+sudo service netfilter-persistent start
+
+sudo ls -l /etc/iptables
