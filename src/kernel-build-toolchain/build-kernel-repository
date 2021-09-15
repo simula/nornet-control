@@ -46,11 +46,11 @@ rsync --partial -a -e "ssh -p 50691" thomasd@dnat.simula.no:'~/src/multipath/lin
 
 echo "Synchronising packages for Bionic ..."
 mkdir -p ${BIONIC_KERNEL_DEBS}/
-rsync --partial -a -e "ssh -J oesthorn.nntb.no" nornetpp@zeus.simula.nornet:'~/src/multipath/linux*.deb' ${BIONIC_KERNEL_DEBS}/ &
+rsync --partial -a -e "ssh -J 128.39.37.188" nornetpp@zeus.simula.nornet:'~/src/multipath/linux*.deb' ${BIONIC_KERNEL_DEBS}/ &
 
 echo "Synchronising packages for Focal ..."
 mkdir -p ${FOCAL_KERNEL_DEBS}/
-rsync --partial -a -e "ssh -J oesthorn.nntb.no" nornetpp@besserud.simula.nornet:'~/src/multipath/linux*.deb' ${FOCAL_KERNEL_DEBS}/ &
+rsync --partial -a -e "ssh -J 128.39.37.188" nornetpp@besserud.simula.nornet:'~/src/multipath/linux*.deb' ${FOCAL_KERNEL_DEBS}/ &
 
 wait
 
@@ -72,6 +72,6 @@ reprepro --ignore=undefinedtarget -C focal-kernel  includedeb focal  ${FOCAL_KER
 
 
 echo "Copying to server ..."
-rsync -Pav -e "ssh -J dreibh@oesthorn.nntb.no" --delete ${LOCAL_KERNEL_REPO}/ $PUBLIC_KERNEL_REPO/
+rsync -Pav -e "ssh -J 128.39.37.188" --delete ${LOCAL_KERNEL_REPO}/ $PUBLIC_KERNEL_REPO/
 
 echo "Done!"
