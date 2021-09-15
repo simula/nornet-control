@@ -24,7 +24,7 @@ set -e
 
 XENIAL_KERNEL_DEBS=/storage/mptcp-kernels/xenial-deb
 BIONIC_KERNEL_DEBS=/storage/mptcp-kernels/bionic-deb
-DISCO_KERNEL_DEBS=/storage/mptcp-kernels/focal-deb
+FOCAL_KERNEL_DEBS=/storage/mptcp-kernels/focal-deb
 
 LOCAL_KERNEL_REPO=/storage/mptcp-kernels/ubuntu
 PUBLIC_KERNEL_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ubuntu/
@@ -46,11 +46,11 @@ rsync --partial -a -e "ssh -p 50691" thomasd@dnat.simula.no:'~/src/multipath/lin
 
 echo "Synchronising packages for Bionic ..."
 mkdir -p ${BIONIC_KERNEL_DEBS}/
-rsync --partial -a ~/src/multipath/linux*.deb ${BIONIC_KERNEL_DEBS}/ &
+rsync --partial -a -e "ssh -J oesthorn.nntb.no" nornetpp@zeus.simula.nornet:'~/src/multipath/linux*.deb' ${BIONIC_KERNEL_DEBS}/ &
 
 echo "Synchronising packages for Focal ..."
-mkdir -p ${DISCO_KERNEL_DEBS}/
-rsync --partial -a -e "ssh -J oesthorn.nntb.no" nornetpp@besserud.simula.nornet:'~/src/multipath/linux*.deb' ${DISCO_KERNEL_DEBS}/ &
+mkdir -p ${FOCAL_KERNEL_DEBS}/
+rsync --partial -a -e "ssh -J oesthorn.nntb.no" nornetpp@besserud.simula.nornet:'~/src/multipath/linux*.deb' ${FOCAL_KERNEL_DEBS}/ &
 
 wait
 
@@ -68,7 +68,7 @@ reprepro --ignore=undefinedtarget -C xenial-kernel includedeb xenial ${XENIAL_KE
 echo "Bionic"
 reprepro --ignore=undefinedtarget -C bionic-kernel includedeb bionic ${BIONIC_KERNEL_DEBS}/*.deb
 echo "Focal"
-reprepro --ignore=undefinedtarget -C focal-kernel  includedeb focal  ${DISCO_KERNEL_DEBS}/*.deb
+reprepro --ignore=undefinedtarget -C focal-kernel  includedeb focal  ${FOCAL_KERNEL_DEBS}/*.deb
 
 
 echo "Copying to server ..."
