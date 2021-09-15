@@ -443,7 +443,7 @@ norNetSetup = [
    'site_latitude'     : 59.921732,
    'site_longitude'    : 10.735502,
    'site_altitude'     : 20,
-   'site_contacts'     : [ u'Ahmed, Amir Maqbool: amir-maqbool.ahmed@hioa.no', u'Hassan, Ismail: Ismail.Hassan@hioa.no', u'Haugerud, Hårek: Harek.Haugerud@hioa.no' ],
+   'site_contacts'     : [ u'Ahmed, Amir Maqbool: amir-maqbool.ahmed@oslomet.no', u'Hassan, Ismail: Ismail.Hassan@oslomet.no', u'Haugerud, Hårek: Harek.Haugerud@oslomet.no' ],
    'site_pcu'          : [ IPv4Address('128.39.120.63'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
