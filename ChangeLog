@@ -1,3 +1,63 @@
+commit 9fc78c3b745260b9473b4d7f821af0d60b5b9583
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Oct 19 15:55:40 2021 +0200
+
+    Updated build scripts
+
+commit f09d841f31faf17a7487d841678a3ef7f1cd6801
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 18 12:11:18 2021 +0200
+
+    Updated site image.
+
+commit 185d57b6d574fab60e7ac3376f50592a2e580aa7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 18 12:07:57 2021 +0200
+
+    Updated site configuration.
+
+commit 414cbf3a1494c8dbcc1fef99393a4dba9aecc66f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 15 17:24:19 2021 +0200
+
+    Updated helper script.
+
+commit 9646e70bcb43aa7562d2d22181611b48861e76f3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 15 13:14:58 2021 +0200
+
+    Updated script.
+
+commit 137243ed2aeaacdbbbc6880fb76aa4cb198496fa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 15 12:26:55 2021 +0200
+
+    Minor update.
+
+commit e7ebb2806fa706ad82e6d9b8227696ee763a89ae
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 18:04:28 2021 +0200
+
+    Improved script.
+
+commit eec8aaced1cf6e9089f99427fe0129944975c792
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 16:13:35 2021 +0200
+
+    Fixed script.
+
+commit 97aca21f4ad2b29ca61ce254b8c687df52b53356
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 16:08:42 2021 +0200
+
+    Package naming fix.
+
+commit a7a0675a52d8cddea01525cf09b24d288569c67e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 27 15:56:37 2021 +0200
+
+    New release nornet-1.5.13.
+
 commit 396f39f999d0b6c033cae84984018ed928d5d69d
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Fri Aug 27 15:54:41 2021 +0200
