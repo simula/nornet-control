@@ -104,18 +104,26 @@ def makeFirewallConfiguration(fullSiteList, localSite, localNode):
    _writeFWConfig(v4File, v6File, ":INPUT ACCEPT [0:0]\n")
 
    # ------ Reject external RPC portmapper access ---------
-   v4File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv4Prefix']) + " -p udp -m udp --dport 111 -j ACCEPT\n")
-   v4File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv4Prefix']) + " -p tcp -m tcp --dport 111 -j ACCEPT\n")
-   v4File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + " -p udp -m udp --dport 111 -j ACCEPT\n")
-   v4File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) + " -p tcp -m tcp --dport 111 -j ACCEPT\n")
-   v4File.write("-A INPUT -p udp -m udp --dport 111 -j REJECT\n")
-   v4File.write("-A INPUT -p tcp -m tcp --dport 111 -j REJECT\n")
-   v6File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv6Prefix']) + " -p udp -m udp --dport 111 -j ACCEPT\n")
-   v6File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv6Prefix']) + " -p tcp -m tcp --dport 111 -j ACCEPT\n")
-   v6File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv6TunnelPrefix']) + " -p udp -m udp --dport 111 -j ACCEPT\n")
-   v6File.write("-A INPUT -s " + str(NorNet_Configuration['NorNet_IPv6TunnelPrefix']) + " -p tcp -m tcp --dport 111 -j ACCEPT\n")
-   v6File.write("-A INPUT -p udp -m udp --dport 111 -j REJECT\n")
-   v6File.write("-A INPUT -p tcp -m tcp --dport 111 -j REJECT\n")
+   restrictedPortsUDP = [ '53', '111' ]
+   restrictedPortsTCP = [ '53', '111', '3128:3129' ]
+
+   for port in restrictedPortsUDP:
+      for prefix in [ '127.0.0.1', str(NorNet_Configuration['NorNet_IPv4Prefix']), str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) ]:
+         v4File.write("-A INPUT -s " + prefix + " -p udp -m udp --dport " + port + " -j ACCEPT\n")
+      v4File.write("-A INPUT -p udp -m udp --dport " + port + " -j REJECT\n")
+   for port in restrictedPortsTCP:
+      for prefix in [ '127.0.0.1', str(NorNet_Configuration['NorNet_IPv4Prefix']), str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) ]:
+         v4File.write("-A INPUT -s " + prefix + " -p tcp -m tcp --dport " + port + " -j ACCEPT\n")
+      v4File.write("-A INPUT -p tcp -m tcp --dport " + port + " -j REJECT\n")
+
+   for port in restrictedPortsUDP:
+      for prefix in [ '::1', str(NorNet_Configuration['NorNet_IPv6Prefix']), str(NorNet_Configuration['NorNet_IPv6TunnelPrefix']) ]:
+         v6File.write("-A INPUT -s " + prefix + " -p udp -m udp --dport " + port + " -j ACCEPT\n")
+      v6File.write("-A INPUT -p udp -m udp --dport " + port + " -j REJECT\n")
+   for port in restrictedPortsTCP:
+      for prefix in [ '::1', str(NorNet_Configuration['NorNet_IPv6Prefix']), str(NorNet_Configuration['NorNet_IPv6TunnelPrefix']) ]:
+         v6File.write("-A INPUT -s " + prefix + " -p tcp -m tcp --dport " + port + " -j ACCEPT\n")
+      v6File.write("-A INPUT -p tcp -m tcp --dport " + port + " -j REJECT\n")
    # ------------------------------------------------------
 
    _writeFWConfig(v4File, v6File, ":FORWARD ACCEPT [0:0]\n")
