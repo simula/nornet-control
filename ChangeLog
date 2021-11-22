@@ -1,3 +1,51 @@
+commit b1e2efae0fb6cc8a2e953d447a81e8b9e95fcc1b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Nov 22 12:49:53 2021 +0100
+
+    Improved firewall rules.
+
+commit a6cd4ce2305b5e92e5a52c8b557ec5d5300e77b9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Nov 22 12:27:23 2021 +0100
+
+    Added helper script.
+
+commit 673f650f8b3b47529d1311304e1a4cd92b33d359
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Nov 8 10:39:45 2021 +0100
+
+    Updated build scripts
+
+commit 70733952646b63ee946392a387abdc257b713aa3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Nov 7 14:27:37 2021 +0100
+
+    Updated build scripts.
+
+commit bb4cf47b65d857d9de4768b653cf7e07cc5427ac
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Nov 7 14:22:53 2021 +0100
+
+    Updated build scripts
+
+commit 4453751bd147131cf1f1ca34f94504f8f60f4283
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 3 18:21:38 2021 +0100
+
+    Updated build scripts
+
+commit 927ffe9ca590888b4ee16346768871259c985cb1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 3 18:21:37 2021 +0100
+
+    Updated build scripts
+
+commit 56dc3ff85ab550dadc8483c56137b3dd71d0cc5b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Oct 19 15:56:09 2021 +0200
+
+    New release nornet-1.5.14.
+
 commit 9fc78c3b745260b9473b4d7f821af0d60b5b9583
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Tue Oct 19 15:55:40 2021 +0200
