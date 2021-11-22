@@ -1,0 +1,28 @@
+#!/bin/sh
+
+(
+   sudo netstat -nlptuW | awk '
+      /^tcp/ {
+         if($4 ~ /^:::|^0.0.0.0:/) {
+            port = gensub(/^:::|^0.0.0.0:/, "", 1, $4)
+            proc = gensub(/:.*/, "", 1, $7)
+            print port "/TCP (" proc ")"
+         }
+      }
+      /^udp/ {
+         if($4 ~ /^:::|^0.0.0.0:/) {
+            port = gensub(/^:::|^0.0.0.0:/, "", 1, $4)
+            proc = gensub(/:.*/, "", 1, $6)
+            print port "/UDP (" proc ")"
+         }
+      }
+   '
+   sudo netstat -nlpSW | awk '
+      /^sctp/ {  print $1 $2 $3
+            if($2 ~ /^:::|^0.0.0.0:/) {
+            port = gensub(/^:::|^0.0.0.0:/, "", 1, $2)
+            print port "/SCTP"
+         }
+      }
+   '
+) | sort -u -k1n
