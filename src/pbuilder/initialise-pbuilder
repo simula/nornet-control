@@ -26,7 +26,7 @@ create-pbuilder ()
 {
    # ====== pbuilder ===========================================================
    sudo OS=$1 DIST=$2 ARCH=$3 pbuilder create | \
-      grep -v "^I: Retrieving\|^I: Validating\|^I: Unpacking\|^I: Extracting\|^I: Configuring"
+      grep -v "^I: Retrieving\|^I: Validating\|^I: Unpacking\|^I: Extracting\|^I: Configuring\|^I: new cache content"
    if [ "${OS}" == "ubuntu" ] ; then
       sudo OS=$1 DIST=$2 ARCH=$3 pbuilder login --save-after-login <<EOF
 apt-get install -qqy software-properties-common
