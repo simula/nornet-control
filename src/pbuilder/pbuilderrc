@@ -81,9 +81,9 @@ APTCACHEHARDLINK=no
 # ====== Directories ========================================================
 NAME="${OS}-${DISTRIBUTION}-${ARCHITECTURE}"
 BASETGZ="/var/cache/pbuilder/${NAME}-base.tgz"
-APTCACHE="/var/cache/pbuilder/${NAME}/aptcache/"
-BUILDPLACE="/var/cache/pbuilder/build/"
-BUILDRESULT="/var/cache/pbuilder/${NAME}/result/"
+APTCACHE="/var/cache/pbuilder/aptcache/${NAME}/"
+BUILDPLACE="/var/cache/pbuilder/build/${NAME}/"
+BUILDRESULT="/var/cache/pbuilder/result/${NAME}/"
 HOOKDIR="/var/cache/pbuilder/hook.d/"
 
 mkdir -p ${APTCACHE}

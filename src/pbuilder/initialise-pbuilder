@@ -44,8 +44,9 @@ EOF
 
 
 # ====== Debian =============================================================
-# create-pbuilder debian buster amd64
+create-pbuilder debian bookworm amd64
 # create-pbuilder debian bullseye amd64
+# create-pbuilder debian buster amd64
 
 # create-pbuilder debian unstable amd64
 # create-pbuilder debian unstable i386
