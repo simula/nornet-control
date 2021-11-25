@@ -1,3 +1,4 @@
+#!/bin/bash
 # NorNet Core pbuilderrc File
 # Copyright (C) 2012-2021 by Thomas Dreibholz
 #
@@ -16,31 +17,46 @@
 #
 # Contact: dreibh@simula.no
 
-DISTRIBUTION=focal
+set -e
+
+
+# ====== Initialise =========================================================
+if [ "${OS}" == "" ] ; then
+   OS=`lsb_release -is`
+   OS=${OS,,}
+fi
+if [ "${DIST}" == "" ] ; then
+   DIST=`lsb_release -cs`
+fi
+if [ "${ARCH}" == "" ] ; then
+   ARCH=`uname -m`
+fi
+
+
+# ====== Settings ===========================================================
+DISTRIBUTION="${DIST}"
 COMPONENTS="main universe"
-
-MIRRORSITE=http://no.archive.ubuntu.com/ubuntu/
-
-
-# To create the environment, including adding a custom PPA:
-# (see also https://larry-price.com/blog/2016/09/27/clean-package-building-with-pbuilder/)
-# sudo pbuilder create --debootstrapopts --variant=buildd
-# sudo pbuilder login --save-after-login <<EOF
-# apt install -y software-properties-common
-# apt-add-repository -sy ppa:dreibh/ppa
-# apt-get update
-# EOF
-
-# Use "eatmydata" to speed up disk I/O.
+if [ "${OS}" == "ubuntu" ] ; then
+   MIRRORSITE=http://no.archive.ubuntu.com/ubuntu/
+   DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/ubuntu-archive-keyring.gpg")
+elif [ "${OS}" == "debian" ] ; then
+   if [ "${ARCH}" == "m68k" ] ; then
+      # M68k port for Amiga, etc.:
+      MIRRORSITE="http://ftp.ports.debian.org/debian-ports/"
+      DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/debian-ports-keyring.gpg")      
+   else
+      MIRRORSITE="http://ftp.no.debian.org/debian/"
+      DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/debian-archive-keyring.gpg")
+   fi
+fi
+ARCHITECTURE="${ARCH}"
+# DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--arch=$ARCH")
 EXTRAPACKAGES=eatmydata
 EATMYDATA=yes
 
-# Multi-core: set concurrency level. The packaging scripts will handle it properly:
 cores=`getconf _NPROCESSORS_ONLN`
 export CONCURRENCY_LEVEL=${cores}
 export DEB_BUILD_OPTIONS="parallel=${cores}"
-# This will not work (unlimited number of processes for kernel build!):
-# !!! DO NOT USE !!! DEBBUILDOPTS="-j${cores}"
 
 # Support tmpfs build
 # (see http://www.davromaniak.eu/index.php?post/2011/07/12/Pbuilder-and-tmpfs-can-be-friends)
@@ -49,21 +65,34 @@ export DEB_BUILD_OPTIONS="parallel=${cores}"
 
 APTCACHEHARDLINK=no
 
-# =================================================================
 
-mkdir -p /var/cache/pbuilder/hook.d
+# ====== Directories ========================================================
+NAME="${OS}-${DISTRIBUTION}-${ARCHITECTURE}"
+BASETGZ="/var/cache/pbuilder/${NAME}-base.tgz"
+APTCACHE="/var/cache/pbuilder/${NAME}/aptcache/"
+BUILDPLACE="/var/cache/pbuilder/build/"
+BUILDRESULT="/var/cache/pbuilder/${NAME}/result/"
+HOOKDIR="/var/cache/pbuilder/hook.d/"
 
-HOOKDIR="/var/cache/pbuilder/hook.d"
+echo "X-1"
+mkdir -p {$APTCACHE}
+mkdir -p ${BUILDRESULT}
+mkdir -p ${HOOKDIR}
+echo "X-2"
+ls -R /var/cache/pbuilder/${NAME}/
 
-cat >/var/cache/pbuilder/hook.d/C10shell <<EOF
+
+# ====== Debugging hook =====================================================
+
+cat >${HOOKDIR}/C10shell <<EOF
 #!/bin/sh
-# invoke shell if build fails.
+# Run when the build fails:
+# - Install helpful tools (bash, joe, less, etc.).
+# - Run a shell.
 
-apt-get install -y --force-yes vim less bash joe
+apt-get install -y --force-yes bash joe less
 cd /tmp/buildd/*/debian/..
-/bin/bash < /dev/tty > /dev/tty 2> /dev/tty
+/bin/bash </dev/tty >/dev/tty 2>/dev/tty
 EOF
 
-sudo chmod a+x /var/cache/pbuilder/hook.d/C10shell
-
-# =================================================================
+chmod a+x ${HOOKDIR}/C10shell
