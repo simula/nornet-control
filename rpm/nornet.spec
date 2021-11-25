@@ -257,7 +257,7 @@ Requires: python3
 Requires: python3-pip
 Requires: python3-psycopg2
 Requires: python3-pymongo
-Requires: qt5-qtbase-devel
+Requires: qemu-user-static
 Requires: quilt
 Requires: R-base
 Requires: rpm
