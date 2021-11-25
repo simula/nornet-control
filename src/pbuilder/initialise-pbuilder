@@ -24,34 +24,59 @@ set -e
 
 create-pbuilder ()
 {
-   # ====== pbuilder ===========================================================
-   sudo OS=$1 DIST=$2 ARCH=$3 pbuilder create | \
-      grep -v "^I: Retrieving\|^I: Validating\|^I: Unpacking\|^I: Extracting\|^I: Configuring\|^I: new cache content"
-   if [ "${OS}" == "ubuntu" ] ; then
-      sudo OS=$1 DIST=$2 ARCH=$3 pbuilder login --save-after-login <<EOF
+   local os="$1"
+   local dist="$2"
+   local arch="$3"
+   local name="${os}-${dist}-${arch}"
+   local logfile="${name}.log"
+
+   if [ ! -e "/var/cache/pbuilder/${name}-base.tgz" ] ; then
+      startTime=`date +%FT%H:%M:%S`
+      echo "${startTime}: Starting to build ${name}, logfile is ${logfile} ..."
+
+      # ====== pbuilder =====================================================
+      (
+         (
+            echo "OS=${os} DIST=${dist} ARCH=${arch}"
+            sudo OS=${os} DIST=${dist} ARCH=${arch} pbuilder create | \
+               grep -v "^I: Retrieving\|^I: Validating\|^I: Unpacking\|^I: Extracting\|^I: Configuring\|^I: new cache content"
+            if [ "${OS}" == "ubuntu" ] ; then
+               sudo OS=$1 DIST=$2 ARCH=$3 pbuilder login --save-after-login <<EOF
 apt-get install -qqy software-properties-common
 apt-add-repository -y ppa:dreibh/ppa
 apt-get update -q
 EOF
+            fi
+         ) >${logfile} 2>&1
+
+         finishTime=`date +%FT%H:%M:%S`
+         echo "${finishTime}: Finished to build ${name}, logfile is ${logfile}"
+      ) &
+
+   else
+      echo "${name} is already there -> ${logfile}"
    fi
 }
 
 
 # ====== Ubuntu =============================================================
-# create-pbuilder ubuntu jammy amd64
-# create-pbuilder ubuntu focal amd64
-# create-pbuilder ubuntu bionic amd64
+create-pbuilder ubuntu jammy amd64
+create-pbuilder ubuntu focal amd64
+create-pbuilder ubuntu bionic amd64
 
 
 # ====== Debian =============================================================
 create-pbuilder debian bookworm amd64
-# create-pbuilder debian bullseye amd64
-# create-pbuilder debian buster amd64
+create-pbuilder debian bullseye amd64
+create-pbuilder debian buster amd64
 
-# create-pbuilder debian unstable amd64
-# create-pbuilder debian unstable i386
+create-pbuilder debian unstable amd64
+create-pbuilder debian unstable i386
 
-# create-pbuilder debian unstable arm64
-# create-pbuilder debian unstable armhf
-# create-pbuilder debian unstable m68k
-# create-pbuilder debian unstable riscv64
+create-pbuilder debian unstable arm64
+create-pbuilder debian unstable armhf
+create-pbuilder debian unstable m68k
+create-pbuilder debian unstable riscv64
+
+
+wait
