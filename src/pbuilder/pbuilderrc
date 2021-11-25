@@ -39,14 +39,18 @@ fi
 DISTRIBUTION="${DIST}"
 COMPONENTS="main universe"
 if [ "${OS}" == "ubuntu" ] ; then
+   COMPONENTS="main universe"
    MIRRORSITE=http://no.archive.ubuntu.com/ubuntu/
    KEYRING="/usr/share/keyrings/ubuntu-archive-keyring.gpg"
 elif [ "${OS}" == "debian" ] ; then
    if [ "${ARCH}" == "m68k" -o  "${ARCH}" == "riscv64" ] ; then
-      # M68k port for Amiga, etc.:
+      # Debian Ports (special architectures)
+      COMPONENTS="main"
       MIRRORSITE="http://ftp.ports.debian.org/debian-ports/"
       KEYRING="/usr/share/keyrings/debian-ports-archive-keyring.gpg"
    else
+      # Debian (supported architectures)
+      COMPONENTS="main"
       MIRRORSITE="http://ftp.no.debian.org/debian/"
       KEYRING="/usr/share/keyrings/debian-archive-keyring.gpg"
    fi
