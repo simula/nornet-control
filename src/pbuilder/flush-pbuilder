@@ -1,14 +1,47 @@
 #!/usr/bin/env bash
+#
+# NorNet Core PBuilder Helper Script
+# Copyright (C) 2012-2021 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
 
 # Bash options:
 set -e
 
-for directory in /var/cache/pbuilder/aptcache /var/cache/pbuilder/result ; do
+# Bash options:
+set -e
+
+CLEANUP="
+   /var/cache/pbuilder/aptcache
+   /var/cache/pbuilder/*/aptcache
+   /var/cache/pbuilder/result
+   /var/cache/pbuilder/*/result
+   /var/cache/pbuilder/*.tgz
+   /var/cache/pbuilder/*.tmp
+   /var/cache/pbuilder/build
+"
+
+for directory in ${CLEANUP} ; do
    if [ -e ${directory} ] ; then
       echo "Cleaning up ${directory} ..."
       find ${directory} -type f | xargs -r rm -f
    fi
 done
 
-fstrim -v /var/cache/pbuilder
 du -sch /var/cache/pbuilder
+
+echo "Running fstrim ..."
+fstrim -v /var/cache/pbuilder

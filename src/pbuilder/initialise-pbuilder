@@ -1,32 +1,56 @@
 #!/usr/bin/env bash
+#
+# NorNet Core PBuilder Helper Script
+# Copyright (C) 2012-2021 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
 
 # Bash options:
 set -e
 
 
-# ====== pbuilder ===========================================================
-sudo pbuilder create --debootstrapopts --variant=buildd
-sudo pbuilder login --save-after-login <<EOF
-apt install -y software-properties-common
-apt-add-repository -sy ppa:dreibh/ppa
-apt-get update
+create-pbuilder ()
+{
+   # ====== pbuilder ===========================================================
+   sudo OS=$1 DIST=$2 ARCH=$3 pbuilder create | \
+      grep -v "^I: Retrieving\|^I: Validating\|^I: Unpacking\|^I: Extracting\|^I: Configuring"
+   if [ "${OS}" == "ubuntu" ] ; then
+      sudo OS=$1 DIST=$2 ARCH=$3 pbuilder login --save-after-login <<EOF
+apt-get install -qqy software-properties-common
+apt-add-repository -y ppa:dreibh/ppa
+apt-get update -q
 EOF
+   fi
+}
 
 
-# ====== pbuilder-dist ======================================================
-# DISTRIBUTIONS="precise"   # trusty xenial bionic cosmic"
-# ARCHITECTURES="amd64"
-# 
-# for distribution in $DISTRIBUTIONS ; do
-#    for architecture in $ARCHITECTURES ; do
-#       
-#       pbuilder-dist $distribution $architecture create --debootstrapopts --variant=buildd
-# 
-#       pbuilder-dist $distribution $architecture login --save-after-login <<EOF
-# apt install -y software-properties-common
-# apt-add-repository -sy ppa:dreibh/ppa
-# apt-get update
-# EOF
-# 
-#     done
-# done
+# ====== Ubuntu =============================================================
+# create-pbuilder ubuntu jammy amd64
+# create-pbuilder ubuntu focal amd64
+# create-pbuilder ubuntu bionic amd64
+
+
+# ====== Debian =============================================================
+# create-pbuilder debian buster amd64
+# create-pbuilder debian bullseye amd64
+
+# create-pbuilder debian unstable amd64
+# create-pbuilder debian unstable i386
+
+# create-pbuilder debian unstable arm64
+# create-pbuilder debian unstable armhf
+# create-pbuilder debian unstable m68k
+# create-pbuilder debian unstable riscv64
