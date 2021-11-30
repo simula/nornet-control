@@ -60,6 +60,21 @@ EOF
 }
 
 
+# ====== Some checks ========================================================
+if [ ! -x /usr/bin/qemu-m68k-static ] ; then
+   echo >&2 "ERROR: qemu-user-static is not installed!"
+   echo >&2 "To fix: sudo apt install -y qemu-user-static"
+fi
+if [ ! -e /usr/share/keyrings/debian-ports-archive-keyring.gpg ] ; then
+   echo >&2 "ERROR: Missing keyring /usr/share/keyrings/debian-archive-keyring!"
+   echo >&2 "To fix: sudo apt install -y debian-archive-keyring"
+fi
+if [ ! -e /usr/share/keyrings/debian-ports-archive-keyring.gpg ] ; then
+   echo >&2 "ERROR: Missing keyring /usr/share/keyrings/debian-ports-archive-keyring!"
+   echo >&2 "To fix: sudo apt install -y debian-ports-archive-keyring"
+fi
+
+
 # ====== Ubuntu =============================================================
 create-pbuilder ubuntu jammy  amd64
 create-pbuilder ubuntu focal  amd64
