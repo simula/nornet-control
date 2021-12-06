@@ -86,7 +86,6 @@ Recommends: apport-retrace,
             language-pack-de-base,
             language-pack-en-base,
             language-pack-nb-base,
-            resolvconf,
             tshark,
             yamllint
 Conflicts: landscape-common,
@@ -215,6 +214,7 @@ Depends: ifupdown,
          ${shlibs:Depends}
 Recommends: nornet-ca,
             open-vm-tools,
+            resolvconf,
             virtualbox-guest-utils | virtualbox-guest-utils-nornet-stable | virtualbox-guest-utils-nornet-testing | virtualbox-guest-utils-nornet-experimental
 Description: Node Control tools for the NorNet system environment
  This package contains the scripts to configure a generic node on a NorNet
