@@ -88,10 +88,7 @@ Recommends: apport-retrace,
             language-pack-nb-base,
             tshark,
             yamllint
-Conflicts: landscape-common,
-           minidlna,
-           tntnet,
-           webfs
+Conflicts: landscape-common, minidlna, tntnet, webfs
 Replaces: landscape-common
 Description: Management tools for the NorNet system environment
  This metapackage contains basic software nor NorNet node management. The
@@ -174,9 +171,7 @@ Description: Development tools for the NorNet system environment
 
 Package: nornet-api
 Architecture: all
-Depends: ${misc:Depends},
-         ${python3:Depends},
-         ${shlibs:Depends}
+Depends: ${misc:Depends}, ${python3:Depends}, ${shlibs:Depends}
 Description: API tools for the NorNet system environment
  This package contains the NorNet Python API library. It contains functions
  to communicate with the central server (MyPLC), based on XMLRPC.
@@ -185,9 +180,7 @@ Description: API tools for the NorNet system environment
 
 Package: nornet-autoupdate
 Architecture: all
-Depends: cron-apt,
-         ${misc:Depends},
-         ${shlibs:Depends}
+Depends: cron-apt, ${misc:Depends}, ${shlibs:Depends}
 Description: Auto Update tools for the NorNet system environment
  This package ensures that the NorNet system is automatically updated
  (installation of updates via cron-apt).
@@ -245,8 +238,7 @@ Depends: arpwatch,
          ${misc:Depends},
          ${python3:Depends},
          ${shlibs:Depends}
-Recommends: nornet-trace-service (>= 2.0.0~),
-            nslint
+Recommends: nornet-trace-service (>= 2.0.0~), nslint
 Suggests: tracebox
 Description: Tunnelbox Control tools for the NorNet system environment
  This package contains the scripts to configure the tunnelboxes of NorNet
@@ -275,8 +267,7 @@ Description: File Server tools for the NorNet system environment
 
 Package: nornet-artwork
 Architecture: all
-Depends: ${misc:Depends},
-         ${shlibs:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: Artwork tools for the NorNet system environment
  This package contains some images for the monitor server
  on a NorNet central site.
