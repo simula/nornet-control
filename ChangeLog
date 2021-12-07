@@ -1,3 +1,111 @@
+commit ae50301b1044e16ab2fee1acc27df9c912b6b250
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Dec 6 16:44:42 2021 +0100
+
+    Minor update.
+
+commit 7beba67fb465556e58af5e6c6030ea1e7b9e04e6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Dec 6 16:42:37 2021 +0100
+
+    Ran wrap-and-sort.
+
+commit 7c43d5fc3c670bca2bfa33671d404fc87e6580ef
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Dec 6 16:27:09 2021 +0100
+
+    Dependency update.
+
+commit f4e5c9b5a3631db7c9c9450cf4c11fc2583aadec
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Dec 6 16:26:39 2021 +0100
+
+    Added GitHub Actions workflow.
+
+commit 10faebf654ebd0879a6aa3d61597a79b5aec095f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 30 20:45:47 2021 +0100
+
+    Added additional checks.
+
+commit 19ebdde5a433d9dd6092a52ca120598f1c6f5521
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 30 15:32:22 2021 +0100
+
+    Travis CI is dead. Removed obsolete Travis CI scripts and configuration.
+
+commit a4b1e8fbbc5ac6dad251b2f4f3cb98bdfa3b2026
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 30 15:31:03 2021 +0100
+
+    Travis CI is dead. Removed obsolete Travis CI scripts and configuration.
+
+commit 88f4ecb2d90e917788c8a664ddc62adab6654c31
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 30 15:30:37 2021 +0100
+
+    Updated build scripts
+
+commit 7589225b653ebc207c84373be31a97d717d88bb6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 30 15:29:17 2021 +0100
+
+    Removed invalid field "Homepage" from debian/upstream/metadata
+
+commit f1f19393f9d9341dbe1009575234379a89304c2e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 30 11:01:58 2021 +0100
+
+    Improved script.
+
+commit 4c1bd45c2540fd518920de45f3e33ffef25a9119
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 25 21:03:30 2021 +0100
+
+    Improved script.
+
+commit 6ad8addcbf460fdd04c8b0d988fe9f47175d9d6f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 25 18:04:11 2021 +0100
+
+    Updated spec file.
+
+commit b4118ab301ac2e21b42886938dc97512a782f34b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 25 17:09:23 2021 +0100
+
+    An update.
+
+commit 5f069a0ecbcf40e1e3b0c96d4d00d4c4bffc222a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 25 16:24:00 2021 +0100
+
+    Minor update.
+
+commit a42714e6dab19e18792daf9f5a52dbf13a37c655
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 25 15:01:35 2021 +0100
+
+    Improved scripts.
+
+commit 2ba0ef6a8998b55001248124d7e8541e91199654
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 25 14:39:32 2021 +0100
+
+    Improved scripts.
+
+commit b1f9f389a5799cfe26a14fb910315ab862b6b2f6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 25 12:26:05 2021 +0100
+
+    Added script.
+
+commit b770e9c1dfe53be7f8875a54e54cdb93892e66e8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Nov 22 12:50:28 2021 +0100
+
+    New release nornet-1.5.15.
+
 commit b1e2efae0fb6cc8a2e953d447a81e8b9e95fcc1b
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Mon Nov 22 12:49:53 2021 +0100
