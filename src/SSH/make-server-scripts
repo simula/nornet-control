@@ -30,3 +30,17 @@ for level in 251 252 253 254 1 ; do
       done
    ) >tabs${level}
 done
+
+
+(
+   for level in 251 252 253 254 1 ; do
+      for site in 88 ; do
+         address="10.80.$site.$level"
+         name=`dig -x ${address} +short | sed -e "s/\..*$//g"`
+         if [ "${name}" == "" ] ; then
+            name="${address}"
+         fi
+         echo "title: ${name};; command: `realpath access` ${address}"
+      done
+   done
+) >tabsHU
