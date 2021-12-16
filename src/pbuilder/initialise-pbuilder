@@ -55,7 +55,17 @@ EOF
       ) &
 
    else
-      echo "${name} is already there -> ${logfile}"
+      echo "${name} is already there -> running UPDATE okay!"
+      (
+         (
+            echo "OS=${os} DIST=${dist} ARCH=${arch}"
+            sudo OS=${os} DIST=${dist} ARCH=${arch} pbuilder update
+         ) >${logfile} 2>&1
+
+         finishTime=`date +%FT%H:%M:%S`
+         echo "${finishTime}: Finished to build ${name}, logfile is ${logfile}"
+         grep ERROR ${logfile}
+      ) &
    fi
 }
 
