@@ -55,7 +55,7 @@ EOF
       ) &
 
    else
-      echo "${name} is already there -> running UPDATE okay!"
+      echo "${name} is already there -> running UPDATE only!"
       (
          (
             echo "OS=${os} DIST=${dist} ARCH=${arch}"
