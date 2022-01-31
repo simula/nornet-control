@@ -1,3 +1,53 @@
+commit 30ac3ac306da005bfdf886babb4b51bebb8541c1
+Merge: c8fc7e57 206bc9a3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jan 31 13:56:41 2022 +0100
+
+    Merge branch 'dreibh/pbuilder'
+
+commit c8fc7e57e8e0cc2515cec5a55cc9a43e3a4ec87d
+Merge: 60a866b0 797056de
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jan 31 13:56:32 2022 +0100
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 206bc9a362d3703d4a657df336a8f3146fe03353
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Jan 1 11:49:35 2022 +0100
+
+    Minor update.
+
+commit 6c5db40965f9354e995a15143ec0a0e93feea97d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 16 13:38:13 2021 +0100
+
+    Minor update.
+
+commit 797056dec8291b6a26d5209a96387fe0d0662f96
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 16 13:18:13 2021 +0100
+
+    Improved script.
+
+commit 60a866b06393aeaba32fb7f20d585b45de97ad61
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 8 10:58:24 2021 +0100
+
+    Updated script.
+
+commit c9ba0933eff38ce5b3ce4c47c1a4b0022d9b60f1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Dec 7 10:39:25 2021 +0100
+
+    Updated LSM entry.
+
+commit d239180ad85941af5615121857fd931932cbe9e0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Dec 7 10:08:18 2021 +0100
+
+    New release nornet-1.5.16.
+
 commit ae50301b1044e16ab2fee1acc27df9c912b6b250
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Mon Dec 6 16:44:42 2021 +0100
