@@ -55,7 +55,7 @@ EOF
       ) &
 
    else
-      echo "${name} is already there -> running UPDATE okay!"
+      echo "${name} is already there -> running UPDATE only!"
       (
          (
             echo "OS=${os} DIST=${dist} ARCH=${arch}"
@@ -105,6 +105,8 @@ create-pbuilder debian unstable m68k
 create-pbuilder debian unstable riscv64
 create-pbuilder debian unstable ppc64el
 create-pbuilder debian unstable s390x
+create-pbuilder debian unstable armel
+create-pbuilder debian unstable mipsel
 
 
 wait
