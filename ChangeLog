@@ -1,3 +1,21 @@
+commit 5bb62ace845a9ee03731b80303192b689e248d51
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 8 14:22:32 2022 +0100
+
+    Header updates.
+
+commit 71fa7b58d82340b839c909202ca2338d57f52229
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 8 14:18:49 2022 +0100
+
+    RPM fix.
+
+commit 02952de02a1a2cd559d51278c32357276d60d5fa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jan 31 13:57:11 2022 +0100
+
+    New release nornet-1.5.17.
+
 commit 30ac3ac306da005bfdf886babb4b51bebb8541c1
 Merge: c8fc7e57 206bc9a3
 Author: Thomas Dreibholz <dreibh@simula.no>
