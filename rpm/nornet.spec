@@ -95,7 +95,6 @@ Requires: nmap
 Requires: (ntpsec or ntpdate)
 Requires: pwgen
 Requires: pxz
-Requires: reiserfs-utils
 Requires: reprepro
 Requires: rsplib-docs
 Requires: rsplib-services
@@ -117,6 +116,7 @@ Requires: xmlstarlet
 Requires: yamllint
 Recommends: grub2-tools
 Recommends: ipsec-tools
+Recommends: reiserfs-utils
 
 %description management
 This metapackage contains basic software nor NorNet node management. The
