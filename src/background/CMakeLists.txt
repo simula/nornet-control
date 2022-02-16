@@ -56,6 +56,8 @@ OPTION(INSTALL_ORIGINALS "Install original images as well" ${TDD_INSTALL_ORIGINA
 
 OPTION(INSERT_HOSTNAME "Insert hostnames into images" ${TDD_INSERT_HOSTNAME})
 
+OPTION(BUILD_MIRRORED "Build mirrored" ${TDD_BUILD_MIRRORED})
+
 OPTION(BUILD_BOOTSPLASH "Build bootsplash JPEG" ${TDD_BUILD_BOOTSPLASH})
 IF(NOT TDD_BOOTSPLASH_RESOLUTIONS)
    # Legacy option: use TDD_BOOTSPLASH_RESOLUTION (one resolution only)
@@ -305,6 +307,10 @@ ENDFOREACH()
 # ###### Generate desktop graphics ##########################################
 FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_WITH_LOGO})
 FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_WITHOUT_LOGO})
+IF(BUILD_MIRRORED)
+   FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_MIRRORED_WITH_LOGO})
+   FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_MIRRORED_WITHOUT_LOGO})
+ENDIF()
 FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
 
    # ====== Set variables ===================================================
@@ -366,13 +372,19 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
 
          # ====== Without logo ==============================================
          IF(FLAT_DIRECTORY_STRUCTURE)
-            SET(dirWithoutLogo     "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_WITHOUT_LOGO}")
-            SET(imageWithoutLogo   "${dirWithoutLogo}/${imageName}-${resolution}-${variant}${imageExtension}")
-            SET(instDirWithoutLogo "${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY}/${TDD_OUTPUT_WITHOUT_LOGO}")
+            SET(dirWithoutLogo             "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_WITHOUT_LOGO}")
+            SET(imageWithoutLogo           "${dirWithoutLogo}/${imageName}-${resolution}-${variant}${imageExtension}")
+            SET(instDirWithoutLogo         "${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY}/${TDD_OUTPUT_WITHOUT_LOGO}")
+            SET(dirMirroredWithoutLogo     "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_MIRRORED_WITHOUT_LOGO}")
+            SET(imageMirroredWithoutLogo   "${dirMirroredWithoutLogo}/${imageName}-${resolution}-${variant}${imageExtension}")
+            SET(instDirMirroredWithoutLogo "${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY}/${TDD_OUTPUT_MIRRORED_WITHOUT_LOGO}")
          ELSE()
-            SET(dirWithoutLogo     "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_WITHOUT_LOGO}/${resolution}/${variant}")
-            SET(imageWithoutLogo   "${dirWithoutLogo}/${imageName}${imageExtension}")
-            SET(instDirWithoutLogo "${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY}/${TDD_OUTPUT_WITHOUT_LOGO}/${resolution}/${variant}")
+            SET(dirWithoutLogo             "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_WITHOUT_LOGO}/${resolution}/${variant}")
+            SET(imageWithoutLogo           "${dirWithoutLogo}/${imageName}${imageExtension}")
+            SET(instDirWithoutLogo         "${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY}/${TDD_OUTPUT_WITHOUT_LOGO}/${resolution}/${variant}")
+            SET(dirMirroredWithoutLogo     "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_MIRRORED_WITHOUT_LOGO}/${resolution}/${variant}")
+            SET(imageMirroredWithoutLogo   "${dirMirroredWithoutLogo}/${imageName}${imageExtension}")
+            SET(instDirMirroredWithoutLogo "${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY}/${TDD_OUTPUT_MIRRORED_WITHOUT_LOGO}/${resolution}/${variant}")
          ENDIF()
          makeUniqueTarget(generate_imageWithoutLogo "generate_${imageName}-without-Logo-${variant}-${resolution}${imageExtension}")
 
@@ -473,13 +485,19 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
 
          # ====== With logo =================================================
          IF(FLAT_DIRECTORY_STRUCTURE)
-            SET(dirWithLogo     "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_WITH_LOGO}")
-            SET(imageWithLogo   "${dirWithLogo}/${imageName}-${resolution}-${variant}${imageExtension}")
-            SET(instDirWithLogo "${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY}/${TDD_OUTPUT_WITH_LOGO}")
+            SET(dirWithLogo             "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_WITH_LOGO}")
+            SET(imageWithLogo           "${dirWithLogo}/${imageName}-${resolution}-${variant}${imageExtension}")
+            SET(instDirWithLogo         "${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY}/${TDD_OUTPUT_WITH_LOGO}")
+            SET(dirMirroredWithLogo     "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_MIRRORED_WITH_LOGO}")
+            SET(imageMirroredWithLogo   "${dirMirroredWithLogo}/${imageName}-${resolution}-${variant}${imageExtension}")
+            SET(instDirMirroredWithLogo "${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY}/${TDD_OUTPUT_MIRRORED_WITH_LOGO}")
          ELSE()
-            SET(dirWithLogo     "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_WITH_LOGO}/${resolution}/${variant}")
-            SET(imageWithLogo   "${dirWithLogo}/${imageName}${imageExtension}")
-            SET(instDirWithLogo "${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY}/${TDD_OUTPUT_WITH_LOGO}/${resolution}/${variant}")
+            SET(dirWithLogo             "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_WITH_LOGO}/${resolution}/${variant}")
+            SET(imageWithLogo           "${dirWithLogo}/${imageName}${imageExtension}")
+            SET(instDirWithLogo         "${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY}/${TDD_OUTPUT_WITH_LOGO}/${resolution}/${variant}")
+            SET(dirMirroredWithLogo     "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_OUTPUT_MIRRORED_WITH_LOGO}/${resolution}/${variant}")
+            SET(imageMirroredWithLogo   "${dirMirroredWithLogo}/${imageName}${imageExtension}")
+            SET(instDirMirroredWithLogo "${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY}/${TDD_OUTPUT_MIRRORED_WITH_LOGO}/${resolution}/${variant}")
          ENDIF()
          makeUniqueTarget(generate_imageWithLogo "generate_${imageName}-with-Logo-${variant}-${resolution}${imageExtension}")
          FILE(MAKE_DIRECTORY ${dirWithLogo})
@@ -563,6 +581,31 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
                                       ${imageWithLogo})
             ADD_CUSTOM_TARGET(${generate_pdfA3} ALL DEPENDS ${pdfA3})
             INSTALL(FILES ${pdfA3} DESTINATION ${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY})
+         ENDIF()
+
+         # ====== Mirrored version ==========================================
+         IF(BUILD_MIRRORED)
+            # ------ Mirrored image without logo ----------------------------
+            SET(mirroredWithoutLogo   "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_PRINT_PREFIX}-A3.pdf")
+            makeUniqueTarget(generate_mirroredWithoutLogo "generate_${imageMirroredWithoutLogo}")
+
+            ADD_CUSTOM_COMMAND(OUTPUT ${imageMirroredWithoutLogo}
+                               COMMAND ${GM} convert ${imageWithoutLogo} -flop ${imageMirroredWithoutLogo}
+                               DEPENDS ${generate_imageWithoutLogo})
+
+            ADD_CUSTOM_TARGET(${generate_mirroredWithoutLogo} ALL DEPENDS ${imageMirroredWithoutLogo})
+            INSTALL(FILES ${imageMirroredWithoutLogo} DESTINATION ${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY})
+
+            # ------ Mirrored image with logo -------------------------------
+            SET(mirroredWithLogo   "${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/${TDD_PRINT_PREFIX}-A3.pdf")
+            makeUniqueTarget(generate_mirroredWithLogo "generate_${imageMirroredWithLogo}")
+
+            ADD_CUSTOM_COMMAND(OUTPUT ${imageMirroredWithLogo}
+                               COMMAND ${GM} convert ${imageWithLogo} -flop ${imageMirroredWithLogo}
+                               DEPENDS ${generate_imageWithLogo})
+
+            ADD_CUSTOM_TARGET(${generate_mirroredWithLogo} ALL DEPENDS ${imageMirroredWithLogo})
+            INSTALL(FILES ${imageMirroredWithLogo} DESTINATION ${CMAKE_INSTALL_DATADIR}/${TDD_INSTALL_SUBDIRECTORY})
          ENDIF()
 
       ENDFOREACH()

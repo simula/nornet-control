@@ -60,6 +60,8 @@ SET(TDD_VARIANTS
 
 SET(TDD_JPEG_QUALITY          87.5)
 
+SET(TDD_BUILD_MIRRORED        0)
+
 SET(TDD_BUILD_BOOTSPLASH      1)
 SET(TDD_BOOTSPLASH_RESOLUTIONS
    1024x768    # Standard
@@ -86,17 +88,19 @@ SET(TDD_BUILD_OVERLAY "${CMAKE_CURRENT_SOURCE_DIR}/build-overlay")
 SET(TDD_BUILD_CAPTION "${CMAKE_CURRENT_SOURCE_DIR}/build-caption")
 
 # ------ Outputs ------------------------------------------
-SET(TDD_ADD_DIST_TARGET          0)
-SET(TDD_FLAT_DIRECTORY_STRUCTURE 1)
-SET(TDD_OUTPUT_DIRECTORY         "Output")
-SET(TDD_INSTALL_SUBDIRECTORY     "nornet-desktop")   # Install under [PREFIX]/share/${TDD_INSTALL_SUBDIRECTORY}
-SET(TDD_INSTALL_ORIGINALS        0)
-SET(TDD_OUTPUT_OVERLAY           "Overlay")
-SET(TDD_OUTPUT_ORIGINALS         "Original")
-SET(TDD_OUTPUT_WITHOUT_LOGO      "Desktop-without-Logo")
-SET(TDD_OUTPUT_WITH_LOGO         "Desktop-with-Logo")
-SET(TDD_OUTPUT_SPLASH            "Splash")
-SET(TDD_OUTPUT_CAPTIONFILE       "nornet-version")
+SET(TDD_ADD_DIST_TARGET              0)
+SET(TDD_FLAT_DIRECTORY_STRUCTURE     1)
+SET(TDD_OUTPUT_DIRECTORY             "Output")
+SET(TDD_INSTALL_SUBDIRECTORY         "nornet-desktop")   # Install under [PREFIX]/share/${TDD_INSTALL_SUBDIRECTORY}
+SET(TDD_INSTALL_ORIGINALS            0)
+SET(TDD_OUTPUT_OVERLAY               "Overlay")
+SET(TDD_OUTPUT_ORIGINALS             "Original")
+SET(TDD_OUTPUT_WITHOUT_LOGO          "Desktop-without-Logo")
+SET(TDD_OUTPUT_WITH_LOGO             "Desktop-with-Logo")
+SET(TDD_OUTPUT_MIRRORED_WITHOUT_LOGO "Mirrored-Desktop-without-Logo")
+SET(TDD_OUTPUT_MIRRORED_WITH_LOGO    "Mirrored-Desktop-with-Logo")
+SET(TDD_OUTPUT_SPLASH                "Splash")
+SET(TDD_OUTPUT_CAPTIONFILE           "nornet-version")
 
 # ------ Programs -----------------------------------------
 SET(TDD_TEST_GIMP       "${CMAKE_CURRENT_SOURCE_DIR}/gimp-scripts/Test-Gimp")
