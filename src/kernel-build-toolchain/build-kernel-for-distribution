@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+
+CONTAINER="jammy"
+IMAGE="dreibh/nornet-ubuntu:22.04"
+
+
+# ====== Configure ==========================================================
+cd ${HOME}/src/multipath/mptcp-kernel
+git clean -dfx
+cat /boot/config-`uname -r` ~/src/nornet/planetlab-kernel/config-planetlab >.config && make config </dev/null
+
+# ====== Build ==============================================================
+docker rm -f ${CONTAINER} >/dev/null || true
+
+rsync -av --delete ${HOME}/src/multipath/mptcp-kernel/ ${CONTAINER}/
+docker run --rm -it --name ${CONTAINER} \
+   --volume "`pwd`/${CONTAINER}":/home/nornetpp/src/multipath/mptcp-kernel ${IMAGE} \
+   bash -c "\
+cd /home/nornetpp/src/multipath/mptcp-kernel && \
+ls && \
+df && \
+bash
+"
