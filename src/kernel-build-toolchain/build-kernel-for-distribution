@@ -3,22 +3,35 @@
 
 CONTAINER="jammy"
 IMAGE="dreibh/nornet-ubuntu:22.04"
-
+DIRECTORY="/tmp/${CONTAINER}"
+LOCALVERSION="-mptcp"
 
 # ====== Configure ==========================================================
 cd ${HOME}/src/multipath/mptcp-kernel
-git clean -dfx
-cat /boot/config-`uname -r` ~/src/nornet/planetlab-kernel/config-planetlab >.config && make config </dev/null
+echo "Cleaning sources ..."
+sudo git clean -dfx --quiet
+echo "Configuring build ..."
+cat /boot/config-`uname -r` ~/src/nornet/planetlab-kernel/config-planetlab >.config && make config </dev/null >/dev/null 2>&1
 
 # ====== Build ==============================================================
-docker rm -f ${CONTAINER} >/dev/null || true
+docker rm -f ${CONTAINER} >/dev/null 2>&1 || true
 
-rsync -av --delete ${HOME}/src/multipath/mptcp-kernel/ ${CONTAINER}/
+echo "RSync'ing sources ..."
+rsync -a --delete ${HOME}/src/multipath/mptcp-kernel/ ${DIRECTORY}/
+
+echo "Staring build ..."
 docker run --rm -it --name ${CONTAINER} \
-   --volume "`pwd`/${CONTAINER}":/home/nornetpp/src/multipath/mptcp-kernel ${IMAGE} \
+   --volume `realpath ${DIRECTORY}`:/home/nornetpp/src/mptcp-kernel \
+   ${IMAGE} \
    bash -c "\
-cd /home/nornetpp/src/multipath/mptcp-kernel && \
-ls && \
-df && \
+cd /home/nornetpp/src/mptcp-kernel && \
+apt install -y rsync kmod cpio bison flex libssl-dev && \
+pwd && \
+id && \
 bash
-"
+" && echo "OK" || echo "BAD"
+
+
+
+# sudo apt install -y rsync kmod cpio bison flex libssl-dev && \
+# make deb-pkg LOCALVERSION=\"${LOCALVERSION}\" && \
