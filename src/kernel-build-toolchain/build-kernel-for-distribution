@@ -1,41 +1,78 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+#
+# Build Ubuntu kernel package using Docker
+# Copyright (C) 2022 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
+
+# Bash options:
+set -e
 
 
-CONTAINER="jammy"
-IMAGE="dreibh/nornet-ubuntu:22.04"
-DIRECTORY="${CONTAINER}"
+if [ $# -lt 2 ] ; then
+   echo >&2 "Usage: $0 image container_name"
+   echo >&2 "Example: $0 dreibh/nornet-ubuntu:22.04 jammy"
+   exit 1
+fi
+
+IMAGE="$1"
+CONTAINER="$2"
+BUILD_DIRECTORY="${CONTAINER}"
+RESULTS_DIRECTORY="packages/${CONTAINER}"
 LOCALVERSION="-mptcp"
 
 # ====== Configure ==========================================================
 pushd ${HOME}/src/multipath/mptcp-kernel >/dev/null
 echo "Cleaning sources ..."
-sudo git clean -dfx --quiet
+# sudo git clean -dfx --quiet
+git clean -dfx --quiet
 echo "Configuring build ..."
 cat /boot/config-`uname -r` ~/src/nornet/planetlab-kernel/config-planetlab >.config && make config </dev/null >/dev/null 2>&1
-ls -l .config
 popd >/dev/null
 
 # ====== Build ==============================================================
 docker rm -f ${CONTAINER} >/dev/null 2>&1 || true
 
+# ------ Rsync sources ------------------------------------------------------
 echo "RSync'ing sources ..."
-pushd ${DIRECTORY} >/dev/null
-sudo git clean -dfx --quiet
-popd >/dev/null
-echo "rsync -a --delete ${HOME}/src/multipath/mptcp-kernel/ ${DIRECTORY}/"
-rsync -a --delete ${HOME}/src/multipath/mptcp-kernel/ ${DIRECTORY}/
+# pushd ${BUILD_DIRECTORY} >/dev/null
+# sudo git clean -dfx --quiet
+# popd >/dev/null
+echo "rsync -a --delete ${HOME}/src/multipath/mptcp-kernel/ ${BUILD_DIRECTORY}/"
+rsync -a --delete ${HOME}/src/multipath/mptcp-kernel/ ${BUILD_DIRECTORY}/
 
+# ------ Remove old packages ------------------------------------------------
+echo "Removing old results ..."
+mkdir -p ${RESULTS_DIRECTORY}
+rm -f ${RESULTS_DIRECTORY}/*.deb
+
+# ------ Build kernel packages in container ---------------------------------
 echo "Staring build ..."
 docker run --rm -it --name ${CONTAINER} \
-   --volume `realpath ${DIRECTORY}`:/home/nornetpp/src/mptcp-kernel \
+   --volume `realpath ${BUILD_DIRECTORY}`:/home/nornetpp/src/mptcp-kernel \
+   --volume `realpath ${RESULTS_DIRECTORY}`:/results \
    ${IMAGE} \
    bash -c "\
 cd /home/nornetpp/src/mptcp-kernel && \
 apt install -y rsync kmod cpio bison flex libssl-dev libelf-dev pahole && \
-pwd && \
-id && \
 export MAKEFLAGS="${MAKEFLAGS}" && \
-bash
-" && echo "OK" || echo "BAD"
+sudo -u nornetpp -g nornetpp make deb-pkg LOCALVERSION=\"${LOCALVERSION}\" && \
+sudo -u nornetpp -g nornetpp  mv ../*.deb /results/ && \
+true" && echo "OK" || echo "BAD"
 
-# make deb-pkg LOCALVERSION=\"${LOCALVERSION}\" && \
+# sudo -u nornetpp -g nornetpp make deb-pkg LOCALVERSION=\"${LOCALVERSION}\" && \
+# sudo -u nornetpp -g nornetpp  mv ../*.deb /results/
