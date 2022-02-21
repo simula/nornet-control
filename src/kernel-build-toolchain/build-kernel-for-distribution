@@ -68,7 +68,7 @@ docker run --rm -it --name ${CONTAINER} \
    ${IMAGE} \
    bash -c "\
 cd /home/nornetpp/src/mptcp-kernel && \
-apt install -y rsync kmod cpio bison flex libssl-dev libelf-dev pahole && \
+apt install -y rsync kmod cpio bison flex libssl-dev libelf-dev dwarves && \
 export MAKEFLAGS="${MAKEFLAGS}" && \
 sudo -u nornetpp -g nornetpp make deb-pkg LOCALVERSION=\"${LOCALVERSION}\" && \
 sudo -u nornetpp -g nornetpp  mv ../*.deb /results/ && \
