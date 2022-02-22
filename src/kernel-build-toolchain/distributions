@@ -19,5 +19,13 @@ Label: packages.nntb.no
 Codename: focal
 Architectures: amd64 source
 Components: focal-kernel
-Description: NorNet Kernel Repository for Disco Focal
+Description: NorNet Kernel Repository for Focal Fossa
+SignWith: yes
+
+Origin: packages.nntb.no
+Label: packages.nntb.no
+Codename: jammy
+Architectures: amd64 source
+Components: jammy-kernel
+Description: NorNet Kernel Repository for Jammy Jellyfish
 SignWith: yes
