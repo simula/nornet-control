@@ -22,56 +22,32 @@
 # Bash options:
 set -e
 
-XENIAL_KERNEL_DEBS=/storage/mptcp-kernels/xenial-deb
-BIONIC_KERNEL_DEBS=/storage/mptcp-kernels/bionic-deb
-FOCAL_KERNEL_DEBS=/storage/mptcp-kernels/focal-deb
 
-LOCAL_KERNEL_REPO=/storage/mptcp-kernels/ubuntu
-PUBLIC_KERNEL_REPO=nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ubuntu/
+DISTRIBUTIONS="xenial bionic focal jammy"
+PACKAGE_STORAGE="/storage/mptcp-kernels"
+PUBLIC_REPOSITORY="nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ubuntu"
 
 
-# How to add repository:
-# sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 21412672518D8B2D1862EFEF5CD5D12AA0877B49
-# Add to sources.list (for Ubuntu 18.04):
-# deb https://packages.nntb.no/nornet-kernel/ubuntu/ bionic bionic-kernel
-# deb-src https://packages.nntb.no/nornet-kernel/ubuntu/ bionic bionic-kernel
-# Add to sources.list (for Ubuntu 16.04):
-# deb https://packages.nntb.no/nornet-kernel/ubuntu/ xenial xenial-kernel
-# deb-src https://packages.nntb.no/nornet-kernel/ubuntu/ xenial xenial-kernel
+for distribution in ${DISTRIBUTIONS} ; do
+   echo -e "\x1b[34mSynchronising packages for ${distribution^} ...\x1b[0m"
+   mkdir -p ${PACKAGE_STORAGE}/${distribution}-deb
+   rsync -a packages/${distribution}/ ${PACKAGE_STORAGE}/${distribution}-deb/
+done
 
 
-echo "Synchronising packages for Xenial ..."
-mkdir -p ${XENIAL_KERNEL_DEBS}/
-rsync --partial -a -e "ssh -p 50691" thomasd@dnat.simula.no:'~/src/multipath/linux*.deb' ${XENIAL_KERNEL_DEBS}/ &
+# !!! rm -rf ${PACKAGE_STORAGE}/ubuntu
+mkdir -p ${PACKAGE_STORAGE}/ubuntu/conf
+cp distributions ${PACKAGE_STORAGE}/ubuntu/conf
 
-echo "Synchronising packages for Bionic ..."
-mkdir -p ${BIONIC_KERNEL_DEBS}/
-rsync --partial -a -e "ssh -J 128.39.37.188" nornetpp@zeus.simula.nornet:'~/src/multipath/linux*.deb' ${BIONIC_KERNEL_DEBS}/ &
-
-echo "Synchronising packages for Focal ..."
-mkdir -p ${FOCAL_KERNEL_DEBS}/
-rsync --partial -a -e "ssh -J 128.39.37.188" nornetpp@besserud.simula.nornet:'~/src/multipath/linux*.deb' ${FOCAL_KERNEL_DEBS}/ &
-
-wait
+cd ${PACKAGE_STORAGE}/ubuntu
+for distribution in ${DISTRIBUTIONS} ; do
+   echo -e "\x1b[34mProcessing packages for ${distribution^} ...\x1b[0m"
+   reprepro --verbose --keepunusednewfiles -C ${distribution}-kernel includedeb ${distribution} ${PACKAGE_STORAGE}/${distribution}-deb/*.deb
+done
 
 
-echo "Creating repository ..."
-rm -rf ${LOCAL_KERNEL_REPO}
-mkdir -p ${LOCAL_KERNEL_REPO}
-mkdir -p ${LOCAL_KERNEL_REPO}/conf
-cp distributions ${LOCAL_KERNEL_REPO}/conf
+echo -e "\x1b[34mCopying to server ...\x1b[0m"
+rsync -Pav -e "ssh -J 128.39.37.188" --delete ${PACKAGE_STORAGE}/ubuntu/ ${PUBLIC_REPOSITORY}/
 
 
-cd ${LOCAL_KERNEL_REPO}
-echo "Xenial"
-reprepro --ignore=undefinedtarget -C xenial-kernel includedeb xenial ${XENIAL_KERNEL_DEBS}/*.deb
-echo "Bionic"
-reprepro --ignore=undefinedtarget -C bionic-kernel includedeb bionic ${BIONIC_KERNEL_DEBS}/*.deb
-echo "Focal"
-reprepro --ignore=undefinedtarget -C focal-kernel  includedeb focal  ${FOCAL_KERNEL_DEBS}/*.deb
-
-
-echo "Copying to server ..."
-rsync -Pav -e "ssh -J 128.39.37.188" --delete ${LOCAL_KERNEL_REPO}/ $PUBLIC_KERNEL_REPO/
-
-echo "Done!"
+echo -e "\x1b[34mDone!\x1b[0m"
