@@ -35,25 +35,17 @@ BUILD_DIRECTORY="${CONTAINER}"
 RESULTS_DIRECTORY="packages/${CONTAINER}"
 LOCALVERSION="-mptcp"
 
-# ====== Configure ==========================================================
-pushd ${HOME}/src/multipath/mptcp-kernel >/dev/null
-echo "Cleaning sources ..."
-# sudo git clean -dfx --quiet
-git clean -dfx --quiet
-echo "Configuring build ..."
-cat /boot/config-`uname -r` ~/src/nornet/planetlab-kernel/config-planetlab >.config && make config </dev/null >/dev/null 2>&1
-popd >/dev/null
+CONFIG_SYSTEM="/boot/config-`uname -r`"
+CONFIG_CUSTOM="${HOME}/src/nornet/planetlab-kernel/config-planetlab"
+
 
 # ====== Build ==============================================================
 docker rm -f ${CONTAINER} >/dev/null 2>&1 || true
 
 # ------ Rsync sources ------------------------------------------------------
 echo "RSync'ing sources ..."
-# pushd ${BUILD_DIRECTORY} >/dev/null
-# sudo git clean -dfx --quiet
-# popd >/dev/null
-echo "rsync -a --delete ${HOME}/src/multipath/mptcp-kernel/ ${BUILD_DIRECTORY}/"
-rsync -a --delete ${HOME}/src/multipath/mptcp-kernel/ ${BUILD_DIRECTORY}/
+echo "rsync -a --delete --exclude .git ${HOME}/src/multipath/mptcp-kernel/ ${BUILD_DIRECTORY}/"
+rsync -a --delete --exclude .git ${HOME}/src/multipath/mptcp-kernel/ ${BUILD_DIRECTORY}/
 
 # ------ Remove old packages ------------------------------------------------
 echo "Removing old results ..."
@@ -65,14 +57,14 @@ echo "Staring build ..."
 docker run --rm -it --name ${CONTAINER} \
    --volume `realpath ${BUILD_DIRECTORY}`:/home/nornetpp/src/mptcp-kernel \
    --volume `realpath ${RESULTS_DIRECTORY}`:/results \
+   --volume ${CONFIG_SYSTEM}:/home/nornetpp/system.config \
+   --volume ${CONFIG_CUSTOM}:/home/nornetpp/custom.config \
    ${IMAGE} \
    bash -c "\
 cd /home/nornetpp/src/mptcp-kernel && \
-apt install -y rsync kmod cpio bison flex libssl-dev libelf-dev dwarves && \
-export MAKEFLAGS="${MAKEFLAGS}" && \
-sudo -u nornetpp -g nornetpp make deb-pkg LOCALVERSION=\"${LOCALVERSION}\" && \
-sudo -u nornetpp -g nornetpp  mv ../*.deb /results/ && \
+apt install -y bc bison cpio devscripts dwarves flex kmod libelf-dev libssl-dev make rsync && \
+sudo -u nornetpp -g nornetpp cat /home/nornetpp/system.config /home/nornetpp/custom.config >.config && \
+sudo -u nornetpp -g nornetpp make config </dev/null >/dev/null 2>&1 && \
+sudo -u nornetpp -g nornetpp env MAKEFLAGS="${MAKEFLAGS}" make deb-pkg LOCALVERSION=\"${LOCALVERSION}\" && \
+sudo -u nornetpp -g nornetpp mv ../*.deb /results/ && \
 true" && echo "OK" || echo "BAD"
-
-# sudo -u nornetpp -g nornetpp make deb-pkg LOCALVERSION=\"${LOCALVERSION}\" && \
-# sudo -u nornetpp -g nornetpp  mv ../*.deb /results/
