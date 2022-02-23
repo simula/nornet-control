@@ -31,7 +31,7 @@ run ()
 
    echo -e "\x1b[34mRunning ${container^}, log is ${container}.log ..."
    (
-      ./build-kernel-for-distribution ${image} ${container} >${container}.log \
+      ./build-kernel-for-distribution ${image} ${container} >${container}.log 2>&1 \
          && echo -e "\x1b[32m${container^} OK\x1b[0m" \
          || echo -e "\x1b[31m${container^} FAILED! (see ${container}.log)\x1b[0m"
    ) &

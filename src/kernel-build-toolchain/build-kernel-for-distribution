@@ -54,7 +54,7 @@ rm -f ${RESULTS_DIRECTORY}/*.deb
 
 # ------ Build kernel packages in container ---------------------------------
 echo "Staring build ..."
-docker run --rm -it --name ${CONTAINER} \
+docker run --rm -i --name ${CONTAINER} \
    --volume `realpath ${BUILD_DIRECTORY}`:/home/nornetpp/src/mptcp-kernel \
    --volume `realpath ${RESULTS_DIRECTORY}`:/results \
    --volume ${CONFIG_SYSTEM}:/home/nornetpp/system.config \
@@ -62,13 +62,14 @@ docker run --rm -it --name ${CONTAINER} \
    ${IMAGE} \
    bash -c "\
 cd /home/nornetpp/src/mptcp-kernel && \
-apt install -y bc bison cpio devscripts dwarves flex kmod libelf-dev libssl-dev make rsync && \
+apt update && \
+env DEBIAN_FRONTEND=noninteractive apt install -y bc bison cpio devscripts dwarves flex kmod libelf-dev libssl-dev make rsync && \
 sudo -u nornetpp -g nornetpp cat /home/nornetpp/system.config /home/nornetpp/custom.config >.config && \
 if [ \"\`lsb_release -cs\`\" == \"xenial\" ] ; then echo \"CONFIG_DEBUG_INFO_BTF=n\" >>.config ; fi && \
 sudo -u nornetpp -g nornetpp make config </dev/null >/dev/null 2>&1 && \
 sudo -u nornetpp -g nornetpp env MAKEFLAGS="${MAKEFLAGS}" make deb-pkg LOCALVERSION=\"${LOCALVERSION}\" && \
 sudo -u nornetpp -g nornetpp mv ../linux-*.deb ../linux-*.dsc ../linux-*.orig.tar.* ../linux-*.diff.* ../linux-*.changes ../linux-*.buildinfo /results/ && \
-true" && echo "OK" || echo "FAILED!"
+true"
 
 
 # sudo -u nornetpp -g nornetpp cat /home/nornetpp/system.config /home/nornetpp/custom.config >.config
