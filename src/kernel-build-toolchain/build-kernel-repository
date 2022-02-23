@@ -42,12 +42,14 @@ cp distributions ${PACKAGE_STORAGE}/ubuntu/conf
 cd ${PACKAGE_STORAGE}/ubuntu
 for distribution in ${DISTRIBUTIONS} ; do
    echo -e "\x1b[34mProcessing packages for ${distribution^} ...\x1b[0m"
-   reprepro --verbose --keepunusednewfiles -C ${distribution}-kernel includedeb ${distribution} ${PACKAGE_STORAGE}/${distribution}-deb/*.deb
+   reprepro --verbose -C ${distribution}-kernel include    ${distribution} ${PACKAGE_STORAGE}/${distribution}-deb/*.changes
+   # FIXME! This is unnecessary, if .deb package is included in .changes file:
+   reprepro --verbose -C ${distribution}-kernel includedeb ${distribution} ${PACKAGE_STORAGE}/${distribution}-deb/*.deb
 done
 
 
 echo -e "\x1b[34mCopying to server ...\x1b[0m"
-rsync -Pav -e "ssh -J 128.39.37.188" --delete ${PACKAGE_STORAGE}/ubuntu/ ${PUBLIC_REPOSITORY}/
+rsync -Pa -e "ssh -J 128.39.37.188" --delete --info=progress2 ${PACKAGE_STORAGE}/ubuntu/ ${PUBLIC_REPOSITORY}/
 
 
 echo -e "\x1b[34mDone!\x1b[0m"

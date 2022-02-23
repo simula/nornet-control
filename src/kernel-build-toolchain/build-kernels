@@ -1,7 +1,45 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+# Build NorNet Kernel Repository
+# Copyright (C) 2017-2022 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
 
-./build-kernel-for-distribution dreibh/minimal-ubuntu:16.04 xenial >xenial.log 2>&1 &
-./build-kernel-for-distribution dreibh/minimal-ubuntu:18.04 bionic >bionic     2>&1 &
-./build-kernel-for-distribution dreibh/minimal-ubuntu:20.04 focal  >focal      2>&1 &
-./build-kernel-for-distribution dreibh/minimal-ubuntu:22.04 jammy  >jammy      2>&1 &
+# Bash options:
+set -e
+
+
+# ###### Run build for distribution in container ############################
+run ()
+{
+   local image="$1"
+   local container="$2"
+
+   echo -e "\x1b[34mRunning ${container^}, log is ${container}.log ..."
+   (
+      ./build-kernel-for-distribution ${image} ${container} >${container}.log \
+         && echo -e "\x1b[32m${container^} OK\x1b[0m" \
+         || echo -e "\x1b[31m${container^} FAILED! (see ${container}.log)\x1b[0m"
+   ) &
+}
+
+
+run dreibh/minimal-ubuntu:16.04 xenial
+run dreibh/minimal-ubuntu:18.04 bionic
+run dreibh/minimal-ubuntu:20.04 focal
+run dreibh/minimal-ubuntu:22.04 jammy
 wait
