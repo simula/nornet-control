@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+#
+# Build NorNet Kernel Repository
+# Copyright (C) 2017-2022 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+#
+
+# Bash options:
+set -e
+
+
+KERNEL_DIRECTORY=${HOME}/src/multipath/mptcp-kernel
+VARIANTS="td-socketoptions-v0.96 td-socketoptions-v0.95"
+
+
+cd ${KERNEL_DIRECTORY}
+for variant in ${VARIANTS} ; do
+
+   branches=`git branch -a --format="%(refname)" | sed -e "s#.*/##g" | grep -E "^${variant}[+]v" | sort -u`
+   latestVersion=`echo "${branches}" | xargs -n1 | sed -e "s/^${variant}[+]v//g" | sort -V -r | head -n1`
+
+   if [ "${latestVersion}" == "" ] ; then
+      exit 1
+   fi
+
+   echo -e "\x1b[34mVariant ${variant}: current kernel version is ${latestVersion}\x1b[0m"
+   kernelCurrentVersion="v${latestVersion}"
+   kernelMinorVersion=`echo "${kernelCurrentVersion}" | sed -e 's#\.[0-9]*$##g'`
+
+   echo "* Kernel minor version:       ${kernelMinorVersion}"
+   echo "* Current kernel patch level: ${kernelCurrentVersion}"
+
+   kernelLatestVersion=`git tag --list --format="%(refname)" | sed -e "s#.*/##g" | grep -E "^${kernelMinorVersion}\." | sort -V -r | head -n1`
+   echo "* Latest kernel patch level:  ${kernelLatestVersion}"
+
+
+   mptcpBranch="upstream/mptcp_`echo "${variant}" | sed -e "s/.*-//g"`"
+   echo "* MPTCP branch                ${mptcpBranch}"
+
+   if [ "${kernelCurrentVersion}" != "${kernelLatestVersion}" ] ; then
+      echo "=> Update necessary!"
+
+      git checkout ${variant}+${kernelCurrentVersion}
+
+      newBranch="${variant}+${kernelLatestVersion}"
+      git branch ${newBranch}
+      git checkout ${newBranch}
+      git merge ${mptcpBranch}
+      git merge ${kernelLatestVersion}
+      git push --set-upstream origin ${newBranch}
+
+   else
+      echo "=> No update necessary."
+   fi
+
+done
