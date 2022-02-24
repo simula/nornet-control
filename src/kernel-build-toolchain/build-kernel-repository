@@ -42,14 +42,21 @@ cp distributions ${PACKAGE_STORAGE}/ubuntu/conf
 cd ${PACKAGE_STORAGE}/ubuntu
 for distribution in ${DISTRIBUTIONS} ; do
    echo -e "\x1b[34mProcessing packages for ${distribution^} ...\x1b[0m"
-   reprepro --verbose -C ${distribution}-kernel include    ${distribution} ${PACKAGE_STORAGE}/${distribution}-deb/*.changes
-   # FIXME! This is unnecessary, if .deb package is included in .changes file:
-   reprepro --verbose -C ${distribution}-kernel includedeb ${distribution} ${PACKAGE_STORAGE}/${distribution}-deb/*.deb
+
+   dscFiles=`find ${PACKAGE_STORAGE}/${distribution}-deb -name "*dsc"`
+   debFiles=`find ${PACKAGE_STORAGE}/${distribution}-deb -name "*.deb"`
+
+   for dscFile in ${dscFiles} ; do   # Add source package
+      reprepro -C ${distribution}-kernel includedsc ${distribution} ${dscFile}
+   done
+   for debFile in ${debFiles} ; do   # Add binary package
+      reprepro -C ${distribution}-kernel includedeb ${distribution} ${debFile}
+   done
 done
 
 
 echo -e "\x1b[34mCopying to server ...\x1b[0m"
-rsync -Pa -e "ssh -J 128.39.37.188" --delete --info=progress2 ${PACKAGE_STORAGE}/ubuntu/ ${PUBLIC_REPOSITORY}/
+rsync --archive --partial --delete --info=progress2 -e "ssh -J 128.39.37.188" ${PACKAGE_STORAGE}/ubuntu/ ${PUBLIC_REPOSITORY}/
 
 
 echo -e "\x1b[34mDone!\x1b[0m"

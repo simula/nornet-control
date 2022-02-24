@@ -68,9 +68,15 @@ sudo -u nornetpp -g nornetpp cat /home/nornetpp/system.config /home/nornetpp/cus
 if [ \"\`lsb_release -cs\`\" == \"xenial\" ] ; then echo \"CONFIG_DEBUG_INFO_BTF=n\" >>.config ; fi && \
 sudo -u nornetpp -g nornetpp make config </dev/null >/dev/null 2>&1 && \
 sudo -u nornetpp -g nornetpp env MAKEFLAGS="${MAKEFLAGS}" make deb-pkg LOCALVERSION=\"${LOCALVERSION}\" && \
-sudo -u nornetpp -g nornetpp mv ../linux-*.deb ../linux-*.dsc ../linux-*.orig.tar.* ../linux-*.diff.* ../linux-*.changes ../linux-*.buildinfo /results/ && \
+find .. \
+   -mindepth 1 -maxdepth 1 \
+   -name \"linux-*.deb\" -or \
+   -name \"linux-*.dsc\" -or \
+   -name \"linux-*.orig.tar.*\" -or  \
+   -name \"linux-*.diff.*\" -or \
+   -name \"linux-*.changes\" -or \
+   -name \"linux-*.buildinfo\" | xargs -n1 -i§ sudo -u nornetpp -g nornetpp mv § /results/ && \
 true"
-
 
 # sudo -u nornetpp -g nornetpp cat /home/nornetpp/system.config /home/nornetpp/custom.config >.config
 # sudo -u nornetpp -g nornetpp make config </dev/null >/dev/null 2>&1
