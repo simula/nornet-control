@@ -33,7 +33,7 @@ IMAGE="$1"
 CONTAINER="$2"
 BUILD_DIRECTORY="${CONTAINER}"
 RESULTS_DIRECTORY="packages/${CONTAINER}"
-LOCALVERSION="-mptcp"
+LOCALVERSION="-mptcp-${CONTAINER}"
 
 CONFIG_SYSTEM="/boot/config-`uname -r`"
 CONFIG_CUSTOM="${HOME}/src/nornet/planetlab-kernel/config-planetlab"
@@ -50,7 +50,7 @@ rsync -a --delete --exclude .git ${HOME}/src/multipath/mptcp-kernel/ ${BUILD_DIR
 # ------ Remove old packages ------------------------------------------------
 echo "Removing old results ..."
 mkdir -p ${RESULTS_DIRECTORY}
-rm -f ${RESULTS_DIRECTORY}/*.deb
+rm -f ${RESULTS_DIRECTORY}/*
 
 # ------ Build kernel packages in container ---------------------------------
 echo "Staring build ..."
