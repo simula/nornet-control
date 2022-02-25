@@ -29,11 +29,10 @@ VARIANTS="td-socketoptions-v0.96 td-socketoptions-v0.95"
 
 cd ${KERNEL_DIRECTORY}
 for variant in ${VARIANTS} ; do
-
-   branches=`git branch -a --format="%(refname)" | sed -e "s#.*/##g" | grep -E "^${variant}[+]v" | sort -u`
-   latestVersion=`echo "${branches}" | xargs -n1 | sed -e "s/^${variant}[+]v//g" | sort -V -r | head -n1`
-
+   branches=`git branch -a --format="%(refname)" | sed -e "s#.*/##g" | grep -E "^${variant}[-+]v" | sort -u`
+   latestVersion=`echo "${branches}" | xargs -n1 | sed -e "s/^${variant}[-+].*v//g" | sort -V -r | head -n1`
    if [ "${latestVersion}" == "" ] ; then
+      echo >&2 "ERROR: Unable to find latest version of corresponding MPTCP branch!"
       exit 1
    fi
 
@@ -48,7 +47,12 @@ for variant in ${VARIANTS} ; do
    echo "* Latest kernel patch level:  ${kernelLatestVersion}"
 
 
-   mptcpBranch="upstream/mptcp_`echo "${variant}" | sed -e "s/.*-//g"`"
+   mptcpBranch="`echo "${variant}" | sed -e "s/.*-//g"`"
+   if [[ ! "${mptcpBranch}" =~ ^mptcp ]] ; then
+      mptcpBranch="upstream/mptcp_${mptcpBranch}"
+   else
+      mptcpBranch="upstream/${mptcpBranch}"
+   fi
    echo "* MPTCP branch                ${mptcpBranch}"
 
    if [ "${kernelCurrentVersion}" != "${kernelLatestVersion}" ] ; then
