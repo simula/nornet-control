@@ -42,4 +42,9 @@ run dreibh/minimal-ubuntu:16.04 xenial
 run dreibh/minimal-ubuntu:18.04 bionic
 run dreibh/minimal-ubuntu:20.04 focal
 run dreibh/minimal-ubuntu:22.04 jammy
+
+run dreibh/minimal-debian:10      buster
+run dreibh/minimal-debian:11      bullseye
+run dreibh/minimal-debian:testing testing
+
 wait

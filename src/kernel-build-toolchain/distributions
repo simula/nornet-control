@@ -2,30 +2,54 @@ Origin: packages.nntb.no
 Label: packages.nntb.no
 Codename: xenial
 Architectures: amd64 source
-Components: xenial-kernel
-Description: NorNet Kernel Repository for Xenial Xerus
+Components: main xenial-kernel
+Description: NorNet Kernel Repository for Ubuntu 16.04 (Xenial Xerus)
 SignWith: 21412672518D8B2D1862EFEF5CD5D12AA0877B49
 
 Origin: packages.nntb.no
 Label: packages.nntb.no
 Codename: bionic
 Architectures: amd64 source
-Components: bionic-kernel
-Description: NorNet Kernel Repository for Bionic Beaver
+Components: main bionic-kernel
+Description: NorNet Kernel Repository for Ubuntu 18.04 (Bionic Beaver)
 SignWith: 21412672518D8B2D1862EFEF5CD5D12AA0877B49
 
 Origin: packages.nntb.no
 Label: packages.nntb.no
 Codename: focal
 Architectures: amd64 source
-Components: focal-kernel
-Description: NorNet Kernel Repository for Focal Fossa
+Components: main focal-kernel
+Description: NorNet Kernel Repository for Ubuntu 20.04 (Focal Fossa)
 SignWith: 21412672518D8B2D1862EFEF5CD5D12AA0877B49
 
 Origin: packages.nntb.no
 Label: packages.nntb.no
 Codename: jammy
 Architectures: amd64 source
-Components: jammy-kernel
-Description: NorNet Kernel Repository for Jammy Jellyfish
+Components: main jammy-kernel
+Description: NorNet Kernel Repository for Ubuntu 22.04 (Jammy Jellyfish)
+SignWith: 21412672518D8B2D1862EFEF5CD5D12AA0877B49
+
+Origin: packages.nntb.no
+Label: packages.nntb.no
+Codename: buster
+Architectures: amd64 source
+Components: main buster-kernel
+Description: NorNet Kernel Repository for Debian 10 (Buster)
+SignWith: 21412672518D8B2D1862EFEF5CD5D12AA0877B49
+
+Origin: packages.nntb.no
+Label: packages.nntb.no
+Codename: bullseye
+Architectures: amd64 source
+Components: main bullseye-kernel
+Description: NorNet Kernel Repository for Debian 11 (Bullseye)
+SignWith: 21412672518D8B2D1862EFEF5CD5D12AA0877B49
+
+Origin: packages.nntb.no
+Label: packages.nntb.no
+Codename: testing
+Architectures: amd64 source
+Components: main testing-kernel
+Description: NorNet Kernel Repository for Debian Testing
 SignWith: 21412672518D8B2D1862EFEF5CD5D12AA0877B49

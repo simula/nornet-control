@@ -47,10 +47,12 @@ for distribution in ${DISTRIBUTIONS} ; do
    debFiles=`find ${PACKAGE_STORAGE}/${distribution}-deb -name "*.deb"`
 
    for dscFile in ${dscFiles} ; do   # Add source package
-      reprepro -C ${distribution}-kernel includedsc ${distribution} ${dscFile}
+      reprepro -C main                   includedsc ${distribution} ${dscFile}
+      # reprepro -C ${distribution}-kernel includedsc ${distribution} ${dscFile}
    done
    for debFile in ${debFiles} ; do   # Add binary package
-      reprepro -C ${distribution}-kernel includedeb ${distribution} ${debFile}
+      reprepro -C main                   includedeb ${distribution} ${debFile}
+      # reprepro -C ${distribution}-kernel includedeb ${distribution} ${debFile}
    done
 done
 
