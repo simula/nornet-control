@@ -15,22 +15,33 @@
 
 <body>
 
+
+<!-- ###### Header ###################################################### -->
+
 <h1>NorNet MPTCP Kernel Package Repository</h1>
 
 <p class="description">
 This is the repository for the
 <a href="https://www.nntb.no/">NorNet</a> <a href="https://www.uni-due.de/~be0001/mptcp/index.html">Multi-Path TCP&nbsp;(MPTCP)</a> kernel package repository for:
 </p>
+<p><a href="https://ubuntu.com/">Ubuntu Linux</a>:</p>
 <ul>
  <li><a href="https://releases.ubuntu.com/22.04/">Ubuntu 22.04 (Jammy Jellyfish)</a></li>
  <li><a href="https://releases.ubuntu.com/20.04/">Ubuntu 20.04 (Focal Fossa)</a></li>
  <li><a href="https://releases.ubuntu.com/18.04/">Ubuntu 18.04 (Bionic Beaver)</a></li>
  <li><a href="https://releases.ubuntu.com/16.04/">Ubuntu 16.04 (Xenial Xerus)</a></li>
+</ul>
+<p><a href="https://www.debian.org/">Debian Linux</a>:</p>
+<ul>
  <li><a href="https://www.debian.org/releases/testing/">Debian Testing (currently: Bookworm)</a></li>
  <li><a href="https://www.debian.org/releases/bullseye/">Debian 11 (Bullseye)</a></li>
  <li><a href="https://www.debian.org/releases/buster/">Debian 10 (Buster)</a></li>
 </ul>
 
+<hr />
+
+
+<!-- ###### Description ################################################# -->
 
 <h2>💡 Description</h2>
 
@@ -123,6 +134,10 @@ netperfmeter &lt;SERVER&gt;:9000 -control-over-tcp -tcp const0:const1400:const0:
 
 </ol>
 
+<hr />
+
+
+<!-- ###### Package Builder Scripts ##################################### -->
 
 <h2>📦 Package Builder Scripts</h2>
 
@@ -134,7 +149,12 @@ The image builder scripts can be found in <a href="https://github.com/simula/nor
 The NorNet kernel configuration can be found in <a href="https://github.com/dreibh/planetlab-kernel">https://github.com/dreibh/planetlab-kernel</a>. The configuration changes in addition to a regular Ubuntu/Debian kernel are in the file <a href="https://github.com/dreibh/planetlab-kernel/blob/master/config-planetlab">config-planetlab</a>.
 </p>
 
+<p class="description">
+The NorNet kernel configuration can be found in <a href="https://github.com/dreibh/mptcp">https://github.com/dreibh/mptcp</a>, forked from upstream <a href="https://github.com/multipath-tcp/mptcp">https://github.com/multipath-tcp/mptcp</a>. The relevant branches for the packages in this repository are td-socketoptions-&lt;MTPCP_VERSION&gt;-&lt;KERNEL_VERSION&gt;.
+<hr />
 
+
+<!-- ###### Useful Links ################################################ -->
 
 <h2>🔗 Useful Links</h2>
 <ul>
@@ -148,8 +168,11 @@ The NorNet kernel configuration can be found in <a href="https://github.com/drei
  <li><a href="https://www.wireshark.org">Wireshark</a></li>
 </ul>
 
-
 <hr />
+
+
+<!-- ###### Footer ###################################################### -->
+
 <p>
 02.03.2022 <a href="https://www.simula.no/people/dreibh">Thomas Dreibholz</a>
 </p>
