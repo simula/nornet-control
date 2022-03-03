@@ -23,9 +23,10 @@
 set -e
 
 
-DISTRIBUTIONS="xenial bionic focal jammy"
+DISTRIBUTIONS="xenial bionic focal jammy   buster bullseye testing"
 PACKAGE_STORAGE="/storage/mptcp-kernels"
-PUBLIC_REPOSITORY="nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/ubuntu"
+PUBLIC_REPOSITORY="nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/"
+README_FILE="files/README.html"
 
 
 for distribution in ${DISTRIBUTIONS} ; do
@@ -48,17 +49,20 @@ for distribution in ${DISTRIBUTIONS} ; do
 
    for dscFile in ${dscFiles} ; do   # Add source package
       reprepro -C main                   includedsc ${distribution} ${dscFile}
-      # reprepro -C ${distribution}-kernel includedsc ${distribution} ${dscFile}
+      reprepro -C ${distribution}-kernel includedsc ${distribution} ${dscFile}
    done
    for debFile in ${debFiles} ; do   # Add binary package
       reprepro -C main                   includedeb ${distribution} ${debFile}
-      # reprepro -C ${distribution}-kernel includedeb ${distribution} ${debFile}
+      reprepro -C ${distribution}-kernel includedeb ${distribution} ${debFile}
    done
 done
 
 
 echo -e "\x1b[34mCopying to server ...\x1b[0m"
-rsync --archive --partial --delete --info=progress2 -e "ssh -J 128.39.37.188" ${PACKAGE_STORAGE}/ubuntu/ ${PUBLIC_REPOSITORY}/
+rsync --archive --partial --delete \
+   --info=progress2 \
+   -e "ssh -J 128.39.37.188" \
+   ${PACKAGE_STORAGE}/ubuntu ${README_FILE} ${PUBLIC_REPOSITORY}/
 
 
 echo -e "\x1b[34mDone!\x1b[0m"
