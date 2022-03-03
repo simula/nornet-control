@@ -29,6 +29,7 @@ PUBLIC_REPOSITORY="nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/"
 README_FILE="files/README.html"
 
 
+# ====== Copy newly-build kernel packages ===================================
 readmeFile=`realpath ${README_FILE}`
 for distribution in ${DISTRIBUTIONS} ; do
    echo -e "\x1b[34mSynchronising packages for ${distribution^} ...\x1b[0m"
@@ -37,6 +38,7 @@ for distribution in ${DISTRIBUTIONS} ; do
 done
 
 
+# ====== Create repository ==================================================
 # !!! rm -rf ${PACKAGE_STORAGE}/ubuntu
 mkdir -p ${PACKAGE_STORAGE}/ubuntu/conf
 cp distributions ${PACKAGE_STORAGE}/ubuntu/conf
@@ -45,25 +47,38 @@ cd ${PACKAGE_STORAGE}/ubuntu
 for distribution in ${DISTRIBUTIONS} ; do
    echo -e "\x1b[34mProcessing packages for ${distribution^} ...\x1b[0m"
 
-   dscFiles=`find ${PACKAGE_STORAGE}/${distribution}-deb -name "*dsc"`
-   debFiles=`find ${PACKAGE_STORAGE}/${distribution}-deb -name "*.deb"`
+   # ------ Add source and binary files -------------------------------------
+   # NOTE: .changes file refers to .dsc for source and .deb for binary!
+   changesFiles=`find ${PACKAGE_STORAGE}/${distribution}-deb -name "*.changes"`
+   for changesFile in ${changesFiles} ; do   # Add binary package
+      reprepro --ignore=wrongdistribution --component main                   include ${distribution} ${changesFile}
+      reprepro --ignore=wrongdistribution --component ${distribution}-kernel include ${distribution} ${changesFile}
+   done
 
-   for dscFile in ${dscFiles} ; do   # Add source package
-      reprepro -C main                   includedsc ${distribution} ${dscFile}
-      reprepro -C ${distribution}-kernel includedsc ${distribution} ${dscFile}
-   done
-   for debFile in ${debFiles} ; do   # Add binary package
-      reprepro -C main                   includedeb ${distribution} ${debFile}
-      reprepro -C ${distribution}-kernel includedeb ${distribution} ${debFile}
-   done
+# THIS IS OBSOLETE:
+#    # ------ Add source files ------------------------------------------------
+#    dscFiles=`find ${PACKAGE_STORAGE}/${distribution}-deb -name "*.dsc"`
+#    for dscFile in ${dscFiles} ; do   # Add source package
+#       reprepro --component main                   includedsc ${distribution} ${dscFile}
+#       reprepro --component ${distribution}-kernel includedsc ${distribution} ${dscFile}
+#    done
+#
+#    # ------ Add binary files ------------------------------------------------
+#    debFiles=`find ${PACKAGE_STORAGE}/${distribution}-deb -name "*.deb"`
+#    for debFile in ${debFiles} ; do   # Add binary package
+#        reprepro --component main                   includedeb ${distribution} ${debFile}
+#        reprepro --component ${distribution}-kernel includedeb ${distribution} ${debFile}
+#    done
 done
 
 
-echo -e "\x1b[34mCopying to server ...\x1b[0m"
+# ====== Rsync to web server ================================================
+echo -e "\x1b[34mCopying to web server ...\x1b[0m"
 rsync --archive --partial --delete \
    --info=progress2 \
    -e "ssh -J 128.39.37.188" \
    ${PACKAGE_STORAGE}/ubuntu ${readmeFile} ${PUBLIC_REPOSITORY}/
 
 
+# ====== Clean up ===========================================================
 echo -e "\x1b[34mDone!\x1b[0m"
