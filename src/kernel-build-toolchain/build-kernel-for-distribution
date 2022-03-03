@@ -65,7 +65,7 @@ cd /home/nornetpp/src/mptcp-kernel && \
 apt update && \
 env DEBIAN_FRONTEND=noninteractive apt install -y bc bison cpio devscripts dwarves flex kmod libelf-dev libssl-dev make rsync && \
 sudo -u nornetpp -g nornetpp cat /home/nornetpp/system.config /home/nornetpp/custom.config >.config && \
-if [ \"\`lsb_release -cs\`\" == \"xenial\" ] ; then echo \"CONFIG_DEBUG_INFO_BTF=n\" >>.config ; fi && \
+if [ \"\`lsb_release -cs\`\" == \"xenial\" -o \"\`lsb_release -cs\`\" == \"buster\" ] ; then echo \"CONFIG_DEBUG_INFO_BTF=n\" >>.config ; fi && \
 sudo -u nornetpp -g nornetpp make config </dev/null >/dev/null 2>&1 && \
 sudo -u nornetpp -g nornetpp env MAKEFLAGS="${MAKEFLAGS}" make deb-pkg LOCALVERSION=\"${LOCALVERSION}\" && \
 find .. \
