@@ -29,6 +29,7 @@ PUBLIC_REPOSITORY="nornetpp@nfs.simula.nornet:/nfs/adm/packages/nornet-kernel/"
 README_FILE="files/README.html"
 
 
+readmeFile=`realpath ${README_FILE}`
 for distribution in ${DISTRIBUTIONS} ; do
    echo -e "\x1b[34mSynchronising packages for ${distribution^} ...\x1b[0m"
    mkdir -p ${PACKAGE_STORAGE}/${distribution}-deb
@@ -62,7 +63,7 @@ echo -e "\x1b[34mCopying to server ...\x1b[0m"
 rsync --archive --partial --delete \
    --info=progress2 \
    -e "ssh -J 128.39.37.188" \
-   ${PACKAGE_STORAGE}/ubuntu ${README_FILE} ${PUBLIC_REPOSITORY}/
+   ${PACKAGE_STORAGE}/ubuntu ${readmeFile} ${PUBLIC_REPOSITORY}/
 
 
 echo -e "\x1b[34mDone!\x1b[0m"
