@@ -71,6 +71,9 @@ for distribution in ${DISTRIBUTIONS} ; do
 #    done
 done
 
+# A quick check to ensure that all files are there:
+reprepro checkpool fast
+
 
 # ====== Rsync to web server ================================================
 echo -e "\x1b[34mCopying to web server ...\x1b[0m"
