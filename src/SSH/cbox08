@@ -1,3 +1,3 @@
 #!/bin/sh
 echo "Connecting to Control Box of Universitetet på Svalbard (158.39.149.133) ..."
-ssh -CX nornetpp@158.39.149.133
+ssh -C nornetpp@158.39.149.133
