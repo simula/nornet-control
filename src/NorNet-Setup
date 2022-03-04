@@ -101,12 +101,12 @@ norNetSetup = [
    'site_altitude'     : 100,
    # Phone: +47-22-85-27-14
    'site_contacts'     : [ u'IT-Ooperations@IFI/UiO: drift@ifi.uio.no' ],
-   'site_pcu'          : [ IPv4Address('129.240.66.75'), 'pcu-root', 'a-secret-password' ],
+   'site_pcu'          : [ IPv4Address('158.36.184.157'), 'pcu-root', 'a-secret-password' ],
    'site_nornet_if'    : 'eth0',
    'site_providers' : [
       [ u'Uninett', 'eth1',
-           IPv4Interface('129.240.66.74/29'),       IPv4Address('129.240.66.73'),
-           IPv6Interface('2001:700:100:279::4/64'), IPv6Address('2001:700:100:279::1'),
+           IPv4Interface('158.36.184.156/29'),       IPv4Address('158.36.184.153'),
+           IPv6Interface('2001:700:182:11::156/64'), IPv6Address('2001:700:182:11::1'),
            1500, 'fibre, research', 1000000, 1000000 ],
       [ u'PowerTech', 'eth2',
            IPv4Interface('195.159.158.198/30'),     IPv4Address('195.159.158.197'),
