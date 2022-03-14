@@ -143,7 +143,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
          outputFile.write('  bridges:\n')
          outputFile.write('    ' + bridgeInterface + ':\n')
 
-      for stage in [ 'addresses', 'routes', 'nameservers' ]:
+      for stage in [ 'addresses', 'routes', 'routing-policy', 'nameservers' ]:
 
          # ====== Begin address configuration ===============================
          if stage == 'addresses':
@@ -156,6 +156,11 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
          elif stage == 'routes':
             outputFile.write('\n      # ====== Routes =======================================================\n')
             outputFile.write('      routes:\n')
+
+         # ====== Begin routing policy configuration ========================
+         elif stage == 'routing-policy':
+            outputFile.write('\n      # ====== Routing Policy ===============================================\n')
+            outputFile.write('      routing-policy:\n')
 
          # ====== Begin DNS configuration ===================================
          elif stage == 'nameservers':
@@ -170,14 +175,19 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
             for providerIndex in providerList:
                if ( ((onlyDefault == True)  and (providerIndex == defaultProviderIndex)) or \
                     ((onlyDefault == False) and (providerIndex != defaultProviderIndex)) ):
-                  if (stage == 'addresses') or (stage == 'routes'):
+                  if (stage == 'addresses') or (stage == 'routes') or (stage == 'routing-policy'):
                      outputFile.write('        # ------ ISP #' + str(providerIndex) + '-----------------------------------\n')
+                  #if stage == 'routes':
+                     #outputFile.write('        # ~~~~~~ Table main ~~~~~~~~~~~~~~~~~~\n')
+
                   for version in [ 4, 6 ]:
 
                      # ====== Addressing =======================================
-                     address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
-                     gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
-                     metric = NorNet_RoutingMetric_AdditionalProvider + providerNumber
+                     address  = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
+                     gateway  = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
+                     metric   = NorNet_RoutingMetric_AdditionalProvider + providerNumber
+                     table    = 1000 + providerIndex
+                     priority = 100 + providerIndex
                      if providerIndex == defaultProviderIndex:
                         metric = NorNet_RoutingMetric_DefaultProvider
 
@@ -195,6 +205,19 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                         outputFile.write('        - to: ' + str(network) + '\n')
                         outputFile.write('          via: ' + str(gateway.ip) + '\n')
                         outputFile.write('          metric: ' + str(metric) + '\n')
+
+                        outputFile.write('        - to: ' + str(address.network) + '\n')
+                        outputFile.write('          scope: link\n')
+                        outputFile.write('          table: ' + str(table) + '\n')
+                        outputFile.write('        - to: ' + str(network) + '\n')
+                        outputFile.write('          via: ' + str(gateway.ip) + '\n')
+                        outputFile.write('          table: ' + str(table) + '\n')
+
+                     # ====== Write routing policy configuration ============
+                     elif stage == 'routing-policy':
+                        outputFile.write('        - from: ' + str(address.network) + '\n')
+                        outputFile.write('          table: ' + str(table) + '\n')
+                        outputFile.write('          priority: ' + str(priority) + '\n')
 
                      # ====== Write DNS configuration =======================
                      elif stage == 'nameservers':

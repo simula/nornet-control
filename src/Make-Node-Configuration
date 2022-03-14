@@ -421,7 +421,7 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, name, descripti
 # ###### Main program #######################################################
 # ====== Handle arguments ===================================================
 if len(sys.argv) < 4:
-   error('Usage: ' + sys.argv[0] + ' FQDN Interface Debian|Fedora|FreeBSD')
+   error('Usage: ' + sys.argv[0] + ' FQDN Interface Debian|Fedora|Netplan|FreeBSD')
 fqdn          = sys.argv[1]
 interfaceName = sys.argv[2]
 distribution  = sys.argv[3]
