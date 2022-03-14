@@ -124,8 +124,94 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                                 hostName, domainName, nodeIndex, siteIndex,
                                 providerList, defaultProviderIndex,
                                 bridgeInterface = None):
+
+   # ====== Write Netplan configuration /etc/netplan/nornet.yaml ============
+   if variant == 'Netplan':
+      outputFile = codecs.open('nornet.yaml' + suffix, 'w', 'utf-8')
+
+      outputFile.write('network:\n')
+      outputFile.write('  version: 2\n')
+      outputFile.write('  renderer: networkd\n')
+
+      outputFile.write('\n  # ###### Interfaces #######################################################\n')
+      outputFile.write('  ethernets:\n')
+      outputFile.write('    ' + interfaceName + ':\n')
+      if bridgeInterface != None:
+         outputFile.write('      dhcp4: no\n')
+         outputFile.write('      accept-ra: no\n')
+         outputFile.write('\n  # ###### Bridges ##########################################################\n')
+         outputFile.write('  bridges:\n')
+         outputFile.write('    ' + bridgeInterface + ':\n')
+
+      for stage in [ 'addresses', 'routes', 'nameservers' ]:
+
+         # ====== Begin address configuration ===============================
+         if stage == 'addresses':
+            outputFile.write('\n      # ====== Addresses ====================================================\n')
+            outputFile.write('      dhcp4: no\n')
+            outputFile.write('      accept-ra: no\n')
+            outputFile.write('      addresses:\n')
+
+         # ====== Begin routes configuration ================================
+         elif stage == 'routes':
+            outputFile.write('\n      # ====== Routes =======================================================\n')
+            outputFile.write('      routes:\n')
+
+         # ====== Begin DNS configuration ===================================
+         elif stage == 'nameservers':
+            outputFile.write('\n      # ====== DNS Servers ==================================================\n')
+            outputFile.write('      nameservers:\n')
+            outputFile.write('        addresses:\n')
+
+         # ====== Handle addresses ==========================================
+         providerConfigs = []
+         providerNumber  = 0
+         for onlyDefault in [ True, False ]:
+            for providerIndex in providerList:
+               if ( ((onlyDefault == True)  and (providerIndex == defaultProviderIndex)) or \
+                    ((onlyDefault == False) and (providerIndex != defaultProviderIndex)) ):
+                  if (stage == 'addresses') or (stage == 'routes'):
+                     outputFile.write('        # ------ ISP #' + str(providerIndex) + '-----------------------------------\n')
+                  for version in [ 4, 6 ]:
+
+                     # ====== Addressing =======================================
+                     address = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
+                     gateway = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
+                     metric = NorNet_RoutingMetric_AdditionalProvider + providerNumber
+                     if providerIndex == defaultProviderIndex:
+                        metric = NorNet_RoutingMetric_DefaultProvider
+
+                     if controlBoxMode == False:
+                        network = 'default'
+                     else:
+                        network = str(makeNorNetIP(0, 0, 0, version))
+
+                     # ====== Write address configuration ===================
+                     if stage == 'addresses':
+                        outputFile.write('        - ' + str(address) + '\n')
+
+                     # ====== Write route configuration =====================
+                     elif stage == 'routes':
+                        outputFile.write('        - to: ' + str(network) + '\n')
+                        outputFile.write('          via: ' + str(gateway.ip) + '\n')
+                        outputFile.write('          metric: ' + str(metric) + '\n')
+
+                     # ====== Write DNS configuration =======================
+                     elif stage == 'nameservers':
+                        if providerIndex == defaultProviderIndex:
+                           outputFile.write('          - ' + str(gateway.ip) + '\n')
+
+                  providerNumber = providerNumber + 1
+
+         # ====== Finish DNS configuration ==================================
+         if stage == 'nameservers':
+            outputFile.write('        search:\n')
+            outputFile.write('          - ' + domainName + '\n')
+
+      outputFile.close()
+
    # ====== Write Debian /etc/network/interfaces ============================
-   if variant == 'Debian':
+   elif variant == 'Debian':
       outputFile = codecs.open('interfaces' + suffix, 'w', 'utf-8')
 
       outputFile.write('# ====== Loopback ======\n')
@@ -217,7 +303,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
       if bridgeInterface != None:
          bridgeTo      = interfaceName
          interfaceName = bridgeInterface
- 
+
          outputFile.write('DEVICE=' + bridgeTo + '\n')
          outputFile.write('ONBOOT=yes\n')
          outputFile.write('BOOTPROTO=none\n')
