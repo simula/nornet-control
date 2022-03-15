@@ -16,6 +16,7 @@ make-vm ()
    local name="$1"
    if ! vboxmanage showvminfo ${name} >/dev/null 2>&1 ; then
       echo "Creating ${name} ..."
+      vboxmanage snapshot "${TEMPLATE}" delete "Linked Base for ${name}" >/dev/null 2>&1 || true
       vboxmanage snapshot "${TEMPLATE}" take "Linked Base for ${name}"
       vboxmanage clonevm  "${TEMPLATE}" --name ${name} --options=link --snapshot="Linked Base for ${name}" --register
    else
