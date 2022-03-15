@@ -5,7 +5,7 @@ TEMPLATE="NEW-TestSetup-TEMPLATE"
 
 # Preparations:
 # vboxmanage clonevm  NorNet-Ubuntu-22.04-LTS --name "${TEMPLATE}" --register
-vboxmanage modifyvm "${TEMPLATE}" --memory 4096 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex off
+# vboxmanage modifyvm "${TEMPLATE}" --memory 4096 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex on
 # vboxmanage modifymedium disk "${HOME}/VirtualBox VMs/${TEMPLATE}/${TEMPLATE}-disk1.vdi" --resize 16384
 # vboxmanage modifymedium disk "${HOME}/VirtualBox VMs/${TEMPLATE}/${TEMPLATE}-disk2.vdi" --resize 16384
 # vboxmanage modifymedium disk "${HOME}/VirtualBox VMs/${TEMPLATE}/${TEMPLATE}-disk3.vdi" --resize 4096
@@ -26,7 +26,7 @@ make-vm ()
 
 VM="NEW-TestSetup-Crossconnect"
 make-vm ${VM}
-vboxmanage modifyvm ${VM} --memory 1024 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex off
+vboxmanage modifyvm ${VM} --memory 1024 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex on
 vboxmanage modifyvm ${VM} --nic1 bridged --nictype1 virtio --bridgeadapter1 oslomet
 vboxmanage modifyvm ${VM} --nic2 intnet  --nictype2 virtio --intnet2 OneAlpha
 vboxmanage modifyvm ${VM} --nic3 intnet  --nictype3 virtio --intnet3 OneBeta
@@ -40,7 +40,7 @@ vboxmanage modifyvm ${VM} --nic9 intnet  --nictype9 virtio --intnet9 TwoDelta
 
 VM="NEW-TestSetup-Tunnelbox-bjoernson.alpha.test"
 make-vm ${VM}
-vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex off
+vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex on
 vboxmanage modifyvm ${VM} --nic1 intnet  --nictype1 virtio --intnet1 TestNetwork-Alpha
 vboxmanage modifyvm ${VM} --nic2 intnet  --nictype2 virtio --intnet2 OneAlpha
 vboxmanage modifyvm ${VM} --nic3 intnet  --nictype3 virtio --intnet3 TwoAlpha
@@ -48,7 +48,7 @@ vboxmanage modifyvm ${VM} --nic4 bridged --nictype4 virtio --bridgeadapter4 oslo
 
 VM="NEW-TestSetup-Tunnelbox-ibsen.beta.test"
 make-vm ${VM}
-vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex off
+vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex on
 vboxmanage modifyvm ${VM} --nic1 intnet  --nictype1 virtio --intnet1 TestNetwork-Beta
 vboxmanage modifyvm ${VM} --nic2 intnet  --nictype2 virtio --intnet2 OneBeta
 vboxmanage modifyvm ${VM} --nic3 intnet  --nictype3 virtio --intnet3 TwoBeta
@@ -56,7 +56,7 @@ vboxmanage modifyvm ${VM} --nic4 bridged --nictype4 virtio --bridgeadapter4 oslo
 
 VM="NEW-TestSetup-Tunnelbox-wergeland.gamma.test"
 make-vm ${VM}
-vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex off
+vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex on
 vboxmanage modifyvm ${VM} --nic1 intnet  --nictype1 virtio --intnet1 TestNetwork-Gamma
 vboxmanage modifyvm ${VM} --nic2 intnet  --nictype2 virtio --intnet2 OneGamma
 vboxmanage modifyvm ${VM} --nic3 intnet  --nictype3 virtio --intnet3 TwoGamma
@@ -64,7 +64,7 @@ vboxmanage modifyvm ${VM} --nic4 bridged --nictype4 virtio --bridgeadapter4 oslo
 
 VM="NEW-TestSetup-Tunnelbox-uluru.delta.test"
 make-vm ${VM}
-vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex off
+vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex on
 vboxmanage modifyvm ${VM} --nic1 intnet  --nictype1 virtio --intnet1 TestNetwork-Delta
 vboxmanage modifyvm ${VM} --nic2 intnet  --nictype2 virtio --intnet2 OneDelta
 vboxmanage modifyvm ${VM} --nic3 intnet  --nictype3 virtio --intnet3 TwoDelta
@@ -73,31 +73,31 @@ vboxmanage modifyvm ${VM} --nic4 bridged --nictype4 virtio --bridgeadapter4 oslo
 
 VM="NEW-TestSetup-FileServer-kongleveien.alpha.test"
 make-vm ${VM}
-vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex off
+vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex on
 vboxmanage modifyvm ${VM} --nic1 intnet  --nictype1 virtio --intnet1 TestNetwork-Alpha
 
 VM="NEW-TestSetup-Monitor-grefsen.alpha.test"
 make-vm ${VM}
-vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex off
+vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex on
 vboxmanage modifyvm ${VM} --nic1 intnet  --nictype1 virtio --intnet1 TestNetwork-Alpha
 
 VM="NEW-TestSetup-Database-rolfsbukta.alpha.test"
 make-vm ${VM}
-vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex off
+vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex on
 vboxmanage modifyvm ${VM} --nic1 intnet  --nictype1 virtio --intnet1 TestNetwork-Alpha
 
 
 VM="NEW-TestSetup-Development-vika.alpha.test"
 make-vm ${VM}
-vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex off
+vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex on
 vboxmanage modifyvm ${VM} --nic1 intnet  --nictype1 virtio --intnet1 TestNetwork-Alpha
 
 VM="NEW-TestSetup-Development-mortensrud.beta.test"
 make-vm ${VM}
-vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex off
+vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex on
 vboxmanage modifyvm ${VM} --nic1 intnet  --nictype1 virtio --intnet1 TestNetwork-Beta
 
 VM="NEW-TestSetup-Development-soedermalm.gamma.test"
 make-vm ${VM}
-vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex off
+vboxmanage modifyvm ${VM} --memory 2048 --audio none --graphicscontroller vboxvga --vram 16 --nested-hw-virt off --hwvirtex on
 vboxmanage modifyvm ${VM} --nic1 intnet  --nictype1 virtio --intnet1 TestNetwork-Gamma
