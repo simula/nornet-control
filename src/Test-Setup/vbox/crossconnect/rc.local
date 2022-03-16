@@ -1,0 +1,4 @@
+#!/bin/sh
+
+iptables -t nat -A POSTROUTING -s 172.16.0.0/12  -o oslomet -j MASQUERADE
+ip6tables -t nat -A POSTROUTING -s fd00::/7  -o oslomet -j MASQUERADE

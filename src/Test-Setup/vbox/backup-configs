@@ -57,11 +57,15 @@ echo "Backup to ${name} ... $SUDO_USER"
 for file in hosts hostname sysctl.conf netplan/${name}.yaml apt/sources.list ; do
    backup-file /etc/${file} ${name} MANDATORY
 done
+for file in rc.local ; do
+   backup-file /etc/${file} ${name}
+done
 for file in nornetapi-config nornetapi-constants ; do
    backup-file /etc/nornet/${file} ${name}
 done
 
 sudo cp /etc/sudoers ${name}/
-sudo chown ${SUDO_USER}:${SUDO_USER} ${name}/sudoers
+
+sudo chown ${SUDO_USER}:${SUDO_USER} ${name}/*
 
 ls -l ${name}/
