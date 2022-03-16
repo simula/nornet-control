@@ -50,7 +50,7 @@ backup-file ()
 
 
 # ###### Main program #######################################################
-name=`hostname`
+name=`hostname -s`
 mkdir -p "${name}"
 
 echo "Backup to ${name} ... $SUDO_USER"
