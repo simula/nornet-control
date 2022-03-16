@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+#
+# NorNet Configuration Restore Script
+# Copyright (C) 2022 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+# ###### Restore file #######################################################
+restore-file ()
+{
+   inputFile="$1"
+   outputDirectory="$2"
+   option="$3"
+   if [ -e "${inputFile}" ] ; then
+      outputFile="${outputDirectory}/`basename ${inputFile}`"
+      if [ ! -e ${outputFile} ] ; then
+         echo "Copying ${inputFile} to ${outputFile} ..."
+         cp ${inputFile} ${outputFile}
+      elif ! diff -q ${inputFile} ${outputFile} >/dev/null ; then
+         echo "Updating ${inputFile} to ${outputFile} ..."
+         colordiff ${inputFile} ${outputFile}
+         cp ${inputFile} ${outputFile}
+      fi
+   else
+      if [ "${option}" == "MANDATORY" ] ; then
+         echo >&2 "ERROR: File ${inputFile} does not exist!"
+         exit 1
+      elif [ "${option}" == "WARNING" ] ; then
+         echo >&2 "WARNING: File ${inputFile} does not exist!"
+      fi
+   fi
+}
+
+
+# ###### Main program #######################################################
+if [ $# -lt 2 ] ; then
+   name=`hostname`
+else
+   name="$1"
+fi
+
+echo "Restore from ${name} ..."
+if [ ! -e "${name}" ] ; then
+   echo >&2 "ERROR: ${name} does not exist!"
+   exit 1
+fi
+
+for file in hosts hostname sysctl.conf ; do
+   restore-file ${name}/${file} /etc MANDATORY
+done
+restore-file ${name}/interfaces   /etc/network
+restore-file ${name}/sources.list /etc/apt
+for file in nornetapi-config nornetapi-constants ; do
+   restore-file ${name}/${file} /etc/nornet
+done
+
+cp ${name}/sudoers /etc
+chown root:root /etc/sudoers
+chmod 440 /etc/sudoers
