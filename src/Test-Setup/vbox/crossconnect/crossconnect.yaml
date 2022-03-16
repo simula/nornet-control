@@ -13,8 +13,9 @@ network:
   ethernets:
     # ====== Management =====================================================
     enp0s3:
-      dhcp4: yes
+      dhcp4: yes      
       accept-ra: yes
+      dhcp-identifier: mac
 
     # ====== Provider One, Site Alpha =======================================
     enp0s8:
