@@ -106,7 +106,7 @@ network:
       set-name: delta2
       dhcp4: no
       accept-ra: no
-      activation-mode: off   # !!!
+      # TEST: activation-mode: off
       addresses:
         - 172.17.4.1/24
         - fd00:17:4::1/64
