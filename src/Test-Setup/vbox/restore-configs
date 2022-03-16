@@ -62,11 +62,15 @@ fi
 for file in hosts hostname sysctl.conf ; do
    restore-file ${name}/${file} /etc MANDATORY
 done
+for file in rc.local ; do
+   restore-file ${name}/${file} /etc
+done
 restore-file ${name}/${name}.yaml /etc/netplan
 if [ -e /etc/netplan/${name}.yaml ] ; then
    rm -f /etc/netplan/00-installer-config.yaml
 fi
 restore-file ${name}/sources.list /etc/apt
+restore-file ${name}/systemd/resolved.conf /etc/systemd
 for file in nornetapi-config nornetapi-constants ; do
    restore-file ${name}/${file} /etc/nornet
 done
