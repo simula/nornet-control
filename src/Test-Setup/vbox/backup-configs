@@ -37,7 +37,7 @@ backup-file ()
       fi
 
       # Ensure that the file is tracked by Git:
-      sudo -u ${USER} git add ${outputFile}
+      sudo -u ${SUDO_USER} git add ${outputFile}
    else
       if [ "${option}" == "MANDATORY" ] ; then
          echo >&2 "ERROR: File ${inputFile} does not exist!"
@@ -53,7 +53,7 @@ backup-file ()
 name=`hostname`
 mkdir -p "${name}"
 
-echo "Backup to ${name} ..."
+echo "Backup to ${name} ... $SUDO_USER"
 for file in hosts hostname sysctl.conf netplan/${name}.yaml apt/sources.list ; do
    backup-file /etc/${file} ${name} MANDATORY
 done
@@ -62,6 +62,6 @@ for file in nornetapi-config nornetapi-constants ; do
 done
 
 sudo cp /etc/sudoers ${name}/
-sudo chown ${USER}:${USER} ${name}/sudoers
+sudo chown ${SUDO_USER}:${SUDO_USER} ${name}/sudoers
 
 ls -l ${name}/

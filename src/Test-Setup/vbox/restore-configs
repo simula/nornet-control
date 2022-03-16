@@ -47,7 +47,7 @@ restore-file ()
 
 
 # ###### Main program #######################################################
-if [ $# -lt 2 ] ; then
+if [ $# -lt 1 ] ; then
    name=`hostname`
 else
    name="$1"
