@@ -13,12 +13,20 @@ network:
   ethernets:
     # ====== Management =====================================================
     enp0s3:
-      dhcp4: yes      
-      accept-ra: yes
-      dhcp-identifier: mac
+#       match:
+#         name: enp0s3
+#       set-name: oslomet    
+#    oslomet:
+       dhcp4: yes      
+       accept-ra: yes
+       dhcp-identifier: mac
 
     # ====== Provider One, Site Alpha =======================================
     enp0s8:
+       match:
+         name: enp0s8
+       set-name: alpha1
+    alpha1:
       dhcp4: no
       accept-ra: no
       addresses:
@@ -27,6 +35,10 @@ network:
 
     # ====== Provider One, Site Beta ========================================
     enp0s9:
+       match:
+         name: enp0s9
+       set-name: beta1
+    beta1:
       dhcp4: no
       accept-ra: no
       addresses:
@@ -35,14 +47,29 @@ network:
 
     # ====== Provider One, Site Gamma =======================================
     enp0s10:
+      match:
+         name: enp0s10
+#         name: gamm1
+      set-name: gamm1
       dhcp4: no
       accept-ra: no
       addresses:
-        - 172.16.3.1/24
-        - fd00:16:3::1/64
+        - 172.16.33.1/24
+        - fd00:16:33::1/64
+#    gamm1:
+#      dhcp4: no
+#      accept-ra: no
+#      addresses:
+#        - 172.16.3.1/24
+#        - fd00:16:3::1/64
 
     # ====== Provider Two, Site Delta =======================================
     enp0s16:
+       match:
+         name: enp0s16
+       set-name: delta1
+       dhcp4: no
+    delta1:
       dhcp4: no
       accept-ra: no
       addresses:
@@ -51,6 +78,10 @@ network:
 
     # ====== Provider Two, Site Alpha =======================================
     enp0s17:
+      match:
+        name: enp0s17
+      set-name: alpha2
+    alpha2:
       dhcp4: no
       accept-ra: no
       addresses:
@@ -59,6 +90,10 @@ network:
 
     # ====== Provider Two, Site Beta =======================================
     enp0s18:
+      match:
+        name: enp0s18
+      set-name: beta2
+    beta2:
       dhcp4: no
       accept-ra: no
       addresses:
@@ -67,6 +102,15 @@ network:
 
     # ====== Provider Two, Site Gamma =======================================
     enp0s19:
+      match:
+        name: enp0s19
+      set-name: gamm2
+      dhcp4: no
+      accept-ra: no
+      addresses:
+        - 172.17.33.1/24
+        - fd00:17:33::1/64
+    gamm2:
       dhcp4: no
       accept-ra: no
       addresses:
@@ -75,8 +119,14 @@ network:
 
     # ====== Provider Two, Site Delta =======================================
     enp2s0:
+       match:
+         name: enp2s0
+       set-name: delta2
+       dhcp4: no
+    delta2:
       dhcp4: no
       accept-ra: no
+      activation-mode: off   # !!!
       addresses:
         - 172.17.4.1/24
         - fd00:17:4::1/64
