@@ -13,13 +13,12 @@ network:
   ethernets:
     # ====== Management =====================================================
     enp0s3:
-#       match:
-#         name: enp0s3
-#       set-name: oslomet    
-#    oslomet:
-       dhcp4: yes      
-       accept-ra: yes
-       dhcp-identifier: mac
+      match:
+        name: enp0s3
+      set-name: oslomet    
+      dhcp4: yes      
+      accept-ra: yes
+      dhcp-identifier: mac
 
     # ====== Provider One, Site Alpha =======================================
     enp0s8:
