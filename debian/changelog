@@ -1,3 +1,9 @@
+nornet (1.5.20-1ubuntu1) bionic; urgency=medium
+
+  * New upstream release.
+
+ -- Thomas Dreibholz <dreibh@simula.no>  Mon, 21 Mar 2022 16:50:17 +0100
+
 nornet (1.5.19-1ubuntu1) bionic; urgency=medium
 
   * New upstream release.
