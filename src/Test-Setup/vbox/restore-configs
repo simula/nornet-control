@@ -65,6 +65,7 @@ done
 for file in rc.local ; do
    restore-file ${name}/${file} /etc
 done
+restore-file ${name}/nornet.yaml  /etc/netplan
 restore-file ${name}/${name}.yaml /etc/netplan
 if [ -e /etc/netplan/${name}.yaml ] ; then
    rm -f /etc/netplan/00-installer-config.yaml

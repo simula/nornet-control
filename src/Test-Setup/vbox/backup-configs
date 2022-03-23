@@ -54,7 +54,7 @@ name=`hostname -s`
 mkdir -p "${name}"
 
 echo "Backup to ${name} ... $SUDO_USER"
-for file in hosts hostname sysctl.conf netplan/${name}.yaml apt/sources.list systemd/resolved.conf ; do
+for file in hosts hostname sysctl.conf netplan/${name}.yaml netplan/nornet.yaml apt/sources.list systemd/resolved.conf ; do
    backup-file /etc/${file} ${name} MANDATORY
 done
 for file in rc.local ; do
