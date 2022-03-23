@@ -1,0 +1,116 @@
+#!/bin/sh
+
+# ###### NorNet PLC configuration ###########################################
+# NOTE:
+# The following information is needed to access the PLC at the Central Site.
+# It is mandatory for all NorNet PLC-database operations!
+
+# This is the address of the PLC and the Central Site:
+NorNetPLC_Address='11.255.1.2'
+
+# These are the user name and corresponding password for accessing the PLC.
+# SECURITY ADVICE:
+# Use a user with restricted access permissions. For most operations (e.g.
+# obtaining the node configurations), it is just sufficient to read the PLC
+# database. Only modifying the configuration needs a more "powerful" user!
+NorNetPLC_User='dummy@simula.nornet'
+NorNetPLC_Password='dummy-password'
+
+
+# ###### NorNet Node configuration ##########################################
+# Node Index; needed,if if the node is not a PLC-managed node:
+# This is also the case for tunnelboxes (in this case: always 1)!
+NorNet_LocalNode_Index="1"
+
+# This is the full hostname of the node:
+NorNet_LocalNode_Hostname='bjoernson.alpha.test'
+
+# This is the name of the NorNet interface (with the site's provider
+# networks) of the node:
+NorNet_LocalNode_NorNetInterface='eth0'
+
+# ###### NorNet system user #################################################
+# The NorNet user on this system. By default, it is 'nornetpp'.
+# NorNet_LocalNode_NorNetUser='nornetpp'
+
+# Automatically update the NorNet user's SSH authorized_keys.
+NorNet_LocalNode_SSHAuthorizedKeysUpdate=1
+
+
+# ###### NorNet Server configuration ########################################
+# The default VNC password to access virtual systems on this host. It may be
+# superseeded by VNCPASSWORD settings in the virtual systems configurations.
+# NorNet_Server_DefaultVNCPassword=""
+
+
+# ###### NorNet Tunnelbox configuration #####################################
+# NOTE:
+# The following information is only necessary to bootstrap a tunnelbox on the
+# local site. For other nodes, the variables do not have to be set!
+
+# This is the Site Index of the local site:
+NorNet_LocalSite_SiteIndex=1
+
+# This is the Provider Index of the local Default Provider:
+NorNet_LocalSite_DefaultProviderIndex=255
+
+# This is the local tunnelbox's outer IPv4 address for the default provider:
+NorNet_LocalSite_TBDefaultProviderIPv4='172.16.1.2'
+
+# DNAT mappings for port mapping of external ports to internal systems:
+NorNet_LocalSite_DNAT_Options='"eth1 tcp 5060 192.168.1.1" "eth1 udp 5060 192.168.1.1" "eth2 tcp 5060 192.168.1.2" "eth2 udp 5060 192.168.1.2"'
+
+# DHCP Configuration
+NorNet_LocalSite_DHCPServer_Dynamic='"40" "49"'
+NorNet_LocalSite_DHCPServer_NodeNames='elefant fisk fugl hest hund katt løve mus orm tiger'
+
+#NorNet_LocalSite_DHCPServer_Static230='"20:4e:7f:6c:ee:03"'   # Netgear Switch
+
+# RADVD Configuration
+NorNet_LocalSite_RADVDServer="on"
+
+# DNS Configuration:
+# NorNet_LocalSite_DNS_Forwarders='"158.36.161.21" "158.36.161.20"'
+
+# Squid Configuration:
+NorNet_Squid_MemoryCache=256
+NorNet_Squid_DiskCache=256
+NorNet_Squid_MaxObjectSize=256
+#NorNet_Squid_ParentCache="10.1.1.1"   # "proxy.simula.nornet"
+NorNet_Squid_TransparentProxy="off"
+
+
+# ====== Central Site only! ===============================
+# NAT public address rnage:
+#NorNet_CentralSite_NAT_Range="172.16.1.2"
+
+# Additional external interface
+# (an interface for external Internet access, e.g. via NAT)
+# that is *not* part of the provider configuration:
+# NorNet_CentralSite_AdditionalExtInterface='eth3'
+
+# Blacklist (to prohibit e.g. devices phoning home):
+# NorNet_CentralSite_Blacklist="11.255.1.50"
+# =========================================================
+ 
+
+# ###### Additional DNS names ###############################################
+# Add additional, non-managed nodes here.
+# The syntax is NorNet_LocalSite_Node<XXX>='"Hostname" "Hardware" "Type"',
+# where <XXX> denotes the node index (i.e. 2 to 254).
+
+NorNet_LocalSite_Alias1='"bjørnson"'
+
+NorNet_LocalSite_Node2='"ullevålseter"     "Amiga 8000"   "NorNet PLC"'
+NorNet_LocalSite_Alias2='"api" "boot" "db"'
+
+NorNet_LocalSite_Node3='"grefsenkollen"    "Amiga 8000"   "NorNet Monitor"'
+   
+NorNet_LocalSite_Node4='"kongleveien"      "Amiga 8000"   "NorNet File Server"'
+   
+NorNet_LocalSite_Node5='"rolfsbukta"       "Amiga 8000"   "NorNet Database"'
+
+NorNet_LocalSite_Node50='"vika"            "Amiga 8000"   "NorNet Node"'
+
+NorNet_LocalSite_Node51='"tjuvholmen"      "Amiga 8000"   "NorNet Node"'
+NorNet_LocalSite_Node52='"bjørvika"        "Amiga 8000"   "NorNet Node"'

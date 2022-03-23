@@ -1,6 +1,6 @@
 # ====== Local Machine ======================================================
 127.0.0.1    localhost
-127.0.1.1    crossconnect.oslomet crossconnect
+127.0.1.1    bjoernson.alpha.test bjoernson
 
 # ====== Test Setup =========================================================
 172.16.1.1   crossconnect.one
