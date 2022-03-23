@@ -65,7 +65,7 @@ for file in nornetapi-config nornetapi-constants ; do
 done
 
 sudo cp /etc/sudoers ${name}/
-
 sudo chown ${SUDO_USER}:${SUDO_USER} ${name}/*
+sudo -u ${SUDO_USER} git add ${name}/sudoers
 
 ls -l ${name}/
