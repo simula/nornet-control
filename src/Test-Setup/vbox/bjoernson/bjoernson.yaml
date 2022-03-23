@@ -43,7 +43,7 @@ network:
       set-name: oslomet
       dhcp4: yes
       dhcp4-overrides:
-        use-dns: false
+        use-dns: true
         use-routes: false
       dhcp-identifier: mac
-      accept-ra: yes
+      accept-ra: no
