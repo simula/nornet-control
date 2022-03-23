@@ -18,8 +18,6 @@ network:
       set-name: nornet
       dhcp4: no
       accept-ra: no
-    addresses:
-      - 11.255.1.1/24
-      - fd00:cafe:0:ff01::1/64
-    search:
-      - alpha.test
+      addresses:
+        - 11.255.1.1/24
+        - fd00:cafe:0:ff01::1/64

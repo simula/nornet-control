@@ -16,10 +16,9 @@ network:
 
     # ====== Provider One ===================================================
     enp0s8:
-       match:
-         name: enp0s8
-       set-name: isp1
-    isp1:
+      match:
+        name: enp0s8
+      set-name: isp1
       dhcp4: no
       accept-ra: no
       addresses:
@@ -42,7 +41,6 @@ network:
       match:
         name: enp0s10
       set-name: oslomet
-    oslomet:
       dhcp4: yes
       dhcp4-overrides:
         use-dns: false
