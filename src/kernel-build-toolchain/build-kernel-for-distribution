@@ -33,7 +33,6 @@ IMAGE="$1"
 CONTAINER="$2"
 BUILD_DIRECTORY="${CONTAINER}"
 RESULTS_DIRECTORY="packages/${CONTAINER}"
-LOCALVERSION="-mptcp-${CONTAINER}"
 
 CONFIG_SYSTEM="/boot/config-`uname -r`"
 CONFIG_CUSTOM="${HOME}/src/nornet/planetlab-kernel/config-planetlab"
@@ -46,6 +45,14 @@ docker rm -f ${CONTAINER} >/dev/null 2>&1 || true
 echo "RSync'ing sources ..."
 echo "rsync -a --delete --exclude .git ${HOME}/src/multipath/mptcp-kernel/ ${BUILD_DIRECTORY}/"
 rsync -a --delete --exclude .git ${HOME}/src/multipath/mptcp-kernel/ ${BUILD_DIRECTORY}/
+pushd ${BUILD_DIRECTORY} >/dev/null
+if grep -q IPPROTO_MPTCP tools/include/uapi/linux/in.h ; then
+   LOCALVERSION="-mptcp-upstream-${CONTAINER}"
+else
+   LOCALVERSION="-mptcp-offtree-${CONTAINER}"
+fi
+echo "LOCALVERSION=${LOCALVERSION}"
+popd >/dev/null
 
 # ------ Remove old packages ------------------------------------------------
 echo "Removing old results ..."
