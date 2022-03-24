@@ -112,7 +112,7 @@ def writeProxyConfiguration(suffix, siteDomain, variant, controlBoxMode):
             proxyConf.write('setenv no_proxy "' + siteDomain + '"\n')
       proxyConf.close()
 
-   if variant == 'Debian':
+   if os.path.isdir('/etc/apt/apt.conf.d/'):
       proxyConf = codecs.open('apt-proxy' + suffix, 'w', 'utf-8')
       if controlBoxMode == False:
          proxyConf.write('Acquire::http::Proxy "http://' + proxyName + ':3128/";\n')
