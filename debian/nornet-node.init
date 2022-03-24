@@ -200,8 +200,12 @@ check_and_configure ()
 
    if needs_update nornet.yaml /etc/netplan/nornet.yaml $1 ; then
       if [ ! -e /etc/init.d/nornet-tunnelbox ] ; then
-         echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Interface configuration has been updated => running netplan ...\x1b[0m"
+         echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Interface configuration has been updated => applying netplan ...\x1b[0m"
          cp nornet.yaml /etc/network/interfaces
+         if [ -e /etc/netplan/00-installer-config.yaml ] ; then
+            echo "Removing old /etc/netplan/00-installer-config.yaml!"
+            rm -f /etc/netplan/00-installer-config.yaml
+         fi
          netplan apply || true
       else
          echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ##### WARNING: nornet-node is supposed to install new /etc/netplan/nornet.yaml on tunnelbox?! ######\x1b[0m"
@@ -249,12 +253,6 @@ check_and_configure ()
    fi
    cp proxy.sh proxy.csh /etc/profile.d/
    cp apt-proxy /etc/apt/apt.conf.d/10-proxy
-
-   # Permanently make important settings in sysctl configuration.
-   sed -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.accept_redirects[ \t]*=.*$/net.ipv4.conf.all.accept_redirects=0/" \
-       -e "s/^[ \t]*[#]*[ \t]*net.ipv4.conf.all.secure_redirects[ \t]*=.*$/net.ipv4.conf.all.secure_redirects=0/" \
-       -e "s/^[ \t]*[#]*[ \t]*net.ipv6.conf.all.accept_redirects[ \t]*=.*$/net.ipv6.conf.all.accept_redirects=0/" \
-       </etc/sysctl.conf >/etc/nornet/sysctl-config && mv /etc/nornet/sysctl-config /etc/sysctl.conf && sudo sysctl -q -p
 }
 
 
