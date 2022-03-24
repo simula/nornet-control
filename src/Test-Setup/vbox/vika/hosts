@@ -1,0 +1,34 @@
+# ====== Local Machine ======================================================
+127.0.0.1    localhost
+127.0.1.1	 vika.alpha.test vika
+
+# ====== Test Setup =========================================================
+172.16.1.1   crossconnect.one
+172.17.1.1   crossconnect.two
+
+172.16.1.2   bjoernson.one
+172.17.1.2   bjoernson.two
+fd00:16:1::2 bjoernson.one
+fd00:17:1::2 bjoernson.two
+
+172.16.2.2   ibsen.one
+172.17.2.2   ibsen.two
+fd00:16:2::2 ibsen.one
+fd00:17:2::2 ibsen.two
+
+172.16.3.2   wergeland.one
+172.17.3.2   wergeland.two
+fd00:16:3::2 wergeland.one
+fd00:17:3::2 wergeland.two
+
+172.16.4.2   uluru.one
+172.17.4.2   uluru.two
+fd00:16:4::2 uluru.one
+fd00:17:4::2 uluru.two
+
+# ====== IPv6 Information ===================================================
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
