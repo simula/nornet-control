@@ -11,9 +11,9 @@ network:
 
   # ###### Interfaces #######################################################
   ethernets:
-    enp3s0:
+    enp0s3:
       match:
-        name: enp3s0
+        name: enp0s3
       set-name: nornet
 
       # ====== Addresses ====================================================
