@@ -19,8 +19,9 @@
 #
 # Contact: dreibh@simula.no
 
-import re
 import os
+import re
+import subprocess
 
 from ipaddress import IPv4Address, IPv4Interface, IPv6Address, IPv6Interface
 
@@ -128,6 +129,13 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
    # ====== Write Netplan configuration /etc/netplan/nornet.yaml ============
    if variant == 'Netplan':
       outputFile = codecs.open('nornet.yaml' + suffix, 'w', 'utf-8')
+
+      fqdn = hostName + '.'  + domainName
+      try:
+         header = subprocess.check_output('if [ -x /usr/bin/figlet ] ; then /usr/bin/figlet -w 256 "' + fqdn + '" ; else echo "' + fqdn + '" ; fi | awk \'{ print "# " $0 }\'', shell=True, text=True)
+         outputFile.write(header + '\n')
+      except:
+         pass
 
       outputFile.write('network:\n')
       outputFile.write('  version: 2\n')
