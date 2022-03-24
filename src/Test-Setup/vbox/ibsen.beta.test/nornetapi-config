@@ -1,0 +1,92 @@
+#!/bin/sh
+
+# ###### NorNet PLC configuration ###########################################
+# NOTE:
+# The following information is needed to access the PLC at the Central Site.
+# It is mandatory for all NorNet PLC-database operations!
+
+# This is the address of the PLC and the Central Site:
+NorNetPLC_Address='11.255.1.2'
+
+# These are the user name and corresponding password for accessing the PLC.
+# SECURITY ADVICE:
+# Use a user with restricted access permissions. For most operations (e.g.
+# obtaining the node configurations), it is just sufficient to read the PLC
+# database. Only modifying the configuration needs a more "powerful" user!
+NorNetPLC_User='dummy@simula.nornet'
+NorNetPLC_Password='dummy-password'
+
+
+# ###### NorNet Node configuration ##########################################
+# Node Index; needed,if if the node is not a PLC-managed node:
+# This is also the case for tunnelboxes (in this case: always 1)!
+NorNet_LocalNode_Index="1"
+
+# This is the full hostname of the node:
+NorNet_LocalNode_Hostname='ibsen.beta.test'
+
+# This is the name of the NorNet interface (with the site's provider
+# networks) of the node:
+NorNet_LocalNode_NorNetInterface='eth0'
+
+# ###### NorNet system user #################################################
+# The NorNet user on this system. By default, it is 'nornetpp'.
+# NorNet_LocalNode_NorNetUser='nornetpp'
+
+# Automatically update the NorNet user's SSH authorized_keys.
+NorNet_LocalNode_SSHAuthorizedKeysUpdate=1
+ 
+ 
+# ###### NorNet Server configuration ########################################
+# The default VNC password to access virtual systems on this host. It may be
+# superseeded by VNCPASSWORD settings in the virtual systems configurations.
+# NorNet_Server_DefaultVNCPassword=""
+
+
+# ###### NorNet Tunnelbox configuration #####################################
+# NOTE:
+# The following information is only necessary to bootstrap a tunnelbox on the
+# local site. For other nodes, the variables do not have to be set!
+
+# This is the Site Index of the local site:
+NorNet_LocalSite_SiteIndex=2
+
+# This is the Provider Index of the local Default Provider:
+NorNet_LocalSite_DefaultProviderIndex=255
+
+# This is the local tunnelbox's outer IPv4 address for the default provider:
+NorNet_LocalSite_TBDefaultProviderIPv4='172.16.2.2'
+
+# DNAT mappings for port mapping of external ports to internal systems:
+NorNet_LocalSite_DNAT_Options='"eth1 tcp 5060 192.168.2.1" "eth1 udp 5060 192.168.2.1" "eth2 tcp 5060 192.168.2.2" "eth2 udp 5060 192.168.2.2"'
+
+# DHCP Configuration
+NorNet_LocalSite_DHCPServer_Dynamic='"40" "49"'
+
+#NorNet_LocalSite_DHCPServer_Static230='"20:4e:7f:6c:ee:03"'   # Netgear Switch
+
+# RADVD Configuration:
+NorNet_LocalSite_RADVDServer="on"
+
+# DNS Configuration:
+NorNet_LocalSite_DNS_Forwarders='"158.36.161.21" "158.36.161.20"'
+
+# Squid Configuration:
+NorNet_Squid_MemoryCache=256
+NorNet_Squid_DiskCache=256
+NorNet_Squid_MaxObjectSize=256
+
+
+# ###### Additional DNS names ###############################################
+# Add additional, non-managed nodes here.
+# The syntax is NorNet_LocalSite_Node<XXX>='"Hostname" "Hardware" "Type"',
+# where <XXX> denotes the node index (i.e. 2 to 254).
+
+NorNet_LocalSite_Node50='"mortensrud"       "Amiaga 8000"   "NorNet Node"'
+NorNet_LocalSite_SSHKeys50='
+ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINHCcMIgy58dZafeg0C3KuD9lqWLgXTYIFwwI8vBQL6M"
+ "ssh-rsa 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"
+ "ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBABsYJ7PUu7lnRyo3bGMQ4xio14ANupH0GdT1eR5IDqbUzrUywW3nNsDlXtgsvV10YQJoEauooyAjLy1TvMJdD/rUwGoW4tohzjRREoysC8a13HkYs1/tK/S6ha0CAXsiX5y/l2Z+ERvnmGtFkl80cDlU0hwYp+l0DWsJxc1kpmP4KSQ/Q=="
+ '
+
+NorNet_LocalSite_Node51='"bergkrystallen"   "Amiaga 8000"   "NorNet Node"'
