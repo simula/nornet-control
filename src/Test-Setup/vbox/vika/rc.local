@@ -12,15 +12,15 @@
 # By default this script does nothing.
 
 # Alpha
-sudo Probe-Endpoint-Setup add 1010 alpha1 11.254.1.50 11.254.1.1 0x00010001 192.168.1.1 || true
-sudo Probe-Endpoint-Setup add 1011 alpha2 11.254.1.50 11.254.1.1 0x00010002 192.168.1.2 || true
+#sudo Probe-Endpoint-Setup add 1010 alpha1 11.254.1.50 11.254.1.1 0x00010001 192.168.1.1 || true
+#sudo Probe-Endpoint-Setup add 1011 alpha2 11.254.1.50 11.254.1.1 0x00010002 192.168.1.2 || true
 
 # Beta
-sudo Probe-Endpoint-Setup add 1020 beta1  11.254.1.50 11.254.2.1 0x00020001 192.168.2.1 || true
-sudo Probe-Endpoint-Setup add 1021 beta2  11.254.1.50 11.254.2.1 0x00020002 192.168.2.2 || true
+#sudo Probe-Endpoint-Setup add 1020 beta1  11.254.1.50 11.254.2.1 0x00020001 192.168.2.1 || true
+#sudo Probe-Endpoint-Setup add 1021 beta2  11.254.1.50 11.254.2.1 0x00020002 192.168.2.2 || true
 
 # Gamma
-sudo Probe-Endpoint-Setup add 1030 gamma1 11.254.1.50 11.254.3.1 0x00030001 192.168.3.1 || true
-sudo Probe-Endpoint-Setup add 1031 gamma2 11.254.1.50 11.254.3.1 0x00030002 192.168.3.2 || true
+#sudo Probe-Endpoint-Setup add 1030 gamma1 11.254.1.50 11.254.3.1 0x00030001 192.168.3.1 || true
+#sudo Probe-Endpoint-Setup add 1031 gamma2 11.254.1.50 11.254.3.1 0x00030002 192.168.3.2 || true
 
 exit 0

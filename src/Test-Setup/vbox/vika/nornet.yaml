@@ -11,7 +11,10 @@ network:
 
   # ###### Interfaces #######################################################
   ethernets:
-    nornet:
+    enp0s3:
+      match:
+        name: enp0s3
+      set-name: nornet
 
       # ====== Addresses ====================================================
       dhcp4: no
