@@ -27,7 +27,9 @@ NorNet_LocalNode_Hostname='ibsen.beta.test'
 
 # This is the name of the NorNet interface (with the site's provider
 # networks) of the node:
-NorNet_LocalNode_NorNetInterface='eth0'
+NorNet_LocalNode_NorNetInterface='nornet'
+NorNet_LocalNode_NorNetInterfaceMatch='enp0s3'
+# NorNet_LocalNode_NorNetInterfaceMatch='08:00:27:99:28:04'
 
 # ###### NorNet system user #################################################
 # The NorNet user on this system. By default, it is 'nornetpp'.
@@ -35,8 +37,8 @@ NorNet_LocalNode_NorNetInterface='eth0'
 
 # Automatically update the NorNet user's SSH authorized_keys.
 NorNet_LocalNode_SSHAuthorizedKeysUpdate=1
- 
- 
+
+
 # ###### NorNet Server configuration ########################################
 # The default VNC password to access virtual systems on this host. It may be
 # superseeded by VNCPASSWORD settings in the virtual systems configurations.
@@ -58,7 +60,7 @@ NorNet_LocalSite_DefaultProviderIndex=255
 NorNet_LocalSite_TBDefaultProviderIPv4='172.16.2.2'
 
 # DNAT mappings for port mapping of external ports to internal systems:
-NorNet_LocalSite_DNAT_Options='"eth1 tcp 5060 192.168.2.1" "eth1 udp 5060 192.168.2.1" "eth2 tcp 5060 192.168.2.2" "eth2 udp 5060 192.168.2.2"'
+# NorNet_LocalSite_DNAT_Options='"eth1 tcp 5060 192.168.2.1" "eth1 udp 5060 192.168.2.1" "eth2 tcp 5060 192.168.2.2" "eth2 udp 5060 192.168.2.2"'
 
 # DHCP Configuration
 NorNet_LocalSite_DHCPServer_Dynamic='"40" "49"'
