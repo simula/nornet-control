@@ -245,6 +245,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
          if stage == 'nameservers':
             outputFile.write('        search:\n')
             outputFile.write('          - ' + domainName + '\n')
+            outputFile.write('          - ' + getDomainFromFQDN(domainName) + '\n')
 
       outputFile.close()
 
