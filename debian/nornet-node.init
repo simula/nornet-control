@@ -139,15 +139,23 @@ get_new_node_configuration ()
    rm -rf updated-node-config
    mkdir updated-node-config
    cd updated-node-config
-   Make-Node-Configuration "$NorNet_LocalNode_Hostname" "$NorNet_LocalNode_NorNetInterface" Debian
 
-   AllDefinedInterfaces=`grep "^[ \t]*auto" /etc/network/interfaces | sed -e "s/\([ \t]*auto[ \t]\)\([a-zA-Z0-9]*\)/\2/g"`
-   for interface in $AllDefinedInterfaces ; do
-      if [ "$interface" != "lo" -a "$interface" != "$NorNet_LocalNode_NorNetInterface" ] ; then
-         echo -e "\n# ====== Additional Interface $interface ======" >>interfaces
-         obtain-existing-interface-configuration /etc/network/interfaces $interface interfaces
-      fi
-   done
+   if [ -e /etc/netplan/nornet.yaml -o -e /etc/netplan/00-installer-config.yaml ] ; then
+      echo "Configuring via Netplan!"
+      Make-Node-Configuration "$NorNet_LocalNode_Hostname" "$NorNet_LocalNode_NorNetInterface" Netplan
+
+   else
+      echo "Configuring via ifupdown!"
+      Make-Node-Configuration "$NorNet_LocalNode_Hostname" "$NorNet_LocalNode_NorNetInterface" Debian
+
+      AllDefinedInterfaces=`grep "^[ \t]*auto" /etc/network/interfaces | sed -e "s/\([ \t]*auto[ \t]\)\([a-zA-Z0-9]*\)/\2/g"`
+      for interface in $AllDefinedInterfaces ; do
+         if [ "$interface" != "lo" -a "$interface" != "$NorNet_LocalNode_NorNetInterface" ] ; then
+            echo -e "\n# ====== Additional Interface $interface ======" >>interfaces
+            obtain-existing-interface-configuration /etc/network/interfaces $interface interfaces
+         fi
+      done
+   fi
 
    cd ..
 
@@ -178,8 +186,8 @@ get_new_node_configuration ()
          echo "ERROR: What is the name of the netfilter-persistent service?"
       fi
    fi
-   
-   # ====== Update other configurations =====================================   
+
+   # ====== Update other configurations =====================================
    mv updated-node-config/* .
    rmdir updated-node-config
 }
@@ -189,7 +197,17 @@ get_new_node_configuration ()
 check_and_configure ()
 {
    get_new_node_configuration
-   if needs_update interfaces /etc/network/interfaces $1 ; then
+
+   if needs_update nornet.yaml /etc/netplan/nornet.yaml $1 ; then
+      if [ ! -e /etc/init.d/nornet-tunnelbox ] ; then
+         echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Interface configuration has been updated => running netplan ...\x1b[0m"
+         cp nornet.yaml /etc/network/interfaces
+         netplan apply || true
+      else
+         echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: ##### WARNING: nornet-node is supposed to install new /etc/netplan/nornet.yaml on tunnelbox?! ######\x1b[0m"
+         echo "/etc/netplan/nornet.yaml will be kept as is!"
+      fi
+   elif needs_update interfaces /etc/network/interfaces $1 ; then
       if [ ! -e /etc/init.d/nornet-tunnelbox ] ; then
          echo -e "\x1b[33m`env LANG=C date +%FT%H:%M:%S`: Interface configuration has been updated => restarting networking service ...\x1b[0m"
          cp interfaces /etc/network/interfaces
