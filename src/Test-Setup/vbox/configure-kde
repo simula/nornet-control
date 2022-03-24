@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+cd ~/src/nornet-vmimage-builder-scripts/scripts/
+
+sudo apt install -y nornet-display
+sudo \
+   USER_NAME=nornetpp \
+   BACKGROUND_SDDM="/usr/share/nornet-desktop/Desktop-with-Logo/Server1-3840x2160-plain.jpeg" \
+   BACKGROUND_LOCKSCREEN="/usr/share/nornet-desktop/Desktop-with-Logo/FileSrv1-3840x2160-plain.jpeg" \
+   BACKGROUND_DESKTOP="/usr/share/nornet-desktop/Desktop-with-Logo/Display1-3840x2160-plain.jpeg" \
+   ./configure-kde-desktop
