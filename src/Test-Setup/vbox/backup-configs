@@ -51,21 +51,22 @@ backup-file ()
 
 # ###### Main program #######################################################
 name=`hostname -s`
-sudo -u ${SUDO_USER} mkdir -p "${name}"
+fqdn=`hostname -f`
+sudo -u ${SUDO_USER} mkdir -p "${fqdn}"
 
-echo "Backup to ${name} ... $SUDO_USER"
+echo "Backup to ${fqdn} ... $SUDO_USER"
 for file in hosts hostname sysctl.conf netplan/${name}.yaml apt/sources.list systemd/resolved.conf ; do
-   backup-file /etc/${file} ${name} MANDATORY
+   backup-file /etc/${file} ${fqdn} MANDATORY
 done
 for file in rc.local netplan/nornet.yaml ; do
-   backup-file /etc/${file} ${name}
+   backup-file /etc/${file} ${fqdn}
 done
 for file in nornetapi-config nornetapi-constants ; do
-   backup-file /etc/nornet/${file} ${name}
+   backup-file /etc/nornet/${file} ${fqdn}
 done
 
-sudo cp /etc/sudoers ${name}/
-sudo chown ${SUDO_USER}:${SUDO_USER} ${name}/*
-sudo -u ${SUDO_USER} git add ${name}/sudoers
+sudo cp /etc/sudoers ${fqdn}/
+sudo chown ${SUDO_USER}:${SUDO_USER} ${fqdn}/*
+sudo -u ${SUDO_USER} git add ${fqdn}/sudoers
 
-ls -l ${name}/
+ls -l ${fqdn}/
