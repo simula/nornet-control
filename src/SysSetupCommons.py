@@ -123,7 +123,7 @@ def writeProxyConfiguration(suffix, siteDomain, variant, controlBoxMode):
 def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                                 hostName, domainName, nodeIndex, siteIndex,
                                 providerList, defaultProviderIndex,
-                                bridgeInterface = None):
+                                bridgeInterface = None, matchInterface = None):
 
    # ====== Write Netplan configuration /etc/netplan/nornet.yaml ============
    if variant == 'Netplan':
@@ -135,7 +135,22 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
 
       outputFile.write('\n  # ###### Interfaces #######################################################\n')
       outputFile.write('  ethernets:\n')
-      outputFile.write('    ' + interfaceName + ':\n')
+
+      reMAC = re.compile(r'^[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}$')
+      if matchInterface == None:
+         outputFile.write('    ' + interfaceName + ':\n')
+      else:
+         if reMAC.match(matchInterface) != None:
+            outputFile.write('    ' + interfaceName + ':\n')
+            outputFile.write('      match:\n')
+            outputFile.write('        macaddress: ' + matchInterface + '\n')
+            outputFile.write('      set-name: ' + interfaceName + '\n')
+         else:
+            outputFile.write('    ' + matchInterface + ':\n')
+            outputFile.write('      match:\n')
+            outputFile.write('        name: ' + matchInterface + '\n')
+            outputFile.write('      set-name: ' + interfaceName + '\n')
+
       if bridgeInterface != None:
          outputFile.write('      dhcp4: no\n')
          outputFile.write('      accept-ra: no\n')

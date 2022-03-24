@@ -466,7 +466,8 @@ writeSysctlConfiguration('sysctl-config', getLocalNodeNorNetInterface())
 writeInterfaceConfiguration('', distribution, interfaceName,
                             NorNet_Configuration['NorNet_LocalNode_ControlBox'],
                             localNode['node_name'], localSite['site_domain'], localNode['node_index'], localSite['site_index'],
-                            providerList, localSite['site_default_provider_index'])
+                            providerList, localSite['site_default_provider_index'],
+                            matchInterface = getLocalNodeNorNetInterfaceMatch())
 writeProxyConfiguration('', localSite['site_domain'], distribution,
                         False)   # Use tunnelbox's proxy!
 
