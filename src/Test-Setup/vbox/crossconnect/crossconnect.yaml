@@ -31,6 +31,14 @@ network:
       addresses:
         - 172.16.1.1/24
         - fd00:16:1::1/64
+      routes:
+      # ------ Central Site: IPv6 for Provider One ------------
+      # NOTE: The tunnelbox performs NAT for IPv4!
+      #       The crossconnect performs NAT for IPv6
+      #       (for test system with unique-local addresses)!
+        - to: fd00:cafe:0:fe00::/56
+          via: fd00:16:1::2
+      # -------------------------------------------------------
       nameservers:
         addresses:
           - 172.16.1.2
@@ -100,6 +108,14 @@ network:
       addresses:
         - 172.17.1.1/24
         - fd00:17:1::1/64
+      routes:
+      # ------ Central Site: IPv6 for Provider One ------------
+      # NOTE: The tunnelbox performs NAT for IPv4!
+      #       The crossconnect performs NAT for IPv6
+      #       (for test system with unique-local addresses)!
+        - to: fd00:cafe:0:ff00::/56
+          via: fd00:17:1::2
+      # -------------------------------------------------------
       nameservers:
         addresses:
           - 172.17.1.2
