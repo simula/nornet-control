@@ -291,6 +291,7 @@ Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Recommends: figlet
 
 %description api
 This package contains the NorNet Python API library. It contains functions

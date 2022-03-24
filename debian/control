@@ -177,6 +177,7 @@ Architecture: all
 Depends: ${misc:Depends},
          ${python3:Depends},
          ${shlibs:Depends}
+Recommends: figlet
 Description: API tools for the NorNet system environment
  This package contains the NorNet Python API library. It contains functions
  to communicate with the central server (MyPLC), based on XMLRPC.
