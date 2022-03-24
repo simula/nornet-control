@@ -27,7 +27,9 @@ NorNet_LocalNode_Hostname='bjoernson.alpha.test'
 
 # This is the name of the NorNet interface (with the site's provider
 # networks) of the node:
-NorNet_LocalNode_NorNetInterface='eth0'
+NorNet_LocalNode_NorNetInterface='nornet'
+NorNet_LocalNode_NorNetInterfaceMatch='enp0s3'
+# NorNet_LocalNode_NorNetInterfaceMatch='08:00:27:99:28:04'
 
 # ###### NorNet system user #################################################
 # The NorNet user on this system. By default, it is 'nornetpp'.
@@ -58,7 +60,7 @@ NorNet_LocalSite_DefaultProviderIndex=255
 NorNet_LocalSite_TBDefaultProviderIPv4='172.16.1.2'
 
 # DNAT mappings for port mapping of external ports to internal systems:
-NorNet_LocalSite_DNAT_Options='"eth1 tcp 5060 192.168.1.1" "eth1 udp 5060 192.168.1.1" "eth2 tcp 5060 192.168.1.2" "eth2 udp 5060 192.168.1.2"'
+# NorNet_LocalSite_DNAT_Options='"eth1 tcp 5060 192.168.1.1" "eth1 udp 5060 192.168.1.1" "eth2 tcp 5060 192.168.1.2" "eth2 udp 5060 192.168.1.2"'
 
 # DHCP Configuration
 NorNet_LocalSite_DHCPServer_Dynamic='"40" "49"'
@@ -92,7 +94,7 @@ NorNet_Squid_TransparentProxy="off"
 # Blacklist (to prohibit e.g. devices phoning home):
 # NorNet_CentralSite_Blacklist="11.255.1.50"
 # =========================================================
- 
+
 
 # ###### Additional DNS names ###############################################
 # Add additional, non-managed nodes here.
@@ -105,9 +107,9 @@ NorNet_LocalSite_Node2='"ullevålseter"     "Amiga 8000"   "NorNet PLC"'
 NorNet_LocalSite_Alias2='"api" "boot" "db"'
 
 NorNet_LocalSite_Node3='"grefsenkollen"    "Amiga 8000"   "NorNet Monitor"'
-   
+
 NorNet_LocalSite_Node4='"kongleveien"      "Amiga 8000"   "NorNet File Server"'
-   
+
 NorNet_LocalSite_Node5='"rolfsbukta"       "Amiga 8000"   "NorNet Database"'
 
 NorNet_LocalSite_Node50='"vika"            "Amiga 8000"   "NorNet Node"'
