@@ -32,7 +32,7 @@ restore-file ()
          cp ${inputFile} ${outputFile}
       elif ! diff -q ${inputFile} ${outputFile} >/dev/null ; then
          echo "Updating ${inputFile} to ${outputFile} ..."
-         colordiff ${inputFile} ${outputFile}
+         colordiff ${outputFile} ${inputFile}
          cp ${inputFile} ${outputFile}
       fi
    else
