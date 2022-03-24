@@ -50,11 +50,11 @@ backup-file ()
 
 
 # ###### Main program #######################################################
-name=`hostname -s`
 fqdn=`hostname -f`
-sudo -u ${SUDO_USER} mkdir -p "${fqdn}"
+name="${fqdn/\.*/}"
 
-echo "Backup to ${fqdn} ... $SUDO_USER"
+echo "Backup to ${fqdn} ..."
+sudo -u ${SUDO_USER} mkdir -p "${fqdn}"
 for file in hosts hostname sysctl.conf netplan/${name}.yaml apt/sources.list systemd/resolved.conf ; do
    backup-file /etc/${file} ${fqdn} MANDATORY
 done
