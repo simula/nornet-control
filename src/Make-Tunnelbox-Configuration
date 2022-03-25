@@ -1003,8 +1003,11 @@ def makeSquidConfiguration(nodeName, localSite):
    outputFile.write('forwarded_for off\n\n')
 
    outputFile.write('# ================== Caching ===========================\n')
+   for squidDirectory in [ '/var/spool/squid3', '/var/spool/squid' ]:
+      if os.path.isdir(squidDirectory):
+         break
    outputFile.write('logformat squid %{%Y-%m-%dT%H:%M:%S}tl.%03tu %6tr %>a %Ss/%03>Hs %<st %rm %ru %un %Sh/%<A %mt\n')
-   outputFile.write('coredump_dir /var/spool/squid3\n')
+   outputFile.write('coredump_dir ' + squidDirectory + '\n')
    parentCache = getSquidParentCache()
    if parentCache != '':
       outputFile.write('cache_peer ' + parentCache + ' parent 3128 0 no-query default\n')
@@ -1012,7 +1015,7 @@ def makeSquidConfiguration(nodeName, localSite):
       outputFile.write('nonhierarchical_direct off\n')
    diskCacheSize = getSquidDiskCacheSize()
    if diskCacheSize > 0:
-      outputFile.write('cache_dir aufs /var/spool/squid3 ' + str(diskCacheSize) + ' 16 256\n')
+      outputFile.write('cache_dir aufs ' + squidDirectory + ' ' + str(diskCacheSize) + ' 16 256\n')
    memoryCacheSize = getSquidMemoryCacheSize()
    if memoryCacheSize < 32:
       memoryCacheSize = 32
