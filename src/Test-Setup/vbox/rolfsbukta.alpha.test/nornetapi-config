@@ -27,7 +27,9 @@ NorNet_LocalNode_Hostname='rolfsbukta.alpha.test'
 
 # This is the name of the NorNet interface (with the site's provider
 # networks) of the node:
-NorNet_LocalNode_NorNetInterface='eth0'
+NorNet_LocalNode_NorNetInterface='nornet'
+NorNet_LocalNode_NorNetInterfaceMatch='enp0s3'
+# NorNet_LocalNode_NorNetInterfaceMatch='08:00:27:99:28:04'
 
 # ###### NorNet system user #################################################
 # The NorNet user on this system. By default, it is 'nornetpp'.
