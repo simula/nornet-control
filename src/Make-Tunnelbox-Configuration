@@ -784,12 +784,12 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
 
    optionsConfFile.write("options {\n")
    optionsConfFile.write("\tdirectory          \"/var/cache/bind\";\n")
-   optionsConfFile.write("\tdnssec-enable      yes;\n")
+   optionsConfFile.write("// \tdnssec-enable      yes;\n")
    if getLocalSiteDNSValidateDNSSEC() == 'on':
       optionsConfFile.write("\tdnssec-validation  yes;\n")
    else:
       optionsConfFile.write("\tdnssec-validation  no;   // Setting for China!\n")
-   optionsConfFile.write("\tdnssec-lookaside   auto;\n")
+   optionsConfFile.write("// \tdnssec-lookaside   auto;\n")
    optionsConfFile.write("\tlisten-on          { any; };\n")
    optionsConfFile.write("\tlisten-on-v6       { any; };\n")
    optionsConfFile.write('\tallow-recursion    { nornet; };\n')
