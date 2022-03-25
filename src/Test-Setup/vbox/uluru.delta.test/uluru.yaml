@@ -18,7 +18,7 @@ network:
     enp0s8:
       match:
         name: enp0s8
-      set-name: isp1
+      set-name: eth1
       dhcp4: no
       accept-ra: no
       addresses:
@@ -57,7 +57,7 @@ network:
     enp0s9:
       match:
         name: enp0s9
-      set-name: isp2
+      set-name: eth2
       dhcp4: no
       accept-ra: no
       addresses:
