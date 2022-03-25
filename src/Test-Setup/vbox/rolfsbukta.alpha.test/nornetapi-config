@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# ###### NorNet PLC configuration ###########################################
+# NOTE:
+# The following information is needed to access the PLC at the Central Site.
+# It is mandatory for all NorNet PLC-database operations!
+
+# This is the address of the PLC and the Central Site:
+NorNetPLC_Address='11.255.1.2'
+
+# These are the user name and corresponding password for accessing the PLC.
+# SECURITY ADVICE:
+# Use a user with restricted access permissions. For most operations (e.g.
+# obtaining the node configurations), it is just sufficient to read the PLC
+# database. Only modifying the configuration needs a more "powerful" user!
+NorNetPLC_User='dummy@simula.nornet'   # 'dummy@simula.nornet'
+NorNetPLC_Password='dummy-password'    # 'dummy-password'
+
+
+# ###### NorNet Node configuration ##########################################
+# Node Index; needed,if if the node is not a PLC-managed node:
+# This is also the case for tunnelboxes (in this case: always 1)!
+NorNet_LocalNode_Index="5"
+
+# This is the full hostname of the node:
+NorNet_LocalNode_Hostname='rolfsbukta.alpha.test'
+
+# This is the name of the NorNet interface (with the site's provider
+# networks) of the node:
+NorNet_LocalNode_NorNetInterface='eth0'
+
+# ###### NorNet system user #################################################
+# The NorNet user on this system. By default, it is 'nornetpp'.
+# NorNet_LocalNode_NorNetUser='nornetpp'
