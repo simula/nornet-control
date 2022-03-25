@@ -1,0 +1,106 @@
+#        _                       _      _ _         _            _   
+#  _   _| |_   _ _ __ _   _   __| | ___| | |_ __ _ | |_ ___  ___| |_ 
+# | | | | | | | | '__| | | | / _` |/ _ \ | __/ _` || __/ _ \/ __| __|
+# | |_| | | |_| | |  | |_| || (_| |  __/ | || (_| || ||  __/\__ \ |_ 
+#  \__,_|_|\__,_|_|   \__,_(_)__,_|\___|_|\__\__,_(_)__\___||___/\__|
+#                                                                    
+
+network:
+  version: 2
+  renderer: networkd
+
+  # ###### Interfaces #######################################################
+  ethernets:
+    # ====== NorNet =========================================================
+    # NOTE: The NorNet interface is configured in nornet.yaml!
+
+    # ====== Provider One ===================================================
+    enp0s8:
+      match:
+        name: enp0s8
+      set-name: isp1
+      dhcp4: no
+      accept-ra: no
+      addresses:
+        - 172.16.4.2/24
+        - fd00:16:4::2/64
+      # ------ Routes --------------------------------------
+      routes:
+        - to: default
+          via: 172.16.4.1
+          metric: 5
+        - to: 172.16.4.0/24
+          scope: link
+          table: 1255
+        - to: default
+          via: 172.16.4.1
+          table: 1255
+        - to: default
+          via: fd00:16:4::1
+          metric: 5
+        - to: fd00:16:4::/64
+          scope: link
+          table: 1255
+        - to: default
+          via: fd00:16:4::1
+          table: 1255
+      # ------ Routing Policy ------------------------------
+      routing-policy:
+        - from: 172.16.4.0/24
+          table: 1255
+          priority: 355
+        - from: fd00:16:4::/64
+          table: 1255
+          priority: 355
+
+    # ====== Provider Two ===================================================
+    enp0s9:
+      match:
+        name: enp0s9
+      set-name: isp2
+      dhcp4: no
+      accept-ra: no
+      addresses:
+        - 172.17.4.2/24
+        - fd00:17:4::2/64
+      # ------ Routes --------------------------------------
+      routes:
+        - to: default
+          via: 172.17.4.1
+          metric: 10
+        - to: 172.17.4.0/24
+          scope: link
+          table: 1254
+        - to: default
+          via: 172.17.4.1
+          table: 1254
+        - to: default
+          via: fd00:17:4::1
+          metric: 10
+        - to: fd00:17:4::/64
+          scope: link
+          table: 1254
+        - to: default
+          via: fd00:17:4::1
+          table: 1254
+      # ------ Routing Policy ------------------------------
+      routing-policy:
+        - from: 172.17.4.0/24
+          table: 1254
+          priority: 355
+        - from: fd00:17:4::/64
+          table: 1254
+          priority: 355
+
+    # ====== Management =====================================================
+    enp0s10:
+      match:
+        name: enp0s10
+      set-name: oslomet
+      dhcp4: yes
+      dhcp4-overrides:
+        use-dns: true
+        use-routes: true
+        route-metric: 1234   # <-- Netplan also applied this to IPv6 RA routes!
+      dhcp-identifier: mac
+      accept-ra: yes
