@@ -6,7 +6,7 @@
 # It is mandatory for all NorNet PLC-database operations!
 
 # This is the address of the PLC and the Central Site:
-NorNetPLC_Address='FD00:CAFE:0:FF01:0:0:0:2' # 11.255.1.2'
+NorNetPLC_Address='ullevaalseter.alpha.test' # 11.255.1.2'
 
 # These are the user name and corresponding password for accessing the PLC.
 # SECURITY ADVICE:
