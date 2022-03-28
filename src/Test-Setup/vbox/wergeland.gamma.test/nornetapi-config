@@ -64,7 +64,6 @@ NorNet_LocalSite_TBDefaultProviderIPv4='172.16.3.2'
 
 # DHCP Configuration
 NorNet_LocalSite_DHCPServer_Dynamic='"40" "49"'
-# NorNet_LocalSite_DHCPServer_NodeNames='elefant fisk fugl hest hund katt løve mus orm tiger'
 
 #NorNet_LocalSite_DHCPServer_Static230='"20:4e:7f:6c:ee:03"'   # Netgear Switch
 
