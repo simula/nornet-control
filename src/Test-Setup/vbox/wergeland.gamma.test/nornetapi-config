@@ -57,7 +57,7 @@ NorNet_LocalSite_SiteIndex=3
 NorNet_LocalSite_DefaultProviderIndex=255
 
 # This is the local tunnelbox's outer IPv4 address for the default provider:
-NorNet_LocalSite_TBDefaultProviderIPv4='172.16.1.4'
+NorNetPLC_Address='ullevaalseter.alpha.test' # 11.255.1.2'
 
 # DNAT mappings for port mapping of external ports to internal systems:
 # NorNet_LocalSite_DNAT_Options='"eth1 tcp 5060 192.168.3.1" "eth1 udp 5060 192.168.3.1" "eth2 tcp 5060 192.168.3.2" "eth2 udp 5060 192.168.3.2"'
@@ -71,13 +71,13 @@ NorNet_LocalSite_DHCPServer_Dynamic='"40" "49"'
 NorNet_LocalSite_RADVDServer="on"
 
 # DNS Configuration:
-NorNet_LocalSite_DNS_Forwarders='"158.36.161.21" "158.36.161.20"'
+# NorNet_LocalSite_DNS_Forwarders='"158.36.161.21" "158.36.161.20"'
 
 # Squid Configuration:
 NorNet_Squid_MemoryCache=256
 NorNet_Squid_DiskCache=256
 NorNet_Squid_MaxObjectSize=256
-#NorNet_Squid_ParentCache="10.1.1.1"   # proxy.simula.nornet"
+# NorNet_Squid_ParentCache="10.1.1.1"   # proxy.simula.nornet"
 NorNet_Squid_TransparentProxy="off"
 
 
@@ -87,10 +87,5 @@ NorNet_Squid_TransparentProxy="off"
 # where <XXX> denotes the node index (i.e. 2 to 254).
 
 NorNet_LocalSite_Node50='"södermalm"   "Amiaga 8000"   "NorNet Node"'
-NorNet_LocalSite_SSHKeys50='
- "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICX5bi8jCoMg+ZJbg574AQF8d9Cy99PjSgMaKbxP8qhO"
- "ssh-rsa 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"
- "ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBAFlcnHQSbQevfbXncyjIc17K+WahtHpl+5Mjan7oPFtlj1LXxztR8lTlB5fVQmiOgIfdEZjA8lnm00+rrhdkHJXwACuqnf9EVgQBRD2nPc+PdZFBdVIUwfanXEB5Msc3GV9ekun+Q+tuv0pKIdLbuAp8SSZWv5BH8IDdwBFi3mv4rqMPA=="
- '
 
 NorNet_LocalSite_Node51='"norrmalm"    "Amiaga 8000"   "NorNet Node"'
