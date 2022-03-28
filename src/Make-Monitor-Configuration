@@ -265,7 +265,11 @@ def makeNagiosConfiguration(fullSiteList, fullNodeList):
 
 
 # ###### Main program #######################################################
-loginToPLC()
+try:
+   loginToPLC()
+except Exception as e:
+   sys.stderr.write('ERROR: ' + str(e) + '!\n')
+   sys.exit(1)
 fullSiteList = fetchNorNetSiteList(False)
 # NOTE: Site list also includes disabled sites!
 fullNodeList = fetchNorNetNodeList()

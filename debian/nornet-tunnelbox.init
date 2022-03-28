@@ -287,8 +287,12 @@ check_and_configure ()
       case "$ACTION" in
       start|stop|restart)
          echo -n "Performing $ACTION of $DESC: "
-         Tunnelbox-Setup "$ACTION" -providers "@ALL" -event "init script action: $ACTION" $@ >>$LOGFILE 2>&1 && \
-         echo "$NAME."
+         if [ -e /etc/nornet/tunnelbox-config ] ; then
+            Tunnelbox-Setup "$ACTION" -providers "@ALL" -event "init script action: $ACTION" $@ >>$LOGFILE 2>&1 && \
+            echo "$NAME."
+         else
+            echo "(not bootstrapped!)"
+         fi
          ;;
       force-reload)
          Tunnelbox-Setup coldstart -providers "@ALL" $@ >>$LOGFILE 2>&1

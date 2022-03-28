@@ -213,7 +213,11 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
 
 
 # ###### Main program #######################################################
-loginToPLC()
+try:
+   loginToPLC()
+except Exception as e:
+   sys.stderr.write('ERROR: ' + str(e) + '!\n')
+   sys.exit(1)
 
 fullSiteList = fetchNorNetSiteList(False)
 # NOTE: Site list also includes disabled sites!
