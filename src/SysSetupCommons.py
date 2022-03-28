@@ -166,7 +166,9 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
          outputFile.write('  bridges:\n')
          outputFile.write('    ' + bridgeInterface + ':\n')
 
-      for stage in [ 'addresses', 'routes', 'routing-policy', 'nameservers' ]:
+      for stage in [ 'addresses',
+                     # 'routes', 'routing-policy',
+                     'nameservers' ]:
 
          # ====== Begin address configuration ===============================
          if stage == 'addresses':
