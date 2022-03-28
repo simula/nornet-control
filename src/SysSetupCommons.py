@@ -177,13 +177,15 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
 
          # ====== Begin routes configuration ================================
          elif stage == 'routes':
-            outputFile.write('\n      # ====== Routes =======================================================\n')
-            outputFile.write('      routes:\n')
+            if nodeIndex != NorNet_NodeIndex_Tunnelbox:
+               outputFile.write('\n      # ====== Routes =======================================================\n')
+               outputFile.write('      routes:\n')
 
          # ====== Begin routing policy configuration ========================
          elif stage == 'routing-policy':
-            outputFile.write('\n      # ====== Routing Policy ===============================================\n')
-            outputFile.write('      routing-policy:\n')
+            if nodeIndex != NorNet_NodeIndex_Tunnelbox:
+               outputFile.write('\n      # ====== Routing Policy ===============================================\n')
+               outputFile.write('      routing-policy:\n')
 
          # ====== Begin DNS configuration ===================================
          elif stage == 'nameservers':
@@ -199,7 +201,9 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                if ( ((onlyDefault == True)  and (providerIndex == defaultProviderIndex)) or \
                     ((onlyDefault == False) and (providerIndex != defaultProviderIndex)) ):
                   if (stage == 'addresses') or (stage == 'routes') or (stage == 'routing-policy'):
-                     outputFile.write('        # ------ ISP #' + str(providerIndex) + '-----------------------------------\n')
+                     if (stage == 'addresses') or \
+                        (nodeIndex != NorNet_NodeIndex_Tunnelbox):
+                        outputFile.write('        # ------ ISP #' + str(providerIndex) + '-----------------------------------\n')
                   #if stage == 'routes':
                      #outputFile.write('        # ~~~~~~ Table main ~~~~~~~~~~~~~~~~~~\n')
 
@@ -225,22 +229,24 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
 
                      # ====== Write route configuration =====================
                      elif stage == 'routes':
-                        outputFile.write('        - to: ' + str(network) + '\n')
-                        outputFile.write('          via: ' + str(gateway.ip) + '\n')
-                        outputFile.write('          metric: ' + str(metric) + '\n')
+                        if nodeIndex != NorNet_NodeIndex_Tunnelbox:
+                           outputFile.write('        - to: ' + str(network) + '\n')
+                           outputFile.write('          via: ' + str(gateway.ip) + '\n')
+                           outputFile.write('          metric: ' + str(metric) + '\n')
 
-                        outputFile.write('        - to: ' + str(address.network) + '\n')
-                        outputFile.write('          scope: link\n')
-                        outputFile.write('          table: ' + str(table) + '\n')
-                        outputFile.write('        - to: ' + str(network) + '\n')
-                        outputFile.write('          via: ' + str(gateway.ip) + '\n')
-                        outputFile.write('          table: ' + str(table) + '\n')
+                           outputFile.write('        - to: ' + str(address.network) + '\n')
+                           outputFile.write('          scope: link\n')
+                           outputFile.write('          table: ' + str(table) + '\n')
+                           outputFile.write('        - to: ' + str(network) + '\n')
+                           outputFile.write('          via: ' + str(gateway.ip) + '\n')
+                           outputFile.write('          table: ' + str(table) + '\n')
 
                      # ====== Write routing policy configuration ============
                      elif stage == 'routing-policy':
-                        outputFile.write('        - from: ' + str(address.network) + '\n')
-                        outputFile.write('          table: ' + str(table) + '\n')
-                        outputFile.write('          priority: ' + str(priority) + '\n')
+                        if nodeIndex != NorNet_NodeIndex_Tunnelbox:
+                           outputFile.write('        - from: ' + str(address.network) + '\n')
+                           outputFile.write('          table: ' + str(table) + '\n')
+                           outputFile.write('          priority: ' + str(priority) + '\n')
 
                      # ====== Write DNS configuration =======================
                      elif stage == 'nameservers':
