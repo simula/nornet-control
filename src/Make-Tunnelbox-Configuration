@@ -1631,7 +1631,11 @@ def makeFlingConfiguration(localSite):
 
 
 # ====== Get configuration ==================================================
-loginToPLC()
+try:
+   loginToPLC()
+except Exception as e:
+   sys.stderr.write('ERROR: ' + str(e) + '!\n')
+   sys.exit(1)
 fullSiteList = fetchNorNetSiteList(False)
 localSite    = None
 try:
