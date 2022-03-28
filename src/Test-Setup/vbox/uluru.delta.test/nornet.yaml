@@ -25,10 +25,9 @@ network:
         - fd00:cafe:0:ff04::1/64
 
       # ====== DNS Servers ==================================================
-#      nameservers:
-#        addresses:
-#          - 11.255.4.1
-#          - fd00:cafe:0:ff04::1
-#        search:
-#          - delta.test
-#          - test
+      nameservers:
+        addresses:
+          - ::1
+        search:
+          - delta.test
+          - test
