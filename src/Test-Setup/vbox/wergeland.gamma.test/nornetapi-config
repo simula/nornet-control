@@ -6,7 +6,7 @@
 # It is mandatory for all NorNet PLC-database operations!
 
 # This is the address of the PLC and the Central Site:
-NorNetPLC_Address='11.255.1.2'
+NorNetPLC_Address='ullevaalseter.alpha.test' # 11.255.1.2'
 
 # These are the user name and corresponding password for accessing the PLC.
 # SECURITY ADVICE:
@@ -57,7 +57,7 @@ NorNet_LocalSite_SiteIndex=3
 NorNet_LocalSite_DefaultProviderIndex=255
 
 # This is the local tunnelbox's outer IPv4 address for the default provider:
-NorNetPLC_Address='ullevaalseter.alpha.test' # 11.255.1.2'
+NorNet_LocalSite_TBDefaultProviderIPv4='172.16.3.2'
 
 # DNAT mappings for port mapping of external ports to internal systems:
 # NorNet_LocalSite_DNAT_Options='"eth1 tcp 5060 192.168.3.1" "eth1 udp 5060 192.168.3.1" "eth2 tcp 5060 192.168.3.2" "eth2 udp 5060 192.168.3.2"'
