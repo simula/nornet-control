@@ -245,7 +245,7 @@ make-tunnel ()
       done
    fi
    # Configure an address and turn the interface up
-   if [[ "innerLocalIP" =~ : ]] ; then
+   if [[ "$innerLocalIP" =~ : ]] ; then
       nodadOption="nodad"
    else
       nodadOption=""
