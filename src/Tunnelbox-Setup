@@ -353,7 +353,7 @@ make-address ()
    if [ "v6option" == "-6" ] ; then
       ip $v6option addr add $address dev $interface valid_lft forever nodad
    fi
-   ip link set up dev eth0
+   ip link set up dev $interface
 }
 
 
