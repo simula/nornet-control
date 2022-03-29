@@ -38,7 +38,7 @@ for siteIndex in siteList:
 
 if len(sys.argv) > 1:
    print('{0:3s} {1:1s} {2:8s} {3:36s} {4:4s} {5:25s} {6:25s} {7:9s} {8:10s} {9:12s} {10:42s} {11:20s} {12:s}'.format(
-      'ID', 'A', 'SSN', 'SiteLongName', 'CC', 'Province', 'City', 'Lat', 'Lon', 'PSN', 'ProviderLongName', 'IPv4', 'IPv6'
+      'ID', 'A', 'SSN', 'SiteLongName', 'CC', 'Province', 'City', 'Lat', 'Lon', 'PSN', 'ProviderLongName', 'IPv4', 'IPv6', 'Downlink', 'Uplink'
    ))
 
 for siteIndex in sorted(siteIndexList):
