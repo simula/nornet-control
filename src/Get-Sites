@@ -29,7 +29,7 @@ from NorNetAPI       import *
 # ###### Main program #######################################################
 loginToPLC(quietMode = True)
 
-siteList = fetchNorNetSite(None, False)
+siteList = fetchNorNetSite(None, True)
 
 
 siteIndexList = []
@@ -58,7 +58,7 @@ for siteIndex in sorted(siteIndexList):
             externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
             externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
 
-            print('{0:3d} {1:1d} {2:8s} {3:36s} {4:2s} {5:25s} {6:25s} {7:s} {8:s} {9:12s} {10:42s} {11:20s} {12:s}'.format(
+            print('{0:3d} {1:1d} {2:8s} {3:36s} {4:2s} {5:25s} {6:25s} {7:s} {8:s} {9:12s} {10:42s} {11:20s} {12:s} {13:9d} {14:9d}'.format(
                      int(site['site_index']),
                      int(siteEnabled),
                      '"' + str(site['site_short_name']) + '"',
@@ -71,5 +71,10 @@ for siteIndex in sorted(siteIndexList):
                      '"' + provider['provider_short_name'] + '"',
                      '"' + provider['provider_long_name']  + '"',
                      '"' + str(externalNetworkIPv4) + '"',
-                     '"' + str(externalNetworkIPv6) + '"'
+                     '"' + str(externalNetworkIPv6) + '"',
+                     int(provider['provider_downstream']),
+                     int(provider['provider_upstream'])
                   ))
+
+#            print(siteTagsList)
+            
