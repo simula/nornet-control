@@ -428,10 +428,7 @@ Depends: ifupdown,
          ${misc:Depends},
          ${python3:Depends},
          ${shlibs:Depends}
-Recommends: amd64-microcode,
-            intel-microcode,
-            lm-sensors,
-            nornet-ca,
+Recommends: nornet-ca,
             ubuntu-server
 Description: Server tools for the NorNet system environment
  This package contains the scripts to configure a generic server system

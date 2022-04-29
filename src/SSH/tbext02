@@ -1,3 +1,3 @@
 #!/bin/sh
-echo "Connecting to Tunnelbox of Universitetet i Oslo (129.240.66.74) ..."
-ssh -C nornetpp@129.240.66.74
+echo "Connecting to Tunnelbox of Universitetet i Oslo (158.36.184.156) ..."
+ssh -C nornetpp@158.36.184.156
