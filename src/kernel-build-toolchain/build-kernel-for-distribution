@@ -47,6 +47,13 @@ echo "RSync'ing sources ..."
 echo "rsync -a --delete --exclude .git ${HOME}/src/multipath/mptcp-kernel/ ${BUILD_DIRECTORY}/"
 rsync -a --delete --exclude .git ${HOME}/src/multipath/mptcp-kernel/ ${BUILD_DIRECTORY}/
 
+# ------ Mark kernel as "offtree" (development) or "next" (mainline) --------
+if grep -q -E "^#define MPTCP_VERSION_0" include/net/mptcp.h ; then
+   LOCALVERSION="${LOCALVERSION}-offtree"
+else
+   LOCALVERSION="${LOCALVERSION}-next"
+fi
+
 # ------ Remove old packages ------------------------------------------------
 echo "Removing old results ..."
 mkdir -p ${RESULTS_DIRECTORY}
