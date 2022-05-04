@@ -1,0 +1,67 @@
+#!/bin/bash -e
+
+URLs="
+   git://git.onelab.eu/lxc-userspace.git
+   git://git.onelab.eu/transforward.git
+   git://git.onelab.eu/comgt.git
+   git://git.onelab.eu/nodeupdate.git
+   git://git.onelab.eu/pingofdeath.git
+   git://git.onelab.eu/plnode-utils.git
+   git://git.onelab.eu/nodemanager.git
+   git://git.onelab.eu/pl_sshd.git
+   git://git.onelab.eu/codemux.git
+   git://git.onelab.eu/libvirt.git
+   git://git.onelab.eu/libvirt-python.git
+   git://git.onelab.eu/pf2slice.git
+   git://git.onelab.eu/inotify-tools.git
+   git://git.onelab.eu/vsys.git
+   git://git.onelab.eu/vsys-scripts.git
+   git://git.onelab.eu/bind_public.git
+   git://git.onelab.eu/sliver-openvswitch.git
+   git://git.onelab.eu/plcapi.git
+   git://git.onelab.eu/drupal.git
+   git://git.onelab.eu/plewww.git
+   git://git.onelab.eu/www-register-wizard.git
+   git://git.onelab.eu/monitor
+   git://git.onelab.eu/plcrt.git
+   git://git.onelab.eu/nodeconfig.git
+   git://git.onelab.eu/bootmanager.git
+   git://git.onelab.eu/pypcilib.git
+   git://git.onelab.eu/pyplnet.git
+   git://git.onelab.eu/pcucontrol.git
+   git://git.onelab.eu/bootcd.git
+   git://git.onelab.eu/sliceimage.git
+   git://git.onelab.eu/nodeimage.git
+   git://git.onelab.eu/myplc.git
+   git://git.onelab.eu/sfa.git
+   git://git.onelab.eu/tests.git
+"
+
+mkdir -p sync
+for url in ${URLs} ; do
+   repository=`echo "${url}" | sed -e "s#.*/##" -e "s/\.git$//"`
+   echo ""
+   echo -e "\x1b[34m====== Processing: ${repository} ======\x1b[0m"
+   echo ""
+
+   origin=`echo "git@github.com:dreibh/planetlab-lxc-${repository}.git" | sed -e "s/lxc-lxc-/lxc-/g"`
+   upstream="${url}"
+
+   if [ ! -e sync/${repository} ] ; then
+      mkdir sync/${repository}
+      cd sync/${repository}
+      git init
+      git remote add origin ${origin}
+      git remote add upstream ${upstream}
+   else
+      cd sync/${repository}
+   fi
+
+   git fetch --all
+   git checkout master || git checkout --track origin/master
+   git merge upstream/master
+   git push origin --all
+   git push origin --tags
+
+   cd ../..
+done
