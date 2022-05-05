@@ -4,6 +4,7 @@ URLs="
    git://git.onelab.eu/lxc-userspace.git
    git://git.onelab.eu/transforward.git
    git://git.onelab.eu/comgt.git
+   git://git.onelab.eu/planetlab-umts-tools.git
    git://git.onelab.eu/nodeupdate.git
    git://git.onelab.eu/pingofdeath.git
    git://git.onelab.eu/plnode-utils.git
