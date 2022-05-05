@@ -1,6 +1,8 @@
 #!/bin/bash -e
 
 URLs="
+   git://git.onelab.eu/build.git
+
    git://git.onelab.eu/lxc-userspace.git
    git://git.onelab.eu/transforward.git
    git://git.onelab.eu/comgt.git
