@@ -78,6 +78,8 @@ Requires: curl
 Requires: ethtool
 Requires: fail2ban
 Requires: gawk
+Requires: gcc
+Requires: gcc-c++
 Requires: git
 Requires: gpm
 Requires: hping3
@@ -93,9 +95,9 @@ Requires: net-snmp-utils
 Requires: net-tools
 Requires: nmap
 Requires: (ntpsec or ntpdate)
+Requires: pigz
 Requires: pwgen
 Requires: pxz
-Requires: reprepro
 Requires: rsplib-docs
 Requires: rsplib-services
 Requires: rsplib-tools
@@ -260,6 +262,7 @@ Requires: python3-pymongo
 Requires: qemu-user-static
 Requires: quilt
 Requires: R-base
+Requires: reprepro
 Requires: rpm
 Requires: texlive-epstopdf-bin
 Requires: urw-base35-fonts
