@@ -95,7 +95,6 @@ Requires: nmap
 Requires: (ntpsec or ntpdate)
 Requires: pwgen
 Requires: pxz
-Requires: reprepro
 Requires: rsplib-docs
 Requires: rsplib-services
 Requires: rsplib-tools
@@ -260,6 +259,7 @@ Requires: python3-pymongo
 Requires: qemu-user-static
 Requires: quilt
 Requires: R-base
+Requires: reprepro
 Requires: rpm
 Requires: texlive-epstopdf-bin
 Requires: urw-base35-fonts
