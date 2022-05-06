@@ -78,6 +78,8 @@ Requires: curl
 Requires: ethtool
 Requires: fail2ban
 Requires: gawk
+Requires: gcc
+Requires: gcc-c++
 Requires: git
 Requires: gpm
 Requires: hping3
@@ -93,6 +95,7 @@ Requires: net-snmp-utils
 Requires: net-tools
 Requires: nmap
 Requires: (ntpsec or ntpdate)
+Requires: pigz
 Requires: pwgen
 Requires: pxz
 Requires: rsplib-docs
