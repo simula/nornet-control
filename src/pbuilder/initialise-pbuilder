@@ -39,14 +39,21 @@ create-pbuilder ()
          (
             echo "OS=${os} DIST=${dist} ARCH=${arch}"
             sudo OS=${os} DIST=${dist} ARCH=${arch} pbuilder create | \
-               grep -v "^I: Retrieving\|^I: Validating\|^I: Unpacking\|^I: Extracting\|^I: Configuring\|^I: new cache content"
-            if [ "${OS}" == "ubuntu" ] ; then
+               ( grep -v "^I: Retrieving\|^I: Validating\|^I: Unpacking\|^I: Extracting\|^I: Configuring\|^I: new cache content" || true )
+
                sudo OS=$1 DIST=$2 ARCH=$3 pbuilder login --save-after-login <<EOF
-apt-get install -qqy software-properties-common
-apt-add-repository -y ppa:dreibh/ppa
-apt-get update -q
+# No need for sync:
+echo "force-unsafe-io" >/etc/dpkg/dpkg.cfg.d/force-unsafe-io
+# Add PPA for Ubuntu:
+if [ "${OS}" == "ubuntu" ] ; then
+   apt-get install -qy software-properties-common
+   apt-add-repository -y ppa:dreibh/ppa
+   apt-get update -q
+fi
+# Install common build tools:
+apt-get install -qy build-essential debhelper cmake
 EOF
-            fi
+
          ) >${logfile} 2>&1
 
          finishTime=`date +%FT%H:%M:%S`
@@ -87,6 +94,8 @@ fi
 
 # ====== Ubuntu =============================================================
 create-pbuilder ubuntu jammy  amd64
+create-pbuilder ubuntu jammy  arm64
+
 create-pbuilder ubuntu focal  amd64
 create-pbuilder ubuntu bionic amd64
 
@@ -94,6 +103,7 @@ create-pbuilder ubuntu bionic amd64
 # ====== Debian =============================================================
 create-pbuilder debian bookworm amd64
 create-pbuilder debian bullseye amd64
+create-pbuilder debian bullseye arm64
 create-pbuilder debian buster   amd64
 
 create-pbuilder debian unstable amd64
