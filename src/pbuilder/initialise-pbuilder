@@ -97,16 +97,24 @@ create-pbuilder ubuntu jammy  amd64
 create-pbuilder ubuntu jammy  arm64
 
 create-pbuilder ubuntu focal  amd64
+create-pbuilder ubuntu focal  arm64
+
 create-pbuilder ubuntu bionic amd64
+create-pbuilder ubuntu bionic arm64
 
 
 # ====== Debian =============================================================
 create-pbuilder debian bookworm amd64
+create-pbuilder debian bookworm arm64
+
 create-pbuilder debian bullseye amd64
 create-pbuilder debian bullseye arm64
+
 create-pbuilder debian buster   amd64
+create-pbuilder debian buster   arm64
 
 create-pbuilder debian unstable amd64
+create-pbuilder debian unstable arm64
 create-pbuilder debian unstable i386
 
 create-pbuilder debian unstable arm64
