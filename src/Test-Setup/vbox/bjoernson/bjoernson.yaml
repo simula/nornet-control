@@ -24,6 +24,11 @@ network:
       addresses:
         - 172.16.1.2/24
         - fd00:16:1::2/64
+      routes:
+        - to: 172.16.0.0/16
+          via: 172.16.1.1
+        - to: fd00:16::/32
+          via: fd00:16:1::1
 
     # ====== Provider Two ===================================================
     enp0s9:
@@ -35,6 +40,11 @@ network:
       addresses:
         - 172.17.1.2/24
         - fd00:17:1::2/64
+      routes:
+        - to: 172.17.0.0/16
+          via: 172.17.1.1
+        - to: fd00:17::/32
+          via: fd00:17:1::1
 
     # ====== Management =====================================================
     enp0s10:
@@ -44,6 +54,17 @@ network:
       dhcp4: yes
       dhcp4-overrides:
         use-dns: true
-        use-routes: false
+        use-routes: true
       dhcp-identifier: mac
-      accept-ra: no
+      accept-ra: yes
+
+
+#  tunnels:
+#    test1:
+#      mode: gre
+#      local: 172.16.1.2
+#      remote: 172.16.4.2
+#      key: 12345678
+#      mtu: 1476
+#      addresses:
+#        - 192.168.254.1/24
