@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ $# -lt 1 ] ; then
+   echo >&2 "Usage: $0 ilo_instance"
+   exit 1
+fi
+
+ssh -oKexAlgorithms=diffie-hellman-group1-sha1 -oMACs=hmac-sha2-256 Administrator@$1
