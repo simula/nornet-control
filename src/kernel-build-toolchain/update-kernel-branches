@@ -24,7 +24,7 @@ set -e
 
 
 KERNEL_DIRECTORY=${HOME}/src/multipath/mptcp-kernel
-VARIANTS="td-socketoptions-v0.96 td-socketoptions-v0.95"
+VARIANTS="td-socketoptions-v0.95 td-socketoptions-v0.96"
 
 
 cd ${KERNEL_DIRECTORY}

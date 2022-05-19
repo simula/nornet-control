@@ -32,7 +32,7 @@ restore-file ()
          cp ${inputFile} ${outputFile}
       elif ! diff -q ${inputFile} ${outputFile} >/dev/null ; then
          echo "Updating ${inputFile} to ${outputFile} ..."
-         colordiff ${inputFile} ${outputFile}
+         colordiff ${outputFile} ${inputFile}
          cp ${inputFile} ${outputFile}
       fi
    else
@@ -48,34 +48,35 @@ restore-file ()
 
 # ###### Main program #######################################################
 if [ $# -lt 1 ] ; then
-   name=`hostname -s`
+   fqdn=`hostname -f`
 else
-   name="$1"
+   fqdn="$1"
 fi
+name="${fqdn/\.*/}"
 
-echo "Restore from ${name} ..."
-if [ ! -e "${name}" ] ; then
-   echo >&2 "ERROR: ${name} does not exist!"
+echo "Restore from ${fqdn} ..."
+if [ ! -e "${fqdn}" ] ; then
+   echo >&2 "ERROR: ${fqdn} does not exist!"
    exit 1
 fi
 
 for file in hosts hostname sysctl.conf ; do
-   restore-file ${name}/${file} /etc MANDATORY
+   restore-file ${fqdn}/${file} /etc MANDATORY
 done
 for file in rc.local ; do
-   restore-file ${name}/${file} /etc
+   restore-file ${fqdn}/${file} /etc
 done
-restore-file ${name}/nornet.yaml  /etc/netplan
-restore-file ${name}/${name}.yaml /etc/netplan
-if [ -e /etc/netplan/${name}.yaml ] ; then
+restore-file ${fqdn}/nornet.yaml  /etc/netplan
+restore-file ${fqdn}/${name}.yaml /etc/netplan
+if [ -e /etc/netplan/${name}.yaml -o /etc/netplan/nornet.yaml ] ; then
    rm -f /etc/netplan/00-installer-config.yaml
 fi
-restore-file ${name}/sources.list /etc/apt
-restore-file ${name}/systemd/resolved.conf /etc/systemd
+restore-file ${fqdn}/sources.list /etc/apt
+restore-file ${fqdn}/systemd/resolved.conf /etc/systemd
 for file in nornetapi-config nornetapi-constants ; do
-   restore-file ${name}/${file} /etc/nornet
+   restore-file ${fqdn}/${file} /etc/nornet
 done
 
-cp ${name}/sudoers /etc
+cp ${fqdn}/sudoers /etc
 chown root:root /etc/sudoers
 chmod 440 /etc/sudoers

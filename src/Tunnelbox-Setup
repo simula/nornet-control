@@ -245,10 +245,15 @@ make-tunnel ()
       done
    fi
    # Configure an address and turn the interface up
-   if [ "$innerV6option" = "" ] ; then
-      ip addr add $innerLocalIP peer $innerRemoteIP dev $interface valid_lft forever nodad || success=0
+   if [[ "$innerLocalIP" =~ : ]] ; then
+      nodadOption="nodad"
    else
-      ip $innerV6option addr add $innerLocalIP/$innerPrefixLength dev $interface valid_lft forever nodad || success=0
+      nodadOption=""
+   fi
+   if [ "$innerV6option" = "" ] ; then
+      ip addr add $innerLocalIP peer $innerRemoteIP dev $interface valid_lft forever $nodadOption || success=0
+   else
+      ip $innerV6option addr add $innerLocalIP/$innerPrefixLength dev $interface valid_lft forever $nodadOption || success=0
    fi
    ip link set dev $interface up
    ip link set dev $interface mtu $TUNNEL_MTU
@@ -344,9 +349,11 @@ make-address ()
       v6option="-6"
    fi
 
-   remove-address $interface $address
-   ip $v6option addr add $address dev $interface valid_lft forever nodad
-   ip link set up dev eth0
+   remove-address $interface $address   
+   if [ "v6option" == "-6" ] ; then
+      ip $v6option addr add $address dev $interface valid_lft forever nodad
+   fi
+   ip link set up dev $interface
 }
 
 

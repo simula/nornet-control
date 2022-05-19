@@ -140,11 +140,12 @@ check_and_configure ()
       # ====== Apply DNS update =============================================
       rm -f zones.conf *.db
       mv updated-tunnelbox-config/named.conf.options updated-tunnelbox-config/zones.conf updated-tunnelbox-config/*.db .
-      
+
       # Compare existing and new configuration. Ignore lines with "; Serial",
       # since they are always updated by Make-Tunnelbox-Configuration.
-      oldDnsFilesSum=`ls /etc/bind/named.conf.options /etc/bind/zones.conf /etc/bind/*.db | xargs cat | grep -v "; Serial" | md5sum`
-      newDnsFilesSum=`ls           named.conf.options           zones.conf           *.db | xargs cat | grep -v "; Serial" | md5sum`
+
+      oldDnsFilesSum=`find /etc/bind -name 'named.conf.options' -or -name 'zones.conf' -or -name '*.db' | sort | xargs cat | grep -v "; Serial" | md5sum`
+      newDnsFilesSum=`find .         -name 'named.conf.options' -or -name 'zones.conf' -or -name '*.db' | sort | xargs cat | grep -v "; Serial" | md5sum`
       # echo "old=$oldDnsFilesSum new=$newDnsFilesSum  $1"
       if [ "$1" = "-update-all" -o "$oldDnsFilesSum" != "$newDnsFilesSum" ] ; then
          find /etc/bind -name zones.conf | xargs --no-run-if-empty rm -f
@@ -286,8 +287,12 @@ check_and_configure ()
       case "$ACTION" in
       start|stop|restart)
          echo -n "Performing $ACTION of $DESC: "
-         Tunnelbox-Setup "$ACTION" -providers "@ALL" -event "init script action: $ACTION" $@ >>$LOGFILE 2>&1 && \
-         echo "$NAME."
+         if [ -e /etc/nornet/tunnelbox-config ] ; then
+            Tunnelbox-Setup "$ACTION" -providers "@ALL" -event "init script action: $ACTION" $@ >>$LOGFILE 2>&1 && \
+            echo "$NAME."
+         else
+            echo "(not bootstrapped!)"
+         fi
          ;;
       force-reload)
          Tunnelbox-Setup coldstart -providers "@ALL" $@ >>$LOGFILE 2>&1

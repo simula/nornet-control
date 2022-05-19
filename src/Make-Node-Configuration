@@ -428,7 +428,11 @@ distribution  = sys.argv[3]
 
 
 # ====== Get configuration ==================================================
-loginToPLC()
+try:
+   loginToPLC()
+except Exception as e:
+   sys.stderr.write('ERROR: ' + str(e) + '!\n')
+   sys.exit(1)
 fullSiteList = fetchNorNetSiteList(False)
 
 localNode = fetchNorNetNode(fqdn)
@@ -466,7 +470,8 @@ writeSysctlConfiguration('sysctl-config', getLocalNodeNorNetInterface())
 writeInterfaceConfiguration('', distribution, interfaceName,
                             NorNet_Configuration['NorNet_LocalNode_ControlBox'],
                             localNode['node_name'], localSite['site_domain'], localNode['node_index'], localSite['site_index'],
-                            providerList, localSite['site_default_provider_index'])
+                            providerList, localSite['site_default_provider_index'],
+                            matchInterface = getLocalNodeNorNetInterfaceMatch())
 writeProxyConfiguration('', localSite['site_domain'], distribution,
                         False)   # Use tunnelbox's proxy!
 

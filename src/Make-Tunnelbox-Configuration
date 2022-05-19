@@ -784,12 +784,12 @@ def makeBindConfiguration(fullSiteList, fullNodeList, fullSliceList,
 
    optionsConfFile.write("options {\n")
    optionsConfFile.write("\tdirectory          \"/var/cache/bind\";\n")
-   optionsConfFile.write("\tdnssec-enable      yes;\n")
+   optionsConfFile.write("// \tdnssec-enable      yes;\n")
    if getLocalSiteDNSValidateDNSSEC() == 'on':
       optionsConfFile.write("\tdnssec-validation  yes;\n")
    else:
       optionsConfFile.write("\tdnssec-validation  no;   // Setting for China!\n")
-   optionsConfFile.write("\tdnssec-lookaside   auto;\n")
+   optionsConfFile.write("// \tdnssec-lookaside   auto;\n")
    optionsConfFile.write("\tlisten-on          { any; };\n")
    optionsConfFile.write("\tlisten-on-v6       { any; };\n")
    optionsConfFile.write('\tallow-recursion    { nornet; };\n')
@@ -1003,8 +1003,11 @@ def makeSquidConfiguration(nodeName, localSite):
    outputFile.write('forwarded_for off\n\n')
 
    outputFile.write('# ================== Caching ===========================\n')
+   for squidDirectory in [ '/var/spool/squid3', '/var/spool/squid' ]:
+      if os.path.isdir(squidDirectory):
+         break
    outputFile.write('logformat squid %{%Y-%m-%dT%H:%M:%S}tl.%03tu %6tr %>a %Ss/%03>Hs %<st %rm %ru %un %Sh/%<A %mt\n')
-   outputFile.write('coredump_dir /var/spool/squid3\n')
+   outputFile.write('coredump_dir ' + squidDirectory + '\n')
    parentCache = getSquidParentCache()
    if parentCache != '':
       outputFile.write('cache_peer ' + parentCache + ' parent 3128 0 no-query default\n')
@@ -1012,7 +1015,7 @@ def makeSquidConfiguration(nodeName, localSite):
       outputFile.write('nonhierarchical_direct off\n')
    diskCacheSize = getSquidDiskCacheSize()
    if diskCacheSize > 0:
-      outputFile.write('cache_dir aufs /var/spool/squid3 ' + str(diskCacheSize) + ' 16 256\n')
+      outputFile.write('cache_dir aufs ' + squidDirectory + ' ' + str(diskCacheSize) + ' 16 256\n')
    memoryCacheSize = getSquidMemoryCacheSize()
    if memoryCacheSize < 32:
       memoryCacheSize = 32
@@ -1628,7 +1631,11 @@ def makeFlingConfiguration(localSite):
 
 
 # ====== Get configuration ==================================================
-loginToPLC()
+try:
+   loginToPLC()
+except Exception as e:
+   sys.stderr.write('ERROR: ' + str(e) + '!\n')
+   sys.exit(1)
 fullSiteList = fetchNorNetSiteList(False)
 localSite    = None
 try:
@@ -1766,7 +1773,8 @@ if ((dynamicConfiguration != None) and (dynamicConfiguration != '')):
       additionalNodes.append(makeNodeForDNS(dhcpName, localSite, i,
                                             'NorNet Node', 'DHCP, dynamic entry ' + str(j) + '/' + str(dynamicEnd + 1 - dynamicStart),
                                             [ 'def-v4only' ]))
-      aliases[i] = [ simpleDhcpName ]
+      if dhcpName != simpleDhcpName:
+         aliases[i] = [ simpleDhcpName ]
       j = j + 1
 
 

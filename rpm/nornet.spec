@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.5.19
+Version: 1.5.21
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -78,6 +78,8 @@ Requires: curl
 Requires: ethtool
 Requires: fail2ban
 Requires: gawk
+Requires: gcc
+Requires: gcc-c++
 Requires: git
 Requires: gpm
 Requires: hping3
@@ -93,9 +95,9 @@ Requires: net-snmp-utils
 Requires: net-tools
 Requires: nmap
 Requires: (ntpsec or ntpdate)
+Requires: pigz
 Requires: pwgen
 Requires: pxz
-Requires: reprepro
 Requires: rsplib-docs
 Requires: rsplib-services
 Requires: rsplib-tools
@@ -260,6 +262,7 @@ Requires: python3-pymongo
 Requires: qemu-user-static
 Requires: quilt
 Requires: R-base
+Requires: reprepro
 Requires: rpm
 Requires: texlive-epstopdf-bin
 Requires: urw-base35-fonts
@@ -291,6 +294,7 @@ Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Recommends: figlet
 
 %description api
 This package contains the NorNet Python API library. It contains functions
@@ -827,6 +831,10 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %changelog
+* Fri May 13 2022 Thomas Dreibholz <dreibh@simula.no> - 1.5.21
+- New upstream release.
+* Mon Mar 21 2022 Thomas Dreibholz <dreibh@simula.no> - 1.5.20
+- New upstream release.
 * Wed Feb 16 2022 Thomas Dreibholz <dreibh@simula.no> - 1.5.19
 - New upstream release.
 * Tue Feb 08 2022 Thomas Dreibholz <dreibh@simula.no> - 1.5.18

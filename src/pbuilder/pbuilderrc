@@ -40,7 +40,11 @@ DISTRIBUTION="${DIST}"
 COMPONENTS="main universe"
 if [ "${OS}" == "ubuntu" ] ; then
    COMPONENTS="main universe"
-   MIRRORSITE=http://no.archive.ubuntu.com/ubuntu/
+   if [ "${ARCH}" == "amd64" -o  "${ARCH}" == "i386" ] ; then
+      MIRRORSITE="http://no.archive.ubuntu.com/ubuntu/"
+   else
+      MIRRORSITE="http://ports.ubuntu.com/ubuntu-ports/"
+   fi
    KEYRING="/usr/share/keyrings/ubuntu-archive-keyring.gpg"
 elif [ "${OS}" == "debian" ] ; then
    if [ "${ARCH}" == "m68k" -o  "${ARCH}" == "riscv64" ] ; then

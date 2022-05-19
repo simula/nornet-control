@@ -1,3 +1,321 @@
+commit 02198f145dde8e41bd8cf0b8cf2ee1afc39ed140
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu May 12 15:49:46 2022 +0200
+
+    Another update.
+
+commit d432155d12be36b20543423bfb6054bd9a5404cc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu May 12 15:27:27 2022 +0200
+
+    Improved PBuilder configuration.
+
+commit eda2a70947785168f109976354bb1f98aeef29f2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu May 12 15:27:18 2022 +0200
+
+    Improved PBuilder initialisation.
+
+commit 1a8d3dfa5cef2097213f59e3d8c61a64d0d6d3bc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 6 10:35:42 2022 +0200
+
+    Another dependency update.
+
+commit 50f38882215fc4e4e7e90d0d6d4e7cda958e7217
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 6 10:32:07 2022 +0200
+
+    Some more dependency improvements.
+
+commit db0b64521330570a43d9a0d94ea8a402416864be
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 6 09:47:12 2022 +0200
+
+    Improved dependencies.
+
+commit 61d94e000badf010e380050b86d2bc890a592ad9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu May 5 14:10:37 2022 +0200
+
+    Improved script.
+
+commit 296766ce1d9fc5d9de7bec97f5c7f7575ec4e0fd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu May 5 10:05:34 2022 +0200
+
+    A fix.
+
+commit 1a07d4ae62516fea6e0df4c87114442e5ce13c5d
+Merge: 9a34f5cb df58d0d2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed May 4 11:19:24 2022 +0200
+
+    Merge branch 'master' of github.com:simula/nornet-control
+
+commit 9a34f5cb6a7f105d335c1064431e74e29fd85e4d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed May 4 11:18:40 2022 +0200
+
+    Added helper script.
+
+commit df58d0d242feb11c9dd8dbb06d4fbc0a039884ba
+Merge: 00a54609 eb73fd0b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 29 15:05:37 2022 +0200
+
+    Merge branch 'master' into dreibh/kernel-builder
+
+commit 00a546094243b62f5d3ed547b50fdcdcb8587763
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 29 15:04:37 2022 +0200
+
+    Improved script.
+
+commit eb73fd0b1e5e745283a2d5fc8680f89092eeb4d9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 21 13:29:57 2022 +0200
+
+    Minor update.
+
+commit 93e8d35e28f2527053e5d1df96c6b8db117ab3bd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 21 16:50:20 2022 +0100
+
+    New release nornet-1.5.20.
+
+commit 9e3196f32907136f2f61a089d951d02b9067624a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 21 16:50:03 2022 +0100
+
+    Updated dependencies.
+
+commit 492aa36d7d5dbff728c7e4bc2a73917922306ebb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 15 10:43:09 2022 +0100
+
+    Kernel package naming update.
+
+commit 16ec7b374b395c677af689394ea314145e5a8d24
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 4 15:06:15 2022 +0100
+
+    Updated helper scripts.
+
+commit 22c1369371f8fee65c3fb7291758238bc2344c8a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 4 14:54:52 2022 +0100
+
+    Added comment.
+
+commit 7d34b938137dc8b73fa6040cb526a7138a097a84
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 4 14:52:24 2022 +0100
+
+    Configuration update at UiO.
+
+commit 66ba896a83d05ebb763fd6983765ba81c32d525b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 4 10:16:28 2022 +0100
+
+    A fix.
+
+commit 2adf26f4e93e450c484c84fc6e99735e43b2cf40
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 3 13:00:30 2022 +0100
+
+    Minor update.
+
+commit 7c95ebd577ddcfab374ddc5b4ddc8c94679699d2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 3 12:43:23 2022 +0100
+
+    Improved script.
+
+commit 3e5c1dc1a6335ac54b7e16b2eea97bc5aaa5bd4d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 3 11:54:54 2022 +0100
+
+    Improved script.
+
+commit 9aab0ffb54a4f9b6696004e92d55d24612e99c5d
+Merge: a12c2233 cefbfd0e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 3 11:42:04 2022 +0100
+
+    Merge branch 'dreibh/kernel-builder' of github.com:simula/nornet-control into dreibh/kernel-builder
+
+commit a12c22336e524aed30061eea7911e28ff56f3f7d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 3 11:41:56 2022 +0100
+
+    Improved script.
+
+commit cefbfd0e8b373f07bf0ecaca299cd6189d756569
+Merge: bc28b039 4d4f51f6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 3 10:25:21 2022 +0100
+
+    Merge branch 'dreibh/kernel-builder' of github.com:simula/nornet-control into dreibh/kernel-builder
+
+commit 4d4f51f66e654ed50af0c916f8c73fd86fe96fb4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 2 16:02:55 2022 +0100
+
+    Improved script.
+
+commit bc28b03917cf205ebd669c59557f0613cb490103
+Merge: 5127238b f8c9b5b8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 2 13:53:13 2022 +0100
+
+    Merge commit 'f8c9b5b8bb86489e641e7956eb3ea5b91e4afaf5' into dreibh/kernel-builder
+
+commit 5127238b43a1bd929f877d572fac4f5ca42912f6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 2 13:38:18 2022 +0100
+
+    Minor fix.
+
+commit 6d63dd22f6eb59e58155ae62c6c5f6fd7305f192
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 2 13:04:47 2022 +0100
+
+    Another update.
+
+commit 3ac7eb28ffe8760def4362492800e15c8026fe72
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 2 12:52:42 2022 +0100
+
+    Minor update.
+
+commit 254cf09bb15ef61afe54618db4dc10ba8e0594e6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 2 12:48:28 2022 +0100
+
+    Updated readme file.
+
+commit bfab00bb109c37f0fe4d77f6069970e2a8bdd5d1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 2 12:31:36 2022 +0100
+
+    Added readme file for kernel repository.
+
+commit c015047a9a92c394b5121b9a00887a749a018e8d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 1 16:30:21 2022 +0100
+
+    Configuration update.
+
+commit 20a906ada4a8d949fae677209236825414ff6519
+Merge: 52e2a6a8 93e3cfa0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 25 15:41:13 2022 +0100
+
+    Merge branch 'dreibh/kernel-builder' of github.com:simula/nornet-control into dreibh/kernel-builder
+
+commit 52e2a6a89cce8005dfc7137e2d3bc25b595d5f66
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 25 15:41:00 2022 +0100
+
+    Minor update.
+
+commit 93e3cfa0ed1b2632d5a0d00c0541ea2c7dbbecfa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 25 10:04:26 2022 +0100
+
+    Improved script.
+
+commit f9fc3430503b7d7edcb3c4832ab2d8417736b5a2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 24 10:55:45 2022 +0100
+
+    Added script.
+
+commit f235711d9628ee1a8350e0380ed8d4c29b2a664f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 24 10:06:59 2022 +0100
+
+    Improved scripts.
+
+commit 36daca00fe00f5db9835649bb5fbc2609f9cca99
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 23 15:22:50 2022 +0100
+
+    Some fixes.
+
+commit 52cb106bd36ce1db545c594fa0b60aa606948efe
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 23 15:10:38 2022 +0100
+
+    Improved scripts.
+
+commit 00eed43c0a2062b2c11fdcac8732ec0e562c02f9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 22 16:46:36 2022 +0100
+
+    Improved script.
+
+commit fb11882f4f46517556c1868d5c2e5ebf381af378
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 22 15:19:33 2022 +0100
+
+    Minor update.
+
+commit 5b3517dc9b7c430ec46b25b42b8eedeed6d1725b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 22 15:10:13 2022 +0100
+
+    Improved script.
+
+commit b7b61061f2b146546d2d4b3901b31dce56f0217b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Feb 22 12:12:31 2022 +0100
+
+    Improved scripts.
+
+commit 5773ecea53ef282401e07c4c7af9dd1219a04c43
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Feb 21 17:16:26 2022 +0100
+
+    A fix.
+
+commit 8726d91630c87594670c405f4c3aa0325b435079
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Feb 21 17:07:21 2022 +0100
+
+    Improved script.
+
+commit 8c87553fc74864e1469668b98f7c38102cbae3f2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 18 20:38:08 2022 +0100
+
+    Improved script.
+
+commit a4c61eef5608f2c04f07e290aa28c864b7fe64e1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 18 18:12:07 2022 +0100
+
+    Updated script.
+
+commit 51b6c2c1537636886f00d4c6b2fa32a72a423ce5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 18 15:52:16 2022 +0100
+
+    Added script.
+
+commit f8c9b5b8bb86489e641e7956eb3ea5b91e4afaf5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 16 12:12:59 2022 +0100
+
+    Updated LSM entry.
+
+commit e728036816131e000e7d93d1db9b44ac54a2ef1c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Feb 16 11:46:43 2022 +0100
+
+    New release nornet-1.5.19.
+
 commit c2f0358067c844a1ceb740f9f5cafa77d6ffcb50
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Feb 16 11:43:31 2022 +0100
