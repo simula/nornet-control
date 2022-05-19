@@ -104,3 +104,14 @@ network:
         route-metric: 1234   # <-- Netplan also applied this to IPv6 RA routes!
       dhcp-identifier: mac
       accept-ra: yes
+
+
+#  tunnels:
+#    test1:
+#      mode: gre
+#      local: 172.16.4.2
+#      remote: 172.16.1.2
+#      key: 12345678
+#      mtu: 1476
+#      addresses:
+#        - 192.168.254.2/24
