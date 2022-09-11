@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import shlex
+import sys
+import pwd
+import codecs
+import configparser
+import io
+import re
+import xmlrpc.client
+
+from ipaddress import ip_address, IPv4Address, IPv4Interface, IPv6Address, IPv6Interface
+
+
+# ###### Unquote a string ###################################################
+def unquote(string):
+   m = re.match(r'''^"(.*)"$''', string)
+   if m != None:
+      return m.group(1)
+   m = re.match(r'''^\'(.*)\'$''', string)
+   if m != None:
+      return m.group(1)
+   return string
+
+
+# ###### Remove shell-style comment from input line #########################
+def removeComment(line):
+   quoteStack = []
+   inEscape   = False
+
+   for i, c in enumerate(line):
+      if ((len(quoteStack) == 0) and (c == '#')):
+         # '#' is comment => remove it.
+         return line[:i].strip()
+      elif inEscape:
+         # Backslash => continue.
+         inEscape = False
+      elif ((len(quoteStack) > 0) and (c == '\\')):
+         # In quote and next character is to be escaped.
+         inEscape = True
+      elif ((c == '"') or (c == '\'')):
+         if ((len(quoteStack) > 0) and (c == quoteStack[len(quoteStack) - 1])):
+            quoteStack.pop()
+         else:
+            quoteStack.append(c)
+
+   return line
+
+
+# ====== Open constants file =============================================
+configFile = codecs.open('bad', 'r', 'utf-8')
+iniString = '[root]\n'
+iniString = iniString + configFile.read()
+
+parsedConfigFile = configparser.RawConfigParser()
+parsedConfigFile.optionxform = str   # Make it case-sensitive!
+parsedConfigFile.readfp(io.StringIO(iniString))
+for parameterName in parsedConfigFile.options('root'):
+   parameterValue = parsedConfigFile.get('root', parameterName)
+   if parameterValue.find('\n'):
+      parameterValue = str.strip(unquote(removeComment(str.replace(parameterValue, '\n', ' '))))
+   else:
+      parameterValue = removeComment(parameterValue.rstrip('\n'))
+   print('<' + parameterName + '> = <' + parameterValue + '>')
+   # NorNet_Configuration[parameterName] = parameterValue

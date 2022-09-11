@@ -190,7 +190,7 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
          parameterValue = str.strip(unquote(removeComment(str.replace(parameterValue, '\n', ' '))))
       else:
          parameterValue = removeComment(parameterValue.rstrip('\n'))
-      # print '<' + parameterName + '> = <' + parameterValue + '>'
+      # print('<' + parameterName + '> = <' + parameterValue + '>')
       NorNet_Configuration[parameterName] = parameterValue
 
    # print NorNet_Configuration

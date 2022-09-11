@@ -58,6 +58,8 @@ for siteIndex in sorted(siteIndexList):
             provider = providerList[providerIndex]
             externalNetworkIPv4 = IPv4Address(str(provider['provider_tunnelbox_ipv4'].ip))
             externalNetworkIPv6 = IPv6Address(str(provider['provider_tunnelbox_ipv6'].ip))
+            externalGatewayIPv4 = IPv4Address(str(provider['provider_gateway_ipv4']))
+            externalGatewayIPv6 = IPv6Address(str(provider['provider_gateway_ipv6']))
 
             print('{0:3d} {1:1d} {2:8s} {3:36s} {4:2s} {5:25s} {6:25s} {7:s} {8:s} {9:3d} {10:12s} {11:42s} {12:20s} {13:36s} {14:10s} {15:10s}'.format(
                      int(site['site_index']),
@@ -79,4 +81,3 @@ for siteIndex in sorted(siteIndexList):
                   ))
 
             isp = isp + 1
-            
