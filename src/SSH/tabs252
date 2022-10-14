@@ -5,6 +5,5 @@ title: polaria;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/acce
 title: bensin;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.5.252
 title: ulriken;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.6.252
 title: holberg;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.7.252
-title: hval;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.8.252
 title: kristiansten;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.9.252
 title: skjomen;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.10.252

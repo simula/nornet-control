@@ -5,6 +5,5 @@ title: tromsoe;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/acce
 title: stavanger;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.5.1
 title: bergen;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.6.1
 title: kristiansand;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.7.1
-title: svalbard;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.8.1
 title: trondheim;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.9.1
 title: narvik;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.10.1

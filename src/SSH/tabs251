@@ -5,6 +5,5 @@ title: tromsoebrua;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/
 title: diesel;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.5.251
 title: damsgaardsfjellet;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.6.251
 title: andersen;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.7.251
-title: sel;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.8.251
 title: nidelva;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.9.251
 title: beisfjorden;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.10.251
