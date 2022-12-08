@@ -5,6 +5,5 @@ title: storsteinen;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/
 title: olje;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.5.254
 title: bryggen;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.6.254
 title: ibsen;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.7.254
-title: isbjoern;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.8.254
 title: nidarosdomen;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.9.254
 title: ofotfjorden;; command: /home/dreibh/src/rn/nornet/nornet-control/src/SSH/access 10.1.10.254
