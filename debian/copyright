@@ -4,7 +4,7 @@ Upstream-Contact: Thomas Dreibholz <dreibh@simula.no>
 Source: https://www.nntb.no
 
 Files: *
-Copyright: Copyright 2012-2022 Thomas Dreibholz
+Copyright: Copyright 2012-2023 Thomas Dreibholz
 License: GPL-3+
 
 Files: src/Kontrollsenter/Clock/*

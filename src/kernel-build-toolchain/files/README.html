@@ -6,8 +6,8 @@
  <title>NorNet MPTCP Kernel Package Repository</title>
  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
  <meta name="Viewport" content="width=device-width; initial-scale=1" />
- <link rel="stylesheet" href="https://www.uni-due.de/~be0001/stylesheet.css" type="text/css">
- <link rel="shortcut icon" href="https://www.uni-due.de/~be0001//graphics/icons/icon-tux.png">
+ <link rel="stylesheet" href="https://www.nntb.no/~dreibh/stylesheet.css" type="text/css">
+ <link rel="shortcut icon" href="https://www.nntb.no/~dreibh//graphics/icons/icon-tux.png">
  <meta name="Author" content="Thomas Dreibholz" />
  <meta name="Description" content="NorNet MPTCP Kernel Package Repository" />
  <meta name="Keywords" content="NorNet, MPTCP, Kernel Packages, Repository" />
@@ -22,7 +22,7 @@
 
 <p class="description">
 This is the repository for the
-<a href="https://www.nntb.no/">NorNet</a> <a href="https://www.uni-due.de/~be0001/mptcp/index.html">Multi-Path TCP&nbsp;(MPTCP)</a> kernel package repository for:
+<a href="https://www.nntb.no/">NorNet</a> <a href="https://www.nntb.no/~dreibh/mptcp/index.html">Multi-Path TCP&nbsp;(MPTCP)</a> kernel package repository for:
 </p>
 <p><a href="https://ubuntu.com/">Ubuntu Linux</a>:</p>
 <ul>
@@ -50,7 +50,7 @@ This is the repository for the
  <li>
   <p>Add signature key:</p>
 <pre>
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys <a href="https://www.uni-due.de/~be0001/21412672518D8B2D1862EFEF5CD5D12AA0877B49.asc">21412672518D8B2D1862EFEF5CD5D12AA0877B49</a>
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys <a href="https://www.nntb.no/~dreibh/21412672518D8B2D1862EFEF5CD5D12AA0877B49.asc">21412672518D8B2D1862EFEF5CD5D12AA0877B49</a>
 </pre>
 </li>
 
@@ -114,7 +114,7 @@ net.mptcp.mptcp_path_manager=fullmesh
  </li>
 
  <li>
-  <p>Reboot with the newly installed kernel. After that, you can test MPTCP with <a href="https://www.uni-due.de/~be0001/netperfmeter/index.html">NetPerfMeter</a>:</p>
+  <p>Reboot with the newly installed kernel. After that, you can test MPTCP with <a href="https://www.nntb.no/~dreibh/netperfmeter/index.html">NetPerfMeter</a>:</p>
   <ul>
    <li>
     <p>Server side:</p>
@@ -127,7 +127,7 @@ netperfmeter 9000
 <pre>
 netperfmeter &lt;SERVER&gt;:9000 -control-over-tcp -tcp const0:const1400:const0:const1400:cmt=mptcp,pathmgr=fullmesh
 </pre>
-    <p>The -control-over-tcp option is only necessary over firewalls/NAT, where <a href="https://www.uni-due.de/~be0001/sctp/index.html">SCTP</a> gets blocked. By default, <a href="https://www.uni-due.de/~be0001/netperfmeter/index.html">NetPerfMeter</a> uses <a href="https://www.uni-due.de/~be0001/sctp/index.html">SCTP</a> for a control connection to the server.</p>
+    <p>The -control-over-tcp option is only necessary over firewalls/NAT, where <a href="https://www.nntb.no/~dreibh/sctp/index.html">SCTP</a> gets blocked. By default, <a href="https://www.nntb.no/~dreibh/netperfmeter/index.html">NetPerfMeter</a> uses <a href="https://www.nntb.no/~dreibh/sctp/index.html">SCTP</a> for a control connection to the server.</p>
    </li>
   </ul>
  </li>
@@ -158,9 +158,9 @@ The NorNet kernel configuration can be found in <a href="https://github.com/drei
 
 <h2>🔗 Useful Links</h2>
 <ul>
- <li><a href="https://www.uni-due.de/~be0001/netperfmeter/index.html">NetPerfMeter – A TCP/MPTCP/UDP/SCTP/DCCP Network Performance Meter Tool</a></li>
- <li><a href="https://www.uni-due.de/~be0001/mptcp/index.html">Thomas Dreibholz's Multi-Path TCP&nbsp;(MPTCP) Page</a></li>
- <li><a href="https://www.uni-due.de/~be0001/sctp/index.html">Thomas Dreibholz's SCTP Page</a></li>
+ <li><a href="https://www.nntb.no/~dreibh/netperfmeter/index.html">NetPerfMeter – A TCP/MPTCP/UDP/SCTP/DCCP Network Performance Meter Tool</a></li>
+ <li><a href="https://www.nntb.no/~dreibh/mptcp/index.html">Thomas Dreibholz's Multi-Path TCP&nbsp;(MPTCP) Page</a></li>
+ <li><a href="https://www.nntb.no/~dreibh/sctp/index.html">Thomas Dreibholz's SCTP Page</a></li>
  <li><a href="https://www.nntb.no/"><em>NorNet</em> – A Real-World, Large-Scale Multi-Homing Testbed</a></li>
  <li><a href="https://www.neat-project.org/"><em>NEAT</em> – A New, Evolutive API and Transport-Layer Architecture for the Internet</a></li>
  <li><a href="https://www.5g-vinni.eu/">5G-VINNI – 5G Verticals Innovation Infrastructure</a></li>

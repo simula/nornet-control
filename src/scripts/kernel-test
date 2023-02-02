@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Kernel Test Script
-# Copyright (C) 2016-2022 by Thomas Dreibholz
+# Copyright (C) 2016-2023 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -107,7 +107,7 @@ echo 'Building Package' >stamp-building
 cp include/generated/utsrelease.h include/linux/
 # !!!!!!!!!!!!
 
-export MAINTAINER="Thomas Dreibholz <dreibh@iem.uni-due.de>"
+export MAINTAINER="Thomas Dreibholz <thomas.dreibholz@gmail.com>"
 dpkg-buildpackage -S -sa -k"${MAINTAINER}" -rfakeroot -I.git -I.gitignore -i'\.git.*'
 
 rm -f stamp-building
