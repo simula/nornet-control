@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Check whether login to slice is possible
-# Copyright (C) 2016-2022 by Thomas Dreibholz
+# Copyright (C) 2016-2023 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,15 +31,15 @@ normalMode="\x1b[0m"
 connectTimeout=15
 sigkillTimeout=60
 sigintTimeout=55
-sshOptions="-oVerifyHostKeyDNS=no -oHostKeyAlgorithms=ssh-rsa -oStrictHostKeyChecking=no -oPasswordAuthentication=no -oConnectTimeout=$connectTimeout"
+sshOptions="-4 -oVerifyHostKeyDNS=yes -oHostKeyAlgorithms=rsa-sha2-512 -oStrictHostKeyChecking=no -oPasswordAuthentication=no -oConnectTimeout=$connectTimeout"
 
 
 function check-node ()
 {
    local nodeName="$1"
 
-   if ping -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
-      if ping6 -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
+   if ping -4 -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
+      if ping -6 -q -c3 -W2 $nodeName >/dev/null 2>&1 ; then
 
          env LANG=C timeout --signal=INT --kill-after=${sigkillTimeout}s ${sigintTimeout} ssh $sshOptions -i $KEY $SLICE@$nodeName '
             if [ ! -e /etc/yum.repos.d/nornet.repo ] ; then

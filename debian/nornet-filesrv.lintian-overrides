@@ -1,5 +1,5 @@
 nornet-filesrv: non-standard-toplevel-dir
-nornet-filesrv: package-contains-empty-directory filesrv/adm/TFTP/
-nornet-filesrv: package-contains-empty-directory filesrv/adm/ISOs/
-nornet-filesrv: package-contains-empty-directory filesrv/pub/
-nornet-filesrv: package-contains-empty-directory filesrv/sys/
+nornet-filesrv: package-contains-empty-directory [filesrv/adm/TFTP/]
+nornet-filesrv: package-contains-empty-directory [filesrv/adm/ISOs/]
+nornet-filesrv: package-contains-empty-directory [filesrv/pub/]
+nornet-filesrv: package-contains-empty-directory [filesrv/sys/]
