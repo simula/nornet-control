@@ -1,5 +1,6 @@
 #!/bin/bash
 
-for server in bjoernholt.nntb.no www.nntb.no wiki.nntb.no godbekken.nntb.no www.neat-project.org benlomond.nntb.no ; do
+for server in bjoernholt.nntb.no www.nntb.no wiki.nntb.no godbekken.nntb.no www.neat-project.org ; do
    scp -4 nornetpp@$server:/etc/apache2/sites-enabled/000-$server.conf .
 done
+scp -4 nornetpp@benlomond.nntb.no:/etc/httpd/conf/httpd.conf 000-benlomond.nntb.no.conf
