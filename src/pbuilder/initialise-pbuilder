@@ -93,13 +93,15 @@ fi
 
 
 # ====== Ubuntu =============================================================
+create-pbuilder ubuntu mantic amd64
+create-pbuilder ubuntu mantic arm64
+
 create-pbuilder ubuntu jammy  amd64
 create-pbuilder ubuntu jammy  arm64
 create-pbuilder ubuntu jammy  armhf
 
 create-pbuilder ubuntu focal  amd64
 create-pbuilder ubuntu focal  arm64
-create-pbuilder ubuntu focal  armhf
 
 create-pbuilder ubuntu bionic amd64
 create-pbuilder ubuntu bionic arm64
