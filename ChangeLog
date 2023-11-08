@@ -1,3 +1,111 @@
+commit 0d76682a2e5c1f8cb0274853dd66b31ab574515d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 2 13:23:07 2023 +0100
+
+    URL change from UDE to NNTB.
+
+commit a3542aca4c3800375b52bd09ef554af2e668fa77
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 2 12:13:30 2023 +0100
+
+    Updated autogen.sh.
+
+commit 2157e994c57f2d1143ccebb1a0291ca30ddd0ad6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 2 11:55:45 2023 +0100
+
+    Updated build scripts
+
+commit 6f3611c32e9b39076a8f6926307e73fdd3af2478
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 2 11:52:55 2023 +0100
+
+    Updated CI scripts
+
+commit 4803bee792de50a99f83ccf3c9dfe95cda87b663
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 2 11:52:40 2023 +0100
+
+    Travis CI is dead. Removed obsolete Travis CI scripts and configuration.
+
+commit 97ee381aacccf3f86aa22bf301557753917de7bd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Dec 13 09:51:46 2022 +0100
+
+    Improved scripts.
+
+commit 2e8cab004c4a0d56f99de6358f838001c9769236
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 14 11:42:29 2022 +0200
+
+    An update.
+
+commit 04e3c21c1093e2824dcba1b6f00c3e83d21ad01b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 31 11:47:43 2022 +0200
+
+    Removed Vcs-* fields from debian/control.
+
+commit 3106f70221c9d71540bc71699e8b79f775f885d5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 6 13:31:55 2022 +0200
+
+    Improved File Server crontab.
+
+commit df2f5a41adff7efb5e1c5f64b79875ddfdd1c1ed
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 6 12:54:29 2022 +0200
+
+    Updated comment.
+
+commit 42e148956f297168e7fcaaa23a590c14fd736c36
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 6 12:54:19 2022 +0200
+
+    Added helper script.
+
+commit 267b0eaa0ced12dd312b92401304e0fdf7e97366
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 29 16:46:41 2022 +0200
+
+    Improved script.
+
+commit f269291c432c38ef45c987143428861b309f87fa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 29 16:41:09 2022 +0200
+
+    Improved script.
+
+commit 418eb1bb072cecb5fcb3206a10f700d2eafff70f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 15 10:27:31 2022 +0200
+
+    Minor update.
+
+commit cda1b674d77b7ada0a15a0432bc270618b24fd10
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu May 19 12:31:52 2022 +0200
+
+    Added script.
+
+commit c63a17a0cb7354c3eefc5878ee62c4e4d3da21d9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 13 12:37:41 2022 +0200
+
+    Updated CI scripts
+
+commit 60883c5d58292942c51727fd51a474a58a9dfec4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 13 12:37:39 2022 +0200
+
+    Updated build scripts
+
+commit ac40e06d1c47774720841a9ef749849155289928
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 13 12:21:52 2022 +0200
+
+    New release nornet-1.5.21.
+
 commit 02198f145dde8e41bd8cf0b8cf2ee1afc39ed140
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Thu May 12 15:49:46 2022 +0200
