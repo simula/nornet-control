@@ -93,6 +93,8 @@ fi
 
 
 # ====== Ubuntu =============================================================
+create-pbuilder ubuntu noble amd64
+create-pbuilder ubuntu noble arm64
 create-pbuilder ubuntu mantic amd64
 create-pbuilder ubuntu mantic arm64
 
