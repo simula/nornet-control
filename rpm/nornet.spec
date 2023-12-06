@@ -21,6 +21,7 @@ BuildRequires: google-noto-sans-fonts
 BuildRequires: google-noto-serif-fonts
 BuildRequires: GraphicsMagick
 BuildRequires: perl-Image-ExifTool
+BuildRequires: pygtk2
 BuildRequires: python3-devel
 BuildRequires: qt5-qtbase-devel
 BuildRequires: texlive-epstopdf-bin
