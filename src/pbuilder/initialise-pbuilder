@@ -108,6 +108,8 @@ create-pbuilder ubuntu focal  arm64
 create-pbuilder ubuntu bionic amd64
 create-pbuilder ubuntu bionic arm64
 
+create-pbuilder ubuntu xenial amd64
+
 
 # ====== Debian =============================================================
 create-pbuilder debian bookworm amd64

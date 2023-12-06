@@ -11,7 +11,7 @@
 # --------------------------------------------------------------------------
 #
 # SuNILab Desktop Background Script
-# Copyright (C) 2017-2023 by Thomas Dreibholz
+# Copyright (C) 2017-2024 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,16 +30,16 @@
 
 
 #############################################################################
-# INITIALISE
+#### INITIALISE                                                          ####
 #############################################################################
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.3)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 PROJECT(undefined NONE)   # to be set in Settings.input
 INCLUDE(Settings.input)
 
 
 #############################################################################
-# INSTALLATION_DIRECTORIES
+#### INSTALLATION_DIRECTORIES                                            ####
 #############################################################################
 
 # See: https://cmake.org/cmake/help/v3.0/module/GNUInstallDirs.html
@@ -47,7 +47,7 @@ INCLUDE(GNUInstallDirs)
 
 
 #############################################################################
-# OPTIONS
+#### OPTIONS                                                             ####
 #############################################################################
 
 OPTION(FLAT_DIRECTORY_STRUCTURE "Use flat directory structure" ${TDD_FLAT_DIRECTORY_STRUCTURE})
@@ -77,7 +77,7 @@ ENDIF()
 
 
 #############################################################################
-# REQUIREMENTS
+#### REQUIREMENTS                                                        ####
 #############################################################################
 
 INCLUDE(FindUnixCommands)
@@ -160,7 +160,7 @@ ENDIF()
 
 
 #############################################################################
-# REQUIREMENTS
+#### REQUIREMENTS                                                        ####
 #############################################################################
 
 IF(TDD_ADD_DIST_TARGET)
@@ -176,7 +176,7 @@ ENDIF()
 
 
 #############################################################################
-# BUILD TARGETS
+#### BUILD TARGETS                                                       ####
 #############################################################################
 
 # NOTE: The following build rules use custom commands. They need additional
@@ -614,7 +614,7 @@ ENDFOREACH()
 
 
 #############################################################################
-# SOURCE DIRECTORIES
+#### SOURCE DIRECTORIES                                                  ####
 #############################################################################
 
 IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/grub)
