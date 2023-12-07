@@ -24,6 +24,10 @@ SET(BUILD_MINOR "5")
 SET(BUILD_PATCH "23~netplan2")
 SET(BUILD_VERSION ${BUILD_MAJOR}.${BUILD_MINOR}.${BUILD_PATCH})
 
+# Python now has very specific requirements for the version:
+# https://packaging.python.org/en/latest/specifications/version-specifiers/
+STRING(REGEX REPLACE "~[^0-9]*" ".dev" PYTHON_BUILD_VERSION ${BUILD_VERSION})
+
 
 #############################################################################
 # INSTALLATION_DIRECTORIES

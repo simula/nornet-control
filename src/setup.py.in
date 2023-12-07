@@ -19,7 +19,11 @@
 # Contact: dreibh@simula.no
 #
 
-from distutils.core import setup
+import sys
+try:
+    from setuptools import setup, Extension
+except ImportError:
+    from distutils.core import setup, Extension
 
 
 setup(name='NorNet',
@@ -27,7 +31,7 @@ setup(name='NorNet',
    author_email='dreibh@simula.no',
    maintainer='Thomas Dreibholz',
    maintainer_email='dreibh@simula.no',
-   version='${BUILD_VERSION}',
+   version='${PYTHON_BUILD_VERSION}',
    url='https://www.nntb.no',
    license='GPL, Version 3.0',
    package_dir={ '': '${CMAKE_CURRENT_SOURCE_DIR}' },
