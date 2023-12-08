@@ -1,5 +1,5 @@
 # MELODIC/NorNet Build Scripts
-# Copyright (C) 2017-2023 by Thomas Dreibholz
+# Copyright (C) 2017-2024 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,13 +24,9 @@ SET(BUILD_MINOR "5")
 SET(BUILD_PATCH "23~netplan4")
 SET(BUILD_VERSION ${BUILD_MAJOR}.${BUILD_MINOR}.${BUILD_PATCH})
 
-# Python now has very specific requirements for the version:
-# https://packaging.python.org/en/latest/specifications/version-specifiers/
-STRING(REGEX REPLACE "~[^0-9]*" ".dev" PYTHON_BUILD_VERSION ${BUILD_VERSION})
-
 
 #############################################################################
-# INSTALLATION_DIRECTORIES
+#### INSTALLATION_DIRECTORIES                                            ####
 #############################################################################
 
 # See: https://cmake.org/cmake/help/v3.0/module/GNUInstallDirs.html
@@ -38,7 +34,7 @@ INCLUDE(GNUInstallDirs)
 
 
 #############################################################################
-# PACKAGING
+#### PACKAGING                                                           ####
 #############################################################################
 
 SET(CPACK_SOURCE_GENERATOR "TXZ")
@@ -57,7 +53,7 @@ INCLUDE(CheckStructHasMember)
 
 
 #############################################################################
-# OS-DEPENDENT
+#### OS-DEPENDENT                                                        ####
 #############################################################################
 
 IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -88,7 +84,7 @@ ENDIF()
 
 
 #############################################################################
-# REQUIREMENTS
+#### REQUIREMENTS                                                        ####
 #############################################################################
 
 FIND_PACKAGE(Python3 COMPONENTS Interpreter REQUIRED)
@@ -96,7 +92,7 @@ MESSAGE("Python3_SITELIB: ${Python3_SITELIB}")
 
 
 #############################################################################
-# SOURCE DIRECTORIES
+#### SOURCE DIRECTORIES                                                  ####
 #############################################################################
 
 ADD_SUBDIRECTORY(src)

@@ -1,5 +1,5 @@
 #############################################################################
-# PYTHON LIBRARIES
+#### PYTHON LIBRARIES                                                    ####
 #############################################################################
 
 SET(nornet_api_files
@@ -16,7 +16,7 @@ INSTALL(FILES ${nornet_api_files} DESTINATION ${Python3_SITELIB})
 
 
 #############################################################################
-# PROGRAMS
+#### PROGRAMS                                                            ####
 #############################################################################
 
 INSTALL(PROGRAMS cls                          DESTINATION ${CMAKE_INSTALL_BINDIR})
@@ -168,7 +168,7 @@ INSTALL(FILES Watchdog.1                      DESTINATION ${CMAKE_INSTALL_MANDIR
 
 
 #############################################################################
-# CONFIGURATION FILES
+#### CONFIGURATION FILES                                                 ####
 #############################################################################
 
 INSTALL(PROGRAMS system-info.d/10-nornet DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/system-info.d)
@@ -181,7 +181,7 @@ INSTALL(FILES watchdog-config.example DESTINATION ${CMAKE_INSTALL_DATADIR}/norne
 
 
 #############################################################################
-# EXAMPLES
+#### EXAMPLES                                                            ####
 #############################################################################
 
 SET(nornet_api_configuration
@@ -194,7 +194,7 @@ INSTALL(FILES ${nornet_api_configuration} DESTINATION ${CMAKE_INSTALL_DATADIR}/n
 
 
 #############################################################################
-# SOURCE DIRECTORIES
+#### SOURCE DIRECTORIES                                                  ####
 #############################################################################
 
 ADD_SUBDIRECTORY(background)
