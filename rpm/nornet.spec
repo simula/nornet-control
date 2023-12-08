@@ -22,7 +22,7 @@ BuildRequires: google-noto-serif-fonts
 BuildRequires: GraphicsMagick
 BuildRequires: perl-Image-ExifTool
 BuildRequires: pygtk2
-BuildRequires: python3
+BuildRequires: python3-devel
 BuildRequires: python3-setuptools
 BuildRequires: qt5-qtbase-devel
 BuildRequires: texlive-epstopdf-bin
@@ -305,7 +305,6 @@ to communicate with the central server (MyPLC), based on XMLRPC.
 See https://www.nntb.no for details on NorNet!
 
 %files api
-%{python3_sitelib}/NorNet*.egg-info
 %{python3_sitelib}/NorNetAPI.py
 %{python3_sitelib}/NorNetConfiguration.py
 %{python3_sitelib}/NorNetExperimentToolbox.py
