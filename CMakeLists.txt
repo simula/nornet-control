@@ -91,13 +91,8 @@ ENDIF()
 # REQUIREMENTS
 #############################################################################
 
-SET(PYTHON_LIBRARY_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH   "NorNet Python library prefix")
-SET(PYTHON_SETUP_OPTS     ""                        CACHE STRING "")
-
-SET(Python_ADDITIONAL_VERSIONS 3)
-INCLUDE(FindPythonInterp)
-
-FIND_PACKAGE(PythonInterp 3.4.0 REQUIRED)
+FIND_PACKAGE(Python3 COMPONENTS Interpreter REQUIRED)
+MESSAGE("Python3_SITELIB: ${Python3_SITELIB}")
 
 
 #############################################################################

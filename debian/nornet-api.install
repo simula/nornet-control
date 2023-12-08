@@ -1,13 +1,12 @@
-# usr/lib/python*/*-packages/NorNet*.egg-info
-# usr/lib/python*/*-packages/NorNetAPI.py
-# usr/lib/python*/*-packages/NorNetConfiguration.py
-# usr/lib/python*/*-packages/NorNetExperimentToolbox.py
-# usr/lib/python*/*-packages/NorNetNodeSetup.py
-# usr/lib/python*/*-packages/NorNetProviderSetup.py
-# usr/lib/python*/*-packages/NorNetSiteSetup.py
-# usr/lib/python*/*-packages/NorNetTools.py
-# usr/lib/python*/*-packages/SysSetupCommons.py
-usr/lib/python*/*-packages/*
+usr/lib/python*/*-packages/NorNet*.egg-info
+usr/lib/python*/*-packages/NorNetAPI.py
+usr/lib/python*/*-packages/NorNetConfiguration.py
+usr/lib/python*/*-packages/NorNetExperimentToolbox.py
+usr/lib/python*/*-packages/NorNetNodeSetup.py
+usr/lib/python*/*-packages/NorNetProviderSetup.py
+usr/lib/python*/*-packages/NorNetSiteSetup.py
+usr/lib/python*/*-packages/NorNetTools.py
+usr/lib/python*/*-packages/SysSetupCommons.py
 usr/share/nornet-api/nornetapi-config.full
 usr/share/nornet-api/nornetapi-config.simple
 usr/share/nornet-api/nornetapi-constants

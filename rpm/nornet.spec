@@ -22,7 +22,8 @@ BuildRequires: google-noto-serif-fonts
 BuildRequires: GraphicsMagick
 BuildRequires: perl-Image-ExifTool
 BuildRequires: pygtk2
-BuildRequires: python3-devel
+BuildRequires: python3
+BuildRequires: python3-setuptools
 BuildRequires: qt5-qtbase-devel
 BuildRequires: texlive-epstopdf-bin
 BuildRequires: urw-base35-fonts
@@ -260,6 +261,7 @@ Requires: python3
 Requires: python3-pip
 Requires: python3-psycopg2
 Requires: python3-pymongo
+Requires: python3-setuptools
 Requires: qemu-user-static
 Requires: quilt
 Requires: R-base
