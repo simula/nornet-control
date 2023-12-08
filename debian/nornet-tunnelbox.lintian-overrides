@@ -1,1 +1,2 @@
 nornet-tunnelbox: missing-systemd-service-for-init.d-script
+nornet-tunnelbox: missing-systemd-timer-for-cron-script
