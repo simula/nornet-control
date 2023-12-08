@@ -16,12 +16,12 @@
 #
 # Contact: dreibh@simula.no
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 PROJECT(nornet LANGUAGES C)
 
 SET(BUILD_MAJOR "1")
 SET(BUILD_MINOR "5")
-SET(BUILD_PATCH "23~netplan2")
+SET(BUILD_PATCH "23~netplan3")
 SET(BUILD_VERSION ${BUILD_MAJOR}.${BUILD_MINOR}.${BUILD_PATCH})
 
 # Python now has very specific requirements for the version:

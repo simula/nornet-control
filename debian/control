@@ -3,8 +3,8 @@ Section: net
 Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: https://www.nntb.no/
-Build-Depends: cmake (>= 3.3) | cmake3,
-               debhelper (>= 9),
+Build-Depends: cmake,
+               debhelper (>= 12),
                dh-python,
                fonts-dejavu,
                fonts-noto-cjk,
@@ -15,7 +15,8 @@ Build-Depends: cmake (>= 3.3) | cmake3,
                gsfonts,
                libfile-fcntllock-perl,
                libimage-exiftool-perl,
-               python3-all
+               python3-all,
+               python3-setuptools
 Standards-Version: 4.6.2
 Rules-Requires-Root: no
 
@@ -75,8 +76,7 @@ Depends: anacron,
          xmlstarlet,
          xz-utils (>= 5.2.0) | pxz,
          yamllint,
-         ${misc:Depends},
-         ${shlibs:Depends}
+         ${misc:Depends}
 Recommends: apport-retrace,
             grub2-common,
             ipsec-tools,
@@ -104,8 +104,7 @@ Depends: fvwm,
          xloadimage,
          xserver-xorg,
          xterm,
-         ${misc:Depends},
-         ${shlibs:Depends}
+         ${misc:Depends}
 Description: X11 Login tools for the NorNet system environment
  This metapackage contains basic X11 software for NorNet systems. The
  software provides a very lightweight graphical login (fvwm) with a shell
@@ -164,8 +163,7 @@ Depends: autoconf,
          sysvbanner,
          valgrind,
          xmlstarlet,
-         ${misc:Depends},
-         ${shlibs:Depends}
+         ${misc:Depends}
 Recommends: ubuntu-dev-tools
 Description: Development tools for the NorNet system environment
  This metapackage contains basic software nor NorNet development. The
@@ -175,10 +173,9 @@ Description: Development tools for the NorNet system environment
 
 Package: nornet-api
 Architecture: all
-Depends: ${misc:Depends},
-         ${python3:Depends},
-         ${shlibs:Depends}
-Recommends: figlet
+Depends: python3,
+         ${misc:Depends},
+         ${python3:Depends}
 Description: API tools for the NorNet system environment
  This package contains the NorNet Python API library. It contains functions
  to communicate with the central server (MyPLC), based on XMLRPC.
@@ -188,8 +185,7 @@ Description: API tools for the NorNet system environment
 Package: nornet-autoupdate
 Architecture: all
 Depends: cron-apt,
-         ${misc:Depends},
-         ${shlibs:Depends}
+         ${misc:Depends}
 Description: Auto Update tools for the NorNet system environment
  This package ensures that the NorNet system is automatically updated
  (installation of updates via cron-apt).
@@ -211,8 +207,7 @@ Depends: ifupdown,
          rsplib-services,
          snmpd,
          ${misc:Depends},
-         ${python3:Depends},
-         ${shlibs:Depends}
+         ${python3:Depends}
 Recommends: nornet-ca,
             open-vm-tools,
             resolvconf,
@@ -243,8 +238,7 @@ Depends: arpwatch,
          squid,
          traceroute,
          ${misc:Depends},
-         ${python3:Depends},
-         ${shlibs:Depends}
+         ${python3:Depends}
 Recommends: nornet-trace-service (>= 2.0.0~),
             nslint
 Suggests: tracebox
@@ -264,8 +258,7 @@ Depends: nfs-kernel-server,
          python3-adns,
          tftpd-hpa,
          ${misc:Depends},
-         ${python3:Depends},
-         ${shlibs:Depends}
+         ${python3:Depends}
 Description: File Server tools for the NorNet system environment
  This package contains the scripts to configure a file server
  on a NorNet central site.
@@ -274,8 +267,7 @@ Description: File Server tools for the NorNet system environment
 
 Package: nornet-artwork
 Architecture: all
-Depends: ${misc:Depends},
-         ${shlibs:Depends}
+Depends: ${misc:Depends}
 Description: Artwork tools for the NorNet system environment
  This package contains some images for the monitor server
  on a NorNet central site.
@@ -294,8 +286,7 @@ Depends: apache2,
          nornet-management (= ${binary:Version}),
          postfix,
          ${misc:Depends},
-         ${python3:Depends},
-         ${shlibs:Depends}
+         ${python3:Depends}
 Description: Monitor tools for the NorNet system environment
  This package contains the scripts to configure a generic monitoring station
  on a NorNet central site.
@@ -311,8 +302,7 @@ Depends: firefox,
          nornet-management (= ${binary:Version}),
          sddm | kdm | lightdm | gdm3,
          xserver-xorg-video-vmware,
-         ${misc:Depends},
-         ${shlibs:Depends}
+         ${misc:Depends}
 Recommends: wireshark
 Description: Display tools for the NorNet system environment
  This package contains the packages to set up a display station for the
@@ -326,8 +316,7 @@ Architecture: all
 Depends: nornet-api (= ${binary:Version}),
          nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
-         ${misc:Depends},
-         ${shlibs:Depends}
+         ${misc:Depends}
 Description: Gatekeeper tools for the NorNet system environment
  This package contains the packages to set up a gatekeeper station for the
  project presentation. It is in fact just a node with a dependency on the
@@ -348,8 +337,7 @@ Depends: apache2,
          nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          oxygen-icon-theme,
-         ${misc:Depends},
-         ${shlibs:Depends}
+         ${misc:Depends}
 Recommends: geoip-database-extra,
             geoipupdate,
             php-mysql | php5-mysql,
@@ -366,8 +354,7 @@ Architecture: all
 Depends: nornet-websrv (= ${binary:Version}),
          php-mysql | php5-mysql,
          postfix,
-         ${misc:Depends},
-         ${shlibs:Depends}
+         ${misc:Depends}
 Description: Wiki Server tools for the NorNet system environment
  This package contains the packages to set up a wiki station for the
  user-contributed documentation. It is in fact just a node with a
@@ -381,8 +368,7 @@ Depends: nornet-api (= ${binary:Version}),
          nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          ntp,
-         ${misc:Depends},
-         ${shlibs:Depends}
+         ${misc:Depends}
 Description: Time Server tools for the NorNet system environment
  This package contains the packages to set up an NTP server for the
  time synchronisation. It is in fact just a node with a dependency on
@@ -397,8 +383,7 @@ Depends: nornet-api (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          postgresql,
          postgresql-contrib,
-         ${misc:Depends},
-         ${shlibs:Depends}
+         ${misc:Depends}
 Description: Database tools for the NorNet system environment
  This package contains the packages to set up a database station for
  experiment results collection. It is in fact just a node with a
@@ -423,8 +408,7 @@ Depends: ifupdown,
          virtinst,
          xauth,
          ${misc:Depends},
-         ${python3:Depends},
-         ${shlibs:Depends}
+         ${python3:Depends}
 Recommends: nornet-ca,
             ubuntu-server
 Description: Server tools for the NorNet system environment
