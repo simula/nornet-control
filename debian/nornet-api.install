@@ -1,4 +1,3 @@
-usr/lib/python*/*-packages/NorNet*.egg-info
 usr/lib/python*/*-packages/NorNetAPI.py
 usr/lib/python*/*-packages/NorNetConfiguration.py
 usr/lib/python*/*-packages/NorNetExperimentToolbox.py

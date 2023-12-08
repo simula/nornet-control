@@ -3,6 +3,7 @@
 #############################################################################
 
 SET(nornet_api_files
+   NorNetAPI.py
    NorNetConfiguration.py
    NorNetExperimentToolbox.py
    NorNetNodeSetup.py
