@@ -5,3 +5,4 @@ nornet-monitor: dir-or-file-in-var-www
 nornet-monitor: package-contains-documentation-outside-usr-share-doc
 nornet-monitor: spare-manual-page
 nornet-monitor: executable-in-usr-lib
+nornet-monitor: missing-systemd-service-for-init.d-script

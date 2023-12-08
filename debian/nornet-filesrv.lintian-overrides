@@ -3,3 +3,4 @@ nornet-filesrv: package-contains-empty-directory [filesrv/adm/TFTP/]
 nornet-filesrv: package-contains-empty-directory [filesrv/adm/ISOs/]
 nornet-filesrv: package-contains-empty-directory [filesrv/pub/]
 nornet-filesrv: package-contains-empty-directory [filesrv/sys/]
+nornet-filesrv: missing-systemd-service-for-init.d-script
