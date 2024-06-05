@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.5.23
+Version: 1.5.24~netplan1
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
