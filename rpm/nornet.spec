@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.5.23~netplan5
+Version: 1.5.23
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -833,6 +833,8 @@ if [ -e /usr/sbin/grub2-mkconfig ] ; then /usr/sbin/grub2-mkconfig -o /boot/grub
 
 
 %changelog
+* Wed Jun 05 2024 Thomas Dreibholz <dreibh@simula.no> - 1.5.23
+- New upstream release.
 * Fri Oct 06 2023 Thomas Dreibholz <dreibh@simula.no> - 1.5.22
 - New upstream release.
 * Fri May 13 2022 Thomas Dreibholz <dreibh@simula.no> - 1.5.21

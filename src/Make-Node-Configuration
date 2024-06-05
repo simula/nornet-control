@@ -104,8 +104,8 @@ def makeFirewallConfiguration(fullSiteList, localSite, localNode):
    _writeFWConfig(v4File, v6File, ":INPUT ACCEPT [0:0]\n")
 
    # ------ Reject external RPC portmapper access ---------
-   restrictedPortsUDP = [ '53', '111' ]
-   restrictedPortsTCP = [ '53', '111', '3128:3129' ]
+   restrictedPortsUDP = [ '53', '111', '161' ]
+   restrictedPortsTCP = [ '53', '111', '161', '3128:3129' ]
 
    for port in restrictedPortsUDP:
       for prefix in [ '127.0.0.1', str(NorNet_Configuration['NorNet_IPv4Prefix']), str(NorNet_Configuration['NorNet_IPv4TunnelPrefix']) ]:

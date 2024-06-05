@@ -1,3 +1,39 @@
+commit f092c445093a591fe2ef32f9568adeea36e9e6da
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 5 17:15:04 2024 +0200
+
+    Removed SNMP.
+
+commit b3abf82f945247d7e8de119d2d9198427eff2c55
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 5 17:14:39 2024 +0200
+
+    Updated script.
+
+commit c50ad18a8b67eb346eb2db1c48e5da3e32cc0000
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 15:12:16 2023 +0100
+
+    Configuration update.
+
+commit 46affc4d3488ebb9e544a7f7c85c4dd2d960cc06
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 15:11:48 2023 +0100
+
+    RPM dependency fix.
+
+commit f1fd68285e363ba69e6458835aa38cb5fc295be7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 15:11:36 2023 +0100
+
+    Updated script.
+
+commit de4c6894c90a3c93ab231597b7565204d3213d56
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 6 17:02:51 2023 +0200
+
+    New release nornet-1.5.22.
+
 commit 0d76682a2e5c1f8cb0274853dd66b31ab574515d
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Thu Feb 2 13:23:07 2023 +0100

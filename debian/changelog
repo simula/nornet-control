@@ -1,8 +1,8 @@
-nornet (1.5.23~netplan5-1ubuntu1) noble; urgency=medium
+nornet (1.5.23-1ubuntu1) bionic; urgency=medium
 
   * New upstream release.
 
- -- Thomas Dreibholz <dreibh@simula.no>  Fri, 08 Dec 2023 14:51:07 +0100
+ -- Thomas Dreibholz <dreibh@simula.no>  Wed, 05 Jun 2024 17:21:10 +0200
 
 nornet (1.5.22-1ubuntu1) bionic; urgency=medium
 
