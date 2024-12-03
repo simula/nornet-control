@@ -18,7 +18,8 @@
 #
 # Contact: dreibh@simula.no
 
-PROXY="128.39.37.188"   # oesthorn.nntb.no
+# PROXY="128.39.37.188"   # oesthorn.nntb.no
+PROXY="nornetpp@158.37.6.195"   # UiB
 
 Random-Sleep 0 5
 while [ true ] ; do
