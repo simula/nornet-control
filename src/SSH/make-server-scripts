@@ -31,6 +31,16 @@ for level in 251 252 253 254 1 ; do
    ) >tabs${level}
 done
 
+(
+   for name in fornebu.simula.nornet blindern.uio.nornet gjoevik.hig.nornet tromsoe.uit.nornet stavanger.uis.nornet bergen.uib.nornet kristiansand.uia.nornet trondheim.ntnu.nornet narvik.hin.nornet karlstad.kau.nornet ; do
+      # address="2001:700:4100:010${site}::1"
+      # name=`dig -x ${address} +short | sed -e "s/\..*$//g"`
+      if [ "${name}" == "" ] ; then
+         name="${address}"
+      fi
+      echo "title: ${name};; command: `realpath access` ${name}"
+   done
+) >tabsTBOX
 
 (
    for level in 251 252 253 254 1 ; do
