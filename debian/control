@@ -3,6 +3,8 @@ Section: net
 Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: https://www.nntb.no/
+Vcs-Git: https://github.com/simula/nornet-control.git
+Vcs-Browser: https://github.com/simula/nornet-control
 Build-Depends: cmake (>= 3.3) | cmake3,
                debhelper (>= 9),
                dh-python,
@@ -16,7 +18,7 @@ Build-Depends: cmake (>= 3.3) | cmake3,
                libfile-fcntllock-perl,
                libimage-exiftool-perl,
                python3-all
-Standards-Version: 4.6.2
+Standards-Version: 4.7.0
 Rules-Requires-Root: no
 
 Package: nornet-management
