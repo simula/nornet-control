@@ -255,7 +255,6 @@ Requires: mock
 Requires: openssl-devel
 Requires: pbuilder
 Requires: perl-Image-ExifTool
-Requires: pkg-config
 Requires: python3
 Requires: python3-pip
 Requires: python3-psycopg2
