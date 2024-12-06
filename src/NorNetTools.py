@@ -150,13 +150,13 @@ def getLocalAddresses(version):
       error('Unable to call /sbin/ip to obtain interface addresses: ' + str(e))
 
    for line in lines:
-      match = re.search('(^[ \t]*inet6[ \t]*)([0-9a-zA-Z:]*)([ \t]*)', line)
+      match = re.search(r'(^[ \t]*inet6[ \t]*)([0-9a-zA-Z:]*)([ \t]*)', line)
       if match != None:
          v6Address = IPv6Address(match.group(2))
          if not v6Address.is_link_local:
             addressList.append(v6Address)
       else:
-         match = re.search('(^[ \t]*inet[ \t]*)([0-9\.]*)([ \t]*)', line)
+         match = re.search(r'(^[ \t]*inet[ \t]*)([0-9\.]*)([ \t]*)', line)
          if match != None:
             v4Address = IPv4Address(match.group(2))
             addressList.append(v4Address)
@@ -175,7 +175,7 @@ def resolveHostname(name, protocol=0):
 
 # ###### Get hostname from FQDN #############################################
 def getHostnameFromFQDN(fqdn):
-   match = re.search('^([^\.]*)\.(.*)', fqdn)
+   match = re.search(r'^([^\.]*)\.(.*)', fqdn)
    if match != None:
       return match.group(1)
    else:
@@ -184,7 +184,7 @@ def getHostnameFromFQDN(fqdn):
 
 # ###### Get hostname from FQDN #############################################
 def getDomainFromFQDN(fqdn):
-   match = re.search('^([^\.]*)\.(.*)', fqdn)
+   match = re.search(r'^([^\.]*)\.(.*)', fqdn)
    if match != None:
       return match.group(2)
    else:
