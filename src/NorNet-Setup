@@ -1180,8 +1180,34 @@ if len(sys.argv) > 2:
       action = 'remove'
    elif sys.argv[1] == 'manage':
       action = 'manage'
+   elif sys.argv[1] == 'info':
+      action = 'info'
 if action == '':
-   error('Usage: ' + sys.argv[0] + ' add|renew|remove|manage Site|ALL [Site] ... [--user=user_name] [--slice=slice_name]')
+   error('Usage: ' + sys.argv[0] + ' add|renew|remove|info|manage Site|ALL [Site] ... [--user=user_name] [--slice=slice_name]')
+
+
+if action == 'info':
+   loadNorNetConfiguration(quietMode = True)
+   for site in norNetSetup:
+      for provider in site['site_providers']:
+         providerIndex = -1
+         for p in NorNet_ProviderList:
+            if NorNet_ProviderList[p][0] == provider[0]:
+               providerIndex = p
+               break
+         if providerIndex <= 0:
+            error("Unknown provider " + provider[0])
+
+         if provider[2] != IPv4Interface('0.0.0.0/0'):
+            sys.stdout.write(str(provider[2].ip) + '\t' +
+                             str(site['site_index']) + '\t' +
+                             str(providerIndex) + '\n')
+         if provider[4] != IPv6Interface('::/0'):
+            sys.stdout.write(str(provider[4].ip) + '\t' +
+                             str(site['site_index']) + '\t' +
+                             str(providerIndex) + '\n')
+
+   sys.exit(0)
 
 
 log('***** Welcome to NorNet! *****')
