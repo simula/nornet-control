@@ -11,7 +11,7 @@
 # --------------------------------------------------------------------------
 #
 # SuNILab Desktop Background Script
-# Copyright (C) 2017-2024 by Thomas Dreibholz
+# Copyright (C) 2017-2025 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,16 +30,16 @@
 
 
 #############################################################################
-#### INITIALISE                                                          ####
+# INITIALISE
 #############################################################################
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
-PROJECT(undefined NONE)   # to be set in Settings.input
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
+PROJECT(undefined C)   # to be set in Settings.input
 INCLUDE(Settings.input)
 
 
 #############################################################################
-#### INSTALLATION_DIRECTORIES                                            ####
+# INSTALLATION_DIRECTORIES
 #############################################################################
 
 # See: https://cmake.org/cmake/help/v3.0/module/GNUInstallDirs.html
@@ -47,7 +47,7 @@ INCLUDE(GNUInstallDirs)
 
 
 #############################################################################
-#### OPTIONS                                                             ####
+# OPTIONS
 #############################################################################
 
 OPTION(FLAT_DIRECTORY_STRUCTURE "Use flat directory structure" ${TDD_FLAT_DIRECTORY_STRUCTURE})
@@ -77,7 +77,7 @@ ENDIF()
 
 
 #############################################################################
-#### REQUIREMENTS                                                        ####
+# REQUIREMENTS
 #############################################################################
 
 INCLUDE(FindUnixCommands)
@@ -85,12 +85,29 @@ INCLUDE(FindUnixCommands)
 # ------ Required prgorams --------------------------------------------------
 FIND_PROGRAM(AWK awk PATHS /bin /usr/bin /usr/local/bin)
 IF(NOT AWK)
-   MESSAGE(FATAL_ERROR "awk (Ubuntu/Debian: awk; Fedora: awk) not found!")
+   MESSAGE(FATAL_ERROR
+           " Cannot find AWK! Try:\n"
+           " * Ubuntu/Debian: sudo apt install -y awk\n"
+           " * Fedora:        sudo dnf install -y awk\n"
+           " * FreeBSD:       (should always be there!")
 ENDIF()
 
 FIND_PROGRAM(GM gm PATHS /bin /usr/bin /usr/local/bin)
 IF(NOT GM)
-   MESSAGE(FATAL_ERROR "gm (Ubuntu/Debian: graphicsmagick; Fedora: GraphicsMagick) not found!")
+   MESSAGE(FATAL_ERROR
+           " Cannot find GraphicsMagick! Try:\n"
+           " * Ubuntu/Debian: sudo apt install -y graphicsmagick\n"
+           " * Fedora:        sudo dnf install -y GraphicsMagick\n"
+           " * FreeBSD:       sudo pkg install -y GraphicsMagick")
+ENDIF()
+
+FIND_PROGRAM(GIMP gimp PATHS /bin /usr/bin /usr/local/bin)
+IF(NOT GIMP)
+   MESSAGE(FATAL_ERROR
+           " Cannot find Gimp! Try:\n"
+           " * Ubuntu/Debian: sudo apt install -y gimp\n"
+           " * Fedora:        sudo dnf install -y gimp\n"
+           " * FreeBSD:       sudo pkg install -y gimp")
 ENDIF()
 
 # NOTE: exiftool fails to handle GIMP-generated JPEG files under
@@ -98,7 +115,11 @@ ENDIF()
 # (i.e. the EXIF information will not be updated).
 FIND_PROGRAM(EXIFTOOL exiftool PATHS /bin /usr/bin /usr/local/bin)
 IF(NOT EXIFTOOL)
-   MESSAGE(FATAL_ERROR "exiftool (Ubuntu/Debian: libimage-exiftool-perl; Fedora: perl-Image-ExifTool) not found!")
+   MESSAGE(FATAL_ERROR
+           " Cannot find ExifTool! Try:\n"
+           " * Ubuntu/Debian: sudo apt install -y libimage-exiftool-perl\n"
+           " * Fedora:        sudo dnf install -y perl-Image-ExifTool\n"
+           " * FreeBSD:       sudo pkg install -y p5-Image-ExifTool")
 ENDIF()
 
 # ------ Required scripts ---------------------------------------------------
@@ -117,19 +138,19 @@ IF(NOT MAKE_CAPTION)
    MESSAGE(FATAL_ERROR "Make-Caption (${TDD_MAKE_CAPTION}) not found!")
 ENDIF()
 
-FIND_PROGRAM(MAKE_TEXT ${TDD_MAKE_TEXT})
-IF(NOT MAKE_TEXT)
-   MESSAGE(FATAL_ERROR "Make-Text (${TDD_MAKE_TEXT}) not found!")
+FIND_PROGRAM(MAKE_GLOSSYTEXT ${TDD_MAKE_GLOSSYTEXT})
+IF(NOT MAKE_GLOSSYTEXT)
+   MESSAGE(FATAL_ERROR "Make-GlossyText (${TDD_MAKE_GLOSSYTEXT}) not found!")
 ENDIF()
 
-FIND_PROGRAM(MAKE_BACKGROUND ${TDD_MAKE_BACKGROUND})
-IF(NOT MAKE_BACKGROUND)
-   MESSAGE(FATAL_ERROR "Make-Background (${TDD_MAKE_BACKGROUND}) not found!")
+FIND_PROGRAM(MAKE_BUMPMAP ${TDD_MAKE_BUMPMAP})
+IF(NOT MAKE_BUMPMAP)
+   MESSAGE(FATAL_ERROR "Make-BumpMap (${TDD_MAKE_BUMPMAP}) not found!")
 ENDIF()
 
-FIND_PROGRAM(MAKE_PAINTING ${TDD_MAKE_PAINTING})
-IF(NOT MAKE_PAINTING)
-   MESSAGE(FATAL_ERROR "Make-Painting (${TDD_MAKE_PAINTING}) not found!")
+FIND_PROGRAM(MAKE_OILPAINTING ${TDD_MAKE_OILPAINTING})
+IF(NOT MAKE_OILPAINTING)
+   MESSAGE(FATAL_ERROR "Make-OilPainting (${TDD_MAKE_OILPAINTING}) not found!")
 ENDIF()
 
 FIND_PROGRAM(MAKE_MOSAIC ${TDD_MAKE_MOSAIC})
@@ -160,7 +181,7 @@ ENDIF()
 
 
 #############################################################################
-#### REQUIREMENTS                                                        ####
+# REQUIREMENTS
 #############################################################################
 
 IF(TDD_ADD_DIST_TARGET)
@@ -176,7 +197,7 @@ ENDIF()
 
 
 #############################################################################
-#### BUILD TARGETS                                                       ####
+# BUILD TARGETS
 #############################################################################
 
 # NOTE: The following build rules use custom commands. They need additional
@@ -229,7 +250,7 @@ FILE(MAKE_DIRECTORY ${GIMP_DIRECTORY})
 FILE(MAKE_DIRECTORY ${GIMP_DIRECTORY}/./gradients)   # For some reason, Gimp 2.10 does not create this directory but complains about it.
 SET(gimpDirStamp "${GIMP_DIRECTORY}/gimp.stamp")
 ADD_CUSTOM_COMMAND(OUTPUT  ${gimpDirStamp}
-                   COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${TEST_GIMP}
+                   COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${TEST_GIMP}
                    COMMAND touch ${gimpDirStamp})
 ADD_CUSTOM_TARGET(generate_gimpDirStamp DEPENDS ${gimpDirStamp})
 
@@ -241,7 +262,7 @@ FOREACH(textFile IN LISTS TDD_TEXT_FILES)
    GET_FILENAME_COMPONENT(textImage ${textImage} NAME)
 
    ADD_CUSTOM_COMMAND(OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text/${textImage}
-                      COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} MAKE_TEXT="${MAKE_TEXT}" OUTPUT="${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text/${textImage}" ${BASH} ${textFile}
+                      COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} MAKE_GLOSSYTEXT="${MAKE_GLOSSYTEXT}" OUTPUT="${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text/${textImage}" ${BASH} ${textFile}
                       DEPENDS ${textFile}
                               generate_gimpDirStamp
                               ${gimpDirStamp})
@@ -268,7 +289,7 @@ FOREACH(image IN LISTS TDD_IMAGE_FILES)
       makeUniqueTarget(generate_hostnameImage "generate_${hostname}.png")
 
       ADD_CUSTOM_COMMAND(OUTPUT  ${hostnameImage}
-                         COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_TEXT} ${hostnameImage} "${hostname}" 256 10 "Brushed Aluminium" "Comic Sans MS"
+                         COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_GLOSSYTEXT} ${hostnameImage} "${hostname}" 256 10 "Brushed Aluminium" "Comic Sans MS"
                          DEPENDS generate_gimpDirStamp
                                  ${gimpDirStamp})
       ADD_CUSTOM_TARGET(${generate_hostnameImage} DEPENDS ${hostnameImage})
@@ -294,7 +315,7 @@ FOREACH(resolution IN LISTS TDD_BOOTSPLASH_RESOLUTIONS)
    STRING(REGEX REPLACE "x.*$" "" bootsplash_width  "${resolution}")
    STRING(REGEX REPLACE "^.*x" "" bootsplash_height "${resolution}")
    ADD_CUSTOM_COMMAND(OUTPUT  ${imageCaption}
-                      COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} MAKE_CAPTION=${MAKE_CAPTION} ${BUILD_CAPTION} ${imageCaption} ${captionFile} ${bootsplash_width} ${bootsplash_height}
+                      COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} MAKE_CAPTION=${MAKE_CAPTION} ${BUILD_CAPTION} ${imageCaption} ${captionFile} ${bootsplash_width} ${bootsplash_height}
                       DEPENDS ${generate_captionFile}
                               ${captionFile}
                               generate_gimpDirStamp
@@ -328,7 +349,7 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
 
    # NOTE: Dependency on generate targets and files!
    ADD_CUSTOM_COMMAND(OUTPUT ${overlayImage}
-                      COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${BUILD_OVERLAY} ${overlayImage} ${width} ${height} ${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text
+                      COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${BUILD_OVERLAY} ${overlayImage} ${width} ${height} ${CMAKE_CURRENT_BINARY_DIR}/${TDD_OUTPUT_DIRECTORY}/Text
                       DEPENDS generate_all_texts
                               ${all_texts}
                               ${BUILD_OVERLAY})
@@ -396,8 +417,8 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
          IF(variant STREQUAL "plain")
             IF(imageExtension STREQUAL ".png")
                ADD_CUSTOM_COMMAND(OUTPUT  ${imageWithoutLogo}
-                                  COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED}    ${image} ${imageTemp2} ${aspectRatio} ${width}
-                                  COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_BACKGROUND} ${imageTemp2} ${imageTemp1}
+                                  COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED}    ${image} ${imageTemp2} ${aspectRatio} ${width}
+                                  COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_BUMPMAP} ${imageTemp2} ${imageTemp1}
                                   COMMAND ${GM} convert ${imageTemp1} -interlace line ${imageWithoutLogo}
                                   COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
                                   COMMAND ${RM} -f ${imageTemp1} ${imageTemp2}
@@ -406,7 +427,7 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
                                           ${gimpDirStamp})
             ELSE()
                ADD_CUSTOM_COMMAND(OUTPUT  ${imageWithoutLogo}
-                                  COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED} ${image} ${imageTemp1} ${aspectRatio} ${width}
+                                  COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED} ${image} ${imageTemp1} ${aspectRatio} ${width}
                                   COMMAND ${GM} convert ${imageTemp1} -interlace line ${imageWithoutLogo}
                                   COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
                                   COMMAND ${RM} -f ${imageTemp1} ${imageTemp2}
@@ -420,8 +441,8 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
             EXECUTE_PROCESS(COMMAND ${AWK} "BEGIN { print int((8*${width})/1024 + 0.5) }" OUTPUT_VARIABLE maskSize OUTPUT_STRIP_TRAILING_WHITESPACE)
             # MESSAGE("Painting: ${width} -> ${maskSize}")
             ADD_CUSTOM_COMMAND(OUTPUT  ${imageWithoutLogo}
-                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED}  ${image} ${imageTemp2} ${aspectRatio} ${width}
-                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_PAINTING} ${imageTemp2} ${imageTemp1} ${makeSize}
+                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED}  ${image} ${imageTemp2} ${aspectRatio} ${width}
+                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_OILPAINTING} ${imageTemp2} ${imageTemp1} ${makeSize}
                                COMMAND ${GM} convert ${imageTemp1} -interlace line ${imageWithoutLogo}
                                COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
                                COMMAND ${RM} -f ${imageTemp1} ${imageTemp2}
@@ -441,8 +462,8 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
             ENDIF()
             # MESSAGE("Mosaic: ${width} ${height} -> ${tileSize} ${tileHeight}")
             ADD_CUSTOM_COMMAND(OUTPUT  ${imageWithoutLogo}
-                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED} ${image} ${imageTemp2} ${aspectRatio} ${width}
-                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_MOSAIC}  ${imageTemp2} ${imageTemp1} ${tileSize} ${tileHeight} ${tileHeight} hexagons rough
+                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED} ${image} ${imageTemp2} ${aspectRatio} ${width}
+                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_MOSAIC}  ${imageTemp2} ${imageTemp1} ${tileSize} ${tileHeight} ${tileHeight} --type hexagons --surface rough
                                COMMAND ${GM} convert ${imageTemp1} -interlace line ${imageWithoutLogo}
                                COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
                                COMMAND ${RM} -f ${imageTemp1} ${imageTemp2}
@@ -453,8 +474,8 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
          # ------ Cloth -----------------------------------------------------
          ELSEIF(variant STREQUAL "cloth")
             ADD_CUSTOM_COMMAND(OUTPUT  ${imageWithoutLogo}
-                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED} ${image} ${imageTemp2} ${aspectRatio} ${width}
-                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CLOTH}   ${imageTemp2} ${imageTemp1} 5
+                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED} ${image} ${imageTemp2} ${aspectRatio} ${width}
+                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CLOTH}   ${imageTemp2} ${imageTemp1} 5
                                COMMAND ${GM} convert ${imageTemp1} -interlace line ${imageWithoutLogo}
                                COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
                                COMMAND ${RM} -f ${imageTemp1} ${imageTemp2}
@@ -465,8 +486,8 @@ FOREACH(resolution IN LISTS TDD_RESOLUTIONS)
          # ------ Old Photo -------------------------------------------------
          ELSEIF(variant STREQUAL "oldphoto")
             ADD_CUSTOM_COMMAND(OUTPUT  ${imageWithoutLogo}
-                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED}  ${image} ${imageTemp2} ${aspectRatio} ${width}
-                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_OLDPHOTO} ${imageTemp2} ${imageTemp1} 20
+                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_CROPPED}  ${image} ${imageTemp2} ${aspectRatio} ${width}
+                               COMMAND env GIMP2_DIRECTORY=${GIMP_DIRECTORY} GIMP3_DIRECTORY=${GIMP_DIRECTORY} ${MAKE_OLDPHOTO} ${imageTemp2} ${imageTemp1} 20
                                COMMAND ${GM} convert ${imageTemp1} -interlace line ${imageWithoutLogo}
                                COMMAND ${EXIFTOOL} -m -q -overwrite_original -Copyright="${TDD_COPYRIGHT}" ${imageWithoutLogo} || true
                                COMMAND ${RM} -f ${imageTemp1} ${imageTemp2}
@@ -614,7 +635,7 @@ ENDFOREACH()
 
 
 #############################################################################
-#### SOURCE DIRECTORIES                                                  ####
+# SOURCE DIRECTORIES
 #############################################################################
 
 IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/grub)
