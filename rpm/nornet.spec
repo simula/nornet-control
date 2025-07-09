@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.5.23
+Version: 1.5.24~rc0
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -21,7 +21,6 @@ BuildRequires: google-noto-sans-fonts
 BuildRequires: google-noto-serif-fonts
 BuildRequires: GraphicsMagick
 BuildRequires: perl-Image-ExifTool
-BuildRequires: pygtk2
 BuildRequires: python3-devel
 BuildRequires: qt5-qtbase-devel
 BuildRequires: texlive-epstopdf-bin

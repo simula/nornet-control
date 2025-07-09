@@ -18,7 +18,7 @@ Build-Depends: cmake (>= 3.3) | cmake3,
                libfile-fcntllock-perl,
                libimage-exiftool-perl,
                python3-all
-Standards-Version: 4.7.0
+Standards-Version: 4.7.2
 Rules-Requires-Root: no
 
 Package: nornet-management
