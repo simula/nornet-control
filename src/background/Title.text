@@ -1,1 +1,1 @@
-${MAKE_TEXT} ${OUTPUT}   "NorNet"   1024 30 "Golden"   "DejaVu Sans Bold"
+${MAKE_GLOSSYTEXT} ${OUTPUT}   "NorNet"   1024   --bordersize 30   --colorscheme "Golden"   --font "DejaVu Sans Bold"
