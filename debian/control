@@ -3,12 +3,10 @@ Section: net
 Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@simula.no>
 Homepage: https://www.nntb.no/
-Build-Depends: cmake,
-               debhelper (>= 12),
 Vcs-Git: https://github.com/simula/nornet-control.git
 Vcs-Browser: https://github.com/simula/nornet-control
-Build-Depends: cmake (>= 3.3) | cmake3,
-               debhelper (>= 9),
+Build-Depends: cmake,
+               debhelper (>= 12),
                dh-python,
                fonts-dejavu,
                fonts-noto-cjk,
@@ -20,8 +18,7 @@ Build-Depends: cmake (>= 3.3) | cmake3,
                libfile-fcntllock-perl,
                libimage-exiftool-perl,
                python3-all,
-               python3-setuptools,
-               python3-all
+               python3-setuptools
 Standards-Version: 4.7.2
 Rules-Requires-Root: no
 
