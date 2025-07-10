@@ -1,9 +1,9 @@
-nornet (1.5.24~rc0-1ubuntu1) questing; urgency=medium
+nornet (1.5.24-1ubuntu1) questing; urgency=medium
 
   * New upstream release.
   * debian/control: Updated standards version to 4.7.2.
 
- -- Thomas Dreibholz <dreibh@simula.no>  Wed, 09 Jul 2025 16:45:32 +0200
+ -- Thomas Dreibholz <dreibh@simula.no>  Thu, 10 Jul 2025 13:27:54 +0200
 
 nornet (1.5.23-1ubuntu1) bionic; urgency=medium
 
