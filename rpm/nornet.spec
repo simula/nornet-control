@@ -1,9 +1,9 @@
 Name: nornet
-Version: 1.5.24~netplan1
+Version: 1.5.25~netplan1
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
-License: GPL-3+
+License: GPL-3.0-or-later
 URL: https://www.nntb.no/
 Source: https://packages.nntb.no/software/nornet/%{name}-%{version}.tar.xz
 
@@ -21,7 +21,6 @@ BuildRequires: google-noto-sans-fonts
 BuildRequires: google-noto-serif-fonts
 BuildRequires: GraphicsMagick
 BuildRequires: perl-Image-ExifTool
-BuildRequires: pygtk2
 BuildRequires: python3-devel
 BuildRequires: python3-setuptools
 BuildRequires: qt5-qtbase-devel
@@ -256,7 +255,6 @@ Requires: mock
 Requires: openssl-devel
 Requires: pbuilder
 Requires: perl-Image-ExifTool
-Requires: pkg-config
 Requires: python3
 Requires: python3-pip
 Requires: python3-psycopg2

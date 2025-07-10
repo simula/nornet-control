@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
+# ==========================================================================
+#         ____            _                     _____           _
+#        / ___| _   _ ___| |_ ___ _ __ ___     |_   _|__   ___ | |___
+#        \___ \| | | / __| __/ _ \ '_ ` _ \ _____| |/ _ \ / _ \| / __|
+#         ___) | |_| \__ \ ||  __/ | | | | |_____| | (_) | (_) | \__ \
+#        |____/ \__, |___/\__\___|_| |_| |_|     |_|\___/ \___/|_|___/
+#               |___/
+#                             --- System-Tools ---
+#                  https://www.nntb.no/~dreibh/system-tools/
+# ==========================================================================
 #
-# Image Best-Fit (resize with cropping, keeping aspect ratio)
-# Copyright (C) 2012-2024 by Thomas Dreibholz
+# GIMP Scripts
+# Copyright (C) 2013-2025 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,11 +26,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Contact: dreibh@simula.no
-#
+# Contact: thomas.dreibholz@gmail.com
 
 # Bash options:
-set -e
+set -eu
 
 
 # ###### Handle arguments ###################################################
@@ -32,12 +41,12 @@ fi
 inputFileName="$1"
 outputFileName="$2"
 
-inputImageSize=`gm identify -format "%wx%h" "$inputFileName"`
+inputImageSize=$(gm identify -format "%wx%h" "$inputFileName")
 
 aspectArg="$3"
 outputAspect=1
 if [[ "$aspectArg" =~ ^([0-9]+\.{0,1}[0-9]*)([:x])([0-9]+\.{0,1}[0-9]*)$ ]] ; then
-   outputAspect=`LC_NUMERIC=C awk "BEGIN { print ${BASH_REMATCH[1]}/${BASH_REMATCH[3]} }"`
+   outputAspect=$(LC_NUMERIC=C awk "BEGIN { print ${BASH_REMATCH[1]}/${BASH_REMATCH[3]} }")
 else
    if [[ "$aspectArg" =~ ^([0-9]+\.{0,1}[0-9]*)$ ]] ; then
       outputAspect="${BASH_REMATCH[1]}"
@@ -51,33 +60,36 @@ else
    fi
 fi
 
-newWidth=`echo "$inputImageSize" | sed -e "s/x[0-9]*$//"`
+# shellcheck disable=SC2001
+newWidth=$(echo "${inputImageSize}" | sed -e "s/x[0-9]*$//")
 if [ $# -ge 4 ] ; then
    newWidth="$4"
-   newHeight=`LC_NUMERIC=C awk "BEGIN { print (${newWidth}/${outputAspect})+0.5 }"`
+   newHeight=$(LC_NUMERIC=C awk "BEGIN { print (${newWidth}/${outputAspect})+0.5 }")
 fi
 
 
 # ###### Load image #########################################################
-inputWidth=`echo "$inputImageSize" | sed -e "s/x[0-9]*$//"`
-inputHeight=`echo "$inputImageSize" | sed -e "s/^[0-9]*x//"`
-inputAspect=`LC_NUMERIC=C awk "BEGIN { print ${inputWidth}/${inputHeight} }"`
+# shellcheck disable=SC2001
+inputWidth=$(echo "${inputImageSize}" | sed -e "s/x[0-9]*$//")
+# shellcheck disable=SC2001
+inputHeight=$(echo "${inputImageSize}" | sed -e "s/^[0-9]*x//")
+inputAspect=$(LC_NUMERIC=C awk "BEGIN { print ${inputWidth}/${inputHeight} }")
 if [[ "$inputAspect" =~ ^- ]] ; then
-   inputAspect=`LC_NUMERIC=C awk "BEGIN { print 1/${inputAspect} }"`   # Input image is in portrait format => convert aspect
+   inputAspect=$(LC_NUMERIC=C awk "BEGIN { print 1/${inputAspect} }")   # Input image is in portrait format => convert aspect
 fi
 # echo "Input: ${inputWidth}*${inputHeight} (${inputAspect})"
 
 
 # ###### Crop image #########################################################
-if [[ "`LC_NUMERIC=C awk "BEGIN { print ${inputAspect}-${outputAspect} }"`" =~ ^- ]] ; then   # inputAspect < outputAspect
+if [[ "$(LC_NUMERIC=C awk "BEGIN { print ${inputAspect}-${outputAspect} }")" =~ ^- ]] ; then   # inputAspect < outputAspect
    croppedInputWidth=${inputWidth}
-   croppedInputHeight=`LC_NUMERIC=C awk "BEGIN { print int(${croppedInputWidth}/${outputAspect})+0.5 }"`
+   croppedInputHeight=$(LC_NUMERIC=C awk "BEGIN { print int(${croppedInputWidth}/${outputAspect})+0.5 }")
 else
    croppedInputHeight=${inputHeight}
-   croppedInputWidth=`LC_NUMERIC=C awk "BEGIN { print int(${inputHeight}*${outputAspect})+0.5 }"`
+   croppedInputWidth=$(LC_NUMERIC=C awk "BEGIN { print int(${inputHeight}*${outputAspect})+0.5 }")
 fi
-cx=`LC_NUMERIC=C awk "BEGIN { print int(${inputWidth}-${croppedInputWidth})/2+0.5 }"`
-cy=`LC_NUMERIC=C awk "BEGIN { print int(${inputHeight}-${croppedInputHeight})/2+0.5 }"`
+cx=$(LC_NUMERIC=C awk "BEGIN { print int(${inputWidth}-${croppedInputWidth})/2+0.5 }")
+cy=$(LC_NUMERIC=C awk "BEGIN { print int(${inputHeight}-${croppedInputHeight})/2+0.5 }")
 # echo "Crop: ${croppedInputWidth}*${croppedInputHeight} [cx=${cx} cy=${cy}] (${outputAspect}:1)"
 
 
@@ -87,13 +99,13 @@ cy=`LC_NUMERIC=C awk "BEGIN { print int(${inputHeight}-${croppedInputHeight})/2+
 # fi
 
 # ###### Run "convert" ######################################################
-rm -f "$outputFileName"
+rm -f "${outputFileName}"
 gm convert "$inputFileName" \
-   -crop ${croppedInputWidth}x${croppedInputHeight}+${cx}+${cy} \
-   -resize ${newWidth}x${newHeight} \
+   -crop "${croppedInputWidth}"x"${croppedInputHeight}"+"${cx}"+"${cy}" \
+   -resize "${newWidth}"x"${newHeight}" \
    +repage \
-   "$outputFileName"
+   "${outputFileName}"
 
 # echo "Done!"
 
-# gm identify "$outputFileName"
+# gm identify "${outputFileName}"

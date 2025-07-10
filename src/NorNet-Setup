@@ -563,34 +563,34 @@ norNetSetup = [
       #[ 107, 8, u'zollverein'  ]
    ] },
 
- #{ 'site_index'        : 43,
-   #'site_enabled'      : False,
-   #'site_long_name'    : u'Universität Darmstadt',
-   #'site_short_name'   : 'TUDA',
-   #'site_url'          : 'https://www.deeds.informatik.tu-darmstadt.de',
-   #'site_domain'       : 'tuda.nornet',
-   #'site_city'         : 'Darmstadt',
-   #'site_province'     : 'Hessen',
-   #'site_country'      : 'Deutschland',
-   #'site_country_code' : 'DE',
-   #'site_latitude'     : 49.877621,
-   #'site_longitude'    : 8.654673,
-   #'site_altitude'     : 50,
-   #'site_contacts'     : [ u'Demir, Kubilay: kubidem@deeds.informatik.tu-darmstadt.de' ],
-   #'site_pcu'          : [ IPv4Address('130.83.162.211'), 'pcu-root', 'a-secret-password' ],
-   #'site_nornet_if'    : 'eth0',
-   #'site_providers' : [
-      #[ u'Deutsches Forschungsnetz', 'eth1',
-           #IPv4Interface('130.83.162.212/25'), IPv4Address('130.83.162.254'),
-           #IPv6Interface('::/0'),              IPv6Address('::'),
-           #1500, 'fibre, research', 1000000, 1000000 ],
-   #],
-   #'site_nodes' : [
-      #[ 100, 1, u'woogsviertel'     ],
-      #[ 101, 2, u'edelsteinviertel' ],
-      #[ 102, 3, u'verlegerviertel'  ],
-      #[ 103, 4, u'bessungen'        ]
-   #] },
+ { 'site_index'        : 43,
+   'site_enabled'      : False,
+   'site_long_name'    : u'Universität Darmstadt',
+   'site_short_name'   : 'TUDA',
+   'site_url'          : 'https://www.deeds.informatik.tu-darmstadt.de',
+   'site_domain'       : 'tuda.nornet',
+   'site_city'         : 'Darmstadt',
+   'site_province'     : 'Hessen',
+   'site_country'      : 'Deutschland',
+   'site_country_code' : 'DE',
+   'site_latitude'     : 49.877621,
+   'site_longitude'    : 8.654673,
+   'site_altitude'     : 50,
+   'site_contacts'     : [ u'Demir, Kubilay: kubidem@deeds.informatik.tu-darmstadt.de' ],
+   'site_pcu'          : [ IPv4Address('130.83.162.211'), 'pcu-root', 'a-secret-password' ],
+   'site_nornet_if'    : 'eth0',
+   'site_providers' : [
+      [ u'Deutsches Forschungsnetz', 'eth1',
+           IPv4Interface('130.83.162.212/25'), IPv4Address('130.83.162.254'),
+           IPv6Interface('::/0'),              IPv6Address('::'),
+           1500, 'fibre, research', 1000000, 1000000 ],
+   ],
+   'site_nodes' : [
+      [ 100, 1, u'woogsviertel'     ],
+      [ 101, 2, u'edelsteinviertel' ],
+      [ 102, 3, u'verlegerviertel'  ],
+      [ 103, 4, u'bessungen'        ]
+   ] },
 
  { 'site_index'        : 30,
    'site_enabled'      : True,
@@ -622,35 +622,35 @@ norNetSetup = [
    ] },
 
  # Universidad de Castilla-La Mancha (UCLM)
- { 'site_index'        : 60,
-   'site_enabled'      : False,
-   'site_long_name'    : u"Universidad de Castilla-La Mancha",
-   'site_short_name'   : 'UCLM',
-   'site_url'          : 'https://www.uclm.es',
-   'site_domain'       : 'uclm.nornet',
-   'site_city'         : 'Albacete',
-   'site_province'     : 'Castilla-La Mancha',
-   'site_country'      : 'Spain',
-   'site_country_code' : 'ES',
-   'site_latitude'     : 38.97868186998078,
-   'site_longitude'    : -1.8570595979690552,
-   'site_altitude'     : 100,
-   'site_contacts'     : [ u'Escudero Sahuquillo, Jesús: jesus.escudero@uclm.es', u'Orozco Barbosa, Luis: luis.orozco@uclm.es' ],
-   'site_pcu'          : [ IPv4Address('132.252.150.151'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ u'Interconexión de los Recursos InformáticoS', 'eth1',
-           IPv4Interface('132.252.150.152/24'), IPv4Address('132.252.150.1'),
-           IPv6Interface('::/0'),               IPv6Address('::'),
-           1500, 'fibre, business', 0, 0 ]
-   ],
-   'site_nodes' : [
-      # Naming scheme: parts of Albacete
-      [ 100, 1, u'sanpedro'    ],
-      [ 101, 2, u'sanjuan'     ],
-      [ 102, 3, u'santateresa' ],
-      [ 103, 4, u'elpilar'     ]
-    ] },
+ # { 'site_index'        : 60,
+ #   'site_enabled'      : False,
+ #   'site_long_name'    : u"Universidad de Castilla-La Mancha",
+ #   'site_short_name'   : 'UCLM',
+ #   'site_url'          : 'https://www.uclm.es',
+ #   'site_domain'       : 'uclm.nornet',
+ #   'site_city'         : 'Albacete',
+ #   'site_province'     : 'Castilla-La Mancha',
+ #   'site_country'      : 'Spain',
+ #   'site_country_code' : 'ES',
+ #   'site_latitude'     : 38.97868186998078,
+ #   'site_longitude'    : -1.8570595979690552,
+ #   'site_altitude'     : 100,
+ #   'site_contacts'     : [ u'Escudero Sahuquillo, Jesús: jesus.escudero@uclm.es', u'Orozco Barbosa, Luis: luis.orozco@uclm.es' ],
+ #   'site_pcu'          : [ IPv4Address('132.252.150.151'), 'pcu-root', 'a-secret-password' ],
+ #   'site_nornet_if'    : 'eth0',
+ #   'site_providers' : [
+ #      [ u'Interconexión de los Recursos InformáticoS', 'eth1',
+ #           IPv4Interface('132.252.150.152/24'), IPv4Address('132.252.150.1'),
+ #           IPv6Interface('::/0'),               IPv6Address('::'),
+ #           1500, 'fibre, business', 0, 0 ]
+ #   ],
+ #   'site_nodes' : [
+ #      # Naming scheme: parts of Albacete
+ #      [ 100, 1, u'sanpedro'    ],
+ #      [ 101, 2, u'sanjuan'     ],
+ #      [ 102, 3, u'santateresa' ],
+ #      [ 103, 4, u'elpilar'     ]
+ #    ] },
 
  # Laboratoire d'Informatique de Grenoble (LIG)
  { 'site_index'        : 64,
@@ -685,34 +685,34 @@ norNetSetup = [
    ] },
 
  # Northeastern University (东北大学)
- { 'site_index'        : 87,
-   'site_enabled'      : True,
-   'site_long_name'    : u'Northeastern University',
-   'site_short_name'   : 'NEU',
-   'site_url'          : 'http://www.neu.edu.cn',
-   'site_domain'       : 'neu.nornet',
-   'site_city'         : 'Shenyang',
-   'site_province'     : 'Liaoning',
-   'site_country'      : 'China',
-   'site_country_code' : 'CN',
-   'site_latitude'     : 41.8,
-   'site_longitude'    : 123.38,
-   'site_altitude'     : 55,
-   'site_contacts'     : [ u'Zhang, Songyang: sonyang.chang@foxmail.com',
-                           u'Zhang, Wei: zhangwei1@mail.neu.edu.cn',
-                           u'Lei, Weimin: leiweimin@ise.neu.edu.cn' ],
-   'site_pcu'          : [ IPv4Address('219.216.65.5'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ u'China Education and Research Network', 'eth1',
-           IPv4Interface('202.199.6.244/24'), IPv4Address('202.199.6.254'),
-           IPv6Interface('2001:da8:9000:a806::6:244/64'), IPv6Address('2001:da8:9000:a806::1'),
-           1500, 'fibre, research', 10000, 10000 ]
-   ],
-   'site_nodes' : [
-      # Naming scheme: places in Liaoning
-      [ 100, 1, u'mozimountain', 'mozimountain.neu.nornet', 'vnc://mozimountain.neu.nornet:5900' ]
-   ] },
+ # { 'site_index'        : 87,
+ #   'site_enabled'      : True,
+ #   'site_long_name'    : u'Northeastern University',
+ #   'site_short_name'   : 'NEU',
+ #   'site_url'          : 'http://www.neu.edu.cn',
+ #   'site_domain'       : 'neu.nornet',
+ #   'site_city'         : 'Shenyang',
+ #   'site_province'     : 'Liaoning',
+ #   'site_country'      : 'China',
+ #   'site_country_code' : 'CN',
+ #   'site_latitude'     : 41.8,
+ #   'site_longitude'    : 123.38,
+ #   'site_altitude'     : 55,
+ #   'site_contacts'     : [ u'Zhang, Songyang: sonyang.chang@foxmail.com',
+ #                           u'Zhang, Wei: zhangwei1@mail.neu.edu.cn',
+ #                           u'Lei, Weimin: leiweimin@ise.neu.edu.cn' ],
+ #   'site_pcu'          : [ IPv4Address('219.216.65.5'), 'pcu-root', 'a-secret-password' ],
+ #   'site_nornet_if'    : 'eth0',
+ #   'site_providers' : [
+ #      [ u'China Education and Research Network', 'eth1',
+ #           IPv4Interface('202.199.6.244/24'), IPv4Address('202.199.6.254'),
+ #           IPv6Interface('2001:da8:9000:a806::6:244/64'), IPv6Address('2001:da8:9000:a806::1'),
+ #           1500, 'fibre, research', 10000, 10000 ]
+ #   ],
+ #   'site_nodes' : [
+ #      # Naming scheme: places in Liaoning
+ #      [ 100, 1, u'mozimountain', 'mozimountain.neu.nornet', 'vnc://mozimountain.neu.nornet:5900' ]
+ #   ] },
 
  # Hainan University (海南大学)
  { 'site_index'        : 88,
@@ -948,36 +948,35 @@ norNetSetup = [
       [ 101, 2, u'bondi'  ]
    ] },
 
- { 'site_index'        : 201,
-   'site_enabled'      : False,
-   'site_long_name'    : u'University of Sydney',
-   'site_short_name'   : 'USyd',
-   'site_url'          : 'https://sydney.edu.au',
-   'site_domain'       : 'sydney.nornet',
-   'site_city'         : 'Sydney',
-   'site_province'     : 'New South Wales',
-   'site_country'      : 'Australia',
-   'site_country_code' : 'AU',
-   'site_latitude'     : -33.88811,
-   'site_longitude'    : 151.19417,
-   'site_altitude'     : 15,
-   'site_contacts'     : [ u'Holz, Ralph: ralph.holz@sydney.edu.au' ],
-   'site_pcu'          : [ IPv4Address('132.252.150.153'), 'pcu-root', 'a-secret-password' ],
-   'site_nornet_if'    : 'eth0',
-   'site_providers' : [
-      [ u'Australian Academic and Research Network', 'eth1',
-           IPv4Interface('132.252.150.154/24'), IPv4Address('132.252.150.1'),
-           IPv6Interface('::/0'),               IPv6Address('::'),
-           1500, 'fibre, business', 1000000, 1000000 ]
-   ],
-   'site_nodes' : [
-      # Naming scheme: parts of Sydney around the University of Sydney
-      [ 100, 1, u'darlington'  ],
-      [ 101, 2, u'camperdown'  ],
-      [ 102, 3, u'ultimo'      ],
-      [ 103, 4, u'chippendale' ]
-   ] }
-
+ # { 'site_index'        : 201,
+ #   'site_enabled'      : False,
+ #   'site_long_name'    : u'University of Sydney',
+ #   'site_short_name'   : 'USyd',
+ #   'site_url'          : 'https://sydney.edu.au',
+ #   'site_domain'       : 'sydney.nornet',
+ #   'site_city'         : 'Sydney',
+ #   'site_province'     : 'New South Wales',
+ #   'site_country'      : 'Australia',
+ #   'site_country_code' : 'AU',
+ #   'site_latitude'     : -33.88811,
+ #   'site_longitude'    : 151.19417,
+ #   'site_altitude'     : 15,
+ #   'site_contacts'     : [ u'Holz, Ralph: ralph.holz@sydney.edu.au' ],
+ #   'site_pcu'          : [ IPv4Address('132.252.150.153'), 'pcu-root', 'a-secret-password' ],
+ #   'site_nornet_if'    : 'eth0',
+ #   'site_providers' : [
+ #      [ u'Australian Academic and Research Network', 'eth1',
+ #           IPv4Interface('132.252.150.154/24'), IPv4Address('132.252.150.1'),
+ #           IPv6Interface('::/0'),               IPv6Address('::'),
+ #           1500, 'fibre, business', 1000000, 1000000 ]
+ #   ],
+ #   'site_nodes' : [
+ #      # Naming scheme: parts of Sydney around the University of Sydney
+ #      [ 100, 1, u'darlington'  ],
+ #      [ 101, 2, u'camperdown'  ],
+ #      [ 102, 3, u'ultimo'      ],
+ #      [ 103, 4, u'chippendale' ]
+ #   ] }
 
  # Qiongzhou University (琼州大学)
  #{ 'site_index'        : 87,
@@ -1180,8 +1179,50 @@ if len(sys.argv) > 2:
       action = 'remove'
    elif sys.argv[1] == 'manage':
       action = 'manage'
+   elif sys.argv[1] == 'addrinfo':
+      action = 'addrinfo'
+   elif sys.argv[1] == 'siteinfo':
+      action = 'siteinfo'
 if action == '':
-   error('Usage: ' + sys.argv[0] + ' add|renew|remove|manage Site|ALL [Site] ... [--user=user_name] [--slice=slice_name]')
+   error('Usage: ' + sys.argv[0] + ' add|renew|remove|addrinfo|siteinfo|manage Site|ALL [Site] ... [--user=user_name] [--slice=slice_name]')
+
+
+if action == 'addrinfo':
+   loadNorNetConfiguration(quietMode = True)
+   for site in norNetSetup:
+      for provider in site['site_providers']:
+         providerIndex = -1
+         for p in NorNet_ProviderList:
+            if NorNet_ProviderList[p][0] == provider[0]:
+               providerIndex = p
+               break
+         if providerIndex <= 0:
+            error("Unknown provider " + provider[0])
+
+         if provider[2] != IPv4Interface('0.0.0.0/0'):
+            sys.stdout.write(str(provider[2].ip) + '\t' +
+                             str(site['site_index']) + '\t' +
+                             str(providerIndex) + '\n')
+         if provider[4] != IPv6Interface('::/0'):
+            sys.stdout.write(str(provider[4].ip) + '\t' +
+                             str(site['site_index']) + '\t' +
+                             str(providerIndex) + '\n')
+
+   sys.exit(0)
+elif action == 'siteinfo':
+   for site in norNetSetup:
+      sys.stdout.write(str(site['site_index']) + '\t' +
+                        str(site['site_long_name']) + '\t' +
+                        str(site['site_short_name']) + '\t' +
+                        str(site['site_latitude']) + '\t' +
+                        str(site['site_longitude']) + '\t' +
+                        str(site['site_altitude']) + '\t' +
+                        str(site['site_city']) + '\t' +
+                        str(site['site_province']) + '\t' +
+                        str(site['site_country']) + '\t' +
+                        str(site['site_country_code']) + '\n')
+
+   sys.exit(0)
 
 
 log('***** Welcome to NorNet! *****')

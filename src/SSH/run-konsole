@@ -35,9 +35,11 @@ while [ $# -gt 0 ] ; do
       echo >&2 "ERROR: ${inputFile} not found!"
       exit 1
    fi
+
+   # NOTE: Use --hold option for debugging --tabs-from-file!
    konsole \
-      --separate --fallback-profile \
-      -p ShowTerminalSizeHint=true -p TerminalColumns=256 -p TerminalRows=8 \
+      --separate \
+      -p ShowTerminalSizeHint=true -p TerminalColumns=160 -p TerminalRows=32 \
       -p ColorScheme=WhiteOnBlack \
       --tabs-from-file "${inputFile}" \
       -e date &

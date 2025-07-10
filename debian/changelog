@@ -1,8 +1,15 @@
-nornet (1.5.24~netplan1-1ubuntu1) bionic; urgency=medium
+nornet (1.5.25~netplan1-1ubuntu1) questing; urgency=medium
 
   * New upstream release.
 
- -- Thomas Dreibholz <dreibh@simula.no>  Wed, 05 Jun 2024 17:25:38 +0200
+ -- Thomas Dreibholz <dreibh@simula.no>  Wed, 10 Jul 2025 13:22:32 +0200
+
+nornet (1.5.24-1ubuntu1) questing; urgency=medium
+
+  * New upstream release.
+  * debian/control: Updated standards version to 4.7.2.
+
+ -- Thomas Dreibholz <dreibh@simula.no>  Wed, 09 Jul 2025 16:45:32 +0200
 
 nornet (1.5.23-1ubuntu1) bionic; urgency=medium
 

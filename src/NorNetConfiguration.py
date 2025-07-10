@@ -183,7 +183,10 @@ def loadNorNetConfiguration(includeAPIConfiguration = True, quietMode = False):
    # ====== Build the configuration table ===================================
    parsedConfigFile = configparser.RawConfigParser()
    parsedConfigFile.optionxform = str   # Make it case-sensitive!
-   parsedConfigFile.readfp(io.StringIO(iniString))
+   try:
+      parsedConfigFile.readfp(io.StringIO(iniString))
+   except:
+      parsedConfigFile.read_file(io.StringIO(iniString))
    for parameterName in parsedConfigFile.options('root'):
       parameterValue = parsedConfigFile.get('root', parameterName)
       if parameterValue.find('\n'):
