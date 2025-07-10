@@ -1,3 +1,123 @@
+commit 2cf5080947292585b4b9f3d24558189f9ae535a8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 10 13:28:17 2025 +0200
+
+    New release nornet-1.5.24.
+
+commit 7fd477f7b4283c0f40abf8ae48fee4cbc0ffdbd6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 10 10:16:50 2025 +0200
+
+    Minor compatibility fix.
+
+commit 4e859d97b393d8024fe14471ab9f830af9f3f08a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 9 16:51:44 2025 +0200
+
+    Version bump.
+
+commit f8cebdffa9f52ce8c3e7e7b0d5f0a8a7b9a49501
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 9 16:51:19 2025 +0200
+
+    Updated texts.
+
+commit 3422c00a552d79d741e530e145fd2fd80b2b6e7d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 9 16:19:11 2025 +0200
+
+    Updated background generation.
+
+commit 089d49ed2db7305780817d8dc18e03d9c3e99961
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 9 16:17:32 2025 +0200
+
+    Updated scripts.
+
+commit 2a2e386eda397c286d1fe6ec72ea9f137efd3424
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 9 16:17:06 2025 +0200
+
+    Updated GIMP scripts
+
+commit 564cc01ec60cb059076d8e93b7a4a8a6e30dba11
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Dec 14 16:31:01 2024 +0100
+
+    Another RPM spec file update.
+
+commit d016f88ac1d34fa3eda5a27733367f079b0a8bf6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 6 14:09:08 2024 +0100
+
+    Further output improvements.
+
+commit d96a5167f8e04022252828d19a4195b45a383548
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 6 13:42:48 2024 +0100
+
+    Added option to export configuration.
+
+commit bb9fff151f24cf83c44b64f27b36d6afd70d7aa0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 6 13:02:00 2024 +0100
+
+    A fix.
+
+commit f98f553659fef9a8abe68447ba2f767dc4e978aa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 17:50:56 2024 +0100
+
+    Dependency fix.
+
+commit 92538c0578e869636d24c6eca695e8a659186598
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 17:50:49 2024 +0100
+
+    Updated CMakeLists.txt.
+
+commit 287c7f23d8d3fdf2ad7e9f6498f0c3940cd78cb4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 17:17:36 2024 +0100
+
+    Packaging updates.
+
+commit 6e196ccc947154c0c80b6c79ccdd2b7ffc5d70c7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 16:23:22 2024 +0100
+
+    Updated CI configuration
+
+commit c594e870a260533968c6153b4ebbf8058f45e3a6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 16:23:18 2024 +0100
+
+    Updated CI scripts
+
+commit 08e92b0cda5746afa27c5f7e9cb39d0704aceff6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 16:23:15 2024 +0100
+
+    Updated build scripts
+
+commit 86a3ea448e71a6cfd17d84fba95e729a150d73f2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Dec 3 16:24:39 2024 +0100
+
+    Updated scripts.
+
+commit 54118b44ffdd5a67c5ae4c9cdf414fbec5574716
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Dec 3 11:37:33 2024 +0100
+
+    Updated scripts.
+
+commit 629d875cdcfd40635029e8565a2e10a272cfc758
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 5 17:21:18 2024 +0200
+
+    New release nornet-1.5.23.
+
 commit f092c445093a591fe2ef32f9568adeea36e9e6da
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Jun 5 17:15:04 2024 +0200
