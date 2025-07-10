@@ -33,7 +33,7 @@
 # INITIALISE
 #############################################################################
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5...3.31)
 PROJECT(undefined C)   # to be set in Settings.input
 INCLUDE(Settings.input)
 
