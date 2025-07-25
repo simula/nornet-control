@@ -26,13 +26,14 @@ controllerNames=""
 while [ $# -gt 0 ] ; do
    echo "===== $1 ... ====="
    vboxmanage showvminfo $1 --machinereadable | (
+      declare -a  controllerNames=()
       while read line ; do
          if [[ "${line}" =~ ^storagecontrollername([0-9]*)=\"(.*)\"$ ]] ; then
             id=${BASH_REMATCH[1]}
             controllerName="${BASH_REMATCH[2]}"
-            controllerNames="${controllerNames} ${controllerName}"
+            controllerNames+=( "${controllerName}" )
          else
-            for controllerName in ${controllerNames} ; do
+            for controllerName in "${controllerNames[@]}" ; do
                if [[ "${line}" =~ ^\"${controllerName}-([0-9]*)-([0-9]*)\"=\"(.*\.vdi)\"$ ]] ; then
                   port=${BASH_REMATCH[1]}
                   device=${BASH_REMATCH[2]}
