@@ -1,1 +1,10 @@
-${MAKE_GLOSSYTEXT} ${OUTPUT}   "NorNet"   1024   --bordersize 30   --colorscheme "Golden"   --font "DejaVu Sans Bold"
+#!/usr/bin/env bash
+
+# Bash options:
+set -eu
+
+${MAKE_GLOSSYTEXT} "${OUTPUT}"   \
+   "NorNet"   1024               \
+   --bordersize 30               \
+   --colorscheme "Golden"        \
+   --font "DejaVu Sans Bold"
