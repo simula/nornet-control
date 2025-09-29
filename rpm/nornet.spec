@@ -7,6 +7,10 @@ License: GPL-3.0-or-later
 URL: https://www.nntb.no/
 Source: https://packages.nntb.no/software/nornet/%{name}-%{version}.tar.xz
 
+# FIXME: S390x does not provide the dependency Gimp 3.x, yet.
+#        Once this is fixed, the architecture exclusion can be removed:
+ExcludeArch: s390x
+
 AutoReqProv: on
 BuildRequires: cmake
 BuildRequires: dejavu-sans-fonts
