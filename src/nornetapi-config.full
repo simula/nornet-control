@@ -26,6 +26,12 @@ NorNet_LocalNode_Hostname='fornebu.simula.nornet'
 # This is the name of the NorNet interface (with the site's provider
 # networks) of the node:
 NorNet_LocalNode_NorNetInterface='eth0'
+# NOTE: With Netplan, it is possible to specify an own interface name, e.g.
+#       "nornet". Then, a match for original interfacename (e.g. enp3s0) or
+#       MAC address (e.g. 08:00:27:99:28:04) must be provided!
+# NorNet_LocalNode_NorNetInterface='nornet'
+# ALTERNATIVE 1: NorNet_LocalNode_NorNetInterfaceMatch='enp3s0'
+# ALTERNATIVE 2: NorNet_LocalNode_NorNetInterfaceMatch='08:00:27:99:28:04'
 
 # Defines whether the node is a Control Box (i.e. using non-NorNet gateway):
 # yes -> set only route to NorNet network via tunnelbox

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+while [ $# -ge 1 ] ; do
+   figlet -w 256 "$1" | awk '{ print "# " $0 }'
+   echo ""
+   shift
+done

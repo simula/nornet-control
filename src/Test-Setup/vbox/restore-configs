@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+#
+# NorNet Configuration Restore Script
+# Copyright (C) 2022-2024 by Thomas Dreibholz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: dreibh@simula.no
+
+
+# ###### Restore file #######################################################
+restore-file ()
+{
+   inputFile="$1"
+   outputDirectory="$2"
+   option="$3"
+   if [ -e "${inputFile}" ] ; then
+      outputFile="${outputDirectory}/`basename ${inputFile}`"
+      if [ ! -e ${outputFile} ] ; then
+         echo "Copying ${inputFile} to ${outputFile} ..."
+         cp ${inputFile} ${outputFile}
+      elif ! diff -q ${inputFile} ${outputFile} >/dev/null ; then
+         echo "Updating ${inputFile} to ${outputFile} ..."
+         colordiff ${outputFile} ${inputFile}
+         cp ${inputFile} ${outputFile}
+      fi
+   else
+      if [ "${option}" == "MANDATORY" ] ; then
+         echo >&2 "ERROR: File ${inputFile} does not exist!"
+         exit 1
+      elif [ "${option}" == "WARNING" ] ; then
+         echo >&2 "WARNING: File ${inputFile} does not exist!"
+      fi
+   fi
+}
+
+
+# ###### Main program #######################################################
+if [ $# -lt 1 ] ; then
+   fqdn=`hostname -f`
+else
+   fqdn="$1"
+fi
+name="${fqdn/\.*/}"
+
+echo "Restore from ${fqdn} ..."
+if [ ! -e "${fqdn}" ] ; then
+   echo >&2 "ERROR: ${fqdn} does not exist!"
+   exit 1
+fi
+
+for file in hosts hostname sysctl.conf ; do
+   restore-file ${fqdn}/${file} /etc MANDATORY
+done
+for file in rc.local ; do
+   restore-file ${fqdn}/${file} /etc
+done
+restore-file ${fqdn}/nornet.yaml  /etc/netplan
+restore-file ${fqdn}/${name}.yaml /etc/netplan
+if [ -e /etc/netplan/${name}.yaml -o /etc/netplan/nornet.yaml ] ; then
+   rm -f /etc/netplan/00-installer-config.yaml
+fi
+restore-file ${fqdn}/sources.list /etc/apt
+restore-file ${fqdn}/systemd/resolved.conf /etc/systemd
+for file in nornetapi-config nornetapi-constants ; do
+   restore-file ${fqdn}/${file} /etc/nornet
+done
+
+cp ${fqdn}/sudoers /etc
+chown root:root /etc/sudoers
+chmod 440 /etc/sudoers

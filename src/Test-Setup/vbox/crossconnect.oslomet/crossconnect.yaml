@@ -1,0 +1,176 @@
+#                                                         _              _                      _
+#   ___ _ __ ___  ___ ___  ___ ___  _ __  _ __   ___  ___| |_   ___  ___| | ___  _ __ ___   ___| |_
+#  / __| '__/ _ \/ __/ __|/ __/ _ \| '_ \| '_ \ / _ \/ __| __| / _ \/ __| |/ _ \| '_ ` _ \ / _ \ __|
+# | (__| | | (_) \__ \__ \ (_| (_) | | | | | | |  __/ (__| |_ | (_) \__ \ | (_) | | | | | |  __/ |_
+#  \___|_|  \___/|___/___/\___\___/|_| |_|_| |_|\___|\___|\__(_)___/|___/_|\___/|_| |_| |_|\___|\__|
+#
+
+network:
+  version: 2
+  renderer: networkd
+
+  # ###### Interfaces #######################################################
+  ethernets:
+    # ====== Management =====================================================
+    enp0s3:
+      match:
+        name: enp0s3
+      set-name: oslomet
+      dhcp4: yes
+      accept-ra: yes
+      dhcp-identifier: mac
+
+    # ====== Provider One, Site Alpha =======================================
+    enp0s8:
+       match:
+         name: enp0s8
+       set-name: alpha1
+    alpha1:
+      dhcp4: no
+      accept-ra: no
+      addresses:
+        - 172.16.1.1/24
+        - fd00:16:1::1/64
+      routes:
+      # ------ Central Site: IPv6 for Provider One ------------
+      # NOTE: The tunnelbox performs NAT for IPv4!
+      #       The crossconnect performs NAT for IPv6
+      #       (for test system with unique-local addresses)!
+        - to: fd00:cafe:0:fe00::/56
+          via: fd00:16:1::2
+      # -------------------------------------------------------
+      nameservers:
+        addresses:
+          - 172.16.1.2
+          - fd00:16:1::2
+        search:
+          - alpha.test
+
+    # ====== Provider One, Site Beta ========================================
+    enp0s9:
+      match:
+        name: enp0s9
+      set-name: beta1
+      dhcp4: no
+      accept-ra: no
+      addresses:
+        - 172.16.2.1/24
+        - fd00:16:2::1/64
+      nameservers:
+        addresses:
+          - 172.16.2.2
+          - fd00:16:2::2
+        search:
+          - beta.test
+
+    # ====== Provider One, Site Gamma =======================================
+    enp0s10:
+      match:
+         name: enp0s10
+      set-name: gamma1
+      dhcp4: no
+      accept-ra: no
+      addresses:
+        - 172.16.3.1/24
+        - fd00:16:3::1/64
+      nameservers:
+        addresses:
+          - 172.16.3.2
+          - fd00:16:3::2
+        search:
+          - gamma.test
+
+    # ====== Provider One, Site Delta =======================================
+    enp0s16:
+      match:
+        name: enp0s16
+      set-name: delta1
+      dhcp4: no
+      accept-ra: no
+      addresses:
+        - 172.16.4.1/24
+        - fd00:16:4::1/64
+      nameservers:
+        addresses:
+          - 172.16.4.2
+          - fd00:16:4::2
+        search:
+          - delta.test
+
+    # ====== Provider Two, Site Alpha =======================================
+    enp0s17:
+      match:
+        name: enp0s17
+      set-name: alpha2
+    alpha2:
+      dhcp4: no
+      accept-ra: no
+      addresses:
+        - 172.17.1.1/24
+        - fd00:17:1::1/64
+      routes:
+      # ------ Central Site: IPv6 for Provider One ------------
+      # NOTE: The tunnelbox performs NAT for IPv4!
+      #       The crossconnect performs NAT for IPv6
+      #       (for test system with unique-local addresses)!
+        - to: fd00:cafe:0:ff00::/56
+          via: fd00:17:1::2
+      # -------------------------------------------------------
+      nameservers:
+        addresses:
+          - 172.17.1.2
+          - fd00:17:1::2
+        search:
+          - alpha.test
+
+    # ====== Provider Two, Site Beta =======================================
+    enp0s18:
+      match:
+        name: enp0s18
+      set-name: beta2
+      dhcp4: no
+      accept-ra: no
+      addresses:
+        - 172.17.2.1/24
+        - fd00:17:2::1/64
+      nameservers:
+        addresses:
+          - 172.17.2.2
+          - fd00:17:2::2
+        search:
+          - beta.test
+
+    # ====== Provider Two, Site Gamma =======================================
+    enp0s19:
+      match:
+        name: enp0s19
+      set-name: gamma2
+      dhcp4: no
+      accept-ra: no
+      addresses:
+        - 172.17.3.1/24
+        - fd00:17:3::1/64
+      nameservers:
+        addresses:
+          - 172.17.3.2
+          - fd00:17:3::2
+        search:
+          - gamma.test
+
+    # ====== Provider Two, Site Delta =======================================
+    enp2s0:
+      match:
+        name: enp2s0
+      set-name: delta2
+      dhcp4: no
+      accept-ra: no
+      # TEST: activation-mode: off
+      addresses:
+        - 172.17.4.1/24
+        - fd00:17:4::1/64
+      nameservers:
+        addresses:
+          - 172.17.4.2
+          - fd00:17:4::2
+        search:
+          - delta.test

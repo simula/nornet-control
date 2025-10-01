@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Make Tunnelbox Configuration
-# Copyright (C) 2012-2023 by Thomas Dreibholz
+# Copyright (C) 2012-2024 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -213,7 +213,11 @@ def makeNFSDConfiguration(fullSiteList, rwSystemList, uid, gid):
 
 
 # ###### Main program #######################################################
-loginToPLC()
+try:
+   loginToPLC()
+except Exception as e:
+   sys.stderr.write('ERROR: ' + str(e) + '!\n')
+   sys.exit(1)
 
 fullSiteList = fetchNorNetSiteList(False)
 # NOTE: Site list also includes disabled sites!

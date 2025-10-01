@@ -1,29 +1,22 @@
 #############################################################################
-# PYTHON LIBRARIES
+#### PYTHON LIBRARIES                                                    ####
 #############################################################################
 
-# Help:
-# https://bloerg.net/2012/11/10/cmake-and-distutils.html
-
-# NOTE: setup.py must *not* be packaged, since it is automatically generated!
-# It has to be added to CPACK_SOURCE_IGNORE_FILES (i.e. "setup.py$")!
-
-SET(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in")
-SET(SETUP_PY    "${CMAKE_CURRENT_BINARY_DIR}/setup.py")
-# SET(DEPS        "${CMAKE_CURRENT_SOURCE_DIR}/module/__init__.py")
-SET(OUTPUT      "${CMAKE_CURRENT_BINARY_DIR}/build/timestamp")
-
-CONFIGURE_FILE(${SETUP_PY_IN} ${SETUP_PY})
-
-ADD_CUSTOM_COMMAND(OUTPUT ${OUTPUT}
-                   COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} build && touch ${OUTPUT})
-ADD_CUSTOM_TARGET(target ALL DEPENDS ${OUTPUT})
-
-INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install ${PYTHON_SETUP_OPTS} --prefix=${PYTHON_LIBRARY_PREFIX})")
+SET(nornet_api_files
+   NorNetAPI.py
+   NorNetConfiguration.py
+   NorNetExperimentToolbox.py
+   NorNetNodeSetup.py
+   NorNetProviderSetup.py
+   NorNetSiteSetup.py
+   NorNetTools.py
+   SysSetupCommons.py
+)
+INSTALL(FILES ${nornet_api_files} DESTINATION ${Python3_SITELIB})
 
 
 #############################################################################
-# PROGRAMS
+#### PROGRAMS                                                            ####
 #############################################################################
 
 INSTALL(PROGRAMS cls                          DESTINATION ${CMAKE_INSTALL_BINDIR})
@@ -175,7 +168,7 @@ INSTALL(FILES Watchdog.1                      DESTINATION ${CMAKE_INSTALL_MANDIR
 
 
 #############################################################################
-# CONFIGURATION FILES
+#### CONFIGURATION FILES                                                 ####
 #############################################################################
 
 INSTALL(PROGRAMS system-info.d/10-nornet DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/system-info.d)
@@ -188,7 +181,7 @@ INSTALL(FILES watchdog-config.example DESTINATION ${CMAKE_INSTALL_DATADIR}/norne
 
 
 #############################################################################
-# EXAMPLES
+#### EXAMPLES                                                            ####
 #############################################################################
 
 SET(nornet_api_configuration
@@ -201,7 +194,7 @@ INSTALL(FILES ${nornet_api_configuration} DESTINATION ${CMAKE_INSTALL_DATADIR}/n
 
 
 #############################################################################
-# SOURCE DIRECTORIES
+#### SOURCE DIRECTORIES                                                  ####
 #############################################################################
 
 ADD_SUBDIRECTORY(background)

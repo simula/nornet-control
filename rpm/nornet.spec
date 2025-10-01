@@ -1,11 +1,15 @@
 Name: nornet
-Version: 1.5.25
+Version: 1.5.26~netplan1
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
 License: GPL-3.0-or-later
 URL: https://www.nntb.no/
 Source: https://packages.nntb.no/software/nornet/%{name}-%{version}.tar.xz
+
+# FIXME: S390x does not provide the dependency Gimp 3.x, yet.
+#        Once this is fixed, the architecture exclusion can be removed:
+ExcludeArch: s390x
 
 AutoReqProv: on
 BuildRequires: cmake
@@ -22,6 +26,7 @@ BuildRequires: google-noto-serif-fonts
 BuildRequires: GraphicsMagick
 BuildRequires: perl-Image-ExifTool
 BuildRequires: python3-devel
+BuildRequires: python3-setuptools
 BuildRequires: qt5-qtbase-devel
 BuildRequires: texlive-epstopdf-bin
 BuildRequires: urw-base35-fonts
@@ -51,7 +56,8 @@ See https://www.nntb.no for details on NorNet!
 %cmake_install
 # ====== Relocate files =====================================================
 mkdir -p %{buildroot}/sbin
-mv %{buildroot}/usr/sbin/Interface-Setup %{buildroot}/sbin
+mv %{buildroot}/usr/bin/Interface-Setup %{buildroot}/sbin || mv %{buildroot}/usr/sbin/Interface-Setup %{buildroot}/sbin
+
 
 mkdir -p %{buildroot}/var
 mv %{buildroot}/usr/var/www %{buildroot}/var
@@ -89,7 +95,7 @@ Requires: joe
 Requires: jq
 Requires: libidn
 Requires: lksctp-tools
-Requires: mlocate
+Requires: (mlocate or plocate)
 Requires: netperfmeter
 Requires: net-snmp-utils
 Requires: net-tools
@@ -258,6 +264,7 @@ Requires: python3
 Requires: python3-pip
 Requires: python3-psycopg2
 Requires: python3-pymongo
+Requires: python3-setuptools
 Requires: qemu-user-static
 Requires: quilt
 Requires: R-base
@@ -293,6 +300,7 @@ Group: Applications/Internet
 BuildArch: noarch
 Requires: %{name}-management = %{version}-%{release}
 Requires: %{name}-api = %{version}-%{release}
+Recommends: figlet
 
 %description api
 This package contains the NorNet Python API library. It contains functions
@@ -300,7 +308,6 @@ to communicate with the central server (MyPLC), based on XMLRPC.
 See https://www.nntb.no for details on NorNet!
 
 %files api
-%{python3_sitelib}/NorNet*.egg-info
 %{python3_sitelib}/NorNetAPI.py
 %{python3_sitelib}/NorNetConfiguration.py
 %{python3_sitelib}/NorNetExperimentToolbox.py

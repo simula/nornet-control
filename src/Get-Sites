@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Get all sites
-# Copyright (C) 2012-2023 by Thomas Dreibholz
+# Copyright (C) 2012-2024 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ from NorNetAPI       import *
 # ###### Main program #######################################################
 loginToPLC(quietMode = True)
 
-siteList = fetchNorNetSite(None, False)
+siteList = fetchNorNetSite(None, True)
 
 
 siteIndexList = []
@@ -37,8 +37,8 @@ for siteIndex in siteList:
    siteIndexList.append(siteIndex)
 
 if len(sys.argv) > 1:
-   print('{0:3s} {1:1s} {2:8s} {3:36s} {4:2s} {5:25s} {6:25s} {7:s} {8:s} {9:12s} {10:42s} {11:20s} {12:20s} {13:20s} {14:s}'.format(
-      'ID', 'A', 'SSN', 'SiteLongName', 'CC', 'Province', 'City', 'Lat', 'Lon', 'PSN', 'ProviderLongName', 'IPv4', 'IPv6', 'GatewayIPv4', 'GatewayIPv6'
+   print('{0:3s} {1:1s} {2:8s} {3:36s} {4:4s} {5:25s} {6:25s} {7:9s} {8:10s} {9:3s} {10:12s} {11:42s} {12:20s} {13:36s} {14:10s} {15:10s}'.format(
+      'ID', 'A', 'SSN', 'SiteLongName', 'CC', 'Province', 'City', 'Lat', 'Lon', 'ISP', 'PSN', 'ProviderLongName', 'IPv4', 'IPv6', 'Downlink', 'Uplink'
    ))
 
 for siteIndex in sorted(siteIndexList):
@@ -50,6 +50,7 @@ for siteIndex in sorted(siteIndexList):
 
    # print(site)
 
+   isp = 1
    for onlyDefault in [ True, False ]:
       for providerIndex in providerList:
          if ( ((onlyDefault == True)  and (providerIndex == site['site_default_provider_index'])) or \
@@ -60,7 +61,7 @@ for siteIndex in sorted(siteIndexList):
             externalGatewayIPv4 = IPv4Address(str(provider['provider_gateway_ipv4']))
             externalGatewayIPv6 = IPv6Address(str(provider['provider_gateway_ipv6']))
 
-            print('{0:3d} {1:1d} {2:8s} {3:36s} {4:2s} {5:25s} {6:25s} {7:s} {8:s} {9:12s} {10:42s} {11:20s} {12:20s} {13:20s} {14:s}'.format(
+            print('{0:3d} {1:1d} {2:8s} {3:36s} {4:2s} {5:25s} {6:25s} {7:s} {8:s} {9:3d} {10:12s} {11:42s} {12:20s} {13:36s} {14:10s} {15:10s}'.format(
                      int(site['site_index']),
                      int(siteEnabled),
                      '"' + str(site['site_short_name']) + '"',
@@ -70,10 +71,13 @@ for siteIndex in sorted(siteIndexList):
                      '"' + getTagValue(siteTagsList, 'nornet_site_city', '?')           + '"',
                      fill(str(site['site_latitude']), 9),
                      fill(str(site['site_longitude']), 10),
+                     isp,
                      '"' + provider['provider_short_name'] + '"',
                      '"' + provider['provider_long_name']  + '"',
                      '"' + str(externalNetworkIPv4) + '"',
                      '"' + str(externalNetworkIPv6) + '"',
-                     '"' + str(externalGatewayIPv4) + '"',
-                     '"' + str(externalGatewayIPv6) + '"'
+                     str(provider['provider_downstream']),
+                     str(provider['provider_upstream'])
                   ))
+
+            isp = isp + 1

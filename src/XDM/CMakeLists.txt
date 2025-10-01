@@ -1,5 +1,5 @@
 #############################################################################
-# CONFIGURATION FILES
+#### CONFIGURATION FILES                                                 ####
 #############################################################################
 
 INSTALL(FILES    Xresources DESTINATION ${CMAKE_INSTALL_DATADIR}/nornet-x11)

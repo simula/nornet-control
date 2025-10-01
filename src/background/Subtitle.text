@@ -1,1 +1,13 @@
-${MAKE_GLOSSYTEXT} ${OUTPUT}   "https://www.nntb.no"   256   --bordersize 20   --colorscheme "Golden"   --font "DejaVu Sans Book"
+#!/usr/bin/env bash
+
+# Bash options:
+set -eu
+
+# The style is named "Book" on most systems, but "Regular" on Fedora ...
+style=$(fc-list | grep "^/usr/.*share/fonts/.*dejavu.*/DejaVuSans\.ttf" | sed -e "s/^.*style=//" -e "s/,Book//")
+
+${MAKE_GLOSSYTEXT} "${OUTPUT}"   \
+   "https://www.nntb.no"   256   \
+   --bordersize 20               \
+   --colorscheme "Golden"        \
+   --font "DejaVu Sans ${style}"

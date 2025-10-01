@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # NorNet System Setup Commons
-# Copyright (C) 2014-2023 by Thomas Dreibholz
+# Copyright (C) 2014-2024 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,8 +19,9 @@
 #
 # Contact: dreibh@simula.no
 
-import re
 import os
+import re
+import subprocess
 
 from ipaddress import IPv4Address, IPv4Interface, IPv6Address, IPv6Interface
 
@@ -111,7 +112,7 @@ def writeProxyConfiguration(suffix, siteDomain, variant, controlBoxMode):
             proxyConf.write('setenv no_proxy "' + siteDomain + '"\n')
       proxyConf.close()
 
-   if variant == 'Debian':
+   if os.path.isdir('/etc/apt/apt.conf.d/'):
       proxyConf = codecs.open('apt-proxy' + suffix, 'w', 'utf-8')
       if controlBoxMode == False:
          proxyConf.write('Acquire::http::Proxy "http://' + proxyName + ':3128/";\n')
@@ -123,9 +124,149 @@ def writeProxyConfiguration(suffix, siteDomain, variant, controlBoxMode):
 def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
                                 hostName, domainName, nodeIndex, siteIndex,
                                 providerList, defaultProviderIndex,
-                                bridgeInterface = None):
+                                bridgeInterface = None, matchInterface = None):
+
+   # ====== Write Netplan configuration /etc/netplan/nornet.yaml ============
+   if variant == 'Netplan':
+      outputFile = codecs.open('nornet.yaml' + suffix, 'w', 'utf-8')
+
+      fqdn = hostName + '.'  + domainName
+      try:
+         header = subprocess.check_output('if [ -x /usr/bin/figlet ] ; then /usr/bin/figlet -w 256 "' + fqdn + '" ; else echo "' + fqdn + '" ; fi | awk \'{ print "# " $0 }\'', shell=True, text=True)
+         outputFile.write(header + '\n')
+      except:
+         pass
+
+      outputFile.write('network:\n')
+      outputFile.write('  version: 2\n')
+      outputFile.write('  renderer: networkd\n')
+
+      outputFile.write('\n  # ###### Interfaces #######################################################\n')
+      outputFile.write('  ethernets:\n')
+
+      reMAC = re.compile(r'^[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}$')
+      if matchInterface == None:
+         outputFile.write('    ' + interfaceName + ':\n')
+      else:
+         if reMAC.match(matchInterface) != None:
+            outputFile.write('    ' + interfaceName + ':\n')
+            outputFile.write('      match:\n')
+            outputFile.write('        macaddress: ' + matchInterface + '\n')
+            outputFile.write('      set-name: ' + interfaceName + '\n')
+         else:
+            outputFile.write('    ' + matchInterface + ':\n')
+            outputFile.write('      match:\n')
+            outputFile.write('        name: ' + matchInterface + '\n')
+            outputFile.write('      set-name: ' + interfaceName + '\n')
+
+      if bridgeInterface != None:
+         outputFile.write('      dhcp4: no\n')
+         outputFile.write('      accept-ra: no\n')
+         outputFile.write('\n  # ###### Bridges ##########################################################\n')
+         outputFile.write('  bridges:\n')
+         outputFile.write('    ' + bridgeInterface + ':\n')
+
+      for stage in [ 'addresses',
+                     # 'routes', 'routing-policy',
+                     'nameservers' ]:
+
+         # ====== Begin address configuration ===============================
+         if stage == 'addresses':
+            outputFile.write('\n      # ====== Addresses ====================================================\n')
+            outputFile.write('      dhcp4: no\n')
+            outputFile.write('      accept-ra: no\n')
+            outputFile.write('      addresses:\n')
+
+         # ====== Begin routes configuration ================================
+         elif stage == 'routes':
+            if nodeIndex != NorNet_NodeIndex_Tunnelbox:
+               outputFile.write('\n      # ====== Routes =======================================================\n')
+               outputFile.write('      routes:\n')
+
+         # ====== Begin routing policy configuration ========================
+         elif stage == 'routing-policy':
+            if nodeIndex != NorNet_NodeIndex_Tunnelbox:
+               outputFile.write('\n      # ====== Routing Policy ===============================================\n')
+               outputFile.write('      routing-policy:\n')
+
+         # ====== Begin DNS configuration ===================================
+         elif stage == 'nameservers':
+            outputFile.write('\n      # ====== DNS Servers ==================================================\n')
+            outputFile.write('      nameservers:\n')
+            outputFile.write('        addresses:\n')
+
+         # ====== Handle addresses ==========================================
+         providerConfigs = []
+         providerNumber  = 0
+         for onlyDefault in [ True, False ]:
+            for providerIndex in providerList:
+               if ( ((onlyDefault == True)  and (providerIndex == defaultProviderIndex)) or \
+                    ((onlyDefault == False) and (providerIndex != defaultProviderIndex)) ):
+                  if (stage == 'addresses') or (stage == 'routes') or (stage == 'routing-policy'):
+                     if (stage == 'addresses') or \
+                        (nodeIndex != NorNet_NodeIndex_Tunnelbox):
+                        outputFile.write('        # ------ ISP #' + str(providerIndex) + '-----------------------------------\n')
+                  #if stage == 'routes':
+                     #outputFile.write('        # ~~~~~~ Table main ~~~~~~~~~~~~~~~~~~\n')
+
+                  for version in [ 4, 6 ]:
+
+                     # ====== Addressing =======================================
+                     address  = makeNorNetIP(providerIndex, siteIndex, nodeIndex,                  version)
+                     gateway  = makeNorNetIP(providerIndex, siteIndex, NorNet_NodeIndex_Tunnelbox, version)
+                     metric   = NorNet_RoutingMetric_AdditionalProvider + providerNumber
+                     table    = 1000 + providerIndex
+                     priority = 100 + providerIndex
+                     if providerIndex == defaultProviderIndex:
+                        metric = NorNet_RoutingMetric_DefaultProvider
+
+                     if controlBoxMode == False:
+                        network = 'default'
+                     else:
+                        network = str(makeNorNetIP(0, 0, 0, version))
+
+                     # ====== Write address configuration ===================
+                     if stage == 'addresses':
+                        outputFile.write('        - ' + str(address) + '\n')
+
+                     # ====== Write route configuration =====================
+                     elif stage == 'routes':
+                        if nodeIndex != NorNet_NodeIndex_Tunnelbox:
+                           outputFile.write('        - to: ' + str(network) + '\n')
+                           outputFile.write('          via: ' + str(gateway.ip) + '\n')
+                           outputFile.write('          metric: ' + str(metric) + '\n')
+
+                           outputFile.write('        - to: ' + str(address.network) + '\n')
+                           outputFile.write('          scope: link\n')
+                           outputFile.write('          table: ' + str(table) + '\n')
+                           outputFile.write('        - to: ' + str(network) + '\n')
+                           outputFile.write('          via: ' + str(gateway.ip) + '\n')
+                           outputFile.write('          table: ' + str(table) + '\n')
+
+                     # ====== Write routing policy configuration ============
+                     elif stage == 'routing-policy':
+                        if nodeIndex != NorNet_NodeIndex_Tunnelbox:
+                           outputFile.write('        - from: ' + str(address.network) + '\n')
+                           outputFile.write('          table: ' + str(table) + '\n')
+                           outputFile.write('          priority: ' + str(priority) + '\n')
+
+                     # ====== Write DNS configuration =======================
+                     elif stage == 'nameservers':
+                        if providerIndex == defaultProviderIndex:
+                           outputFile.write('          - ' + str(gateway.ip) + '\n')
+
+                  providerNumber = providerNumber + 1
+
+         # ====== Finish DNS configuration ==================================
+         if stage == 'nameservers':
+            outputFile.write('        search:\n')
+            outputFile.write('          - ' + domainName + '\n')
+            outputFile.write('          - ' + getDomainFromFQDN(domainName) + '\n')
+
+      outputFile.close()
+
    # ====== Write Debian /etc/network/interfaces ============================
-   if variant == 'Debian':
+   elif variant == 'Debian':
       outputFile = codecs.open('interfaces' + suffix, 'w', 'utf-8')
 
       outputFile.write('# ====== Loopback ======\n')
@@ -217,7 +358,7 @@ def writeInterfaceConfiguration(suffix, variant, interfaceName, controlBoxMode,
       if bridgeInterface != None:
          bridgeTo      = interfaceName
          interfaceName = bridgeInterface
- 
+
          outputFile.write('DEVICE=' + bridgeTo + '\n')
          outputFile.write('ONBOOT=yes\n')
          outputFile.write('BOOTPROTO=none\n')

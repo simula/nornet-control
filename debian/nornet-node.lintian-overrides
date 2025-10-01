@@ -1,0 +1,2 @@
+nornet-node: missing-systemd-service-for-init.d-script
+nornet-node: missing-systemd-timer-for-cron-script

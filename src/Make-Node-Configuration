@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Make Node Configuration
-# Copyright (C) 2012-2023 by Thomas Dreibholz
+# Copyright (C) 2012-2024 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -421,14 +421,18 @@ def makeSNMPConfiguration(fullSiteList, fullUserList, localSite, name, descripti
 # ###### Main program #######################################################
 # ====== Handle arguments ===================================================
 if len(sys.argv) < 4:
-   error('Usage: ' + sys.argv[0] + ' FQDN Interface Debian|Fedora|FreeBSD')
+   error('Usage: ' + sys.argv[0] + ' FQDN Interface Debian|Fedora|Netplan|FreeBSD')
 fqdn          = sys.argv[1]
 interfaceName = sys.argv[2]
 distribution  = sys.argv[3]
 
 
 # ====== Get configuration ==================================================
-loginToPLC()
+try:
+   loginToPLC()
+except Exception as e:
+   sys.stderr.write('ERROR: ' + str(e) + '!\n')
+   sys.exit(1)
 fullSiteList = fetchNorNetSiteList(False)
 
 localNode = fetchNorNetNode(fqdn)
@@ -466,7 +470,8 @@ writeSysctlConfiguration('sysctl-config', getLocalNodeNorNetInterface())
 writeInterfaceConfiguration('', distribution, interfaceName,
                             NorNet_Configuration['NorNet_LocalNode_ControlBox'],
                             localNode['node_name'], localSite['site_domain'], localNode['node_index'], localSite['site_index'],
-                            providerList, localSite['site_default_provider_index'])
+                            providerList, localSite['site_default_provider_index'],
+                            matchInterface = getLocalNodeNorNetInterfaceMatch())
 writeProxyConfiguration('', localSite['site_domain'], distribution,
                         False)   # Use tunnelbox's proxy!
 

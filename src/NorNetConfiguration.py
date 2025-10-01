@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # NorNet PLC Configuration
-# Copyright (C) 2012-2023 by Thomas Dreibholz
+# Copyright (C) 2012-2024 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -66,6 +66,7 @@ NorNet_Configuration = {
    'NorNet_LocalNode_Hostname'                 : 'localhost.localdomain',
    'NorNet_LocalNode_NorNetUser'               : 'nornetpp',
    'NorNet_LocalNode_NorNetInterface'          : None,
+   'NorNet_LocalNode_NorNetInterfaceMatch'     : None,
    'NorNet_LocalNode_ControlBox'               : False,
 
    'NorNet_Slice_NodeIndexRange'               : None,
@@ -360,9 +361,14 @@ def getLocalNodeHostname():
    return NorNet_Configuration['NorNet_LocalNode_Hostname']
 
 
-# ###### Get local node hostname ############################################
+# ###### Get NorNet interface name ##########################################
 def getLocalNodeNorNetInterface():
    return NorNet_Configuration['NorNet_LocalNode_NorNetInterface']
+
+
+# ###### Get NorNet interface match string ##################################
+def getLocalNodeNorNetInterfaceMatch():
+   return NorNet_Configuration['NorNet_LocalNode_NorNetInterfaceMatch']
 
 
 # ###### Get local node NorNet user #########################################

@@ -1,0 +1,2 @@
+nornet-development: script-not-executable
+nornet-development: missing-systemd-timer-for-cron-script

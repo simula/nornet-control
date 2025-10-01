@@ -1,5 +1,5 @@
 # MELODIC/NorNet Build Scripts
-# Copyright (C) 2017-2023 by Thomas Dreibholz
+# Copyright (C) 2017-2024 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,17 +16,17 @@
 #
 # Contact: dreibh@simula.no
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 PROJECT(nornet LANGUAGES C)
 
 SET(BUILD_MAJOR "1")
 SET(BUILD_MINOR "5")
-SET(BUILD_PATCH "25")
+SET(BUILD_PATCH "26~netplan1")
 SET(BUILD_VERSION ${BUILD_MAJOR}.${BUILD_MINOR}.${BUILD_PATCH})
 
 
 #############################################################################
-# INSTALLATION_DIRECTORIES
+#### INSTALLATION_DIRECTORIES                                            ####
 #############################################################################
 
 # See: https://cmake.org/cmake/help/v3.0/module/GNUInstallDirs.html
@@ -69,7 +69,7 @@ ENDIF()
 
 
 #############################################################################
-# OS-DEPENDENT
+#### OS-DEPENDENT                                                        ####
 #############################################################################
 
 IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -100,20 +100,15 @@ ENDIF()
 
 
 #############################################################################
-# REQUIREMENTS
+#### REQUIREMENTS                                                        ####
 #############################################################################
 
-SET(PYTHON_LIBRARY_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH   "NorNet Python library prefix")
-SET(PYTHON_SETUP_OPTS     ""                        CACHE STRING "")
-
-SET(Python_ADDITIONAL_VERSIONS 3)
-INCLUDE(FindPythonInterp)
-
-FIND_PACKAGE(PythonInterp 3.4.0 REQUIRED)
+FIND_PACKAGE(Python3 COMPONENTS Interpreter REQUIRED)
+MESSAGE("Python3_SITELIB: ${Python3_SITELIB}")
 
 
 #############################################################################
-# SOURCE DIRECTORIES
+#### SOURCE DIRECTORIES                                                  ####
 #############################################################################
 
 ADD_SUBDIRECTORY(src)
