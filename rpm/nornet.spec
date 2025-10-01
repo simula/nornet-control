@@ -56,7 +56,8 @@ See https://www.nntb.no for details on NorNet!
 %cmake_install
 # ====== Relocate files =====================================================
 mkdir -p %{buildroot}/sbin
-mv %{buildroot}/usr/bin/Interface-Setup %{buildroot}/sbin
+mv %{buildroot}/usr/bin/Interface-Setup %{buildroot}/sbin || mv %{buildroot}/usr/sbin/Interface-Setup %{buildroot}/sbin
+
 
 mkdir -p %{buildroot}/var
 mv %{buildroot}/usr/var/www %{buildroot}/var
