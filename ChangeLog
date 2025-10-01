@@ -1,8 +1,89 @@
+commit 7e43a972a3b6f25c6f588fda0a2c47612363470e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Oct 1 16:08:13 2025 +0200
+
+    Updated submodule.
+
+commit 9ada532e9c224bdd1e66f32d0975153fb69a83bf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Oct 1 16:07:58 2025 +0200
+
+    A fix.
+
+commit 1f1adce1dede06ae2dcbe2906a7a0364dda10eb5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Sep 29 20:52:26 2025 +0200
+
+    Path fix.
+
+commit 8954f54ad38d89f8d0d28188a35fc4f79ac66e42
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Sep 29 18:11:46 2025 +0200
+
+    RPM spec fix.
+
+commit aa82c0f5529d4365839202e1551f6b8e14483359
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Sep 29 17:22:26 2025 +0200
+
+    Improved scripts.
+
+commit fced0241bcccf847b9a4a18efe6c175396c2568a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 25 12:51:07 2025 +0200
+
+    Some clean-ups.
+
+commit 281c161c931b70217cd6aa2f7ccba695229804e5
+Merge: 2102651b 31c121ae
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 25 12:46:28 2025 +0200
+
+    Merge branch 'master' into dreibh/netplan
+
+commit 31c121aee32d00d5292cd9a61007280eb942f717
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jul 25 12:45:57 2025 +0200
+
+    Improved script.
+
+commit fe040a73e274c853f79657bdd4b5ac241f63ba26
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 24 10:27:47 2025 +0200
+
+    Minor update.
+
+commit 2102651be3a64fd6258b79352f2c3a5c9ba429c5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 10 13:54:43 2025 +0200
+
+    Some clean-ups.
+
+commit 9e4884ca8033f795ad6731504c833c47642102cf
+Merge: 385b5ca6 6d3ca309
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 10 13:36:59 2025 +0200
+
+    Merge branch 'master' into dreibh/netplan
+
+commit 6d3ca30923584ee6ca76ed192bb0d0cf213f903e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 10 13:29:20 2025 +0200
+
+    New release nornet-1.5.25.
+
 commit 2cf5080947292585b4b9f3d24558189f9ae535a8
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Thu Jul 10 13:28:17 2025 +0200
 
     New release nornet-1.5.24.
+
+commit 385b5ca69ce0e1200a2a286ee95bd7692d2b964d
+Merge: 7e52bc5d 7fd477f7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 10 13:25:05 2025 +0200
+
+    Merge branch 'master' into dreibh/netplan
 
 commit 7fd477f7b4283c0f40abf8ae48fee4cbc0ffdbd6
 Author: Thomas Dreibholz <dreibh@simula.no>
@@ -112,6 +193,25 @@ Date:   Tue Dec 3 11:37:33 2024 +0100
 
     Updated scripts.
 
+commit 7e52bc5db2919eb8cf13088fe7a176269af18c90
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 5 17:37:30 2024 +0200
+
+    Updated script.
+
+commit 36d69c2b679f986e880163a23d84f0c1b21b07c3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 5 17:25:49 2024 +0200
+
+    Version bump.
+
+commit c61feb966fd64c0eefa30f58ad31c5ad90d50a40
+Merge: 42d7650d 629d875c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 5 17:25:24 2024 +0200
+
+    Merge branch 'master' into dreibh/netplan
+
 commit 629d875cdcfd40635029e8565a2e10a272cfc758
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Jun 5 17:21:18 2024 +0200
@@ -129,6 +229,122 @@ Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Jun 5 17:14:39 2024 +0200
 
     Updated script.
+
+commit 42d7650d34266bd41131e99a44d7d68effd1902b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 8 14:51:30 2023 +0100
+
+    Version bump.
+
+commit 7f9d709795d67aa0ce564c66f4eb50de4ae84553
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 8 14:38:46 2023 +0100
+
+    Header updates.
+
+commit eecbb5a67b034a7928f0b69fbefedd2f62d52e16
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 8 14:37:14 2023 +0100
+
+    Updated Lintian overrides.
+
+commit 8d8c834ab0675e9eb6e212bf12cfff6ad556629e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 8 14:20:38 2023 +0100
+
+    Fixed Python warnings for regexp syntax.
+
+commit 02c38e15fb6c9d08d2c746dcd5f03442844cae73
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 8 14:20:15 2023 +0100
+
+    Added Lintian overrides.
+
+commit e6d493aba3c2cbf219109bf8aa0d6668566ff3ba
+Merge: d1101d56 923bb40f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 8 13:38:04 2023 +0100
+
+    Merge branch 'dreibh/python-build-fix' of https://github.com/simula/nornet-control into dreibh/python-build-fix
+
+commit d1101d56c521eb1c40adfc836b08270441dda544
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 8 13:37:51 2023 +0100
+
+    Another fix.
+
+commit 923bb40f3cabac120034ca5e4610075154d54b96
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 8 13:28:28 2023 +0100
+
+    Minor fixes.
+
+commit 8d88fa0a162f943602c16718fdd610e7fd8cb0ee
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 8 13:15:26 2023 +0100
+
+    Another try.
+
+commit 847b8b7350fae5d47b67d44921d5b71c2dd64760
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 8 12:23:20 2023 +0100
+
+    Trying to fix the Python build under Ubuntu 24.04/Fedora 39.
+
+commit dbb8bcc59d2eb159e05a655bd082c804dc4856c7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 7 17:28:45 2023 +0100
+
+    Towards fixing the Python build issue under Ubuntu 24.04.
+
+commit 064f0f65fa951b63a5e92bae73c2c1fa9628998a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 7 12:40:38 2023 +0100
+
+    Dependency fix.
+
+commit b216ea0cb6a53eae1aa3aea792978b45cf0fab24
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 7 12:31:23 2023 +0100
+
+    Updated CI scripts
+
+commit 62a5098655ea83fcf1cc0e290d23ebc9c0b85be8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 7 12:31:20 2023 +0100
+
+    Updated build scripts
+
+commit 6c6923ec18b4a685504675c57cacc5d9d1072f05
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 7 10:20:51 2023 +0100
+
+    Updated packaging configuration.
+
+commit 08d3b07b19ae6c23d3455471dca6528ac508ee0d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 17:48:09 2023 +0100
+
+    Dependency fix.
+
+commit 0dbebf78c1b69a68679809794240164646342c65
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 17:41:26 2023 +0100
+
+    Version bump.
+
+commit 745408ab1d3e4966e525b2d0294e936027819cb7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 15:57:59 2023 +0100
+
+    Build fix.
+
+commit 9842e8a46080489f70824fbd98e664ad2c39876b
+Merge: 4f6110c0 c50ad18a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 15:12:47 2023 +0100
+
+    Merge branch 'master' into dreibh/netplan
 
 commit c50ad18a8b67eb346eb2db1c48e5da3e32cc0000
 Author: Thomas Dreibholz <dreibh@simula.no>
@@ -148,11 +364,98 @@ Date:   Wed Dec 6 15:11:36 2023 +0100
 
     Updated script.
 
+commit 4f6110c0674ca25add0a3359f973e38b5c0ef0ba
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 15 11:56:16 2023 +0100
+
+    Dependency fix.
+
+commit 279e77554a589537a611a18f27394eacbe2006b8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Nov 11 11:56:41 2023 +0100
+
+    Minor update.
+
+commit d80529ed982fc4d1b269329675cf7c374596b840
+Merge: cda13260 ec3d1551
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 8 11:11:00 2023 +0100
+
+    Merge branch 'dreibh/netplan' of github.com:simula/nornet-control into dreibh/netplan
+
+commit ec3d15515f8fdee0f4000dfac2ce43a391f15eec
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 9 14:27:33 2023 +0200
+
+    Dependency fix.
+
+commit 7be4df5ed9fc6cc0abb52bcbe86d2e88c26d847a
+Merge: 0f24891b de4c6894
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 9 10:40:00 2023 +0200
+
+    Merge branch 'master' into dreibh/netplan
+
 commit de4c6894c90a3c93ab231597b7565204d3213d56
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Fri Oct 6 17:02:51 2023 +0200
 
     New release nornet-1.5.22.
+
+commit cda1326001823cbb4352a5d0c197d5bea2e981aa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 6 15:15:39 2023 +0200
+
+    Updated build scripts
+
+commit 0f24891b29c2743ab13d8d5e55905b1a10dc83ac
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Oct 5 16:48:47 2023 +0200
+
+    Version bump.
+
+commit 6d261dd79ae7b4c6ef651708c0ff2edd5b905575
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Oct 5 10:46:36 2023 +0200
+
+    Minor update.
+
+commit 269fbdf46d9611e7bfbc6479c6a5d5276c45dadb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Apr 26 17:27:44 2023 +0200
+
+    Added script.
+
+commit fc03fb577692b5953119455f9f27a170c03d6a0e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 14 16:13:34 2023 +0200
+
+    Dependency fix.
+
+commit e8cc8305dfce993f96a541dba33c422eeb6105d8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 14 15:40:04 2023 +0200
+
+    Another update.
+
+commit a615957f13166ebcf0c17a74dfb3e7983253c146
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 13 15:52:31 2023 +0200
+
+    Updated script.
+
+commit 735b61bb6af0232b852318959a96466b21192d01
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 13 15:23:52 2023 +0200
+
+    Configuration updates.
+
+commit 253679c3b8c19eba8bbc9433cf76623eeeabd72f
+Merge: 18a363d3 0d76682a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 29 14:44:04 2023 +0200
+
+    Merge branch 'master' into dreibh/netplan
 
 commit 0d76682a2e5c1f8cb0274853dd66b31ab574515d
 Author: Thomas Dreibholz <dreibh@simula.no>
@@ -190,11 +493,25 @@ Date:   Tue Dec 13 09:51:46 2022 +0100
 
     Improved scripts.
 
+commit 18a363d3141dc586bff121db968d4d2176f88e19
+Merge: 6cf537ec 2e8cab00
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 8 14:06:27 2022 +0100
+
+    Merge branch 'master' into dreibh/netplan
+
 commit 2e8cab004c4a0d56f99de6358f838001c9769236
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Fri Oct 14 11:42:29 2022 +0200
 
     An update.
+
+commit 6cf537ecb4480963ed77c6a0367ff8bf2bafe0ae
+Merge: 0a7212a6 04e3c21c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Sep 11 13:34:57 2022 +0200
+
+    Merge branch 'master' into dreibh/netplan
 
 commit 04e3c21c1093e2824dcba1b6f00c3e83d21ad01b
 Author: Thomas Dreibholz <dreibh@simula.no>
@@ -238,6 +555,38 @@ Date:   Wed Jun 15 10:27:31 2022 +0200
 
     Minor update.
 
+commit 0a7212a688c2694c9f56cb8444a2c22d2091b4d8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu May 19 16:38:45 2022 +0200
+
+    Version bump.
+
+commit a635ea49c0b2fb0c97116ff27b60ff8bc1257c23
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu May 19 16:00:41 2022 +0200
+
+    Minor update.
+
+commit db74a7542f20af0d2f58a8d5cc4655dc305c9c7a
+Merge: 154353df 0344fbee
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu May 19 16:00:12 2022 +0200
+
+    Merge branch 'dreibh/netplan' of https://github.com/simula/nornet-control into dreibh/netplan
+
+commit 154353df1d80091dfb8ea9b83d812eea44618408
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu May 19 15:56:44 2022 +0200
+
+    Configuration update.
+
+commit 0344fbee067389e0e71841905c170b95ca72c2ea
+Merge: 22233a35 cda1b674
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu May 19 14:04:43 2022 +0200
+
+    Merge branch 'master' into dreibh/netplan
+
 commit cda1b674d77b7ada0a15a0432bc270618b24fd10
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Thu May 19 12:31:52 2022 +0200
@@ -279,6 +628,13 @@ Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Thu May 12 15:27:18 2022 +0200
 
     Improved PBuilder initialisation.
+
+commit 22233a355cc45e6382fc1869fe02b4f1aa50c5ce
+Merge: 19849a1e 1a8d3dfa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri May 6 10:36:07 2022 +0200
+
+    Merge branch 'master' into dreibh/netplan
 
 commit 1a8d3dfa5cef2097213f59e3d8c61a64d0d6d3bc
 Author: Thomas Dreibholz <dreibh@simula.no>
@@ -342,6 +698,509 @@ Date:   Thu Apr 21 13:29:57 2022 +0200
 
     Minor update.
 
+commit 19849a1eccb481f46fb0e9a7acf09a336ba5b679
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 29 16:41:34 2022 +0200
+
+    Yet another update.
+
+commit 19041e85fee36a9d3d8e92fe7fcaafbbd228785e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 29 16:32:37 2022 +0200
+
+    Another update.
+
+commit 6f0effb49f0c16a3c105f4da351caea205b59c39
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 29 16:27:20 2022 +0200
+
+    Minor update.
+
+commit 59d605e06b8083b6dae4a226a80800d5a3d632e1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 29 16:23:41 2022 +0200
+
+    Improved site export script.
+
+commit 9d14ff4609f915a3e88671f90423098d4340b4f8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 17:15:34 2022 +0200
+
+    Minor update.
+
+commit c0c93c9ef14a807743e684fe52d360c2ba28c912
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 17:14:10 2022 +0200
+
+    Netplan: Source routing is implicit for NorNet interface.
+
+commit b2eaec6b3d6846108c70dd249fbfc79cf8e376e5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 17:09:23 2022 +0200
+
+    Improved Netplan configuration.
+
+commit b631650425708bdc27b7b9c9e14d59df7e19d953
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 16:44:18 2022 +0200
+
+    Added configuration files.
+
+commit b780e6ecf7bc18aa42c1ee7434cc4fb2aa9e39ee
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 16:42:44 2022 +0200
+
+    Added configuration files.
+
+commit 47e28ba92fc59432f4d88db83966872cf60e04bf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 16:28:52 2022 +0200
+
+    Configuration updates.
+
+commit 26d12b434c0cd9d0dcdbb03a3817ead3966d3690
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 16:19:25 2022 +0200
+
+    Minor update.
+
+commit c4ae400e5eccb08d935b1a1ad5322720ef8d50c4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 16:14:28 2022 +0200
+
+    Bugfix: Fixed DHCP alias name handling with default naming scheme dhcp<NN>.
+
+commit fd56ca5ddd03cb22992021711b6b73731ded4b18
+Merge: 41548a18 bf12684a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 16:05:20 2022 +0200
+
+    Merge branch 'dreibh/netplan' of github.com:simula/nornet-control into dreibh/netplan
+
+commit bf12684a4f3987b5d0fe6b05c82f322b9c8dc28a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 16:05:08 2022 +0200
+
+    A fix.
+
+commit c09e9ac1fd9e20ab3c20cba4330ce0b3f40919ab
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 16:03:30 2022 +0200
+
+    Bugfix: Fixed use of hardcoded NorNet interface name.
+
+commit abdfd52bc87906e1ae5b3383fbe62e9e558d476d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 16:01:58 2022 +0200
+
+    Bugfix: Only use "nodad" option for IPv6.
+
+commit 41548a1829a77bcfb60d75d0ea1594c8ff25e7ca
+Merge: 11e0d7e3 2ee3215e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 15:51:09 2022 +0200
+
+    Merge branch 'dreibh/netplan' of github.com:simula/nornet-control into dreibh/netplan
+
+commit 11e0d7e3ef58797411a9fcc357c3cdc7f84e89b4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 15:50:40 2022 +0200
+
+    Fixed scan for Bind9 configuration files: handle case of unconfigured Bind9.
+
+commit 2ee3215e5b74b668c3ee0b74f0e46fdf75915a40
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 15:42:59 2022 +0200
+
+    Improved PLC login failure handling.
+
+commit 5f9251596866cdf62e9b529e7ea4c39b0d2733e4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 15:32:35 2022 +0200
+
+    Improved init script.
+
+commit ce3b09d66305bca6fef345bf18191b31a30ffc78
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 15:22:23 2022 +0200
+
+    A fix.
+
+commit 4909f5f77666eb94c4b029d4ecca797fd3deb595
+Merge: 64b93b48 1b0bab99
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 15:17:28 2022 +0200
+
+    Merge branch 'dreibh/netplan' of github.com:simula/nornet-control into dreibh/netplan
+
+commit 64b93b4804944c1a5fd03504f406a86b41d77e6d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 15:17:19 2022 +0200
+
+    Updated configuration.
+
+commit 1b0bab991dee60747244e369d051dd7dd4ef7cb7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 28 15:16:07 2022 +0200
+
+    Updated configuration.
+
+commit 7e3890568aeb106c777d162a1b04aa36f9eb5bf1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 25 15:34:52 2022 +0100
+
+    Minor update.
+
+commit e5ffc9d7a11e28f5385ec297065e6ac7d4ea74b9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 25 14:22:01 2022 +0100
+
+    Squid configuration fix.
+
+commit 7885a843c93b9fb149d13401bafbaa2be5e5cfd2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 25 13:59:56 2022 +0100
+
+    Commented out removed Bind9 options.
+
+commit d52c5534df37ccae7595707b489ea28a8f193f5e
+Merge: 7cb3268a 931a8364
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 25 13:45:33 2022 +0100
+
+    Merge branch 'dreibh/netplan' of https://github.com/simula/nornet-control into dreibh/netplan
+
+commit 7cb3268a59bcd7c406e3e6575df3e7a821cbac2b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 25 13:43:50 2022 +0100
+
+    Updated configuration.
+
+commit 931a83644ad831b06036466e4d9e3bc6501bcadf
+Merge: 15b650d1 17eef917
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 25 12:51:33 2022 +0100
+
+    Merge branch 'dreibh/netplan' of github.com:simula/nornet-control into dreibh/netplan
+
+commit 15b650d1bd2fca57ffd4d1ade13a116ae44d72fc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 25 12:51:15 2022 +0100
+
+    Updated submodule.
+
+commit 63ee826e157a6dbff8415e1a33a9d7f26b98b048
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 25 12:50:52 2022 +0100
+
+    Dependency fix.
+
+commit 17eef917f7550e78c9f5618ff9327a7aacf96a95
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 25 12:44:02 2022 +0100
+
+    Updated configuration.
+
+commit f0070aaecc704ea5ee24bac547f40a31fa16bed9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 25 12:12:34 2022 +0100
+
+    Added ReadMe file.
+
+commit 0d2e2610c47523159c5d039e4597a6558017d279
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 25 11:30:08 2022 +0100
+
+    Updated configurations.
+
+commit 1357121b9c146751e42542f708fb32177f3a5808
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 25 11:28:12 2022 +0100
+
+    Added configuration files.
+
+commit 1eb820703248ca6535930ca036deb49c41004a6b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Mar 25 11:26:44 2022 +0100
+
+    Added configuration files.
+
+commit 40169d7be60cd252396c9e8f87c9be669d98ab90
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 15:49:32 2022 +0100
+
+    Another update.
+
+commit 7e35fe09474aa2e866c62bec2b33cb35021cd7da
+Merge: d0ac8b38 112b41ba
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 15:48:41 2022 +0100
+
+    Merge branch 'dreibh/netplan' of github.com:simula/nornet-control into dreibh/netplan
+
+commit 112b41ba3dbb1afd0c791d1078cc986b91f8870c
+Merge: 5cb29180 a4b51191
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 15:48:33 2022 +0100
+
+    Merge branch 'dreibh/netplan' of https://github.com/simula/nornet-control into dreibh/netplan
+
+commit a4b511919bda30f2625478511424c2659203906a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 15:47:38 2022 +0100
+
+    Added configuration files.
+
+commit 5cb29180cf99c4c4b576eee1a0bdcc281c010b49
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 15:47:31 2022 +0100
+
+    Added configuration files.
+
+commit d0ac8b38df02e7bfbeebf3110a920a3b5efd0ae5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 15:45:54 2022 +0100
+
+    Minor updates.
+
+commit 55964b50f0df5a8dec7235a43413cc54bcdb85f8
+Merge: be3d73ea 4e49ec77
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 15:41:32 2022 +0100
+
+    Merge branch 'dreibh/netplan' of https://github.com/simula/nornet-control into dreibh/netplan
+
+commit be3d73ea1b10bbacc1dfab7bb215e995cac67b6a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 15:41:02 2022 +0100
+
+    Added configuration files.
+
+commit 4e49ec77b0303adc24d402aae5f7213ad4a49140
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 15:27:47 2022 +0100
+
+    Added configuration files.
+
+commit b8e2a5e2d99f515a785cef129f51216a3f707733
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 15:18:59 2022 +0100
+
+    Added configuration files.
+
+commit 3a45dbc85bae0c995b206874db9d547c17452bef
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 15:13:34 2022 +0100
+
+    Added configuration files.
+
+commit ad66249b23e549c7b93e611f30c96a126da7b775
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 15:01:55 2022 +0100
+
+    Updated configurations.
+
+commit 5f84fc75fc58ef70f52d4b25e87bebed22b01fcf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 14:59:21 2022 +0100
+
+    A fix.
+
+commit 314ac5aa269aff2fc01617ac93e00b67ba0d0c14
+Merge: 2fa3ace8 b3fcd460
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 14:57:12 2022 +0100
+
+    Merge branch 'dreibh/netplan' of https://github.com/simula/nornet-control into dreibh/netplan
+
+commit 2fa3ace8f38bfe0e0a4ad3211a3b00b0c26fd169
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 14:57:04 2022 +0100
+
+    Added configuration files.
+
+commit 68d2f4e152db4cd02644a2e656617a131bf7b46d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 14:53:27 2022 +0100
+
+    A fix.
+
+commit b3fcd460e08abbf13bc29b65d263de6ba8d9fbaa
+Merge: 61b138a0 93e8d35e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 13:52:31 2022 +0100
+
+    Merge branch 'master' into dreibh/netplan
+
+commit 61b138a06ff7b3b6ac4e2c5b938ba0af10dec083
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 13:35:38 2022 +0100
+
+    Minor update.
+
+commit dc560691f6097ba48a38cd48418da8a4faa9d1d0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 13:33:45 2022 +0100
+
+    Minor updates.
+
+commit 8c83316aa6480de73027a566e1b98497db2794ec
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 13:26:47 2022 +0100
+
+    Some clean-ups.
+
+commit b830c0bf56753dcb1776be41cf98a84cdc533ac2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 13:24:56 2022 +0100
+
+    Further improvements of the backup/restore scripts.
+
+commit e7fd26ec24a8866e3c6b4099c2ecc4c6d1da5712
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 13:19:56 2022 +0100
+
+    Improved configuration.
+
+commit a17d49ae4ee84d0a4a1e4335f29460882c568c7c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 13:15:22 2022 +0100
+
+    A fix.
+
+commit 5557e54a0dab6fd3b876a22fca28c64351552ed3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 13:15:16 2022 +0100
+
+    Updated configuration.
+
+commit 96380c27cbc4548fb4f1a06164a2f28c970e0772
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 13:06:12 2022 +0100
+
+    Improved service script.
+
+commit 71869aa5957225b8ccc3ac4d434400d8398c5d22
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 12:36:51 2022 +0100
+
+    Dependency update.
+
+commit 5363925e3097ed46c949e8f0c90381d9be000cd3
+Merge: 9f933616 492aa36d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 12:36:43 2022 +0100
+
+    Merge branch 'master' into dreibh/netplan
+
+commit 9f93361629e585953b5f9175ec48fc744d3a20ba
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 12:34:04 2022 +0100
+
+    Added header into Netplan output.
+
+commit 50324be3ae1914b128afd2ce4a00da7c18f34712
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 12:05:53 2022 +0100
+
+    Improved DNS configuration via Netplan.
+
+commit ccb53afc2460cec1a4833ec3a1483477036603e4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 12:05:43 2022 +0100
+
+    Handling Netplan configuration.
+
+commit 5935b705d3390b9126ae99e4efa104f49a6a8cae
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 11:34:56 2022 +0100
+
+    Improved Netplan configuration.
+
+commit e60b4bd85f3836c86c37e07f210280b6516952dc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 11:06:46 2022 +0100
+
+    Updated configuration.
+
+commit f3223a422f35c0fe4d5341fd29e794c8ae4434cc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 11:06:42 2022 +0100
+
+    Improved script.
+
+commit 9cd803fcfe4b9e12e69d5bb075bc2b3d2e727bce
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 10:37:35 2022 +0100
+
+    Added helper script.
+
+commit 7f57585f34e1f89183fd11e14c999eeac69ba189
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 09:51:53 2022 +0100
+
+    Updated configuration.
+
+commit 070e50027a9ec009cf585cc12ef1d81fc6ff4da5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 09:49:46 2022 +0100
+
+    Minor update.
+
+commit cbe7ad54292973fa9a8f4bfe2eb4a6fe86e467de
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 09:38:45 2022 +0100
+
+    A fix.
+
+commit 997b8f7ca972bbd14dbb3e719d77844b55ca7600
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 24 09:38:29 2022 +0100
+
+    Added configuration files.
+
+commit ddd4af28b680f40d93aa34151a390819f67908b8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 23 15:23:17 2022 +0100
+
+    Another configuration update.
+
+commit 460b2a32c73e9d007ceefc71749fcf23b2a156d4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 23 15:20:50 2022 +0100
+
+    Updated configuration.
+
+commit e66e6333a863cbae4c16734bed901e131f332537
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 23 13:28:11 2022 +0100
+
+    Updated scripts.
+
+commit db9caad757ea99ba50cbabc19f7db17398a57c19
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 23 13:28:03 2022 +0100
+
+    Updated configuration.
+
+commit 07b0e9ff9dfd21785682a269dfc552b240ce5e13
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 23 10:10:20 2022 +0100
+
+    Added placeholder.
+
+commit 990f16d875e8b214e35a3a905d4800ca0dbedb96
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 23 10:06:03 2022 +0100
+
+    Added configuration files.
+
+commit db1daa2a73211840975ed7fc62385db21000e54e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 23 09:58:32 2022 +0100
+
+    Updated helper script.
+
 commit 93e8d35e28f2527053e5d1df96c6b8db117ab3bd
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Mon Mar 21 16:50:20 2022 +0100
@@ -354,11 +1213,150 @@ Date:   Mon Mar 21 16:50:03 2022 +0100
 
     Updated dependencies.
 
+commit 241cfbb58b2969169623368abf7724c73caff500
+Merge: 903c242c 02e5557d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 18:11:01 2022 +0100
+
+    Merge branch 'dreibh/netplan' of github.com:simula/nornet-control into dreibh/netplan
+
+commit 903c242c651b7f1dc4c113ad33b7d4e448182094
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 18:10:48 2022 +0100
+
+    Updated script.
+
+commit 02e5557d680e871f90a745fca9340aad88fde23f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 18:08:52 2022 +0100
+
+    Added configuration file.
+
+commit 7ac0d2d4783c46a953ec095c1da10b54e601007b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 18:08:32 2022 +0100
+
+    Minor update.
+
+commit 07f9bf5057c46499a0cda2adbb2f4807d53327ae
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 18:06:55 2022 +0100
+
+    Updated configuration.
+
+commit dcf6281172b34900b8d2835f7a99c0cf4f2ebe44
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 17:58:36 2022 +0100
+
+    Updated configuration.
+
+commit ebc1591a06119b85d8cd47645b1b0f11ea36af19
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 11:52:22 2022 +0100
+
+    Minor update.
+
+commit f78865be45fd91c92d92e4a2d005e4b42025a374
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 11:49:27 2022 +0100
+
+    A fix.
+
+commit d0d545fe093ab82cd69466f23cba2970549bf5d4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 11:44:22 2022 +0100
+
+    Yet another update.
+
+commit 0e068c4926b617327852de9f90cc1f8f6e1ba54e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 11:41:25 2022 +0100
+
+    Another test.
+
+commit 5a85f019565832169a74eade90e1e796b7d6284c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 11:34:59 2022 +0100
+
+    A test.
+
+commit 1ad3530acd1e37a7c8b6c6d9277d0d90f6fc5d2b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 10:22:03 2022 +0100
+
+    Another configuration update.
+
+commit 2f342a91f1993863c6a219cd5e112ac4588b2540
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 09:54:56 2022 +0100
+
+    Some updates.
+
+commit 0443ccecf43ae977c24ded651306aa5ae70acd03
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 09:42:22 2022 +0100
+
+    Improved scripts.
+
+commit e77fe070a4ec7bcd008c0362330bb33ba668e46f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 09:42:06 2022 +0100
+
+    Added configuration files.
+
+commit 3014f3a0b6211dcc89ef79ec41c2671540847a03
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Mar 16 09:29:46 2022 +0100
+
+    Added helper scripts.
+
+commit 83867e5dfc03c2a0d0330615aaf3a6ae45a32ccc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 15 18:20:27 2022 +0100
+
+    A fix.
+
+commit 24554d79909af0a13af79c82a9a640c793665cc1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 15 18:14:33 2022 +0100
+
+    Minor update.
+
+commit 9ac30d030da3d0fda0d8daec8b572288bde4e1de
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 15 18:09:34 2022 +0100
+
+    Added configuration file.
+
+commit a3a99e6e5326b41df736aa4e5f364455e4c2acc5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 15 17:55:58 2022 +0100
+
+    Improved script.
+
+commit a50ed4856c957b64a888ceb3257431873623737b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Mar 15 16:11:32 2022 +0100
+
+    Added helper script.
+
 commit 492aa36d7d5dbff728c7e4bc2a73917922306ebb
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Tue Mar 15 10:43:09 2022 +0100
 
     Kernel package naming update.
+
+commit 53ef1ddda4a37e9121c69a71987e18238b9666b9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 14 15:50:55 2022 +0100
+
+    Improved output.
+
+commit 8574c443bf8d326eab8b8eef754f821e84e37fbb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Mar 14 15:18:46 2022 +0100
+
+    Added initial Netplan support.
 
 commit 16ec7b374b395c677af689394ea314145e5a8d24
 Author: Thomas Dreibholz <dreibh@simula.no>

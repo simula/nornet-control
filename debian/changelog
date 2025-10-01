@@ -1,8 +1,8 @@
-nornet (1.5.26~netplan1-1ubuntu1) questing; urgency=medium
+nornet (1.5.26-1ubuntu1) questing; urgency=medium
 
   * New upstream release.
 
- -- Thomas Dreibholz <dreibh@simula.no>  Wed, 10 Jul 2025 13:22:32 +0200
+ -- Thomas Dreibholz <dreibh@simula.no>  Wed, 01 Oct 2025 16:12:08 +0200
 
 nornet (1.5.25-1ubuntu1) questing; urgency=medium
 
