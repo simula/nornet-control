@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # Print installed NorNet packages
 # Copyright (C) 2013-2024 by Thomas Dreibholz
@@ -18,9 +18,21 @@
 #
 # Contact: dreibh@simula.no
 
+# Bash options:
+set -eu
+
+# To let System-Maintenance display a list of important installed project
+# packages, add a script [0-9][0-9]-name to /etc/system-maintenance.d. The
+# scripts are executed in order of their number, with the first argument
+# being the full list of installed packages.
+
+if [ $# -lt 1 ] ; then
+   echo >&2 "Usage: $0 package_list_file"
+   exit 1
+fi
 fullPackageList="$1"
 
 echo "====== Installed NorNet Software ============================================="
-grep "^nornet-" ${fullPackageList}
+grep "^nornet-" "${fullPackageList}"
 
 exit 0
