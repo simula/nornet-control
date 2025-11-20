@@ -1,3 +1,9 @@
+nornet (1.5.27~rc1-1ubuntu1) questing; urgency=medium
+
+  * New upstream release.
+
+ -- Thomas Dreibholz <dreibh@simula.no>  Wed, 08 Oct 2025 00:21:12 +0200
+
 nornet (1.5.26-1ubuntu1) questing; urgency=medium
 
   * New upstream release.

@@ -1,5 +1,5 @@
 Name: nornet
-Version: 1.5.26
+Version: 1.5.27~rc1
 Release: 1
 Summary: NorNet Control
 Group: Applications/Internet
@@ -100,7 +100,6 @@ Requires: netperfmeter
 Requires: net-snmp-utils
 Requires: net-tools
 Requires: nmap
-Requires: (ntpsec or ntpdate)
 Requires: pigz
 Requires: pwgen
 Requires: pxz
@@ -124,7 +123,6 @@ Requires: xmlstarlet
 Requires: yamllint
 Recommends: grub2-tools
 Recommends: ipsec-tools
-Recommends: reiserfs-utils
 
 %description management
 This metapackage contains basic software nor NorNet node management. The
