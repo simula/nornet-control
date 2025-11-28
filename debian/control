@@ -149,7 +149,7 @@ Depends: autoconf,
          r-base,
          reprepro,
          shellcheck,
-         simulamet-management (= ${binary:Version}),
+         nornet-management (= ${binary:Version}),
          tidy,
          zlib1g-dev,
          ${misc:Depends}
