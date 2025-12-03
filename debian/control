@@ -6,7 +6,7 @@ Homepage: https://www.nntb.no/
 Vcs-Git: https://github.com/simula/nornet-control.git
 Vcs-Browser: https://github.com/simula/nornet-control
 Build-Depends: cmake,
-               debhelper (>= 12),
+               debhelper-compat (= 13),
                dh-python,
                fonts-dejavu,
                fonts-noto-cjk,
@@ -190,12 +190,10 @@ Architecture: all
 Conflicts: miredo
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ifupdown,
-         iptables-persistent | netfilter-persistent,
          nfs-common,
          nornet-api (= ${binary:Version}),
          nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
-         ntpsec | ntp,
          openssh-server,
          rsplib-services,
          ${misc:Depends},
@@ -224,9 +222,8 @@ Depends: arpwatch,
          nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
          nornet-node (= ${binary:Version}) | nornet-server (= ${binary:Version}),
-         ntpsec | ntp,
          radvd,
-         squid3,
+         squid | squid3,
          traceroute,
          ${misc:Depends},
          ${python3:Depends}
@@ -358,7 +355,6 @@ Architecture: all
 Depends: nornet-api (= ${binary:Version}),
          nornet-autoupdate (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
-         ntpsec | ntp,
          ${misc:Depends}
 Description: Time Server tools for the NorNet system environment
  This package contains the packages to set up an NTP server for the
@@ -386,12 +382,10 @@ Package: nornet-server
 Architecture: all
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ifupdown,
-         iptables-persistent | netfilter-persistent,
          libvirt-clients | libvirt-bin,
          nfs-common,
          nornet-api (= ${binary:Version}),
          nornet-management (= ${binary:Version}),
-         ntpsec | ntp,
          openssh-server,
          ovmf,
          qemu-kvm,
