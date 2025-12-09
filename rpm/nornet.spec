@@ -27,7 +27,6 @@ BuildRequires: GraphicsMagick
 BuildRequires: perl-Image-ExifTool
 BuildRequires: python3-devel
 BuildRequires: python3-setuptools
-BuildRequires: qt5-qtbase-devel
 BuildRequires: texlive-epstopdf-bin
 BuildRequires: urw-base35-fonts
 BuildRoot: %{_tmppath}/%{name}-%{version}-build
