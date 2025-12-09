@@ -34,8 +34,24 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-build
 
 BuildArch: noarch
 
-# TEST ONLY:
-# define _unpackaged_files_terminate_build 0
+Requires: %{name}-api
+Requires: %{name}-artwork
+Requires: %{name}-autoupdate
+Requires: %{name}-database
+Requires: %{name}-development
+Requires: %{name}-display
+Requires: %{name}-filesrv
+Requires: %{name}-gatekeeper
+Requires: %{name}-management
+Requires: %{name}-monitor
+Requires: %{name}-node
+Requires: %{name}-plc
+Requires: %{name}-server
+Requires: %{name}-timesrv
+Requires: %{name}-tunnelbox
+Requires: %{name}-websrv
+Requires: %{name}-wikisrv
+Requires: %{name}-x11
 
 
 %description
@@ -67,6 +83,8 @@ mv %{buildroot}/usr/share/nornet-desktop/Splash/*-*.jpeg  %{buildroot}/boot/NorN
 mkdir -p %{buildroot}/etc/nornet
 mv %{buildroot}/usr/share/nornet-desktop/Splash/nornet-version %{buildroot}/etc/nornet
 # ===========================================================================
+
+%files
 
 
 %package management
