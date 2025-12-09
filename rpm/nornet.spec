@@ -33,24 +33,24 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-build
 
 BuildArch: noarch
 
-Requires: %{name}-api
-Requires: %{name}-artwork
-Requires: %{name}-autoupdate
-Requires: %{name}-database
-Requires: %{name}-development
-Requires: %{name}-display
-Requires: %{name}-filesrv
-Requires: %{name}-gatekeeper
-Requires: %{name}-management
-Requires: %{name}-monitor
-Requires: %{name}-node
-Requires: %{name}-plc
-Requires: %{name}-server
-Requires: %{name}-timesrv
-Requires: %{name}-tunnelbox
-Requires: %{name}-websrv
-Requires: %{name}-wikisrv
-Requires: %{name}-x11
+Requires: %{name}-api = %{version}-%{release}
+Requires: %{name}-artwork = %{version}-%{release}
+Requires: %{name}-autoupdate = %{version}-%{release}
+Requires: %{name}-database = %{version}-%{release}
+Requires: %{name}-development = %{version}-%{release}
+Requires: %{name}-display = %{version}-%{release}
+Requires: %{name}-filesrv = %{version}-%{release}
+Requires: %{name}-gatekeeper = %{version}-%{release}
+Requires: %{name}-management = %{version}-%{release}
+Requires: %{name}-monitor = %{version}-%{release}
+Requires: %{name}-node = %{version}-%{release}
+Requires: %{name}-plc = %{version}-%{release}
+Requires: %{name}-server = %{version}-%{release}
+Requires: %{name}-timesrv = %{version}-%{release}
+Requires: %{name}-tunnelbox = %{version}-%{release}
+Requires: %{name}-websrv = %{version}-%{release}
+Requires: %{name}-wikisrv = %{version}-%{release}
+Requires: %{name}-x11 = %{version}-%{release}
 
 
 %description
